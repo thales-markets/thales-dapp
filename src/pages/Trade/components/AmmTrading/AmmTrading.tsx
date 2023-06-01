@@ -107,15 +107,15 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported && isBuy;
-    const isRangedAmm = [Positions.IN, Positions.OUT].includes(market.positionType);
+    const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
 
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
-        enabled: isAppReady && !isRangedAmm && !!market.address,
+        enabled: isAppReady && !isRangedMarket && !!market.address,
     });
     const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, {
-        enabled: isAppReady && isRangedAmm && !!market.address,
+        enabled: isAppReady && isRangedMarket && !!market.address,
     });
 
     useEffect(() => {
@@ -123,7 +123,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         let base = 0;
         let baseImpact = 0;
         let isTradingDisabled = false;
-        if (isRangedAmm) {
+        if (isRangedMarket) {
             if (rangedAmmMaxLimitsQuery.isSuccess && rangedAmmMaxLimitsQuery.data) {
                 const rangedAmmMaxLimits = rangedAmmMaxLimitsQuery.data;
                 if (isInPosition) {
@@ -162,7 +162,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
         setIsAmmTradingDisabled(isTradingDisabled);
-    }, [isRangedAmm, ammMaxLimitsQuery, isUpPosition, rangedAmmMaxLimitsQuery, isInPosition, isBuy]);
+    }, [isRangedMarket, ammMaxLimitsQuery, isUpPosition, rangedAmmMaxLimitsQuery, isInPosition, isBuy]);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -226,20 +226,20 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             : null;
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedAmm && !!market.address,
+        enabled: isAppReady && isWalletConnected && !isRangedMarket && !!market.address,
     });
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && isRangedAmm && !!market.address,
+        enabled: isAppReady && isWalletConnected && isRangedMarket && !!market.address,
     });
 
-    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
+    let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedMarket) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
-    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedMarket) {
         optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
-    const tokenBalance = isRangedAmm
+    const tokenBalance = isRangedMarket
         ? market.positionType === Positions.IN
             ? optBalances.in || 0
             : optBalances.out || 0
@@ -280,7 +280,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             snxJSConnector.provider
         );
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
         const getAllowance = async () => {
             try {
@@ -314,14 +314,14 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         isWalletConnected,
         hasAllowance,
         isAllowing,
-        isRangedAmm,
+        isRangedMarket,
         isBuy,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
         const id = toast.loading(t('amm.progress'));
         try {
@@ -372,10 +372,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
             try {
                 const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
-                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
+                const contract = isRangedMarket ? rangedMarketAMMContract : ammContract;
 
                 const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
-                const promises = isRangedAmm
+                const promises = isRangedMarket
                     ? getQuoteFromRangedAMM(
                           isNonDefaultStable,
                           isBuy,
@@ -450,7 +450,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         try {
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-            const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+            const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
 
             const parsedAmount = isBuy
                 ? ethers.utils.parseEther(positionAmount.toString())
@@ -495,7 +495,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 );
 
                 refetchBalances(walletAddress, networkId);
-                isRangedAmm
+                isRangedMarket
                     ? refetchRangedAmmData(walletAddress, market.address, networkId)
                     : refetchAmmData(walletAddress, market.address);
 
@@ -506,13 +506,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
                 if (isBuy) {
                     trackEvent({
-                        category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
                         value: Number(paidAmount),
                     });
                 } else {
                     trackEvent({
-                        category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
                     });
                 }
@@ -569,7 +569,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const onMaxClick = async () => {
         trackEvent({
-            category: isRangedAmm ? 'RangeAMM' : 'AMM',
+            category: isRangedMarket ? 'RangeAMM' : 'AMM',
             action: 'click-on-max-button',
         });
 
@@ -639,7 +639,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         currencyKey={currencyKey}
                         maturityDate={maturityDate}
                         market={market}
-                        isRangedAmm={isRangedAmm}
+                        isRangedMarket={isRangedMarket}
                         isFetchingQuote={isFetchingQuote}
                         priceProfit={priceProfit}
                         paidAmount={paidAmount}
@@ -709,7 +709,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
                                 slippage={slippagePerc}
                                 setSlippage={setSlippagePerc}
-                                hideScew={isRangedAmm && !isBuy}
+                                hideScew={isRangedMarket && !isBuy}
                             />
                         </>
                     )}
@@ -743,7 +743,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                             currencyKey={currencyKey}
                             maturityDate={maturityDate}
                             market={market}
-                            isRangedAmm={isRangedAmm}
+                            isRangedMarket={isRangedMarket}
                             isFetchingQuote={isFetchingQuote}
                             priceProfit={priceProfit}
                             paidAmount={paidAmount}

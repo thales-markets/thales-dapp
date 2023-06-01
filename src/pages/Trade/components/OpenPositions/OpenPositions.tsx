@@ -54,7 +54,7 @@ const OpenPositions: React.FC = () => {
     const isArbitrum = getIsArbitrum(networkId);
 
     const handleSubmit = async (position: UserLivePositions) => {
-        const isRangedAmm = [Positions.IN, Positions.OUT].includes(position.side);
+        const isRangedMarket = [Positions.IN, Positions.OUT].includes(position.side);
 
         const fetchGasLimit = async (
             marketAddress: string,
@@ -65,7 +65,7 @@ const OpenPositions: React.FC = () => {
         ) => {
             try {
                 const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
-                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
+                const contract = isRangedMarket ? rangedMarketAMMContract : ammContract;
 
                 if (isOVM) {
                     const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
@@ -110,9 +110,9 @@ const OpenPositions: React.FC = () => {
             if (position.market && totalToPay > 0) {
                 try {
                     const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
-                    const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
+                    const contract = isRangedMarket ? rangedMarketAMMContract : ammContract;
 
-                    const promises = isRangedAmm
+                    const promises = isRangedMarket
                         ? [
                               getQuoteFromRangedAMM(
                                   false,
@@ -173,7 +173,7 @@ const OpenPositions: React.FC = () => {
         }
         try {
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-            const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+            const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
 
             const parsedTotal = stableCoinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
@@ -218,7 +218,7 @@ const OpenPositions: React.FC = () => {
                 );
 
                 refetchBalances(walletAddress, networkId);
-                isRangedAmm
+                isRangedMarket
                     ? refetchRangedAmmData(walletAddress, position.market, networkId)
                     : refetchAmmData(walletAddress, position.market);
                 refetchUserOpenPositions(walletAddress, networkId);
@@ -227,7 +227,7 @@ const OpenPositions: React.FC = () => {
                 setGasLimit(null);
 
                 trackEvent({
-                    category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                    category: isRangedMarket ? 'RangeAMM' : 'AMM',
                     action: 'sell-to-amm',
                 });
             }
