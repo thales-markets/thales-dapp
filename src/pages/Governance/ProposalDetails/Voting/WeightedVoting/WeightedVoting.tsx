@@ -1,13 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import {
-    FlexDivColumnCentered,
-    FlexDivCentered,
-    FlexDivRowCentered,
-    FlexDiv,
-    FlexDivSpaceBetween,
-    Colors,
-} from 'theme/common';
+import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { VoteContainer, VoteConfirmation } from 'pages/Governance/styled-components';
@@ -21,7 +14,7 @@ import { ProposalTypeEnum, SpaceKey } from 'constants/governance';
 import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
 import pitches from '../pitches.json';
-import { Dialog, withStyles } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
 import useProposalQuery from 'queries/governance/useProposalQuery';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
@@ -361,17 +354,17 @@ const SeePitchButton = styled.button`
     }
 `;
 
-const PitchModal = withStyles(() => ({
-    paper: {
-        borderRadius: '15px',
-        width: '900px',
-        maxWidth: '900px',
-        background: Colors.GRAY_DARK,
-        overflow: 'auto',
-        border: `2px solid ${Colors.GRAY}`,
-        color: Colors.WHITE,
-    },
-}))(Dialog);
+const PitchModal = styled((props) => <Dialog classes={{ papper: props.className }} {...props} />)`
+    & .MuiDialog-paper {
+        border-radius: 15px;
+        width: 900px;
+        max-width: 900px;
+        background: ${(props) => props.theme.background.primary};
+        overflow: auto;
+        border: 2px solid ${(props) => props.theme.borderColor.primary};
+        color: ${(props) => props.theme.textColor.primary};
+    }
+`;
 
 const PitchContainer = styled.div`
     position: relative;

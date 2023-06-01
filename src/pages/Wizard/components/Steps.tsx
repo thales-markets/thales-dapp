@@ -381,7 +381,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Modal>
             )}
             {showSwap && (
-                <Modal title="" onClose={() => setShowSwap(false)} shouldCloseOnOverlayClick={true}>
+                <Modal
+                    title={t('options.swap.title')}
+                    onClose={() => setShowSwap(false)}
+                    shouldCloseOnOverlayClick={true}
+                >
                     <Swap handleClose={setShowSwap} />
                 </Modal>
             )}

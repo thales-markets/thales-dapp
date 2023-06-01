@@ -184,7 +184,7 @@ export const UserSwap: React.FC = () => {
             </SwapWrapper>
             {showSwap && (
                 <Modal
-                    title=""
+                    title={t('options.swap.title')}
                     onClose={() => setShowSwap(false)}
                     shouldCloseOnOverlayClick={false}
                     customStyle={{ overlay: { zIndex: 201 } }}
