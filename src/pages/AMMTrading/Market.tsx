@@ -93,133 +93,92 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         }
     }, [optionMarket?.phase, rangedMarket?.phase]);
 
-    return optionMarket || rangedMarket ? (
+    const market = isRangedMarket ? rangedMarket : optionMarket;
+
+    const getAmmTradingMarket = (market: OptionsMarketInfo | RangedMarketData) => {
+        return {
+            currencyKey: market.currencyKey,
+            address: market.address,
+            liquidity: 0,
+            price: 0,
+            roi: 0,
+            strikePrice: (market as OptionsMarketInfo).strikePrice,
+            leftPrice: (market as RangedMarketData).leftPrice,
+            rightPrice: (market as RangedMarketData).rightPrice,
+            discount: 0,
+            positionType: positionType,
+        };
+    };
+
+    const getProviderContent = () => (
+        <>
+            <Container>
+                {inMaturityPhase ? (
+                    <Maturity isRangedMarket={isRangedMarket} />
+                ) : (
+                    <>
+                        {market && (
+                            <>
+                                <WalletBalance isRangedMarket={isRangedMarket} positionType={positionType} />
+                                <AmmTradingContainer>
+                                    <SwitchInput
+                                        active={orderSide === 'sell'}
+                                        width="40px"
+                                        height="16px"
+                                        dotSize="10px"
+                                        circlePosition="2px"
+                                        label={{
+                                            firstLabel: t(`common.buy`),
+                                            secondLabel: t(`common.sell`),
+                                            fontSize: '13px',
+                                        }}
+                                        handleClick={() => {
+                                            setOrderSide(orderSide === 'buy' ? 'sell' : 'buy');
+                                        }}
+                                    />
+                                    <DirectionContainer>
+                                        <RadioButtons
+                                            onChange={(position) => {
+                                                history.push({
+                                                    pathname: location.pathname,
+                                                    search: queryString.stringify({
+                                                        position: position.toLowerCase(),
+                                                    }),
+                                                });
+                                                setPositionType(position);
+                                            }}
+                                            selected={positionType}
+                                            options={
+                                                isRangedMarket
+                                                    ? [Positions.IN, Positions.OUT]
+                                                    : [Positions.UP, Positions.DOWN]
+                                            }
+                                        />
+                                    </DirectionContainer>
+                                    <AmmTrading
+                                        currencyKey={market.currencyKey}
+                                        maturityDate={market.maturityDate}
+                                        market={getAmmTradingMarket(market)}
+                                        isDetailsPage={true}
+                                    />
+                                </AmmTradingContainer>
+                            </>
+                        )}
+                    </>
+                )}
+            </Container>
+            <TabContainer isRangedMarket={isRangedMarket} />
+        </>
+    );
+
+    return market ? (
         <>
             <BannerCarousel />
             <MainContainer>
-                {!isRangedMarket && (
-                    <MarketProvider optionsMarket={optionMarket}>
-                        <Container>
-                            {optionMarket && !inMaturityPhase && (
-                                <>
-                                    <WalletBalance isRangedMarket={false} positionType={positionType} />
-                                    <AmmTradingContainer>
-                                        <SwitchInput
-                                            active={orderSide === 'sell'}
-                                            width="40px"
-                                            height="16px"
-                                            dotSize="10px"
-                                            circlePosition="2px"
-                                            label={{
-                                                firstLabel: t(`common.buy`),
-                                                secondLabel: t(`common.sell`),
-                                                fontSize: '13px',
-                                            }}
-                                            handleClick={() => {
-                                                setOrderSide(orderSide === 'buy' ? 'sell' : 'buy');
-                                            }}
-                                        />
-                                        <DirectionContainer>
-                                            <RadioButtons
-                                                onChange={(position) => {
-                                                    history.push({
-                                                        pathname: location.pathname,
-                                                        search: queryString.stringify({
-                                                            position: position.toLowerCase(),
-                                                        }),
-                                                    });
-                                                    setPositionType(position);
-                                                }}
-                                                selected={positionType}
-                                                options={[Positions.UP, Positions.DOWN]}
-                                            />
-                                        </DirectionContainer>
-                                        <AmmTrading
-                                            currencyKey={optionMarket.currencyKey}
-                                            maturityDate={optionMarket.maturityDate}
-                                            market={{
-                                                currencyKey: optionMarket.currencyKey,
-                                                address: optionMarket.address,
-                                                liquidity: 0,
-                                                price: 0,
-                                                roi: 0,
-                                                strikePrice: optionMarket.strikePrice,
-                                                leftPrice: 0,
-                                                rightPrice: 0,
-                                                discount: 0,
-                                                positionType: positionType,
-                                            }}
-                                            isDetailsPage={true}
-                                        />
-                                    </AmmTradingContainer>
-                                </>
-                            )}
-                            {inMaturityPhase && <Maturity isRangedMarket={false} />}
-                        </Container>
-                        <TabContainer isRangedMarket={false} />
-                    </MarketProvider>
-                )}
-                {isRangedMarket && (
-                    <RangedMarketProvider rangedMarket={rangedMarket}>
-                        <Container>
-                            {rangedMarket && !inMaturityPhase && (
-                                <>
-                                    <WalletBalance isRangedMarket={true} positionType={positionType} />
-                                    <AmmTradingContainer>
-                                        <SwitchInput
-                                            active={orderSide === 'sell'}
-                                            width="40px"
-                                            height="16px"
-                                            dotSize="10px"
-                                            circlePosition="2px"
-                                            label={{
-                                                firstLabel: t(`common.buy`),
-                                                secondLabel: t(`common.sell`),
-                                                fontSize: '13px',
-                                            }}
-                                            handleClick={() => {
-                                                setOrderSide(orderSide === 'buy' ? 'sell' : 'buy');
-                                            }}
-                                        />
-                                        <DirectionContainer>
-                                            <RadioButtons
-                                                onChange={(position) => {
-                                                    history.push({
-                                                        pathname: location.pathname,
-                                                        search: queryString.stringify({
-                                                            position: position.toLowerCase(),
-                                                        }),
-                                                    });
-                                                    setPositionType(position);
-                                                }}
-                                                selected={positionType}
-                                                options={[Positions.IN, Positions.OUT]}
-                                            />
-                                        </DirectionContainer>
-                                        <AmmTrading
-                                            currencyKey={rangedMarket.currencyKey}
-                                            maturityDate={rangedMarket.maturityDate}
-                                            market={{
-                                                currencyKey: rangedMarket.currencyKey,
-                                                address: rangedMarket.address,
-                                                liquidity: 0,
-                                                price: 0,
-                                                roi: 0,
-                                                strikePrice: 0,
-                                                leftPrice: rangedMarket.leftPrice,
-                                                rightPrice: rangedMarket.rightPrice,
-                                                discount: 0,
-                                                positionType: positionType,
-                                            }}
-                                            isDetailsPage={true}
-                                        />
-                                    </AmmTradingContainer>
-                                </>
-                            )}
-                            {inMaturityPhase && <Maturity isRangedMarket={true} />}
-                        </Container>
-                        <TabContainer isRangedMarket={true} />
-                    </RangedMarketProvider>
+                {isRangedMarket ? (
+                    <RangedMarketProvider rangedMarket={rangedMarket}>{getProviderContent()}</RangedMarketProvider>
+                ) : (
+                    <MarketProvider optionsMarket={optionMarket}>{getProviderContent()}</MarketProvider>
                 )}
             </MainContainer>
         </>
