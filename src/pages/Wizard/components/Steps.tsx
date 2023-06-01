@@ -31,7 +31,7 @@ enum NavItems {
 }
 
 enum Provider {
-    BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY&coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
+    BANXA = 'https://thalesmarket.banxa.com/?coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
     MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg',
     BUNGEE = '',
     LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
@@ -651,8 +651,6 @@ const IFrameWrapper = styled.div`
     width: 530px;
     height: 635px;
     margin: auto;
-    background: white;
-    border-radius: 15px;
     outline: none;
 `;
 
