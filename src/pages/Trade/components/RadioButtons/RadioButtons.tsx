@@ -4,16 +4,17 @@ import styled from 'styled-components';
 
 type RadioButtonsProps = {
     selected: Positions;
-    onChange: React.Dispatch<React.SetStateAction<Positions>>;
+    onChange: React.Dispatch<Positions>;
+    options?: Positions[];
 };
 
-const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange }) => {
+const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options }) => {
     return (
         <Wrapper>
-            {Object.values(Positions).map((position, index) => {
+            {(options || Object.values(Positions)).map((position, index) => {
                 return (
                     <React.Fragment key={index}>
-                        <RadioWrapper onClick={onChange.bind(this, position)} key={index}>
+                        <RadioWrapper onClick={() => onChange(position)} key={index}>
                             {selected === position ? (
                                 <RadioIcon selected={true} className="icon icon--radio-button-selected" />
                             ) : (
@@ -21,7 +22,7 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange }) => {
                             )}
                             <Label selected={selected === position}> {position}</Label>
                         </RadioWrapper>
-                        {index === 1 && <Separator />}
+                        {index === 1 && !options && <Separator />}
                     </React.Fragment>
                 );
             })}

@@ -50,6 +50,7 @@ type TableProps = {
     hidePagination?: boolean;
     hasStickyRow?: boolean;
     preventMobileView?: boolean;
+    defaultPageSize?: number;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -66,6 +67,7 @@ const Table: React.FC<TableProps> = ({
     hidePagination,
     hasStickyRow,
     preventMobileView,
+    defaultPageSize,
 }) => {
     const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(false);
@@ -116,7 +118,7 @@ const Table: React.FC<TableProps> = ({
     };
 
     useEffect(() => {
-        setPageSize(DEFAULT_PAGE_SIZE);
+        setPageSize(defaultPageSize || DEFAULT_PAGE_SIZE);
     }, []);
 
     useEffect(() => {

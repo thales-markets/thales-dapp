@@ -84,7 +84,7 @@ const MenuCardButton = styled.div`
 `;
 
 const MenuIcon = styled.i`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default UserCard;

@@ -77,8 +77,8 @@ export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
 
 export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
-    if (networkId == Network.Arbitrum) return null;
-    return MAX_L2_GAS_LIMIT;
+    if (networkId == Network['Mainnet-Ovm']) return MAX_L2_GAS_LIMIT;
+    return null;
 };
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;

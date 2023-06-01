@@ -185,13 +185,14 @@ const MaxButton = styled.button`
 const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
         margin: -10px 0 0 0;
-        padding: 2px 8px;
+        padding: 2px 4px;
         font-weight: 600;
         font-size: 13px;
         line-height: 15px;
         color: ${(props) => props.theme.input.textColor.quaternary};
         background-color: ${(props) => props.theme.background.primary};
         text-align: center;
+        max-width: 320px;
     }
 `;
 

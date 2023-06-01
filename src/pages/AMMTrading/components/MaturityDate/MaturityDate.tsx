@@ -4,12 +4,10 @@ import useInterval from 'hooks/useInterval';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-
 import { formatShortDate, formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 
 type MaturityDateProps = {
     maturityDateUnix: number;
-    // timeRemainingUnix: number;
     onEnded?: () => void;
     showFullCounter?: boolean;
     fontSize?: string;
@@ -18,25 +16,16 @@ type MaturityDateProps = {
 
 const ONE_SECOND_IN_MS = 1000;
 
-const MaturityDate: React.FC<MaturityDateProps> = ({
-    maturityDateUnix,
-    // timeRemainingUnix,
-    onEnded,
-    showFullCounter,
-    fontSize,
-    color,
-}) => {
-    const [showTimeRemaining, setTimeRemaningVisibility] = useState<boolean>(false);
-
+const MaturityDate: React.FC<MaturityDateProps> = ({ maturityDateUnix, onEnded, showFullCounter, fontSize, color }) => {
+    const { t } = useTranslation();
     const now = Date.now();
+    const [showTimeRemaining, setTimeRemaningVisibility] = useState<boolean>(false);
     const [timeElapsed, setTimeElapsed] = useState(now >= maturityDateUnix);
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, maturityDateUnix)));
     const [showRemainingInWeeks, setShowRemainingInWeeks] = useState(weeksDiff > 4);
     const [countdownDisabled, setCountdownDisabled] = useState(timeElapsed || showRemainingInWeeks);
-
     const [timeInterval, setTimeInterval] = useState<number | null>(countdownDisabled ? null : ONE_SECOND_IN_MS);
     const [duration, setDuration] = useState<Duration>(intervalToDuration({ start: now, end: maturityDateUnix }));
-    const { t } = useTranslation();
 
     const dateTimeTranslationMap = {
         years: t('options.common.time-remaining.years'),
@@ -109,16 +98,9 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
 const Display = styled.span<{ fontSize?: string; color?: string }>`
     cursor: pointer;
     font-weight: 700;
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '25px')};
-    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
-    width: 140px;
+    font-size: ${(props) => props.fontSize || '13px'};
+    color: ${(props) => props.color || props.theme.textColor.primary};
     display: block;
-    @media (max-width: 1024px) {
-        font-size: 21px;
-    }
-    @media (max-width: 568px) {
-        font-size: 18px;
-    }
 `;
 
 export default MaturityDate;

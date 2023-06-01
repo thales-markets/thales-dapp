@@ -11,6 +11,7 @@ import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
+import { BALANCE_THRESHOLD } from 'constants/token';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -55,7 +56,7 @@ const useUserOpenPositions = (
             const rangedClaimablePositions: any = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (Number(ethers.utils.formatEther(positionBalance.amount)) > 0) {
+                if (Number(ethers.utils.formatEther(positionBalance.amount)) > BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         livePositions.push(positionBalance);
                     } else {
@@ -65,7 +66,7 @@ const useUserOpenPositions = (
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (Number(ethers.utils.formatEther(positionBalance.amount)) > 0) {
+                if (Number(ethers.utils.formatEther(positionBalance.amount)) > BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         liveRangedPositions.push(positionBalance);
                     } else {

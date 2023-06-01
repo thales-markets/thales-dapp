@@ -13,12 +13,12 @@ export const navigateTo = (path: string, replacePath = false, scrollToTop = fals
     replacePath ? history.replace(path, state) : history.push(path, state);
 };
 
-export const buildOptionsMarketLink = (marketAddress: string, option?: string) =>
-    `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.Home}/${marketAddress}${option ? `?option=${option}` : ''}`;
+export const buildOptionsMarketLink = (marketAddress: string, position?: string) =>
+    `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.Home}/${marketAddress}${position ? `?position=${position}` : ''}`;
 
-export const buildRangeMarketLink = (marketAddress: string, side?: string, orderType?: string) =>
+export const buildRangeMarketLink = (marketAddress: string, position?: string) =>
     `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.RangeMarkets}/${marketAddress}${
-        side || orderType ? `?side=${side}&orderType=${orderType}` : ''
+        position ? `?position=${position}` : ''
     }`;
 
 export const buildReferrerLink = (route: string, referralId: string) => {
@@ -27,8 +27,8 @@ export const buildReferrerLink = (route: string, referralId: string) => {
 
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;
 
-export const navigateToOptionsMarket = (marketAddress: string, option?: string, replacePath = false) =>
-    navigateTo(buildOptionsMarketLink(marketAddress, option), replacePath);
+export const navigateToOptionsMarket = (marketAddress: string, position?: string, replacePath = false) =>
+    navigateTo(buildOptionsMarketLink(marketAddress, position), replacePath);
 
 export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = false) =>
     navigateTo(`${ROUTES.Governance.Home}/${spaceKey ? spaceKey : ''}/${id ? id : ''}`, replacePath);

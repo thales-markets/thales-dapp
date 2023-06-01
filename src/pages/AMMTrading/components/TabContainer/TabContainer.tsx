@@ -4,28 +4,39 @@ import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
-import Container from './styled-components/Container';
+import {
+    Container,
+    MenuContainer,
+    MenuItem,
+    Tab,
+    ViewButton,
+    ViewItem,
+    ViewTitle,
+    ViewsDropDown,
+    ViewsDropDownWrapper,
+} from './styled-components';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RowCard from '../RowCard';
-import { MarketType } from 'types/options';
-import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { MARKET_TYPE } from 'constants/options';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
-const TabContainer: React.FC = () => {
-    const marketInfo = useMarketContext();
+type TabContainerProps = {
+    isRangedMarket: boolean;
+};
+
+const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const [currentTab, setCurrentTab] = useState<number>(1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
-    const { trackEvent } = useMatomo();
 
     useEffect(() => {
-        if (marketInfo.phase == 'maturity') {
+        if (market.phase == 'maturity') {
             setMaturity(true);
             setCurrentTab(4);
         }
-    }, [marketInfo.phase]);
+    }, [market.phase]);
 
     const { t } = useTranslation();
 
@@ -33,7 +44,7 @@ const TabContainer: React.FC = () => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.chart', { currencyKey: marketInfo?.currencyKey }),
+                      title: t('options.market.widgets.chart', { currencyKey: market.currencyKey }),
                       index: 1,
                   },
               ]
@@ -63,141 +74,62 @@ const TabContainer: React.FC = () => {
     return (
         <>
             <Container>
-                <RowCard />
-                <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
+                {isRangedMarket ? <RowCardRangedMarket /> : <RowCard />}
+                <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
                     {currentTab
                         ? t('options.market.row-card.current-view', {
                               currentView: tabItems.find((item) => item.index == currentTab)?.title,
                           })
                         : t('options.market.row-card.views')}
-                </FiltersButton>
+                </ViewButton>
                 {showViewsDropdown && (
-                    <PositionWrapper>
-                        <Wrapper>
+                    <ViewsDropDownWrapper>
+                        <ViewsDropDown>
                             <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
-                                <Title>Views</Title>
+                                <ViewTitle>Views</ViewTitle>
                                 {tabItems &&
                                     tabItems.map((item, index) => {
                                         return (
-                                            <Item
+                                            <ViewItem
                                                 active={currentTab === item.index}
                                                 key={index}
                                                 onClick={() => {
-                                                    if (item.index == 5) {
-                                                        trackEvent({
-                                                            category: 'PositionalMarket',
-                                                            action: 'click-on-similar-markets',
-                                                        });
-                                                    }
                                                     setCurrentTab(item.index);
                                                     setShowViewsDropdown(false);
                                                 }}
                                             >
                                                 {item.title}
-                                            </Item>
+                                            </ViewItem>
                                         );
                                     })}
                             </OutsideClickHandler>
-                        </Wrapper>
-                    </PositionWrapper>
+                        </ViewsDropDown>
+                    </ViewsDropDownWrapper>
                 )}
-                <Container.Main justifyContent={inMaturity ? 'flex-start' : ''}>
+                <MenuContainer justifyContent={inMaturity ? 'flex-start' : 'stretch'}>
                     {tabItems &&
                         tabItems.map((item, index) => {
                             return (
-                                <Container.Main.Item
+                                <MenuItem
                                     active={item.index == currentTab}
                                     key={index}
-                                    noStrech={inMaturity ? true : false}
+                                    noStrech={inMaturity}
                                     onClick={() => setCurrentTab(item.index)}
                                 >
                                     {item.title}
-                                </Container.Main.Item>
+                                </MenuItem>
                             );
                         })}
-                </Container.Main>
-                <Container.Tab>
+                </MenuContainer>
+                <Tab>
                     {currentTab == 1 && <TradingView />}
-                    {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[0] as MarketType} />}
-                </Container.Tab>
+                    {currentTab == 2 && <OptionPriceTab isRangedMarket={isRangedMarket} />}
+                    {currentTab == 3 && <UserActivity isRangedMarket={isRangedMarket} />}
+                    {currentTab == 4 && <MarketActivity isRangedMarket={isRangedMarket} />}
+                </Tab>
             </Container>
         </>
     );
 };
-
-const PositionWrapper = styled.div`
-    position: relative;
-    width: 100%;
-    height: 0;
-    z-index: 2;
-`;
-
-const FiltersButton = styled.div`
-    display: none;
-    padding: 6px 20px;
-    border: 1.5px solid rgba(100, 217, 254, 0.5);
-    box-sizing: border-box;
-    border-radius: 30px;
-    background: transparent;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 11px;
-    text-transform: uppercase;
-    color: var(--color-highlight);
-    @media (max-width: 768px) {
-        display: block;
-        align-self: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-`;
-
-const Wrapper = styled.div`
-    display: none;
-    @media (max-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
-        border: 2px solid rgba(100, 217, 254, 0.5);
-        box-sizing: border-box;
-        border-radius: 12px;
-        padding: 15px 20px;
-        max-width: 240px;
-        position: absolute;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: -56px;
-        z-index: 2;
-    }
-`;
-
-const Item = styled.div<{ active: boolean }>`
-    text-transform: uppercase;
-    cursor: pointer;
-    color: ${(props) => (props?.active ? 'var(--color-highlight)' : props.theme.textColor.primary)};
-
-    @media (max-width: 768px) {
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 162.5%;
-    }
-`;
-
-const Title = styled.p`
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 100%;
-    text-transform: uppercase;
-    color: var(--color-highlight);
-    @media (min-width: 769px) {
-        display: none;
-    }
-    margin-bottom: 10px;
-`;
 
 export default TabContainer;
