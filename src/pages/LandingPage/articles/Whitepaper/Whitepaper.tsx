@@ -196,7 +196,7 @@ const H1 = styled.h1`
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 0.2em;
     margin-bottom: 0.6em;
 `;
@@ -208,7 +208,7 @@ const H2 = styled.h2`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -220,7 +220,7 @@ const H3 = styled.h3`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -231,7 +231,7 @@ const Paragraph = styled.p`
     margin-bottom: 1em;
     &,
     & * {
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
@@ -246,19 +246,19 @@ const Paragraph = styled.p`
 
 const Date = styled.h1`
     font-family: NunitoExtraLight !important;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     font-size: 1.2em;
 `;
 
 const List = styled.ul`
     list-style: disc;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     list-style-position: inside;
 `;
 
 const ListItem = styled.li<{ bold?: boolean }>`
     margin-bottom: 0.5em;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     font-size: 1.3em;
 `;
 
@@ -273,7 +273,7 @@ const ChartLabel = styled.span`
     bottom: -1.55em;
     left: 0;
     right: 0;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     text-align: center;
 `;
 

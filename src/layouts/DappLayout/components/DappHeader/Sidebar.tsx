@@ -334,7 +334,7 @@ const LogoIcon = styled.img`
 const Divider = styled.hr`
     width: 100%;
     border: none;
-    border-top: 3px solid rgb(255, 255, 255, 0.5);
+    border-top: 3px solid ${(props) => props.theme.borderColor.secondary};
     @media (max-width: 1024px) {
         display: none;
     }

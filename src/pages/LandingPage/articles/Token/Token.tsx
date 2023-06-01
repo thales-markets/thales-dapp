@@ -146,7 +146,7 @@ const H1 = styled.h1`
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 1em;
     margin-bottom: 1.3em;
 `;
@@ -158,7 +158,7 @@ const H2 = styled.h2`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -167,7 +167,7 @@ const Paragraph = styled.p`
     line-height: 1em;
     &,
     & * {
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
@@ -187,7 +187,7 @@ const Paragraph = styled.p`
 const AnimationSvg = styled.object``;
 
 const ListWrapper = styled.div`
-    border: 1px solid ${(props) => props.theme.textColor.primary};
+    border: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
     border-radius: 7px;
     width: 38em;
     margin-bottom: 4em;
@@ -199,7 +199,7 @@ const ListWrapper = styled.div`
 
 const List = styled.ul`
     list-style: disc;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-left: 2em;
     padding: 1.5em;
     & > li {
@@ -217,7 +217,7 @@ const List = styled.ul`
 
 const NestedList = styled.ul`
     list-style: none;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     & li {
         &:before {
             content: '\\25BA \\0020';
@@ -230,7 +230,7 @@ const NestedList = styled.ul`
             font-size: 1.4em;
             font-weight: 300;
             line-height: 170%;
-            color: ${(props) => props.theme.textColor.primary};
+            color: ${(props) => props.theme.landingPage.textColor.primary};
             &:hover {
                 font-size: 1.6em;
                 transition: 0.2s;
@@ -248,7 +248,7 @@ const NestedList = styled.ul`
 
 const ListItem = styled.li`
     height: 3em;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default Token;

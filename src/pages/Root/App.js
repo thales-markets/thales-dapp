@@ -388,6 +388,15 @@ const GlobalStyle = createGlobalStyle`
         font-family: ${(props) => props.theme.fontFamily.primary};
         font-style: normal !important;
     }
+    *::-webkit-scrollbar-track {
+        background: ${(props) => props.theme.background.secondary};
+    }
+    *::-webkit-scrollbar-thumb {
+        background: ${(props) => props.theme.background.tertiary};
+    }
+    body {
+        background: ${(props) => props.theme.landingPage.background.primary};
+    }
     body #root {
         background: ${(props) => props.theme.background.primary};
     }

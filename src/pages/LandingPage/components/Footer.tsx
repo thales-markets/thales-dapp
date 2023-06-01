@@ -90,7 +90,7 @@ const FlexDiv = styled.div`
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     flex-wrap: wrap;
 `;
 
@@ -130,9 +130,9 @@ const FooterHtml = styled.div`
             width: 100vw;
             margin-top: 17px;
             z-index: 3;
-            background: var(--main-background);
+            background: ${(props) => props.theme.landingPage.background.primary};
             & > a > i {
-                color: ${(props) => props.theme.textColor.primary} !important;
+                color: ${(props) => props.theme.landingPage.textColor.primary} !important;
             }
             & > i {
                 display: inline-block;
@@ -216,7 +216,7 @@ const FooterContainer = styled(FlexDiv)`
     right: 0;
     margin: 17px auto 0;
     z-index: 3;
-    background: var(--main-background);
+    background: ${(props) => props.theme.landingPage.background.primary};
 `;
 
 const FooterIcon = styled.i`
@@ -228,7 +228,7 @@ const FooterIcon = styled.i`
         pointer-events: none;
     }
     font-size: 3em;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 const FooterLink = styled.a`
@@ -237,9 +237,9 @@ const FooterLink = styled.a`
     font-weight: 300;
     font-size: 15px;
     line-height: 36px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     &:visited {
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
     }
 `;
 
@@ -271,12 +271,12 @@ const FooterIconLogo = styled.i`
     font-size: 12em;
     margin-top: -50px;
     margin-bottom: -40px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     text-align: center;
 `;
 
 const ButtonContainer = styled.div`
-    border: 3px solid ${(props) => props.theme.textColor.primary};
+    border: 3px solid ${(props) => props.theme.landingPage.textColor.primary};
     box-sizing: border-box;
     border-radius: 21px;
     width: 9em;
@@ -292,15 +292,15 @@ const DAPPLink = styled.a`
     line-height: 36px;
     width: 100%;
     text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     &:visited {
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
     }
     & > i {
         font-size: 4em;
         line-height: 26px;
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
     }
 `;
 

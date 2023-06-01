@@ -125,4 +125,14 @@ export default {
         buy: Colors.GREEN,
         sell: Colors.RED,
     },
+    landingPage: {
+        background: {
+            primary: Colors.BLUE_MIDNIGHT,
+            secondary: Colors.BLUE_MIDNIGHT_LIGHT,
+        },
+        textColor: {
+            primary: Colors.WHITE,
+            secondary: Colors.BLUE_SKY,
+        },
+    },
 };

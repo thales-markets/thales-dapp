@@ -139,11 +139,7 @@ table {
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: #848e9c #2b3139;
     scrollbar-width: thin;
-    &.dark-theme {
-        scrollbar-color: #a1e1b4 #133326;
-    }
 }
 
 *::-webkit-scrollbar {
@@ -152,11 +148,9 @@ table {
 }
 *::-webkit-scrollbar-track {
     border-radius: 8px;
-    background: #2b3139;
 }
 *::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    background: #848e9c;
 }
 
 input::-webkit-outer-spin-button,
@@ -179,10 +173,6 @@ input[type='number'] {
     &.collapse {
         overflow: hidden;
     }
-}
-
-body {
-    background: #052040;
 }
 
 a {

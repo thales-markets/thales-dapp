@@ -91,7 +91,7 @@ const Logo = styled.i`
     grid-row-end: 4;
     font-size: 8.3em;
     line-height: 34px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     flex: 1;
 `;
@@ -125,7 +125,7 @@ const DropDownContainer = styled.div`
         line-height: 1.6em;
         text-align: left;
         text-transform: uppercase;
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         padding: 10px;
         border-radius: 7px;
         &:hover {
@@ -145,7 +145,7 @@ const Link = styled.a`
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     @media (max-width: 1024px) {
         margin-bottom: 60px;
     }
@@ -158,8 +158,8 @@ const Link = styled.a`
             right: -32px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid ${(props) => props.theme.textColor.primary};
-            border-right: 2px solid ${(props) => props.theme.textColor.primary};
+            border-top: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
+            border-right: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
             transform: rotate(135deg);
         }
         &.open:after {
@@ -172,17 +172,17 @@ const Link = styled.a`
 const Xicon = styled.i`
     font-size: 20px;
     font-weight: 100;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     position: absolute;
     top: 37px;
     right: 25px;
 `;
 
 const ThalesButton = styled.div`
-    background: #1b314f;
+    background: ${(props) => props.theme.landingPage.background.secondary};
     &,
     & * {
-        color: #f7f7f7 !important;
+        color: ${(props) => props.theme.landingPage.textColor.primary} !important;
     }
 
     display: flex;
@@ -208,7 +208,7 @@ const Wrapper = styled.div`
     align-items: flex-start;
     padding: 100px 40px;
     width: 100%;
-    background: var(--main-background);
+    background: ${(props) => props.theme.landingPage.background.primary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
 `;
 
@@ -220,7 +220,7 @@ const LanguageContainerInBurger = styled.div`
 const HorizontalLine = styled.div`
     width: 100%;
     height: 2px;
-    background: ${(props) => props.theme.textColor.primary};
+    background: ${(props) => props.theme.landingPage.textColor.primary};
     position: relative;
     top: -30px;
 `;
@@ -235,7 +235,7 @@ const Text = styled.p`
     z-index: 2;
     text-align: left;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default BurgerContainer;

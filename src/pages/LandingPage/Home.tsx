@@ -158,10 +158,7 @@ export const Background = styled.div`
         font-size: 14px;
     }
 
-    background: #052040;
-    --main-background: #052040;
-    --color: #f7f7f7;
-    --background: #1b314f;
+    background: ${(props) => props.theme.landingPage.background.primary};
 `;
 
 const FlexWrapper = styled.div`
@@ -183,7 +180,7 @@ const Title = styled.p`
     }
     line-height: 91.91%;
     text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 const FlexDiv = styled.div`
@@ -191,7 +188,7 @@ const FlexDiv = styled.div`
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     flex-wrap: wrap;
     &.initiatives {
         & > a > i {
@@ -287,7 +284,7 @@ const INCH = styled(IconAbs)`
 `;
 
 const Faq = styled.div`
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
     border-radius: 7px;
     margin: 3em 4em;
@@ -305,7 +302,7 @@ const FaqQuestion = styled.p`
     font-weight: bold;
     font-size: 1.5em;
     line-height: 91.91%;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-bottom: 1em;
     @media (max-width: 600px) {
         margin-bottom: 24px;
@@ -318,9 +315,9 @@ const FaqAnswer = styled.p`
     font-weight: 300;
     font-size: 1em;
     line-height: 1.2em;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     &:not(:last-child) {
-        border-bottom: 1px solid ${(props) => props.theme.textColor.primary};
+        border-bottom: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
         padding-bottom: 2em;
         margin-bottom: 2em;
         @media (max-width: 600px) {
@@ -332,11 +329,11 @@ const FaqAnswer = styled.p`
 
 const Info = styled.div`
     width: 100%;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     text-align: center;
     padding: 10px;
     font-size: 16px;
-    background-color: var(--background);
+    background-color: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
     z-index: 2;
     position: absolute;
@@ -344,12 +341,12 @@ const Info = styled.div`
         font-weight: bold;
         cursor: pointer;
         margin-left: 0.2em;
-        color: #91bced;
+        color: ${(props) => props.theme.landingPage.textColor.secondary};
     }
     a {
         display: contents;
         font-weight: bold;
         cursor: pointer;
-        color: #91bced;
+        color: ${(props) => props.theme.landingPage.textColor.secondary};
     }
 `;
