@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 
@@ -12,7 +13,7 @@ export const MenuContainer = styled(FlexDiv)<{
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     margin-bottom: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -20,7 +21,7 @@ export const MenuContainer = styled(FlexDiv)<{
 export const Container = styled(FlexDiv)`
     max-width: 600px;
     flex-direction: column;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
         width: 100%;
     }
@@ -46,7 +47,7 @@ export const MenuItem = styled.div<{
 
 export const ViewButton = styled.div`
     display: none;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: block;
         align-self: center;
         padding: 6px 20px;
@@ -72,7 +73,7 @@ export const ViewsDropDownWrapper = styled.div`
 
 export const ViewsDropDown = styled.div`
     display: none;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
         flex-direction: column;
         background: ${(props) => props.theme.background.secondary};
@@ -105,7 +106,7 @@ export const ViewTitle = styled.p`
 `;
 
 export const ViewItem = styled.div<{ active: boolean }>`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-weight: bold;
         font-size: 12px;
         line-height: 18px;
