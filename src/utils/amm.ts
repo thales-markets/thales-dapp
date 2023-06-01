@@ -1,9 +1,6 @@
 import { ZERO_ADDRESS } from '@1inch/limit-order-protocol';
-import { COLLATERALS, COLLATERALS_INDEX, STABLE_DECIMALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
-import { OptionSide, RangedMarketPositionType, StableCoins } from 'types/options';
-import { stableCoinParser } from './formatters/ethers';
-import { getIsArbitrum, getIsPolygon, Network, NetworkId } from './network';
+import { OptionSide, RangedMarketPositionType } from 'types/options';
 
 export const getQuoteFromAMM = (
     isNonDefaultStable: boolean,
@@ -194,56 +191,6 @@ export const preparePopulateTransactionForAMM = async (
     }
 
     return txRequest;
-};
-
-export const getAmountToApprove = (
-    approveAmount: BigNumber,
-    isNonDefaultStable: boolean,
-    isBuy: boolean,
-    selectedStableIndex: number,
-    networkId: NetworkId
-): BigNumber => {
-    if (approveAmount === ethers.constants.MaxUint256) {
-        return ethers.constants.MaxUint256;
-    }
-
-    if ((getIsPolygon(networkId) || getIsArbitrum(networkId)) && isBuy) {
-        return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6);
-    } else if (networkId == Network.BSC) {
-        return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), STABLE_DECIMALS['BUSD']);
-    } else if (isNonDefaultStable) {
-        return ethers.utils.parseUnits(
-            ethers.utils.formatEther(approveAmount),
-            STABLE_DECIMALS[COLLATERALS[selectedStableIndex] as StableCoins]
-        );
-    } else {
-        return approveAmount;
-    }
-};
-
-export const getAmountForApproval = (stableIndex: number, amountToApprove: string, networkId: NetworkId) => {
-    let collateralDecimals = 18;
-    if (networkId === Network.Arbitrum) {
-        collateralDecimals = 6;
-    } else {
-        const stable = COLLATERALS_INDEX[stableIndex];
-
-        if ((STABLE_DECIMALS as any)[stable]) {
-            collateralDecimals = (STABLE_DECIMALS as any)[stable];
-        }
-    }
-    return ethers.utils.parseUnits(amountToApprove, collateralDecimals);
-};
-
-export const parseSellAmount = (
-    sellAmount: number | string,
-    // isNonDefaultStable: boolean,
-    // isBuy: boolean,
-    // isPolygon: boolean,
-    selectedStableIndex: number,
-    networkId: NetworkId
-) => {
-    return stableCoinParser(Number(sellAmount)?.toString(), networkId, COLLATERALS[selectedStableIndex]);
 };
 
 export const getEstimatedGasFees = async (

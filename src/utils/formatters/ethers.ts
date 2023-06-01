@@ -13,16 +13,12 @@ export const bigNumberFormatter = (value: BigNumberish, decimals?: number) =>
     Number(ethers.utils.formatUnits(value, decimals ? decimals : 18));
 
 export const stableCoinFormatter = (value: BigNumberish, networkId: number, currency?: string) => {
-    if (networkId == POLYGON_ID) {
+    if (networkId == POLYGON_ID || networkId == Network.Arbitrum) {
         return Number(ethers.utils.formatUnits(value, 6));
     }
 
     if (networkId == Network.BSC) {
         return Number(ethers.utils.formatUnits(value, 18));
-    }
-
-    if (networkId == Network.Arbitrum) {
-        return Number(ethers.utils.formatUnits(value, 6));
     }
 
     if (currency && STABLE_DECIMALS[currency as StableCoins]) {
@@ -33,22 +29,17 @@ export const stableCoinFormatter = (value: BigNumberish, networkId: number, curr
 };
 
 export const stableCoinParser = (value: string, networkId: number, currency?: string) => {
-    try {
-        if (networkId == POLYGON_ID || networkId == Network.Arbitrum) {
-            return ethers.utils.parseUnits(value, 6);
-        }
-        if (networkId == Network.BSC) {
-            return ethers.utils.parseUnits(value, STABLE_DECIMALS['BUSD']);
-        }
-        if (currency && STABLE_DECIMALS[currency as StableCoins]) {
-            return ethers.utils.parseUnits(value, STABLE_DECIMALS[currency as StableCoins]);
-        }
-
-        return ethers.utils.parseUnits(value, networkId === POLYGON_ID ? 6 : 18);
-    } catch (e) {
-        console.log('e ', e);
-        return ethers.utils.parseUnits(value, networkId === POLYGON_ID ? 6 : 18);
+    if (networkId == POLYGON_ID || networkId == Network.Arbitrum) {
+        return ethers.utils.parseUnits(value, 6);
     }
+    if (networkId == Network.BSC) {
+        return ethers.utils.parseUnits(value, 18);
+    }
+    if (currency && STABLE_DECIMALS[currency as StableCoins]) {
+        return ethers.utils.parseUnits(value, STABLE_DECIMALS[currency as StableCoins]);
+    }
+
+    return ethers.utils.parseUnits(value, 18);
 };
 
 export const getAddress = (addr: string) => ethers.utils.getAddress(addr);

@@ -148,14 +148,14 @@ const StyledInput = styled(Input)<{ padding?: string }>`
 const RightContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
-    bottom: 8px;
+    bottom: 7px;
 `;
 
 const CurrencyLabel = styled.label<{ hasSeparator?: boolean }>`
-    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
+    border-left: ${(props) => (props.hasSeparator ? `2px solid ${props.theme.input.borderColor.primary}` : 'none')};
     font-weight: bold;
     font-size: 13px;
-    line-height: 15px;
+    line-height: 20px;
     color: ${(props) => props.theme.input.textColor.primary};
     padding-left: 8px;
     padding-right: 12px;

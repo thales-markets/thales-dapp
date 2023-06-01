@@ -253,6 +253,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                 <ApprovalModal
                     defaultAmount={amountToStake}
                     tokenSymbol={LP_TOKEN}
+                    isNonStable={true}
                     isAllowing={isAllowingStake}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
