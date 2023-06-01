@@ -302,7 +302,6 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
     ) : (
         <>
             {optBalances.long > 0 &&
-                positionCurrentValue.longPositionValue &&
                 positionCurrentValue.longPositionValue > 0 &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.longPositionValue)}`}
             {(isLongOutOfLiqudity || areBothOutOfLiqudity) && (
@@ -327,7 +326,6 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {hasBothPositions && !areBothOutOfLiqudity && ' / '}
 
             {optBalances.short > 0 &&
-                positionCurrentValue.shortPositionValue &&
                 positionCurrentValue.shortPositionValue > 0 &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.shortPositionValue)}`}
             {isShortOutOfLiqudity && !areBothOutOfLiqudity && (

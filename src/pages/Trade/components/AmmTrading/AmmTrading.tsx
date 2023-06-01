@@ -162,16 +162,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
         setIsAmmTradingDisabled(isTradingDisabled);
-    }, [
-        isRangedAmm,
-        ammMaxLimitsQuery.data,
-        ammMaxLimitsQuery.isSuccess,
-        isUpPosition,
-        rangedAmmMaxLimitsQuery.data,
-        rangedAmmMaxLimitsQuery.isSuccess,
-        isInPosition,
-        isBuy,
-    ]);
+    }, [isRangedAmm, ammMaxLimitsQuery, isUpPosition, rangedAmmMaxLimitsQuery, isInPosition, isBuy]);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
