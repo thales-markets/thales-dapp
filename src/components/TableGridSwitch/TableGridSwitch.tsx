@@ -1,7 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 import Switch from 'components/SwitchInput/SwitchInput';
+import { ThemeInterface } from 'types/ui';
 
 type TableGridSwitchProps = {
     labels: Array<string>;
@@ -10,15 +11,11 @@ type TableGridSwitchProps = {
 };
 
 const TableGridSwitch: React.FC<TableGridSwitchProps> = ({ labels, value, clickEventHandler }) => {
+    const theme: ThemeInterface = useTheme();
     return (
         <Wrapper>
             <Label>{labels[0]}</Label>
-            <Switch
-                active={value}
-                handleClick={() => clickEventHandler()}
-                dotBackground={'var(--input-border-color)'}
-                borderColor={'var(--input-border-color)'}
-            />
+            <Switch active={value} handleClick={() => clickEventHandler()} borderColor={theme.borderColor.primary} />
             <Label>{labels[1]}</Label>
         </Wrapper>
     );
@@ -34,7 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.span`
-    color: var(--input-border-color);
+    color: ${(props) => props.theme.textColor.primary};
     display: block;
     margin: 0px 5px 0px 5px;
 `;

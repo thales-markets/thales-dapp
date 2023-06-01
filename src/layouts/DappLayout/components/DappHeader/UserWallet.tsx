@@ -168,9 +168,8 @@ const NetworkDropDown = styled.div`
     left: 130px;
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
-    background-color: var(--background);
-    border: 1px solid rgba(100, 217, 254, 0.5);
+    border-radius: 8px;
+    background: ${(props) => props.theme.background.secondary};
     width: 130px;
     max-width: 130px;
     padding: 5px;
@@ -197,6 +196,10 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     width: 100%;
     padding: ${(props) => (props.selectedItem ? '6px 13px' : '6px')};
     font-size: 14px;
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
+    }
 `;
 
 const Arrow = styled.i`

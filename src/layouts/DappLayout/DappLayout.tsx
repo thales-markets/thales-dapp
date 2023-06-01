@@ -105,27 +105,6 @@ const Background = styled.section`
         overflow: hidden;
     }
     background-color: ${(props) => props.theme.background.primary};
-    --background: var(--color-primary);
-    --shadow: 0px 0px 40px var(--color-highlight);
-    --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
-    --input-border-color: var(--color-highlight);
-    --table-border-color: rgba(100, 217, 254, 0.5);
-    --table-border-hover-color: rgba(100, 217, 254, 1);
-    --table-header-text-color: var(--color-highlight);
-    --disabled-item: #8181ac;
-    --enabled-item: #f7f7f7;
-    --primary-filter-menu-active: var(--color-highlight);
-    --hotmarket-arrow-enabled: var(--color-highlight);
-    --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    --scrollbar-width: 10px;
-    --color-scrollbar-hover: #f7f7f7;
-    --button-bg-active: var(--color-highlight);
-    --button-text-active: var(--color-primary);
-    --button-bg-inactive: transparent;
-    --button-text-inactive: var(--color-highlight);
-    --notice-text: var(--color-highlight);
-    --amm-switch-circle: #f7f7f7;
-    --card-border-color: rgba(100, 217, 254, 0.3);
 `;
 
 const Wrapper = styled.div`

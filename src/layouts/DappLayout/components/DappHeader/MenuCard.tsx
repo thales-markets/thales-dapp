@@ -38,19 +38,17 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
 const MenuCard = styled.div<{ isVisible: boolean }>`
     display: ${(props) => (props.isVisible ? 'block' : 'none')};
     position: absolute;
-    max-width: 280px;
+    min-width: 360px;
     right: 35px;
     max-height: 95vh;
     overflow-y: auto;
     top: 40px;
-    border: 1px solid var(--color-highlight);
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     box-sizing: border-box;
     border-radius: 15px;
-    z-index: 1000;
+    z-index: 2000;
     background-color: ${(props) => props.theme.background.primary};
-    --background: var(--color-primary);
-    --icon-color: #f7f7f7;
-    --shadow-color: 'var(--color-highlight)';
+
     @media (max-width: 1024px) {
         width: 100%;
         max-width: 100%;
@@ -63,7 +61,6 @@ const MenuCard = styled.div<{ isVisible: boolean }>`
         border: none;
         position: fixed;
     }
-    box-shadow: var(--shadow);
 `;
 
 const Container = styled.div`

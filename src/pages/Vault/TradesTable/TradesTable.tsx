@@ -5,7 +5,6 @@ import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/TableV2';
 import { buildOptionsMarketLink } from 'utils/routes';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import './style.css';
 import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
@@ -45,7 +44,6 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                     accessor: 'currencyKey',
                     Cell: (cellProps: CellProps<VaultTrade, VaultTrade['currencyKey']>) => (
                         <SPAAnchor
-                            className="hover-underline"
                             onClick={(e) => e.stopPropagation()}
                             href={buildOptionsMarketLink(cellProps.row.original.market)}
                         >
@@ -54,7 +52,7 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                                 height={`${isMobile ? '18px' : '22px'}`}
                                 currencyKey={cellProps.cell.value}
                             />
-                            {cellProps.cell.value}
+                            <CurrencyName>{cellProps.cell.value}</CurrencyName>
                         </SPAAnchor>
                     ),
                     sortable: true,
@@ -157,6 +155,12 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
 
 const Status = styled.span<{ color: string }>`
     color: ${(props) => props.color};
+`;
+
+const CurrencyName = styled.span`
+    &:hover {
+        text-decoration: underline;
+    }
 `;
 
 const Icon = styled.i<{ color: string; marginLeft?: string; marginRight?: string }>`

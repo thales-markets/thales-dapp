@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { withTranslation } from 'react-i18next';
 import i18n from 'i18n';
+import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
+import React, { useState } from 'react';
+import { useTranslation, withTranslation } from 'react-i18next';
 import styled from 'styled-components';
-
-import { DEFAULT_LANGUAGE, SupportedLanguages, LanguageNameMap } from 'i18n/config';
-import { useTranslation } from 'react-i18next';
-
-import { FlexDivRow, UserCardSectionHeader } from 'theme/common';
+import { FlexDivRow } from 'theme/common';
 
 const LanguageCardSelector: React.FC = () => {
     const [selectedLanguage, setLanguage] = useState(
@@ -16,8 +13,8 @@ const LanguageCardSelector: React.FC = () => {
     const { t } = useTranslation();
 
     return (
-        <>
-            <UserCardSectionHeader>{t('common.user-info-card.language')}</UserCardSectionHeader>
+        <Container>
+            <UserCardSectionHeader>{t('common.user-info-card.language')}:</UserCardSectionHeader>
             <FlexDivRow>
                 {Object.values(SupportedLanguages).map((language: string) => (
                     <LanguageContainer
@@ -33,16 +30,28 @@ const LanguageCardSelector: React.FC = () => {
                     </LanguageContainer>
                 ))}
             </FlexDivRow>
-        </>
+        </Container>
     );
 };
+
+const Container = styled.div`
+    margin-top: 10px;
+`;
+
+const UserCardSectionHeader = styled.span`
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    color: ${(props) => props.theme.textColor.primary};
+    text-transform: uppercase;
+`;
 
 const LanguageContainer = styled.div<{ selected?: boolean }>`
     border: none;
     cursor: pointer;
     text-align: center;
     margin-top: 10px;
-    color: ${(props: any) => (props.selected ? 'var(--color-white)' : '#8181ac')};
+    color: ${(props: any) => (props.selected ? props.theme.textColor.primary : props.theme.textColor.secondary)};
 `;
 
 const FlagIcon = styled.i`

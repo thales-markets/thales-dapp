@@ -51,14 +51,6 @@ export const LoaderContainer = styled.div`
     transform: translate(-50%, -50%);
 `;
 
-export const UserCardSectionHeader = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 20px;
-    color: ${(props) => props.theme.textColor.secondary};
-    text-transform: uppercase;
-`;
-
 // TODO: Update color names
 export const Colors = {
     GRAY: '#2B3139',

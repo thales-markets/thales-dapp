@@ -233,9 +233,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         />
                         <Tooltip
                             contentStyle={{
-                                backgroundColor: 'var(--color-tertiary)',
-                                color: 'var(--color-white)',
+                                backgroundColor: theme.background.secondary,
+                                color: theme.textColor.primary,
                                 border: 'none',
+                                borderRadius: '8px',
                                 fontSize: 14,
                             }}
                         />
