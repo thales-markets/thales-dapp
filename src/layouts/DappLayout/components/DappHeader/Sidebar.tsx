@@ -224,7 +224,7 @@ const ItemsContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    --scrollbar-width: 0%;
+    margin-right: -10px;
     height: 100%;
     @media (max-width: 1024px) {
         flex-direction: row;
@@ -247,10 +247,6 @@ const SidebarHtml = styled.nav`
 
     .sidebar-logoBig {
         display: none;
-    }
-
-    *::-webkit-scrollbar-thumb {
-        background: transparent;
     }
 
     @media (min-width: 1024px) {
