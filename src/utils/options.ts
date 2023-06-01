@@ -1,11 +1,8 @@
 import orderBy from 'lodash/orderBy';
-import { COLLATERALS, PHASE } from '../constants/options';
-import { OptionSide, OptionsMarkets, Phase, RangedMarketPositionType } from '../types/options';
-import { getStableCoinForNetwork, getSynthAsset } from './currency';
+import { PHASE } from '../constants/options';
+import { OptionsMarkets, Phase } from '../types/options';
+import { getSynthAsset } from './currency';
 import { Color } from '@material-ui/lab';
-import { ethers } from 'ethers';
-import { NetworkId } from './network';
-import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { formatCurrency } from './formatters/number';
 
 export enum SortDirection {
@@ -63,41 +60,6 @@ export const dispatchMarketNotification = (message: string, type?: Color) => {
         detail: { text: message, type: type },
     });
     document.dispatchEvent(marketNotificationEvent);
-};
-
-export const getSellToken = (
-    isNonDefaultStable: boolean,
-    isBuy: boolean,
-    isFirstPosition: boolean,
-    firstPositionAddress: string,
-    secondPositionAddress: string,
-    stableIndex: number,
-    collateralContract: ethers.Contract | undefined,
-    multiCollateralContract?: Array<ethers.Contract | undefined>
-) => {
-    if (isNonDefaultStable) {
-        return multiCollateralContract ? multiCollateralContract[stableIndex]?.address : undefined;
-    } else if (isBuy) {
-        return collateralContract?.address;
-    } else {
-        return isFirstPosition ? firstPositionAddress : secondPositionAddress;
-    }
-};
-
-export const getSellTokenCurrency = (
-    isNonDefaultStable: boolean,
-    isBuy: boolean,
-    networkId: NetworkId,
-    positionSide: RangedMarketPositionType | OptionSide,
-    stableIndex: number
-) => {
-    if (isNonDefaultStable) {
-        return COLLATERALS[stableIndex];
-    } else if (isBuy) {
-        return getStableCoinForNetwork(networkId);
-    } else {
-        return OPTIONS_CURRENCY_MAP[positionSide];
-    }
 };
 
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);

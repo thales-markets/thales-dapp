@@ -267,6 +267,7 @@ const Bridge: React.FC = () => {
                 <ApprovalModal
                     defaultAmount={amount}
                     tokenSymbol={THALES_CURRENCY}
+                    isNonStable={true}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

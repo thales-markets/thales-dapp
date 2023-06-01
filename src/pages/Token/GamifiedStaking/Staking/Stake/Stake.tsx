@@ -285,6 +285,7 @@ const Stake: React.FC = () => {
                 <ApprovalModal
                     defaultAmount={amountToStake}
                     tokenSymbol={THALES_CURRENCY}
+                    isNonStable={true}
                     isAllowing={isAllowingStake}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

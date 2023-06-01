@@ -30,7 +30,9 @@ import { RootState } from 'redux/rootReducer';
 import {
     AccountMarketInfo,
     MarketInfo,
+    OptionsMarketInfo,
     RangedMarketBalanceInfo,
+    RangedMarketData,
     RangedMarketPerPosition,
     StableCoins,
 } from 'types/options';
@@ -61,6 +63,8 @@ import {
     FinalizeTrade,
     TradingDetailsContainer,
 } from './styled-components';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -72,6 +76,8 @@ type AmmTradingProps = {
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
 const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, market, isDetailsPage }) => {
+    const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
+    const contextMarket = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
@@ -107,7 +113,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported && isBuy;
-    const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
 
@@ -270,25 +275,30 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const isFormDisabled = !market.address || isSubmitting || outOfLiquidity || isAmmTradingDisabled;
 
+    const approvalCurrencyAddress = isBuy
+        ? collateral.address
+        : isRangedMarket
+        ? market.positionType === Positions.IN
+            ? (contextMarket as RangedMarketData).inAddress
+            : (contextMarket as RangedMarketData).outAddress
+        : market.positionType === Positions.UP
+        ? (contextMarket as OptionsMarketInfo).longAddress
+        : (contextMarket as OptionsMarketInfo).shortAddress;
+    const approvalCurrency = isBuy ? collateral.currency : market.positionType;
+
     useEffect(() => {
-        if (!collateral.address) {
+        if (!approvalCurrencyAddress) {
             return;
         }
-        const erc20Instance = new ethers.Contract(
-            collateral.address as any,
-            erc20Contract.abi,
-            snxJSConnector.provider
-        );
+        const erc20Instance = new ethers.Contract(approvalCurrencyAddress, erc20Contract.abi, snxJSConnector.provider);
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
         const getAllowance = async () => {
             try {
-                const parsedAmount: BigNumber = stableCoinParser(
-                    Number(paidAmount)?.toString(),
-                    networkId,
-                    COLLATERALS[selectedStableIndex]
-                );
+                const parsedAmount: BigNumber = isBuy
+                    ? stableCoinParser(Number(paidAmount).toString(), networkId, COLLATERALS[selectedStableIndex])
+                    : ethers.utils.parseEther(Number(paidAmount).toString());
 
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
 
@@ -297,16 +307,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 console.log(e);
             }
         };
-        if (isBuy) {
-            if (isWalletConnected && erc20Instance.provider) {
-                getAllowance();
-            }
-        } else {
-            setAllowance(true);
+        if (isWalletConnected && erc20Instance.provider) {
+            getAllowance();
         }
     }, [
         dispatch,
-        collateral.address,
+        approvalCurrencyAddress,
         networkId,
         paidAmount,
         selectedStableIndex,
@@ -319,7 +325,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
+        if (!approvalCurrencyAddress) {
+            return;
+        }
+        const erc20Instance = new ethers.Contract(approvalCurrencyAddress, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
@@ -610,11 +619,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             return (
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve').toUpperCase() + ' ' + collateral.currency
-                        : t('common.enable-wallet-access.approve-progress').toUpperCase() +
-                          ' ' +
-                          collateral.currency +
-                          '...'}
+                        ? `${t('common.enable-wallet-access.approve')}  ${approvalCurrency}`
+                        : `${t('common.enable-wallet-access.approve-progress')}  ${approvalCurrency}...`}
                 </Button>
             );
         }
@@ -757,7 +763,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
                     defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(paidAmount))}
-                    tokenSymbol={collateral.currency}
+                    tokenSymbol={approvalCurrency}
+                    isNonStable={!isBuy}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
