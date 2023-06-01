@@ -115,7 +115,7 @@ const Title = styled.p`
     font-size: 5.5em;
     line-height: 92.3%;
     text-align: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 600px) {
         font-size: 38px;
     }
@@ -127,7 +127,7 @@ const Subtitle = styled.p`
     font-size: 2.5em;
     line-height: 95%;
     text-align: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 20px;
     @media (max-width: 600px) {
         font-size: 20px;
@@ -192,7 +192,7 @@ const LearnButton = styled(Button)`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: pointer;
     transition: 0.2s;
     z-index: 4;
@@ -418,7 +418,7 @@ const ContTitle = styled.p`
     font-weight: bold;
     font-size: 3.5em;
     line-height: 95%;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 10px;
     margin-bottom: 0.75em;
     @media (max-width: 800px) {
@@ -440,7 +440,7 @@ const ContSubTitle = styled.p`
 
         text-align: justify;
         white-space: pre-line;
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
         @media (max-width: 600px) {
             padding-top: 20px;
         }
@@ -455,7 +455,7 @@ const Link = styled.a`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: pointer;
     display: flex;
     align-items: inherit;
@@ -469,7 +469,7 @@ const Logo = styled.i`
     margin-top: 4px;
     font-size: 5.2em;
     line-height: 1.75em;
-    color: var(--color-white) !important;
+    color: ${(props) => props.theme.textColor.primary} !important;
     position: absolute;
 `;
 

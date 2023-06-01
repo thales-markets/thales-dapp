@@ -72,7 +72,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     ${(props) => (props?.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
-    color: var(--color-white) !important;
+    color: ${(props) => props.theme.textColor.primary} !important;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         text-align: center;
     }
