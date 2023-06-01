@@ -22,6 +22,7 @@ import Modal from 'components/Modal';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 import { WizardSteps } from 'constants/wizard';
+import { Colors } from 'theme/common';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -153,7 +154,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (!isWalletConnected) return;
         setCurrentStep(WizardSteps.TRADE);
     };
-
+    console.log(iframe === Provider.MT_PELERIN);
     return (
         <>
             <CardWrapper ref={ref}>
@@ -357,8 +358,12 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Modal>
             )}
             {iframe.length > 0 && (
-                <Modal title="" onClose={() => setIframe('')} shouldCloseOnOverlayClick={true}>
-                    <IFrameWrapper>
+                <Modal
+                    title={iframe === Provider.BANXA ? t('wizard-page.buy-with-banxa') : t('wizard-page.buy-with-mtp')}
+                    onClose={() => setIframe('')}
+                    shouldCloseOnOverlayClick={true}
+                >
+                    <IFrameWrapper background={iframe === Provider.BANXA ? '' : Colors.WHITE}>
                         {iframeLoader && <SimpleLoader />}
                         <IFrame src={iframe} onLoad={() => setIframeLoader(false)} />
                     </IFrameWrapper>
@@ -647,9 +652,11 @@ const Logo = styled.div<{ logoType: Provider }>`
     margin-left: 20px;
 `;
 
-const IFrameWrapper = styled.div`
+const IFrameWrapper = styled.div<{ background?: string }>`
     width: 530px;
     height: 635px;
+    border-radius: 8px;
+    ${(props) => (props.background ? `background: ${props.background};` : '')}
     margin: auto;
     outline: none;
 `;

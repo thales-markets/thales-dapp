@@ -230,6 +230,8 @@
         "answer16": "Thales Market currently uses sUSD as the main form of collateral when purchasing positions, but other stable coins are also utilized.  These include USDC, USDT and DAI.",
         "video-header": "Video tutorial",
         "buy-title": "Buy, Bridge & Send",
+        "buy-with-banxa": "Buy with Banxa",
+        "buy-with-mtp": "Buy with Mt Pelerin",
         "buy-button1": "Buy with card",
         "buy-button2": "Buy with card",
         "buy-button3": "Bridge to {{network}}",
