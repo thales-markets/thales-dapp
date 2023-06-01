@@ -1,9 +1,6 @@
 import { ZERO_ADDRESS } from '@1inch/limit-order-protocol';
-import { COLLATERALS, COLLATERALS_INDEX, STABLE_DECIMALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
-import { OptionSide, RangedMarketPositionType, StableCoins } from 'types/options';
-import { stableCoinParser } from './formatters/ethers';
-import { getIsArbitrum, getIsPolygon, Network, NetworkId } from './network';
+import { OptionSide, RangedMarketPositionType } from 'types/options';
 
 export const getQuoteFromAMM = (
     isNonDefaultStable: boolean,
