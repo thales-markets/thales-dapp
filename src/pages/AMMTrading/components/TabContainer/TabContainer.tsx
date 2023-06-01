@@ -19,7 +19,6 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RowCard from '../RowCard';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
 type TabContainerProps = {
     isRangedMarket: boolean;
@@ -74,7 +73,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
     return (
         <>
             <Container>
-                {isRangedMarket ? <RowCardRangedMarket /> : <RowCard />}
+                <RowCard isRangedMarket={isRangedMarket} />
                 <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
                     {currentTab
                         ? t('options.market.row-card.current-view', {

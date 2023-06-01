@@ -1,4 +1,5 @@
 import { LINKS } from 'constants/links';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -10,7 +11,7 @@ export const Container = styled(FlexDivSpaceBetween)`
     padding: 5px 10px;
     gap: 8px;
     width: 600px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
         gap: 0;
         display: grid;
@@ -29,7 +30,7 @@ export const ColumnContainer = styled(FlexDivColumn)<{
 }>`
     align-items: ${(props) => props.alignItems || 'baseline'};
     justify-content: flex-start;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 10px;
     }
 `;

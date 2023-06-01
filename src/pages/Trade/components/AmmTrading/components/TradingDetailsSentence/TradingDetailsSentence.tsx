@@ -17,7 +17,7 @@ type TradingDetailsSentenceProps = {
     currencyKey: string;
     maturityDate: number;
     market: MarketInfo | RangedMarketPerPosition;
-    isRangedAmm: boolean;
+    isRangedMarket: boolean;
     isFetchingQuote: boolean;
     priceProfit: number | string;
     paidAmount: number | string;
@@ -28,7 +28,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     currencyKey,
     maturityDate,
     market,
-    isRangedAmm,
+    isRangedMarket,
     isFetchingQuote,
     priceProfit,
     paidAmount,
@@ -61,7 +61,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     {market.address ? (
                         <>
                             <SentanceTextValue uppercase={true}>{positionTypeFormatted}</SentanceTextValue>
-                            {isRangedAmm ? (
+                            {isRangedMarket ? (
                                 !breakFirstLine && (
                                     <>
                                         <SentanceTextValue>
@@ -92,7 +92,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     )}
                 </Text>
             </FlexDivCentered>
-            {breakFirstLine && isRangedAmm && market.address && (
+            {breakFirstLine && isRangedMarket && market.address && (
                 <FlexDivCentered>
                     <Text>
                         <SentanceTextValue>
