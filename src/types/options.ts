@@ -1,4 +1,5 @@
 import { Positions } from 'constants/options';
+import { BigNumber } from 'ethers';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
@@ -218,4 +219,18 @@ export type UsersAssets = {
         longValue?: number;
         shortValue?: number;
     };
+};
+
+export type UserLivePositions = {
+    positionAddress: string;
+    currencyKey: string;
+    strikePrice: string;
+    amount: number;
+    amountBigNumber: BigNumber;
+    maturityDate: number;
+    market: string;
+    side: Positions;
+    paid: number;
+    value: number;
+    claimable?: boolean;
 };
