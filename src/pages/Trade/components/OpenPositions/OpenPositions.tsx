@@ -48,7 +48,7 @@ const OpenPositions: React.FC = () => {
         positionsQuery,
     ]);
 
-    const handleSubmit = async (position: UserLivePositions) => {
+    const handleCashout = async (position: UserLivePositions) => {
         const isRangedMarket = [Positions.IN, Positions.OUT].includes(position.side);
 
         const fetchAmmPriceData = async (totalToPay: number) => {
@@ -227,7 +227,7 @@ const OpenPositions: React.FC = () => {
                         {...defaultButtonProps}
                         disabled={submittingPosition === position.positionAddress}
                         additionalStyles={additionalButtonStyle}
-                        onClick={() => handleSubmit(position)}
+                        onClick={() => handleCashout(position)}
                     >
                         {`${
                             submittingPosition === position.positionAddress
@@ -447,6 +447,7 @@ const NoPositionsText = styled.span`
 `;
 
 const Separator = styled.div`
+    min-width: 2px;
     width: 2px;
     height: 14px;
     background: ${(props) => props.theme.background.secondary};
