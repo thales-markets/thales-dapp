@@ -619,8 +619,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             return (
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? `${t('common.enable-wallet-access.approve')}  ${approvalCurrency}`
-                        : `${t('common.enable-wallet-access.approve-progress')}  ${approvalCurrency}...`}
+                        ? `${t('common.enable-wallet-access.approve')} ${approvalCurrency}`
+                        : `${t('common.enable-wallet-access.approve-progress')} ${approvalCurrency}...`}
                 </Button>
             );
         }

@@ -7,11 +7,11 @@ import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { UserLivePositions } from 'types/options';
@@ -24,6 +24,11 @@ import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchUserOpenPositions } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { checkAllowance } from 'utils/network';
+import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
+
+const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -37,8 +42,75 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [hasAllowance, setAllowance] = useState(false);
+    const [isAllowing, setIsAllowing] = useState(false);
+
+    useEffect(() => {
+        const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.provider);
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+
+        const getAllowance = async () => {
+            try {
+                const allowance = await checkAllowance(
+                    position.amountBigNumber,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setAllowance(allowance);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        if (isWalletConnected && erc20Instance.provider) {
+            getAllowance();
+        }
+    }, [
+        position.positionAddress,
+        position.amountBigNumber,
+        networkId,
+        walletAddress,
+        isWalletConnected,
+        hasAllowance,
+        isAllowing,
+    ]);
+
+    const handleAllowance = async (approveAmount: BigNumber) => {
+        const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.signer);
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+
+        const id = toast.loading(t('amm.progress'));
+        try {
+            setIsAllowing(true);
+            const providerOptions = {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            };
+
+            const tx = (await erc20Instance.approve(
+                addressToApprove,
+                approveAmount,
+                providerOptions
+            )) as ethers.ContractTransaction;
+            setOpenApprovalModal(false);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
+                handleCashout();
+                setIsAllowing(false);
+            }
+        } catch (e) {
+            console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            setIsAllowing(false);
+            setOpenApprovalModal(false);
+        }
+    };
 
     const handleCashout = async () => {
         const fetchAmmPriceData = async (totalToPay: number) => {
@@ -211,15 +283,17 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
             return (
                 <Button
                     {...defaultButtonProps}
-                    disabled={isSubmitting}
+                    disabled={isAllowing || isSubmitting}
                     additionalStyles={additionalButtonStyle}
-                    onClick={() => handleCashout()}
+                    onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
                 >
-                    {`${
-                        isSubmitting
-                            ? t(`options.trade.user-positions.cash-out-progress`)
-                            : t('options.trade.user-positions.cash-out')
-                    } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
+                    {isAllowing
+                        ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
+                        : `${
+                              isSubmitting
+                                  ? t(`options.trade.user-positions.cash-out-progress`)
+                                  : t('options.trade.user-positions.cash-out')
+                          } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
                 </Button>
             );
         }
@@ -261,6 +335,17 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 </FlexContainer>
             </AlignedFlex>
             {getButton()}
+            {openApprovalModal && (
+                <ApprovalModal
+                    // add three percent to approval amount to take into account price changes
+                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * position.amount)}
+                    tokenSymbol={position.side}
+                    isNonStable={true}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </Position>
     );
 };
