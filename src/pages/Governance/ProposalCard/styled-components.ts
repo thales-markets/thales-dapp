@@ -31,12 +31,12 @@ export const Card = styled.div`
 
 export const Status = styled(FlexDivCentered)<{ status: string }>`
     font-weight: bold;
-    color: ${(props) => getStatusColor(props.status)};
+    color: ${(props) => getStatusColor(props.status, props.theme)};
     text-transform: uppercase;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.5px;
-    border: 2px solid ${(props) => getStatusColor(props.status)};
+    border: 2px solid ${(props) => getStatusColor(props.status, props.theme)};
     border-radius: 8px;
     padding: 0px 20px;
     height: 36px;

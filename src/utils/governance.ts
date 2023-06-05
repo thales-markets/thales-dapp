@@ -8,7 +8,7 @@ import {
     PROPOSAL_APPROVAL_VOTES,
     PROPOSAL_APPROVAL_VOTES_OLD,
 } from 'constants/governance';
-import { Colors } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 
 function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
@@ -78,13 +78,13 @@ export const getProposalApprovalData = (proposalStartDate: number) => {
     return { numberOfCouncilMembers, proposalApprovalVotes };
 };
 
-export const getStatusColor = (status: string) => {
+export const getStatusColor = (status: string, theme: ThemeInterface) => {
     switch (status) {
         case StatusEnum.Pending:
-            return Colors.GRAY_LIGHT;
+            return theme.textColor.secondary;
         case StatusEnum.Closed:
-            return Colors.BLUE_DARK;
+            return theme.info.textColor.secondary;
         default:
-            return Colors.GREEN;
+            return theme.textColor.quaternary;
     }
 };

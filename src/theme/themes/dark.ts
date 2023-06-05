@@ -102,6 +102,7 @@ export default {
         },
         textColor: {
             primary: Colors.BLUE,
+            secondary: Colors.BLUE_DARK,
         },
         borderColor: {
             primary: Colors.BLUE,
