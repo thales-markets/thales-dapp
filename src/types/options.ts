@@ -77,6 +77,7 @@ export type MarketInfo = {
     strikePrice: number;
     discount: number;
     positionType: Positions;
+    url?: string;
 };
 
 export type RangedMarketPerPosition = {
@@ -89,6 +90,7 @@ export type RangedMarketPerPosition = {
     rightPrice: number;
     discount: number;
     positionType: Positions;
+    url?: string;
 };
 
 export type RangedMarket = {

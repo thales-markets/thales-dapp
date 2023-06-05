@@ -1,3 +1,4 @@
+import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -205,6 +206,7 @@ const Table: React.FC<TableProps> = ({
                         {stickyRow ?? <></>}
                         {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
                             prepareRow(row);
+                            console.log(row);
 
                             return (
                                 <ExpandableRow key={rowIndex}>
@@ -219,27 +221,56 @@ const Table: React.FC<TableProps> = ({
                                         </ExpandableRowReact>
                                     ) : (
                                         <>
-                                            <TableRow
-                                                selected={selectedRowIndex === rowIndex}
-                                                style={tableRowStyles}
-                                                {...row.getRowProps()}
-                                                cursorPointer={!!onTableRowClick}
-                                                onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
-                                            >
-                                                {row.cells.map((cell, cellIndex: any) => {
-                                                    return (
-                                                        <TableCell
-                                                            style={tableRowCellStyles}
-                                                            {...cell.getCellProps()}
-                                                            key={cellIndex}
-                                                            width={cell.column.width}
-                                                            id={cell.column.id}
-                                                        >
-                                                            {cell.render('Cell')}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
+                                            {(row.original as any).url && selectedRowIndex === rowIndex ? (
+                                                <SPAAnchor href={(row.original as any).url} key={rowIndex}>
+                                                    <TableRow
+                                                        selected={selectedRowIndex === rowIndex}
+                                                        style={tableRowStyles}
+                                                        {...row.getRowProps()}
+                                                        cursorPointer={!!onTableRowClick}
+                                                        onClick={
+                                                            onTableRowClick ? () => onTableRowClick(row) : undefined
+                                                        }
+                                                    >
+                                                        {row.cells.map((cell, cellIndex: any) => {
+                                                            return (
+                                                                <TableCell
+                                                                    style={tableRowCellStyles}
+                                                                    {...cell.getCellProps()}
+                                                                    key={cellIndex}
+                                                                    width={cell.column.width}
+                                                                    id={cell.column.id}
+                                                                >
+                                                                    {cell.render('Cell')}
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                    </TableRow>
+                                                </SPAAnchor>
+                                            ) : (
+                                                <TableRow
+                                                    selected={selectedRowIndex === rowIndex}
+                                                    style={tableRowStyles}
+                                                    {...row.getRowProps()}
+                                                    cursorPointer={!!onTableRowClick}
+                                                    onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
+                                                >
+                                                    {row.cells.map((cell, cellIndex: any) => {
+                                                        return (
+                                                            <TableCell
+                                                                style={tableRowCellStyles}
+                                                                {...cell.getCellProps()}
+                                                                key={cellIndex}
+                                                                width={cell.column.width}
+                                                                id={cell.column.id}
+                                                            >
+                                                                {cell.render('Cell')}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            )}
+
                                             {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
                                                 <PriceWrapper ref={elementRef as any}>
                                                     <Price>
