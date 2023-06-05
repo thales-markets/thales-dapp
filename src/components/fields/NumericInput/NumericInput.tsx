@@ -148,7 +148,7 @@ const StyledInput = styled(Input)<{ padding?: string }>`
 const RightContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
-    bottom: 7px;
+    bottom: 6px;
 `;
 
 const CurrencyLabel = styled.label<{ hasSeparator?: boolean }>`
@@ -171,7 +171,7 @@ const MaxButton = styled.button`
     border: none;
     font-weight: 700;
     font-size: 13px;
-    line-height: 15px;
+    line-height: 20px;
     color: ${(props) => props.theme.button.textColor.quaternary};
     text-transform: uppercase;
     cursor: pointer;
