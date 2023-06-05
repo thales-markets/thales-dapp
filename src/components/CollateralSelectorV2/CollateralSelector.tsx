@@ -64,7 +64,7 @@ const Text = styled.span`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
-    line-height: 15px;
+    line-height: 20px;
 `;
 
 const TextCollateral = styled(Text)`
