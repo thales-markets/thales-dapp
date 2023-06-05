@@ -1,4 +1,4 @@
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import React from 'react';
 import styled from 'styled-components';
 import { FieldContainer, FieldLabel, Input } from '../common';

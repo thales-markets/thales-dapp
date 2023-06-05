@@ -1,7 +1,7 @@
 import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
 import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
 import Currency from 'components/Currency';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useMemo } from 'react';

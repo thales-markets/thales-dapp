@@ -46,7 +46,7 @@ import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
 import { toast } from 'react-toastify';
 import ReadMoreButton from 'components/ReadMoreButton';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';

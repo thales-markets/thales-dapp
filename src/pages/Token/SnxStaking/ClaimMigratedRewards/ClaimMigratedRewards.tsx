@@ -25,7 +25,7 @@ import {
 } from '../gridComponents';
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import styled from 'styled-components';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import Button from 'components/Button';
 
 const ClaimMigratedRewards: React.FC = () => {

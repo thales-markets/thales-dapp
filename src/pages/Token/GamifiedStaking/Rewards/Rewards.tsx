@@ -3,7 +3,7 @@ import arrowLink from 'assets/images/arrow-link.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';

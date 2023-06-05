@@ -19,7 +19,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
 import SearchInput from 'components/SearchInput';
 

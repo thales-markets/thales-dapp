@@ -7,7 +7,7 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import SimpleLoader from 'components/SimpleLoader';
 import Switch from 'components/SwitchInput/SwitchInput';
 import TimeRemaining from 'components/TimeRemaining';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
 import { USD_SIGN } from 'constants/currency';

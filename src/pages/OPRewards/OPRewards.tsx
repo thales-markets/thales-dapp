@@ -25,7 +25,7 @@ import { RootState } from 'redux/rootReducer';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import { truncateAddress } from 'utils/formatters/string';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import TimeRemaining from 'components/TimeRemaining';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';

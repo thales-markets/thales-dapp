@@ -1,4 +1,4 @@
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -6,7 +6,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import Table from 'components/TableV2';
 import TimeRemaining from 'components/TimeRemaining';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { Positions } from 'enums/options';
