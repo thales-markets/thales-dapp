@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import { getStableCoinForNetwork } from 'utils/currency';
 import {
     calculateAndFormatPercentage,

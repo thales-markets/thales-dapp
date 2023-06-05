@@ -14,7 +14,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { TokenInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';

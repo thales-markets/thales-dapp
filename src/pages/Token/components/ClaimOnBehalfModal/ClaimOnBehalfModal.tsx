@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { InputContainer } from '../styled-components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';

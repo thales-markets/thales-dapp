@@ -21,7 +21,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';

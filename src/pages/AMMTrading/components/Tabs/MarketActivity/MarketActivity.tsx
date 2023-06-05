@@ -17,7 +17,7 @@ import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';

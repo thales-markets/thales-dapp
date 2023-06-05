@@ -3,7 +3,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import { setSelectedCollateral } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
 
 type CollateralSelectorProps = {
     collateralArray: Array<string>;

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
 import History from '../History';
 import Results from '../Results';

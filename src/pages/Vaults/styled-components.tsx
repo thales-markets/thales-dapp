@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivRow } from 'theme/common';
+import { FlexDivColumn, FlexDivRow } from 'styles/common';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;

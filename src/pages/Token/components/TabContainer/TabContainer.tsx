@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { TokenTabSection } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';

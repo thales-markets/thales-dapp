@@ -2,7 +2,7 @@ import React from 'react';
 import { ReactComponent as ValidationErrorIcon } from 'assets/images/validation-error-triangle.svg';
 import { ReactComponent as CloseIcon } from 'assets/images/close-red.svg';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 
 type ValidationMessageProps = {
     showValidation: boolean;

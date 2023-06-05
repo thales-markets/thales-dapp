@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import Results from '../ProposalDetails/Results';
 import { SpaceKey } from 'enums/governance';
 

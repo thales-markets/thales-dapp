@@ -12,7 +12,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { getIsMainnet } from 'utils/network';
 import AmmTrading from './components/AmmTrading';

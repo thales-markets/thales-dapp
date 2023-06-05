@@ -3,7 +3,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;

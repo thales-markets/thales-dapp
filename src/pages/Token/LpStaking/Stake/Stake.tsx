@@ -16,7 +16,7 @@ import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';

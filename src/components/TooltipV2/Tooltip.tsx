@@ -2,7 +2,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import ReactTooltip from 'rc-tooltip';
 import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
-import 'theme/tooltip.css';
+import 'styles/tooltip.css';
 
 type TooltipProps = {
     component?: any;

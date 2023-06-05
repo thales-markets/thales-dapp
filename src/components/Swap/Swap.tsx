@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { LoaderContainer } from 'theme/common';
+import { LoaderContainer } from 'styles/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';

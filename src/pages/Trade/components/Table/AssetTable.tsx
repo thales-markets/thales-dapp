@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatStrikePrice } from 'utils/formatters/number';

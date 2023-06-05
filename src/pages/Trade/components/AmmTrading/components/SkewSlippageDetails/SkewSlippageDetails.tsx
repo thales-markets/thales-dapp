@@ -2,7 +2,7 @@ import { SLIPPAGE_PERCENTAGE } from 'constants/options';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import { formatPercentage } from 'utils/formatters/number';
 import Slippage from '../Slippage';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';

@@ -1,4 +1,4 @@
-import theme from 'theme/themes/dark';
+import theme from 'styles/themes/dark';
 
 export type ThemeInterface = typeof theme;
 

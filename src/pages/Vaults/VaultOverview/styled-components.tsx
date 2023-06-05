@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
     background: linear-gradient(0deg, rgba(3, 218, 198, 0.2) 0%, rgba(3, 218, 198, 0) 90.62%);

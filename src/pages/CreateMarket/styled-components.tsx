@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import errorIcon from 'assets/images/errorIcon.svg';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import Select from 'pages/CreateMarket/components/Select';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 

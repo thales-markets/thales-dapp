@@ -11,7 +11,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
 

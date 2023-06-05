@@ -4,7 +4,7 @@ import { Positions } from 'enums/options';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import MarketDetails from '../MarketDetails';
 import SkewSlippageDetails from '../SkewSlippageDetails';
 import { isSlippageValid } from '../Slippage/Slippage';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { Proposal, ProposalResults } from 'types/governance';
 import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';

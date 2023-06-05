@@ -28,7 +28,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { FlexDivRow } from 'theme/common';
+import { FlexDivRow } from 'styles/common';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';

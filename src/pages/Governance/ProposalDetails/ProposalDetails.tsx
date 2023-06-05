@@ -9,7 +9,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
-import { FlexDivRow, FlexDivRowCentered } from 'theme/common';
+import { FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
 import { formatShortDateWithTime } from 'utils/formatters/date';

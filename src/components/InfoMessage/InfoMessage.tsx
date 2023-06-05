@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as InfoIcon } from 'assets/images/info-circle-blue.svg';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 
 type InfoMessageProps = {
     message: string | null;

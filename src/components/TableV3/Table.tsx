@@ -5,7 +5,7 @@ import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuer
 import React, { CSSProperties, DependencyList, useEffect, useMemo, useRef, useState } from 'react';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered } from 'styles/common';
 import { OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 

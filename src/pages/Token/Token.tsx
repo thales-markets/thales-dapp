@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';

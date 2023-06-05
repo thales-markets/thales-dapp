@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 
 export const MenuContainer = styled(FlexDiv)<{
     justifyContent?: string;

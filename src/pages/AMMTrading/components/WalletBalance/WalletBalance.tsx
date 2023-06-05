@@ -13,7 +13,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { AccountMarketInfo, RangedMarketBalanceInfo, StableCoins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';

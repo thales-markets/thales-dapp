@@ -14,7 +14,7 @@ import {
     FlexDivColumnCentered,
     FlexDivRowCentered,
     FlexDivSpaceBetween,
-} from 'theme/common';
+} from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 

@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cell, Pie } from 'recharts';
 import { useTheme } from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import { Proposal, ProposalResults } from 'types/governance';
 import { ThemeInterface } from 'types/ui';
 import { getProposalApprovalData } from 'utils/governance';

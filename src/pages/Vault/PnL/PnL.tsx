@@ -8,7 +8,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { VaultPnls } from 'types/vault';
 import { formatPercentageWithSign } from 'utils/formatters/number';

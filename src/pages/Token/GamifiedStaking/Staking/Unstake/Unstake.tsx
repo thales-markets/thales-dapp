@@ -21,7 +21,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';

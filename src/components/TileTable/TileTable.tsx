@@ -10,7 +10,7 @@ import {
     Title,
 } from './styled-components';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import SPAAnchor from '../SPAAnchor';
 import SimpleLoader from '../SimpleLoader';
 import { useTranslation } from 'react-i18next';

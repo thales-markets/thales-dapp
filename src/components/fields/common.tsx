@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 
 export const FieldContainer = styled(FlexDivColumn)<{ margin?: string }>`
     flex: initial;

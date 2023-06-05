@@ -1,6 +1,6 @@
 import { StatusEnum } from 'enums/governance';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getStatusColor } from 'utils/governance';
 
 export const CardContainer = styled(FlexDivColumnCentered)`

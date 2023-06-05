@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';

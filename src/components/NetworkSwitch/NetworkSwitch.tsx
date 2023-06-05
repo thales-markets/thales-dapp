@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { Network } from 'enums/network';
 
 const NetworkSwitch: React.FC = () => {

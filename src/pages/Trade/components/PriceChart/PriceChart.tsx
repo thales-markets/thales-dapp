@@ -18,7 +18,7 @@ import {
     YAxis,
 } from 'recharts';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivSpaceBetween } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,

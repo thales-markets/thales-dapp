@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchProposal } from 'utils/queryConnector';

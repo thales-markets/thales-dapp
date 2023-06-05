@@ -2,7 +2,14 @@ import { Slider } from '@material-ui/core';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivStart } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivColumnCentered,
+    FlexDivRow,
+    FlexDivStart,
+} from 'styles/common';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;

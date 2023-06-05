@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from 'utils/snxJSConnector';

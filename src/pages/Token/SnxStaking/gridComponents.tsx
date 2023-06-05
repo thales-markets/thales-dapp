@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 
 export const GridContainer = styled.div`
     position: relative;

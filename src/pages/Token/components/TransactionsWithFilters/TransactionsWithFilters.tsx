@@ -12,7 +12,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { TokenTransaction } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { SectionHeader } from '../../styled-components';

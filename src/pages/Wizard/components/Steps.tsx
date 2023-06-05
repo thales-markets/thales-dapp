@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Colors } from 'theme/common';
+import { Colors } from 'styles/common';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 
 enum NavItems {

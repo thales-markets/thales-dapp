@@ -3,7 +3,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import { Tip20Link, Tip23Link } from '../../styled-components';
 
 type MigrationInfoProps = {

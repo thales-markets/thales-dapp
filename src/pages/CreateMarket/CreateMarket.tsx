@@ -16,7 +16,7 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
 import { BigNumber, ethers } from 'ethers';
-import { FlexDivColumn, FlexDivCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivCentered } from 'styles/common';
 import MarketSummary from './MarketSummary';
 import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
 import {

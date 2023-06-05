@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { LoaderContainer } from 'theme/common';
+import { LoaderContainer } from 'styles/common';
 import { UsersAssets } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';

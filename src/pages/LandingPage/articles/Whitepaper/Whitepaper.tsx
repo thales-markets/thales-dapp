@@ -10,7 +10,7 @@ import Header from '../../components/Header/Header';
 import { Background } from '../../Home';
 
 import { Trans, useTranslation } from 'react-i18next';
-import { FlexDivCentered } from '../../../../theme/common';
+import { FlexDivCentered } from '../../../../styles/common';
 import Footer from '../../components/Footer';
 
 const Whitepaper: React.FC = () => {

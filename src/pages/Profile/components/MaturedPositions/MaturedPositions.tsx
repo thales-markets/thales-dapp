@@ -10,7 +10,7 @@ import { TFunction } from 'i18next';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
-import { LoaderContainer } from 'theme/common';
+import { LoaderContainer } from 'styles/common';
 import { UsersAssets } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';

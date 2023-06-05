@@ -17,7 +17,7 @@ import { setIsBuy } from 'redux/modules/marketWidgets';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';
 import { history, navigateTo } from 'utils/routes';
 import Maturity from './components/Maturity';

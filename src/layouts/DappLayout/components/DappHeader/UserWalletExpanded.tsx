@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivSpaceBetween } from 'styles/common';
 import { truncateAddress } from 'utils/formatters/string';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useDisconnect } from 'wagmi';

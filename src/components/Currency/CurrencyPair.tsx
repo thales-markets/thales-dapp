@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatCurrencyPair } from 'utils/formatters/string';
 import CurrencyIcon from './CurrencyIcon';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import styled from 'styled-components';
 
 type CurrencyPairProps = {

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FieldContainer, FieldLabel, Input } from '../common';
 import MuiTooltip from '@material-ui/core/Tooltip';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import { ReactComponent as BalanceIcon } from 'assets/images/token/balance-icon.svg';
 import InlineLoader from 'components/InlineLoader';
 

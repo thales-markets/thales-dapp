@@ -1,7 +1,7 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { PieChart } from 'recharts';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 
 export const Container = styled(FlexDivRow)`
     width: 100%;

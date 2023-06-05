@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';

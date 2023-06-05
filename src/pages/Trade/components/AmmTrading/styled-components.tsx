@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 
 export const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean }>`
     height: ${(props) => (props.isDetailsPage ? 'auto' : '78px')};

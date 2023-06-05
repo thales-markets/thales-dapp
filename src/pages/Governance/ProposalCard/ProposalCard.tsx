@@ -4,7 +4,7 @@ import { indexOf, max } from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
-import { FlexDivRowCentered } from 'theme/common';
+import { FlexDivRowCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
 import { ThemeInterface } from 'types/ui';
 import { truncateText } from 'utils/formatters/string';

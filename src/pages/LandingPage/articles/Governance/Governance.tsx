@@ -3,7 +3,7 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header/Header';
 import { Background } from '../../Home';

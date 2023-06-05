@@ -18,7 +18,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import styled from 'styled-components';
 import ApprovalModal from 'components/ApprovalModal';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';

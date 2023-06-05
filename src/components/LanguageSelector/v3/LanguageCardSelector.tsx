@@ -3,7 +3,7 @@ import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/conf
 import React, { useState } from 'react';
 import { useTranslation, withTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivRow } from 'theme/common';
+import { FlexDivRow } from 'styles/common';
 
 const LanguageCardSelector: React.FC = () => {
     const [selectedLanguage, setLanguage] = useState(

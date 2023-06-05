@@ -3,7 +3,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween } from 'styles/common';
 
 export const Container = styled(FlexDivSpaceBetween)`
     background: ${(props) => props.theme.background.secondary};

@@ -10,7 +10,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivRow } from 'theme/common';
+import { FlexDivRow } from 'styles/common';
 import { formatCurrency, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
 

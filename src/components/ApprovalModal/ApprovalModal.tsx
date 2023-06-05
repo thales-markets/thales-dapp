@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { bigNumberFormatter, stableCoinParser } from 'utils/formatters/ethers';
 
 type ApprovalModalProps = {

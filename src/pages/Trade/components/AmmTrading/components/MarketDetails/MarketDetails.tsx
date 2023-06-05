@@ -3,7 +3,7 @@ import { Positions } from 'enums/options';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import { getSynthName } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';

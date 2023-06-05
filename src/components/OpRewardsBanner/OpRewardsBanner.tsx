@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import InfoBanner from 'components/InfoBanner';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';

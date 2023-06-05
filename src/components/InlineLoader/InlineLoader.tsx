@@ -1,7 +1,7 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 
 type InlineLoaderProps = {
     thickness?: number;

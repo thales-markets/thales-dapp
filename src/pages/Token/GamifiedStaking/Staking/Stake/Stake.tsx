@@ -19,7 +19,7 @@ import { refetchTokenQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import { getMaxGasLimitForNetwork } from 'constants/options';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 import ApprovalModal from 'components/ApprovalModal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';

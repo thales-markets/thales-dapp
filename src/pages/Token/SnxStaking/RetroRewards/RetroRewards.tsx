@@ -16,7 +16,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { VestingInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDateWithTime } from 'utils/formatters/date';

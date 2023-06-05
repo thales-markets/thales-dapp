@@ -11,7 +11,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 import { VaultTrade, VaultTrades, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
 import TradesTable from '../TradesTable';
 import UserTransactionsTable from '../UserTransactionsTable';

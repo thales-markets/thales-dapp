@@ -6,7 +6,7 @@ import { SpaceKey } from 'enums/governance';
 import React, { useMemo } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { buildHref } from 'utils/routes';
 
 type ElectionsBannerProps = {

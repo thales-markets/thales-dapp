@@ -15,7 +15,13 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumnCentered,
+    FlexDivRowCentered,
+    FlexDivSpaceBetween,
+} from 'styles/common';
 import { Proposal } from 'types/governance';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchProposal } from 'utils/queryConnector';

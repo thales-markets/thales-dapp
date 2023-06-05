@@ -4,7 +4,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { navigateTo } from 'utils/routes';
 
 const MigrationNotice: React.FC = () => {

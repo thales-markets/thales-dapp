@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as WarningIcon } from 'assets/images/warning-icon-orange.svg';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 
 type InfoWarningMessageProps = {
     message: string | null;

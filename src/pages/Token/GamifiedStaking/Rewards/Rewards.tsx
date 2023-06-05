@@ -35,7 +35,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { Colors, FlexDivEnd } from 'theme/common';
+import { Colors, FlexDivEnd } from 'styles/common';
 import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { getStableCoinForNetwork } from 'utils/currency';

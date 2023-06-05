@@ -5,7 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { history } from 'utils/routes';
 import Bridge from './Bridge';
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { CSSProperties } from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivSpaceBetween } from 'styles/common';
 
 export const Container = styled(FlexDivColumn)`
     border: 1px solid ${(props) => props.theme.borderColor.primary};

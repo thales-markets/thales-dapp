@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered } from 'styles/common';
 
 export const Container = styled.div`
     width: 100%;

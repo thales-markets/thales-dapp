@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
