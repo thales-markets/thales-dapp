@@ -4,13 +4,11 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatStrikePrice } from 'utils/formatters/number';
-import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 type TableProps = {
     markets: MarketInfo[] | RangedMarketPerPosition[];
@@ -24,7 +22,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
     // selectors
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const navigate = useHistory();
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
@@ -111,15 +108,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                     onTableRowClick={(row) => {
                         setRowIndex(row.index);
                         setMarket({ ...row.original, positionType: position });
-                        if (rowIndex === row.index) {
-                            let url = '';
-                            if (position === Positions.UP || position === Positions.DOWN) {
-                                url = buildOptionsMarketLink(row.original.address, position.toLowerCase());
-                            } else {
-                                url = buildRangeMarketLink(row.original.address, position.toLowerCase());
-                            }
-                            navigate.push(url);
-                        }
                     }}
                     tableHeadCellStyles={getTableHeaderStyle(theme.textColor.secondary)}
                     data={markets}
