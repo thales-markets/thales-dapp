@@ -48,7 +48,7 @@ import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import ApprovalModal from 'components/ApprovalModal';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import { getMaxGasLimitForNetwork } from 'constants/options';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 
 const MIN_FUNDING_AMOUNT = 0;
 

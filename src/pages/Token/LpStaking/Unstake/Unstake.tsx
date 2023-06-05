@@ -20,7 +20,7 @@ import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 
 type Properties = {
     staked: number;

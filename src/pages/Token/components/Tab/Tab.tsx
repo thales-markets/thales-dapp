@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';

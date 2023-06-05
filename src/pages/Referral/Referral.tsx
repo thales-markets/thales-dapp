@@ -25,7 +25,7 @@ import {
     StyledLink,
     FooterLink,
 } from './styled-components';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';

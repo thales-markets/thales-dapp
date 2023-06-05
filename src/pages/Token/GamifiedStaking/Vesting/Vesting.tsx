@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import TileTable from 'components/TileTable';
 import { TileRow } from 'components/TileTable/TileTable';
 import ValidationMessage from 'components/ValidationMessage';

@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';

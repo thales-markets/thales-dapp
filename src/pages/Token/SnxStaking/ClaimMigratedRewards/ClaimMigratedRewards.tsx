@@ -26,7 +26,7 @@ import {
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import styled from 'styled-components';
 import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();

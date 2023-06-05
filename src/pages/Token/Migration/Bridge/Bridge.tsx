@@ -24,7 +24,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
 import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();

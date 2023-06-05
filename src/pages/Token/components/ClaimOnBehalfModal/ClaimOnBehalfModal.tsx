@@ -15,7 +15,7 @@ import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components
 import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput';
 import Modal from 'components/Modal';
 

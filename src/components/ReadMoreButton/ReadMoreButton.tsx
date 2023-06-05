@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';

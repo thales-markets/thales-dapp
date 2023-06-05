@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import arrowLink from 'assets/images/arrow-link.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import ValidationMessage from 'components/ValidationMessage';

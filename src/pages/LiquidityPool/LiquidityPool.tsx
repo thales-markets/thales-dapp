@@ -1,6 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';

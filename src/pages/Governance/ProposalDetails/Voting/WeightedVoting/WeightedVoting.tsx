@@ -3,7 +3,7 @@ import { Dialog } from '@material-ui/core';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import ValidationMessage from 'components/ValidationMessage';
 import { ProposalTypeEnum, SpaceKey } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';

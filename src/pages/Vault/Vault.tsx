@@ -72,7 +72,7 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 

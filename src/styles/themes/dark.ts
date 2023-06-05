@@ -136,4 +136,46 @@ export default {
             secondary: Colors.BLUE_SKY,
         },
     },
+    toastMessages: {
+        success: {
+            background: {
+                primary: Colors.GREEN,
+                secondary: Colors.GREEN_DARK,
+                tertiary: Colors.GREEN_LIGHT,
+            },
+            textColor: {
+                primary: Colors.BLACK,
+            },
+        },
+        info: {
+            background: {
+                primary: Colors.BLUE_DARK,
+                secondary: Colors.BLUE_LIGHT,
+                tertiary: Colors.BLUE,
+            },
+            textColor: {
+                primary: Colors.BLACK,
+            },
+        },
+        warning: {
+            background: {
+                primary: Colors.ORANGE,
+                secondary: Colors.ORANGE_LIGHT,
+                tertiary: Colors.ORANGE_DARK,
+            },
+            textColor: {
+                primary: Colors.BLACK,
+            },
+        },
+        error: {
+            background: {
+                primary: Colors.RED,
+                secondary: Colors.RED_LIGHT,
+                tertiary: Colors.RED_DARK,
+            },
+            textColor: {
+                primary: Colors.BLACK,
+            },
+        },
+    },
 };

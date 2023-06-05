@@ -1,5 +1,5 @@
 import checkmark from 'assets/images/checkmark.svg';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import { TransactionFilterEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { orderBy } from 'lodash';

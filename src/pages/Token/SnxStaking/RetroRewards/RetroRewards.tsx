@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { THALES_CURRENCY } from 'constants/currency';
