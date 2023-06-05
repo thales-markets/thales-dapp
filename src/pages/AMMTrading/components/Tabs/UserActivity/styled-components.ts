@@ -10,7 +10,7 @@ export const DateTimeContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
     width: 110px;
 `;
 
