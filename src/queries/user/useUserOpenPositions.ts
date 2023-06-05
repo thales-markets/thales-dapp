@@ -6,25 +6,13 @@ import { Positions, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import { BigNumber, ethers } from 'ethers';
-import { stableCoinFormatter } from 'utils/formatters/ethers';
+import { ethers } from 'ethers';
+import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { BALANCE_THRESHOLD } from 'constants/token';
-
-export type UserLivePositions = {
-    currencyKey: string;
-    strikePrice: string;
-    amount: number;
-    amountBigNumber: BigNumber;
-    maturityDate: number;
-    market: string;
-    side: Positions;
-    paid: number;
-    value: number;
-    claimable?: boolean;
-};
+import { UserLivePositions } from 'types/options';
 
 const useUserOpenPositions = (
     networkId: NetworkId,
@@ -46,7 +34,6 @@ const useUserOpenPositions = (
                     max: Infinity,
                     network: networkId,
                     account: walletAddress.toLowerCase(),
-                    // maturityDate: tomorrow,
                 }),
             ]);
 
@@ -56,7 +43,7 @@ const useUserOpenPositions = (
             const rangedClaimablePositions: any = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (Number(ethers.utils.formatEther(positionBalance.amount)) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         livePositions.push(positionBalance);
                     } else {
@@ -66,7 +53,7 @@ const useUserOpenPositions = (
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (Number(ethers.utils.formatEther(positionBalance.amount)) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         liveRangedPositions.push(positionBalance);
                     } else {
@@ -135,14 +122,15 @@ const useUserOpenPositions = (
             const modifiedLivePositions: UserLivePositions[] = [
                 ...result.map((positionBalance: any) => {
                     return {
+                        positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
-                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
-                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            bigNumberFormatter(positionBalance.position.market.strikePrice),
                             positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
                         ),
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
@@ -152,33 +140,35 @@ const useUserOpenPositions = (
                 }),
                 ...claimablePositions.map((positionBalance: any) => {
                     return {
+                        positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
-                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
-                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            bigNumberFormatter(positionBalance.position.market.strikePrice),
                             positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
                         ),
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
-                        value: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
                     };
                 }),
                 ...resultsRanged.map((positionBalance: any) => {
                     return {
+                        positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
-                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
-                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            bigNumberFormatter(positionBalance.position.market.leftPrice),
                             positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
-                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                            bigNumberFormatter(positionBalance.position.market.rightPrice)
                         ),
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
@@ -187,19 +177,20 @@ const useUserOpenPositions = (
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
                     return {
+                        positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
-                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
-                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            bigNumberFormatter(positionBalance.position.market.leftPrice),
                             positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
-                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                            bigNumberFormatter(positionBalance.position.market.rightPrice)
                         ),
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
-                        value: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
                     };
                 }),
@@ -210,23 +201,10 @@ const useUserOpenPositions = (
     );
 };
 
-const isOptionClaimable = (balance: any) => {
-    if (balance.position.side === 'long' && balance.position.market.result === 0) {
-        return true;
-    }
-    if (balance.position.side === 'short' && balance.position.market.result === 1) {
-        return true;
-    }
-
-    if (balance.position.side === 'in' && balance.position.market.result === 0) {
-        return true;
-    }
-
-    if (balance.position.side === 'out' && balance.position.market.result === 1) {
-        return true;
-    }
-
-    return false;
-};
+const isOptionClaimable = (balance: any) =>
+    (balance.position.side === 'long' && balance.position.market.result === 0) ||
+    (balance.position.side === 'short' && balance.position.market.result === 1) ||
+    (balance.position.side === 'in' && balance.position.market.result === 0) ||
+    (balance.position.side === 'out' && balance.position.market.result === 1);
 
 export default useUserOpenPositions;
