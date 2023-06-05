@@ -1102,7 +1102,7 @@ const abi = [
     },
 ];
 
-export const multipleCollateral = {
+const multipleCollateral = {
     sUSD: {
         addresses: {
             [Network.Mainnet]: 'TBD',

@@ -11,10 +11,6 @@ export type RangedMarketPositionType = 'in' | 'out';
 
 type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
-export type TooltipType = 'error' | 'success' | 'info';
-
-export type MarketType = 'positional' | 'ranged';
-
 export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
 
 export type OptionsTransaction = {

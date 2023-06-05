@@ -14,7 +14,7 @@ import {
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled, { useTheme } from 'styled-components';
 import { format } from 'date-fns';
-import Toggle from './components/DateToggle/Toggle';
+import Toggle from './components/DateToggle';
 import {
     calculatePercentageChange,
     formatCurrencyWithSign,

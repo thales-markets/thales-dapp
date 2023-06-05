@@ -6,13 +6,11 @@ import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-lo
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
-import { Network } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
-export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
 type NetworkMapper = Record<number, number>;
 type DropdownNetwork = {
@@ -64,11 +62,8 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
-export const POLYGON_MUMBAI_ID = 80001;
-export const POLYGON_ID = 137;
-
 const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
-    [POLYGON_ID]: {
+    137: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
         rpcUrls: ['https://polygon-rpc.com'],
@@ -79,7 +74,7 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    [POLYGON_MUMBAI_ID]: {
+    80001: {
         chainId: '0x13881',
         chainName: 'Polygon Mumbai',
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
@@ -125,7 +120,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
         name: 'Optimism',
         icon: OpLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
+            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? 10;
             const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
             if (typeof window.ethereum !== 'undefined') {

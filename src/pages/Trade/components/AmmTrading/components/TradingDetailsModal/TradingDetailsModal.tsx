@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { isSlippageValid } from '../Slippage/Slippage';
-import TradingDetails from '../TradingDetails/TradingDetails';
-import MarketDetails from '../MarketDetails/MarketDetails';
-import SkewSlippageDetails from '../SkewSlippageDetails/SkewSlippageDetails';
+import TradingDetails from '../TradingDetails';
+import MarketDetails from '../MarketDetails';
+import SkewSlippageDetails from '../SkewSlippageDetails';
 
 type TradingDetailsModalProps = {
     currencyKey: string;

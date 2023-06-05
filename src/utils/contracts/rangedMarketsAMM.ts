@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const rangedMarketAMMContract = {
+const rangedMarketAMMContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

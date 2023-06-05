@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const priceFeedContract = {
+const priceFeedContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: '0x4a1e5AF88f39Ad09BC3fAc3563B77F4f8A55F3Da',

@@ -35,12 +35,6 @@ export const ColumnContainer = styled(FlexDivColumn)<{
     }
 `;
 
-export const Icon = styled.i<{ color?: string }>`
-    margin: 0 5px;
-    font-size: 13px;
-    color: ${(props) => props.color || ''};
-`;
-
 export const SubContainer = styled(FlexDivColumn)<{
     hidden?: boolean;
 }>`

@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const stakingDataContract = {
+const stakingDataContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const opThalesContract = {
+const opThalesContract = {
     addresses: {
         [Network.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
         [Network.Ropsten]: 'TBD',

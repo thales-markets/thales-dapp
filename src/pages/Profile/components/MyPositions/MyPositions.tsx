@@ -498,7 +498,7 @@ const TooltipLink = styled.a`
     }
 `;
 
-export const UsingAmmLink: React.FC = () => {
+const UsingAmmLink: React.FC = () => {
     const { t } = useTranslation();
     return (
         <TooltipLink

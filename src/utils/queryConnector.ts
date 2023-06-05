@@ -46,14 +46,6 @@ export const refetchRangeMarketQueries = (
     }
 };
 
-export const refetchTrades = (marketAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Trades(marketAddress));
-};
-
-export const refetchUserTrades = (marketAddress: string, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
-};
-
 export const refetchUserOpenPositions = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.UserOpenPositions(walletAddress, networkId));
 };

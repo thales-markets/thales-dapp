@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const stakingThales = {
+const stakingThales = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

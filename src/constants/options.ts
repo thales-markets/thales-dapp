@@ -1,5 +1,5 @@
 import { Network, NetworkId } from 'utils/network';
-import { Phase, OptionSide, RangedMarketPositionType, MarketType } from '../types/options';
+import { Phase, OptionSide, RangedMarketPositionType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
@@ -19,13 +19,6 @@ export const POSITIONS_TO_SIDE_MAP: Record<Positions, number> = {
     DOWN: 1,
     IN: 0,
     OUT: 1,
-};
-
-export const MARKET_TYPE: Record<MarketType | number, number | MarketType> = {
-    ranged: 1,
-    0: 'positional',
-    1: 'ranged',
-    positional: 0,
 };
 
 export const SIDE: Record<OptionSide | number, number | OptionSide> = {
@@ -62,18 +55,8 @@ export const STABLE_DECIMALS = {
 
 export const SLIPPAGE_PERCENTAGE = [0.5, 1, 2];
 
-export enum OrderPeriod {
-    TEN_MINUTES = 'TEN_MINUTES',
-    ONE_HOUR = 'ONE_HOUR',
-    ONE_DAY = 'ONE_DAY',
-    ONE_WEEK = 'ONE_WEEK',
-    TRADING_END = 'TRADING_END',
-    CUSTOM = 'CUSTOM',
-}
-
 export const MINIMUM_AMM_LIQUIDITY = 2;
 const MAX_L2_GAS_LIMIT = 15000000;
-export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
 
 export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {

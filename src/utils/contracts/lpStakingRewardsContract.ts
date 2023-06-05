@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const lpStakingRewardsContract = {
+const lpStakingRewardsContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

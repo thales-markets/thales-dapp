@@ -55,7 +55,7 @@ import { isSlippageValid } from './components/Slippage/Slippage';
 import { getIsBuy } from 'redux/modules/marketWidgets';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import TradingDetailsSentence from './components/TradingDetailsSentence/TradingDetailsSentence';
+import TradingDetailsSentence from './components/TradingDetailsSentence';
 import {
     ColumnSpaceBetween,
     Container,

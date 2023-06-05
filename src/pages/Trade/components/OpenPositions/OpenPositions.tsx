@@ -13,7 +13,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'theme/common';
 import { UserLivePositions } from 'types/options';
-import OpenPosition from '../OpenPosition/OpenPosition';
+import OpenPosition from '../OpenPosition';
 
 const OpenPositions: React.FC = () => {
     const { t } = useTranslation();

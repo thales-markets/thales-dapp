@@ -15,7 +15,7 @@ import { RangedMarketProvider } from './contexts/RangedMarketContext';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { FlexDivColumn } from 'theme/common';
-import AmmTrading from 'pages/Trade/components/AmmTrading/AmmTrading';
+import AmmTrading from 'pages/Trade/components/AmmTrading';
 import { Positions } from 'constants/options';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
 import WalletBalance from './components/WalletBalance';

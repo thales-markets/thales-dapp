@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const liquidityPoolDataContract = {
+const liquidityPoolDataContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

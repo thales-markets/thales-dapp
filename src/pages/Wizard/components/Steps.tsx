@@ -12,14 +12,13 @@ import banxa from 'assets/images/wizard/logo-banxa.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
-import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
 import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import BungeePlugin from 'components/BungeePlugin';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
-import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { Network, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 import { WizardSteps } from 'constants/wizard';
 import { Colors } from 'theme/common';
@@ -96,7 +95,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
-                    networkId === POLYGON_ID
+                    networkId === Network['POLYGON-MAINNET']
                         ? '&net=polygon_mainnet&bsc=EUR&bdc=MATIC&crys=MATIC'
                         : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
                 setIframe(Provider.MT_PELERIN.toString() + queryParams);

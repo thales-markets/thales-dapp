@@ -2,7 +2,7 @@ import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
-import { GWEI_UNIT, POLYGON_GWEI_INCREASE_PERCENTAGE, POLYGON_ID, POLYGON_MUMBAI_ID } from 'constants/network';
+import { GWEI_UNIT } from 'constants/network';
 import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
@@ -150,28 +150,6 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
     }
 };
 
-export const getProvider = (gasEstimate: BigNumber, gasInGwei: string, networkId: NetworkId) => {
-    if (networkId == POLYGON_ID || networkId == POLYGON_MUMBAI_ID) {
-        return {
-            gasLimit: formatGasLimit(gasEstimate, networkId),
-            gasPrice: ethers.utils.parseUnits(
-                Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
-                'gwei'
-            ),
-        };
-    }
-
-    if (networkId == Network.BSC) {
-        return {
-            gasLimit: formatGasLimit(gasEstimate, networkId),
-        };
-    }
-
-    return {
-        gasLimit: formatGasLimit(gasEstimate, networkId),
-    };
-};
-
 export const getDefaultCollateral = (networkId: NetworkId) => {
     if (getIsPolygon(networkId) || getIsArbitrum(networkId)) {
         return CRYPTO_CURRENCY_MAP.USDC;
@@ -180,12 +158,6 @@ export const getDefaultCollateral = (networkId: NetworkId) => {
         return CRYPTO_CURRENCY_MAP.BUSD;
     }
     return SYNTHS_MAP.sUSD;
-};
-
-export const getFeeCollateral = (networkId: NetworkId) => {
-    if (getIsPolygon(networkId)) return CRYPTO_CURRENCY_MAP.MATIC;
-    if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
-    return CRYPTO_CURRENCY_MAP.ETH;
 };
 
 export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {

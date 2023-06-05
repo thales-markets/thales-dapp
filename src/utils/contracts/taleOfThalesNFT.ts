@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const taleOfThalesNFT = {
+const taleOfThalesNFT = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

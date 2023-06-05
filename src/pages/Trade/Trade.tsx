@@ -1,5 +1,5 @@
 import { Positions } from 'constants/options';
-import AmmTrading from './components/AmmTrading/AmmTrading';
+import AmmTrading from './components/AmmTrading';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
 import React, { useMemo, useState, useEffect } from 'react';
@@ -10,17 +10,17 @@ import { RootState } from 'redux/rootReducer';
 import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndDateQuery';
 import styled from 'styled-components';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import AssetTable from './components/Table/AssetTable';
+import AssetTable from './components/Table';
 import AssetDropdown from './components/AssetDropdown';
 import DatesDropdown from './components/MaturityDateDropdown';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
-import OpenPositions from './components/OpenPositions/OpenPositions';
+import OpenPositions from './components/OpenPositions';
 import { useTranslation } from 'react-i18next';
 import { getIsMainnet } from 'utils/network';
-import UnsupportedNetwork from 'components/UnsupportedNetwork/UnsupportedNetwork';
+import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import Footer from 'components/Footer';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 

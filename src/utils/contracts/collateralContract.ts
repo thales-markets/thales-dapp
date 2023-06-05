@@ -1,6 +1,6 @@
 import { Network } from 'utils/network';
 
-export const erc20Contract = {
+const erc20Contract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',
