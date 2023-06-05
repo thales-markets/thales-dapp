@@ -94,14 +94,14 @@ const useBinaryOptionsUserTradesQuery = (
                 ),
                 ...mapToOptionTransactions(
                     filterTrades(secondPositionBuys, walletAddress),
-                    isRangedMarket ? 'in' : 'long',
+                    isRangedMarket ? 'out' : 'short',
                     'buy',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
                     filterTrades(secondPositionSells, walletAddress),
-                    isRangedMarket ? 'in' : 'long',
+                    isRangedMarket ? 'out' : 'short',
                     'sell',
                     marketAddress,
                     walletAddress
