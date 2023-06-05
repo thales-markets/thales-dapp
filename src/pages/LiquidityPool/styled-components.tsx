@@ -339,11 +339,11 @@ export const StyledSlider = styled((props) => (
         height: 14px;
         margin-top: -2px;
         background: ${(props) => props.theme.textColor.primary};
-        box-shadow: 0px 1px 4px rgba(202, 202, 241, 0.5);
+        box-shadow: none;
 
         &:focus,
         &:hover {
-            box-shadow: 0px 1px 4px rgba(202, 202, 241, 0.5);
+            box-shadow: none;
         }
 
         &.Mui-disabled {
