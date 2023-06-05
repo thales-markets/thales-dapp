@@ -1,43 +1,43 @@
+import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'enums/governance';
+import makeBlockie from 'ethereum-blockies-base64';
+import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 import React, { useEffect, useState } from 'react';
-import { FlexDivRow, FlexDivRowCentered } from 'theme/common';
-import { Proposal } from 'types/governance';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
-import { truncateAddress } from 'utils/formatters/string';
-import { formatShortDateWithTime } from 'utils/formatters/date';
+import { FlexDivRow, FlexDivRowCentered } from 'theme/common';
+import { Proposal } from 'types/governance';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { useTranslation } from 'react-i18next';
-import { StyledLink, Blockie } from '../styled-components';
-import { Network } from 'utils/network';
-import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'constants/governance';
+import { truncateAddress } from 'utils/formatters/string';
+import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
+import { Network } from 'enums/network';
+import snxJSConnector from 'utils/snxJSConnector';
+import { Blockie, StyledLink } from '../styled-components';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
-import snxJSConnector from 'utils/snxJSConnector';
-import makeBlockie from 'ethereum-blockies-base64';
-import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 import {
-    DetailsTitle,
-    Divider,
-    VotingPowerTitle,
     ArrowIcon,
+    Body,
     Container,
-    Title,
-    StatusContainer,
-    Label,
-    StatusWrapper,
-    Status,
-    DetailsWrapper,
     DetailsContainer,
+    DetailsTitle,
+    DetailsWrapper,
+    Divider,
+    Label,
+    Status,
+    StatusContainer,
+    StatusWrapper,
     Text,
+    Title,
     VoteHeader,
     VoteNote,
-    Body,
+    VotingPowerTitle,
 } from './styled-components';
 
 type ProposalDetailsProps = {

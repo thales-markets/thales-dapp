@@ -1,8 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
 import snapshot from '@snapshot-labs/snapshot.js';
-import { Proposal } from 'types/governance';
+import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
-import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, StatusEnum, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import { StatusEnum } from 'enums/governance';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { Proposal } from 'types/governance';
 
 const useVotingPowerQuery = (proposal: Proposal, walletAddress: string, options?: UseQueryOptions<number>) => {
     return useQuery<number>(

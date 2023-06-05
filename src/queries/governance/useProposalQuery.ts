@@ -1,18 +1,12 @@
-import { useQuery, UseQueryOptions } from 'react-query';
 import snapshot from '@snapshot-labs/snapshot.js';
-import { ethers } from 'ethers';
-import { uniqBy } from 'lodash';
-import request, { gql } from 'graphql-request';
-import {
-    BLOCK_ARBITRUM,
-    BLOCK_OPTIMISM,
-    SNAPSHOT_GRAPHQL_URL,
-    SpaceKey,
-    StatusEnum,
-    VOTING_COUNCIL_PROPOSAL_ID,
-} from 'constants/governance';
-import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
+import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, SNAPSHOT_GRAPHQL_URL, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import { ethers } from 'ethers';
+import request, { gql } from 'graphql-request';
+import { uniqBy } from 'lodash';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import voting from 'utils/voting';
 
 const useProposalQuery = (

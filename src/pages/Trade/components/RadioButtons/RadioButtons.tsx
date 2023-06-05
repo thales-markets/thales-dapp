@@ -1,4 +1,4 @@
-import { Positions } from 'constants/options';
+import { Positions } from 'enums/options';
 import React from 'react';
 import styled from 'styled-components';
 

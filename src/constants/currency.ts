@@ -185,13 +185,6 @@ const FIAT_CURRENCY_SIGN = {
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY_MAP = {
-    long: 'UP',
-    short: 'DOWN',
-    in: 'IN',
-    out: 'OUT',
-};
-
 export const THALES_CURRENCY = 'THALES';
 export const LP_TOKEN = 'LP Token';
 

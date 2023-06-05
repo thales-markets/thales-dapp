@@ -1,18 +1,18 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign, formatCurrency, formatCurrencyWithPrecision } from 'utils/formatters/number';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
-import { getIsAppReady } from 'redux/modules/app';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { get } from 'lodash';
-import { RootState } from 'redux/rootReducer';
-import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
-import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { FlexDivRow } from 'theme/common';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { formatCurrency, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
+import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
 
 export type GasLimit = {
     gasLimit: number;

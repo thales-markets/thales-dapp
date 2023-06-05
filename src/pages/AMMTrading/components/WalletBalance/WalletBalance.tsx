@@ -1,22 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import { COLLATERALS } from 'constants/options';
+import { Positions } from 'enums/options';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { AccountMarketInfo, RangedMarketBalanceInfo, StableCoins } from 'types/options';
-import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
-import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { COLLATERALS, Positions } from 'constants/options';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import { FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import { AccountMarketInfo, RangedMarketBalanceInfo, StableCoins } from 'types/options';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
+import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type WalletBalanceProps = {
     isRangedMarket: boolean;

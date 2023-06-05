@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import { Theme } from 'constants/ui';
+import { Theme } from 'enums/ui';
 import { kebabCase } from 'lodash';
 import { CSSProperties } from 'styled-components';
 import localStore from './localStore';

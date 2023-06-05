@@ -39,7 +39,8 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { VaultTab, VAULT_MAP } from 'constants/vault';
+import { VAULT_MAP } from 'constants/vault';
+import { VaultTab } from 'enums/vault';
 import { getIsAppReady } from 'redux/modules/app';
 import { UserVaultData, VaultData } from 'types/vault';
 import useVaultDataQuery from 'queries/vault/useVaultDataQuery';

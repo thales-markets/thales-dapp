@@ -1,5 +1,5 @@
-import { Positions } from 'constants/options';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 

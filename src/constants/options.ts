@@ -1,18 +1,13 @@
-import { Network, NetworkId } from 'utils/network';
-import { Phase, OptionSide, RangedMarketPositionType } from '../types/options';
+import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
+import { NetworkId } from 'utils/network';
+import { OptionSide, Phase, RangedMarketPositionType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
     maturity: 1,
     expiry: 2,
 };
-
-export enum Positions {
-    UP = 'UP',
-    DOWN = 'DOWN',
-    IN = 'IN',
-    OUT = 'OUT',
-}
 
 export const POSITIONS_TO_SIDE_MAP: Record<Positions, number> = {
     UP: 0,
@@ -35,13 +30,12 @@ export const RANGE_SIDE: Record<RangedMarketPositionType | number, number | Rang
     1: 'out',
 };
 
-export enum COLLATERALS_INDEX {
-    'sUSD' = 0,
-    'DAI' = 1,
-    'USDC' = 2,
-    'USDT' = 3,
-    'BUSD' = 4,
-}
+export const OPTIONS_POSITIONS_MAP = {
+    long: 'UP',
+    short: 'DOWN',
+    in: 'IN',
+    out: 'OUT',
+};
 
 export const COLLATERALS = ['sUSD', 'DAI', 'USDC', 'USDT'];
 

@@ -1,44 +1,44 @@
+import Button from 'components/ButtonV2';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
+import { THALES_CURRENCY } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import i18n from 'i18n';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
+import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
+import NetworkFees from 'pages/Token/components/NetworkFees';
+import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
-import { getIsAppReady } from 'redux/modules/app';
 import { VestingInfo } from 'types/token';
-import snxJSConnector from 'utils/snxJSConnector';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
+import { ThemeInterface } from 'types/ui';
 import { formatShortDateWithTime } from 'utils/formatters/date';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { dispatchMarketNotification } from 'utils/options';
+import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import {
-    ButtonContainerBottom,
-    EarnSection,
-    SectionHeader,
-    ClaimMessage,
-    SectionContentContainer,
-} from '../components';
-import {
+    LearnMore,
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
-    LearnMore,
     Tip37Link,
 } from '../../styled-components';
-import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { THALES_CURRENCY } from 'constants/currency';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { dispatchMarketNotification } from 'utils/options';
-import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
-import i18n from 'i18n';
-import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2';
-import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import {
+    ButtonContainerBottom,
+    ClaimMessage,
+    EarnSection,
+    SectionContentContainer,
+    SectionHeader,
+} from '../components';
 
 const initialVestingInfo = {
     unlocked: 0,

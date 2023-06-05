@@ -1,14 +1,20 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import arrowLink from 'assets/images/arrow-link.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
+import Button from 'components/ButtonV2/Button';
+import TimeRemaining from 'components/TimeRemaining';
+import Tooltip from 'components/TooltipV2/Tooltip';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
+import { EMPTY_VALUE } from 'constants/placeholder';
 import ROUTES from 'constants/routes';
+import { TokenTabEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import TimeRemaining from 'components/TimeRemaining';
 import {
     ButtonContainer,
     ClaimMessage,
@@ -18,32 +24,27 @@ import {
     Tip125Link,
     Tip48Link,
 } from 'pages/Token/styled-components';
-import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { Colors, FlexDivEnd } from 'theme/common';
-import { StakingData, TokenTabEnum, UserStakingData } from 'types/token';
+import { StakingData, UserStakingData } from 'types/token';
+import { ThemeInterface } from 'types/ui';
+import { getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getStableCoinForNetwork } from 'utils/currency';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import useStakingDataQuery from 'queries/token/useStakingDataQuery';
-import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2/Button';
-import { EMPTY_VALUE } from 'constants/placeholder';
-import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { getIsMobile } from 'redux/modules/ui';
+import YourTransactions from './Transactions';
 
 enum SectionType {
     INFO,

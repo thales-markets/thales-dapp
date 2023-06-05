@@ -1,7 +1,7 @@
+import { SpaceKey } from 'enums/governance';
+import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
-import { SpaceKey } from './governance';
-import { Positions } from './options';
 
 const QUERY_KEYS = {
     WalletBalances: {

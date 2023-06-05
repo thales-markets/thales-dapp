@@ -1,24 +1,29 @@
 import PriceChart from 'components/Charts/PriceChart';
 import Currency from 'components/Currency/v2';
 import CurrencyIcon, { IconType } from 'components/Currency/v2/CurrencyIcon';
+import RangeIllustration from 'components/RangeIllustration';
 import SPAAnchor from 'components/SPAAnchor';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import Table from 'components/TableV2';
+import TimeRemaining from 'components/TimeRemaining';
+import Tooltip from 'components/TooltipV2/Tooltip';
 import { USD_SIGN } from 'constants/currency';
+import { LINKS } from 'constants/links';
+import { Positions } from 'enums/options';
 import { orderBy } from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
+import { LoaderContainer } from 'theme/common';
 import { UsersAssets } from 'types/options';
+import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { LoaderContainer } from 'theme/common';
-import RangeIllustration from 'components/RangeIllustration';
-import TimeRemaining from 'components/TimeRemaining';
-import { LINKS } from 'constants/links';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import {
     Card,
     CardColumn,
@@ -37,11 +42,6 @@ import {
     TableText,
     getColor,
 } from '../styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
-import { ThemeInterface } from 'types/ui';
-import { Positions } from 'constants/options';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;

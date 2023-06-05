@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
 import { getStatusColor } from 'utils/governance';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;

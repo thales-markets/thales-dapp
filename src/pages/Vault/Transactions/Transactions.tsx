@@ -1,20 +1,20 @@
+import SelectInput from 'components/SelectInput';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { VaultTransaction } from 'enums/vault';
+import { orderBy } from 'lodash';
+import useVaultTradesQuery from 'queries/vault/useVaultTradesQuery';
+import useVaultUserTransactionsQuery from 'queries/vault/useVaultUserTransactionsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { orderBy } from 'lodash';
-import { getIsAppReady } from 'redux/modules/app';
+import { VaultTrade, VaultTrades, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
 import TradesTable from '../TradesTable';
-import useVaultTradesQuery from 'queries/vault/useVaultTradesQuery';
-import { VaultTrades, VaultTrade, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
-import SelectInput from 'components/SelectInput';
-import { VaultTransaction } from 'constants/vault';
 import UserTransactionsTable from '../UserTransactionsTable';
-import useVaultUserTransactionsQuery from 'queries/vault/useVaultUserTransactionsQuery';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TransactionsProps = {
     vaultAddress: string;

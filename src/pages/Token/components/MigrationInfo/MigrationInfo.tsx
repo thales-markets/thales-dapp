@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Trans } from 'react-i18next';
-import { FlexDivCentered } from 'theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
+import { Trans } from 'react-i18next';
+import styled from 'styled-components';
+import { FlexDivCentered } from 'theme/common';
 import { Tip20Link, Tip23Link } from '../../styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type MigrationInfoProps = {
     messageKey: string;

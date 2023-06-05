@@ -1,8 +1,7 @@
 import { STABLE_DECIMALS } from 'constants/options';
-import { BigNumberish } from 'ethers';
-import { ethers } from 'ethers';
+import { Network } from 'enums/network';
+import { BigNumberish, ethers } from 'ethers';
 import { StableCoins } from 'types/options';
-import { Network } from 'utils/network';
 
 export const bytesFormatter = (input: string) => ethers.utils.formatBytes32String(input);
 

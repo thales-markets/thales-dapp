@@ -1,10 +1,4 @@
-import useInterval from 'hooks/useInterval';
-import React, { lazy, useEffect, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as Arrow } from 'assets/images/arrow-link.svg';
 import metamask from 'assets/images/metamask.svg';
 import { ReactComponent as InsertCard } from 'assets/images/wizard/insert-card.svg';
@@ -12,16 +6,23 @@ import banxa from 'assets/images/wizard/logo-banxa.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
-import ROUTES from 'constants/routes';
-import SimpleLoader from 'components/SimpleLoader';
-import SPAAnchor from 'components/SPAAnchor';
 import BungeePlugin from 'components/BungeePlugin';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
-import { Network, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { WizardSteps } from 'constants/wizard';
+import SPAAnchor from 'components/SPAAnchor';
+import SimpleLoader from 'components/SimpleLoader';
+import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { WizardSteps } from 'enums/wizard';
+import useInterval from 'hooks/useInterval';
+import React, { lazy, useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { Colors } from 'theme/common';
+import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',

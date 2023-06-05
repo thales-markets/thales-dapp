@@ -1,5 +1,4 @@
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'constants/options';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -12,6 +11,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
+import { Positions } from 'enums/options';
 
 type TradingDetailsSentenceProps = {
     currencyKey: string;

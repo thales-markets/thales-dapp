@@ -1,21 +1,22 @@
+import checkmark from 'assets/images/checkmark.svg';
+import Button from 'components/ButtonV2';
+import { TransactionFilterEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { orderBy } from 'lodash';
+import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import TransactionsTable from '../TransactionsTable';
-import styled, { useTheme } from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
-import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { SectionHeader } from '../../styled-components';
-import checkmark from 'assets/images/checkmark.svg';
-import { orderBy } from 'lodash';
-import Button from 'components/ButtonV2';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivColumn } from 'theme/common';
+import { TokenTransaction } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { getIsMobile } from 'redux/modules/ui';
+import { SectionHeader } from '../../styled-components';
+import TransactionsTable from '../TransactionsTable';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];

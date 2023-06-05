@@ -1,14 +1,14 @@
-import Modal from 'components/Modal';
 import Button from 'components/ButtonV2';
-import { Positions } from 'constants/options';
+import Modal from 'components/Modal';
+import { Positions } from 'enums/options';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import { isSlippageValid } from '../Slippage/Slippage';
-import TradingDetails from '../TradingDetails';
 import MarketDetails from '../MarketDetails';
 import SkewSlippageDetails from '../SkewSlippageDetails';
+import { isSlippageValid } from '../Slippage/Slippage';
+import TradingDetails from '../TradingDetails';
 
 type TradingDetailsModalProps = {
     currencyKey: string;

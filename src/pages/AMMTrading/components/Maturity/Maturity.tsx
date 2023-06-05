@@ -27,7 +27,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
 import { refetchMarketQueries, refetchBalances, refetchRangeMarketQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Positions, getMaxGasLimitForNetwork } from 'constants/options';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'utils/formatters/number';
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
@@ -36,6 +36,7 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import { Positions } from 'enums/options';
 
 type MaturityProps = {
     isRangedMarket: boolean;

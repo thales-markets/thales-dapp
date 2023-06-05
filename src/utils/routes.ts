@@ -1,7 +1,6 @@
-import { SpaceKey } from 'constants/governance';
 import ROUTES from 'constants/routes';
-import { createBrowserHistory } from 'history';
-import { createHashHistory } from 'history';
+import { SpaceKey } from 'enums/governance';
+import { createBrowserHistory, createHashHistory } from 'history';
 
 const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
 const history = ifIpfsDeployment ? createHashHistory() : createBrowserHistory();

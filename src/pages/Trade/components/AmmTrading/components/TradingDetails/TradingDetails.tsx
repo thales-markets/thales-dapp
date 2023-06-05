@@ -1,5 +1,7 @@
+import InlineLoader from 'components/InlineLoader/InlineLoader';
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'constants/options';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import { Positions } from 'enums/options';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -15,9 +17,7 @@ import {
     formatPercentage,
 } from 'utils/formatters/number';
 import { getFormattedBonus } from 'utils/options';
-import { EMPTY_VALUE } from 'constants/placeholder';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';
-import InlineLoader from 'components/InlineLoader/InlineLoader';
 
 type TradingDetailsProps = {
     positionType: Positions;

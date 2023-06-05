@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
-import { FlexDivColumnCentered } from 'theme/common';
-import { LoaderContainer } from 'pages/Governance/styled-components';
-import { StatusEnum } from 'constants/governance';
 import SimpleLoader from 'components/SimpleLoader';
-import { Proposal, ProposalResults } from 'types/governance';
+import { StatusEnum } from 'enums/governance';
+import { LoaderContainer } from 'pages/Governance/styled-components';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pie, Cell } from 'recharts';
+import { Cell, Pie } from 'recharts';
+import { useTheme } from 'styled-components';
+import { FlexDivColumnCentered } from 'theme/common';
+import { Proposal, ProposalResults } from 'types/governance';
+import { ThemeInterface } from 'types/ui';
 import { getProposalApprovalData } from 'utils/governance';
 import {
     ChartInnerText,
@@ -17,8 +19,6 @@ import {
     VotedInLabel,
     Votes,
 } from './styled-components';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;

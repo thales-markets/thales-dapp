@@ -10,7 +10,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import styled, { useTheme } from 'styled-components';
-import { VaultTradeStatus } from 'constants/vault';
+import { VaultTradeStatus } from 'enums/vault';
 import { ThemeInterface } from 'types/ui';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';

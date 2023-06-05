@@ -1,44 +1,44 @@
-import React, { useMemo } from 'react';
-import {
-    Container,
-    ColumnContainer,
-    Header,
-    SubContainer,
-    Value,
-    CurrencyContainer,
-    CurrencyIcon,
-    CurrencyLabel,
-    ColumnAnchorSubContainer,
-    UsingAmmLink,
-} from './styled-components';
-import MaturityDate from '../MaturityDate';
-import { useMarketContext } from '../../contexts/MarketContext';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
+import Tooltip from 'components/TooltipV2';
+import { USD_SIGN } from 'constants/currency';
+import { Positions } from 'enums/options';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import useRangedAMMMaxLimitsQuery, {
+    RangeAmmMaxLimits,
+} from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import React, { useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsBuy } from 'redux/modules/marketWidgets';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
 import { AccountMarketInfo, OptionsMarketInfo, RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
+import { ThemeInterface } from 'types/ui';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 import {
     formatCurrency,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
     formatPricePercentageDifference,
 } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
-import { Trans, useTranslation } from 'react-i18next';
-import { getIsBuy } from 'redux/modules/marketWidgets';
-import Tooltip from 'components/TooltipV2';
-import { getEtherscanAddressLink } from 'utils/etherscan';
-import { Positions } from 'constants/options';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
-import useRangedAMMMaxLimitsQuery, {
-    RangeAmmMaxLimits,
-} from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
+import { useMarketContext } from '../../contexts/MarketContext';
+import MaturityDate from '../MaturityDate';
+import {
+    ColumnAnchorSubContainer,
+    ColumnContainer,
+    Container,
+    CurrencyContainer,
+    CurrencyIcon,
+    CurrencyLabel,
+    Header,
+    SubContainer,
+    UsingAmmLink,
+    Value,
+} from './styled-components';
 
 type RowCardProps = {
     isRangedMarket: boolean;

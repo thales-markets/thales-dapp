@@ -1,13 +1,13 @@
+import { TokenTabEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import queryString from 'query-string';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDiv } from 'theme/common';
-import Bridge from './Bridge';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { history } from 'utils/routes';
-import queryString from 'query-string';
-import { TokenTabEnum } from 'types/token';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import Bridge from './Bridge';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();

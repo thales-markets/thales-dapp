@@ -1,31 +1,31 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { CoinGeckoClient } from 'coingecko-api-v3';
+import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
+import { format } from 'date-fns';
+import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import usePriceDataQuery from 'queries/price/usePriceDataQuery';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-    XAxis,
-    YAxis,
     Area,
     AreaChart,
-    ResponsiveContainer,
-    Tooltip,
-    ReferenceLine,
     CartesianGrid,
     ReferenceArea,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
 } from 'recharts';
-import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled, { useTheme } from 'styled-components';
-import { format } from 'date-fns';
-import Toggle from './components/DateToggle';
+import { FlexDivSpaceBetween } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,
     formatCurrencyWithSign,
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
-import usePriceDataQuery from 'queries/price/usePriceDataQuery';
-import { FlexDivSpaceBetween } from 'theme/common';
-import { Positions } from 'constants/options';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import Toggle from './components/DateToggle';
 
 type PriceChartProps = {
     asset: string;

@@ -1,18 +1,18 @@
+import SelectInput from 'components/SelectInput';
+import { LiquidityPoolTransaction } from 'enums/liquidityPool';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { orderBy } from 'lodash';
+import useLiquidityPoolUserTransactionsQuery from 'queries/liquidityPool/useLiquidityPoolUserTransactionsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { orderBy } from 'lodash';
-import { getIsAppReady } from 'redux/modules/app';
-import { LiquidityPoolUserTransactions, LiquidityPoolUserTransaction } from 'types/liquidityPool';
-import SelectInput from 'components/SelectInput';
-import useLiquidityPoolUserTransactionsQuery from 'queries/liquidityPool/useLiquidityPoolUserTransactionsQuery';
+import { LiquidityPoolUserTransaction, LiquidityPoolUserTransactions } from 'types/liquidityPool';
 import UserTransactionsTable from '../UserTransactionsTable';
-import { LiquidityPoolTransaction } from 'constants/liquidityPool';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TransactionsProps = {
     currentRound: number;

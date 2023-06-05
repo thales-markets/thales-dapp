@@ -1,5 +1,5 @@
-import { SpaceKey } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
+import { SpaceKey } from 'enums/governance';
 import { QueryClient } from 'react-query';
 import { NetworkId } from 'utils/network';
 

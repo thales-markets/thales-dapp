@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
-import { WizardSteps } from 'constants/wizard';
+import { WizardSteps } from 'enums/wizard';
 
 const Wizard: React.FC = () => {
     const { t } = useTranslation();

@@ -1,4 +1,4 @@
-import { VaultTradeStatus } from 'constants/vault';
+import { VaultTradeStatus } from 'enums/vault';
 import { HistoricalOptionsMarketInfo } from './options';
 
 export type VaultData = {

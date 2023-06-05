@@ -1,4 +1,4 @@
-import { Positions } from 'constants/options';
+import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';

@@ -1,14 +1,14 @@
-import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import snxJSConnector from 'utils/snxJSConnector';
+import { Positions } from 'enums/options';
 import { ethers } from 'ethers';
-import { Positions } from 'constants/options';
 import { uniq } from 'lodash';
-import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
-import { NetworkId } from 'utils/network';
+import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
+import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { truncDecimals } from 'utils/formatters/number';
+import { NetworkId } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,

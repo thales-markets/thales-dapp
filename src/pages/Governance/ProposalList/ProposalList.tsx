@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
-import useProposalsQuery from 'queries/governance/useProposalsQuery';
-import { SpaceKey, StatusEnum } from 'constants/governance';
-import { Proposal } from 'types/governance';
-import ProposalCard from '../ProposalCard';
-import { navigateToGovernance } from 'utils/routes';
-import { useTranslation } from 'react-i18next';
-import { LoaderContainer } from '../styled-components';
+import Button from 'components/ButtonV2/Button';
 import SimpleLoader from 'components/SimpleLoader';
-import { RootState } from 'redux/rootReducer';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import useProposalsQuery from 'queries/governance/useProposalsQuery';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import Button from 'components/ButtonV2/Button';
+import { RootState } from 'redux/rootReducer';
+import { Proposal } from 'types/governance';
+import { navigateToGovernance } from 'utils/routes';
+import ProposalCard from '../ProposalCard';
+import { LoaderContainer } from '../styled-components';
 import { NoProposals, NoProposalsText, Wrapper } from './styled-components';
 
 type ProposalListProps = {

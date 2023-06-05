@@ -5,7 +5,7 @@ import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import { DisclaimerComponent } from '@rainbow-me/rainbowkit';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
     return (

@@ -1,8 +1,8 @@
-import React, { CSSProperties } from 'react';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import ReactTooltip from 'rc-tooltip';
+import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 import 'theme/tooltip.css';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TooltipProps = {
     component?: any;

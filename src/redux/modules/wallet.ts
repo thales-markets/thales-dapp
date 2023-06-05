@@ -2,7 +2,7 @@ import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { getAddress } from 'utils/formatters/ethers';
 import { defaultNetwork, NetworkId } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
-import { COLLATERALS_INDEX } from 'constants/options';
+import { COLLATERALS_INDEX } from 'enums/options';
 
 const sliceName = 'wallet';
 

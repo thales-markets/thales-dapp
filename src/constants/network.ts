@@ -245,11 +245,3 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
         },
     },
 };
-
-export enum OneInchLiquidityProtocol {
-    UNISWAP = 'OPTIMISM_UNISWAP_V3',
-    PMM6 = 'OPTIMISM_PMM6',
-    VELODROME = 'OPTIMISM_VELODROME',
-    BALANCER = 'OPTIMISM_BALANCER_V2',
-    CURVE = 'OPTIMISM_CURVE',
-}

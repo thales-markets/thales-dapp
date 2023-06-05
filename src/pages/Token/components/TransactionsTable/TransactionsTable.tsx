@@ -5,7 +5,8 @@ import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/curren
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import Table from 'components/TableV2';
-import { TokenTransaction, TokenTransactions, TransactionFilterEnum } from 'types/token';
+import { TokenTransaction, TokenTransactions } from 'types/token';
+import { TransactionFilterEnum } from 'enums/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { EMPTY_VALUE } from 'constants/placeholder';
 

@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { navigateToGovernance } from 'utils/routes';
-import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
+import { SNAPSHOT_GRAPHQL_URL } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
 import { Proposal } from 'types/governance';
@@ -33,6 +33,7 @@ import {
 } from './styled-components';
 import Dropdown from './components/Dropdown';
 import { getIsMobile } from 'redux/modules/ui';
+import { SpaceKey, StatusEnum } from 'enums/governance';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;

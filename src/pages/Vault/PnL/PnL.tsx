@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { getIsAppReady } from 'redux/modules/app';
-import { VaultPnls } from 'types/vault';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useVaultPnlsQuery from 'queries/vault/useVaultPnlsQuery';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { formatPercentageWithSign } from 'utils/formatters/number';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { VaultPnls } from 'types/vault';
+import { formatPercentageWithSign } from 'utils/formatters/number';
 
 type PnlProps = {
     vaultAddress: string;

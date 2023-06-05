@@ -1,25 +1,26 @@
+import Button from 'components/ButtonV2';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
 import LpStaking from 'pages/Token/LpStaking';
-import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
 import Migration from 'pages/Token/Migration';
 import SnxStaking from 'pages/Token/SnxStaking';
+import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
-import { getIsArbitrum, getIsOVM } from 'utils/network';
-import Button from 'components/ButtonV2';
-import MigrationInfo from '../MigrationInfo';
-import { history } from 'utils/routes';
-import queryString from 'query-string';
-import { useLocation } from 'react-router-dom';
+import { TokenTabSection } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
+import { history } from 'utils/routes';
+import MigrationInfo from '../MigrationInfo';
 
 const Tab: React.FC<{
     selectedTab: string;

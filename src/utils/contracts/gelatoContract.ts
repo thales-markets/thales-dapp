@@ -1,4 +1,4 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
 const GELATO_POOL_ADDRESS = '0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5'; // thales/WETH
 const GELATO_POOL_ABI = [

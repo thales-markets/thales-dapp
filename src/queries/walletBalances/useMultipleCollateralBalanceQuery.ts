@@ -3,7 +3,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
-import { COLLATERALS_INDEX, STABLE_DECIMALS } from 'constants/options';
+import { STABLE_DECIMALS } from 'constants/options';
+import { COLLATERALS_INDEX } from 'enums/options';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,

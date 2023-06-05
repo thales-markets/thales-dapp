@@ -1,9 +1,9 @@
+import { LINKS } from 'constants/links';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import { LINKS } from 'constants/links';
-import { useTranslation } from 'react-i18next';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;

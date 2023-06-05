@@ -1,7 +1,7 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TableV3 from 'components/TableV3';
-import { Positions } from 'constants/options';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';

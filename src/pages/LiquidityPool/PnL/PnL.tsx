@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { getIsAppReady } from 'redux/modules/app';
-import { LiquidityPoolPnls } from 'types/liquidityPool';
+import { LiquidityPoolPnlType } from 'enums/liquidityPool';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useLiquidityPoolPnlsQuery from 'queries/liquidityPool/useLiquidityPoolPnlsQuery';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
-    BarChart,
     Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
     XAxis,
     YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    Cell,
-    LineChart,
-    Line,
 } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { formatPercentageWithSign } from 'utils/formatters/number';
-import { LiquidityPoolPnlType } from 'constants/liquidityPool';
+import { LiquidityPoolPnls } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { formatPercentageWithSign } from 'utils/formatters/number';
 
 type PnlProps = {
     lifetimePnl: number;

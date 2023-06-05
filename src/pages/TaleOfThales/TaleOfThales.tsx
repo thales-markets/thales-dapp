@@ -4,7 +4,7 @@ import Metaverse from './components/Metaverse';
 import Mint from './components/Mint';
 import Story from './components/Story';
 import { history } from 'utils/routes';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

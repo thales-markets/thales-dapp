@@ -1,4 +1,5 @@
-import { SUPPORTED_NETWORKS, isMainNet, NetworkId, getIsBSC, getIsArbitrum, Network } from './network';
+import { Network } from 'enums/network';
+import { NetworkId, SUPPORTED_NETWORKS, getIsArbitrum, getIsBSC, isMainNet } from './network';
 
 const getEtherScanBaseURL = (networkId: NetworkId) => {
     const network = SUPPORTED_NETWORKS[networkId];

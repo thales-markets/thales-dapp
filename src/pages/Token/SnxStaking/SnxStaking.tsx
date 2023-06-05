@@ -1,9 +1,9 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled from 'styled-components';
 import ClaimMigratedRewards from './ClaimMigratedRewards';
 import RetroRewards from './RetroRewards';
 import YourTransactions from './Transactions';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const SnxStaking: React.FC = () => {
     return (

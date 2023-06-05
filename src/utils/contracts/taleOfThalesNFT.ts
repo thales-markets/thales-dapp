@@ -1,4 +1,4 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
 const taleOfThalesNFT = {
     addresses: {

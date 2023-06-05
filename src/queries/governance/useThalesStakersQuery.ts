@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Staker, Stakers } from 'types/governance';
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 
 const useThalesStakersQuery = (options?: UseQueryOptions<Stakers>) => {

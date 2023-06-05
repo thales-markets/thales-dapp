@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
@@ -134,7 +134,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
                                     ? formatCurrencyWithKey(
-                                          (OPTIONS_CURRENCY_MAP as any)[cellProps.cell.row.original.side],
+                                          (OPTIONS_POSITIONS_MAP as any)[cellProps.cell.row.original.side],
                                           cellProps.cell.value
                                       )
                                     : cellProps.cell.row.original.type === 'mint'

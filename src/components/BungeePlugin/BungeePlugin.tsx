@@ -1,15 +1,16 @@
 import { Bridge, Customize } from '@socket.tech/plugin';
+import { Network } from 'enums/network';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { Network, NetworkId, getDefaultCollateral } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
-import { hexToRGB } from 'utils/style';
-import { getNetworkId } from 'redux/modules/wallet';
 import { ThemeInterface } from 'types/ui';
+import { NetworkId, getDefaultCollateral } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
+import { hexToRGB } from 'utils/style';
+import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 
 const SUPPORTED_DESTINATION_NETWORKS = [
     Network['Mainnet-Ovm'],

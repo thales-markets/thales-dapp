@@ -1,4 +1,4 @@
-import { SpaceKey } from 'constants/governance';
+import { SpaceKey } from 'enums/governance';
 
 export type SpaceData = {
     id: SpaceKey;

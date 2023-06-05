@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import { ReactComponent as ArrowDown } from 'assets/images/wizard/arrow-down.svg';
 import { ReactComponent as ArrowUp } from 'assets/images/wizard/arrow-up.svg';
 import SPAAnchor from 'components/SPAAnchor';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 
 const WizardFaq: React.FC = () => {
     const { t } = useTranslation();

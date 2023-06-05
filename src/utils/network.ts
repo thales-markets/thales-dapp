@@ -3,25 +3,11 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
-import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
+import { Network } from 'enums/network';
+import { BigNumber, UnsignedTransaction, ethers } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
 export type NetworkId = 1 | 3 | 42 | 10 | 69 | 420 | 80001 | 137 | 56 | 42161;
-
-export enum Network {
-    Mainnet = 1,
-    Ropsten = 3,
-    Rinkeby = 4,
-    Goerli = 5,
-    Kovan = 42,
-    'Mainnet-Ovm' = 10,
-    'Kovan-Ovm' = 69,
-    'Goerli-Ovm' = 420,
-    'POLYGON-MUMBAI' = 80001,
-    'POLYGON-MAINNET' = 137,
-    BSC = 56,
-    Arbitrum = 42161,
-}
 
 type EthereumProvider = {
     isMetaMask: boolean;

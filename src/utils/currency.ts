@@ -1,5 +1,5 @@
 import { currencyKeyToAssetIconMap, CRYPTO_CURRENCY_MAP, SYNTHS_MAP, currencyKeyToNameMap } from 'constants/currency';
-import { COLLATERALS_INDEX } from 'constants/options';
+import { COLLATERALS_INDEX } from 'enums/options';
 import { StableCoins } from 'types/options';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from './network';
 

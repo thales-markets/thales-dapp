@@ -1,13 +1,13 @@
 import snapshot from '@snapshot-labs/snapshot.js';
-import { SpaceKey, StatusEnum } from 'constants/governance';
-import { ethers } from 'ethers';
 import {
-    OLD_COUNCIL_END_DATE,
-    NUMBER_OF_COUNCIL_MEMBERS_OLD,
     NUMBER_OF_COUNCIL_MEMBERS,
+    NUMBER_OF_COUNCIL_MEMBERS_OLD,
+    OLD_COUNCIL_END_DATE,
     PROPOSAL_APPROVAL_VOTES,
     PROPOSAL_APPROVAL_VOTES_OLD,
 } from 'constants/governance';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import { ethers } from 'ethers';
 import { ThemeInterface } from 'types/ui';
 
 function getENSForAddresses(addresses: any[]) {

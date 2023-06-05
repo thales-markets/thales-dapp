@@ -1,14 +1,19 @@
-import React, { useMemo, DependencyList, CSSProperties, useEffect, useState, useRef } from 'react';
-import { useTable, useSortBy, Column, Row, usePagination } from 'react-table';
 import SimpleLoader from 'components/SimpleLoader';
-import styled from 'styled-components';
-import { SortDirection } from 'utils/options';
-import { FlexDiv, FlexDivCentered } from 'theme/common';
+import { USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
+import React, { CSSProperties, DependencyList, useEffect, useMemo, useRef, useState } from 'react';
+import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+
+enum SortDirection {
+    NONE,
+    ASC,
+    DESC,
+}
 
 type CSSPropertiesWithMedia = { cssProperties: CSSProperties } & { mediaMaxWidth: string };
 

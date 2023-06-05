@@ -1,7 +1,7 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { ZERO_ADDRESS } from 'constants/network';
-import { Positions } from 'constants/options';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
 import useUserOpenPositions from 'queries/user/useUserOpenPositions';
 import React, { useMemo } from 'react';

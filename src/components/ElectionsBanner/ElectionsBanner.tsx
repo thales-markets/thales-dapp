@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
-import { Trans } from 'react-i18next';
 import InfoBanner from 'components/InfoBanner';
+import SPAAnchor from 'components/SPAAnchor';
+import { VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import ROUTES from 'constants/routes';
+import { SpaceKey } from 'enums/governance';
+import React, { useMemo } from 'react';
+import { Trans } from 'react-i18next';
+import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { buildHref } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import SPAAnchor from 'components/SPAAnchor';
-import { SpaceKey, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 
 type ElectionsBannerProps = {
     isLandingPage?: boolean;

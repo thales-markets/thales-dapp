@@ -1,6 +1,13 @@
-import { ValueType } from 'react-select';
-import { CurrencyKeyOptionType } from 'constants/currency';
+import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
+import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
+import Currency from 'components/Currency';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import { CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ValueType } from 'react-select';
+import styled, { useTheme } from 'styled-components';
 import {
     FlexDivCentered,
     FlexDivColumn,
@@ -8,17 +15,8 @@ import {
     FlexDivRowCentered,
     FlexDivSpaceBetween,
 } from 'theme/common';
-import styled from 'styled-components';
-import Currency from 'components/Currency';
-import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
-import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
-import { USD_SIGN } from 'constants/currency';
-import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;

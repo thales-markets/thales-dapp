@@ -4,7 +4,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import { VaultTrades, VaultTrade } from 'types/vault';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { VaultTradeStatus } from 'constants/vault';
+import { VaultTradeStatus } from 'enums/vault';
 
 const useVaultTradesQuery = (vaultAddress: string, networkId: NetworkId, options?: UseQueryOptions<VaultTrades>) => {
     return useQuery<VaultTrades>(

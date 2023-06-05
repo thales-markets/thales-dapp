@@ -1,5 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'constants/options';
+import { Positions } from 'enums/options';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

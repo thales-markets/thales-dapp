@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
-import { Proposal } from 'types/governance';
-import { useTranslation } from 'react-i18next';
-import { VoteContainer, VoteConfirmation } from 'pages/Governance/styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
-import { refetchProposal } from 'utils/queryConnector';
-import { dispatchMarketNotification } from 'utils/options';
-import { ProposalTypeEnum } from 'constants/governance';
-import ValidationMessage from 'components/ValidationMessage';
-import voting from 'utils/voting';
+import { Web3Provider } from '@ethersproject/providers';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
-import { Web3Provider } from '@ethersproject/providers';
 import Button from 'components/ButtonV2/Button';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import ValidationMessage from 'components/ValidationMessage';
+import { ProposalTypeEnum } from 'enums/governance';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { Proposal } from 'types/governance';
+import { dispatchMarketNotification } from 'utils/options';
+import { refetchProposal } from 'utils/queryConnector';
+import voting from 'utils/voting';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;

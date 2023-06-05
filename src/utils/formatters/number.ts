@@ -1,5 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'constants/options';
+import { Positions } from 'enums/options';
 import numbro from 'numbro';
 
 type NumericValue = string | number;

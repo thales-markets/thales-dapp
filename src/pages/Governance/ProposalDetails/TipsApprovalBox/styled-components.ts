@@ -1,4 +1,4 @@
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { PieChart } from 'recharts';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';

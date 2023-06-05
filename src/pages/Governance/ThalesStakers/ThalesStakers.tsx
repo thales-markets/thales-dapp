@@ -10,7 +10,7 @@ import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import Table from 'components/TableV2';

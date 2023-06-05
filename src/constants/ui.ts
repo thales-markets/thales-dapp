@@ -1,10 +1,7 @@
+import { Theme } from 'enums/ui';
 import { ToastPosition, TypeOptions } from 'react-toastify';
 import darkTheme from 'theme/themes/dark';
 import { ThemeInterface } from 'types/ui';
-
-export enum Theme {
-    DARK,
-}
 
 export const ThemeMap: Record<Theme, ThemeInterface> = {
     [Theme.DARK]: darkTheme,
@@ -56,7 +53,3 @@ export const getInfoToastOptions = (message: string) => {
 };
 
 export const REFERRAL_COOKIE_LIFETIME = 648000;
-
-export enum ScreenSizeBreakpoint {
-    SMALL = 767,
-}

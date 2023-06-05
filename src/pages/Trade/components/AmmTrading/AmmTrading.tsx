@@ -3,21 +3,26 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/ButtonV2';
 import CollateralSelector from 'components/CollateralSelectorV2';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
     POSITIONS_TO_SIDE_MAP,
-    Positions,
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -25,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsBuy } from 'redux/modules/marketWidgets';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -43,18 +49,14 @@ import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForN
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { roundNumberToDecimals, truncToDecimals } from 'utils/formatters/number';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
+import { convertPriceImpactToBonus } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
-import TradingDetailsModal from './components/TradingDetailsModal';
-import TradingDetails from './components/TradingDetails';
-import { convertPriceImpactToBonus } from 'utils/options';
-import NumericInput from 'components/fields/NumericInput/NumericInput';
 import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
 import { isSlippageValid } from './components/Slippage/Slippage';
-import { getIsBuy } from 'redux/modules/marketWidgets';
-import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import TradingDetails from './components/TradingDetails';
+import TradingDetailsModal from './components/TradingDetailsModal';
 import TradingDetailsSentence from './components/TradingDetailsSentence';
 import {
     ColumnSpaceBetween,
@@ -63,8 +65,6 @@ import {
     FinalizeTrade,
     TradingDetailsContainer,
 } from './styled-components';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 
 type AmmTradingProps = {
     currencyKey: string;

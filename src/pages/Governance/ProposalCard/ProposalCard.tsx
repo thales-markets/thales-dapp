@@ -1,14 +1,14 @@
-import { SpaceKey, StatusEnum } from 'constants/governance';
-import { indexOf, max } from 'lodash';
 import TimeRemaining from 'components/TimeRemaining';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import { indexOf, max } from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'styled-components';
 import { FlexDivRowCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
+import { ThemeInterface } from 'types/ui';
 import { truncateText } from 'utils/formatters/string';
 import { Body, Card, CardContainer, Result, ResultContainer, RightSection, Status, Title } from './styled-components';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 type ProposalCardProps = {
     proposal: Proposal;

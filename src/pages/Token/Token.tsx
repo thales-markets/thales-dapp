@@ -10,7 +10,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
-import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';

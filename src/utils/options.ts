@@ -5,12 +5,6 @@ import { getSynthAsset } from './currency';
 import { Color } from '@material-ui/lab';
 import { formatCurrency } from './formatters/number';
 
-export enum SortDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
         markets.map((optionsMarket) => {
