@@ -8,13 +8,19 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
         QUERY_KEYS.User.Data(walletAddress, networkId),
         async () => {
             let [profit, volume, trades, gain, investment] = [0, 0, 0, 0, 0];
-            const marketTx = await thalesData.binaryOptions.optionTransactions({
-                max: 1000,
-                account: walletAddress,
-                network: networkId,
-            });
 
-            marketTx.map((tx: any) => {
+            const [userMarketTransactions, userTrades] = await Promise.all([
+                thalesData.binaryOptions.optionTransactions({
+                    account: walletAddress,
+                    network: networkId,
+                }),
+                thalesData.binaryOptions.trades({
+                    taker: walletAddress,
+                    network: networkId,
+                }),
+            ]);
+
+            userMarketTransactions.map((tx: any) => {
                 if (tx.type === 'mint') {
                     volume += tx.amount / 2;
                     profit -= tx.amount / 2;
@@ -24,31 +30,7 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
                 }
             });
 
-            const [tradesMaker, tradesTaker] = await Promise.all([
-                thalesData.binaryOptions.trades({
-                    maker: walletAddress,
-                    network: networkId,
-                }),
-                thalesData.binaryOptions.trades({
-                    taker: walletAddress,
-                    network: networkId,
-                }),
-            ]);
-
-            tradesMaker.map((tx: any) => {
-                trades += 1;
-
-                if (tx.orderSide === 'sell') {
-                    profit += tx.makerAmount;
-                    volume += tx.makerAmount;
-                } else {
-                    profit -= tx.takerAmount;
-                    investment += tx.takerAmount;
-                    volume += tx.takerAmount;
-                }
-            });
-
-            tradesTaker.map((tx: any) => {
+            userTrades.map((tx: any) => {
                 trades += 1;
 
                 if (tx.orderSide === 'sell') {
@@ -64,8 +46,8 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
             gain = investment !== 0 ? profit / investment : 0;
 
             const result = {
-                marketTx,
-                trades: [...tradesMaker, ...tradesTaker],
+                userMarketTransactions,
+                trades: userTrades,
                 userData: {
                     profit,
                     volume,

@@ -59,17 +59,10 @@ const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface)
             const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
             return {
-                dotColor: marketExpired ? '' : theme.background.quaternary,
+                dotColor: theme.background.tertiary,
+                backgroundColor: theme.background.secondary,
                 asset: {
                     currencyKey: d.marketItem.currencyKey,
-                    assetNameFontSize: '12px',
-                    currencyKeyFontSize: '12px',
-                    iconType:
-                        d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]]
-                            ? 1
-                            : d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]]
-                            ? 2
-                            : 0,
                 },
                 cells: [
                     { title: d.orderSide, value: formatHoursAndMinutesFromTimestamp(d.timestamp) },

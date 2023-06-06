@@ -1,49 +1,41 @@
-import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import SearchInput from 'components/SearchInput/SearchInput';
-import TableGridSwitch from 'components/TableGridSwitch';
-import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
-import { USD_SIGN } from 'constants/currency';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useAllPositions from 'queries/user/useAllPositions';
+import useAllPositions, { UserPositionsData } from 'queries/user/useAllPositions';
 import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
-import useRangedPositions from 'queries/user/useRangedPositions';
 import queryString from 'query-string';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import localStore from 'utils/localStore';
 import { history } from 'utils/routes';
-import { getIsOVM, getIsPolygon } from '../../utils/network';
+import { getIsOVM } from '../../utils/network';
 import History from './components/History/History';
-import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
 import {
     Container,
     ContainerFixed,
     ContainerLeft,
-    ContainerRight,
     ContentWrapper,
-    Label,
     Nav,
     NavItem,
     Notification,
-    PriceContainer,
-    Row,
-    Value,
-    Wrapper,
+    StatsContainer,
+    StatsItem,
+    StatsLabel,
+    StatsValue,
 } from './styled-components';
+import PositionHistory from './components/History copy/PositionHistory';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
+import { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -59,63 +51,49 @@ const Profile: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [searchAddress, setSearchAddress] = useState<string>('');
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-    const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
+    const markets = marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : [];
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
-        enabled: isAppReady && markets !== undefined && markets?.length > 0,
+        enabled: isAppReady && markets.length > 0,
     });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
+    const exchangeRates =
+        exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data
+            ? exchangeRatesMarketDataQuery.data
+            : null;
 
     const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady && walletAddress !== null,
+        enabled: isAppReady && isWalletConnected,
     });
 
-    const positions = userPositionsQuery.isSuccess
-        ? userPositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
-
-    const userRangePositionsQuery = useRangedPositions(
-        networkId,
-        (searchAddress ? searchAddress : walletAddress) as any,
-        {
-            enabled: isAppReady && walletAddress !== null,
-        }
-    );
-
-    const userRangePositions = userRangePositionsQuery.isSuccess
-        ? userRangePositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
+    const positions: UserPositionsData =
+        userPositionsQuery.isSuccess && userPositionsQuery.data
+            ? userPositionsQuery.data
+            : {
+                  live: [],
+                  claimable: [],
+                  claimed: [],
+                  rip: [],
+                  claimableCount: 0,
+                  claimableAmount: 0,
+              };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
     });
     const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
-    const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
-    const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
-
-    const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
     const [searchText, setSearchText] = useState('');
     const queryParamTab = queryString.parse(location.search).tab as NavItems;
     const [view, setView] = useState(
         Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
     );
 
-    const tableViewSwitchClickhandler = () => {
-        setSimpleView(!isSimpleView);
-        localStore.set(tableViewStorageKey, isSimpleView);
-    };
-
     const showOPBanner = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-
-    const claimable = useMemo(() => {
-        return positions.claimable + userRangePositions.claimable;
-    }, [positions, userRangePositions]);
 
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
@@ -145,21 +123,54 @@ const Profile: React.FC = () => {
         <>
             {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
-            <Container layout={isSimpleView}>
+            <Container>
                 <ContainerFixed>
                     <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
                     />
-                    <TableGridSwitch
-                        value={!isSimpleView}
-                        clickEventHandler={tableViewSwitchClickhandler}
-                        labels={[t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)]}
-                    />
                 </ContainerFixed>
-                <ContainerLeft layout={isSimpleView}>
-                    <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
+                <ContainerLeft>
+                    <StatsContainer>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
+                            <StatsValue
+                                color={
+                                    dataForUI?.userData.profit === 0
+                                        ? theme.textColor.primary
+                                        : dataForUI?.userData.profit > 0
+                                        ? theme.textColor.quaternary
+                                        : theme.textColor.tertiary
+                                }
+                            >
+                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
+                            </StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.gain-col')}:</StatsLabel>
+                            <StatsValue
+                                color={
+                                    dataForUI?.userData.gain === 0
+                                        ? theme.textColor.primary
+                                        : dataForUI?.userData.gain > 0
+                                        ? theme.textColor.quaternary
+                                        : theme.textColor.tertiary
+                                }
+                            >
+                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
+                            </StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.trades-col')}:</StatsLabel>
+                            <StatsValue>{dataForUI?.userData.trades}</StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.volume-col')}:</StatsLabel>
+                            <StatsValue>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</StatsValue>
+                        </StatsItem>
+                    </StatsContainer>
+                    <Nav justifyContent={'space-between'}>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
                             className={view === NavItems.MyPositions ? 'active' : ''}
@@ -171,7 +182,7 @@ const Profile: React.FC = () => {
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
                             {t('options.trading-profile.tabs.matured-positions')}
-                            {claimable > 0 && <Notification> {claimable} </Notification>}
+                            {positions.claimableCount > 0 && <Notification> {positions.claimableCount} </Notification>}
                         </NavItem>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.History)}
@@ -180,20 +191,18 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <ContentWrapper isScrollable={isSimpleView || view === NavItems.History}>
+                    <ContentWrapper isScrollable={true}>
                         {view === NavItems.MyPositions && (
                             <MyPositions
-                                isSimpleView={isSimpleView}
                                 exchangeRates={exchangeRates}
-                                positions={positions.live}
-                                rangedPositions={userRangePositions.live}
+                                livePositions={positions.live}
                                 searchText={searchAddress ? '' : searchText}
                                 isLoading={userPositionsQuery.isLoading}
                             />
                         )}
-                        {view === NavItems.MaturedPositions && (
+                        {/* {view === NavItems.MaturedPositions && (
                             <MaturedPositions
-                                isSimpleView={isSimpleView}
+                                isSimpleView={true}
                                 positions={positions.matured}
                                 claimed={positions.claimed}
                                 claimedRange={userRangePositions.claimed}
@@ -201,18 +210,26 @@ const Profile: React.FC = () => {
                                 isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
                             />
-                        )}
+                        )} */}
                         {view === NavItems.History && (
-                            <History
-                                markets={[...(markets as any)]}
-                                trades={dataForUI ? dataForUI.trades : []}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
-                            />
+                            <>
+                                <PositionHistory
+                                    claimedPositions={positions.claimed}
+                                    ripPositions={positions.rip}
+                                    searchText={searchAddress ? '' : searchText}
+                                    isLoading={userPositionsQuery.isLoading}
+                                />
+                                <History
+                                    markets={[...(markets as any)]}
+                                    trades={dataForUI ? dataForUI.trades : []}
+                                    searchText={searchAddress ? '' : searchText}
+                                    isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
+                                />
+                            </>
                         )}
                     </ContentWrapper>
                 </ContainerLeft>
-                <ContainerRight layout={isSimpleView}>
+                {/* <ContainerRight layout={isSimpleView}>
                     <PieChartOptionsAllocated
                         claimable={positions.claimableAmount + userRangePositions.claimableAmount}
                     />
@@ -263,7 +280,7 @@ const Profile: React.FC = () => {
                             </PriceContainer>
                         )}
                     </Wrapper>
-                </ContainerRight>
+                </ContainerRight> */}
             </Container>
             <Footer />
         </>

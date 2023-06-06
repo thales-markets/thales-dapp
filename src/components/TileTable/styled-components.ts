@@ -56,7 +56,7 @@ export const Tile = styled(FlexDiv)<{
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             height: ${(props) => (props.heightSmall ? '44px' : props.lineSmall ? '70px' : '94px')};
-            top: ${(props) => (props.heightSmall || props.lineSmall ? '-31px' : '-56px')};
+            top: ${(props) => (props.heightSmall || props.lineSmall ? '-32px' : '-56px')};
         }
     }
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {

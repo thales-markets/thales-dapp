@@ -1,9 +1,7 @@
-import Currency from 'components/Currency/v2';
 import CurrencyIcon, { IconType } from 'components/Currency/v2/CurrencyIcon';
 import RangeIllustration from 'components/RangeIllustration';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'enums/options';
 import { TFunction } from 'i18next';
@@ -14,11 +12,7 @@ import { LoaderContainer } from 'styles/common';
 import { UsersAssets } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
-import {
-    formatCurrencyWithSign,
-    formatCurrencyWithSignInRange,
-    getPercentageDifference,
-} from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import {
     Card,
@@ -34,7 +28,6 @@ import {
     NoDataContainer,
     NoDataText,
     PriceDifferenceInfo,
-    TableText,
     getColor,
 } from '../styled-components';
 
@@ -243,122 +236,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                     <SimpleLoader />
                 </LoaderContainer>
             )}
-            {!isSimpleView && (
-                <Table
-                    data={data}
-                    searchQuery={searchText}
-                    isLoading={isLoading}
-                    columns={[
-                        {
-                            Header: <>{t('options.home.markets-table.asset-col')}</>,
-                            accessor: 'market.currencyKey',
-                            Cell: (props: any) => (
-                                <Currency.Name
-                                    currencyKey={props.cell.value}
-                                    showIcon={true}
-                                    iconProps={{ type: 'asset' }}
-                                    synthIconStyle={{ width: 32, height: 32 }}
-                                    spanStyle={{ width: 60 }}
-                                    hideAssetName={true}
-                                />
-                            ),
-                            sortable: true,
-                        },
-                        {
-                            Header: <>{t(`options.home.markets-table.maturity-date-col`)}</>,
-                            accessor: 'market.maturityDate',
-                            Cell: (props: any) => <TableText>{formatShortDate(props.cell.value)}</TableText>,
-                        },
-                        {
-                            Header: <>{t(`options.home.markets-table.strike-price-col`)}</>,
-                            accessor: 'range',
-                            Cell: (props: any) => (
-                                <TableText>
-                                    {props.cell.value
-                                        ? formatCurrencyWithSignInRange(
-                                              USD_SIGN,
-                                              props.row.original.market.leftPrice,
-                                              props.row.original.market.rightPrice,
-                                              2
-                                          )
-                                        : formatCurrencyWithSign(USD_SIGN, props.row.original.market.strikePrice, 2)}
-                                </TableText>
-                            ),
-                            sortable: true,
-                            sortType: (firstElem: any, secondElem: any) => {
-                                const firstPrice =
-                                    firstElem.original.market.leftPrice || firstElem.original.market.strikePrice;
-                                const secondPrice =
-                                    secondElem.original.market.leftPrice || secondElem.original.market.strikePrice;
-
-                                if (firstPrice > secondPrice) {
-                                    return 1;
-                                }
-                                if (firstPrice < secondPrice) {
-                                    return -1;
-                                }
-                                return 0;
-                            },
-                        },
-                        {
-                            Header: <>{t(`options.home.markets-table.final-asset-price-col`)}</>,
-                            accessor: 'market.finalPrice',
-                            Cell: (props: any) => (
-                                <TableText>{formatCurrencyWithSign(USD_SIGN, props.cell.value)}</TableText>
-                            ),
-                            sortable: true,
-                            sortType: (firstElem: any, secondElem: any) => {
-                                if (firstElem.original.market.finalPrice > secondElem.original.market.finalPrice)
-                                    return 1;
-                                if (firstElem.original.market.finalPrice < secondElem.original.market.finalPrice)
-                                    return -1;
-                                return 0;
-                            },
-                        },
-                        {
-                            Header: <>{t(`options.home.markets-table.status-col`)}</>,
-                            accessor: 'claimable',
-                            Cell: (props: any) => (
-                                <TableText>
-                                    {getIconOrText(props.cell.value, props.row.original.claimed, t, theme)}
-                                </TableText>
-                            ),
-                        },
-                        {
-                            Header: <>{t('options.leaderboard.trades.table.amount-col')}</>,
-                            accessor: 'balances.amount',
-                            Cell: (props: any) => (
-                                <TableText
-                                    style={{
-                                        minWidth: 100,
-                                        marginRight: 20,
-                                        textAlign: 'right',
-                                        display: 'inline-block',
-                                    }}
-                                >
-                                    {props.cell.value.toFixed(2)}
-                                    <Icon
-                                        margin="0 0 0 6px"
-                                        color={getColor(props.row.original, theme)}
-                                        className={`v2-icon v2-icon--${props.row.original.balances.type.toLowerCase()}`}
-                                    ></Icon>
-                                </TableText>
-                            ),
-                            sortable: true,
-                            sortType: (firstElem: any, secondElem: any) => {
-                                if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
-                                if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
-                                return 0;
-                            },
-                        },
-                    ]}
-                />
-            )}
         </Container>
     );
 };
 
-const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction, theme: ThemeInterface) => {
+export const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction, theme: ThemeInterface) => {
     if (claimable) {
         return (
             <span>
@@ -377,6 +259,29 @@ const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction, theme
             </span>
         );
     }
+};
+
+export const getColorPerPosition = (position: Positions, theme: ThemeInterface) => {
+    switch (position) {
+        case Positions.UP:
+            return theme.positionColor.up;
+        case Positions.DOWN:
+            return theme.positionColor.down;
+        case Positions.IN:
+            return theme.positionColor.in;
+        case Positions.OUT:
+            return theme.positionColor.out;
+        default:
+            return theme.textColor.primary;
+    }
+};
+
+export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => {
+    return (
+        <span>
+            {amount} <span style={{ color: getColorPerPosition(position, theme) }}>{position}</span>
+        </span>
+    );
 };
 
 export default MaturedPositions;

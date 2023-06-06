@@ -98,6 +98,7 @@ export type RangedMarket = {
     timestamp: number;
     currencyKey: string;
     maturityDate: number;
+    expiryDate: number;
     leftPrice: number;
     rightPrice: number;
     inAddress: string;

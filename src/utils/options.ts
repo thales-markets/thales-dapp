@@ -4,6 +4,8 @@ import { OptionsMarkets, Phase } from '../types/options';
 import { getSynthAsset } from './currency';
 import { Color } from '@material-ui/lab';
 import { formatCurrency } from './formatters/number';
+import { ThemeInterface } from 'types/ui';
+import { Positions } from 'enums/options';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
@@ -59,3 +61,18 @@ export const dispatchMarketNotification = (message: string, type?: Color) => {
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);
 
 export const getFormattedBonus = (bonus: number | undefined) => `+${formatCurrency(Number(bonus))}%`;
+
+export const getColorPerPosition = (position: Positions, theme: ThemeInterface) => {
+    switch (position) {
+        case Positions.UP:
+            return theme.positionColor.up;
+        case Positions.DOWN:
+            return theme.positionColor.down;
+        case Positions.IN:
+            return theme.positionColor.in;
+        case Positions.OUT:
+            return theme.positionColor.out;
+        default:
+            return theme.textColor.primary;
+    }
+};

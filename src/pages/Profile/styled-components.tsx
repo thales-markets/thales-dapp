@@ -1,12 +1,14 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
+import { FlexDivRow } from 'styles/common';
 
-export const Container = styled.div<{ layout: boolean }>`
+export const Container = styled.div`
     position: relative;
     display: flex;
     width: 100%;
     margin-top: 50px;
-    flex-direction: ${(props) => (props.layout ? 'row' : 'column-reverse')};
+    max-width: 974px;
+    flex-direction: row;
     @media (max-width: 1250px) {
         margin-top: 0;
         flex-direction: column-reverse;
@@ -30,15 +32,11 @@ export const ContainerFixed = styled.div`
     }
 `;
 
-export const ContainerLeft = styled.div<{ layout: boolean }>`
+export const ContainerLeft = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-width: 50%;
-    max-width: ${(props) => (props.layout ? '50%' : '100%')};
-    @media (max-width: 1250px) {
-        max-width: 100%;
-    }
+    width: 100%;
 `;
 
 export const ContainerRight = styled.div<{ layout: boolean }>`
@@ -117,8 +115,8 @@ export const Value = styled(Text)<{ color?: string }>`
 
 export const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
-    align-items: center;
-    justify-content: ${(props) => props.justifyContent};
+    justify-content: center;
+    align-items: stretch;
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -190,4 +188,23 @@ export const PriceContainer = styled.div`
     max-width: 500px;
     margin: 0 auto;
     margin-top: 20px;
+`;
+
+export const StatsContainer = styled(FlexDivRow)`
+    border-radius: 8px;
+    background: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.textColor.primary};
+    padding: 20px 15px;
+    font-size: 18px;
+`;
+
+export const StatsItem = styled(FlexDivRow)``;
+
+export const StatsLabel = styled.span`
+    margin-right: 6px;
+`;
+
+export const StatsValue = styled.span<{ color?: string }>`
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    font-weight: 700;
 `;

@@ -1,47 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { useSelector } from 'react-redux';
-import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
 import { getSynthName } from 'utils/currency';
 
 export type AssetInfoProps = {
     currencyKey: string;
-    logoSize?: string;
+    iconFontSize?: string;
     assetNameFontSize?: string;
     currencyKeyFontSize?: string;
     displayInRow?: boolean;
     displayInRowMobile?: boolean;
     hideFullName?: boolean;
-    iconType?: number;
 };
 
 const AssetInfo: React.FC<AssetInfoProps> = ({
     currencyKey,
-    logoSize,
+    iconFontSize,
     assetNameFontSize,
     currencyKeyFontSize,
     displayInRow,
     hideFullName,
     displayInRowMobile,
-    iconType,
 }) => {
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
-
     return (
         <AssetContainer displayInRowMobile={displayInRowMobile}>
             <CurrencyIcon
-                synthIconStyle={{
-                    marginRight: isMobile ? 0 : 7,
-                    height: isMobile ? '30px' : logoSize || '24px',
-                    width: isMobile ? '30px' : logoSize || '24px',
-                }}
-                currencyKey={currencyKey}
-                width={logoSize}
-                height={logoSize}
-                iconType={iconType}
+                className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`}
+                fontSize={iconFontSize}
             />
             <AssetNameContainer displayInRow={displayInRow}>
                 {!hideFullName && <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>}
@@ -65,9 +50,9 @@ const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
 `;
 
 const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
-    display: ${(props) => (props?.displayInRow ? 'flex' : 'block')};
-    ${(props) => (props?.displayInRow ? 'flex-direction: row;' : '')}
-    ${(props) => (props?.displayInRow ? 'align-items: baseline;' : '')}
+    display: ${(props) => (props.displayInRow ? 'flex' : 'block')};
+    ${(props) => (props.displayInRow ? 'flex-direction: row;' : '')}
+    ${(props) => (props.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
     color: ${(props) => props.theme.textColor.primary} !important;
@@ -79,7 +64,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
 const AssetName = styled.span<{ fontSize?: string }>`
     display: block;
     font-weight: 300;
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
+    font-size: ${(props) => props.fontSize || '12px'};
     text-transform: uppercase;
     line-height: 120%;
     margin-right: 2px;
@@ -90,9 +75,17 @@ const AssetName = styled.span<{ fontSize?: string }>`
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
     display: block;
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
+    font-size: ${(props) => props.fontSize || '12px'};
     text-transform: uppercase;
     font-weight: 700;
+`;
+
+const CurrencyIcon = styled.i<{ fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '24px'};
+    margin-right: 6px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-right: 0px;
+    }
 `;
 
 export default AssetInfo;

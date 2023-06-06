@@ -206,7 +206,6 @@ const Table: React.FC<TableProps> = ({
                         {stickyRow ?? <></>}
                         {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
                             prepareRow(row);
-                            console.log(row);
 
                             return (
                                 <ExpandableRow key={rowIndex}>

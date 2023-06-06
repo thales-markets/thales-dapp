@@ -20,7 +20,7 @@ type Cell = {
     color?: string;
     title?: string;
     titleFontSize?: number;
-    value: string | number;
+    value: string | number | ReactElement;
     valueFontSize?: number;
     test?: number;
 };

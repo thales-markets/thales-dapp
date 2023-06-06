@@ -39,6 +39,7 @@ import {
     UsingAmmLink,
     Value,
 } from './styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 type RowCardProps = {
     isRangedMarket: boolean;
@@ -149,21 +150,6 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                   market?.phase == 'maturity' ? market.finalPrice : market.currentPrice
               );
     }, [market.currentPrice, (market as OptionsMarketInfo).strikePrice, market.phase, isRangedMarket]);
-
-    const getColorPerPosition = (position: Positions) => {
-        switch (position) {
-            case Positions.UP:
-                return theme.positionColor.up;
-            case Positions.DOWN:
-                return theme.positionColor.down;
-            case Positions.IN:
-                return theme.positionColor.in;
-            case Positions.OUT:
-                return theme.positionColor.out;
-            default:
-                return theme.textColor.primary;
-        }
-    };
 
     const getMarketPriceSection = () => (
         <SubContainer>

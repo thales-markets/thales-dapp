@@ -32,19 +32,19 @@ export const TableText = styled.span`
 `;
 
 export const CardWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ? props.theme.background.quaternary : 'transparent')};
+    background: ${(props) => (props.background ? props.theme.background.quaternary : props.theme.background.secondary)};
     margin-bottom: 15px;
     border-radius: 15px;
     padding: 2px;
     border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.primary}`)};
     &:hover {
         transform: scale(1.02);
-        border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.secondary}`)};
+        border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.primary}`)};
     }
 `;
 
 export const Card = styled.div`
-    background: ${(props) => props.theme.background.primary};
+    background: ${(props) => props.theme.background.secondary};
     box-sizing: border-box;
     border-radius: 15px;
     padding: 16px 24px;
@@ -104,19 +104,19 @@ export const CardSection = styled.div`
 `;
 
 export const CardRowTitle = styled(CardText)`
-    font-size: 14px;
+    font-size: 13px;
+    color: ${(props) => props.theme.textColor.secondary};
     font-weight: 400;
-    text-transform: capitalize;
     margin-bottom: 4px;
     @media (max-width: 500px) {
-        font-size: 8px;
+        font-size: 10px;
     }
 `;
 
 export const CardRowSubtitle = styled(CardText)`
-    font-size: 23px;
+    font-size: 15px;
     span {
-        font-size: 23px !important;
+        font-size: 15px !important;
         white-space: pre;
     }
     font-weight: 700;
@@ -140,14 +140,15 @@ export const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
 `;
 
 export const getColor = (data: any, theme: ThemeInterface) => {
-    if (data.range) {
-        return data.balances.type === Positions.IN ? theme.positionColor.in : theme.positionColor.out;
+    if (data.isRanged) {
+        return data.side === Positions.IN ? theme.positionColor.in : theme.positionColor.out;
     }
-    return data.balances.type === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
+    return data.side === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
 };
 
 export const Icon = styled.i<{ margin?: string; color?: string }>`
-    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
+    margin: 0px 0px 2px 4px;
+    font-size: 10px;
     ${(props) => (props.color ? `color: ${props.color} !important` : '')};
     @media (max-width: 568px) {
         font-size: 16px;
@@ -170,5 +171,13 @@ export const NoDataContainer = styled.div`
     margin-top: 50px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
+    }
+`;
+
+export const CurrencyIcon = styled.i<{ fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '24px'};
+    margin-right: 6px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-right: 0px;
     }
 `;
