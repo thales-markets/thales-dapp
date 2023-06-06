@@ -19,7 +19,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatGasLimit } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import NetworkFees from '../components/NetworkFees';
@@ -28,6 +27,12 @@ import Instructions from './Instructions';
 import Stake from './Stake';
 import YourTransactions from './Transactions';
 import Unstake from './Unstake';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -136,6 +141,7 @@ const LpStaking: React.FC = () => {
 
     const handleClaimStakingRewards = async () => {
         if (rewards || secondRewards) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -148,7 +154,7 @@ const LpStaking: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.lp-staking.claim.claimed'));
+                    toast.update(id, getSuccessToastOptions(t('options.earn.lp-staking.claim.claimed'), id));
                     refetchTokenQueries(walletAddress, networkId);
                     refetchLPStakingQueries(walletAddress, networkId);
                     setIsClaiming(false);

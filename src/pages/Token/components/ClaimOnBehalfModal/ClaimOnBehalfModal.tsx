@@ -9,7 +9,6 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
 import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
@@ -18,6 +17,12 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput';
 import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -61,6 +66,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 
     const handleSubmit = async () => {
         try {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsSubmitting(true);
 
@@ -76,10 +82,14 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    canClaimOnBehalf
-                        ? t('options.earn.claim-on-behalf.disable-button.confirmation-message')
-                        : t('options.earn.claim-on-behalf.enable-button.confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        canClaimOnBehalf
+                            ? t('options.earn.claim-on-behalf.disable-button.confirmation-message')
+                            : t('options.earn.claim-on-behalf.enable-button.confirmation-message'),
+                        id
+                    )
                 );
                 setAccount('');
                 setIsSubmitting(false);

@@ -26,10 +26,15 @@ import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../../styled-components';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -217,7 +222,7 @@ const Unstake: React.FC = () => {
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
-
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setTxErrorMessage(null);
             setIsUnstaking(true);
@@ -229,8 +234,12 @@ const Unstake: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message'),
+                        id
+                    )
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setAmountToUnstake('');
@@ -248,7 +257,7 @@ const Unstake: React.FC = () => {
 
     const handleUnstakeThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
-
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setTxErrorMessage(null);
             setIsUnstaking(true);
@@ -257,8 +266,12 @@ const Unstake: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message'),
+                        id
+                    )
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setIsUnstakingInContract(false);

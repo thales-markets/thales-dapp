@@ -23,11 +23,16 @@ import {
     FlexDivSpaceBetween,
 } from 'styles/common';
 import { Proposal } from 'types/governance';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchProposal } from 'utils/queryConnector';
 import voting from 'utils/voting';
 import { percentageOfTotal } from 'utils/voting/weighted';
 import pitches from '../pitches.json';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -79,6 +84,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     }
 
     const handleVote = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         setTxErrorMessage(null);
         setIsVoting(true);
         try {
@@ -99,7 +105,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
             });
 
             refetchProposal(proposal.space.id, proposal.id, walletAddress);
-            dispatchMarketNotification(t('governance.proposal.vote-confirmation-message'));
+            toast.update(id, getSuccessToastOptions(t('governance.proposal.vote-confirmation-message'), id));
             setIsVoting(false);
         } catch (e) {
             console.log(e);

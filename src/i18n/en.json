@@ -386,7 +386,8 @@
             "info": "Info",
             "warning": "Warning",
             "error": "Error"
-        }
+        },
+        "progress": "Please wait..."
     },
     "modals": {
         "gwei": {

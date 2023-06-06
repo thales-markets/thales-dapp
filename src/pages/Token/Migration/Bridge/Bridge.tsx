@@ -3,7 +3,6 @@ import { BigNumber, ethers } from 'ethers';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
-import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -25,6 +24,12 @@ import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQu
 import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -144,6 +149,7 @@ const Bridge: React.FC = () => {
     };
 
     const handleSubmit = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         setTxErrorMessage(null);
         setIsSubmitting(true);
 
@@ -163,7 +169,7 @@ const Bridge: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('migration.bridge-button.confirmation-message'));
+                toast.update(id, getSuccessToastOptions(t('migration.bridge-button.confirmation-message'), id));
                 setIsSubmitting(false);
                 setAmount('');
             }

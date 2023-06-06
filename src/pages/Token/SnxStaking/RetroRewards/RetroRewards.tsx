@@ -22,7 +22,6 @@ import { ThemeInterface } from 'types/ui';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import {
@@ -39,6 +38,12 @@ import {
     SectionContentContainer,
     SectionHeader,
 } from '../components';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -111,6 +116,7 @@ const RetroRewards: React.FC = () => {
 
     const handleClaimRetroRewards = async () => {
         if (isClaimAvailable) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             const { vestingEscrowContract } = snxJSConnector as any;
 
             try {
@@ -123,7 +129,7 @@ const RetroRewards: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.snx-stakers.confirmation-message'));
+                    toast.update(id, getSuccessToastOptions(t('options.earn.snx-stakers.confirmation-message'), id));
                     refetchVestingEscrow(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({

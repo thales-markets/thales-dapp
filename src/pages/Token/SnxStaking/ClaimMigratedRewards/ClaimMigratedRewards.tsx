@@ -15,7 +15,6 @@ import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../co
 import { Tip37Link } from '../../styled-components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import { dispatchMarketNotification } from 'utils/options';
 import {
     GridContainer,
     StakingRewardsContent,
@@ -27,6 +26,12 @@ import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInve
 import styled from 'styled-components';
 import Tooltip from 'components/Tooltip/Tooltip';
 import Button from 'components/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -107,6 +112,7 @@ const ClaimMigratedRewards: React.FC = () => {
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
             try {
+                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
@@ -120,7 +126,13 @@ const ClaimMigratedRewards: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.earn.thales-staking.staking-rewards.confirmation-message'),
+                            id
+                        )
+                    );
                     refetchMigratedInvestorsRetroRewards(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setMigratedRewards({

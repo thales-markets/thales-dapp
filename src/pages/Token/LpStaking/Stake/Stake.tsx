@@ -15,7 +15,6 @@ import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
-import { dispatchMarketNotification } from 'utils/options';
 import { FlexDivColumnCentered } from 'styles/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
@@ -23,6 +22,12 @@ import ApprovalModal from 'components/ApprovalModal';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -116,6 +121,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
 
     const handleStakeThales = async () => {
         try {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
@@ -126,7 +132,10 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.gamified-staking.staking.stake.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.earn.gamified-staking.staking.stake.confirmation-message'), id)
+                );
                 refetchTokenQueries(walletAddress, networkId);
                 refetchLPStakingQueries(walletAddress, networkId);
                 setAmountToStake('');

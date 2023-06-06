@@ -24,9 +24,14 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -181,6 +186,7 @@ const MergeAccount: React.FC = () => {
 
     const handleMerge = async () => {
         try {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsMerging(true);
 
@@ -192,7 +198,10 @@ const MergeAccount: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.gamified-staking.merge-account.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.earn.gamified-staking.merge-account.confirmation-message'), id)
+                );
                 setDestAddress('');
                 setIsMerging(false);
             }
@@ -204,6 +213,7 @@ const MergeAccount: React.FC = () => {
 
     const handleDelegate = async () => {
         try {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsDelegating(true);
 
@@ -218,8 +228,12 @@ const MergeAccount: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.merge-account.delegation-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.merge-account.delegation-confirmation-message'),
+                        id
+                    )
                 );
                 setDelegateDestAddress('');
                 setIsDelegating(false);

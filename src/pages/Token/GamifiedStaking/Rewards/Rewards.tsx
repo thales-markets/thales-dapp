@@ -41,10 +41,15 @@ import { ThemeInterface } from 'types/ui';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -355,6 +360,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const handleClaimStakingRewards = async () => {
         if (isClaimAvailable) {
             try {
+                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -364,7 +370,13 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.gamified-staking.rewards.claim.confirmation-message'));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.earn.gamified-staking.rewards.claim.confirmation-message'),
+                            id
+                        )
+                    );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClaiming(false);
                 }
@@ -379,6 +391,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const handleClosePeriod = async () => {
         if (canClosePeriod) {
             try {
+                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClosingPeriod(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -386,8 +399,12 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(
-                        t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message')
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message'),
+                            id
+                        )
                     );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClosingPeriod(false);

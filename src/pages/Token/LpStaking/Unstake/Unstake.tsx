@@ -14,13 +14,18 @@ import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnect
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { dispatchMarketNotification } from 'utils/options';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type Properties = {
     staked: number;
@@ -79,7 +84,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
     const handleUnstakeThales = async () => {
         const { lpStakingRewardsContract } = snxJSConnector as any;
-
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setTxErrorMessage(null);
             setIsUnstaking(true);
@@ -91,8 +96,12 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message'),
+                        id
+                    )
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 refetchLPStakingQueries(walletAddress, networkId);
