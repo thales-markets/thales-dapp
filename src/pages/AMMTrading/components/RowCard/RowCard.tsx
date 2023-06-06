@@ -178,10 +178,12 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     ) => (
         <Value>
             {positionLeftBalance > 0 && <Value>{formatCurrencyWithPrecision(positionLeftBalance)} </Value>}
-            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft)}>{positionLeft}</Value>}
+            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft, theme)}>{positionLeft}</Value>}
             {positionLeftBalance > 0 && positionRightBalance > 0 && ' / '}
             {positionRightBalance > 0 && <Value>{formatCurrencyWithPrecision(positionRightBalance)} </Value>}
-            {positionRightBalance > 0 && <Value color={getColorPerPosition(positionRight)}>{positionRight}</Value>}
+            {positionRightBalance > 0 && (
+                <Value color={getColorPerPosition(positionRight, theme)}>{positionRight}</Value>
+            )}
             {isLoading ? '-' : positionLeftBalance == 0 && positionRightBalance == 0 && 'N/A'}
         </Value>
     );
@@ -196,11 +198,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {(ammData && positionLeftLiquidity > 0) || (ammData && positionRightLiquidity > 0) ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {ammData ? formatCurrency(positionLeftLiquidity, 0) : '0'}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {ammData ? formatCurrency(positionRightLiquidity, 0) : '0'}
                     </Value>
                 </>
@@ -222,11 +224,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {ammData ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionLeftPrice)}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionRightPrice)}
                     </Value>
                 </>
@@ -237,7 +239,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     );
 
     const getResultSectionValue = (positionResult: Positions) => (
-        <Value color={getColorPerPosition(positionResult)}>{positionResult}</Value>
+        <Value color={getColorPerPosition(positionResult, theme)}>{positionResult}</Value>
     );
 
     return (
