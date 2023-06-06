@@ -1,9 +1,12 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import ROUTES from 'constants/routes';
 import useUserNotifications from 'queries/user/useUserNotifications';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { buildHref } from 'utils/routes';
 
 const Notification: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -20,10 +23,12 @@ const Notification: React.FC = () => {
     }, [notificationQuery]);
 
     return notifications > 0 ? (
-        <Wrapper>
-            <Bell className="icon icon--bell" />
-            <Number>{notifications}</Number>
-        </Wrapper>
+        <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
+            <Wrapper>
+                <Bell className="icon icon--bell" />
+                <Number>{notifications}</Number>
+            </Wrapper>
+        </SPAAnchor>
     ) : (
         <></>
     );
@@ -60,6 +65,7 @@ const Wrapper = styled.div`
 `;
 
 const Number = styled.span`
+    color: ${(props) => props.theme.background.primary};
     font-size: 13px;
     font-weight: 600;
 `;
