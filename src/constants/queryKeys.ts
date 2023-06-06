@@ -122,6 +122,12 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        UserNotifications: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'userNotifications',
+            walletAddress,
+            networkId,
+        ],
         RangedPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'rangedPositions',
