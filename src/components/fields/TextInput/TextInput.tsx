@@ -52,6 +52,7 @@ const TextInput: React.FC<TextInputProps> = ({
                 )}
                 <StyledInput
                     {...rest}
+                    readOnly={!onChange}
                     value={value}
                     type="text"
                     onChange={onChange}
@@ -81,8 +82,11 @@ const TextInput: React.FC<TextInputProps> = ({
     );
 };
 
-const StyledInput = styled(Input)<{ padding?: string }>`
+const StyledInput = styled(Input)<{ padding?: string; readOnly: boolean }>`
     padding: ${(props) => props.padding || '5px 10px 5px 10px'};
+    &:focus {
+        ${(props) => (props.readOnly ? `border: 1px solid ${props.theme.input.borderColor.primary};` : '')}
+    }
 `;
 
 const RightContainer = styled(FlexDivCentered)`
