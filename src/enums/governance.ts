@@ -15,3 +15,9 @@ export enum ProposalTypeEnum {
     Single = 'single-choice',
     Weighted = 'weighted',
 }
+
+export enum StakersFilterEnum {
+    All = 'all',
+    Optimism = 'optimism',
+    Arbitrum = 'arbitrum',
+}
