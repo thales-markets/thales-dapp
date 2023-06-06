@@ -109,14 +109,14 @@ export const CardRowTitle = styled(CardText)`
     font-weight: 400;
     margin-bottom: 4px;
     @media (max-width: 500px) {
-        font-size: 10px;
+        font-size: 12px;
     }
 `;
 
 export const CardRowSubtitle = styled(CardText)`
-    font-size: 15px;
+    font-size: 18px;
     span {
-        font-size: 15px !important;
+        font-size: 18px !important;
         white-space: pre;
     }
     font-weight: 700;
@@ -180,4 +180,9 @@ export const CurrencyIcon = styled.i<{ fontSize?: string }>`
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0px;
     }
+`;
+
+export const Title = styled(CardText)`
+    font-size: 18px;
+    font-weight: bold;
 `;

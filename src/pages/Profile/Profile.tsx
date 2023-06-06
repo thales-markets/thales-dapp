@@ -36,6 +36,8 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
+import MyClaimablePositions from './components/MyPositions copy/MyClaimablePositions';
+import { Title } from './components/styled-components';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -191,14 +193,28 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <ContentWrapper isScrollable={true}>
+                    <>
                         {view === NavItems.MyPositions && (
-                            <MyPositions
-                                exchangeRates={exchangeRates}
-                                livePositions={positions.live}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading}
-                            />
+                            <>
+                                <ContentWrapper isScrollable={true}>
+                                    <Title>Claimable positions</Title>
+                                    <MyClaimablePositions
+                                        exchangeRates={exchangeRates}
+                                        livePositions={positions.claimable}
+                                        searchText={searchAddress ? '' : searchText}
+                                        isLoading={userPositionsQuery.isLoading}
+                                    />
+                                </ContentWrapper>
+                                <ContentWrapper isScrollable={true}>
+                                    <Title>Open positions</Title>
+                                    <MyPositions
+                                        exchangeRates={exchangeRates}
+                                        livePositions={positions.live}
+                                        searchText={searchAddress ? '' : searchText}
+                                        isLoading={userPositionsQuery.isLoading}
+                                    />
+                                </ContentWrapper>
+                            </>
                         )}
                         {/* {view === NavItems.MaturedPositions && (
                             <MaturedPositions
@@ -213,21 +229,27 @@ const Profile: React.FC = () => {
                         )} */}
                         {view === NavItems.History && (
                             <>
-                                <PositionHistory
-                                    claimedPositions={positions.claimed}
-                                    ripPositions={positions.rip}
-                                    searchText={searchAddress ? '' : searchText}
-                                    isLoading={userPositionsQuery.isLoading}
-                                />
-                                <History
-                                    markets={[...(markets as any)]}
-                                    trades={dataForUI ? dataForUI.trades : []}
-                                    searchText={searchAddress ? '' : searchText}
-                                    isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
-                                />
+                                <ContentWrapper isScrollable={true}>
+                                    <Title>Position history</Title>
+                                    <PositionHistory
+                                        claimedPositions={positions.claimed}
+                                        ripPositions={positions.rip}
+                                        searchText={searchAddress ? '' : searchText}
+                                        isLoading={userPositionsQuery.isLoading}
+                                    />
+                                </ContentWrapper>
+                                <ContentWrapper isScrollable={true}>
+                                    <Title>Transaction history</Title>
+                                    <History
+                                        markets={[...(markets as any)]}
+                                        trades={dataForUI ? dataForUI.trades : []}
+                                        searchText={searchAddress ? '' : searchText}
+                                        isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
+                                    />
+                                </ContentWrapper>
                             </>
                         )}
-                    </ContentWrapper>
+                    </>
                 </ContainerLeft>
                 {/* <ContainerRight layout={isSimpleView}>
                     <PieChartOptionsAllocated

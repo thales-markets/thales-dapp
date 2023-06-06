@@ -1,7 +1,7 @@
 import { TFunction } from 'i18next';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getAmount, getIconOrText } from '../../MaturedPositions/MaturedPositions';
 import { USD_SIGN } from 'constants/currency';
 import { UserPosition } from 'queries/user/useAllPositions';

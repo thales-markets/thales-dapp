@@ -46,16 +46,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
     const theme: ThemeInterface = useTheme();
 
     const data = useMemo(() => {
-        const mappedPositions = livePositions.map((position: UserPosition) => {
-            return {
-                ...position,
-                priceDiff: position.isRanged
-                    ? 0
-                    : getPercentageDifference(exchangeRates?.[position.currencyKey] || 0, position.strikePrice),
-            };
-        });
-
-        return orderBy(mappedPositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
+        return orderBy(livePositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
     }, [livePositions]);
 
     const filteredData = useMemo(() => {
@@ -110,18 +101,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
                                             </CardRowTitle>
                                             <CardRowSubtitle>{formatShortDate(data.maturityDate)}</CardRowSubtitle>
                                         </CardSection>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t(`options.home.markets-table.time-remaining-col`)}
-                                            </CardRowTitle>
-                                            <CardRowSubtitle>
-                                                <TimeRemaining
-                                                    end={data.maturityDate}
-                                                    fontSize={20}
-                                                    showFullCounter={true}
-                                                />
-                                            </CardRowSubtitle>
-                                        </CardSection>
                                     </CardColumn>
                                     {data.isRanged ? (
                                         <CardColumn>
@@ -137,13 +116,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
                                             </CardSection>
                                             <CardSection>
                                                 <CardRowTitle>
-                                                    {t('options.home.market-card.current-asset-price')}
+                                                    {t('options.home.markets-table.final-asset-price-col')}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(
-                                                        USD_SIGN,
-                                                        exchangeRates?.[data.currencyKey] || 0
-                                                    )}
+                                                    {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
                                                 </CardRowSubtitle>
                                             </CardSection>
                                         </CardColumn>
@@ -159,28 +135,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
                                             </CardSection>
                                             <CardSection>
                                                 <CardRowTitle>
-                                                    {t('options.home.market-card.current-asset-price')}
+                                                    {t('options.home.markets-table.final-asset-price-col')}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(
-                                                        USD_SIGN,
-                                                        exchangeRates?.[data.currencyKey] || 0
-                                                    )}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.price-difference')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    <PriceDifferenceInfo
-                                                        priceDiff={
-                                                            data.strikePrice < (exchangeRates?.[data.currencyKey] || 0)
-                                                        }
-                                                    >
-                                                        {`${(data.priceDiff || 0).toFixed(2)}%`}
-                                                    </PriceDifferenceInfo>
+                                                    {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
                                                 </CardRowSubtitle>
                                             </CardSection>
                                         </CardColumn>

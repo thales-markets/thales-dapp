@@ -20,7 +20,7 @@ const getOptionSideLabel = (optionSide: string) => {
     return optionSide.toLowerCase() === 'short' ? 'down' : 'up';
 };
 
-const generateStrike = (market: any) => {
+export const generateStrike = (market: any) => {
     if (market.leftPrice) {
         return '$' + formatCurrency(market.leftPrice) + ' - ' + '$' + formatCurrency(market.rightPrice);
     }
