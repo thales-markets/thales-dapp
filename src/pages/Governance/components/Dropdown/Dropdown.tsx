@@ -67,6 +67,7 @@ const Container = styled(FlexDivColumnCentered)`
     width: 140px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
+        min-width: 200px;
         margin-bottom: 10px;
     }
 `;

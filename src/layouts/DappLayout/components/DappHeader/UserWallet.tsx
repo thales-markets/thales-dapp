@@ -108,7 +108,7 @@ const Wrapper = styled.div`
     display: block;
     position: absolute;
     top: 40px;
-    right: 100px;
+    right: 80px;
     width: 260px;
     @media (max-width: 1024px) {
         right: 70px;
@@ -118,7 +118,7 @@ const Wrapper = styled.div`
     @media (max-width: 500px) {
         right: 55px;
         top: 20px;
-        width: 130px;
+        width: 110px;
     }
 `;
 
@@ -129,14 +129,14 @@ const WrapperContainer = styled.div`
     border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     @media (max-width: 500px) {
-        height: 32px;
+        height: 26px;
     }
 `;
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     width: 100%;
     cursor: ${(props) => (props.connected ? 'text' : 'pointer')};
-    padding: 5px 6px;
+    padding: 3px 6px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,11 +194,15 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: ${(props) => (props.selectedItem ? '6px 13px' : '6px')};
-    font-size: 14px;
+    padding: ${(props) => (props.selectedItem ? '4px 13px' : '6px')};
+    font-size: 13px;
     border-radius: 8px;
     &:hover {
         background: ${(props) => props.theme.background.primary};
+    }
+    svg {
+        width: 16px;
+        height: 16px;
     }
 `;
 

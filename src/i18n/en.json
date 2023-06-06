@@ -1767,6 +1767,11 @@
             "view-all-stakers": "View all stakers",
             "number-of-stakers": "Total number of stakers",
             "search-placeholder": "Search stakers..."
+        },
+        "stakers-filter": {
+            "all": "all",
+            "optimism": "optimism",
+            "arbitrum": "arbitrum"
         }
     },
     "optimism": {

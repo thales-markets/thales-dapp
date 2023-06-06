@@ -122,6 +122,12 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        UserNotifications: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'userNotifications',
+            walletAddress,
+            networkId,
+        ],
         RangedPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'rangedPositions',
@@ -236,7 +242,7 @@ const QUERY_KEYS = {
             walletAddress,
         ],
         CouncilMembers: () => ['governance', 'councilMembers'],
-        ThalesStakers: () => ['governance', 'thalesStakers'],
+        ThalesStakers: (filter: string) => ['governance', 'thalesStakers', filter],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',
             'votingPower',
