@@ -2,7 +2,7 @@ import RangeIllustration from 'components/RangeIllustration';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { orderBy } from 'lodash';

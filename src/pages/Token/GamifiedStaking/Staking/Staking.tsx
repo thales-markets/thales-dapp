@@ -1,5 +1,5 @@
 import Switch from 'components/SwitchInput/SwitchInput';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
 import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';

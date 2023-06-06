@@ -1,5 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import Checkbox from 'components/fields/Checkbox';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import Modal from 'components/Modal';

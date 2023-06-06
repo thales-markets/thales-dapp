@@ -1,8 +1,8 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'components/ButtonV2';
-import CollateralSelector from 'components/CollateralSelectorV2';
+import Button from 'components/Button';
+import CollateralSelector from 'components/CollateralSelector';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import {
     COLLATERALS,

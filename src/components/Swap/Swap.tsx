@@ -1,6 +1,6 @@
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'components/ButtonV2';
-import CollateralSelector from 'components/CollateralSelectorV2/CollateralSelector';
+import Button from 'components/Button';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
 import SimpleLoader from 'components/SimpleLoader';
 import NumericInput from 'components/fields/NumericInput';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';

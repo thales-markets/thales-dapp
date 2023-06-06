@@ -23,7 +23,7 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { VoteRow, VoteLabel, NoVotes } from './styled-components';
 import { ProposalTypeEnum } from 'enums/governance';
 

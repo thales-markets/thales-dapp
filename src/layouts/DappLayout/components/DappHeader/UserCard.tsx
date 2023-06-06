@@ -6,6 +6,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
 const UserSwap = lazy(() => import(/* webpackChunkName: "UserSwap" */ './UserSwap'));
 const UserWallet = lazy(() => import(/* webpackChunkName: "UserWallet" */ './UserWallet'));
+const Notification = lazy(() => import(/* webpackChunkName: "Notification" */ './Notifications'));
 
 const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -24,6 +25,10 @@ const UserCard: React.FC = () => {
                 <UserWallet />
             </Suspense>
 
+            <Suspense fallback={<></>}>
+                <Notification />
+            </Suspense>
+
             <MenuCardButton
                 onClick={() => {
                     trackEvent({
@@ -33,7 +38,7 @@ const UserCard: React.FC = () => {
                     setShowCard(!showCard);
                 }}
             >
-                <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
+                <MenuIcon style={{ fontSize: 26 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
             {showCard && (
                 <Suspense fallback={<></>}>

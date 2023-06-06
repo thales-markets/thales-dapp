@@ -1,5 +1,5 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
 import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';

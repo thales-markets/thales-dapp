@@ -1,5 +1,5 @@
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';

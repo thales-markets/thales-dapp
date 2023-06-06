@@ -1,4 +1,4 @@
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'enums/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';

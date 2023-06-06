@@ -25,7 +25,7 @@ import {
     StyledLink,
     FooterLink,
 } from './styled-components';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -46,7 +46,7 @@ import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
 import { toast } from 'react-toastify';
 import ReadMoreButton from 'components/ReadMoreButton';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';

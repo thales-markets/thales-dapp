@@ -63,7 +63,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInput';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
 import Footer from 'components/Footer';
@@ -72,7 +72,7 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 

@@ -19,9 +19,11 @@ import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
 import SearchInput from 'components/SearchInput';
+import { StakersFilterEnum } from 'enums/governance';
+import Dropdown from '../components/Dropdown/Dropdown';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -29,8 +31,9 @@ const ThalesStakers: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
+    const [filter, setFilter] = useState<StakersFilterEnum>(StakersFilterEnum.All);
 
-    const stakersQuery = useThalesStakersQuery({
+    const stakersQuery = useThalesStakersQuery(filter, {
         enabled: isAppReady,
     });
     const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
@@ -75,6 +78,12 @@ const ThalesStakers: React.FC = () => {
     return (
         <Container>
             <HeaderContainer>
+                <Dropdown
+                    options={Object.values(StakersFilterEnum)}
+                    activeOption={filter}
+                    onSelect={setFilter}
+                    translationKey="stakers-filter"
+                />
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>

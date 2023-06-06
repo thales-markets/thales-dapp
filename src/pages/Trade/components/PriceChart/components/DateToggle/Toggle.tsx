@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';

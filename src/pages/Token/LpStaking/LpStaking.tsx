@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import Switch from 'components/SwitchInput/SwitchInput';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';

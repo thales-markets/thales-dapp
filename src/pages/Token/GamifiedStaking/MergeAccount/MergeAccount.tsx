@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import ValidationMessage from 'components/ValidationMessage';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { ZERO_ADDRESS } from 'constants/network';

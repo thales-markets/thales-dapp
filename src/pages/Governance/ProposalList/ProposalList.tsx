@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import SimpleLoader from 'components/SimpleLoader';
 import { SpaceKey, StatusEnum } from 'enums/governance';
 import useProposalsQuery from 'queries/governance/useProposalsQuery';

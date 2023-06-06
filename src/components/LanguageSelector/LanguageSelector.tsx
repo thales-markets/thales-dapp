@@ -5,7 +5,7 @@ import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 
 type LanguageSelectorProps = {
     isBurger?: boolean;

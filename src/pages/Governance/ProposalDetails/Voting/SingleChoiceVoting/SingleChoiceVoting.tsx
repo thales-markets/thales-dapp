@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import ValidationMessage from 'components/ValidationMessage';
 import { ProposalTypeEnum } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';

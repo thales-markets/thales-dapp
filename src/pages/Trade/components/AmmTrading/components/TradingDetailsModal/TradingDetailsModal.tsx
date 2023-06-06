@@ -1,4 +1,4 @@
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import Modal from 'components/Modal';
 import { Positions } from 'enums/options';
 import React, { useState } from 'react';

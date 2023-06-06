@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import UserWalletExpanded from './UserWalletExpanded';
 import PieChartUserBalance from 'components/Charts/PieChartUserBalance';
 import PriceChart from 'components/Charts/PriceChart';
-import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
+import LanguageCardSelector from 'components/LanguageSelector/LanguageCardSelector';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 

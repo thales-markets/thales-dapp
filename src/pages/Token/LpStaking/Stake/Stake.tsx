@@ -22,7 +22,7 @@ import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 
 type Properties = {
     isStakingPaused: boolean;

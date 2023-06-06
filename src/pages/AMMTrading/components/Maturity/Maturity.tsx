@@ -15,7 +15,7 @@ import {
     Info,
     LoaderContainer,
 } from './styled-components';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';

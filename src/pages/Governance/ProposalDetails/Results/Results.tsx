@@ -13,7 +13,7 @@ import {
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import { ThemeInterface } from 'types/ui';
 import {
     ResultRow,

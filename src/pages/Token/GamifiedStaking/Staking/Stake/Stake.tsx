@@ -24,7 +24,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import Button from 'components/ButtonV2/Button';
+import Button from 'components/Button/Button';
 import { getIsMobile } from 'redux/modules/ui';
 
 const Stake: React.FC = () => {

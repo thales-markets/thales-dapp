@@ -71,11 +71,6 @@ const PageTitle = styled.p`
     color: ${(props) => props.theme.textColor.primary};
 
     @media (max-width: 1024px) {
-        margin-top: 20px;
-        font-size: 32px;
-    }
-
-    @media (max-width: 568px) {
         display: none;
     }
 `;
