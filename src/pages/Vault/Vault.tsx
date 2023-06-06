@@ -50,7 +50,6 @@ import TimeRemaining from 'components/TimeRemaining';
 import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import ApprovalModal from 'components/ApprovalModal';
 import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
@@ -75,6 +74,12 @@ import { refetchVaultData } from 'utils/queryConnector';
 import Button from 'components/Button/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -216,7 +221,10 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral } = snxJSConnector;
         if (signer && collateral) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsAllowing(true);
 
             try {
@@ -234,14 +242,15 @@ const Vault: React.FC<VaultProps> = (props) => {
                         getSuccessToastOptions(
                             t('options.market.toast-messsage.approve-success', {
                                 token: getDefaultCollateral(networkId),
-                            })
+                            }),
+                            id
                         )
                     );
                     setIsAllowing(false);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
             }
         }
@@ -250,7 +259,10 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleDeposit = async () => {
         const { signer } = snxJSConnector;
         if (signer) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
@@ -265,14 +277,14 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message')));
+                    toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message'), id));
                     setAmount('');
                     setIsSubmitting(false);
                     refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }
@@ -281,7 +293,10 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleWithdrawalRequest = async () => {
         const { signer } = snxJSConnector;
         if (signer) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
@@ -292,14 +307,17 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    toast.update(id, getSuccessToastOptions(t('vault.button.request-withdrawal-confirmation-message')));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t('vault.button.request-withdrawal-confirmation-message'), id)
+                    );
                     setAmount('');
                     setIsSubmitting(false);
                     refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }

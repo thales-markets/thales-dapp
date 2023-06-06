@@ -3,7 +3,12 @@ import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
 import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -85,7 +90,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
-        const id = toast.loading(t('amm.progress'));
+        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             const providerOptions = {
@@ -100,13 +105,13 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
+                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`), id));
                 handleCashout();
                 setIsAllowing(false);
             }
         } catch (e) {
             console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsAllowing(false);
             setOpenApprovalModal(false);
         }
@@ -156,11 +161,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
         };
 
         setIsSubmitting(true);
-        const id = toast.loading(t('amm.progress'));
+        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
 
         const totalValueChanged = await fetchAmmPriceData(position.paid);
         if (totalValueChanged) {
-            toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.try-again'), id));
             setIsSubmitting(false);
             refetchUserOpenPositions(walletAddress, networkId);
             return;
@@ -196,7 +201,8 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`)
+                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`),
+                        id
                     )
                 );
 
@@ -215,7 +221,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
             }
         } catch (e) {
             console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsSubmitting(false);
         }
     };
@@ -230,7 +236,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
             setIsSubmitting(true);
 
             const marketContractWithSigner = marketContract.connect(snxJSConnector.signer);
-            const id = toast.loading(t('amm.progress'));
+            const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
 
             try {
                 const providerOptions = {
@@ -245,7 +251,8 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t(`options.market.trade-card.maturity.confirm-button.confirmation-message`)
+                            t(`options.market.trade-card.maturity.confirm-button.confirmation-message`),
+                            id
                         )
                     );
                     refetchBalances(walletAddress, networkId);
@@ -254,7 +261,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }

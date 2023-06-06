@@ -140,8 +140,8 @@ export default {
         success: {
             background: {
                 primary: Colors.GREEN,
-                secondary: Colors.GREEN_DARK,
-                tertiary: Colors.GREEN_LIGHT,
+                secondary: Colors.GREEN_LIGHT,
+                tertiary: Colors.GREEN_DARK,
             },
             textColor: {
                 primary: Colors.BLACK,
