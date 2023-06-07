@@ -1,14 +1,15 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
+import { ReactComponent as ArrowDown } from 'assets/images/wizard/arrow-down.svg';
+import { ReactComponent as ArrowUp } from 'assets/images/wizard/arrow-up.svg';
 
 export const Container = styled.div`
     position: relative;
     display: flex;
     width: 100%;
-    margin-top: 50px;
     max-width: 974px;
-    flex-direction: row;
+    flex-direction: column;
     @media (max-width: 1250px) {
         margin-top: 0;
         flex-direction: column-reverse;
@@ -23,10 +24,7 @@ export const ContainerFixed = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    position: absolute;
     width: 100%;
-    max-width: 400px;
-    top: -40px;
     @media (max-width: 1250px) {
         display: none;
     }
@@ -119,6 +117,7 @@ export const Nav = styled.div<{ justifyContent: string }>`
     align-items: stretch;
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
+    margin-bottom: 20px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
         justify-content: space-between;
@@ -151,11 +150,11 @@ export const Notification = styled.span`
     box-sizing: border-box;
     border-radius: 30px;
     color: ${(props) => props.theme.button.textColor.primary};
-    margin-left: 20px;
-    width: 28px;
+    margin-left: 10px;
+    width: 24px;
     text-align: center;
     font-size: 18px;
-    line-height: 28px;
+    line-height: 24px;
     position: relative;
     top: 0px;
     display: inline-block;
@@ -194,8 +193,9 @@ export const StatsContainer = styled(FlexDivRow)`
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
     color: ${(props) => props.theme.textColor.primary};
-    padding: 20px 15px;
+    padding: 20px 20px;
     font-size: 18px;
+    margin-top: 20px;
 `;
 
 export const StatsItem = styled(FlexDivRow)``;
@@ -207,4 +207,72 @@ export const StatsLabel = styled.span`
 export const StatsValue = styled.span<{ color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     font-weight: 700;
+`;
+
+export const Accordion = styled.div<{ isOpened: boolean }>`
+    width: 100%;
+    display: ${(props) => (props.isOpened ? '' : 'flex')};
+    justify-content: space-between;
+    cursor: pointer;
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 15px;
+    position: relative;
+    margin-bottom: 10px;
+`;
+
+export const AccordionHeader = styled.p`
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 16px;
+    color: ${(props) => props.theme.textColor.quaternary};
+    padding: 20px 60px 20px 30px;
+    span {
+        text-transform: lowercase;
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 15px 60px 15px 15px;
+        font-size: 15px;
+        line-height: 22px;
+    }
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+`;
+
+export const AccordionContent = styled.div`
+    color: ${(props) => props.theme.textColor.primary};
+    padding: 0 30px 20px 30px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 0px 15px 15px 15px;
+    }
+`;
+
+export const StyledArrowUp = styled(ArrowUp)`
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+        fill-opacity: 1;
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        right: 15px;
+        height: 12px;
+    }
+`;
+
+export const StyledArrowDown = styled(ArrowDown)`
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+        fill-opacity: 1;
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        right: 15px;
+        height: 12px;
+    }
 `;

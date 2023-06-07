@@ -69,14 +69,14 @@ const generateRows = (data: UserPosition[], translator: TFunction, theme: ThemeI
 
             const cells: any = [
                 {
-                    title: translator('options.home.markets-table.final-asset-price-col'),
-                    value: formatCurrencyWithSign(USD_SIGN, d.finalPrice),
-                },
-                {
                     title: d.isRanged
                         ? translator('options.market.ranged-markets.strike-range')
                         : translator(`options.home.markets-table.strike-price-col`),
                     value: generateStrike(d),
+                },
+                {
+                    title: translator('options.home.markets-table.final-asset-price-col'),
+                    value: formatCurrencyWithSign(USD_SIGN, d.finalPrice),
                 },
             ];
 

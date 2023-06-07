@@ -30,6 +30,7 @@ import {
     PriceDifferenceInfo,
     getColor,
 } from '../styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -250,29 +251,14 @@ export const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction
         );
     }
     if (claimed) {
-        return <span style={{ color: theme.textColor.tertiary }}>{t('options.home.market-card.claimed')}</span>;
+        return <span style={{ color: theme.textColor.quaternary }}>{t('options.home.market-card.claimed')}</span>;
     } else {
         return (
-            <span>
+            <span style={{ color: theme.textColor.tertiary }}>
                 {t('options.home.market-card.rip')}
                 <Icon color={theme.textColor.tertiary} margin="0 0 0 6px" className="v2-icon v2-icon--rip"></Icon>
             </span>
         );
-    }
-};
-
-export const getColorPerPosition = (position: Positions, theme: ThemeInterface) => {
-    switch (position) {
-        case Positions.UP:
-            return theme.positionColor.up;
-        case Positions.DOWN:
-            return theme.positionColor.down;
-        case Positions.IN:
-            return theme.positionColor.in;
-        case Positions.OUT:
-            return theme.positionColor.out;
-        default:
-            return theme.textColor.primary;
     }
 };
 

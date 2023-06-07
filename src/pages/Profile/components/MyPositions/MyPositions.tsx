@@ -127,7 +127,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
                                         <CardColumn>
                                             <CardSection>
                                                 <CardRowTitle>
-                                                    {t('options.home.market-card.strike-price')}
+                                                    {t('options.market.ranged-markets.strike-range')}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
                                                     {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}

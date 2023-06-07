@@ -1,6 +1,5 @@
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
@@ -12,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import { LoaderContainer } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import {
     Card,
@@ -25,10 +24,8 @@ import {
     Container,
     Content,
     CurrencyIcon,
-    Icon,
     NoDataContainer,
     NoDataText,
-    PriceDifferenceInfo,
     getColor,
 } from '../styled-components';
 import { UserPosition } from 'queries/user/useAllPositions';

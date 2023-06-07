@@ -1,6 +1,5 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import SearchInput from 'components/SearchInput/SearchInput';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
@@ -15,14 +14,12 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { history } from 'utils/routes';
-import { getIsOVM } from '../../utils/network';
 import History from './components/History/History';
 import MyPositions from './components/MyPositions/MyPositions';
 import {
     Container,
     ContainerFixed,
     ContainerLeft,
-    ContentWrapper,
     Nav,
     NavItem,
     Notification,
@@ -37,6 +34,8 @@ import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import MyClaimablePositions from './components/MyPositions copy/MyClaimablePositions';
+import ProfileAccordion from './components/ProfileAccordion/ProfileAccordion';
+import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
 import { Title } from './components/styled-components';
 
 enum NavItems {
@@ -95,8 +94,6 @@ const Profile: React.FC = () => {
         Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
     );
 
-    const showOPBanner = getIsOVM(networkId);
-
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
             setSearchAddress(searchText.toLowerCase());
@@ -123,14 +120,17 @@ const Profile: React.FC = () => {
 
     return (
         <>
-            {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
+            <BannerCarousel />
             <Container>
                 <ContainerFixed>
+                    <Title>Trading Profile</Title>
                     <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
+                        width="300px"
+                        height="28px"
                     />
                 </ContainerFixed>
                 <ContainerLeft>
@@ -178,12 +178,6 @@ const Profile: React.FC = () => {
                             className={view === NavItems.MyPositions ? 'active' : ''}
                         >
                             {t('options.trading-profile.tabs.my-positions')}
-                        </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.MaturedPositions)}
-                            className={view === NavItems.MaturedPositions ? 'active' : ''}
-                        >
-                            {t('options.trading-profile.tabs.matured-positions')}
                             {positions.claimableCount > 0 && <Notification> {positions.claimableCount} </Notification>}
                         </NavItem>
                         <NavItem
@@ -196,57 +190,42 @@ const Profile: React.FC = () => {
                     <>
                         {view === NavItems.MyPositions && (
                             <>
-                                <ContentWrapper isScrollable={true}>
-                                    <Title>Claimable positions</Title>
+                                <ProfileAccordion title="Claimable positions">
                                     <MyClaimablePositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.claimable}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ContentWrapper>
-                                <ContentWrapper isScrollable={true}>
-                                    <Title>Open positions</Title>
+                                </ProfileAccordion>
+                                <ProfileAccordion title="Open positions">
                                     <MyPositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.live}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ContentWrapper>
+                                </ProfileAccordion>
                             </>
                         )}
-                        {/* {view === NavItems.MaturedPositions && (
-                            <MaturedPositions
-                                isSimpleView={true}
-                                positions={positions.matured}
-                                claimed={positions.claimed}
-                                claimedRange={userRangePositions.claimed}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
-                                rangedPositions={userRangePositions.matured}
-                            />
-                        )} */}
                         {view === NavItems.History && (
                             <>
-                                <ContentWrapper isScrollable={true}>
-                                    <Title>Position history</Title>
+                                <ProfileAccordion title="Position history">
                                     <PositionHistory
                                         claimedPositions={positions.claimed}
                                         ripPositions={positions.rip}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ContentWrapper>
-                                <ContentWrapper isScrollable={true}>
-                                    <Title>Transaction history</Title>
+                                </ProfileAccordion>
+                                <ProfileAccordion title="Transaction history">
                                     <History
                                         markets={[...(markets as any)]}
                                         trades={dataForUI ? dataForUI.trades : []}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
                                     />
-                                </ContentWrapper>
+                                </ProfileAccordion>
                             </>
                         )}
                     </>

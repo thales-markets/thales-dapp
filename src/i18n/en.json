@@ -487,7 +487,7 @@
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
             "market-card": {
-                "current-asset-price": "Current asset price",
+                "current-asset-price": "Current price",
                 "pool-size": "Pool size",
                 "amm-liquidity": "AMM liquidity",
                 "end-date": "End date",
@@ -537,7 +537,7 @@
                 "strike-price-col": "Strike price",
                 "discount-col": "Discount",
                 "asset-price-col": "Asset price",
-                "current-asset-price-col": "Current asset price",
+                "current-asset-price-col": "Current price",
                 "final-asset-price-col": "Final price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
