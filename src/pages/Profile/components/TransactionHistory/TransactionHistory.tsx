@@ -14,14 +14,14 @@ import generateRows from './utils/generateRows';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
 
-type HistoryProps = {
+type TransactionHistoryProps = {
     markets?: OptionsMarkets;
     trades: [];
     searchText: string;
     isLoading?: boolean;
 };
 
-const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoading }) => {
+const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades, searchText, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -72,4 +72,4 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoadin
     );
 };
 
-export default History;
+export default TransactionHistory;

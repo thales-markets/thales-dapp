@@ -15,22 +15,6 @@ export const Container = styled.div`
     min-height: 200px;
 `;
 
-export const MiddleContrainer = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-    min-width: 180px;
-`;
-
-export const TableText = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 285%;
-    text-align: right;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
 export const CardWrapper = styled.div<{ background?: boolean }>`
     background: ${(props) => (props.background ? props.theme.background.quaternary : props.theme.background.secondary)};
     margin-bottom: 15px;

@@ -25,7 +25,6 @@ import {
     Container,
     Content,
     CurrencyIcon,
-    Icon,
     NoDataContainer,
     NoDataText,
     PriceDifferenceInfo,
@@ -34,14 +33,14 @@ import {
 import { UserPosition } from 'queries/user/useAllPositions';
 import { getAmount } from '../MaturedPositions/MaturedPositions';
 
-type MyPositionsProps = {
+type OpenPositionsProps = {
     exchangeRates: Rates | null;
     livePositions: UserPosition[];
     searchText: string;
     isLoading?: boolean;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {
+const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -261,4 +260,4 @@ const UsingAmmLink: React.FC = () => {
     );
 };
 
-export default MyPositions;
+export default OpenPositions;

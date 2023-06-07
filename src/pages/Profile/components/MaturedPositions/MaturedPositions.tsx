@@ -24,7 +24,6 @@ import {
     Container,
     Content,
     Icon,
-    MiddleContrainer,
     NoDataContainer,
     NoDataText,
     PriceDifferenceInfo,
@@ -167,7 +166,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         </CardSection>
                                     </CardColumn>
                                     {data.range ? (
-                                        <MiddleContrainer>
+                                        <CardColumn>
                                             <RangeIllustration
                                                 priceData={{
                                                     left: data.market.leftPrice,
@@ -177,7 +176,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                 fontSize={24}
                                                 maxWidth={65}
                                             />
-                                        </MiddleContrainer>
+                                        </CardColumn>
                                     ) : (
                                         <CardColumn>
                                             <CardSection>

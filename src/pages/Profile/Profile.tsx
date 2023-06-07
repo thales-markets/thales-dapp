@@ -14,8 +14,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { history } from 'utils/routes';
-import History from './components/History/History';
-import MyPositions from './components/MyPositions/MyPositions';
 import {
     Container,
     ContainerFixed,
@@ -28,15 +26,17 @@ import {
     StatsLabel,
     StatsValue,
 } from './styled-components';
-import PositionHistory from './components/History copy/PositionHistory';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import MyClaimablePositions from './components/MyPositions copy/MyClaimablePositions';
 import ProfileAccordion from './components/ProfileAccordion/ProfileAccordion';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
 import { Title } from './components/styled-components';
+import ClaimablePositions from './components/ClaimablePositions/ClaimablePositions';
+import PositionHistory from './components/PositionHistory/PositionHistory';
+import TransactionHistory from './components/TransactionHistory/TransactionHistory';
+import OpenPositions from './components/OpenPositions/OpenPositions';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -191,15 +191,14 @@ const Profile: React.FC = () => {
                         {view === NavItems.MyPositions && (
                             <>
                                 <ProfileAccordion title="Claimable positions">
-                                    <MyClaimablePositions
-                                        exchangeRates={exchangeRates}
-                                        livePositions={positions.claimable}
+                                    <ClaimablePositions
+                                        claimablePositions={positions.claimable}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileAccordion>
                                 <ProfileAccordion title="Open positions">
-                                    <MyPositions
+                                    <OpenPositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.live}
                                         searchText={searchAddress ? '' : searchText}
@@ -219,7 +218,7 @@ const Profile: React.FC = () => {
                                     />
                                 </ProfileAccordion>
                                 <ProfileAccordion title="Transaction history">
-                                    <History
+                                    <TransactionHistory
                                         markets={[...(markets as any)]}
                                         trades={dataForUI ? dataForUI.trades : []}
                                         searchText={searchAddress ? '' : searchText}

@@ -4,7 +4,6 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { orderBy } from 'lodash';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';
@@ -31,20 +30,19 @@ import {
 import { UserPosition } from 'queries/user/useAllPositions';
 import { getAmount } from '../MaturedPositions/MaturedPositions';
 
-type MyPositionsProps = {
-    exchangeRates: Rates | null;
-    livePositions: UserPosition[];
+type ClaimablePositionsProps = {
+    claimablePositions: UserPosition[];
     searchText: string;
     isLoading?: boolean;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {
+const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositions, searchText, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
     const data = useMemo(() => {
-        return orderBy(livePositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
-    }, [livePositions]);
+        return orderBy(claimablePositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
+    }, [claimablePositions]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -53,18 +51,17 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
         });
     }, [searchText, data]);
 
-    if (!isLoading && !data.length) {
-        return (
-            <NoDataContainer>
-                <NoDataText>{t('common.no-data-available')}</NoDataText>
-            </NoDataContainer>
-        );
-    }
-
     return (
         <Container>
-            {!isLoading &&
-                filteredData.length > 0 &&
+            {isLoading ? (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            ) : filteredData.length === 0 ? (
+                <NoDataContainer>
+                    <NoDataText>{t('common.no-data-available')}</NoDataText>
+                </NoDataContainer>
+            ) : (
                 filteredData.map((data: UserPosition, index: number) => (
                     <Content key={index}>
                         <SPAAnchor
@@ -183,11 +180,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, livePositions,
                             </CardWrapper>
                         </SPAAnchor>
                     </Content>
-                ))}
-            {isLoading && (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
+                ))
             )}
         </Container>
     );
@@ -216,4 +209,4 @@ const UsingAmmLink: React.FC = () => {
     );
 };
 
-export default MyPositions;
+export default ClaimablePositions;
