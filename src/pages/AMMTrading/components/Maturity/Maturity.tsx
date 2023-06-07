@@ -18,7 +18,12 @@ import {
 import Button from 'components/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
@@ -88,7 +93,10 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
     const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise;
 
     const handleExercise = async () => {
-        const id = toast.loading(t('options.market.trade-card.maturity.confirm-button.progress-label'));
+        const id = toast.loading(
+            getDefaultToastContent(t('options.market.trade-card.maturity.confirm-button.progress-label')),
+            getLoadingToastOptions()
+        );
 
         try {
             setIsExercising(true);
@@ -106,7 +114,10 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
             if (txResult && txResult.transactionHash) {
                 toast.update(
                     id,
-                    getSuccessToastOptions(t('options.market.trade-card.maturity.confirm-button.confirmation-message'))
+                    getSuccessToastOptions(
+                        t('options.market.trade-card.maturity.confirm-button.confirmation-message'),
+                        id
+                    )
                 );
                 isRangedMarket
                     ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
@@ -116,7 +127,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
             }
         } catch (e) {
             console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsExercising(false);
         }
     };

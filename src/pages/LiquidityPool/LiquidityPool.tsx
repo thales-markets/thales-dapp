@@ -13,7 +13,12 @@ import RadioButton from 'components/fields/RadioButton';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
 import { Network } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
@@ -238,7 +243,10 @@ const LiquidityPool: React.FC = () => {
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral, liquidityPoolContract } = snxJSConnector;
         if (signer && collateral && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsAllowing(true);
 
             try {
@@ -254,14 +262,15 @@ const LiquidityPool: React.FC = () => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', { token: collateral })
+                            t('options.market.toast-messsage.approve-success', { token: collateral }),
+                            id
                         )
                     );
                     setIsAllowing(false);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
             }
         }
@@ -270,7 +279,10 @@ const LiquidityPool: React.FC = () => {
     const handleDeposit = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -285,14 +297,17 @@ const LiquidityPool: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    toast.update(id, getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message')));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)
+                    );
                     setAmount('');
                     setIsSubmitting(false);
                     refetchLiquidityPoolData(walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }
@@ -301,7 +316,10 @@ const LiquidityPool: React.FC = () => {
     const handleWithdrawalRequest = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -319,7 +337,7 @@ const LiquidityPool: React.FC = () => {
                 if (txResult && txResult.events) {
                     toast.update(
                         id,
-                        getSuccessToastOptions(t('liquidity-pool.button.request-withdrawal-confirmation-message'))
+                        getSuccessToastOptions(t('liquidity-pool.button.request-withdrawal-confirmation-message'), id)
                     );
                     setAmount('');
                     setIsSubmitting(false);
@@ -327,7 +345,7 @@ const LiquidityPool: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }

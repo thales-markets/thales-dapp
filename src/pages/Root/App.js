@@ -1,7 +1,5 @@
-import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import Loader from 'components/Loader';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,7 +64,6 @@ const App = () => {
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { address } = useAccount();
@@ -140,14 +137,6 @@ const App = () => {
             }
         };
         init();
-
-        const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
-        };
-        document.addEventListener('market-notification', handler);
-        return () => {
-            document.removeEventListener('market-notification', handler);
-        };
     }, [dispatch, provider, signer, switchedToNetworkId, address, isLedgerLive]);
 
     useEffect(() => {
@@ -194,13 +183,6 @@ const App = () => {
             }
         };
     }, [dispatch]);
-
-    const onSnackbarClosed = (e) => {
-        if (e) {
-            return;
-        }
-        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
-    };
 
     return (
         <ThemeProvider>
@@ -363,19 +345,6 @@ const App = () => {
                         </Switch>
                     </Router>
                     <ReactQueryDevtools initialIsOpen={false} />
-                    <Snackbar
-                        open={snackbarDetails.isOpen}
-                        onClose={onSnackbarClosed}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                        autoHideDuration={5000}
-                    >
-                        <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
-                            {snackbarDetails.message}
-                        </Alert>
-                    </Snackbar>
                 </Suspense>
             </QueryClientProvider>
             <GlobalStyle />

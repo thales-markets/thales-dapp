@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import Button from 'components/Button/Button';
-import ValidationMessage from 'components/ValidationMessage';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { ZERO_ADDRESS } from 'constants/network';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -10,11 +9,10 @@ import { TransactionFilterEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { orderBy } from 'lodash';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -23,10 +21,15 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -39,10 +42,7 @@ const MergeAccount: React.FC = () => {
     const [delegateDestAddress, setDelegateDestAddress] = useState<string>('');
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { stakingThalesContract } = snxJSConnector as any;
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
@@ -142,46 +142,9 @@ const MergeAccount: React.FC = () => {
     const isDelegateButtonDisabled =
         isDelegating || !isDelegateDestAddressEntered || !isDelegateDestAddressValid || !isWalletConnected;
 
-    const isL2 = getIsOVM(networkId);
-
-    useEffect(() => {
-        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.delegateVolume(
-                getAddress(ZERO_ADDRESS)
-            );
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (stakingThalesContractWithSigner.signer) {
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
-                            fetchL1Fee(stakingThalesContractWithSigner),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
-                            getAddress(ZERO_ADDRESS)
-                        );
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-
-        fetchGasLimit();
-    }, [walletAddress]);
-
     const handleMerge = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsMerging(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -192,19 +155,22 @@ const MergeAccount: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.gamified-staking.merge-account.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.earn.gamified-staking.merge-account.confirmation-message'), id)
+                );
                 setDestAddress('');
                 setIsMerging(false);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsMerging(false);
         }
     };
 
     const handleDelegate = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsDelegating(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -218,14 +184,18 @@ const MergeAccount: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.merge-account.delegation-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.merge-account.delegation-confirmation-message'),
+                        id
+                    )
                 );
                 setDelegateDestAddress('');
                 setIsDelegating(false);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsDelegating(false);
         }
     };
@@ -322,7 +292,6 @@ const MergeAccount: React.FC = () => {
                             />
                         </div>
                     </InputContainer>
-                    <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                     <ButtonContainer>{getDelegateButton()}</ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>
@@ -399,11 +368,6 @@ const MergeAccount: React.FC = () => {
                             </Message>
                         )}
                         {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
                     </ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>

@@ -2,19 +2,24 @@ import { Web3Provider } from '@ethersproject/providers';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import Button from 'components/Button/Button';
-import ValidationMessage from 'components/ValidationMessage';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { ProposalTypeEnum } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchProposal } from 'utils/queryConnector';
 import voting from 'utils/voting';
 
@@ -28,10 +33,9 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number | undefined>(undefined);
     const [isVoting, setIsVoting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const handleVote = async () => {
-        setTxErrorMessage(null);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         setIsVoting(true);
         try {
             const hub = 'https://hub.snapshot.org';
@@ -48,11 +52,11 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
             });
 
             refetchProposal(proposal.space.id, proposal.id, walletAddress);
-            dispatchMarketNotification(t('governance.proposal.vote-confirmation-message'));
+            toast.update(id, getSuccessToastOptions(t('governance.proposal.vote-confirmation-message'), id));
             setIsVoting(false);
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsVoting(false);
         }
     };
@@ -95,11 +99,6 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
                         : t(`governance.proposal.vote-progress-label`)}
                 </Button>
             </FlexDivCentered>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
         </>
     );
 };

@@ -4,7 +4,6 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
-import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -14,7 +13,6 @@ import { TokenTabEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import {
     ButtonContainer,
     ClaimMessage,
@@ -40,11 +38,17 @@ import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
+import { getIsOVM } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -73,11 +77,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
 
@@ -233,35 +234,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, lpStakingSecondRewards);
 
     useEffect(() => {
-        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.claimReward();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        stakingThalesContractWithSigner.estimateGas.claimReward(),
-                        fetchL1Fee(stakingThalesContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await stakingThalesContractWithSigner.estimateGas.claimReward();
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isClaimAvailable) return;
-        fetchGasLimit();
-    }, [walletAddress, isClaimAvailable]);
-
-    useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
@@ -354,8 +326,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const handleClaimStakingRewards = async () => {
         if (isClaimAvailable) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.claimReward({
@@ -364,13 +336,19 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.gamified-staking.rewards.claim.confirmation-message'));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.earn.gamified-staking.rewards.claim.confirmation-message'),
+                            id
+                        )
+                    );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClaiming(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClaiming(false);
             }
         }
@@ -378,23 +356,27 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const handleClosePeriod = async () => {
         if (canClosePeriod) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClosingPeriod(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.closePeriod()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(
-                        t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message')
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message'),
+                            id
+                        )
                     );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClosingPeriod(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClosingPeriod(false);
             }
         }
@@ -446,10 +428,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
                 </SectionValue>
-                <NetworkFeesWrapper>
-                    <Line margin={'0 0 10px 0'} />
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
-                </NetworkFeesWrapper>
                 <ButtonContainer>
                     <ClaimMessage above={true}>
                         {isPaused ? t('options.earn.gamified-staking.rewards.claim.paused-message') : ''}
@@ -458,11 +436,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </ClaimMessage>
                     {getClaimButton()}
                 </ButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
             </SectionContentWrapper>
         );
     };
@@ -1094,13 +1067,6 @@ const PeriodLabel = styled(SectionContent)`
     color: ${(props) => props.theme.textColor.primary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
-    }
-`;
-
-const NetworkFeesWrapper = styled.div`
-    margin: 0 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: auto;
     }
 `;
 

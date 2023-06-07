@@ -3,7 +3,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -104,14 +104,6 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     text-align: center;
     margin-bottom: 5px;
     color: ${(props) => (props.disabled ? props.theme.textColor.secondary : props.theme.textColor.primary)};
-`;
-
-export const FullRow = styled(FlexDiv)`
-    flex-basis: 100%;
-    display: flex;
-    font-size: 20px;
-    justify-content: center;
-    margin-bottom: 10px;
 `;
 
 const TooltipLink = styled.a`

@@ -3,6 +3,12 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
 import CollateralSelector from 'components/CollateralSelector';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import {
     COLLATERALS,
@@ -12,7 +18,6 @@ import {
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
@@ -332,7 +337,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
-        const id = toast.loading(t('amm.progress'));
+        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             const providerOptions = {
@@ -347,12 +352,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
+                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`), id));
                 setIsAllowing(false);
             }
         } catch (e) {
             console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsAllowing(false);
             setOpenApprovalModal(false);
         }
@@ -449,11 +454,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
-        const id = toast.loading(t('amm.progress'));
+        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
 
         const priceChanged = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
-            toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.try-again'), id));
             setIsSubmitting(false);
             return;
         }
@@ -499,7 +504,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                             `options.market.trade-options.place-order.swap-confirm-button.${
                                 isBuy ? 'buy' : 'sell'
                             }.confirmation-message`
-                        )
+                        ),
+                        id
                     )
                 );
 
@@ -528,7 +534,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             }
         } catch (e) {
             console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsSubmitting(false);
         }
     };

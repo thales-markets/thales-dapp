@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
 import {
     DescriptionContainer,
     FormWrapper,
@@ -61,6 +60,8 @@ import TextInput from 'components/fields/TextInput/TextInput';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
+import ToastMessage from 'components/ToastMessage';
 
 const tabs = [
     {
@@ -172,7 +173,10 @@ const Referral: React.FC = () => {
 
     const copyLink = () => {
         navigator.clipboard.writeText(referralLink);
-        toast(t('referral-page.modal.copied'), { type: 'success' });
+        toast(
+            <ToastMessage id="customId" type="success" message={t('referral-page.modal.copied')} />,
+            getSuccessToastOptions('', 'customId')
+        );
     };
 
     const populateReferralLink = (landingPageId: number, reffererId: string) => {
@@ -207,11 +211,17 @@ const Referral: React.FC = () => {
             previousReffererID: savedReffererID,
         });
         if (response.data.error) {
-            toast(t('referral-page.generate.id-exists'), { type: 'error' });
+            toast(
+                <ToastMessage id="customId" type="error" message={t('referral-page.generate.id-exists')} />,
+                getErrorToastOptions('', 'customId')
+            );
         } else {
             populateReferralLink(landingPage, reffererID);
             setSavedReffererID(reffererID);
-            toast(t('referral-page.generate.id-create-success'), { type: 'success' });
+            toast(
+                <ToastMessage id="customId" type="success" message={t('referral-page.generate.id-create-success')} />,
+                getSuccessToastOptions('', 'customId')
+            );
         }
     }, [reffererID, walletAddress, savedReffererID, t]);
 

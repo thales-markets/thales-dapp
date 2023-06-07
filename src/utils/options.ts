@@ -2,7 +2,6 @@ import orderBy from 'lodash/orderBy';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
 import { getSynthAsset } from './currency';
-import { Color } from '@material-ui/lab';
 import { formatCurrency } from './formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
@@ -48,14 +47,6 @@ export const getPhaseAndEndDate = (
         phase: 'expiry',
         timeRemaining: expiryDate,
     };
-};
-
-export const dispatchMarketNotification = (message: string, type?: Color) => {
-    const marketNotificationEvent = new CustomEvent('market-notification', {
-        bubbles: true,
-        detail: { text: message, type: type },
-    });
-    document.dispatchEvent(marketNotificationEvent);
 };
 
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);

@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, formatGasLimit, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { checkAllowance, getIsPolygon, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
@@ -41,7 +41,6 @@ import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
-import ValidationMessage from 'components/ValidationMessage';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
@@ -49,6 +48,12 @@ import ApprovalModal from 'components/ApprovalModal';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import Button from 'components/Button/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const MIN_FUNDING_AMOUNT = 0;
 
@@ -83,7 +88,6 @@ const CreateMarket: React.FC = () => {
         const [hasAllowance, setAllowance] = useState<boolean>(false);
         const [isAllowing, setIsAllowing] = useState<boolean>(false);
         const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
-        const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
         const [showWarning, setShowWarning] = useState(false);
         const [isMarketCreated, setIsMarketCreated] = useState(false);
         const [market, setMarket] = useState<string>('');
@@ -146,8 +150,8 @@ const CreateMarket: React.FC = () => {
 
         const handleMarketCreation = async () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsCreatingMarket(true);
                 const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
@@ -169,7 +173,7 @@ const CreateMarket: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsCreatingMarket(false);
             }
         };
@@ -182,16 +186,13 @@ const CreateMarket: React.FC = () => {
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await collateralContract?.estimateGas.approve(
-                    binaryOptionsMarketManagerContract?.address as any,
-                    approveAmount
-                );
+                const providerOptions = {
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
+                };
                 const tx = (await collateralContract?.approve(
                     binaryOptionsMarketManagerContract?.address as any,
                     approveAmount,
-                    {
-                        gasLimit: formatGasLimit(gasEstimate as any, networkId),
-                    }
+                    providerOptions
                 )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 await tx.wait();
@@ -477,18 +478,11 @@ const CreateMarket: React.FC = () => {
                 ></ProgressTracker>
                 <ButtonContainer>
                     <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                    {isMarketCreated ? (
+                    {isMarketCreated && (
                         <Button onClick={() => navigateToOptionsMarket(market)}>
                             {t('options.create-market.go-to-market')}
                         </Button>
-                    ) : (
-                        <></>
                     )}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </ButtonContainer>
                 {openApprovalModal && (
                     <ApprovalModal

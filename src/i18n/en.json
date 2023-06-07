@@ -380,7 +380,14 @@
         "enter-amount": "Enter amount",
         "enter-percentage": "Enter percentage",
         "enter-address": "Enter address",
-        "search-placeholder": "Search..."
+        "search-placeholder": "Search...",
+        "status": {
+            "success": "Success",
+            "info": "Info",
+            "warning": "Warning",
+            "error": "Error"
+        },
+        "progress": "Please wait..."
     },
     "modals": {
         "gwei": {

@@ -1,19 +1,19 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import styled, { useTheme } from 'styled-components';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
 import { generalConfig } from 'config/general';
-import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
+import queryString from 'query-string';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
+import { isAndroid, isMetamask, isMobile } from 'utils/device';
+import { getReferralWallet, setReferralWallet } from 'utils/referral';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -84,7 +84,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
                 <DappHeader />
             </Suspense>
             <Wrapper>{children}</Wrapper>
-            <ToastContainer theme={'colored'} />
+            <StyledToastContainer />
         </Background>
     );
 };
@@ -122,6 +122,75 @@ const Wrapper = styled.div`
         padding: 0 10px;
     }
     max-width: 1440px;
+`;
+
+const StyledToastContainer = styled(ToastContainer)`
+    &&&.Toastify__toast-container {
+        width: 468px;
+        @media (max-width: 600px) {
+            top: 0;
+            padding: 0;
+            left: 0;
+            margin: 0;
+            transform: translateX(0);
+        }
+    }
+    .Toastify__toast {
+        width: 460px;
+        height: 80px;
+        cursor: default;
+        border-radius: 15px;
+
+        &.success {
+            background: ${(props) =>
+                `linear-gradient(90deg, ${props.theme.toastMessages.success.background.secondary} -1.48%, ${props.theme.toastMessages.success.background.tertiary} 102.44%)`};
+        }
+        &.info {
+            background: ${(props) =>
+                `linear-gradient(90deg, ${props.theme.toastMessages.info.background.secondary} -1.48%, ${props.theme.toastMessages.info.background.tertiary} 102.44%)`};
+        }
+        &.warning {
+            background: ${(props) =>
+                `linear-gradient(90deg, ${props.theme.toastMessages.warning.background.secondary} -1.48%, ${props.theme.toastMessages.warning.background.tertiary} 102.44%)`};
+        }
+        &.error {
+            background: ${(props) =>
+                `linear-gradient(90deg, ${props.theme.toastMessages.error.background.secondary} -1.48%, ${props.theme.toastMessages.error.background.tertiary} 102.44%)`};
+        }
+
+        color: ${(props) => props.theme.toastMessages.error.textColor.primary};
+
+        @media (max-width: 600px) {
+            width: 100vw;
+            border-radius: 0;
+        }
+    }
+    .Toastify__progress-bar {
+        height: 12px;
+        background: inherit;
+
+        &.success {
+            background: ${(props) => props.theme.toastMessages.success.background.primary};
+        }
+        &.info {
+            background: ${(props) => props.theme.toastMessages.info.background.primary};
+        }
+        &.warning {
+            background: ${(props) => props.theme.toastMessages.warning.background.primary};
+        }
+        &.error {
+            background: ${(props) => props.theme.toastMessages.error.background.primary};
+        }
+    }
+    .Toastify__toast-icon {
+        width: 32px;
+        margin-inline-end: 12px;
+    }
+    .Toastify__spinner {
+        width: 32px;
+        height: 32px;
+        border-right-color: ${(props) => props.theme.toastMessages.info.background.primary};
+    }
 `;
 
 export default DappLayout;

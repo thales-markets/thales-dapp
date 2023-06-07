@@ -154,6 +154,10 @@
     content: '\0032';
 }
 
+.icon--gear:before {
+    content: '\0033';
+}
+
 .icon--triangle:before {
     content: '\0034';
 }
@@ -270,8 +274,16 @@
     content: '\007A';
 }
 
-.icon--gear:before {
-    content: '\0033';
+.icon--error:before {
+    content: '\008B';
+}
+
+.icon--info:before {
+    content: '\008C';
+}
+
+.icon--success:before {
+    content: '\008D';
 }
 
 .icon--bell:before {

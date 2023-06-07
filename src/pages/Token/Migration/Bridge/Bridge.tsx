@@ -1,17 +1,14 @@
-import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
-import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { checkAllowance, formatGasLimit, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { checkAllowance, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
@@ -25,6 +22,14 @@ import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQu
 import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -38,10 +43,8 @@ const Bridge: React.FC = () => {
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [opThalesBalance, setOpThalesBalance] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
 
     const isAmountEntered = Number(amount) > 0;
@@ -87,47 +90,18 @@ const Bridge: React.FC = () => {
         }
     }, [walletAddress, isWalletConnected, hasAllowance, networkId, amount, isAllowing]);
 
-    useEffect(() => {
-        const fetchGasLimit = async () => {
-            const { bridgeContract, opThalesTokenContract } = snxJSConnector as any;
-            if (bridgeContract) {
-                try {
-                    const bridgeContractWithSigner = bridgeContract.connect((snxJSConnector as any).signer);
-                    const parsedAmount = ethers.utils.parseEther(amount.toString());
-                    const gasEstimate = await bridgeContractWithSigner.estimateGas.depositERC20To(
-                        opThalesTokenContract.address,
-                        (thalesTokenContract as any).addresses[L1_TO_L2_NETWORK_MAPPER[networkId]],
-                        walletAddress,
-                        parsedAmount,
-                        2000000,
-                        '0x'
-                    );
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                } catch (e) {
-                    console.log(e);
-                    setGasLimit(null);
-                }
-            }
-        };
-        if (isButtonDisabled) return;
-        fetchGasLimit();
-    }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
-
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { opThalesTokenContract, bridgeContract } = snxJSConnector as any;
 
         if (opThalesTokenContract && bridgeContract) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
             const addressToApprove = bridgeContract.address;
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await opThalesTokenContractWithSigner.estimateGas.approve(
-                    addressToApprove,
-                    approveAmount
-                );
                 const tx = (await opThalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
@@ -136,7 +110,7 @@ const Bridge: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
                 setOpenApprovalModal(false);
             }
@@ -144,7 +118,7 @@ const Bridge: React.FC = () => {
     };
 
     const handleSubmit = async () => {
-        setTxErrorMessage(null);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         setIsSubmitting(true);
 
         try {
@@ -163,13 +137,13 @@ const Bridge: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('migration.bridge-button.confirmation-message'));
+                toast.update(id, getSuccessToastOptions(t('migration.bridge-button.confirmation-message'), id));
                 setIsSubmitting(false);
                 setAmount('');
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsSubmitting(false);
         }
     };
@@ -196,7 +170,7 @@ const Bridge: React.FC = () => {
             );
         }
         return (
-            <Button disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
+            <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {!isSubmitting ? t('migration.bridge-button.label') : t('migration.bridge-button.progress-label')}
             </Button>
         );
@@ -249,8 +223,6 @@ const Bridge: React.FC = () => {
                     }`}
                 />
             </InputContainer>
-            <Divider />
-            <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             <MessageContainer>
                 <InfoMessage message={t('migration.migration-delay-info')}></InfoMessage>
             </MessageContainer>
@@ -258,11 +230,6 @@ const Bridge: React.FC = () => {
                 <InfoWarningMessage message={t('migration.migration-multisig-contact-warning')}></InfoWarningMessage>
             </MessageContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
@@ -287,12 +254,6 @@ const InfoSection = styled.span`
     font-size: 15px;
     margin-bottom: 35px;
     text-align: justify;
-`;
-
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const ArrowContainer = styled(FlexDivCentered)`
