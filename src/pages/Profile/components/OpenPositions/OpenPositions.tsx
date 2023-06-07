@@ -10,27 +10,25 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import {
     Card,
     CardColumn,
     CardRow,
-    CardRowSubtitle,
+    CardRowValue,
     CardRowTitle,
     CardSection,
-    CardWrapper,
     Container,
     Content,
     CurrencyIcon,
     LoaderContainer,
     NoDataContainer,
-    PriceDifferenceInfo,
     UsingAmmLink,
     getAmount,
-    getColor,
 } from '../styled-components';
 import { UserPosition } from 'queries/user/useAllPositions';
+import { getColorPerPosition } from 'utils/options';
 
 type OpenPositionsProps = {
     exchangeRates: Rates | null;
@@ -49,7 +47,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                 ...position,
                 priceDiff: position.isRanged
                     ? 0
-                    : getPercentageDifference(exchangeRates?.[position.currencyKey] || 0, position.strikePrice),
+                    : formatPricePercentageDifference(position.strikePrice, exchangeRates?.[position.currencyKey] || 0),
             };
         });
 
@@ -79,148 +77,139 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                                 data.isRanged ? buildRangeMarketLink(data.market) : buildOptionsMarketLink(data.market)
                             }
                         >
-                            <CardWrapper>
-                                <Card>
-                                    <CardColumn>
-                                        <CardRow style={{ marginBottom: 10 }}>
-                                            <CurrencyIcon
-                                                className={`currency-icon currency-icon--${data.currencyKey.toLowerCase()}`}
-                                                fontSize="34px"
+                            <Card>
+                                <CardColumn>
+                                    <CardRow>
+                                        <CurrencyIcon
+                                            className={`currency-icon currency-icon--${data.currencyKey.toLowerCase()}`}
+                                        />
+                                        <CardSection>
+                                            <CardRowValue>{data.currencyKey}</CardRowValue>
+                                            <CardRowValue color={getColorPerPosition(data.side, theme)}>
+                                                {data.side}
+                                            </CardRowValue>
+                                        </CardSection>
+                                    </CardRow>
+                                    <CardSection>
+                                        <CardRowTitle>{t(`options.home.markets-table.maturity-date-col`)}</CardRowTitle>
+                                        <CardRowValue>{formatShortDate(data.maturityDate)}</CardRowValue>
+                                    </CardSection>
+                                    <CardSection>
+                                        <CardRowTitle>
+                                            {t(`options.home.markets-table.time-remaining-col`)}
+                                        </CardRowTitle>
+                                        <CardRowValue>
+                                            <TimeRemaining
+                                                end={data.maturityDate}
+                                                fontSize={18}
+                                                showFullCounter={true}
                                             />
-                                            <CardSection>
-                                                <CardRowSubtitle>{data.currencyKey}</CardRowSubtitle>
-                                                <CardRowSubtitle
-                                                    style={{
-                                                        color: getColor(data, theme),
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {data.side}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardRow>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t(`options.home.markets-table.maturity-date-col`)}
-                                            </CardRowTitle>
-                                            <CardRowSubtitle>{formatShortDate(data.maturityDate)}</CardRowSubtitle>
-                                        </CardSection>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t(`options.home.markets-table.time-remaining-col`)}
-                                            </CardRowTitle>
-                                            <CardRowSubtitle>
-                                                <TimeRemaining
-                                                    end={data.maturityDate}
-                                                    fontSize={20}
-                                                    showFullCounter={true}
-                                                />
-                                            </CardRowSubtitle>
-                                        </CardSection>
-                                    </CardColumn>
-                                    {data.isRanged ? (
-                                        <CardColumn>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.market.ranged-markets.strike-range')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}
-                                                    <br />
-                                                    {`< ${formatCurrencyWithSign(USD_SIGN, data.rightPrice)}`}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.current-asset-price')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(
-                                                        USD_SIGN,
-                                                        exchangeRates?.[data.currencyKey] || 0
-                                                    )}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
-                                    ) : (
-                                        <CardColumn>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.strike-price')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.strikePrice)}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.current-asset-price')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(
-                                                        USD_SIGN,
-                                                        exchangeRates?.[data.currencyKey] || 0
-                                                    )}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.price-difference')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    <PriceDifferenceInfo
-                                                        priceDiff={
-                                                            data.strikePrice < (exchangeRates?.[data.currencyKey] || 0)
-                                                        }
-                                                    >
-                                                        {`${(data.priceDiff || 0).toFixed(2)}%`}
-                                                    </PriceDifferenceInfo>
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
-                                    )}
-
+                                        </CardRowValue>
+                                    </CardSection>
+                                </CardColumn>
+                                {data.isRanged ? (
                                     <CardColumn>
                                         <CardSection>
                                             <CardRowTitle>
-                                                {t('options.leaderboard.trades.table.amount-col')}
+                                                {t('options.market.ranged-markets.strike-range')}
                                             </CardRowTitle>
-                                            <CardRowSubtitle>
-                                                {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
-                                            </CardRowSubtitle>
+                                            <CardRowValue>
+                                                {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}
+                                                <br />
+                                                {`< ${formatCurrencyWithSign(USD_SIGN, data.rightPrice)}`}
+                                            </CardRowValue>
                                         </CardSection>
                                         <CardSection>
-                                            <CardRowTitle>{t('options.home.market-card.position-value')}</CardRowTitle>
-                                            <CardRowSubtitle>
-                                                {data.value === 0 ? (
-                                                    <>
-                                                        N/A
-                                                        <Tooltip
-                                                            overlay={
-                                                                <Trans
-                                                                    i18nKey={t(
-                                                                        'options.home.market-card.no-liquidity-tooltip'
-                                                                    )}
-                                                                    components={[
-                                                                        <span key="1">
-                                                                            <UsingAmmLink key="2" />
-                                                                        </span>,
-                                                                    ]}
-                                                                />
-                                                            }
-                                                            iconFontSize={20}
-                                                            top={-2}
-                                                        />
-                                                    </>
-                                                ) : (
-                                                    formatCurrencyWithSign(USD_SIGN, data.value)
+                                            <CardRowTitle>
+                                                {t('options.home.market-card.current-asset-price')}
+                                            </CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    exchangeRates?.[data.currencyKey] || 0
                                                 )}
-                                            </CardRowSubtitle>
+                                            </CardRowValue>
                                         </CardSection>
                                     </CardColumn>
-                                </Card>
-                            </CardWrapper>
+                                ) : (
+                                    <CardColumn>
+                                        <CardSection>
+                                            <CardRowTitle>{t('options.home.market-card.strike-price')}</CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(USD_SIGN, data.strikePrice)}
+                                            </CardRowValue>
+                                        </CardSection>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t('options.home.market-card.current-asset-price')}
+                                            </CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    exchangeRates?.[data.currencyKey] || 0
+                                                )}
+                                            </CardRowValue>
+                                        </CardSection>
+
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t('options.home.market-card.price-difference')}
+                                            </CardRowTitle>
+                                            <CardRowValue
+                                                color={
+                                                    !data.priceDiff
+                                                        ? theme.textColor.primary
+                                                        : data.priceDiff > 0
+                                                        ? theme.textColor.quaternary
+                                                        : data.priceDiff < 0
+                                                        ? theme.textColor.tertiary
+                                                        : theme.textColor.primary
+                                                }
+                                            >
+                                                {data.priceDiff ? `${data.priceDiff.toFixed(2)}%` : 'N/A'}
+                                            </CardRowValue>
+                                        </CardSection>
+                                    </CardColumn>
+                                )}
+
+                                <CardColumn>
+                                    <CardSection>
+                                        <CardRowTitle>{t('options.leaderboard.trades.table.amount-col')}</CardRowTitle>
+                                        <CardRowValue>
+                                            {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
+                                        </CardRowValue>
+                                    </CardSection>
+                                    <CardSection>
+                                        <CardRowTitle>{t('options.home.market-card.position-value')}</CardRowTitle>
+                                        <CardRowValue>
+                                            {data.value === 0 ? (
+                                                <>
+                                                    N/A
+                                                    <Tooltip
+                                                        overlay={
+                                                            <Trans
+                                                                i18nKey={t(
+                                                                    'options.home.market-card.no-liquidity-tooltip'
+                                                                )}
+                                                                components={[
+                                                                    <span key="1">
+                                                                        <UsingAmmLink key="2" />
+                                                                    </span>,
+                                                                ]}
+                                                            />
+                                                        }
+                                                        iconFontSize={17}
+                                                        mobileIconFontSize={12}
+                                                        top={-1}
+                                                    />
+                                                </>
+                                            ) : (
+                                                formatCurrencyWithSign(USD_SIGN, data.value)
+                                            )}
+                                        </CardRowValue>
+                                    </CardSection>
+                                </CardColumn>
+                            </Card>
                         </SPAAnchor>
                     </Content>
                 ))

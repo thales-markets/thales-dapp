@@ -30,11 +30,6 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
         });
     }, [searchText, data]);
 
-    const generateStrike = (position: UserPosition) =>
-        position.isRanged
-            ? `$${formatCurrency(position.leftPrice)} - $${formatCurrency(position.rightPrice)}`
-            : `$${formatCurrency(position.strikePrice)}`;
-
     const generateRows = (data: UserPosition[]) => {
         try {
             const dateMap: Record<string, UserPosition[]> = {};
@@ -65,7 +60,9 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
                         title: row.isRanged
                             ? t('options.market.ranged-markets.strike-range')
                             : t(`options.home.markets-table.strike-price-col`),
-                        value: generateStrike(row),
+                        value: row.isRanged
+                            ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
+                            : `$${formatCurrency(row.strikePrice)}`,
                     },
                     {
                         title: t('options.home.markets-table.final-asset-price-col'),

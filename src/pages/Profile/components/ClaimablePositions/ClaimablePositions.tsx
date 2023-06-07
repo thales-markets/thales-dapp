@@ -1,10 +1,9 @@
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { orderBy } from 'lodash';
 import React, { useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
@@ -14,20 +13,18 @@ import {
     Card,
     CardColumn,
     CardRow,
-    CardRowSubtitle,
+    CardRowValue,
     CardRowTitle,
     CardSection,
-    CardWrapper,
     Container,
     Content,
     CurrencyIcon,
     LoaderContainer,
     NoDataContainer,
-    UsingAmmLink,
     getAmount,
-    getColor,
 } from '../styled-components';
 import { UserPosition } from 'queries/user/useAllPositions';
+import { getColorPerPosition } from 'utils/options';
 
 type ClaimablePositionsProps = {
     claimablePositions: UserPosition[];
@@ -66,115 +63,79 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                                 data.isRanged ? buildRangeMarketLink(data.market) : buildOptionsMarketLink(data.market)
                             }
                         >
-                            <CardWrapper>
-                                <Card>
+                            <Card>
+                                <CardColumn>
+                                    <CardRow>
+                                        <CurrencyIcon
+                                            className={`currency-icon currency-icon--${data.currencyKey.toLowerCase()}`}
+                                        />
+                                        <CardSection>
+                                            <CardRowValue>{data.currencyKey}</CardRowValue>
+                                            <CardRowValue color={getColorPerPosition(data.side, theme)}>
+                                                {data.side}
+                                            </CardRowValue>
+                                        </CardSection>
+                                    </CardRow>
+                                    <CardSection>
+                                        <CardRowTitle>{t(`options.home.markets-table.maturity-date-col`)}</CardRowTitle>
+                                        <CardRowValue>{formatShortDate(data.maturityDate)}</CardRowValue>
+                                    </CardSection>
+                                </CardColumn>
+                                {data.isRanged ? (
                                     <CardColumn>
-                                        <CardRow style={{ marginBottom: 10 }}>
-                                            <CurrencyIcon
-                                                className={`currency-icon currency-icon--${data.currencyKey.toLowerCase()}`}
-                                                fontSize="34px"
-                                            />
-                                            <CardSection>
-                                                <CardRowSubtitle>{data.currencyKey}</CardRowSubtitle>
-                                                <CardRowSubtitle
-                                                    style={{
-                                                        color: getColor(data, theme),
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {data.side}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardRow>
                                         <CardSection>
                                             <CardRowTitle>
-                                                {t(`options.home.markets-table.maturity-date-col`)}
+                                                {t('options.market.ranged-markets.strike-range')}
                                             </CardRowTitle>
-                                            <CardRowSubtitle>{formatShortDate(data.maturityDate)}</CardRowSubtitle>
+                                            <CardRowValue>
+                                                {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}
+                                                <br />
+                                                {`< ${formatCurrencyWithSign(USD_SIGN, data.rightPrice)}`}
+                                            </CardRowValue>
+                                        </CardSection>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t('options.home.markets-table.final-asset-price-col')}
+                                            </CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
+                                            </CardRowValue>
                                         </CardSection>
                                     </CardColumn>
-                                    {data.isRanged ? (
-                                        <CardColumn>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.strike-price')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}
-                                                    <br />
-                                                    {`< ${formatCurrencyWithSign(USD_SIGN, data.rightPrice)}`}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.markets-table.final-asset-price-col')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
-                                    ) : (
-                                        <CardColumn>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.market-card.strike-price')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.strikePrice)}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.home.markets-table.final-asset-price-col')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
-                                    )}
+                                ) : (
+                                    <CardColumn>
+                                        <CardSection>
+                                            <CardRowTitle>{t('options.home.market-card.strike-price')}</CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(USD_SIGN, data.strikePrice)}
+                                            </CardRowValue>
+                                        </CardSection>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t('options.home.markets-table.final-asset-price-col')}
+                                            </CardRowTitle>
+                                            <CardRowValue>
+                                                {formatCurrencyWithSign(USD_SIGN, data.finalPrice)}
+                                            </CardRowValue>
+                                        </CardSection>
+                                    </CardColumn>
+                                )}
 
-                                    <CardColumn>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t('options.leaderboard.trades.table.amount-col')}
-                                            </CardRowTitle>
-                                            <CardRowSubtitle>
-                                                {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
-                                            </CardRowSubtitle>
-                                        </CardSection>
-                                        <CardSection>
-                                            <CardRowTitle>{t('options.home.market-card.position-value')}</CardRowTitle>
-                                            <CardRowSubtitle>
-                                                {data.value === 0 ? (
-                                                    <>
-                                                        N/A
-                                                        <Tooltip
-                                                            overlay={
-                                                                <Trans
-                                                                    i18nKey={t(
-                                                                        'options.home.market-card.no-liquidity-tooltip'
-                                                                    )}
-                                                                    components={[
-                                                                        <span key="1">
-                                                                            <UsingAmmLink key="2" />
-                                                                        </span>,
-                                                                    ]}
-                                                                />
-                                                            }
-                                                            iconFontSize={20}
-                                                            top={-2}
-                                                        />
-                                                    </>
-                                                ) : (
-                                                    formatCurrencyWithSign(USD_SIGN, data.value)
-                                                )}
-                                            </CardRowSubtitle>
-                                        </CardSection>
-                                    </CardColumn>
-                                </Card>
-                            </CardWrapper>
+                                <CardColumn>
+                                    <CardSection>
+                                        <CardRowTitle>{t('options.leaderboard.trades.table.amount-col')}</CardRowTitle>
+                                        <CardRowValue>
+                                            {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
+                                        </CardRowValue>
+                                    </CardSection>
+                                    <CardSection>
+                                        <CardRowTitle>{t('options.home.markets-table.status-col')}</CardRowTitle>
+                                        <CardRowValue color={theme.textColor.quaternary}>
+                                            {t('options.home.market-card.claimable')}
+                                        </CardRowValue>
+                                    </CardSection>
+                                </CardColumn>
+                            </Card>
                         </SPAAnchor>
                     </Content>
                 ))

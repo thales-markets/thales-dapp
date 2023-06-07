@@ -502,6 +502,7 @@
                 "claim": "CLAIM",
                 "claimed": "CLAIMED",
                 "rip": "RIP",
+                "claimable": "CLAIMABLE",
                 "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
             },
             "hot-market-card": {
@@ -1682,7 +1683,7 @@
                 "position-history": "Position history",
                 "transaction-history": "Transaction history"
             },
-            "search-placeholder": "Search Wallet",
+            "search-placeholder": "Search wallet",
             "history": {
                 "strike": "Strike",
                 "price": "Price",

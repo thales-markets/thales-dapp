@@ -310,7 +310,13 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                             <SubContainer>
                                 <Header>{t('options.market.overview.price-difference')}</Header>
                                 <Value
-                                    color={priceDifference > 0 ? theme.textColor.quaternary : theme.textColor.tertiary}
+                                    color={
+                                        priceDifference > 0
+                                            ? theme.textColor.quaternary
+                                            : priceDifference < 0
+                                            ? theme.textColor.tertiary
+                                            : theme.textColor.primary
+                                    }
                                 >
                                     {priceDifference ? `${priceDifference.toFixed(2)}%` : 'N/A'}
                                 </Value>

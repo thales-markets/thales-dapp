@@ -1,16 +1,13 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 
-export const Container = styled.div`
-    position: relative;
-    display: flex;
+export const Container = styled(FlexDivColumn)`
     width: 100%;
     max-width: 974px;
-    flex-direction: column;
 `;
 
-export const ContainerFixed = styled(FlexDivRow)`
+export const Header = styled(FlexDivRow)`
     width: 100%;
     align-items: center;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -18,88 +15,20 @@ export const ContainerFixed = styled(FlexDivRow)`
     }
 `;
 
-export const ContainerLeft = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-`;
-
-export const ContainerRight = styled.div<{ layout: boolean }>`
-    flex: 1;
-    display: flex;
-    flex-direction: ${(props) => (props.layout ? 'column' : 'row-reverse')};
-    padding-left: ${(props) => (props.layout ? '80px' : '0')};
-    max-width: ${(props) => (props.layout ? '50%' : '100%')};
-    align-items: center;
-    & > div:nth-child(2) {
-        margin: ${(props) => (props.layout ? '' : '0 20px')};
-    }
-    @media (max-width: 1250px) {
-        max-width: 100%;
-        flex-direction: row;
-        padding-left: 0;
-    }
-`;
-
-export const Wrapper = styled.div`
-    display: block;
-    box-sizing: border-box;
-    border-radius: 15px;
-    padding: 18px 32px;
-    border: 2px solid ${(props) => props.theme.borderColor.primary};
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    @media (max-width: 1250px) {
-        margin-left: 40px;
-    }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 8px;
-        margin-left: 20px;
-    }
-
-    @media (max-width: 500px) {
-        padding: 8px;
-        margin-left: 10px;
-    }
-`;
-
-export const Row = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    max-width: 500px;
-    width: 100%;
-`;
-
-const Text = styled.span`
-    display: block;
+export const Title = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
-    line-height: 24px;
-`;
-
-export const Label = styled(Text)`
-    font-weight: 400;
+    font-weight: bold;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 12px;
+        margin-bottom: 10px;
     }
 `;
 
-export const Value = styled(Text)<{ color?: string }>`
-    color: ${(props) => props.color ?? 'none'};
-    font-weight: 700;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 16px;
-    }
-    @media (max-width: 500px) {
-        font-size: 14px;
-    }
+export const MainContainer = styled(FlexDivColumn)`
+    width: 100%;
 `;
 
-export const Nav = styled.div<{ justifyContent: string }>`
+export const Nav = styled.div`
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -129,19 +58,16 @@ export const NavItem = styled.p`
 
 export const Notification = styled.span`
     background: ${(props) => props.theme.button.background.primary};
-    box-sizing: border-box;
     border-radius: 30px;
     color: ${(props) => props.theme.button.textColor.primary};
-    margin-left: 10px;
+    margin-left: 8px;
     width: 24px;
     text-align: center;
     font-size: 18px;
     line-height: 24px;
-    position: relative;
-    top: 0px;
     display: inline-block;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 12px;
+        font-size: 13px;
         line-height: 20px;
         width: 22px;
         margin-left: 6px;

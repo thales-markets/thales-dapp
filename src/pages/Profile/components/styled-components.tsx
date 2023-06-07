@@ -5,135 +5,83 @@ import { TFunction } from 'i18next';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { getColorPerPosition } from 'utils/options';
 
+export const Container = styled(FlexDivColumn)`
+    padding-top: 10px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding-top: 5px;
+    }
+`;
+
 export const Content = styled.div`
     display: content;
+    &:not(:last-child) {
+        margin-bottom: 15px;
+    }
 `;
 
-export const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    position: relative;
-`;
-
-export const CardWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ? props.theme.background.quaternary : props.theme.background.secondary)};
-    margin-bottom: 15px;
+export const Card = styled(FlexDivRowCentered)`
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 15px;
-    padding: 2px;
-    border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.primary}`)};
+    padding: 20px 25px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 12px 10px;
+    }
     &:hover {
         transform: scale(1.02);
-        border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.primary}`)};
     }
 `;
+export const CardColumn = styled(FlexDivColumn)``;
 
-export const Card = styled.div`
-    background: ${(props) => props.theme.background.secondary};
-    box-sizing: border-box;
-    border-radius: 15px;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    @media (max-width: 380px) {
-        padding: 16px 10px;
-    }
-`;
-export const CardColumn = styled.div<{ ranged?: boolean }>`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    height: 100%;
-    flex: ${(props) => (props.ranged ? 'none' : '2')};
+export const CardRow = styled(FlexDivCentered)`
+    margin-bottom: 10px;
 `;
 
-export const CardRow = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    & > svg {
-        width: 36px !important;
-        height: 36px !important;
-    }
-
-    @media (max-width: 500px) {
-        & > svg {
-            width: 26px !important;
-            height: 26px !important;
-            margin-bottom: 4px;
-        }
-    }
-`;
-
-const CardText = styled.span`
-    display: block;
-    color: ${(props) => props.theme.textColor.primary};
-    line-height: 100%;
-    white-space: pre;
-`;
-
-export const CardSection = styled.div`
-    display: block;
+export const CardSection = styled(FlexDivColumn)`
     &:not(:last-child) {
         margin-bottom: 10px;
     }
-    @media (max-width: 500px) {
-        & > svg {
-            width: 32px !important;
-            height: 32px !important;
-            margin-bottom: 4px;
-        }
-    }
 `;
 
-export const CardRowTitle = styled(CardText)`
+export const CardRowTitle = styled.span`
     font-size: 13px;
+    line-height: 100%;
+    white-space: pre;
     color: ${(props) => props.theme.textColor.secondary};
     font-weight: 400;
     margin-bottom: 4px;
-    @media (max-width: 500px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
 
-export const CardRowSubtitle = styled(CardText)`
+export const CardRowValue = styled.span<{ color?: string }>`
     font-size: 18px;
+    line-height: 100%;
+    white-space: pre;
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    font-weight: 700;
     span {
         font-size: 18px !important;
-        white-space: pre;
     }
-    font-weight: 700;
-    @media (max-width: 500px) {
-        font-size: 14px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
         span {
-            font-size: 14px !important;
-        }
-    }
-
-    @media (max-width: 400px) {
-        font-size: 12px;
-        span {
-            font-size: 12px !important;
+            font-size: 13px !important;
         }
     }
 `;
 
-export const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    color: ${(props) => (props.priceDiff ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
-`;
-
-export const getColor = (data: any, theme: ThemeInterface) => {
-    if (data.isRanged) {
-        return data.side === Positions.IN ? theme.positionColor.in : theme.positionColor.out;
+export const CurrencyIcon = styled.i<{ fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '32px'};
+    margin-right: 6px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 24px;
     }
-    return data.side === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
-};
+`;
 
 export const LoaderContainer = styled(FlexDivCentered)`
     position: relative;
@@ -154,19 +102,6 @@ export const NoDataContainer = styled(FlexDivCentered)`
         font-size: 13px;
     }
   }
-`;
-
-export const CurrencyIcon = styled.i<{ fontSize?: string }>`
-    font-size: ${(props) => props.fontSize || '34px'};
-    margin-right: 6px;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 24px;
-    }
-`;
-
-export const Title = styled(CardText)`
-    font-size: 18px;
-    font-weight: bold;
 `;
 
 export const TooltipLink = styled.a`

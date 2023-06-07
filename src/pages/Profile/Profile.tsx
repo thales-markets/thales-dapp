@@ -16,8 +16,8 @@ import { RootState } from 'redux/rootReducer';
 import { history } from 'utils/routes';
 import {
     Container,
-    ContainerFixed,
-    ContainerLeft,
+    Header,
+    MainContainer,
     Nav,
     NavItem,
     Notification,
@@ -25,6 +25,7 @@ import {
     StatsItem,
     StatsLabel,
     StatsValue,
+    Title,
 } from './styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -32,7 +33,6 @@ import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import ProfileAccordion from './components/ProfileAccordion/ProfileAccordion';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
-import { Title } from './components/styled-components';
 import ClaimablePositions from './components/ClaimablePositions/ClaimablePositions';
 import PositionHistory from './components/PositionHistory/PositionHistory';
 import TransactionHistory from './components/TransactionHistory/TransactionHistory';
@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
             <ElectionsBanner />
             <BannerCarousel />
             <Container>
-                <ContainerFixed>
+                <Header>
                     <Title>{t('options.trading-profile.title')}</Title>
                     <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
@@ -131,9 +131,10 @@ const Profile: React.FC = () => {
                         handleChange={(value) => setSearchText(value)}
                         width="300px"
                         height="28px"
+                        iconTop="6px"
                     />
-                </ContainerFixed>
-                <ContainerLeft>
+                </Header>
+                <MainContainer>
                     <StatsContainer>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
@@ -178,7 +179,7 @@ const Profile: React.FC = () => {
                             </StatsValue>
                         </StatsItem>
                     </StatsContainer>
-                    <Nav justifyContent={'space-between'}>
+                    <Nav>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
                             className={view === NavItems.MyPositions ? 'active' : ''}
@@ -234,59 +235,7 @@ const Profile: React.FC = () => {
                             </>
                         )}
                     </>
-                </ContainerLeft>
-                {/* <ContainerRight layout={isSimpleView}>
-                    <PieChartOptionsAllocated
-                        claimable={positions.claimableAmount + userRangePositions.claimableAmount}
-                    />
-                    <Wrapper>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.netprofit-col')}: </Label>
-                            <Value
-                                color={
-                                    dataForUI?.userData.profit === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.profit > 0
-                                        ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
-                                }
-                            >
-                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
-                            </Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.gain-col')}: </Label>
-                            <Value
-                                color={
-                                    dataForUI?.userData.gain === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.gain > 0
-                                        ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
-                                }
-                            >
-                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
-                            </Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.trades-col')}: </Label>
-                            <Value>{dataForUI?.userData.trades}</Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.volume-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.investment-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.investment, 2)}</Value>
-                        </Row>
-                        {!isPolygon && (
-                            <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
-                                <ThalesBalance showTitle={true} />
-                            </PriceContainer>
-                        )}
-                    </Wrapper>
-                </ContainerRight> */}
+                </MainContainer>
             </Container>
             <Footer />
         </>

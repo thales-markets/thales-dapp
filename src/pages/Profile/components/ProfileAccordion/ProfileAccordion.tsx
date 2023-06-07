@@ -33,7 +33,10 @@ const Accordion = styled.div<{ isOpened: boolean }>`
     border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-bottom: 10px;
+    }
 `;
 
 const AccordionHeader = styled.p`
@@ -41,12 +44,12 @@ const AccordionHeader = styled.p`
     font-size: 18px;
     line-height: 16px;
     color: ${(props) => props.theme.textColor.quaternary};
-    padding: 20px 60px 20px 30px;
+    padding: 20px 60px 20px 32px;
     span {
         text-transform: lowercase;
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 15px 60px 15px 15px;
+        padding: 10px 50px 10px 12px;
         font-size: 15px;
         line-height: 22px;
     }
@@ -59,9 +62,9 @@ const AccordionHeader = styled.p`
 
 const AccordionContent = styled.div`
     color: ${(props) => props.theme.textColor.primary};
-    padding: 0 30px 20px 30px;
+    padding: 0 30px 25px 30px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 0px 15px 15px 15px;
+        padding: 0px 10px 10px 10px;
     }
 `;
 
@@ -74,7 +77,8 @@ const StyledArrowUp = styled(ArrowUp)`
         fill-opacity: 1;
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        right: 15px;
+        top: 15px;
+        right: 10px;
         height: 12px;
     }
 `;
@@ -88,7 +92,8 @@ export const StyledArrowDown = styled(ArrowDown)`
         fill-opacity: 1;
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        right: 15px;
+        top: 15px;
+        right: 10px;
         height: 12px;
     }
 `;
