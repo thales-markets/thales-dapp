@@ -8,7 +8,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import ValidationMessage from 'components/ValidationMessage';
 import { ProposalTypeEnum } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
@@ -34,11 +33,9 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number | undefined>(undefined);
     const [isVoting, setIsVoting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const handleVote = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-        setTxErrorMessage(null);
         setIsVoting(true);
         try {
             const hub = 'https://hub.snapshot.org';
@@ -60,7 +57,6 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsVoting(false);
         }
     };
@@ -103,11 +99,6 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
                         : t(`governance.proposal.vote-progress-label`)}
                 </Button>
             </FlexDivCentered>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
         </>
     );
 };

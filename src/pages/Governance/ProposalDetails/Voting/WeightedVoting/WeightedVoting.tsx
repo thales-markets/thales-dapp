@@ -4,7 +4,6 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
 import Button from 'components/Button/Button';
-import ValidationMessage from 'components/ValidationMessage';
 import { ProposalTypeEnum, SpaceKey } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
@@ -45,7 +44,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number[]>(new Array(proposal.choices.length + 1).fill(0));
     const [isVoting, setIsVoting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [modalInfo, setModalInfo] = useState({ isOpen: false, author: '', content: '' });
 
     const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
@@ -86,7 +84,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
 
     const handleVote = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-        setTxErrorMessage(null);
         setIsVoting(true);
         try {
             const formattedChoices = { ...selectedChoices };
@@ -111,7 +108,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsVoting(false);
         }
     };
@@ -213,11 +209,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                         : t(`governance.proposal.vote-progress-label`)}
                 </Button>
             </FlexDivCentered>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
             <PitchModal
                 onClose={() => setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })}
                 open={modalInfo.isOpen}

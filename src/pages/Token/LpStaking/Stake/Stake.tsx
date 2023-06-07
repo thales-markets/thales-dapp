@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
+import { ClaimMessage, EarnSection, Line, SectionContentContainer } from '../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
@@ -10,7 +10,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import ValidationMessage from 'components/ValidationMessage';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
@@ -46,7 +45,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
     const [isStaking, setIsStaking] = useState<boolean>(false);
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
@@ -123,7 +121,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     const handleStakeThales = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
@@ -144,14 +141,14 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsStaking(false);
         }
     };
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const { gelatoContract } = snxJSConnector as any;
-        const gelatoContractWithSigner = gelatoContract.connect((snxJSConnector as any).signer);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+        const { gelatoContract, signer } = snxJSConnector as any;
+        const gelatoContractWithSigner = gelatoContract.connect(signer);
 
         const addressToApprove = lpStakingRewardsContract.address;
         try {
@@ -167,7 +164,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsAllowingStake(false);
             setOpenApprovalModal(false);
         }
@@ -252,13 +249,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         <ClaimMessage>{t('options.earn.gamified-staking.staking.stake.paused-message')}</ClaimMessage>
                     )}
                 </StakeButtonDiv>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
             </SectionContentContainer>
             {openApprovalModal && (
                 <ApprovalModal

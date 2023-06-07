@@ -1,6 +1,5 @@
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip/Tooltip';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { THALES_CURRENCY } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import i18n from 'i18n';
@@ -61,7 +60,6 @@ const RetroRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -121,7 +119,6 @@ const RetroRewards: React.FC = () => {
             const { vestingEscrowContract } = snxJSConnector as any;
 
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const tx = await vestingContractWithSigner.claim({
@@ -142,7 +139,6 @@ const RetroRewards: React.FC = () => {
                 }
             } catch (e) {
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }
         }
@@ -303,11 +299,6 @@ const RetroRewards: React.FC = () => {
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>
                     </ButtonContainerBottom>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </StyledSectionContentContainer>
             </GridContainer>
         </EarnSection>

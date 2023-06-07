@@ -184,7 +184,7 @@ const StyledToastContainer = styled(ToastContainer)`
     }
     .Toastify__toast-icon {
         width: 32px;
-        margin-inline-end: 30px;
+        margin-inline-end: 12px;
     }
     .Toastify__spinner {
         width: 32px;

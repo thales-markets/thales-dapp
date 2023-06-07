@@ -1,4 +1,3 @@
-import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import NumericInput from 'components/fields/NumericInput';
@@ -44,7 +43,6 @@ const Bridge: React.FC = () => {
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [opThalesBalance, setOpThalesBalance] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -123,6 +121,7 @@ const Bridge: React.FC = () => {
         const { opThalesTokenContract, bridgeContract } = snxJSConnector as any;
 
         if (opThalesTokenContract && bridgeContract) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
             const addressToApprove = bridgeContract.address;
 
@@ -142,7 +141,7 @@ const Bridge: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
                 setOpenApprovalModal(false);
             }
@@ -151,7 +150,6 @@ const Bridge: React.FC = () => {
 
     const handleSubmit = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-        setTxErrorMessage(null);
         setIsSubmitting(true);
 
         try {
@@ -177,7 +175,6 @@ const Bridge: React.FC = () => {
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsSubmitting(false);
         }
     };
@@ -266,11 +263,6 @@ const Bridge: React.FC = () => {
                 <InfoWarningMessage message={t('migration.migration-multisig-contact-warning')}></InfoWarningMessage>
             </MessageContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}

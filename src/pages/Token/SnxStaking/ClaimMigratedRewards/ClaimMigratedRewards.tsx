@@ -5,7 +5,6 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { ethers } from 'ethers';
 import { MigratedRetroReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
@@ -40,7 +39,6 @@ const ClaimMigratedRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [migratedRewards, setMigratedRewards] = useState<MigratedRetroReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -114,7 +112,6 @@ const ClaimMigratedRewards: React.FC = () => {
         if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
                     (snxJSConnector as any).signer
@@ -145,7 +142,6 @@ const ClaimMigratedRewards: React.FC = () => {
             } catch (e) {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }
         }
@@ -218,11 +214,6 @@ const ClaimMigratedRewards: React.FC = () => {
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </StyledGridAction>
             </GridContainer>
         </EarnSection>

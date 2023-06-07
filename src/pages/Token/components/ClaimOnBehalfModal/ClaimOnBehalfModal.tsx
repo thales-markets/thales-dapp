@@ -7,7 +7,6 @@ import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
@@ -38,7 +37,6 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [account, setAccount] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { stakingThalesContract } = snxJSConnector as any;
 
     const isAccountEntered = account !== undefined && account.trim() !== '';
@@ -68,7 +66,6 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const handleSubmit = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsSubmitting(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -98,7 +95,6 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsSubmitting(false);
         }
     };
@@ -169,14 +165,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                         validationMessage={t(`common.errors.invalid-address`)}
                     />
                 </InputContainer>
-                <ButtonContainer>
-                    {getSubmitButton()}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </ButtonContainer>
+                <ButtonContainer>{getSubmitButton()}</ButtonContainer>
                 <EnabledAddressesTitle>
                     {t('options.earn.claim-on-behalf.enabled-addresses-title')}:
                 </EnabledAddressesTitle>

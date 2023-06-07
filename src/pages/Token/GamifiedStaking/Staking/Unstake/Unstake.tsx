@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import NumericInput from 'components/fields/NumericInput';
 import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -28,7 +27,7 @@ import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/fo
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../../styled-components';
+import { ClaimMessage, EarnSection, Line, SectionContentContainer } from '../../../styled-components';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
@@ -62,7 +61,6 @@ const Unstake: React.FC = () => {
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
     const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -225,7 +223,6 @@ const Unstake: React.FC = () => {
         const { stakingThalesContract } = snxJSConnector as any;
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
@@ -252,16 +249,14 @@ const Unstake: React.FC = () => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsUnstaking(false);
         }
     };
 
     const handleUnstakeThales = async () => {
-        const { stakingThalesContract } = snxJSConnector as any;
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+        const { stakingThalesContract } = snxJSConnector as any;
         try {
-            setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const tx = await stakingThalesContractWithSigner.unstake({ gasLimit: getMaxGasLimitForNetwork(networkId) });
@@ -283,16 +278,14 @@ const Unstake: React.FC = () => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsUnstaking(false);
         }
     };
 
     const handleCancelUnstakingThales = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         const { stakingThalesContract } = snxJSConnector as any;
-
         try {
-            setTxErrorMessage(null);
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const tx = await stakingThalesContractWithSigner.cancelUnstake({
@@ -308,7 +301,7 @@ const Unstake: React.FC = () => {
                 setGasLimit(null);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsCanceling(false);
         }
     };
@@ -482,13 +475,6 @@ const Unstake: React.FC = () => {
                         </ClaimMessage>
                     )}
                 </ButtonsContainer>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
             </SectionContentContainer>
         </EarnSection>
     );

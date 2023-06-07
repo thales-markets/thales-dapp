@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/Tooltip/Tooltip';
-import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -58,7 +57,6 @@ const LpStaking: React.FC = () => {
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -144,7 +142,6 @@ const LpStaking: React.FC = () => {
         if (rewards || secondRewards) {
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
@@ -163,7 +160,6 @@ const LpStaking: React.FC = () => {
             } catch (e) {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }
         }
@@ -238,14 +234,7 @@ const LpStaking: React.FC = () => {
                         </SectionValue>
                         <Line margin={'0 0 10px 0'} />
                         <NetworkFees gasLimit={gasLimit} />
-                        <ButtonContainer>
-                            {getClaimButton()}
-                            <ValidationMessage
-                                showValidation={txErrorMessage !== null}
-                                message={txErrorMessage}
-                                onDismiss={() => setTxErrorMessage(null)}
-                            />
-                        </ButtonContainer>
+                        <ButtonContainer>{getClaimButton()}</ButtonContainer>
                     </SectionContentWrapper>
                 </SectionWrapper>
             </SectionContentWrapper>

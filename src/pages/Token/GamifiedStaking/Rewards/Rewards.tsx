@@ -4,7 +4,6 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
-import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -83,7 +82,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
 
@@ -362,7 +360,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         if (isClaimAvailable) {
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.claimReward({
@@ -384,7 +381,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             } catch (e) {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }
         }
@@ -394,7 +390,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         if (canClosePeriod) {
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClosingPeriod(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.closePeriod()) as ethers.ContractTransaction;
@@ -414,7 +409,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             } catch (e) {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClosingPeriod(false);
             }
         }
@@ -478,11 +472,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </ClaimMessage>
                     {getClaimButton()}
                 </ButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
             </SectionContentWrapper>
         );
     };

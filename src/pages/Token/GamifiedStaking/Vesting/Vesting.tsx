@@ -1,7 +1,6 @@
 import Button from 'components/Button/Button';
 import TileTable from 'components/TileTable';
 import { TileRow } from 'components/TileTable/TileTable';
-import ValidationMessage from 'components/ValidationMessage';
 import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -44,7 +43,6 @@ const Vesting: React.FC = () => {
 
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
     const { escrowThalesContract } = snxJSConnector as any;
@@ -122,7 +120,6 @@ const Vesting: React.FC = () => {
     const handleVest = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
 
@@ -142,7 +139,6 @@ const Vesting: React.FC = () => {
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsClaiming(false);
         }
     };
@@ -179,11 +175,6 @@ const Vesting: React.FC = () => {
                         <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </SectionContentWrapper>
             </SectionWrapper>
 

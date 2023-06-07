@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
+import { EarnSection, Line, SectionContentContainer } from '../../styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from 'utils/snxJSConnector';
 import { formatGasLimit, getL1FeeInWei } from 'utils/network';
@@ -44,7 +43,6 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
     const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { lpStakingRewardsContract } = snxJSConnector as any;
 
     const isAmountEntered = Number(amountToUnstake) > 0;
@@ -87,7 +85,6 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
         const { lpStakingRewardsContract } = snxJSConnector as any;
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsUnstaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
@@ -113,7 +110,6 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsUnstaking(false);
         }
     };
@@ -180,13 +176,6 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                 <Line margin={'0 0 10px 0'} />
                 <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
                 <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
             </SectionContentContainer>
         </EarnSection>
     );

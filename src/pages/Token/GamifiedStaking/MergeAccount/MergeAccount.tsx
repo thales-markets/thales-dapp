@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import Button from 'components/Button/Button';
-import ValidationMessage from 'components/ValidationMessage';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { ZERO_ADDRESS } from 'constants/network';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -45,7 +44,6 @@ const MergeAccount: React.FC = () => {
     const [delegateDestAddress, setDelegateDestAddress] = useState<string>('');
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { stakingThalesContract } = snxJSConnector as any;
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
@@ -188,7 +186,6 @@ const MergeAccount: React.FC = () => {
     const handleMerge = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsMerging(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -208,7 +205,6 @@ const MergeAccount: React.FC = () => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsMerging(false);
         }
     };
@@ -216,7 +212,6 @@ const MergeAccount: React.FC = () => {
     const handleDelegate = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsDelegating(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -242,7 +237,6 @@ const MergeAccount: React.FC = () => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsDelegating(false);
         }
     };
@@ -416,11 +410,6 @@ const MergeAccount: React.FC = () => {
                             </Message>
                         )}
                         {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
                     </ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../styled-components';
+import { ClaimMessage, EarnSection, SectionContentContainer, Line } from '../../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NumericInput from 'components/fields/NumericInput';
@@ -12,7 +12,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import ValidationMessage from 'components/ValidationMessage';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
@@ -47,7 +46,6 @@ const Stake: React.FC = () => {
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
     const [isStaking, setIsStaking] = useState<boolean>(false);
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
@@ -152,7 +150,6 @@ const Stake: React.FC = () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
         try {
-            setTxErrorMessage(null);
             setIsStaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
@@ -172,14 +169,14 @@ const Stake: React.FC = () => {
             }
         } catch (e) {
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsStaking(false);
         }
     };
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const { thalesTokenContract } = snxJSConnector as any;
-        const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+        const { thalesTokenContract, signer } = snxJSConnector as any;
+        const thalesTokenContractWithSigner = thalesTokenContract.connect(signer);
 
         const addressToApprove = stakingThalesContract.address;
         try {
@@ -198,7 +195,7 @@ const Stake: React.FC = () => {
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsAllowingStake(false);
             setOpenApprovalModal(false);
         }
@@ -285,13 +282,6 @@ const Stake: React.FC = () => {
                         <ClaimMessage>{t('options.earn.gamified-staking.staking.stake.paused-message')}</ClaimMessage>
                     )}
                 </StakeButtonDiv>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
             </SectionContentContainer>
             {openApprovalModal && (
                 <ApprovalModal
