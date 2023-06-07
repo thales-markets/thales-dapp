@@ -26,7 +26,7 @@ import {
     StatsLabel,
     StatsValue,
 } from './styled-components';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
               };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady && walletAddress !== null,
+        enabled: isAppReady && isWalletConnected,
     });
     const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
@@ -124,7 +124,7 @@ const Profile: React.FC = () => {
             <BannerCarousel />
             <Container>
                 <ContainerFixed>
-                    <Title>Trading Profile</Title>
+                    <Title>{t('options.trading-profile.title')}</Title>
                     <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
@@ -139,37 +139,43 @@ const Profile: React.FC = () => {
                             <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
                             <StatsValue
                                 color={
-                                    dataForUI?.userData.profit === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.profit > 0
+                                    dataForUI?.userData.profit > 0
                                         ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
+                                        : dataForUI?.userData.profit < 0
+                                        ? theme.textColor.tertiary
+                                        : theme.textColor.primary
                                 }
                             >
-                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
+                                {allTxAndDataQuery.isLoading
+                                    ? '-'
+                                    : formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.gain-col')}:</StatsLabel>
                             <StatsValue
                                 color={
-                                    dataForUI?.userData.gain === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.gain > 0
+                                    dataForUI?.userData.gain > 0
                                         ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
+                                        : dataForUI?.userData.gain < 0
+                                        ? theme.textColor.tertiary
+                                        : theme.textColor.primary
                                 }
                             >
-                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
+                                {allTxAndDataQuery.isLoading ? '-' : formatPercentage(dataForUI?.userData.gain)}
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.trades-col')}:</StatsLabel>
-                            <StatsValue>{dataForUI?.userData.trades}</StatsValue>
+                            <StatsValue>{allTxAndDataQuery.isLoading ? '-' : dataForUI?.userData.trades}</StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.volume-col')}:</StatsLabel>
-                            <StatsValue>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</StatsValue>
+                            <StatsValue>
+                                {allTxAndDataQuery.isLoading
+                                    ? '-'
+                                    : formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}
+                            </StatsValue>
                         </StatsItem>
                     </StatsContainer>
                     <Nav justifyContent={'space-between'}>
@@ -190,14 +196,14 @@ const Profile: React.FC = () => {
                     <>
                         {view === NavItems.MyPositions && (
                             <>
-                                <ProfileAccordion title="Claimable positions">
+                                <ProfileAccordion title={t('options.trading-profile.accordions.claimable-positions')}>
                                     <ClaimablePositions
                                         claimablePositions={positions.claimable}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileAccordion>
-                                <ProfileAccordion title="Open positions">
+                                <ProfileAccordion title={t('options.trading-profile.accordions.open-positions')}>
                                     <OpenPositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.live}
@@ -209,7 +215,7 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileAccordion title="Position history">
+                                <ProfileAccordion title={t('options.trading-profile.accordions.position-history')}>
                                     <PositionHistory
                                         claimedPositions={positions.claimed}
                                         ripPositions={positions.rip}
@@ -217,7 +223,7 @@ const Profile: React.FC = () => {
                                         isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileAccordion>
-                                <ProfileAccordion title="Transaction history">
+                                <ProfileAccordion title={t('options.trading-profile.accordions.transaction-history')}>
                                     <TransactionHistory
                                         markets={[...(markets as any)]}
                                         trades={dataForUI ? dataForUI.trades : []}

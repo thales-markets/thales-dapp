@@ -1,7 +1,13 @@
+import { LINKS } from 'constants/links';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { TFunction } from 'i18next';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
+import { getColorPerPosition } from 'utils/options';
 
 export const Content = styled.div`
     display: content;
@@ -12,7 +18,6 @@ export const Container = styled.div`
     flex-direction: column;
     padding-top: 15px;
     position: relative;
-    min-height: 200px;
 `;
 
 export const CardWrapper = styled.div<{ background?: boolean }>`
@@ -130,43 +135,94 @@ export const getColor = (data: any, theme: ThemeInterface) => {
     return data.side === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
 };
 
-export const Icon = styled.i<{ margin?: string; color?: string }>`
-    margin: 0px 0px 2px 4px;
-    font-size: 10px;
-    ${(props) => (props.color ? `color: ${props.color} !important` : '')};
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
-`;
-
-export const NoDataText = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 15px;
-    }
-`;
-
-export const NoDataContainer = styled.div`
-    display: block;
+export const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 200px;
     width: 100%;
+`;
+
+export const NoDataContainer = styled(FlexDivCentered)`
+    color: ${(props) => props.theme.textColor.primary};
+    justify-content: center;
+    margin: 20px 0px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 100%;
+    height: 20px;
     text-align: center;
-    margin-top: 50px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-top: 10px;
+        font-size: 13px;
     }
+  }
 `;
 
 export const CurrencyIcon = styled.i<{ fontSize?: string }>`
-    font-size: ${(props) => props.fontSize || '24px'};
+    font-size: ${(props) => props.fontSize || '34px'};
     margin-right: 6px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-right: 0px;
+        font-size: 24px;
     }
 `;
 
 export const Title = styled(CardText)`
     font-size: 18px;
     font-weight: bold;
+`;
+
+export const TooltipLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const UsingAmmLink: React.FC = () => {
+    const { t } = useTranslation();
+    return (
+        <TooltipLink
+            target="_blank"
+            rel="noreferrer"
+            href={LINKS.AMM.UsingAmm}
+            onClick={(event) => {
+                event?.stopPropagation();
+            }}
+        >
+            {t('common.here')}
+        </TooltipLink>
+    );
+};
+
+export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => {
+    return (
+        <Value>
+            {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
+        </Value>
+    );
+};
+
+export const getStatus = (claimed: boolean, theme: ThemeInterface, t: TFunction) => {
+    if (claimed) {
+        return <Value color={theme.textColor.quaternary}>{t('options.home.market-card.claimed')}</Value>;
+    } else {
+        return (
+            <Value color={theme.textColor.tertiary}>
+                {t('options.home.market-card.rip')}
+                <Icon color={theme.textColor.tertiary} className="v2-icon v2-icon--rip"></Icon>
+            </Value>
+        );
+    }
+};
+
+const Value = styled.span<{ color?: string }>`
+    color: ${(props) => props.color || props.theme.textColor.primary};
+`;
+
+const Icon = styled.i<{ color?: string }>`
+    margin: 0px 0px 2px 4px;
+    font-size: 10px;
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
 `;

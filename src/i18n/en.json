@@ -1676,6 +1676,12 @@
                 "matured-positions": "Matured Positions",
                 "history": "History"
             },
+            "accordions": {
+                "claimable-positions": "Claimable positions",
+                "open-positions": "Open positions",
+                "position-history": "Position history",
+                "transaction-history": "Transaction history"
+            },
             "search-placeholder": "Search Wallet",
             "history": {
                 "strike": "Strike",

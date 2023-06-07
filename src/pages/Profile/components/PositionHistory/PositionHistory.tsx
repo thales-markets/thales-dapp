@@ -5,12 +5,10 @@ import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { UserPosition } from 'queries/user/useAllPositions';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import styled from 'styled-components';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'enums/options';
-import { getColorPerPosition } from 'utils/options';
+import { getAmount, getStatus } from '../styled-components';
 
 type PositionHistoryProps = {
     claimedPositions: UserPosition[];
@@ -36,27 +34,6 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
         position.isRanged
             ? `$${formatCurrency(position.leftPrice)} - $${formatCurrency(position.rightPrice)}`
             : `$${formatCurrency(position.strikePrice)}`;
-
-    const getAmount = (amount: number | string, position: Positions) => {
-        return (
-            <Value>
-                {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
-            </Value>
-        );
-    };
-
-    const getStatus = (claimed: boolean) => {
-        if (claimed) {
-            return <Value color={theme.textColor.quaternary}>{t('options.home.market-card.claimed')}</Value>;
-        } else {
-            return (
-                <Value color={theme.textColor.tertiary}>
-                    {t('options.home.market-card.rip')}
-                    <Icon color={theme.textColor.tertiary} className="v2-icon v2-icon--rip"></Icon>
-                </Value>
-            );
-        }
-    };
 
     const generateRows = (data: UserPosition[]) => {
         try {
@@ -105,12 +82,12 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
 
                 cells.push({
                     title: t('options.leaderboard.trades.table.amount-col'),
-                    value: getAmount(formatCurrency(row.amount, 2), row.side),
+                    value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
                 });
 
                 cells.push({
                     title: t('options.home.markets-table.status-col'),
-                    value: getStatus(row.claimed),
+                    value: getStatus(row.claimed, theme, t),
                 });
 
                 return {
@@ -137,19 +114,5 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
 
     return <TileTable rows={rows as any} isLoading={isLoading} defaultFlowColor={theme.background.tertiary} />;
 };
-
-export const Value = styled.span<{ color?: string }>`
-    color: ${(props) => props.color || props.theme.textColor.primary};
-`;
-
-export const Icon = styled.i<{ color?: string }>`
-    margin: 0px 0px 2px 4px;
-    font-size: 10px;
-    color: ${(props) => props.color || props.theme.textColor.primary};
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
-`;
 
 export default PositionHistory;

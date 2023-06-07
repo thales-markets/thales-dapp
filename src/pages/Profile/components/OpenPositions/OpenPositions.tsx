@@ -3,16 +3,14 @@ import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
-import { LINKS } from 'constants/links';
 import { orderBy } from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import styled, { useTheme } from 'styled-components';
-import { LoaderContainer } from 'styles/common';
+import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import {
     Card,
@@ -25,13 +23,14 @@ import {
     Container,
     Content,
     CurrencyIcon,
+    LoaderContainer,
     NoDataContainer,
-    NoDataText,
     PriceDifferenceInfo,
+    UsingAmmLink,
+    getAmount,
     getColor,
 } from '../styled-components';
 import { UserPosition } from 'queries/user/useAllPositions';
-import { getAmount } from '../MaturedPositions/MaturedPositions';
 
 type OpenPositionsProps = {
     exchangeRates: Rates | null;
@@ -64,18 +63,15 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
         });
     }, [searchText, data]);
 
-    if (!isLoading && !data.length) {
-        return (
-            <NoDataContainer>
-                <NoDataText>{t('common.no-data-available')}</NoDataText>
-            </NoDataContainer>
-        );
-    }
-
     return (
         <Container>
-            {!isLoading &&
-                filteredData.length > 0 &&
+            {isLoading ? (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            ) : filteredData.length === 0 ? (
+                <NoDataContainer>{t('common.no-data-available')}</NoDataContainer>
+            ) : (
                 filteredData.map((data: UserPosition, index: number) => (
                     <Content key={index}>
                         <SPAAnchor
@@ -191,7 +187,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                                                 {t('options.leaderboard.trades.table.amount-col')}
                                             </CardRowTitle>
                                             <CardRowSubtitle>
-                                                {getAmount(data.amount.toFixed(2), data.side, theme)}
+                                                {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
                                             </CardRowSubtitle>
                                         </CardSection>
                                         <CardSection>
@@ -227,36 +223,9 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                             </CardWrapper>
                         </SPAAnchor>
                     </Content>
-                ))}
-            {isLoading && (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
+                ))
             )}
         </Container>
-    );
-};
-
-const TooltipLink = styled.a`
-    color: ${(props) => props.theme.link.textColor.primary};
-    &:hover {
-        text-decoration: underline;
-    }
-`;
-
-const UsingAmmLink: React.FC = () => {
-    const { t } = useTranslation();
-    return (
-        <TooltipLink
-            target="_blank"
-            rel="noreferrer"
-            href={LINKS.AMM.UsingAmm}
-            onClick={(event) => {
-                event?.stopPropagation();
-            }}
-        >
-            {t('common.here')}
-        </TooltipLink>
     );
 };
 

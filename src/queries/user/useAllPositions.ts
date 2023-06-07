@@ -284,12 +284,14 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                     network: networkId,
                     maxMaturity,
                 }),
-                thalesData.binaryOptions.rangedMarkets({
-                    max: Infinity,
-                    network: networkId,
-                    marketIds: rangedMarketIds,
-                    maxMaturity,
-                }),
+                rangedMarketIds.length > 0
+                    ? thalesData.binaryOptions.rangedMarkets({
+                          max: Infinity,
+                          network: networkId,
+                          marketIds: rangedMarketIds,
+                          maxMaturity,
+                      })
+                    : [],
             ]);
 
             const claimedPositions = optionsMarkets

@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivRow } from 'styles/common';
 
 export const Container = styled.div`
     position: relative;
@@ -8,23 +8,13 @@ export const Container = styled.div`
     width: 100%;
     max-width: 974px;
     flex-direction: column;
-    @media (max-width: 1250px) {
-        margin-top: 0;
-        flex-direction: column-reverse;
-    }
-    *::-webkit-scrollbar-track {
-        border-radius: 8px;
-    }
 `;
 
-export const ContainerFixed = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+export const ContainerFixed = styled(FlexDivRow)`
     width: 100%;
-    @media (max-width: 1250px) {
-        display: none;
+    align-items: center;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-direction: column;
     }
 `;
 
@@ -116,10 +106,6 @@ export const Nav = styled.div<{ justifyContent: string }>`
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     margin-bottom: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-top: 20px;
-        justify-content: space-between;
-    }
 `;
 
 export const NavItem = styled.p`
@@ -135,11 +121,9 @@ export const NavItem = styled.p`
         box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 14px;
+        line-height: 30px;
+        font-size: 12px;
         padding: 0 20px;
-    }
-    @media (max-width: 500px) {
-        font-size: 10px;
     }
 `;
 
@@ -156,49 +140,45 @@ export const Notification = styled.span`
     position: relative;
     top: 0px;
     display: inline-block;
-    @media (max-width: 512px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
         line-height: 20px;
         width: 22px;
-        margin-left: 10px;
+        margin-left: 6px;
     }
-`;
-
-export const ContentWrapper = styled.div<{ isScrollable?: boolean }>`
-    width: calc(100% + 80px);
-    overflow: hidden;
-    overflow-y: auto;
-    position: relative;
-    left: -50px;
-    margin-top: 10px;
-    padding-left: 50px;
-    padding-right: 20px;
-    height: 100%;
-    min-height: 300px;
-    ${(props) => (props.isScrollable ? 'max-height: 400px;' : '')}
-`;
-
-export const PriceContainer = styled.div`
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    margin-top: 20px;
 `;
 
 export const StatsContainer = styled(FlexDivRow)`
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
     color: ${(props) => props.theme.textColor.primary};
-    padding: 20px 20px;
+    padding: 15px 15px;
     font-size: 18px;
-    margin-top: 20px;
+    line-height: 24px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 10px 10px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        line-height: 18px;
+    }
 `;
 
-export const StatsItem = styled(FlexDivRow)``;
+export const StatsItem = styled(FlexDivCentered)`
+    :not(:first-child) {
+        border-left: 2px solid ${(props) => props.theme.borderColor.secondary};
+    }
+    width: 100%;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        :not(:first-child) {
+            border-left: none;
+        }
+        width: 50%;
+    }
+`;
 
-export const StatsLabel = styled.span`
+export const StatsLabel = styled.label`
     margin-right: 6px;
 `;
 
