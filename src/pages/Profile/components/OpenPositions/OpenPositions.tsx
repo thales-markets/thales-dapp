@@ -27,14 +27,14 @@ import {
     UsingAmmLink,
     getAmount,
 } from '../styled-components';
-import { UserPosition } from 'queries/user/useAllPositions';
 import { getColorPerPosition } from 'utils/options';
+import { UserPosition } from 'types/options';
 
 type OpenPositionsProps = {
     exchangeRates: Rates | null;
     livePositions: UserPosition[];
     searchText: string;
-    isLoading?: boolean;
+    isLoading: boolean;
 };
 
 const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {

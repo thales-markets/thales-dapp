@@ -23,13 +23,13 @@ import {
     NoDataContainer,
     getAmount,
 } from '../styled-components';
-import { UserPosition } from 'queries/user/useAllPositions';
 import { getColorPerPosition } from 'utils/options';
+import { UserPosition } from 'types/options';
 
 type ClaimablePositionsProps = {
     claimablePositions: UserPosition[];
     searchText: string;
-    isLoading?: boolean;
+    isLoading: boolean;
 };
 
 const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositions, searchText, isLoading }) => {

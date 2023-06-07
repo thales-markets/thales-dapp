@@ -109,7 +109,7 @@ const QUERY_KEYS = {
         ],
     },
     User: {
-        Data: (walletAddress: string, networkId: NetworkId) => ['user', 'transactions', walletAddress, networkId],
+        ProfileData: (walletAddress: string, networkId: NetworkId) => ['user', 'profileData', walletAddress, networkId],
         AllPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'allPositions',

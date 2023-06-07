@@ -2,12 +2,17 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
+import { UserProfileData } from 'types/options';
 
-const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<any>) => {
-    return useQuery<any>(
-        QUERY_KEYS.User.Data(walletAddress, networkId),
+const useUserProfileDataQuery = (
+    networkId: NetworkId,
+    walletAddress: string,
+    options?: UseQueryOptions<UserProfileData>
+) => {
+    return useQuery<UserProfileData>(
+        QUERY_KEYS.User.ProfileData(walletAddress, networkId),
         async () => {
-            let [profit, volume, trades, gain, investment] = [0, 0, 0, 0, 0];
+            let [profit, volume, numberOfTrades, gain, investment] = [0, 0, 0, 0, 0];
 
             const [userMarketTransactions, userTrades] = await Promise.all([
                 thalesData.binaryOptions.optionTransactions({
@@ -31,7 +36,7 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
             });
 
             userTrades.map((tx: any) => {
-                trades += 1;
+                numberOfTrades += 1;
 
                 if (tx.orderSide === 'sell') {
                     profit += tx.makerAmount;
@@ -46,15 +51,12 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
             gain = investment !== 0 ? profit / investment : 0;
 
             const result = {
-                userMarketTransactions,
                 trades: userTrades,
-                userData: {
-                    profit,
-                    volume,
-                    trades,
-                    gain,
-                    investment,
-                },
+                profit,
+                volume,
+                numberOfTrades,
+                gain,
+                investment,
             };
 
             return result;
@@ -63,4 +65,4 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
     );
 };
 
-export default useCalculateDataQuery;
+export default useUserProfileDataQuery;

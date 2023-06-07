@@ -3,18 +3,18 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { UserPosition } from 'queries/user/useAllPositions';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { getAmount, getStatus } from '../styled-components';
+import { UserPosition } from 'types/options';
 
 type PositionHistoryProps = {
     claimedPositions: UserPosition[];
     ripPositions: UserPosition[];
     searchText: string;
-    isLoading?: boolean;
+    isLoading: boolean;
 };
 
 const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, ripPositions, searchText, isLoading }) => {

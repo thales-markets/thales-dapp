@@ -37,7 +37,9 @@ export const Nav = styled.div`
     margin-bottom: 20px;
 `;
 
-export const NavItem = styled.p`
+export const NavItem = styled.p<{
+    active?: boolean;
+}>`
     font-weight: bold;
     line-height: 40px;
     font-size: 15px;
@@ -46,9 +48,7 @@ export const NavItem = styled.p`
     cursor: pointer;
     padding: 0 50px;
     white-space: pre;
-    &.active {
-        box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
-    }
+    box-shadow: ${(props) => (props.active ? `0px 4px ${props.theme.borderColor.quaternary};` : '')};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         line-height: 30px;
         font-size: 12px;
@@ -69,7 +69,7 @@ export const Notification = styled.span`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
         line-height: 20px;
-        width: 22px;
+        width: 20px;
         margin-left: 6px;
     }
 `;

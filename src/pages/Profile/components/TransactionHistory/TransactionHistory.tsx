@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, RangedMarket, Trade, Trades } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { sortOptionsMarkets } from 'utils/options';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
@@ -20,10 +20,14 @@ import { Positions } from 'enums/options';
 import { getAmount } from '../styled-components';
 
 type TransactionHistoryProps = {
-    markets?: OptionsMarkets;
-    trades: [];
+    markets: OptionsMarkets;
+    trades: Trades;
     searchText: string;
-    isLoading?: boolean;
+    isLoading: boolean;
+};
+
+type TradeWithMarket = Trade & {
+    marketItem: HistoricalOptionsMarketInfo | RangedMarket;
 };
 
 const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades, searchText, isLoading }) => {
@@ -40,7 +44,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, rangedTrades, {
         enabled: isAppReady && rangedTrades.length > 0,
     });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
+    const rangedMarkets = rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : [];
     const allMarkets = [...(markets as any), ...rangedMarkets];
 
     const getOptionSideLabel = (optionSide: string) => {
@@ -57,9 +61,9 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
         return Positions.UP;
     };
 
-    const generateRows = (data: any[]) => {
+    const generateRows = (data: TradeWithMarket[]) => {
         try {
-            const dateMap: Record<string, any> = {};
+            const dateMap: Record<string, TradeWithMarket[]> = {};
             const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
             sortedData.forEach((trade) => {
                 const tradeDateKey = formatShortDate(trade.timestamp).toUpperCase();
@@ -69,41 +73,39 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                 dateMap[tradeDateKey].push(trade);
             });
 
-            const rows = Object.keys(dateMap).reduce((prev: any[], curr: string) => {
+            const rows = Object.keys(dateMap).reduce((prev: (string | TradeWithMarket)[], curr: string) => {
                 prev.push(curr);
                 prev.push(...dateMap[curr]);
                 return prev;
             }, []);
 
-            return rows.map((d) => {
-                if (typeof d === 'string') {
-                    return d;
+            return rows.map((row: string | TradeWithMarket) => {
+                if (typeof row === 'string') {
+                    return row;
                 }
                 const isRanged =
-                    d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]] ||
-                    d.optionSide == RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]]
-                        ? true
-                        : false;
-                const marketExpired = d.marketItem?.result;
+                    row.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]] ||
+                    row.optionSide == RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]];
+                const marketExpired = row.marketItem.result;
                 const optionPrice =
-                    d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
-                const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
+                    row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
+                const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
 
                 return {
                     dotColor: theme.background.tertiary,
                     backgroundColor: theme.background.secondary,
                     asset: {
-                        currencyKey: d.marketItem.currencyKey,
+                        currencyKey: row.marketItem.currencyKey,
                     },
                     cells: [
-                        { title: d.orderSide, value: formatHoursAndMinutesFromTimestamp(d.timestamp) },
+                        { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
                         {
                             title: t('options.trading-profile.history.strike'),
                             value: isRanged
-                                ? `$${formatCurrency(d.marketItem.leftPrice)} - $${formatCurrency(
-                                      d.marketItem.rightPrice
+                                ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
+                                      (row.marketItem as RangedMarket).rightPrice
                                   )}`
-                                : `$${formatCurrency(d.marketItem.strikePrice)}`,
+                                : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
                         },
                         {
                             title: t('options.trading-profile.history.price'),
@@ -112,8 +114,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                         {
                             title: t('options.trading-profile.history.amount'),
                             value: getAmount(
-                                formatCurrency(d.orderSide == 'sell' ? d.takerAmount : d.makerAmount),
-                                getOptionSideLabel(d.optionSide),
+                                formatCurrency(row.orderSide == 'sell' ? row.takerAmount : row.makerAmount),
+                                getOptionSideLabel(row.optionSide),
                                 theme
                             ),
                         },
@@ -125,12 +127,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                             title: marketExpired
                                 ? t('options.trading-profile.history.expired')
                                 : t('options.trading-profile.history.expires'),
-                            value: formatShortDate(new Date(d.marketItem.maturityDate)),
+                            value: formatShortDate(new Date(row.marketItem.maturityDate)),
                         },
                     ],
                     link: isRanged
-                        ? buildRangeMarketLink(d.marketItem.address)
-                        : buildOptionsMarketLink(d.marketItem.address),
+                        ? buildRangeMarketLink(row.marketItem.address)
+                        : buildOptionsMarketLink(row.marketItem.address),
                 };
             });
         } catch (e) {
@@ -143,7 +145,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
             const optionsMarketsMap = keyBy(sortOptionsMarkets(allMarkets), 'address');
             return generateRows(
                 trades
-                    .map((trade: any) => ({
+                    .map((trade: Trade) => ({
                         ...trade,
                         marketItem: optionsMarketsMap[trade.market],
                     }))

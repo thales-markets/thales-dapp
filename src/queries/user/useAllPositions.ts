@@ -1,7 +1,13 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
-import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
+import {
+    HistoricalOptionsMarketInfo,
+    OptionsTransaction,
+    RangedMarket,
+    UserPosition,
+    UserPositionsData,
+} from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { NetworkId } from 'utils/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
@@ -9,35 +15,6 @@ import { BALANCE_THRESHOLD } from 'constants/token';
 import { RANGE_SIDE, SIDE } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
-
-export type UserPositionsData = {
-    live: UserPosition[];
-    claimable: UserPosition[];
-    rip: UserPosition[];
-    claimed: UserPosition[];
-    claimableCount: number;
-    claimableAmount: number;
-};
-
-export type UserPosition = {
-    positionAddress: string;
-    currencyKey: string;
-    strikePrice: number;
-    leftPrice: number;
-    rightPrice: number;
-    finalPrice: number;
-    amount: number;
-    maturityDate: number;
-    expiryDate: number;
-    market: string;
-    side: Positions;
-    paid: number;
-    value: number;
-    claimable: boolean;
-    claimed: boolean;
-    isRanged: boolean;
-    priceDiff?: number;
-};
 
 const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<UserPositionsData>) => {
     return useQuery<UserPositionsData>(

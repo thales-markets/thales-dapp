@@ -3,8 +3,8 @@ import Footer from 'components/Footer';
 import SearchInput from 'components/SearchInput/SearchInput';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useAllPositions, { UserPositionsData } from 'queries/user/useAllPositions';
-import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
+import useAllPositions from 'queries/user/useAllPositions';
+import useUserProfileDataQuery from 'queries/user/useUserProfileDataQuery';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,7 @@ import ClaimablePositions from './components/ClaimablePositions/ClaimablePositio
 import PositionHistory from './components/PositionHistory/PositionHistory';
 import TransactionHistory from './components/TransactionHistory/TransactionHistory';
 import OpenPositions from './components/OpenPositions/OpenPositions';
+import { UserPositionsData, UserProfileData } from 'types/options';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -83,10 +84,24 @@ const Profile: React.FC = () => {
                   claimableAmount: 0,
               };
 
-    const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady && isWalletConnected,
-    });
-    const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
+    const userProfileDataQuery = useUserProfileDataQuery(
+        networkId,
+        (searchAddress ? searchAddress : walletAddress) as any,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+    const profileData: UserProfileData =
+        userProfileDataQuery.isSuccess && userProfileDataQuery.data
+            ? userProfileDataQuery.data
+            : {
+                  trades: [],
+                  profit: 0,
+                  volume: 0,
+                  numberOfTrades: 0,
+                  gain: 0,
+                  investment: 0,
+              };
 
     const [searchText, setSearchText] = useState('');
     const queryParamTab = queryString.parse(location.search).tab as NavItems;
@@ -140,57 +155,54 @@ const Profile: React.FC = () => {
                             <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
                             <StatsValue
                                 color={
-                                    dataForUI?.userData.profit > 0
+                                    profileData.profit > 0
                                         ? theme.textColor.quaternary
-                                        : dataForUI?.userData.profit < 0
+                                        : profileData.profit < 0
                                         ? theme.textColor.tertiary
                                         : theme.textColor.primary
                                 }
                             >
-                                {allTxAndDataQuery.isLoading
+                                {userProfileDataQuery.isLoading
                                     ? '-'
-                                    : formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
+                                    : formatCurrencyWithSign(USD_SIGN, profileData.profit, 2)}
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.gain-col')}:</StatsLabel>
                             <StatsValue
                                 color={
-                                    dataForUI?.userData.gain > 0
+                                    profileData.gain > 0
                                         ? theme.textColor.quaternary
-                                        : dataForUI?.userData.gain < 0
+                                        : profileData.gain < 0
                                         ? theme.textColor.tertiary
                                         : theme.textColor.primary
                                 }
                             >
-                                {allTxAndDataQuery.isLoading ? '-' : formatPercentage(dataForUI?.userData.gain)}
+                                {userProfileDataQuery.isLoading ? '-' : formatPercentage(profileData.gain)}
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.trades-col')}:</StatsLabel>
-                            <StatsValue>{allTxAndDataQuery.isLoading ? '-' : dataForUI?.userData.trades}</StatsValue>
+                            <StatsValue>{userProfileDataQuery.isLoading ? '-' : profileData.numberOfTrades}</StatsValue>
                         </StatsItem>
                         <StatsItem>
                             <StatsLabel>{t('options.leaderboard.table.volume-col')}:</StatsLabel>
                             <StatsValue>
-                                {allTxAndDataQuery.isLoading
+                                {userProfileDataQuery.isLoading
                                     ? '-'
-                                    : formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}
+                                    : formatCurrencyWithSign(USD_SIGN, profileData.volume, 2)}
                             </StatsValue>
                         </StatsItem>
                     </StatsContainer>
                     <Nav>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
-                            className={view === NavItems.MyPositions ? 'active' : ''}
+                            active={view === NavItems.MyPositions}
                         >
                             {t('options.trading-profile.tabs.my-positions')}
                             {positions.claimableCount > 0 && <Notification> {positions.claimableCount} </Notification>}
                         </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.History)}
-                            className={view === NavItems.History ? 'active' : ''}
-                        >
+                        <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
@@ -226,10 +238,10 @@ const Profile: React.FC = () => {
                                 </ProfileAccordion>
                                 <ProfileAccordion title={t('options.trading-profile.accordions.transaction-history')}>
                                     <TransactionHistory
-                                        markets={[...(markets as any)]}
-                                        trades={dataForUI ? dataForUI.trades : []}
+                                        markets={markets}
+                                        trades={profileData.trades}
                                         searchText={searchAddress ? '' : searchText}
-                                        isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
+                                        isLoading={userProfileDataQuery.isLoading || marketsQuery.isLoading}
                                     />
                                 </ProfileAccordion>
                             </>
