@@ -41,6 +41,7 @@ import {
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -140,6 +141,7 @@ const RetroRewards: React.FC = () => {
                     setIsClaiming(false);
                 }
             } catch (e) {
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }

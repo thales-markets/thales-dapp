@@ -29,6 +29,7 @@ import Button from 'components/Button';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -111,8 +112,8 @@ const ClaimMigratedRewards: React.FC = () => {
 
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
@@ -143,6 +144,7 @@ const ClaimMigratedRewards: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }

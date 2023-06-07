@@ -28,6 +28,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -170,6 +171,7 @@ const Stake: React.FC = () => {
                 setIsStaking(false);
             }
         } catch (e) {
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsStaking(false);
         }

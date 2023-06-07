@@ -31,10 +31,7 @@ const Container = styled(FlexDivRowCentered)`
 const Icon = styled.i`
     color: ${(props) => props.theme.toastMessages.error.textColor.primary};
     font-size: 32px;
-    margin-right: 30px;
-    @media (max-width: 600px) {
-        margin-right: 15px;
-    }
+    margin-right: 12px;
 `;
 
 const Title = styled.span`

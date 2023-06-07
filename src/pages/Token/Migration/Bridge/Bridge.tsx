@@ -27,6 +27,7 @@ import Button from 'components/Button';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -175,6 +176,7 @@ const Bridge: React.FC = () => {
             }
         } catch (e) {
             console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsSubmitting(false);
         }

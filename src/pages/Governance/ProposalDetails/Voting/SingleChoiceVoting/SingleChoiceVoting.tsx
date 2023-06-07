@@ -4,6 +4,7 @@ import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import Button from 'components/Button/Button';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -58,6 +59,7 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
             setIsVoting(false);
         } catch (e) {
             console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsVoting(false);
         }

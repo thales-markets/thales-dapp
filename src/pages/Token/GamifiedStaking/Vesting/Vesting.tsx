@@ -28,6 +28,7 @@ import YourTransactions from './Transactions';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -119,8 +120,8 @@ const Vesting: React.FC = () => {
     }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
 
     const handleVest = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
@@ -140,6 +141,7 @@ const Vesting: React.FC = () => {
             }
         } catch (e) {
             console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsClaiming(false);
         }

@@ -25,6 +25,7 @@ import Button from 'components/Button/Button';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -120,8 +121,8 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     }, [isButtonDisabled, amountToStake, hasStakeAllowance, walletAddress]);
 
     const handleStakeThales = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             setTxErrorMessage(null);
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
@@ -142,6 +143,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                 setIsStaking(false);
             }
         } catch (e) {
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsStaking(false);
         }

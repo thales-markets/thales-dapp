@@ -47,6 +47,7 @@ import YourTransactions from './Transactions';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -359,8 +360,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const handleClaimStakingRewards = async () => {
         if (isClaimAvailable) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -382,6 +383,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 }
             } catch (e) {
                 console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClaiming(false);
             }
@@ -390,8 +392,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const handleClosePeriod = async () => {
         if (canClosePeriod) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
                 setTxErrorMessage(null);
                 setIsClosingPeriod(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -411,6 +413,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 }
             } catch (e) {
                 console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsClosingPeriod(false);
             }

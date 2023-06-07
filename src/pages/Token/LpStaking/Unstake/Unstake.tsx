@@ -23,6 +23,7 @@ import Button from 'components/Button/Button';
 import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
+    getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
@@ -111,6 +112,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                 setAmountToUnstake('');
             }
         } catch (e) {
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsUnstaking(false);
         }
