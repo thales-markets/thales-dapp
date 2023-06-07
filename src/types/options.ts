@@ -274,3 +274,7 @@ export type UserProfileData = {
     gain: number;
     investment: number;
 };
+
+export type TradeWithMarket = Trade & {
+    marketItem: HistoricalOptionsMarketInfo | RangedMarket;
+};

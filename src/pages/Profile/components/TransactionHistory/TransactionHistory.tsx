@@ -1,21 +1,26 @@
 import TileTable from 'components/TileTable';
-import { currencyKeyToCoinGeckoIndexMap, currencyKeyToNameMap } from 'constants/currency';
 import { keyBy } from 'lodash';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, RangedMarket, Trade, Trades } from 'types/options';
+import {
+    HistoricalOptionsMarketInfo,
+    OptionsMarkets,
+    RangedMarket,
+    Trade,
+    TradeWithMarket,
+    Trades,
+} from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { sortOptionsMarkets } from 'utils/options';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrency } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { POSITIONS_TO_SIDE_MAP, RANGE_SIDE } from 'constants/options';
+import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
 import { getAmount } from '../styled-components';
 
@@ -26,16 +31,11 @@ type TransactionHistoryProps = {
     isLoading: boolean;
 };
 
-type TradeWithMarket = Trade & {
-    marketItem: HistoricalOptionsMarketInfo | RangedMarket;
-};
-
 const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades, searchText, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
 
     const rangedTrades = trades
         .filter((trade: any) => trade.optionSide === 'in' || trade.optionSide === 'out')
@@ -47,19 +47,23 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
     const rangedMarkets = rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : [];
     const allMarkets = [...(markets as any), ...rangedMarkets];
 
-    const getOptionSideLabel = (optionSide: string) => {
-        switch (optionSide.toLowerCase()) {
-            case 'short':
-                return Positions.DOWN;
-            case 'long':
-                return Positions.UP;
-            case 'in':
-                return Positions.IN;
-            case 'out':
-                return Positions.OUT;
-        }
-        return Positions.UP;
-    };
+    const data = useMemo(() => {
+        const marketsMap = keyBy(allMarkets, 'address');
+        return trades.map((trade: Trade) => ({
+            ...trade,
+            marketItem: marketsMap[trade.market],
+        }));
+    }, [trades, allMarkets]);
+
+    const filteredData = useMemo(
+        () =>
+            data.filter(
+                (trade: TradeWithMarket) =>
+                    trade.marketItem &&
+                    (!searchText || trade.marketItem.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+            ),
+        [searchText, data]
+    );
 
     const generateRows = (data: TradeWithMarket[]) => {
         try {
@@ -83,13 +87,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                 if (typeof row === 'string') {
                     return row;
                 }
-                const isRanged =
-                    row.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]] ||
-                    row.optionSide == RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]];
+                const isRanged = row.optionSide === 'in' || row.optionSide == 'out';
                 const marketExpired = row.marketItem.result;
                 const optionPrice =
                     row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
                 const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
+                const amount = row.orderSide == 'sell' ? row.takerAmount : row.makerAmount;
 
                 return {
                     dotColor: theme.background.tertiary,
@@ -114,8 +117,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                         {
                             title: t('options.trading-profile.history.amount'),
                             value: getAmount(
-                                formatCurrency(row.orderSide == 'sell' ? row.takerAmount : row.makerAmount),
-                                getOptionSideLabel(row.optionSide),
+                                formatCurrency(amount),
+                                OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
                                 theme
                             ),
                         },
@@ -141,27 +144,11 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
     };
 
     const rows = useMemo(() => {
-        if (trades.length > 0 && markets) {
-            const optionsMarketsMap = keyBy(sortOptionsMarkets(allMarkets), 'address');
-            return generateRows(
-                trades
-                    .map((trade: Trade) => ({
-                        ...trade,
-                        marketItem: optionsMarketsMap[trade.market],
-                    }))
-                    .filter((trade: any) => {
-                        if (!trade?.marketItem) return false;
-
-                        const search = searchText.toLowerCase();
-                        const tradeValue = `${trade?.marketItem?.currencyKey} ${
-                            currencyKeyToCoinGeckoIndexMap[trade?.marketItem?.asset?.toUpperCase()]
-                        } ${currencyKeyToNameMap[trade?.marketItem?.asset?.toUpperCase()]}`.toLowerCase();
-                        return !searchText || tradeValue.includes(search);
-                    })
-            );
+        if (filteredData.length > 0) {
+            return generateRows(filteredData);
         }
         return [];
-    }, [trades, walletAddress, markets, searchText]);
+    }, [filteredData]);
 
     return (
         <TileTable

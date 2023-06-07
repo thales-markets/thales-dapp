@@ -52,13 +52,13 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
         });
 
         return orderBy(mappedPositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
-    }, [livePositions]);
+    }, [livePositions, exchangeRates]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
-        return data.filter((value: UserPosition) => {
-            return value.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-        });
+        return data.filter(
+            (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        );
     }, [searchText, data]);
 
     return (

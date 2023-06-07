@@ -25,9 +25,9 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
-        return data.filter((value: UserPosition) => {
-            return value.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-        });
+        return data.filter(
+            (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        );
     }, [searchText, data]);
 
     const generateRows = (data: UserPosition[]) => {
