@@ -12,8 +12,6 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../components';
 import { Tip37Link } from '../../styled-components';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import {
     GridContainer,
     StakingRewardsContent,
@@ -41,9 +39,6 @@ const ClaimMigratedRewards: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [migratedRewards, setMigratedRewards] = useState<MigratedRetroReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
     const { unclaimedInvestorsRetroAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
@@ -62,51 +57,6 @@ const ClaimMigratedRewards: React.FC = () => {
             setMigratedRewards(migratedRewardsQuery.data);
         }
     }, [migratedRewardsQuery.isSuccess, migratedRewardsQuery.data]);
-
-    useEffect(() => {
-        const fetchL1Fee = async (unclaimedInvestorsRetroAirdropContractWithSigner: any, migratedRewards: any) => {
-            const txRequest = await unclaimedInvestorsRetroAirdropContractWithSigner.populateTransaction.claim(
-                migratedRewards.reward.index,
-                migratedRewards.reward.rawBalance,
-                migratedRewards.reward.proof
-            );
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            if (migratedRewards && migratedRewards.reward) {
-                try {
-                    const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
-                        (snxJSConnector as any).signer
-                    );
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            unclaimedInvestorsRetroAirdropContractWithSigner.estimateGas.claim(
-                                migratedRewards.reward.index,
-                                migratedRewards.reward.rawBalance,
-                                migratedRewards.reward.proof
-                            ),
-                            fetchL1Fee(unclaimedInvestorsRetroAirdropContractWithSigner, migratedRewards),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await unclaimedInvestorsRetroAirdropContractWithSigner.estimateGas.claim(
-                            migratedRewards.reward.index,
-                            migratedRewards.reward.rawBalance,
-                            migratedRewards.reward.proof
-                        );
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    }
-                } catch (e) {
-                    console.log(e);
-                    setGasLimit(null);
-                }
-            }
-        };
-        if (!isWalletConnected || !isClaimAvailable || !unclaimedInvestorsRetroAirdropContract) return;
-        fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, unclaimedInvestorsRetroAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
@@ -186,7 +136,6 @@ const ClaimMigratedRewards: React.FC = () => {
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
                 </StyledStakingRewardsItem>
                 <StyledGridAction>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
                         <Button onClick={handleClaimOngoingAirdrop} disabled={!isClaimAvailable || isClaiming}>
                             {isClaiming

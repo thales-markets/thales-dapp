@@ -9,11 +9,10 @@ import { TransactionFilterEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { orderBy } from 'lodash';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -22,7 +21,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
 import { toast } from 'react-toastify';
@@ -45,8 +43,6 @@ const MergeAccount: React.FC = () => {
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
@@ -145,43 +141,6 @@ const MergeAccount: React.FC = () => {
 
     const isDelegateButtonDisabled =
         isDelegating || !isDelegateDestAddressEntered || !isDelegateDestAddressValid || !isWalletConnected;
-
-    const isL2 = getIsOVM(networkId);
-
-    useEffect(() => {
-        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.delegateVolume(
-                getAddress(ZERO_ADDRESS)
-            );
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (stakingThalesContractWithSigner.signer) {
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
-                            fetchL1Fee(stakingThalesContractWithSigner),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
-                            getAddress(ZERO_ADDRESS)
-                        );
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-
-        fetchGasLimit();
-    }, [walletAddress]);
 
     const handleMerge = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
@@ -333,7 +292,6 @@ const MergeAccount: React.FC = () => {
                             />
                         </div>
                     </InputContainer>
-                    <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                     <ButtonContainer>{getDelegateButton()}</ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>

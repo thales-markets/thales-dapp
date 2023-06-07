@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
 import {
     DescriptionContainer,
     FormWrapper,
@@ -61,7 +60,8 @@ import TextInput from 'components/fields/TextInput/TextInput';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
-import ToastMessage, { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
+import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
+import ToastMessage from 'components/ToastMessage';
 
 const tabs = [
     {

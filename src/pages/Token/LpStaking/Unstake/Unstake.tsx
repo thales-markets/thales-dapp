@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, Line, SectionContentContainer } from '../../styled-components';
+import { EarnSection, SectionContentContainer } from '../../styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import styled from 'styled-components';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
@@ -38,48 +35,14 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
-    const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
     const [amountToUnstake, setAmountToUnstake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
     const { lpStakingRewardsContract } = snxJSConnector as any;
 
     const isAmountEntered = Number(amountToUnstake) > 0;
     const insufficientBalance = Number(amountToUnstake) > staked || !staked;
 
-    const isStartUnstakeButtonDisabled =
-        isUnstaking || !lpStakingRewardsContract || !isAmountEntered || insufficientBalance || !isWalletConnected;
-
     const isUnstakeButtonDisabled = isUnstaking || !lpStakingRewardsContract || !isWalletConnected;
-
-    useEffect(() => {
-        const fetchL1FeeUnstake = async (lpStakingRewardsContractWithSigner: any, amount: any) => {
-            const txRequest = await lpStakingRewardsContractWithSigner.populateTransaction.withdraw(amount);
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const { lpStakingRewardsContract } = snxJSConnector as any;
-                const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const amount = ethers.utils.parseEther(amountToUnstake.toString());
-                const [unstakeGasEstimate, l1FeeUnstakeInWei] = await Promise.all([
-                    lpStakingRewardsContractWithSigner.estimateGas.withdraw(amount),
-                    fetchL1FeeUnstake(lpStakingRewardsContractWithSigner, amount),
-                ]);
-                setGasLimit(formatGasLimit(unstakeGasEstimate, networkId));
-                setL1Fee(l1FeeUnstakeInWei);
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (isUnstakeButtonDisabled || isStartUnstakeButtonDisabled) return;
-        fetchGasLimit();
-    }, [isUnstaking, walletAddress, unstakingEnded, amountToUnstake]);
 
     const handleUnstakeThales = async () => {
         const { lpStakingRewardsContract } = snxJSConnector as any;
@@ -103,9 +66,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 refetchLPStakingQueries(walletAddress, networkId);
-                setUnstakingEnded(true);
                 setIsUnstaking(false);
-                setGasLimit(null);
                 setAmountToUnstake('');
             }
         } catch (e) {
@@ -173,8 +134,6 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         }
                     />
                 </InputContainer>
-                <Line margin={'0 0 10px 0'} />
-                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
                 <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
             </SectionContentContainer>
         </EarnSection>
@@ -183,6 +142,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
 const ButtonsContainer = styled(FlexDivColumnCentered)`
     padding-top: 40px;
+    padding-bottom: 10px;
     align-items: center;
     > * {
         &:nth-child(2) {

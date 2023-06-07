@@ -5,7 +5,6 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import i18n from 'i18n';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
-import NetworkFees from 'pages/Token/components/NetworkFees';
 import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -20,7 +19,6 @@ import { VestingInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import {
@@ -44,6 +42,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -62,10 +61,7 @@ const RetroRewards: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const { vestingEscrowContract } = snxJSConnector as any;
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
 
@@ -83,36 +79,6 @@ const RetroRewards: React.FC = () => {
         }
     }, [vestingQuery.isSuccess, vestingQuery.data]);
 
-    useEffect(() => {
-        const fetchL1Fee = async (vestingContractWithSigner: any) => {
-            const txRequest = await vestingContractWithSigner.populateTransaction.claim();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            const { vestingEscrowContract } = snxJSConnector as any;
-            try {
-                const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        vestingContractWithSigner.estimateGas.claim(),
-                        fetchL1Fee(vestingContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || !isClaimAvailable) return;
-        fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable]);
-
     const handleClaimRetroRewards = async () => {
         if (isClaimAvailable) {
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
@@ -122,7 +88,7 @@ const RetroRewards: React.FC = () => {
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const tx = await vestingContractWithSigner.claim({
-                    gasLimit,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -286,7 +252,6 @@ const RetroRewards: React.FC = () => {
                             <Text>{formatCurrencyWithKey(THALES_CURRENCY, locked)}</Text>
                         </div>
                     </AmountsContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
                         <Button disabled={!isClaimAvailable || isClaiming} onClick={handleClaimRetroRewards}>
                             {isClaiming

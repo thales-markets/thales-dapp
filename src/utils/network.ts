@@ -1,11 +1,7 @@
-import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
-import { GWEI_UNIT } from 'constants/network';
 import { Network } from 'enums/network';
-import { BigNumber, UnsignedTransaction, ethers } from 'ethers';
-import { serializeTransaction } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
 
 export type NetworkId = 1 | 3 | 42 | 10 | 69 | 420 | 80001 | 137 | 56 | 42161;
 
@@ -65,21 +61,7 @@ export async function getEthereumNetwork() {
     }
 }
 
-export const getTransactionPrice = (
-    gasPrice: number | null,
-    gasLimit: number | null,
-    ethPrice: number | null,
-    l1Fee?: number | null
-) => {
-    if (!gasPrice || !gasLimit || !ethPrice) return 0;
-    const transsactionPrice = (gasPrice * ethPrice * gasLimit) / GWEI_UNIT;
-    const l1TranactionPrice = l1Fee && l1Fee !== null ? (l1Fee * ethPrice) / GWEI_UNIT / GWEI_UNIT : 0;
-    return transsactionPrice + l1TranactionPrice;
-};
-
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
-
-const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
@@ -96,35 +78,6 @@ export const getIsOVM = (networkId: number): boolean => [10, 69, 420].includes(n
 export const getIsPolygon = (networkId: number): boolean => [137, 80001].includes(networkId);
 
 export const getIsArbitrum = (networkId: number): boolean => [42161].includes(networkId);
-
-export const formatGwei = (wei: number) => wei / GWEI_UNIT;
-
-export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
-    getIsOVM(networkId) ? Number(gasEstimate) : normalizeGasLimit(Number(gasEstimate));
-
-export const getL1FeeInWei = async (txRequest: any, snxJSConnector: any) => {
-    try {
-        const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
-            predeploys.OVM_GasPriceOracle
-        );
-        const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
-        if (unsignedTx) {
-            const serializedTx = serializeTransaction({
-                nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
-                value: unsignedTx.value,
-                gasPrice: unsignedTx.gasPrice,
-                gasLimit: unsignedTx.gasLimit,
-                to: unsignedTx.to,
-                data: unsignedTx.data,
-            });
-            const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
-            return l1FeeInWei.toNumber();
-        }
-        return 1;
-    } catch (e) {
-        console.log('e ', e);
-    }
-};
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {

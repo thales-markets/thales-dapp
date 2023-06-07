@@ -17,10 +17,8 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
-import { formatGasLimit } from 'utils/network';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import NetworkFees from '../components/NetworkFees';
 import { ButtonContainer, Line } from '../styled-components';
 import Instructions from './Instructions';
 import Stake from './Stake';
@@ -56,7 +54,6 @@ const LpStaking: React.FC = () => {
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -79,23 +76,6 @@ const LpStaking: React.FC = () => {
     ]);
 
     const { lpStakingRewardsContract } = snxJSConnector as any;
-
-    useEffect(() => {
-        const fetchGasLimit = async () => {
-            try {
-                const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const gasEstimate = await lpStakingRewardsContractWithSigner.estimateGas.getReward();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || (!rewards && !secondRewards)) return;
-        fetchGasLimit();
-    }, [isWalletConnected, rewards, secondRewards]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -232,8 +212,6 @@ const LpStaking: React.FC = () => {
                                 )}`}
                             </SectionValueContent>
                         </SectionValue>
-                        <Line margin={'0 0 10px 0'} />
-                        <NetworkFees gasLimit={gasLimit} />
                         <ButtonContainer>{getClaimButton()}</ButtonContainer>
                     </SectionContentWrapper>
                 </SectionWrapper>

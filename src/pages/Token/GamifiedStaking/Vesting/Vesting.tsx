@@ -5,8 +5,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/styled-components';
+import { ButtonContainer } from 'pages/Token/styled-components';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +19,6 @@ import { UserVestingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
@@ -42,9 +40,6 @@ const Vesting: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
     const { escrowThalesContract } = snxJSConnector as any;
     const [lastValidUserVestingData, setLastValidUserVestingData] = useState<UserVestingData | undefined>(undefined);
 
@@ -86,36 +81,6 @@ const Vesting: React.FC = () => {
 
         return rows;
     };
-
-    useEffect(() => {
-        const fetchL1Fee = async (escrowThalesContractWithSigner: any, toVest: any) => {
-            const txRequest = await escrowThalesContractWithSigner.populateTransaction.vest(toVest);
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        escrowThalesContractWithSigner.estimateGas.vest(rawClaimable),
-                        fetchL1Fee(escrowThalesContractWithSigner, rawClaimable),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(rawClaimable);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || !+claimable || !escrowThalesContract) return;
-        fetchGasLimit();
-    }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
 
     const handleVest = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
@@ -170,10 +135,6 @@ const Vesting: React.FC = () => {
                             {formatCurrencyWithKey(THALES_CURRENCY, claimable, 0, true)}
                         </SectionValueContent>
                     </SectionValue>
-                    <NetworkFeesWrapper>
-                        <Line margin={isMobile ? '0 0 10px 0' : '10px 0'} />
-                        <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
-                    </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>
@@ -300,13 +261,6 @@ const SectionValueContent = styled(SectionContent)`
     color: ${(props) => props.theme.textColor.quaternary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 20px;
-    }
-`;
-
-const NetworkFeesWrapper = styled.div`
-    margin: 0 80px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: auto;
     }
 `;
 

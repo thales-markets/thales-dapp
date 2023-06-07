@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, formatGasLimit, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { checkAllowance, getIsPolygon, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
@@ -186,16 +186,13 @@ const CreateMarket: React.FC = () => {
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await collateralContract?.estimateGas.approve(
-                    binaryOptionsMarketManagerContract?.address as any,
-                    approveAmount
-                );
+                const providerOptions = {
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
+                };
                 const tx = (await collateralContract?.approve(
                     binaryOptionsMarketManagerContract?.address as any,
                     approveAmount,
-                    {
-                        gasLimit: formatGasLimit(gasEstimate as any, networkId),
-                    }
+                    providerOptions
                 )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 await tx.wait();

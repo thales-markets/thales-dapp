@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, Line, SectionContentContainer } from '../../styled-components';
+import { ClaimMessage, EarnSection, SectionContentContainer } from '../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
@@ -10,8 +10,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
@@ -45,8 +44,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
     const [isStaking, setIsStaking] = useState<boolean>(false);
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const { lpStakingRewardsContract } = snxJSConnector as any;
 
@@ -91,33 +88,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         }
     }, [walletAddress, isWalletConnected, hasStakeAllowance, lpStakingRewardsContract, amountToStake, isAllowingStake]);
 
-    useEffect(() => {
-        const fetchL1Fee = async (lpStakingRewardsContractWithSigner: any, amount: any) => {
-            const txRequest = await lpStakingRewardsContractWithSigner.populateTransaction.stake(amount);
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            const amount = ethers.utils.parseEther(amountToStake.toString());
-            try {
-                const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const [gasEstimate, l1FeeInWei] = await Promise.all([
-                    lpStakingRewardsContractWithSigner.estimateGas.stake(amount),
-                    fetchL1Fee(lpStakingRewardsContractWithSigner, amount),
-                ]);
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-                setL1Fee(l1FeeInWei);
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (isButtonDisabled) return;
-        fetchGasLimit();
-    }, [isButtonDisabled, amountToStake, hasStakeAllowance, walletAddress]);
-
     const handleStakeThales = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
@@ -153,9 +123,8 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         const addressToApprove = lpStakingRewardsContract.address;
         try {
             setIsAllowingStake(true);
-            const gasEstimate = await gelatoContractWithSigner.estimateGas.approve(addressToApprove, approveAmount);
             const tx = (await gelatoContractWithSigner.approve(addressToApprove, approveAmount, {
-                gasLimit: formatGasLimit(gasEstimate, networkId),
+                gasLimit: getMaxGasLimitForNetwork(networkId),
             })) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
@@ -241,8 +210,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         isBalanceLoading={lpTokensBalanceQuery.isLoading}
                     />
                 </InputContainer>
-                <Line margin={'0 0 10px 0'} />
-                <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>
                     {getStakeButton()}
                     {isStakingPaused && (
@@ -266,6 +233,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
 
 const StakeButtonDiv = styled(FlexDivColumnCentered)`
     padding-top: 40px;
+    padding-bottom: 10px;
     align-items: center;
     @media (max-width: 1024px) {
         padding-top: 15px;
