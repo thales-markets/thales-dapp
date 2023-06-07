@@ -50,8 +50,9 @@ export const STABLE_DECIMALS = {
 export const SLIPPAGE_PERCENTAGE = [0.5, 1, 2];
 
 export const MINIMUM_AMM_LIQUIDITY = 2;
-const MAX_L2_GAS_LIMIT = 15000000;
 export const MIN_SCEW_IMPACT = 0.0;
+
+const MAX_L2_GAS_LIMIT = 29000000;
 
 export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
     if (networkId == Network['Mainnet-Ovm']) return MAX_L2_GAS_LIMIT;
