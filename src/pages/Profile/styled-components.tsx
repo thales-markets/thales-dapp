@@ -5,11 +5,6 @@ import { FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 export const Container = styled(FlexDivColumn)`
     width: 100%;
     max-width: 974px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-    }
 `;
 
 export const Header = styled(FlexDivRow)`

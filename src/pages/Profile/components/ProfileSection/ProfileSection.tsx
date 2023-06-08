@@ -42,10 +42,14 @@ const SectionHeader = styled.p`
 
 const SectionContent = styled.div<{ maxHeight?: string }>`
     color: ${(props) => props.theme.textColor.primary};
-    overflow-x: auto;
+    overflow-y: auto;
+    padding-right: 4px;
     max-height: ${(props) => props.maxHeight || '320px'};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-height: ${(props) => props.maxHeight || '340px'};
+    }
+    &::-webkit-scrollbar {
+        width: 5px;
     }
 `;
 
