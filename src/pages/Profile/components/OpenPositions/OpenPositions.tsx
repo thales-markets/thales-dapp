@@ -1,34 +1,23 @@
-import SPAAnchor from 'components/SPAAnchor';
-import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import TimeRemaining from 'components/TimeRemaining';
-import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { orderBy } from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import {
-    Card,
-    CardColumn,
-    CardRow,
-    CardRowValue,
-    CardRowTitle,
-    CardSection,
-    Container,
-    Content,
-    CurrencyIcon,
-    LoaderContainer,
-    NoDataContainer,
-    UsingAmmLink,
-    getAmount,
-} from '../styled-components';
-import { getColorPerPosition } from 'utils/options';
+import { getAmount, MarketLink } from '../styled-components';
 import { UserPosition } from 'types/options';
+import Button from 'components/Button/Button';
+import { CSSProperties } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getIsMobile } from 'redux/modules/ui';
+import TileTable from 'components/TileTable/TileTable';
+import MaturityDate from 'pages/AMMTrading/components/MaturityDate/MaturityDate';
+import MyPositionAction from '../MyPositionAction/MyPositionAction';
 
 type OpenPositionsProps = {
     exchangeRates: Rates | null;
@@ -40,6 +29,7 @@ type OpenPositionsProps = {
 const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const data = useMemo(() => {
         const mappedPositions = livePositions.map((position: UserPosition) => {
@@ -61,161 +51,95 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
         );
     }, [searchText, data]);
 
-    return (
-        <Container>
-            {isLoading ? (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            ) : filteredData.length === 0 ? (
-                <NoDataContainer>{t('common.no-data-available')}</NoDataContainer>
-            ) : (
-                filteredData.map((data: UserPosition, index: number) => (
-                    <Content key={index}>
-                        <SPAAnchor
-                            href={
-                                data.isRanged ? buildRangeMarketLink(data.market) : buildOptionsMarketLink(data.market)
-                            }
-                        >
-                            <Card>
-                                <CardColumn>
-                                    <CardRow>
-                                        <CurrencyIcon
-                                            className={`currency-icon currency-icon--${data.currencyKey.toLowerCase()}`}
-                                        />
-                                        <CardSection>
-                                            <CardRowValue>{data.currencyKey}</CardRowValue>
-                                            <CardRowValue color={getColorPerPosition(data.side, theme)}>
-                                                {data.side}
-                                            </CardRowValue>
-                                        </CardSection>
-                                    </CardRow>
-                                    <CardSection>
-                                        <CardRowTitle>{t(`options.home.markets-table.maturity-date-col`)}</CardRowTitle>
-                                        <CardRowValue>{formatShortDate(data.maturityDate)}</CardRowValue>
-                                    </CardSection>
-                                    <CardSection>
-                                        <CardRowTitle>
-                                            {t(`options.home.markets-table.time-remaining-col`)}
-                                        </CardRowTitle>
-                                        <CardRowValue>
-                                            <TimeRemaining
-                                                end={data.maturityDate}
-                                                fontSize={18}
-                                                showFullCounter={true}
-                                            />
-                                        </CardRowValue>
-                                    </CardSection>
-                                </CardColumn>
-                                {data.isRanged ? (
-                                    <CardColumn>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t('options.market.ranged-markets.strike-range')}
-                                            </CardRowTitle>
-                                            <CardRowValue>
-                                                {`> ${formatCurrencyWithSign(USD_SIGN, data.leftPrice)}`}
-                                                <br />
-                                                {`< ${formatCurrencyWithSign(USD_SIGN, data.rightPrice)}`}
-                                            </CardRowValue>
-                                        </CardSection>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t('options.home.market-card.current-asset-price')}
-                                            </CardRowTitle>
-                                            <CardRowValue>
-                                                {formatCurrencyWithSign(
-                                                    USD_SIGN,
-                                                    exchangeRates?.[data.currencyKey] || 0
-                                                )}
-                                            </CardRowValue>
-                                        </CardSection>
-                                    </CardColumn>
-                                ) : (
-                                    <CardColumn>
-                                        <CardSection>
-                                            <CardRowTitle>{t('options.home.market-card.strike-price')}</CardRowTitle>
-                                            <CardRowValue>
-                                                {formatCurrencyWithSign(USD_SIGN, data.strikePrice)}
-                                            </CardRowValue>
-                                        </CardSection>
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t('options.home.market-card.current-asset-price')}
-                                            </CardRowTitle>
-                                            <CardRowValue>
-                                                {formatCurrencyWithSign(
-                                                    USD_SIGN,
-                                                    exchangeRates?.[data.currencyKey] || 0
-                                                )}
-                                            </CardRowValue>
-                                        </CardSection>
+    const generateRows = (data: UserPosition[]) => {
+        try {
+            const rows = data.sort((a, b) => b.maturityDate - a.maturityDate);
 
-                                        <CardSection>
-                                            <CardRowTitle>
-                                                {t('options.home.market-card.price-difference')}
-                                            </CardRowTitle>
-                                            <CardRowValue
-                                                color={
-                                                    !data.priceDiff
-                                                        ? theme.textColor.primary
-                                                        : data.priceDiff > 0
-                                                        ? theme.textColor.quaternary
-                                                        : data.priceDiff < 0
-                                                        ? theme.textColor.tertiary
-                                                        : theme.textColor.primary
-                                                }
-                                            >
-                                                {data.priceDiff ? `${data.priceDiff.toFixed(2)}%` : 'N/A'}
-                                            </CardRowValue>
-                                        </CardSection>
-                                    </CardColumn>
-                                )}
+            return rows.map((row: UserPosition) => {
+                const cells: any = [
+                    {
+                        title: row.isRanged
+                            ? t('options.market.ranged-markets.strike-range')
+                            : t(`options.home.markets-table.strike-price-col`),
+                        value: row.isRanged
+                            ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
+                            : `$${formatCurrency(row.strikePrice)}`,
+                    },
+                    {
+                        title: t('options.home.market-card.current-asset-price'),
+                        value: formatCurrencyWithSign(USD_SIGN, exchangeRates?.[row.currencyKey] || 0),
+                    },
+                    {
+                        title: t('options.leaderboard.trades.table.amount-col'),
+                        value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
+                    },
+                    {
+                        title: t('options.trading-profile.history.paid'),
+                        value: `$${formatCurrency(row.paid)}`,
+                    },
+                    {
+                        title: t('options.trading-profile.history.expires'),
+                        value: <MaturityDate maturityDateUnix={row.maturityDate} showFullCounter={true} />,
+                    },
+                    {
+                        value: <MyPositionAction position={row} />,
+                    },
+                ];
 
-                                <CardColumn>
-                                    <CardSection>
-                                        <CardRowTitle>{t('options.leaderboard.trades.table.amount-col')}</CardRowTitle>
-                                        <CardRowValue>
-                                            {getAmount(formatCurrency(data.amount, 2), data.side, theme)}
-                                        </CardRowValue>
-                                    </CardSection>
-                                    <CardSection>
-                                        <CardRowTitle>{t('options.home.market-card.position-value')}</CardRowTitle>
-                                        <CardRowValue>
-                                            {data.value === 0 ? (
-                                                <>
-                                                    N/A
-                                                    <Tooltip
-                                                        overlay={
-                                                            <Trans
-                                                                i18nKey={t(
-                                                                    'options.home.market-card.no-liquidity-tooltip'
-                                                                )}
-                                                                components={[
-                                                                    <span key="1">
-                                                                        <UsingAmmLink key="2" />
-                                                                    </span>,
-                                                                ]}
-                                                            />
-                                                        }
-                                                        iconFontSize={17}
-                                                        mobileIconFontSize={12}
-                                                        top={-1}
-                                                    />
-                                                </>
-                                            ) : (
-                                                formatCurrencyWithSign(USD_SIGN, data.value)
-                                            )}
-                                        </CardRowValue>
-                                    </CardSection>
-                                </CardColumn>
-                            </Card>
-                        </SPAAnchor>
-                    </Content>
-                ))
-            )}
-        </Container>
-    );
+                if (!isMobile) {
+                    cells.push({
+                        value: (
+                            <MarketLink
+                                href={
+                                    row.isRanged ? buildRangeMarketLink(row.market) : buildOptionsMarketLink(row.market)
+                                }
+                            />
+                        ),
+                        width: '30px',
+                    });
+                }
+
+                return {
+                    backgroundColor: theme.background.secondary,
+                    asset: {
+                        currencyKey: row.currencyKey,
+                        position: row.side,
+                        width: '50px',
+                    },
+                    cells: cells,
+                    link: isMobile
+                        ? row.isRanged
+                            ? buildRangeMarketLink(row.market)
+                            : buildOptionsMarketLink(row.market)
+                        : undefined,
+                };
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const rows = useMemo(() => {
+        if (filteredData.length > 0) {
+            return generateRows(filteredData);
+        }
+        return [];
+    }, [filteredData]);
+
+    return <TileTable rows={rows as any} isLoading={isLoading} hideFlow />;
+};
+
+const defaultButtonProps = {
+    width: '100%',
+    height: '27px',
+    fontSize: '13px',
+    padding: '0px 10px',
+};
+
+const additionalButtonStyle: CSSProperties = {
+    minWidth: '180px',
+    lineHeight: '100%',
+    border: 'none',
 };
 
 export default OpenPositions;

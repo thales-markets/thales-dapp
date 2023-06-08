@@ -31,18 +31,18 @@ import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/numbe
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import ProfileAccordion from './components/ProfileAccordion/ProfileAccordion';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
 import ClaimablePositions from './components/ClaimablePositions/ClaimablePositions';
 import PositionHistory from './components/PositionHistory/PositionHistory';
 import TransactionHistory from './components/TransactionHistory/TransactionHistory';
 import OpenPositions from './components/OpenPositions/OpenPositions';
 import { UserPositionsData, UserProfileData } from 'types/options';
+import ProfileSection from './components/ProfileSection/ProfileSection';
 
 enum NavItems {
     MyPositions = 'my-positions',
-    MaturedPositions = 'matured-positions',
     History = 'history',
+    VaultsLp = 'vaults-lp',
 }
 
 const Profile: React.FC = () => {
@@ -205,45 +205,51 @@ const Profile: React.FC = () => {
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
+                        <NavItem
+                            onClick={() => onTabClickHandler(NavItems.VaultsLp)}
+                            active={view === NavItems.VaultsLp}
+                        >
+                            {t('options.trading-profile.tabs.vaults-lp')}
+                        </NavItem>
                     </Nav>
                     <>
                         {view === NavItems.MyPositions && (
                             <>
-                                <ProfileAccordion title={t('options.trading-profile.accordions.claimable-positions')}>
+                                <ProfileSection title={t('options.trading-profile.accordions.claimable-positions')}>
                                     <ClaimablePositions
                                         claimablePositions={positions.claimable}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ProfileAccordion>
-                                <ProfileAccordion title={t('options.trading-profile.accordions.open-positions')}>
+                                </ProfileSection>
+                                <ProfileSection title={t('options.trading-profile.accordions.open-positions')}>
                                     <OpenPositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.live}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ProfileAccordion>
+                                </ProfileSection>
                             </>
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileAccordion title={t('options.trading-profile.accordions.position-history')}>
+                                <ProfileSection title={t('options.trading-profile.accordions.position-history')}>
                                     <PositionHistory
                                         claimedPositions={positions.claimed}
                                         ripPositions={positions.rip}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
-                                </ProfileAccordion>
-                                <ProfileAccordion title={t('options.trading-profile.accordions.transaction-history')}>
+                                </ProfileSection>
+                                <ProfileSection title={t('options.trading-profile.accordions.transaction-history')}>
                                     <TransactionHistory
                                         markets={markets}
                                         trades={profileData.trades}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userProfileDataQuery.isLoading || marketsQuery.isLoading}
                                     />
-                                </ProfileAccordion>
+                                </ProfileSection>
                             </>
                         )}
                     </>

@@ -14,6 +14,7 @@ export const Tile = styled(FlexDiv)<{
     heightSmall?: boolean;
     defaultFlowColor?: string;
     lineSmall?: boolean;
+    hideFlow?: boolean;
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
@@ -26,7 +27,8 @@ export const Tile = styled(FlexDiv)<{
     margin-bottom: 15px;
     height: 50px;
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-    margin-left: 40px;
+    margin-left: ${(props) => (props.hideFlow ? '10px' : '40px')};
+    gap: 4px;
     &:before {
         content: '';
         position: absolute;
@@ -42,6 +44,7 @@ export const Tile = styled(FlexDiv)<{
             props.defaultFlowColor || props.dotColor || props.theme.background.secondary} !important;
         box-shadow: 0 0 0 3px ${(props) => props.defaultFlowColor || props.dotColor || props.theme.background.secondary} !important;
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
+        display: ${(props) => (props.hideFlow ? 'none' : 'block')} !important;
     }
     &:after {
         content: '';
@@ -53,7 +56,7 @@ export const Tile = styled(FlexDiv)<{
         height: 44px;
         background: ${(props) => props.defaultFlowColor || props.theme.background.secondary};
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
-        display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
+        display: ${(props) => (props.hideFlow || props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             height: ${(props) => (props.heightSmall ? '44px' : props.lineSmall ? '70px' : '94px')};
             top: ${(props) => (props.heightSmall || props.lineSmall ? '-32px' : '-56px')};
@@ -112,7 +115,7 @@ export const Title = styled(FlexDiv)<{
     }
 `;
 
-export const Cell = styled.div<{ direction?: string; color?: string }>`
+export const Cell = styled.div<{ direction?: string; color?: string; width?: string }>`
     display: flex;
     flex: 1;
     align-items: center;
@@ -120,6 +123,7 @@ export const Cell = styled.div<{ direction?: string; color?: string }>`
     gap: ${(props) => (props.direction ? '3px' : '0')};
     color: ${(props) => props.theme.textColor.primary} !important;
     justify-content: center;
+    max-width: ${(props) => props.width || ''};
 `;
 
 export const CellTitle = styled.div<{ fontSize?: number }>`

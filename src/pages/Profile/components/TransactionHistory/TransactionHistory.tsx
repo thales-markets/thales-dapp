@@ -19,10 +19,11 @@ import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarket
 import { getIsAppReady } from 'redux/modules/app';
 import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrency } from 'utils/formatters/number';
-import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
-import { getAmount } from '../styled-components';
+import { MarketLink, getAmount } from '../styled-components';
+import { getEtherscanTxLink } from 'utils/etherscan';
+import { getIsMobile } from 'redux/modules/ui';
 
 type TransactionHistoryProps = {
     markets: OptionsMarkets;
@@ -36,6 +37,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const rangedTrades = trades
         .filter((trade: any) => trade.optionSide === 'in' || trade.optionSide === 'out')
@@ -94,48 +96,53 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                 const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
                 const amount = row.orderSide == 'sell' ? row.takerAmount : row.makerAmount;
 
+                const cells: any = [
+                    { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
+                    {
+                        title: t('options.trading-profile.history.strike'),
+                        value: isRanged
+                            ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
+                                  (row.marketItem as RangedMarket).rightPrice
+                              )}`
+                            : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
+                    },
+                    {
+                        title: t('options.trading-profile.history.price'),
+                        value: `$${formatCurrency(optionPrice)}`,
+                    },
+                    {
+                        title: t('options.trading-profile.history.amount'),
+                        value: getAmount(
+                            formatCurrency(amount),
+                            OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
+                            theme
+                        ),
+                    },
+                    {
+                        title: t('options.trading-profile.history.paid'),
+                        value: `$${formatCurrency(paidAmount)}`,
+                    },
+                    {
+                        title: marketExpired
+                            ? t('options.trading-profile.history.expired')
+                            : t('options.trading-profile.history.expires'),
+                        value: formatShortDate(new Date(row.marketItem.maturityDate)),
+                    },
+                ];
+
+                if (!isMobile) {
+                    cells.push({
+                        value: <MarketLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
+                        width: '30px',
+                    });
+                }
+
                 return {
-                    dotColor: theme.background.tertiary,
-                    backgroundColor: theme.background.secondary,
                     asset: {
                         currencyKey: row.marketItem.currencyKey,
                     },
-                    cells: [
-                        { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
-                        {
-                            title: t('options.trading-profile.history.strike'),
-                            value: isRanged
-                                ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
-                                      (row.marketItem as RangedMarket).rightPrice
-                                  )}`
-                                : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
-                        },
-                        {
-                            title: t('options.trading-profile.history.price'),
-                            value: `$${formatCurrency(optionPrice)}`,
-                        },
-                        {
-                            title: t('options.trading-profile.history.amount'),
-                            value: getAmount(
-                                formatCurrency(amount),
-                                OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
-                                theme
-                            ),
-                        },
-                        {
-                            title: t('options.trading-profile.history.paid'),
-                            value: `$${formatCurrency(paidAmount)}`,
-                        },
-                        {
-                            title: marketExpired
-                                ? t('options.trading-profile.history.expired')
-                                : t('options.trading-profile.history.expires'),
-                            value: formatShortDate(new Date(row.marketItem.maturityDate)),
-                        },
-                    ],
-                    link: isRanged
-                        ? buildRangeMarketLink(row.marketItem.address)
-                        : buildOptionsMarketLink(row.marketItem.address),
+                    cells,
+                    link: isMobile ? getEtherscanTxLink(networkId, row.transactionHash) : undefined,
                 };
             });
         } catch (e) {
@@ -150,13 +157,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
         return [];
     }, [filteredData]);
 
-    return (
-        <TileTable
-            rows={rows as any}
-            isLoading={isLoading || rangedMarketsQuery.isLoading}
-            defaultFlowColor={theme.background.tertiary}
-        />
-    );
+    return <TileTable rows={rows as any} isLoading={isLoading || rangedMarketsQuery.isLoading} />;
 };
 
 export default TransactionHistory;

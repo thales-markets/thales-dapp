@@ -22,7 +22,7 @@ type Cell = {
     titleFontSize?: number;
     value: string | number | ReactElement;
     valueFontSize?: number;
-    test?: number;
+    width?: string;
 };
 
 export type TileRow = {
@@ -42,6 +42,7 @@ type Properties = {
     isLoading?: boolean;
     noResultsMessage?: string;
     defaultFlowColor?: string;
+    hideFlow?: boolean;
 };
 
 const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
@@ -61,6 +62,7 @@ const TileTable: React.FC<Properties> = ({
     isLoading,
     noResultsMessage,
     defaultFlowColor,
+    hideFlow,
 }) => {
     const { t } = useTranslation();
 
@@ -94,11 +96,12 @@ const TileTable: React.FC<Properties> = ({
                                 heightSmall={row.heightSmall}
                                 defaultFlowColor={defaultFlowColor}
                                 lineSmall={lineSmall}
+                                hideFlow={hideFlow}
                                 key={index}
                             >
                                 {row.asset && <AssetInfo {...row.asset} />}
                                 {cells.map((cell, index) => (
-                                    <Cell direction={cell.flexDirection} key={index}>
+                                    <Cell direction={cell.flexDirection} key={index} width={cell.width}>
                                         {cell.title && (
                                             <CellTitle fontSize={cell.titleFontSize}>{cell.title}</CellTitle>
                                         )}

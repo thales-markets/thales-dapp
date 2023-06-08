@@ -245,6 +245,7 @@ export type UserPosition = {
     rightPrice: number;
     finalPrice: number;
     amount: number;
+    amountBigNumber: BigNumber;
     maturityDate: number;
     expiryDate: number;
     market: string;

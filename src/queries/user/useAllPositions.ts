@@ -15,6 +15,9 @@ import { BALANCE_THRESHOLD } from 'constants/token';
 import { RANGE_SIDE, SIDE } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
+import { BigNumber, ethers } from 'ethers';
+import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
+import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 
 const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<UserPositionsData>) => {
     return useQuery<UserPositionsData>(
@@ -79,6 +82,13 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             const [livePositionsWithValue, liveRangedPositionsWithValue] = await Promise.all([
                 Promise.all([
                     ...livePositions.map(async (positionBalance: any) => {
+                        const positionContract = new ethers.Contract(
+                            positionBalance.position.id,
+                            binaryOptionPositionContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const contractPositionBalance = await positionContract.balanceOf(walletAddress);
+
                         const { ammContract } = snxJSConnector as any;
                         const ammQuote = await ammContract.sellToAmmQuote(
                             positionBalance.position.market.id,
@@ -88,12 +98,20 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
 
                         return {
                             ...positionBalance,
+                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
                 Promise.all([
                     ...liveRangedPositions.map(async (positionBalance: any) => {
+                        const positionContract = new ethers.Contract(
+                            positionBalance.position.id,
+                            rangedPositionContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const contractPositionBalance = await positionContract.balanceOf(walletAddress);
+
                         const { rangedMarketAMMContract } = snxJSConnector as any;
                         const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
                             positionBalance.position.market.id,
@@ -103,6 +121,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
 
                         return {
                             ...positionBalance,
+                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
@@ -116,6 +135,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -136,6 +156,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -161,6 +182,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -169,7 +191,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         rightPrice: 0,
                         finalPrice: positionBalance.position.market.finalPrice / 1e18,
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
-                        value: 0,
+                        value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
                         claimed: false,
                         isRanged: false,
@@ -183,6 +205,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -191,7 +214,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         rightPrice: bigNumberFormatter(positionBalance.position.market.rightPrice),
                         finalPrice: positionBalance.position.market.finalPrice / 1e18,
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
-                        value: 0,
+                        value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
                         claimed: false,
                         isRanged: true,
@@ -206,6 +229,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -226,6 +250,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
@@ -280,6 +305,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: market.address,
                         currencyKey: market.currencyKey,
                         amount: Number(claimTransaction.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: 0,
                         maturityDate: market.maturityDate,
                         expiryDate: market.expiryDate,
@@ -304,6 +330,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         market: market.address,
                         currencyKey: market.currencyKey,
                         amount: Number(claimTransaction.amount),
+                        amountBigNumber: BigNumber.from(0),
                         paid: 0,
                         maturityDate: market.maturityDate,
                         expiryDate: market.expiryDate,

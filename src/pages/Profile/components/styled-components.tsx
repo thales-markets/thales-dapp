@@ -127,37 +127,48 @@ export const UsingAmmLink: React.FC = () => {
     );
 };
 
-export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => {
-    return (
-        <Value>
-            {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
+export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => (
+    <Value>
+        {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
+    </Value>
+);
+
+export const getStatus = (claimed: boolean, theme: ThemeInterface, t: TFunction) =>
+    claimed ? (
+        <Value color={theme.textColor.quaternary} fontSize="15px">
+            {t('options.home.market-card.claimed')}
+        </Value>
+    ) : (
+        <Value color={theme.textColor.tertiary} fontSize="15px">
+            {t('options.home.market-card.rip')}
         </Value>
     );
-};
 
-export const getStatus = (claimed: boolean, theme: ThemeInterface, t: TFunction) => {
-    if (claimed) {
-        return <Value color={theme.textColor.quaternary}>{t('options.home.market-card.claimed')}</Value>;
-    } else {
-        return (
-            <Value color={theme.textColor.tertiary}>
-                {t('options.home.market-card.rip')}
-                <Icon color={theme.textColor.tertiary} className="v2-icon v2-icon--rip"></Icon>
-            </Value>
-        );
-    }
-};
-
-const Value = styled.span<{ color?: string }>`
+const Value = styled.span<{ color?: string; fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '12px'};
     color: ${(props) => props.color || props.theme.textColor.primary};
 `;
 
-const Icon = styled.i<{ color?: string }>`
-    margin: 0px 0px 2px 4px;
-    font-size: 10px;
-    color: ${(props) => props.color || props.theme.textColor.primary};
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
+// const Icon = styled.i<{ color?: string }>`
+//     margin: 0px 0px 2px 4px;
+//     font-size: 10px;
+//     color: ${(props) => props.color || props.theme.textColor.primary};
+//     @media (max-width: 568px) {
+//         font-size: 16px;
+//         line-height: 100%;
+//     }
+// `;
+
+const IconLink = styled.i<{ color?: string }>`
+    font-size: 20px;
+    color: ${(props) => props.color || props.theme.textColor.secondary};
+    text-transform: none;
 `;
+
+export const MarketLink: React.FC<{ href: string }> = ({ href }) => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={href}>
+            <IconLink className="icon icon--right" />
+        </TooltipLink>
+    );
+};
