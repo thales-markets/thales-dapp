@@ -10,7 +10,9 @@ const StyledLoader = styled(CircularProgress)`
     position: absolute;
     left: calc(50% - 22px);
     top: calc(50% - 22px);
-    color: ${(props) => props.theme.background.quaternary};
+    &.MuiCircularProgress-colorPrimary {
+        color: ${(props) => props.theme.background.quaternary};
+    }
 `;
 
 export default SimpleLoader;
