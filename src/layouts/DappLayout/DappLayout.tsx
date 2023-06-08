@@ -126,7 +126,7 @@ const Wrapper = styled.div`
 
 const StyledToastContainer = styled(ToastContainer)`
     &&&.Toastify__toast-container {
-        width: 468px;
+        width: 330px;
         @media (max-width: 600px) {
             top: 0;
             padding: 0;
@@ -136,8 +136,8 @@ const StyledToastContainer = styled(ToastContainer)`
         }
     }
     .Toastify__toast {
-        width: 460px;
-        height: 80px;
+        width: 322px;
+        height: 68px;
         cursor: default;
         border-radius: 15px;
 
@@ -166,7 +166,7 @@ const StyledToastContainer = styled(ToastContainer)`
         }
     }
     .Toastify__progress-bar {
-        height: 12px;
+        height: 8px;
         background: inherit;
 
         &.success {
@@ -183,12 +183,12 @@ const StyledToastContainer = styled(ToastContainer)`
         }
     }
     .Toastify__toast-icon {
-        width: 32px;
+        width: 28px;
         margin-inline-end: 12px;
     }
     .Toastify__spinner {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         border-right-color: ${(props) => props.theme.toastMessages.info.background.primary};
     }
 `;

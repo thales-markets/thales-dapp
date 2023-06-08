@@ -13,7 +13,7 @@ const ToastMessage: React.FC<ToastMessageProps> = ({ id, type, message }) => {
     const title = !isDefaultType ? t('common.status.' + type) : '';
 
     return (
-        <Container>
+        <Container hasTitle={!!title}>
             {!isDefaultType && <Icon className={`icon icon--${type}`} />}
             <FlexDivColumn>
                 {title && <Title>{title}</Title>}
@@ -24,20 +24,21 @@ const ToastMessage: React.FC<ToastMessageProps> = ({ id, type, message }) => {
     );
 };
 
-const Container = styled(FlexDivRowCentered)`
+const Container = styled(FlexDivRowCentered)<{ hasTitle: boolean }>`
     color: ${(props) => props.theme.toastMessages.error.textColor.primary};
+    ${(props) => (props.hasTitle ? 'margin-top: -6px;' : '')}
 `;
 
 const Icon = styled.i`
     color: ${(props) => props.theme.toastMessages.error.textColor.primary};
-    font-size: 32px;
+    font-size: 28px;
     margin-right: 12px;
 `;
 
 const Title = styled.span`
     font-weight: 700;
-    font-size: 18px;
-    line-height: 24px;
+    font-size: 16px;
+    line-height: 22px;
     text-transform: uppercase;
 `;
 
@@ -51,17 +52,17 @@ const Message = styled.span<{ isLargeFont?: boolean }>`
 
 const CloseIcon = styled.i`
     position: absolute;
-    top: 15px;
+    top: 12px;
     right: 15px;
-    font-size: 13px;
-    line-height: 13px;
+    font-size: 12px;
+    line-height: 12px;
     cursor: pointer;
     color: ${(props) => props.theme.toastMessages.error.textColor.primary};
 `;
 
 const toastBasicProperties = {
     position: 'top-right' as ToastPosition,
-    autoClose: 7000,
+    autoClose: 7000, // 7s
     hideProgressBar: false,
     closeOnClick: false,
     pauseOnHover: true,
