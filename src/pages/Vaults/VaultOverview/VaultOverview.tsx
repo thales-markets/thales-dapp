@@ -39,7 +39,6 @@ type VaultOverviewProps = {
 const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const language = i18n.language;
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidVaultData, setLastValidVaultData] = useState<VaultData | undefined>(undefined);
@@ -65,7 +64,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
 
     return (
         <SpaContainer>
-            <SPAAnchor href={buildVaultLink(vaultId, language)}>
+            <SPAAnchor href={buildVaultLink(vaultId)}>
                 <FlexDivColumn style={{ height: '100%' }}>
                     <VaultContainer>
                         <VaultTitle>

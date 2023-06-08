@@ -136,6 +136,12 @@ const QUERY_KEYS = {
         ],
         EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
+        VaultsAndLpTxs: (networkId: NetworkId, walletAddress: string) => [
+            'wallet',
+            'vaultsAndLpTxs',
+            networkId,
+            walletAddress,
+        ],
     },
     Token: {
         StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],

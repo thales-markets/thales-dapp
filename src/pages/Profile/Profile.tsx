@@ -38,6 +38,7 @@ import TransactionHistory from './components/TransactionHistory/TransactionHisto
 import OpenPositions from './components/OpenPositions/OpenPositions';
 import { UserPositionsData, UserProfileData } from 'types/options';
 import ProfileSection from './components/ProfileSection/ProfileSection';
+import UserVaults from './components/UserVaults/UserVaults';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -250,6 +251,11 @@ const Profile: React.FC = () => {
                                         isLoading={userProfileDataQuery.isLoading || marketsQuery.isLoading}
                                     />
                                 </ProfileSection>
+                            </>
+                        )}
+                        {view === NavItems.VaultsLp && (
+                            <>
+                                <UserVaults />
                             </>
                         )}
                     </>

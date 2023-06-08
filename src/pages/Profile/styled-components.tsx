@@ -51,7 +51,7 @@ export const NavItem = styled.p<{
     box-shadow: ${(props) => (props.active ? `0px 4px ${props.theme.borderColor.quaternary};` : '')};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         line-height: 30px;
-        font-size: 12px;
+        font-size: 13px;
         padding: 0 20px;
     }
 `;

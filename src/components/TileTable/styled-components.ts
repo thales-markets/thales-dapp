@@ -20,14 +20,14 @@ export const Tile = styled(FlexDiv)<{
     background: ${(props) => props.backgroundColor || 'transparent'};
     border: 2px solid ${(props) => (props.backgroundColor ? 'transparent' : props.theme.borderColor.primary)};
     box-sizing: border-box;
-    border-radius: 15px;
+    border-radius: 8px;
     justify-content: space-between;
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     height: 50px;
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-    margin-left: ${(props) => (props.hideFlow ? '10px' : '40px')};
+    margin-left: ${(props) => (props.hideFlow ? '0px' : '40px')};
     gap: 4px;
     &:before {
         content: '';

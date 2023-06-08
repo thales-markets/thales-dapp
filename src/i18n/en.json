@@ -1698,7 +1698,8 @@
                 "paid": "Paid",
                 "expired": "Expired",
                 "expires": "Expires @"
-            }
+            },
+            "lp-title": "Thales Liquidity Pool"
         }
     },
     "governance": {
