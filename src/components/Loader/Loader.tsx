@@ -17,7 +17,9 @@ const Loader: React.FC = () => {
 };
 
 const CustomCircularProgress = styled(CircularProgress)`
-    color: ${(props) => props.theme.background.quaternary} !important;
+    &.MuiCircularProgress-colorPrimary {
+        color: ${(props) => props.theme.background.quaternary};
+    }
 `;
 
 const Wrapper = styled.div`

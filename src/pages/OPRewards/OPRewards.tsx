@@ -103,6 +103,7 @@ const OPRewards: React.FC = () => {
         const options: Array<{ value: number; label: string }> = [];
         const periodRangeTimestampsLocal: any = [];
         while (true) {
+            if (PERIOD_COUNTER > 6) break;
             if (CALCULATED_START.getTime() < NOW.getTime()) {
                 periodRangeTimestampsLocal.push({
                     minTimestamp: CALCULATED_START.getTime() / 1000,
@@ -297,7 +298,7 @@ const OPRewards: React.FC = () => {
                 <ElectionsBanner />
                 <Description>
                     <p>
-                        <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText /> }} />
+                        <Trans i18nKey={'op-rewards.ended-competition'} components={{ bold: <BoldText /> }} />
                     </p>
                     <Trans
                         i18nKey={'op-rewards.description-1'}

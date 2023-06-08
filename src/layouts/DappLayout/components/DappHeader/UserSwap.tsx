@@ -238,13 +238,16 @@ const SwapButtonText = styled.p`
 `;
 
 const BalanceContainer = styled.div`
+    display: flex;
+    flex-direction: column;
     position: relative;
     top: 6px;
     background-color: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
-    padding: 5px 0;
+    padding: 5px;
     text-align: center;
     z-index: 1;
+    gap: 5px;
 `;
 
 const BalanceWrapper = styled.div<{ clickable: boolean }>`
@@ -252,9 +255,12 @@ const BalanceWrapper = styled.div<{ clickable: boolean }>`
     flex-direction: row;
     align-items: center;
     text-align: center;
-    margin: 4px 7px;
-    padding: 2px 0;
+    padding: 6px;
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
+    }
 `;
 
 const BalanceTextWrap = styled.div`

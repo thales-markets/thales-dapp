@@ -2041,6 +2041,7 @@
         "description-itm": "<bold>ITM (In The Money)</bold> represents a position that would be successful if matured immediately. Example: BTC is at 30k and you buy an UP position with strike price 29k.",
         "description-otm": "<bold>OTM (Out of The Money)</bold> positions would be resolved immediately as unsuccessful. Example: BTC is at 30k and you buy a DOWN position with strike price 29k.",
         "length-info": "The counter in this page will indicate when every round starts and ends, lasting 1 week, and also show how much rewards you'll be receiveing at the end of the round. Please be aware that the amount of rewards displayed is just an estimation based on current amounts.",
+        "ended-competition": "In the past, we offered a unique incentive program that weekly rewarded our active traders with bonus OP and THALES, based on their trading positions. Although this particular program has concluded, keep an eye out for upcoming initiatives as we constantly strive to enrich your experience on Thales Markets.",
         "table": {
             "wallet-address": "Wallet address",
             "my-wallet-address": " My wallet address",
