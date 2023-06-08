@@ -46,7 +46,7 @@ const SectionContent = styled.div<{ maxHeight?: string }>`
     padding-right: 4px;
     max-height: ${(props) => props.maxHeight || '320px'};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        max-height: ${(props) => props.maxHeight || '340px'};
+        max-height: ${(props) => props.maxHeight || '345px'};
     }
     &::-webkit-scrollbar {
         width: 5px;
