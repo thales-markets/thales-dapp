@@ -3,15 +3,16 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
-import UserVaultAndLpTransactionsTable from './components/TransactionsTable/UserVaultAndLpTransactionsTable';
 import UserLiquidityPool from './components/UserLiquidityPool';
 import UserVault from './components/UserVault';
 import ProfileSection from '../ProfileSection/ProfileSection';
+import { useTranslation } from 'react-i18next';
+import UserVaultsAndLpTransactionsTable from './components/UserVaultsAndLpTransactionsTable/UserVaultsAndLpTransactionsTable';
 
 const UserVaults: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const vaults = useMemo(() => {
         const arr = [];
         for (const key in VAULT_MAP) {
@@ -22,17 +23,17 @@ const UserVaults: React.FC = () => {
 
     return (
         <>
-            <ProfileSection title={'Vaults'} fullHeight>
+            <ProfileSection title={t('options.trading-profile.vaults-lp.lp-title')} fullHeight>
+                <UserLiquidityPool />
+            </ProfileSection>
+            <ProfileSection title={t('options.trading-profile.vaults-lp.vaults-title')} fullHeight>
                 {vaults.map((obj) => {
                     if (obj.vaultAddress)
                         return <UserVault key={obj.key} vaultName={obj.key} vaultAddress={obj.vaultAddress} />;
                 })}
             </ProfileSection>
-            <ProfileSection title={'Liquidity Pool'} fullHeight>
-                <UserLiquidityPool />
-            </ProfileSection>
-            <ProfileSection title={'Vaults'}>
-                <UserVaultAndLpTransactionsTable />
+            <ProfileSection title={t('options.trading-profile.vaults-lp.history-title')} fullHeight>
+                <UserVaultsAndLpTransactionsTable />
             </ProfileSection>
         </>
     );

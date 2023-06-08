@@ -1699,7 +1699,25 @@
                 "expired": "Expired",
                 "expires": "Expires @"
             },
-            "lp-title": "Thales Liquidity Pool"
+            "vaults-lp": {
+                "vaults-title": "Vaults",
+                "lp-title": "Liquidity Pool",
+                "thales-lp-title": "Thales Liquidity Pool",
+                "history-title": "History",
+                "my-position-label": "My position",
+                "vault-pnl-label": "Vault PnL",
+                "lp-pnl-label": "LP PnL",
+                "round-label": "Round",
+                "round-end-label": "The round ends in",
+                "round-ended-label": "Round ended",
+                "date-time-col": "date | time",
+                "name-col": "name",
+                "type-col": "type",
+                "amount-col": "amount",
+                "round-col": "round",
+                "tx-status-col": "tx status",
+                "no-transactions": "No transactions associated with this wallet"
+            }
         }
     },
     "governance": {

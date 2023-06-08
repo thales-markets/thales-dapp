@@ -60,7 +60,7 @@ const UserLiquidityPool: React.FC = () => {
     return (
         <VaultLpDetails
             icon={'liquidity-pool'}
-            title={t(`options.trading-profile.lp-title`)}
+            title={t(`options.trading-profile.vaults-lp.thales-lp-title`)}
             position={userLiquidityPoolData?.balanceTotal || 0}
             pnl={liquidityPoolData?.lifetimePnl || 0}
             round={liquidityPoolData?.round || 0}

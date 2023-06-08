@@ -51,7 +51,7 @@ const SectionContent = styled.div<{ fullHeight?: boolean }>`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0px 0px 0px 0px;
     }
-    max-height: ${(props) => (props.fullHeight ? 'initial' : '320px')};
+    max-height: ${(props) => (props.fullHeight ? '100%' : '320px')};
     overflow-x: auto;
 `;
 
