@@ -7,7 +7,7 @@ import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { getAmount, MarketLink } from '../styled-components';
+import { getAmount, IconLink } from '../styled-components';
 import { UserPosition } from 'types/options';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -15,6 +15,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import TileTable from 'components/TileTable/TileTable';
 import MaturityDate from 'pages/AMMTrading/components/MaturityDate/MaturityDate';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 
 type OpenPositionsProps = {
     exchangeRates: Rates | null;
@@ -86,11 +87,13 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                 if (!isMobile) {
                     cells.push({
                         value: (
-                            <MarketLink
+                            <SPAAnchor
                                 href={
                                     row.isRanged ? buildRangeMarketLink(row.market) : buildOptionsMarketLink(row.market)
                                 }
-                            />
+                            >
+                                <IconLink className="icon icon--right" />
+                            </SPAAnchor>
                         ),
                         width: '30px',
                     });

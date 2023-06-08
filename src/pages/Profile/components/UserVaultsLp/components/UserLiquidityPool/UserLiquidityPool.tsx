@@ -9,6 +9,8 @@ import { buildLiquidityPoolLink } from 'utils/routes';
 import VaultLpDetails from '../VaultLpDetails/VaultLpDetails';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 
 const UserLiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -16,6 +18,7 @@ const UserLiquidityPool: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const [lastValidLiquidityPoolData, setLastValidLiquidityPoolData] = useState<LiquidityPoolData | undefined>(
         undefined
     );
@@ -57,7 +60,21 @@ const UserLiquidityPool: React.FC = () => {
         return lastValidUserLiquidityPoolData;
     }, [userLiquidityPoolDataQuery.isSuccess, userLiquidityPoolDataQuery.data, lastValidUserLiquidityPoolData]);
 
-    return (
+    return isMobile ? (
+        <SPAAnchor href={buildLiquidityPoolLink()}>
+            <VaultLpDetails
+                icon={'liquidity-pool'}
+                title={t(`options.trading-profile.vaults-lp.thales-lp-title`)}
+                position={userLiquidityPoolData?.balanceTotal || 0}
+                pnl={liquidityPoolData?.lifetimePnl || 0}
+                round={liquidityPoolData?.round || 0}
+                roundEndTime={liquidityPoolData?.roundEndTime || 0}
+                isRoundEnded={!!liquidityPoolData?.isRoundEnded}
+                link={buildLiquidityPoolLink()}
+                isLoading={liquidityPoolDataQuery.isLoading || userLiquidityPoolDataQuery.isLoading}
+            />
+        </SPAAnchor>
+    ) : (
         <VaultLpDetails
             icon={'liquidity-pool'}
             title={t(`options.trading-profile.vaults-lp.thales-lp-title`)}

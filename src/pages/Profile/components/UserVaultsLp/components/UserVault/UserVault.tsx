@@ -9,6 +9,8 @@ import { RootState } from 'redux/rootReducer';
 import { UserVaultData, VaultData } from 'types/vault';
 import { buildVaultLink } from 'utils/routes';
 import VaultLpDetails from '../VaultLpDetails/VaultLpDetails';
+import { getIsMobile } from 'redux/modules/ui';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 
 const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaultName, vaultAddress }) => {
     const { t } = useTranslation();
@@ -16,6 +18,7 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const [lastValidVaultData, setLastValidVaultData] = useState<VaultData | undefined>(undefined);
     const [lastValidUserVaultData, setLastValidUserVaultData] = useState<UserVaultData | undefined>(undefined);
 
@@ -53,7 +56,21 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
         return lastValidUserVaultData;
     }, [userVaultDataQuery.isSuccess, userVaultDataQuery.data, lastValidUserVaultData]);
 
-    return (
+    return isMobile ? (
+        <SPAAnchor href={buildVaultLink(vaultName)}>
+            <VaultLpDetails
+                icon={vaultName}
+                title={t(`vault.${vaultName}.title`)}
+                position={userVaultData?.balanceTotal || 0}
+                pnl={vaultData?.lifetimePnl || 0}
+                round={vaultData?.round || 0}
+                roundEndTime={vaultData?.roundEndTime || 0}
+                isRoundEnded={!!vaultData?.isRoundEnded}
+                link={buildVaultLink(vaultName)}
+                isLoading={vaultDataQuery.isLoading || userVaultDataQuery.isLoading}
+            />
+        </SPAAnchor>
+    ) : (
         <VaultLpDetails
             icon={vaultName}
             title={t(`vault.${vaultName}.title`)}

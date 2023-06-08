@@ -4,14 +4,14 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type ProfileSectionProps = {
     title: string;
-    fullHeight?: boolean;
+    maxHeight?: string;
 };
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ title, children, fullHeight }) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({ title, children, maxHeight }) => {
     return (
         <Section>
             <SectionHeader>{title}</SectionHeader>
-            <SectionContent fullHeight={fullHeight}>{children}</SectionContent>
+            <SectionContent maxHeight={maxHeight}>{children}</SectionContent>
         </Section>
     );
 };
@@ -38,21 +38,15 @@ const SectionHeader = styled.p`
         font-size: 18px;
         line-height: 22px;
     }
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
 `;
 
-const SectionContent = styled.div<{ fullHeight?: boolean }>`
+const SectionContent = styled.div<{ maxHeight?: string }>`
     color: ${(props) => props.theme.textColor.primary};
-    padding: 0 0px 0px 0px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 0px 0px 0px 0px;
-    }
-    max-height: ${(props) => (props.fullHeight ? '100%' : '320px')};
     overflow-x: auto;
+    max-height: ${(props) => props.maxHeight || '320px'};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        max-height: ${(props) => props.maxHeight || '340px'};
+    }
 `;
 
 export default ProfileSection;

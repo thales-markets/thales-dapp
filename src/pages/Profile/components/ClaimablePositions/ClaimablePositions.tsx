@@ -7,13 +7,14 @@ import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { getAmount, MarketLink } from '../styled-components';
+import { getAmount, IconLink } from '../styled-components';
 import { UserPosition } from 'types/options';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
 import TileTable from 'components/TileTable/TileTable';
 import MyPositionAction from '../MyPositionAction';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 
 type ClaimablePositionsProps = {
     claimablePositions: UserPosition[];
@@ -72,11 +73,13 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                 if (!isMobile) {
                     cells.push({
                         value: (
-                            <MarketLink
+                            <SPAAnchor
                                 href={
                                     row.isRanged ? buildRangeMarketLink(row.market) : buildOptionsMarketLink(row.market)
                                 }
-                            />
+                            >
+                                <IconLink className="icon icon--right" />
+                            </SPAAnchor>
                         ),
                         width: '30px',
                     });

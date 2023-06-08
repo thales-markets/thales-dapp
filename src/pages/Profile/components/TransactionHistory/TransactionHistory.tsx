@@ -21,7 +21,7 @@ import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/forma
 import { formatCurrency } from 'utils/formatters/number';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
-import { MarketLink, getAmount } from '../styled-components';
+import { ArrowLink, getAmount } from '../styled-components';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { getIsMobile } from 'redux/modules/ui';
 
@@ -132,7 +132,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
 
                 if (!isMobile) {
                     cells.push({
-                        value: <MarketLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
+                        value: <ArrowLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
                         width: '30px',
                     });
                 }

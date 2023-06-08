@@ -5,6 +5,9 @@ import { EMPTY_VALUE } from 'constants/placeholder';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRow, FlexDivStart } from 'styles/common';
@@ -36,6 +39,7 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const getTextValue = (value: string | Element | JSX.Element, color?: string) => (
         <Value color={color}>{isLoading ? EMPTY_VALUE : value}</Value>
@@ -81,11 +85,13 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
                     )
                 )}
             </Item>
-            <Item hideBorder maxWidth="20px">
-                <SPAAnchor href={link}>
-                    <IconLink className="icon icon--right" />
-                </SPAAnchor>
-            </Item>
+            {!isMobile && (
+                <Item hideBorder maxWidth="20px">
+                    <SPAAnchor href={link}>
+                        <IconLink className="icon icon--right" />
+                    </SPAAnchor>
+                </Item>
+            )}
         </Container>
     );
 };

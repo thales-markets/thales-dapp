@@ -149,26 +149,16 @@ const Value = styled.span<{ color?: string; fontSize?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
 `;
 
-// const Icon = styled.i<{ color?: string }>`
-//     margin: 0px 0px 2px 4px;
-//     font-size: 10px;
-//     color: ${(props) => props.color || props.theme.textColor.primary};
-//     @media (max-width: 568px) {
-//         font-size: 16px;
-//         line-height: 100%;
-//     }
-// `;
-
-const IconLink = styled.i<{ color?: string }>`
+export const IconLink = styled.i<{ color?: string }>`
     font-size: 20px;
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
 `;
 
-export const MarketLink: React.FC<{ href: string }> = ({ href }) => {
+export const ArrowLink: React.FC<{ href: string }> = ({ href }) => {
     return (
-        <TooltipLink target="_blank" rel="noreferrer" href={href}>
+        <a target="_blank" rel="noreferrer" href={href}>
             <IconLink className="icon icon--right" />
-        </TooltipLink>
+        </a>
     );
 };
