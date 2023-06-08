@@ -69,7 +69,7 @@ const UserWallet: React.FC = () => {
                                     style: { marginRight: 5 },
                                 })}
                                 {selectedNetwork.name}
-                                <Arrow className={`icon icon--arrow-down`} />
+                                <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
                             </NetworkItem>
                             {isDropdownOpen && (
                                 <NetworkDropDown>
@@ -164,7 +164,7 @@ const NetworkInfoContainer = styled.div`
 const NetworkDropDown = styled.div`
     z-index: 1000;
     position: absolute;
-    top: 35px;
+    top: 31px;
     left: 130px;
     display: flex;
     flex-direction: column;
@@ -206,11 +206,10 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     }
 `;
 
-const Arrow = styled.i`
-    margin-left: 7px;
-    margin-top: 2px;
+const Icon = styled.i`
+    margin-left: auto;
     font-size: 10px;
-    text-transform: none;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default UserWallet;
