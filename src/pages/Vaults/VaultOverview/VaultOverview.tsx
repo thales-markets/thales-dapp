@@ -17,7 +17,6 @@ import {
     VaultSectionIcon,
 } from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
-import i18n from 'i18n';
 import { VAULT_MAP } from 'constants/vault';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';

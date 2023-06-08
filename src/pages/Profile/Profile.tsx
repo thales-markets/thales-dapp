@@ -31,14 +31,14 @@ import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/numbe
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
-import ClaimablePositions from './components/ClaimablePositions/ClaimablePositions';
-import PositionHistory from './components/PositionHistory/PositionHistory';
-import TransactionHistory from './components/TransactionHistory/TransactionHistory';
-import OpenPositions from './components/OpenPositions/OpenPositions';
+import BannerCarousel from 'pages/Trade/components/BannerCarousel';
+import ClaimablePositions from './components/ClaimablePositions';
+import PositionHistory from './components/PositionHistory';
+import TransactionHistory from './components/TransactionHistory';
+import OpenPositions from './components/OpenPositions';
 import { UserPositionsData, UserProfileData } from 'types/options';
-import ProfileSection from './components/ProfileSection/ProfileSection';
-import UserVaults from './components/UserVaults/UserVaults';
+import ProfileSection from './components/ProfileSection';
+import UserVaultsLp from './components/UserVaultsLp';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -255,7 +255,7 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.VaultsLp && (
                             <>
-                                <UserVaults />
+                                <UserVaultsLp />
                             </>
                         )}
                     </>

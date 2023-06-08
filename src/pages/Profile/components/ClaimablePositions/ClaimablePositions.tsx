@@ -13,9 +13,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
 import TileTable from 'components/TileTable/TileTable';
-import { CSSProperties } from 'styled-components';
-import Button from 'components/Button/Button';
-import MyPositionAction from '../MyPositionAction/MyPositionAction';
+import MyPositionAction from '../MyPositionAction';
 
 type ClaimablePositionsProps = {
     claimablePositions: UserPosition[];
@@ -111,19 +109,6 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
     }, [filteredData]);
 
     return <TileTable rows={rows as any} isLoading={isLoading} hideFlow />;
-};
-
-const defaultButtonProps = {
-    width: '100%',
-    height: '27px',
-    fontSize: '13px',
-    padding: '0px 10px',
-};
-
-const additionalButtonStyle: CSSProperties = {
-    minWidth: '180px',
-    lineHeight: '100%',
-    border: 'none',
 };
 
 export default ClaimablePositions;

@@ -380,15 +380,15 @@ const Label = styled.span`
     white-space: nowrap;
 `;
 
-const Separator = styled.div`
-    min-width: 2px;
-    width: 2px;
-    height: 14px;
-    background: ${(props) => props.theme.background.secondary};
-    border-radius: 3px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
-`;
+// const Separator = styled.div`
+//     min-width: 2px;
+//     width: 2px;
+//     height: 14px;
+//     background: ${(props) => props.theme.background.secondary};
+//     border-radius: 3px;
+//     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+//         display: none;
+//     }
+// `;
 
 export default MyPositionAction;

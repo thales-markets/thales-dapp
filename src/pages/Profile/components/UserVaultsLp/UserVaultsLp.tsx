@@ -9,7 +9,7 @@ import ProfileSection from '../ProfileSection/ProfileSection';
 import { useTranslation } from 'react-i18next';
 import UserVaultsAndLpTransactionsTable from './components/UserVaultsAndLpTransactionsTable/UserVaultsAndLpTransactionsTable';
 
-const UserVaults: React.FC = () => {
+const UserVaultsLp: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -39,4 +39,4 @@ const UserVaults: React.FC = () => {
     );
 };
 
-export default UserVaults;
+export default UserVaultsLp;

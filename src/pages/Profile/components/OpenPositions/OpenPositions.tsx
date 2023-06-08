@@ -5,13 +5,10 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { getAmount, MarketLink } from '../styled-components';
 import { UserPosition } from 'types/options';
-import Button from 'components/Button/Button';
-import { CSSProperties } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
@@ -127,19 +124,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
     }, [filteredData]);
 
     return <TileTable rows={rows as any} isLoading={isLoading} hideFlow />;
-};
-
-const defaultButtonProps = {
-    width: '100%',
-    height: '27px',
-    fontSize: '13px',
-    padding: '0px 10px',
-};
-
-const additionalButtonStyle: CSSProperties = {
-    minWidth: '180px',
-    lineHeight: '100%',
-    border: 'none',
 };
 
 export default OpenPositions;
