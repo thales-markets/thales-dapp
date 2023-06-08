@@ -1,13 +1,14 @@
-import React from 'react';
-import styled from 'styled-components';
-import { truncateAddress } from 'utils/formatters/string';
-import { useTranslation } from 'react-i18next';
-import { UserCardSectionHeader } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
-import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/Button';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivSpaceBetween } from 'styles/common';
+import { truncateAddress } from 'utils/formatters/string';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useDisconnect } from 'wagmi';
 
 const truncateAddressNumberOfCharacters = 5;
@@ -23,7 +24,7 @@ const UserWalletExpanded: React.FC = () => {
 
     return (
         <Wrapper>
-            <UserCardSectionHeader>{t('common.user-info-card.wallet')}</UserCardSectionHeader>
+            <UserCardSectionHeader>{t('common.user-info-card.wallet')}:</UserCardSectionHeader>
             <Container>
                 <WalletContainer
                     isClickable={!isWalletConnected}
@@ -42,9 +43,7 @@ const UserWalletExpanded: React.FC = () => {
                 </WalletContainer>
                 {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
-                        <Button style={{ marginRight: '3px' }} onClick={openAccountModal}>
-                            {t('common.user-info-card.options')}
-                        </Button>
+                        <Button onClick={openAccountModal}>{t('common.user-info-card.options')}</Button>
                         <Button onClick={() => disconnect()}>{t('common.user-info-card.disconnect')}</Button>
                     </WalletOptions>
                 )}
@@ -57,6 +56,14 @@ const Wrapper = styled.div`
     display: block;
 `;
 
+const UserCardSectionHeader = styled.span`
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    color: ${(props) => props.theme.textColor.primary};
+    text-transform: uppercase;
+`;
+
 const Container = styled.div`
     display: contents;
     @media (max-width: 1024px) {
@@ -66,8 +73,7 @@ const Container = styled.div`
     }
 `;
 
-const WalletOptions = styled.div`
-    display: flex;
+const WalletOptions = styled(FlexDivSpaceBetween)`
     margin-bottom: 18px;
     align-items: center;
     @media (max-width: 1024px) {
@@ -75,20 +81,6 @@ const WalletOptions = styled.div`
         width: auto;
         margin: 0 auto;
     }
-`;
-
-const Button = styled.div`
-    background-color: var(--input-border-color);
-    flex: 1;
-    font-size: 13px;
-    color: var(--background);
-    font-weight: 600;
-    border-radius: 20px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    text-align: center;
-    line-height: 20px;
-    cursor: pointer;
 `;
 
 const WalletContainer = styled.div<{ isClickable: boolean }>`

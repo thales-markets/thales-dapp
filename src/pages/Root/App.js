@@ -1,7 +1,5 @@
-import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import Loader from 'components/Loader';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,13 +26,13 @@ import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'w
 import snxJSConnector from 'utils/snxJSConnector';
 import { createGlobalStyle } from 'styled-components';
 import ThemeProvider from 'layouts/Theme';
-import { getDefaultTheme } from 'theme/common';
+import { getDefaultTheme } from 'utils/style';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
 const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
-const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
 const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
 const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
 const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
@@ -48,9 +46,9 @@ const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
 const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 
-const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
-const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
-const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
+const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
+const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
+const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
@@ -66,7 +64,6 @@ const App = () => {
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { address } = useAccount();
@@ -140,14 +137,6 @@ const App = () => {
             }
         };
         init();
-
-        const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
-        };
-        document.addEventListener('market-notification', handler);
-        return () => {
-            document.removeEventListener('market-notification', handler);
-        };
     }, [dispatch, provider, signer, switchedToNetworkId, address, isLedgerLive]);
 
     useEffect(() => {
@@ -194,13 +183,6 @@ const App = () => {
             }
         };
     }, [dispatch]);
-
-    const onSnackbarClosed = (e) => {
-        if (e) {
-            return;
-        }
-        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
-    };
 
     return (
         <ThemeProvider>
@@ -363,19 +345,6 @@ const App = () => {
                         </Switch>
                     </Router>
                     <ReactQueryDevtools initialIsOpen={false} />
-                    <Snackbar
-                        open={snackbarDetails.isOpen}
-                        onClose={onSnackbarClosed}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                        autoHideDuration={5000}
-                    >
-                        <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
-                            {snackbarDetails.message}
-                        </Alert>
-                    </Snackbar>
                 </Suspense>
             </QueryClientProvider>
             <GlobalStyle />
@@ -387,6 +356,15 @@ const GlobalStyle = createGlobalStyle`
     * {
         font-family: ${(props) => props.theme.fontFamily.primary};
         font-style: normal !important;
+    }
+    *::-webkit-scrollbar-track {
+        background: ${(props) => props.theme.background.secondary};
+    }
+    *::-webkit-scrollbar-thumb {
+        background: ${(props) => props.theme.background.tertiary};
+    }
+    body {
+        background: ${(props) => props.theme.landingPage.background.primary};
     }
     body #root {
         background: ${(props) => props.theme.background.primary};

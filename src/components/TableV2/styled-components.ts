@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered } from 'theme/common';
 import { TablePagination } from '@material-ui/core';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered } from 'styles/common';
 
 export const TableView = styled.div`
     color: ${(props) => props.theme.textColor.primary};

@@ -1,13 +1,14 @@
-import React from 'react';
-import { FlexDivColumnCentered } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import { SidebarContent, SidebarContentWrapper, SidebarTitle } from 'pages/Governance/styled-components';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import { SidebarContent, SidebarTitle, SidebarContentWrapper } from 'pages/Governance/styled-components';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { COUNCIL_PROPOSAL_ID, SpaceKey } from 'constants/governance';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { FlexDivColumnCentered } from 'styles/common';
 import Results from '../ProposalDetails/Results';
+import { SpaceKey } from 'enums/governance';
 
 const CouncilMembers: React.FC = () => {
     const { t } = useTranslation();

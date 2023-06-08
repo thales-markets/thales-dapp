@@ -1,18 +1,19 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
-import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
-import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
+import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
+import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
+import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import Button from 'components/Button';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { useTranslation } from 'react-i18next';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
-import { Network, NetworkId, getIsMainnet } from 'utils/network';
-import Button from 'components/ButtonV2';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import styled from 'styled-components';
+import { NetworkId, getIsMainnet } from 'utils/network';
 
 const UnsupportedNetwork: React.FC = () => {
     const { t } = useTranslation();

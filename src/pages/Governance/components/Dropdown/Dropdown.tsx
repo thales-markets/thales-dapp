@@ -1,10 +1,10 @@
+import { ReactComponent as DownIcon } from 'assets/images/down.svg';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
-import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
-import { ReactComponent as DownIcon } from 'assets/images/down.svg';
-import { useTranslation } from 'react-i18next';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 
 type DropdownProps = {
     options: any;
@@ -13,7 +13,7 @@ type DropdownProps = {
     translationKey: string;
 };
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSelect, translationKey }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSelect, translationKey }) => {
     const { t } = useTranslation();
     const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
     const handleDropdownOpening = (isOpen: boolean) => {
@@ -67,6 +67,7 @@ const Container = styled(FlexDivColumnCentered)`
     width: 140px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
+        min-width: 200px;
         margin-bottom: 10px;
     }
 `;

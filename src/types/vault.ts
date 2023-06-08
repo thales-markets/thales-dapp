@@ -1,5 +1,4 @@
-import { CurrencyKey } from 'constants/currency';
-import { VaultTradeStatus } from 'constants/vault';
+import { VaultTradeStatus } from 'enums/vault';
 import { HistoricalOptionsMarketInfo } from './options';
 
 export type VaultData = {
@@ -44,7 +43,7 @@ export type VaultTrade = {
     amount: number;
     paid: number;
     blockNumber: number;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     strikePrice: number;
     maturityDate: number;
     market: string;
@@ -57,7 +56,7 @@ export type VaultTrade = {
 
 export type VaultTrades = VaultTrade[];
 
-export type VaultPnlPerRound = {
+type VaultPnlPerRound = {
     round: number | string;
     pnl: number;
 };

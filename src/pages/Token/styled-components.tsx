@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { LINKS } from 'constants/links';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import styled from 'styled-components';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -106,22 +106,14 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     color: ${(props) => (props.disabled ? props.theme.textColor.secondary : props.theme.textColor.primary)};
 `;
 
-export const FullRow = styled(FlexDiv)`
-    flex-basis: 100%;
-    display: flex;
-    font-size: 20px;
-    justify-content: center;
-    margin-bottom: 10px;
-`;
-
-export const TooltipLink = styled.a`
+const TooltipLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;
     }
 `;
 
-export const DescriptionLink = styled.a`
+const DescriptionLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;

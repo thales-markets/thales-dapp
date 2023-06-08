@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import Button from 'components/Button';
 import ROUTES from 'constants/routes';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { navigateTo } from 'utils/routes';
-import Button from 'components/ButtonV2';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const MigrationNotice: React.FC = () => {
     const { t } = useTranslation();
@@ -57,7 +57,7 @@ const Text = styled(FlexDiv)`
     }
 `;
 
-export const MigrateText = styled.span`
+const MigrateText = styled.span`
     margin-right: 15px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0;

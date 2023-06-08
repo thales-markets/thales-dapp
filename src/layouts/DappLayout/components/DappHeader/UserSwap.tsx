@@ -184,7 +184,7 @@ export const UserSwap: React.FC = () => {
             </SwapWrapper>
             {showSwap && (
                 <Modal
-                    title=""
+                    title={t('options.swap.title')}
                     onClose={() => setShowSwap(false)}
                     shouldCloseOnOverlayClick={false}
                     customStyle={{ overlay: { zIndex: 201 } }}
@@ -199,15 +199,15 @@ export const UserSwap: React.FC = () => {
 const SwapWrapper = styled.div`
     position: absolute;
     width: 130px;
-    right: 365px;
+    right: 345px;
     top: 40px;
     @media (max-width: 1024px) {
         right: 334px;
         top: 20px;
     }
 
-    @media (max-width: 400px) {
-        right: 194px;
+    @media (max-width: 500px) {
+        right: 174px;
         top: 20px;
     }
 `;
@@ -218,7 +218,7 @@ const SwapButton = styled.div<{ clickable: boolean }>`
     border-radius: 8px;
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
-    padding: 5px 7px;
+    padding: 3px 7px;
     text-align: center;
 `;
 
@@ -238,13 +238,16 @@ const SwapButtonText = styled.p`
 `;
 
 const BalanceContainer = styled.div`
+    display: flex;
+    flex-direction: column;
     position: relative;
     top: 6px;
     background-color: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
-    padding: 5px 0;
+    padding: 5px;
     text-align: center;
     z-index: 1;
+    gap: 5px;
 `;
 
 const BalanceWrapper = styled.div<{ clickable: boolean }>`
@@ -252,9 +255,12 @@ const BalanceWrapper = styled.div<{ clickable: boolean }>`
     flex-direction: row;
     align-items: center;
     text-align: center;
-    margin: 4px 7px;
-    padding: 2px 0;
+    padding: 6px;
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
+    }
 `;
 
 const BalanceTextWrap = styled.div`
@@ -267,6 +273,6 @@ const BalanceText = styled.span`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const AssetIconStyle = { width: '20px', height: '20px' };
+const AssetIconStyle = { width: '18px', height: '18px' };
 
 export default UserSwap;

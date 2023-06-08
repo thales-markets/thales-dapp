@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector/V2';
+import LanguageSelector from 'components/LanguageSelector';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -108,7 +108,7 @@ const DropDownContainer = styled.div`
     position: absolute;
     top: 2em;
     left: 0;
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     display: none;
@@ -140,7 +140,7 @@ const DropDownContainer = styled.div`
         line-height: 1.6em;
         text-align: left;
         text-transform: uppercase;
-        color: var(--color-white);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         padding: 10px;
         border-radius: 7px;
         &:hover {
@@ -156,7 +156,7 @@ const Logo = styled.i`
     grid-row-end: 4;
     font-size: 8.3em;
     line-height: 34px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     flex: 1;
     cursor: pointer;
@@ -211,7 +211,7 @@ const ButtonContainer = styled(CenteredDiv)`
     grid-column-end: 50;
     grid-row-start: 3;
     grid-row-end: 4;
-    color: var(--color-white);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     @media (max-width: 1024px) {
         display: none;
@@ -229,7 +229,7 @@ const Link = styled.a`
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    color: var(--color-white);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     @media (max-width: 1024px) {
         margin-bottom: 60px;
     }
@@ -242,8 +242,8 @@ const Link = styled.a`
             right: -32px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid var(--color-white);
-            border-right: 2px solid var(--color-white);
+            border-top: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
+            border-right: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
             transform: rotate(135deg);
         }
         &.open:after {
@@ -257,7 +257,7 @@ const DotsIcon = styled.i`
     font-size: 3em;
     line-height: 24px;
     z-index: 2;
-    color: var(--color-white);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default Header;

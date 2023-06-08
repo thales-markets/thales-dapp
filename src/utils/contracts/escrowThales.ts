@@ -1,6 +1,6 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
-export const escrowThales = {
+const escrowThales = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',

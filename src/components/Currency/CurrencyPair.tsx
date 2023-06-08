@@ -1,19 +1,18 @@
 import React from 'react';
-import { CurrencyKey } from 'constants/currency';
 import { formatCurrencyPair } from 'utils/formatters/string';
 import CurrencyIcon from './CurrencyIcon';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import styled from 'styled-components';
 
 type CurrencyPairProps = {
-    baseCurrencyKey: CurrencyKey;
+    baseCurrencyKey: string;
     baseCurrencyAsset?: string;
-    quoteCurrencyKey: CurrencyKey;
+    quoteCurrencyKey: string;
     showIcon?: boolean;
     iconProps?: any;
 };
 
-export const CurrencyPair: React.FC<CurrencyPairProps> = ({
+const CurrencyPair: React.FC<CurrencyPairProps> = ({
     baseCurrencyKey,
     baseCurrencyAsset,
     quoteCurrencyKey,

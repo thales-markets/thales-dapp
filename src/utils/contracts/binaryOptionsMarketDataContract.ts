@@ -1,6 +1,6 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
-export const binaryOptionsMarketDataContract = {
+const binaryOptionsMarketDataContract = {
     addresses: {
         [Network.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
         [Network.Ropsten]: '0x87e3C6e879d08F362dCfC5Bad6d9bec0923F2884',

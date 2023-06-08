@@ -1,22 +1,15 @@
-import { CurrencyKey } from '../constants/currency';
-import { BigNumberish } from 'ethers';
-import { OrderPeriod, Positions } from 'constants/options';
+import { Positions } from 'enums/options';
+import { BigNumber } from 'ethers';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionType = 'up' | 'down' | 'in' | 'out';
+type OptionType = 'up' | 'down' | 'in' | 'out';
 
 export type RangedMarketPositionType = 'in' | 'out';
 
-export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
-
-export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
-
-export type TooltipType = 'error' | 'success' | 'info';
-
-export type MarketType = 'positional' | 'ranged';
+type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
 export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
 
@@ -24,7 +17,7 @@ export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
     account?: string;
-    currencyKey?: CurrencyKey;
+    currencyKey?: string;
     timestamp: number;
     side: OptionSide | RangedMarketPositionType;
     amount: number | string;
@@ -34,25 +27,18 @@ export type OptionsTransaction = {
     blockNumber: number;
 };
 
-export type OptionValue = {
+type OptionValue = {
     long: number;
     short: number;
 };
 
-export type BNOptionValue = {
-    depositedBN: BigNumberish;
-    feeBN: BigNumberish;
-};
-
 export type OptionsTransactions = OptionsTransaction[];
-
-export type OptionsTransactionsMap = Record<string, OptionsTransactions>;
 
 export type HistoricalOptionsMarketInfo = {
     address: string;
     timestamp: number;
     creator: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     strikePrice: number;
     maturityDate: number;
     expiryDate: number;
@@ -91,6 +77,7 @@ export type MarketInfo = {
     strikePrice: number;
     discount: number;
     positionType: Positions;
+    url?: string;
 };
 
 export type RangedMarketPerPosition = {
@@ -103,12 +90,13 @@ export type RangedMarketPerPosition = {
     rightPrice: number;
     discount: number;
     positionType: Positions;
+    url?: string;
 };
 
 export type RangedMarket = {
     address: string;
     timestamp: number;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     maturityDate: number;
     leftPrice: number;
     rightPrice: number;
@@ -129,60 +117,12 @@ export type RangedMarket = {
     isOpen: boolean;
     result: OptionType;
     finalPrice: number;
-};
-
-export type RangedMarketUI = RangedMarket & {
-    asset: string;
-    availableIn: number;
-    availableOut: number;
-    inPrice: number;
-    outPrice: number;
-    ammLiquidity: string;
-    range: string;
-    phaseNum: number;
-    timeRemaining: number;
-};
-
-export type RangedMarketInfo = {
-    address: string;
-    timestamp: number;
-    timeRemaining: number;
-    asset: CurrencyKey;
-    currencyKey: CurrencyKey;
-    maturityDate: number;
-    expiryDate: number;
-    leftPrice: number;
-    rightPrice: number;
-    inAddress: string;
-    outAddress: string;
-    leftMarket: {
-        id: string;
-        creator: string;
-        longAddress: string;
-        shortAddress: string;
-    };
-    rightMarket: {
-        id: string;
-        creator: string;
-        longAddress: string;
-        shortAddress: string;
-    };
-    isOpen: boolean;
-    result: OptionType;
-    finalPrice: number;
-    availableIn: number;
-    availableOut: number;
-    inPrice: number;
-    outPrice: number;
-    phase: string;
-    phaseNum: number;
-    range: string;
 };
 
 export type RangedMarketData = {
     isResolved: boolean;
     address: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     asset: string;
     currentPrice: number;
     finalPrice: number;
@@ -208,7 +148,7 @@ export type RangedMarketData = {
 export type OptionsMarketInfo = {
     isResolved: boolean;
     address: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     priceUpdatedAt: number;
     currentPrice: number;
     finalPrice: number;
@@ -223,16 +163,10 @@ export type OptionsMarketInfo = {
     deposited: number;
     creator: string;
 
-    // options: OptionValue;
     fees: {
         creator: number;
         pool: number;
     };
-    // creatorLimits: {
-    //     capitalRequirement: number;
-    //     skewLimit: number;
-    // };
-    // BN: BNOptionValue;
     IV?: any;
     availableLongs: number;
     availableShorts: number;
@@ -245,26 +179,9 @@ export type OptionsMarketInfo = {
     outcome?: string;
 };
 
-export type HotMarket = {
-    fullAssetName?: string;
-    currencyKey: string;
-    assetName: string;
-    pricePerOption: number;
-    strikePrice: string;
-    timeRemaining: number;
-    potentialProfit: string;
-    discount: number;
-    address: string;
-};
-
 export type AccountMarketInfo = {
     long: number;
     short: number;
-};
-
-export type MarketParametersInfo = {
-    longAddress: string;
-    shortAddress: string;
 };
 
 export type RangedMarketBalanceInfo = {
@@ -273,48 +190,6 @@ export type RangedMarketBalanceInfo = {
 };
 
 export type OptionsMarkets = HistoricalOptionsMarketInfo[];
-export type OptionsMarketsMap = Record<string, HistoricalOptionsMarketInfo>;
-
-export type TradeCardPhaseProps = {
-    optionsMarket: OptionsMarketInfo;
-    accountMarketInfo: AccountMarketInfo;
-};
-
-export type CurrentPosition = {
-    bid: number;
-    payout: number;
-};
-
-export type Orders = OrderItem[];
-
-export type OrderItem = {
-    rawOrder: any;
-    signature: any;
-    displayOrder: DisplayOrder;
-    orderData: any;
-};
-
-export type ExtendedOrderItem = OrderItem & {
-    market: HistoricalOptionsMarketInfo;
-    optionSide: OptionSide;
-    walletBalance?: number;
-};
-
-export type ExtendedOrders = ExtendedOrderItem[];
-
-export type DisplayOrder = {
-    price: number;
-    amount: number;
-    fillableAmount: number;
-    filled: number;
-    total: number;
-    fillableTotal: number;
-    timeRemaining: number;
-    orderHash: string;
-    percentageOfMaximum?: number;
-    potentialReturn: number;
-    potentialReturnAmount: number;
-};
 
 export type OrderSide = 'buy' | 'sell';
 
@@ -331,15 +206,8 @@ export type Trade = {
     takerAmount: number;
     blockNumber: number;
 };
-export type ExtendedTrade = Trade & {
-    market: string;
-    optionSide: OptionSide;
-    orderSide: OrderSide;
-    marketItem: HistoricalOptionsMarketInfo;
-};
 
 export type Trades = Trade[];
-export type ExtendedTrades = ExtendedTrade[];
 
 export type UsersAssets = {
     market: HistoricalOptionsMarketInfo;
@@ -351,84 +219,16 @@ export type UsersAssets = {
     };
 };
 
-export type OrderData = {
-    makerAsset: string;
-    takerAsset: string;
-    predicate: string;
-};
-
-export type UserOrder = {
-    makerAmount: number;
-    takerAmount: number;
-    orderMaker: number;
-    remainingMakerAmount: number;
-    data: OrderData;
-};
-
-export type UserOrders = UserOrder[];
-
-export type OneInchErrorResponse = {
-    statusCode: number;
-    description: string;
-};
-
-export type ZeroExValidationError = {
-    field: string;
-    code: number;
-    reason: string;
-};
-
-export type ExpirationOption = {
-    value: OrderPeriod;
-    label: string;
-};
-
-export type Flippening = {
-    ethPrice: number;
-    btcPrice: number;
-    ethMarketCap: number;
-    btcMarketCap: number;
-    ratio: number;
-};
-
-export type ETHBTCRatio = {
-    timestamp: number;
-    ratio: number;
-};
-
-export type ETHBTCRatios = ETHBTCRatio[];
-
-export type ETHBurned = {
-    total: number;
-    totalUsd: number;
-    yesterday: number;
-    yesterdayUsd: number;
-};
-
-export type ExpirationOptions = ExpirationOption[];
-
-export type GridFilters = {
-    searchQuery: string;
-    sort?:
-        | Array<
-              | {
-                    column: string;
-                    type: 'asc' | 'desc';
-                }
-              | undefined
-          >
-        | [];
-    assetFilters: string[];
-    showOnlyLiquid?: boolean;
-};
-
-export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
-
-export type GridSortOption = 'byName' | 'byTimeRemaining';
-
-export type SortOption = {
-    property: string;
-    displayName: string;
-    desc: boolean;
-    asc: boolean;
+export type UserLivePositions = {
+    positionAddress: string;
+    currencyKey: string;
+    strikePrice: string;
+    amount: number;
+    amountBigNumber: BigNumber;
+    maturityDate: number;
+    market: string;
+    side: Positions;
+    paid: number;
+    value: number;
+    claimable?: boolean;
 };

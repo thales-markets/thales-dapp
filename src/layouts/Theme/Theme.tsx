@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { ThemeMap } from 'constants/ui';
-import { getDefaultTheme } from 'theme/common';
+import { getDefaultTheme } from 'utils/style';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
 

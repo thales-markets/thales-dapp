@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-
-import { getSynthName } from 'utils/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getSynthName } from 'utils/currency';
 
 export type AssetInfoProps = {
     currencyKey: string;
@@ -72,7 +70,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     ${(props) => (props?.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
-    color: var(--color-white) !important;
+    color: ${(props) => props.theme.textColor.primary} !important;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         text-align: center;
     }

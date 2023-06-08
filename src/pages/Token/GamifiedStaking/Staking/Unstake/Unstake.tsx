@@ -1,35 +1,37 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
-import { useTranslation } from 'react-i18next';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import styled from 'styled-components';
-import { getIsAppReady } from 'redux/modules/app';
-import { refetchTokenQueries } from 'utils/queryConnector';
-import { ethers } from 'ethers';
-import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { THALES_CURRENCY } from 'constants/currency';
-import { dispatchMarketNotification } from 'utils/options';
-import intervalToDuration from 'date-fns/intervalToDuration';
-import { formattedDuration } from 'utils/formatters/date';
-import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
-import TimeRemaining from 'components/TimeRemaining';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { getMaxGasLimitForNetwork } from 'constants/options';
-import snxJSConnector from 'utils/snxJSConnector';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { UserStakingData } from 'types/token';
+import Button from 'components/Button/Button';
+import TimeRemaining from 'components/TimeRemaining';
+import Tooltip from 'components/Tooltip/Tooltip';
+import NumericInput from 'components/fields/NumericInput';
+import { THALES_CURRENCY } from 'constants/currency';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import intervalToDuration from 'date-fns/intervalToDuration';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { ethers } from 'ethers';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2/Button';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { UserStakingData } from 'types/token';
+import { formattedDuration } from 'utils/formatters/date';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { refetchTokenQueries } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import { ClaimMessage, EarnSection, SectionContentContainer } from '../../../styled-components';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -54,10 +56,6 @@ const Unstake: React.FC = () => {
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
     const [amountToUnstake, setAmountToUnstake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
@@ -111,115 +109,10 @@ const Unstake: React.FC = () => {
         }
     }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
 
-    useEffect(() => {
-        const fetchL1FeeStartUnstake = async (stakingThalesContractWithSigner: any, amount: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.startUnstake(amount);
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-        const fetchL1FeeUnstake = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.unstake();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-        const fetchL1FeeCancelUnstake = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.cancelUnstake();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const { stakingThalesContract } = snxJSConnector as any;
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (isUnstakingInContract) {
-                    if (unstakingEnded) {
-                        if (isL2) {
-                            const [
-                                unstakeGasEstimate,
-                                cancelUnstakeGasEstimate,
-                                l1FeeUnstakeInWei,
-                                fetchL1FeeCancelUnstakeInWei,
-                            ] = await Promise.all([
-                                stakingThalesContractWithSigner.estimateGas.unstake(),
-                                stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
-                                fetchL1FeeUnstake(stakingThalesContractWithSigner),
-                                fetchL1FeeCancelUnstake(stakingThalesContractWithSigner),
-                            ]);
-                            setGasLimit([
-                                {
-                                    gasLimit: formatGasLimit(unstakeGasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-unstake'),
-                                },
-                                {
-                                    gasLimit: formatGasLimit(cancelUnstakeGasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-cancel'),
-                                },
-                            ]);
-                            setL1Fee([l1FeeUnstakeInWei, fetchL1FeeCancelUnstakeInWei]);
-                        } else {
-                            const unstakeGasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
-                            const cancelUnstakeGasEstimate = await stakingThalesContractWithSigner.estimateGas.cancelUnstake();
-                            setGasLimit([
-                                {
-                                    gasLimit: formatGasLimit(unstakeGasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-unstake'),
-                                },
-                                {
-                                    gasLimit: formatGasLimit(cancelUnstakeGasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-cancel'),
-                                },
-                            ]);
-                        }
-                    } else {
-                        if (isL2) {
-                            const [gasEstimate, l1FeeInWei] = await Promise.all([
-                                stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
-                                fetchL1FeeCancelUnstake(stakingThalesContractWithSigner),
-                            ]);
-                            setGasLimit([
-                                {
-                                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-cancel'),
-                                },
-                            ]);
-                            setL1Fee([l1FeeInWei]);
-                        } else {
-                            const gasEstimate = await stakingThalesContractWithSigner.estimateGas.cancelUnstake();
-                            setGasLimit([
-                                {
-                                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                                    label: t('options.earn.gamified-staking.staking.unstake.network-fee-cancel'),
-                                },
-                            ]);
-                            setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        }
-                    }
-                } else {
-                    const amount = ethers.utils.parseEther(amountToUnstake.toString());
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            stakingThalesContractWithSigner.estimateGas.startUnstake(amount),
-                            fetchL1FeeStartUnstake(stakingThalesContractWithSigner, amount),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (isUnstakeButtonDisabled || (!isUnstakingInContract && isStartUnstakeButtonDisabled)) return;
-        fetchGasLimit();
-    }, [isUnstaking, isCanceling, isUnstakingInContract, walletAddress, unstakingEnded, amountToUnstake]);
-
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
-
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
@@ -229,8 +122,12 @@ const Unstake: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message'),
+                        id
+                    )
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setAmountToUnstake('');
@@ -238,45 +135,45 @@ const Unstake: React.FC = () => {
                 setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
                 setUnstakingEnded(false);
                 setIsUnstaking(false);
-                setGasLimit(null);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsUnstaking(false);
         }
     };
 
     const handleUnstakeThales = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         const { stakingThalesContract } = snxJSConnector as any;
-
         try {
-            setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const tx = await stakingThalesContractWithSigner.unstake({ gasLimit: getMaxGasLimitForNetwork(networkId) });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message'),
+                        id
+                    )
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setIsUnstakingInContract(false);
                 setUnstakingEnded(true);
                 setIsUnstaking(false);
-                setGasLimit(null);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsUnstaking(false);
         }
     };
 
     const handleCancelUnstakingThales = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         const { stakingThalesContract } = snxJSConnector as any;
-
         try {
-            setTxErrorMessage(null);
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const tx = await stakingThalesContractWithSigner.cancelUnstake({
@@ -289,10 +186,9 @@ const Unstake: React.FC = () => {
                 setIsUnstakingInContract(false);
                 setUnstakingEnded(true);
                 setIsCanceling(false);
-                setGasLimit(null);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsCanceling(false);
         }
     };
@@ -451,10 +347,6 @@ const Unstake: React.FC = () => {
                         isBalanceLoading={userStakingDataQuery.isLoading}
                     />
                 </InputContainer>
-                <Line margin={'0 0 10px 0'} />
-                <NetworkFeesWrapper>
-                    <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
-                </NetworkFeesWrapper>
                 <ButtonsContainer twoButtons={isUnstakingInContract && unstakingEnded}>
                     {getSubmitButton()}
                     {isStakingPaused && (
@@ -466,13 +358,6 @@ const Unstake: React.FC = () => {
                         </ClaimMessage>
                     )}
                 </ButtonsContainer>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
             </SectionContentContainer>
         </EarnSection>
     );
@@ -536,7 +421,7 @@ const UnstakingTitleText = styled.span`
 `;
 
 const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
-    padding-top: 10px;
+    padding-top: 101px;
     padding-bottom: ${(props) => (props.twoButtons ? '10px' : '25px')};
     align-items: center;
     > * {
@@ -552,10 +437,6 @@ const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
 
 const ButtonWrapperTooltip = styled.div`
     width: 100%;
-`;
-
-const NetworkFeesWrapper = styled.div`
-    min-height: 63px;
 `;
 
 export default Unstake;

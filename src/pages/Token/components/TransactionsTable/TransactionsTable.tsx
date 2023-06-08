@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import Table from 'components/TableV2';
-import { TokenTransaction, TokenTransactions, TransactionFilterEnum } from 'types/token';
+import { TokenTransaction, TokenTransactions } from 'types/token';
+import { TransactionFilterEnum } from 'enums/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { EMPTY_VALUE } from 'constants/placeholder';
 
@@ -15,7 +16,7 @@ type TransactionsTableProps = {
     isLoading: boolean;
 };
 
-export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
+const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
 
     const amountSort = useMemo(
@@ -43,7 +44,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Header: <>{t('options.earn.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['timestamp']>) => (
-                            <p>{formatTxTimestamp(cellProps.cell.value)}</p>
+                            <p>{formatShortDateWithTime(cellProps.cell.value)}</p>
                         ),
                         sortable: true,
                     },

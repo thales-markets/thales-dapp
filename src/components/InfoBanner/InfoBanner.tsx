@@ -1,7 +1,7 @@
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered } from 'styles/common';
 
 const InfoBanner: React.FC = ({ children }) => {
     return (

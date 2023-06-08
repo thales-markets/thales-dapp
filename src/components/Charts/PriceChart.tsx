@@ -1,21 +1,20 @@
-import React, { CSSProperties, useMemo } from 'react';
-
-import { ResponsiveContainer, AreaChart, Area, YAxis, XAxis, Tooltip } from 'recharts';
-import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
-
-import usePriceDataQuery from 'queries/price/usePriceDataQuery';
-import styled from 'styled-components';
-
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { formatPriceChangeInterval } from 'utils/formatters/string';
-import { CurrencyKey } from 'constants/currency';
-
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import usePriceDataQuery from 'queries/price/usePriceDataQuery';
+import React, { CSSProperties, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
+import {
+    calculatePercentageChange,
+    formatCurrencyWithSign,
+    formatPricePercentageGrowth,
+} from 'utils/formatters/number';
+import { formatPriceChangeInterval } from 'utils/formatters/string';
 
 type PriceChartProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     currencyVs?: string;
     days?: number;
     width?: number;
@@ -46,6 +45,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     isAnimationActive,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     const priceData = usePriceDataQuery({ currencyKey, currencyVs, days });
     const processedPriceData = useMemo(() => {
@@ -99,12 +99,12 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         >
                             <defs>
                                 <linearGradient id="colorPriceBull" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="62%" stopColor="#50CE99" stopOpacity={0.5} />
-                                    <stop offset="99.68%" stopColor="#C4C4C4" stopOpacity={0} />
+                                    <stop offset="62%" stopColor={theme.textColor.quaternary} stopOpacity={0.5} />
+                                    <stop offset="99.68%" stopColor={theme.textColor.secondary} stopOpacity={0} />
                                 </linearGradient>
                                 <linearGradient id="colorPriceBear" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="70%" stopColor="#DE496D" stopOpacity={0.5} />
-                                    <stop offset="99.68%" stopColor="#C4C4C4" stopOpacity={0} />
+                                    <stop offset="70%" stopColor={theme.textColor.tertiary} stopOpacity={0.5} />
+                                    <stop offset="99.68%" stopColor={theme.textColor.secondary} stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <YAxis hide={true} domain={['dataMin', 'dataMax']} />
@@ -130,7 +130,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                 type="monotone"
                                 dataKey="price"
                                 strokeWidth={1.5}
-                                stroke={`${percentagePriceChange > 0 ? '#50CE99' : '#DE496D'}`}
+                                stroke={
+                                    percentagePriceChange > 0 ? theme.textColor.quaternary : theme.textColor.tertiary
+                                }
                                 fill={`url(#${percentagePriceChange > 0 ? 'colorPriceBull' : 'colorPriceBear'})`}
                                 isAnimationActive={isAnimationActive}
                             />
@@ -163,6 +165,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
 
 const CustomizedAxisTick: React.FC<any> = (props: any) => {
     const { x, y, payload } = props;
+    const theme: ThemeInterface = useTheme();
 
     return (
         <g transform={`translate(${x - 20},${y})`}>
@@ -170,7 +173,7 @@ const CustomizedAxisTick: React.FC<any> = (props: any) => {
                 <circle cx="2" cy="2" r="2" fill="white" fillOpacity="0.6" />
             </svg>
 
-            <text style={{ fontSize: 12, fontWeight: 700 }} x={-2} y={10} dy={12} fill="var(--color-white)">
+            <text style={{ fontSize: 12, fontWeight: 700 }} x={-2} y={10} dy={12} fill={theme.textColor.primary}>
                 {payload.value}
             </text>
         </g>
@@ -187,6 +190,7 @@ const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
 `;
 
 const ChartHeader = styled.div`
+    display: flex;
     width: 100%;
     margin-bottom: 10px;
     text-align: left;
@@ -196,7 +200,7 @@ const CoinName = styled.p`
     line-height: 15px;
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.primary};
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -208,6 +212,7 @@ const Price = styled.p`
     letter-spacing: 0.035em;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
+    margin-left: 5px;
 `;
 
 const ChartFooter = styled.div`
@@ -230,14 +235,14 @@ const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
 `;
 
 const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>`
-    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
+    color: ${(props: any) => (props.uptrend ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
     font-weight: bold;
     text-align: right;
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
-    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
+    color: ${(props: any) => (props.uptrend ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;

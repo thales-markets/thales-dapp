@@ -1,8 +1,9 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/ButtonV2';
+import Button from 'components/Button';
 import Checkbox from 'components/fields/Checkbox';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import Modal from 'components/Modal';
+import { COLLATERALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,23 +11,24 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { getAmountForApproval } from 'utils/amm';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { bigNumberFormatter, stableCoinParser } from 'utils/formatters/ethers';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
     collateralIndex?: number;
     tokenSymbol: string;
+    isNonStable?: boolean;
     isAllowing: boolean;
     onSubmit: (approveAmount: BigNumber) => void;
     onClose: () => void;
 };
 
-export const ApprovalModal: React.FC<ApprovalModalProps> = ({
+const ApprovalModal: React.FC<ApprovalModalProps> = ({
     defaultAmount,
     collateralIndex,
     tokenSymbol,
+    isNonStable,
     isAllowing,
     onSubmit,
     onClose,
@@ -44,11 +46,9 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const isAmountEntered = Number(amount) > 0;
     const isButtonDisabled = !isWalletConnected || isAllowing || (!approveAll && (!isAmountEntered || !isAmountValid));
 
-    const amountConverted = getAmountForApproval(
-        collateralIndex ? collateralIndex : 0,
-        Number(amount).toString(),
-        networkId
-    );
+    const amountConverted = isNonStable
+        ? ethers.utils.parseEther(Number(amount).toString())
+        : stableCoinParser(Number(amount).toString(), networkId, COLLATERALS[collateralIndex || 0]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {

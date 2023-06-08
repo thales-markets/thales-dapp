@@ -1,38 +1,43 @@
 import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
 import SimpleLoader from 'components/SimpleLoader';
+import NumericInput from 'components/fields/NumericInput';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { Network, OneInchLiquidityProtocol } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { LoaderContainer } from 'theme/common';
+import { LoaderContainer } from 'styles/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, Network } from 'utils/network';
+import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
 import { Container, ErrorMessage, SectionWrapper, defaultButtonProps } from './styled-components';
 import {
+    ARB_ETH,
+    BSC_BNB,
     ETH_Eth,
     OP_Eth,
     POLYGON_MATIC,
-    mapTokenByNetwork,
     TokenSymbol,
-    getTokenForSwap,
     getFromTokenSwap,
-    BSC_BNB,
-    ARB_ETH,
+    getTokenForSwap,
+    mapTokenByNetwork,
 } from './tokens';
-import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import { OneInchLiquidityProtocol } from 'constants/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import Button from 'components/ButtonV2';
-import NumericInput from 'components/fields/NumericInput';
-import CollateralSelector from 'components/CollateralSelectorV2/CollateralSelector';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
@@ -152,7 +157,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
 
     const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
-        const id = toast.loading(t('options.swap.progress'));
+        const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             setLoading(true);
@@ -162,7 +167,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             await tx.wait();
             setLoading(false);
             setIsAllowing(false);
-            toast.update(id, getSuccessToastOptions(t('options.swap.approval-success')));
+            toast.update(id, getSuccessToastOptions(t('options.swap.approval-success'), id));
             setOpenApprovalModal(false);
             return {
                 data: (req.data as any).data,
@@ -175,7 +180,8 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.approval-failed')
+                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.approval-failed'),
+                    id
                 )
             );
             setOpenApprovalModal(false);
@@ -184,7 +190,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
 
     const swapTx = async () => {
         setLoading(true);
-        const id = toast.loading(t('options.swap.progress'));
+        const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
         try {
             const req = await swapQuery.refetch();
             if (req.isSuccess) {
@@ -199,7 +205,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 await tx.wait();
                 refetchBalances(walletAddress as any, networkId);
                 setLoading(false);
-                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol })));
+                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol }), id));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -215,7 +221,8 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed')
+                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'),
+                    id
                 )
             );
             console.log('failed: ', e);

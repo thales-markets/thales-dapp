@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { Proposal, ProposalResults } from 'types/governance';
 import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';
@@ -15,16 +15,17 @@ import {
 } from 'pages/Governance/styled-components';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { Network } from 'utils/network';
-import { FIRST_COUNCIL_ELECTIONS_ID, ProposalTypeEnum } from 'constants/governance';
+import { Network } from 'enums/network';
+import { FIRST_COUNCIL_ELECTIONS_ID } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { VoteRow, VoteLabel, NoVotes } from './styled-components';
+import { ProposalTypeEnum } from 'enums/governance';
 
 type HistoryProps = {
     proposal: Proposal;

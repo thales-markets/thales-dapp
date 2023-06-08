@@ -6,6 +6,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
 const UserSwap = lazy(() => import(/* webpackChunkName: "UserSwap" */ './UserSwap'));
 const UserWallet = lazy(() => import(/* webpackChunkName: "UserWallet" */ './UserWallet'));
+const Notification = lazy(() => import(/* webpackChunkName: "Notification" */ './Notifications'));
 
 const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -24,6 +25,10 @@ const UserCard: React.FC = () => {
                 <UserWallet />
             </Suspense>
 
+            <Suspense fallback={<></>}>
+                <Notification />
+            </Suspense>
+
             <MenuCardButton
                 onClick={() => {
                     trackEvent({
@@ -33,7 +38,7 @@ const UserCard: React.FC = () => {
                     setShowCard(!showCard);
                 }}
             >
-                <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
+                <MenuIcon style={{ fontSize: 26 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
             {showCard && (
                 <Suspense fallback={<></>}>
@@ -54,11 +59,9 @@ const Overlay = styled.div`
     top: 0;
     left: 0;
     opacity: 1;
-    z-index: 10;
+    z-index: 1501;
     transition: opacity 2s;
-    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.06) -2.8%, rgba(255, 255, 255, 0.02) 106.83%);
-    box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(10px);
     &.show {
         display: block;
     }
@@ -84,7 +87,7 @@ const MenuCardButton = styled.div`
 `;
 
 const MenuIcon = styled.i`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default UserCard;

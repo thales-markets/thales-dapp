@@ -1,4 +1,4 @@
-export const ammVaultContract = {
+const ammVaultContract = {
     abi: [
         {
             anonymous: false,

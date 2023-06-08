@@ -28,7 +28,7 @@ import { VaultData } from 'types/vault';
 import { formatPercentage, formatPercentageWithSign } from 'utils/formatters/number';
 import SimpleLoader from 'components/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
-import { Colors, FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 
@@ -132,7 +132,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                     </VaultInfoContainer>
                                     <VaultInfoContainer>
                                         <VaultInfoLabel>{t('vault.round-end-label')}:</VaultInfoLabel>
-                                        <VaultInfo color={Colors.GREEN}>
+                                        <VaultInfo color={theme.textColor.quaternary}>
                                             {vaultData.isRoundEnded ? (
                                                 t('vault.round-ended-label')
                                             ) : (

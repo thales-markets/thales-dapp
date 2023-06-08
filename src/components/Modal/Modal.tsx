@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactModal from 'react-modal';
 import styled, { CSSProperties } from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 import { convertCssToStyledProperties } from 'utils/style';
 
 type ModalProps = {
@@ -37,7 +37,7 @@ const defaultCustomStyles = {
     },
 };
 
-export const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = ({
     title,
     onClose,
     children,

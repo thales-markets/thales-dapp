@@ -1,33 +1,36 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/Button/Button';
+import Switch from 'components/SwitchInput/SwitchInput';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { ethers } from 'ethers';
+import useGelatoQuery from 'queries/token/useGelatoQuery';
+import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
+import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import { ButtonContainer, Line } from '../styled-components';
 import Instructions from './Instructions';
-import YourTransactions from './Transactions';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import useLPStakingQuery from 'queries/token/useLPStakingQuery';
-import useGelatoQuery from 'queries/token/useGelatoQuery';
-import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
-import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import Switch from 'components/SwitchInput/SwitchInput';
 import Stake from './Stake';
+import YourTransactions from './Transactions';
 import Unstake from './Unstake';
-import NetworkFees from '../components/NetworkFees';
-import ValidationMessage from 'components/ValidationMessage';
-import snxJSConnector from 'utils/snxJSConnector';
-import { formatGasLimit } from 'utils/network';
-import { getMaxGasLimitForNetwork } from 'constants/options';
-import { ethers } from 'ethers';
-import { dispatchMarketNotification } from 'utils/options';
-import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2/Button';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { getIsMobile } from 'redux/modules/ui';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -51,8 +54,6 @@ const LpStaking: React.FC = () => {
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -75,23 +76,6 @@ const LpStaking: React.FC = () => {
     ]);
 
     const { lpStakingRewardsContract } = snxJSConnector as any;
-
-    useEffect(() => {
-        const fetchGasLimit = async () => {
-            try {
-                const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const gasEstimate = await lpStakingRewardsContractWithSigner.estimateGas.getReward();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || (!rewards && !secondRewards)) return;
-        fetchGasLimit();
-    }, [isWalletConnected, rewards, secondRewards]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -136,8 +120,8 @@ const LpStaking: React.FC = () => {
 
     const handleClaimStakingRewards = async () => {
         if (rewards || secondRewards) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
@@ -148,14 +132,14 @@ const LpStaking: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.lp-staking.claim.claimed'));
+                    toast.update(id, getSuccessToastOptions(t('options.earn.lp-staking.claim.claimed'), id));
                     refetchTokenQueries(walletAddress, networkId);
                     refetchLPStakingQueries(walletAddress, networkId);
                     setIsClaiming(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClaiming(false);
             }
         }
@@ -228,16 +212,7 @@ const LpStaking: React.FC = () => {
                                 )}`}
                             </SectionValueContent>
                         </SectionValue>
-                        <Line margin={'0 0 10px 0'} />
-                        <NetworkFees gasLimit={gasLimit} />
-                        <ButtonContainer>
-                            {getClaimButton()}
-                            <ValidationMessage
-                                showValidation={txErrorMessage !== null}
-                                message={txErrorMessage}
-                                onDismiss={() => setTxErrorMessage(null)}
-                            />
-                        </ButtonContainer>
+                        <ButtonContainer>{getClaimButton()}</ButtonContainer>
                     </SectionContentWrapper>
                 </SectionWrapper>
             </SectionContentWrapper>

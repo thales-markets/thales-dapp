@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDiv } from 'theme/common';
+import { FlexDivColumnCentered, FlexDiv } from 'styles/common';
 
 export const ResultRow = styled(FlexDivColumnCentered)<{
     backgroundColor?: string;

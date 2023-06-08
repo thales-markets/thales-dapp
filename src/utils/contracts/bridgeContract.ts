@@ -1,6 +1,6 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
-export const bridgeContract = {
+const bridgeContract = {
     addresses: {
         [Network.Mainnet]: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
         [Network.Ropsten]: 'TBD',

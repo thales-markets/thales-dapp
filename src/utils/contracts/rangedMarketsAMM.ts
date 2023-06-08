@@ -1,6 +1,6 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
-export const rangedMarketAMMContract = {
+const rangedMarketAMMContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',
@@ -20,48 +20,13 @@ export const rangedMarketAMMContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'buyer',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'sUSDPaid',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'susd',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'asset',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'buyer', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' },
+                { indexed: false, internalType: 'address', name: 'susd', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'asset', type: 'address' },
             ],
             name: 'BoughtFromAmm',
             type: 'event',
@@ -69,32 +34,25 @@ export const rangedMarketAMMContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'oldOwner',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'buyer', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' },
+                { indexed: false, internalType: 'bool', name: 'inTheMoney', type: 'bool' },
+            ],
+            name: 'BoughtOptionType',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'address', name: 'oldOwner', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'newOwner', type: 'address' },
             ],
             name: 'OwnerChanged',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }],
             name: 'OwnerNominated',
             type: 'event',
         },
@@ -107,24 +65,9 @@ export const rangedMarketAMMContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'leftMarket',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'rightMarket',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'leftMarket', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'rightMarket', type: 'address' },
             ],
             name: 'RangedMarketCreated',
             type: 'event',
@@ -132,30 +75,10 @@ export const rangedMarketAMMContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'refferer',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'trader',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'volume',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'refferer', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'trader', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'volume', type: 'uint256' },
             ],
             name: 'ReferrerPaid',
             type: 'event',
@@ -163,201 +86,55 @@ export const rangedMarketAMMContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'capPerMarket',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
+                { indexed: false, internalType: 'address', name: '_safeBox', type: 'address' },
             ],
-            name: 'SetCapPerMarket',
+            name: 'SafeBoxChanged',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_spread',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: 'minSupportedPrice', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'maxSupportedPrice', type: 'uint256' },
             ],
-            name: 'SetMaxSupportedPrice',
+            name: 'SetMinMaxSupportedPrice',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_spread',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: 'minSupportedPrice', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'maxSupportedPrice', type: 'uint256' },
             ],
-            name: 'SetMaxinalDifBetweenStrikes',
+            name: 'SetMinimalMaximalDifBetweenStrikes',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'uint256', name: 'rangedAmmFee', type: 'uint256' }],
+            name: 'SetRangedFee',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_spread',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetMinSupportedPrice',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_spread',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetMinimalDifBetweenStrikes',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'rangedAmmFee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetRangedAmmFee',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'sUSD',
-                    type: 'address',
-                },
-            ],
-            name: 'SetSUSD',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_safeBox',
-                    type: 'address',
-                },
-            ],
-            name: 'SetSafeBox',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_safeBoxImpact',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetSafeBoxImpact',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
-            ],
-            name: 'SetStakingThales',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'seller',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'sUSDPaid',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'susd',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'asset',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'seller', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' },
+                { indexed: false, internalType: 'address', name: 'susd', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'asset', type: 'address' },
             ],
             name: 'SoldToAMM',
             type: 'event',
         },
-        {
-            inputs: [],
-            name: 'acceptOwnership',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
+        { inputs: [], name: 'acceptOwnership', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
             ],
             name: 'availableToBuyFromAMM',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -366,34 +143,18 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
             ],
             name: 'availableToSellToAMM',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            outputs: [{ internalType: 'uint256', name: '_available', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
                 { internalType: 'uint256', name: 'expectedPayout', type: 'uint256' },
                 { internalType: 'uint256', name: 'additionalSlippage', type: 'uint256' },
@@ -405,16 +166,8 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
                 { internalType: 'uint256', name: 'expectedPayout', type: 'uint256' },
                 { internalType: 'uint256', name: 'additionalSlippage', type: 'uint256' },
@@ -428,16 +181,8 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
                 { internalType: 'uint256', name: 'expectedPayout', type: 'uint256' },
                 { internalType: 'uint256', name: 'additionalSlippage', type: 'uint256' },
@@ -450,65 +195,41 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'buyFromAmmQuote',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            outputs: [{ internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'buyFromAmmQuoteDetailed',
             outputs: [
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
+                { internalType: 'uint256', name: 'quoteWithFees', type: 'uint256' },
+                { internalType: 'uint256', name: 'leftQuote', type: 'uint256' },
+                { internalType: 'uint256', name: 'rightQuote', type: 'uint256' },
             ],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
                 { internalType: 'address', name: 'collateral', type: 'address' },
             ],
             name: 'buyFromAmmQuoteWithDifferentCollateral',
             outputs: [
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
+                { internalType: 'uint256', name: 'collateralQuote', type: 'uint256' },
+                { internalType: 'uint256', name: 'sUSDToPay', type: 'uint256' },
             ],
             stateMutability: 'view',
             type: 'function',
@@ -519,7 +240,7 @@ export const rangedMarketAMMContract = {
                 { internalType: 'address', name: 'rightMarket', type: 'address' },
             ],
             name: 'canCreateRangedMarket',
-            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            outputs: [{ internalType: 'bool', name: 'toReturn', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -542,11 +263,28 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
+                { internalType: 'address[]', name: 'leftMarkets', type: 'address[]' },
+                { internalType: 'address[]', name: 'rightMarkets', type: 'address[]' },
+            ],
+            name: 'createRangedMarkets',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
                 { internalType: 'address', name: '', type: 'address' },
                 { internalType: 'address', name: '', type: 'address' },
             ],
             name: 'createdRangedMarkets',
             outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'curveOnrampEnabled',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -565,27 +303,23 @@ export const rangedMarketAMMContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'initNonReentrant',
-            outputs: [],
-            stateMutability: 'nonpayable',
+            inputs: [
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
+            ],
+            name: 'getPriceImpact',
+            outputs: [{ internalType: 'int256', name: '_impact', type: 'int256' }],
+            stateMutability: 'view',
             type: 'function',
         },
+        { inputs: [], name: 'initNonReentrant', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
             inputs: [
                 { internalType: 'address', name: '_owner', type: 'address' },
-                {
-                    internalType: 'contract IThalesAMM',
-                    name: '_thalesAmm',
-                    type: 'address',
-                },
+                { internalType: 'contract IThalesAMM', name: '_thalesAmm', type: 'address' },
                 { internalType: 'uint256', name: '_rangedAmmFee', type: 'uint256' },
                 { internalType: 'uint256', name: '_capPerMarket', type: 'uint256' },
-                {
-                    internalType: 'contract IERC20Upgradeable',
-                    name: '_sUSD',
-                    type: 'address',
-                },
+                { internalType: 'contract IERC20Upgradeable', name: '_sUSD', type: 'address' },
                 { internalType: 'address', name: '_safeBox', type: 'address' },
                 { internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
             ],
@@ -603,6 +337,13 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [],
+            name: 'maxAllowedPegSlippagePercentage',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
             name: 'maxSupportedPrice',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
@@ -611,19 +352,6 @@ export const rangedMarketAMMContract = {
         {
             inputs: [],
             name: 'maximalDifBetweenStrikes',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-            ],
-            name: 'minInPrice',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
@@ -706,6 +434,13 @@ export const rangedMarketAMMContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'address[]', name: 'markets', type: 'address[]' }],
+            name: 'resolveRangedMarketsBatch',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [
                 { internalType: 'address payable', name: 'account', type: 'address' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
@@ -738,16 +473,8 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
                 { internalType: 'uint256', name: 'expectedPayout', type: 'uint256' },
                 { internalType: 'uint256', name: 'additionalSlippage', type: 'uint256' },
@@ -759,62 +486,34 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'sellToAmmQuote',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            outputs: [{ internalType: 'uint256', name: 'pricePaid', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'contract RangedMarket',
-                    name: 'rangedMarket',
-                    type: 'address',
-                },
-                {
-                    internalType: 'enum RangedMarket.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
+                { internalType: 'contract RangedMarket', name: 'rangedMarket', type: 'address' },
+                { internalType: 'enum RangedMarket.Position', name: 'position', type: 'uint8' },
                 { internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'sellToAmmQuoteDetailed',
             outputs: [
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
+                { internalType: 'uint256', name: 'quoteWithFees', type: 'uint256' },
+                { internalType: 'uint256', name: 'leftQuote', type: 'uint256' },
+                { internalType: 'uint256', name: 'rightQuote', type: 'uint256' },
             ],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                { internalType: 'uint256', name: '_capPerMarket', type: 'uint256' },
-                { internalType: 'uint256', name: '_rangedAMMFee', type: 'uint256' },
-            ],
-            name: 'setCapPerMarketAndRangedAMMFee',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                { internalType: 'address', name: '_curveSUSD', type: 'address' },
-                { internalType: 'address', name: '_dai', type: 'address' },
-                { internalType: 'address', name: '_usdc', type: 'address' },
-                { internalType: 'address', name: '_usdt', type: 'address' },
+                { internalType: 'bool', name: '_curveOnrampEnabled', type: 'bool' },
+                { internalType: 'uint256', name: '_maxAllowedPegSlippagePercentage', type: 'uint256' },
             ],
             name: 'setCurveSUSD',
             outputs: [],
@@ -825,16 +524,8 @@ export const rangedMarketAMMContract = {
             inputs: [
                 { internalType: 'uint256', name: '_minSupportedPrice', type: 'uint256' },
                 { internalType: 'uint256', name: '_maxSupportedPrice', type: 'uint256' },
-                {
-                    internalType: 'uint256',
-                    name: '_minDiffBetweenStrikes',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_maxDiffBetweenStrikes',
-                    type: 'uint256',
-                },
+                { internalType: 'uint256', name: '_minDiffBetweenStrikes', type: 'uint256' },
+                { internalType: 'uint256', name: '_maxDiffBetweenStrikes', type: 'uint256' },
             ],
             name: 'setMinMaxSupportedPrice',
             outputs: [],
@@ -857,16 +548,8 @@ export const rangedMarketAMMContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_rangedMarketMastercopy',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_rangedPositionMastercopy',
-                    type: 'address',
-                },
+                { internalType: 'address', name: '_rangedMarketMastercopy', type: 'address' },
+                { internalType: 'address', name: '_rangedPositionMastercopy', type: 'address' },
             ],
             name: 'setRangedMarketMastercopies',
             outputs: [],
@@ -877,8 +560,9 @@ export const rangedMarketAMMContract = {
             inputs: [
                 { internalType: 'address', name: '_safeBox', type: 'address' },
                 { internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
+                { internalType: 'uint256', name: '_rangedAMMFee', type: 'uint256' },
             ],
-            name: 'setSafeBoxData',
+            name: 'setSafeBoxDataAndRangedAMMFee',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -886,11 +570,7 @@ export const rangedMarketAMMContract = {
         {
             inputs: [
                 { internalType: 'address', name: '_thalesAMM', type: 'address' },
-                {
-                    internalType: 'contract IStakingThales',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
+                { internalType: 'contract IStakingThales', name: '_stakingThales', type: 'address' },
                 { internalType: 'address', name: '_referrals', type: 'address' },
                 { internalType: 'uint256', name: '_referrerFee', type: 'uint256' },
             ],

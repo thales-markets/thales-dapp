@@ -1,17 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
-import {
-    OptionsTransactions,
-    OptionsTransaction,
-    Trades,
-    Trade,
-    RangedMarketPositionType,
-    MarketType,
-} from 'types/options';
+import { OptionsTransactions, OptionsTransaction, Trades, Trade, RangedMarketPositionType } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionSide, OrderSide } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
@@ -54,7 +46,7 @@ const useBinaryOptionsUserTradesQuery = (
     secondPositionAddress: string,
     networkId: number,
     walletAddress: string,
-    marketType: MarketType,
+    isRangedMarket: boolean,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
     const collateral = snxJSConnector.collateral;
@@ -88,28 +80,28 @@ const useBinaryOptionsUserTradesQuery = (
             const trades = [
                 ...mapToOptionTransactions(
                     filterTrades(firstPositionBuys, walletAddress),
-                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
+                    isRangedMarket ? 'in' : 'long',
                     'buy',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
                     filterTrades(firstPositionSells, walletAddress),
-                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
+                    isRangedMarket ? 'in' : 'long',
                     'sell',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
                     filterTrades(secondPositionBuys, walletAddress),
-                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
+                    isRangedMarket ? 'out' : 'short',
                     'buy',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
                     filterTrades(secondPositionSells, walletAddress),
-                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
+                    isRangedMarket ? 'out' : 'short',
                     'sell',
                     marketAddress,
                     walletAddress

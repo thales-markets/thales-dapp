@@ -1,9 +1,9 @@
+import { SpaceKey } from 'enums/governance';
+import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
-import { SpaceKey } from './governance';
-import { Positions } from './options';
 
-export const QUERY_KEYS = {
+const QUERY_KEYS = {
     WalletBalances: {
         Balance: (walletAddress: string, networkId: NetworkId) => ['balance', walletAddress, networkId],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
@@ -122,6 +122,12 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        UserNotifications: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'userNotifications',
+            walletAddress,
+            networkId,
+        ],
         RangedPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'rangedPositions',
@@ -236,7 +242,7 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         CouncilMembers: () => ['governance', 'councilMembers'],
-        ThalesStakers: () => ['governance', 'thalesStakers'],
+        ThalesStakers: (filter: string) => ['governance', 'thalesStakers', filter],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',
             'votingPower',

@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import { getStatusColor } from 'utils/governance';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
@@ -67,7 +67,7 @@ export const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
     padding: 1px;
     border-radius: 8px;
     width: 200px;
-    background: ${(props) => getStatusColor(props.status)};
+    background: ${(props) => getStatusColor(props.status, props.theme)};
 `;
 
 export const Status = styled(FlexDivColumnCentered)<{ status: string }>`
@@ -77,7 +77,7 @@ export const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     line-height: 24px;
     text-align: center;
     letter-spacing: 2px;
-    color: ${(props) => getStatusColor(props.status)};
+    color: ${(props) => getStatusColor(props.status, props.theme)};
     background: ${(props) => props.theme.background.primary};
     border-radius: 8px;
     text-transform: uppercase;

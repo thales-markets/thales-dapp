@@ -1,5 +1,5 @@
-import { SpaceKey } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
+import { SpaceKey } from 'enums/governance';
 import { QueryClient } from 'react-query';
 import { NetworkId } from 'utils/network';
 
@@ -44,14 +44,6 @@ export const refetchRangeMarketQueries = (
             QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId)
         );
     }
-};
-
-export const refetchTrades = (marketAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Trades(marketAddress));
-};
-
-export const refetchUserTrades = (marketAddress: string, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
 };
 
 export const refetchUserOpenPositions = (walletAddress: string, networkId: NetworkId) => {

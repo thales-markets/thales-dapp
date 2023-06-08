@@ -12,41 +12,41 @@ import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { UI_COLORS } from 'constants/ui';
-import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
-import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'styles/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
-const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
+type MarketActivityProps = {
+    isRangedMarket: boolean;
+};
+
+const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && !!optionsMarket?.address,
+    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(market.address, networkId, {
+        enabled: isAppReady,
     });
 
     const marketTransactions = uniqBy(marketTransactionsQuery.data || [], (transaction) => transaction.hash);
 
     const tradesQuery = useBinaryOptionsTradesQuery(
-        optionsMarket?.address,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo)?.longAddress
-            : (optionsMarket as RangedMarketData)?.inAddress,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo)?.shortAddress
-            : (optionsMarket as RangedMarketData)?.outAddress,
+        market.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
-        marketType,
-        { enabled: isAppReady && !!optionsMarket?.address }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const transactions = useMemo(
@@ -62,23 +62,23 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     const getCellColor = (type: string) => {
         switch (type) {
             case 'buy':
-                return UI_COLORS.GREEN;
+                return theme.tradeTypeColor.buy;
             case 'long':
-                return UI_COLORS.GREEN;
+                return theme.positionColor.up;
             case 'up':
-                return UI_COLORS.GREEN;
+                return theme.positionColor.up;
             case 'sell':
-                return UI_COLORS.RED;
+                return theme.tradeTypeColor.sell;
             case 'short':
-                return UI_COLORS.RED;
+                return theme.positionColor.down;
             case 'down':
-                return UI_COLORS.RED;
+                return theme.positionColor.down;
             case 'in':
-                return UI_COLORS.IN_COLOR;
+                return theme.positionColor.in;
             case 'out':
-                return UI_COLORS.OUT_COLOR;
+                return theme.positionColor.out;
             default:
-                return 'var(--color-white)';
+                return theme.textColor.primary;
         }
     };
 
@@ -99,9 +99,11 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     );
 
     return (
-        <FlexDivColumn>
+        <Container>
             <Table
                 data={transactions}
+                isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
+                defaultPageSize={10}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
@@ -132,7 +134,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
                                     ? formatCurrencyWithKey(
-                                          (OPTIONS_CURRENCY_MAP as any)[cellProps.cell.row.original.side],
+                                          (OPTIONS_POSITIONS_MAP as any)[cellProps.cell.row.original.side],
                                           cellProps.cell.value
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
@@ -172,8 +174,12 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     },
                 ]}
             />
-        </FlexDivColumn>
+        </Container>
     );
 };
+
+const Container = styled(FlexDivColumn)`
+    width: 100%;
+`;
 
 export default MarketActivity;

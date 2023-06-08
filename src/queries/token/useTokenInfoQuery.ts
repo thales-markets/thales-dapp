@@ -1,12 +1,13 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from 'constants/queryKeys';
-import { TokenInfo } from 'types/token';
-import { TOTAL_SUPPLY } from 'constants/token';
-import { getIsOVM, Network, NetworkId } from 'utils/network';
-import { ethers } from 'ethers';
-import thalesContract from 'utils/contracts/thalesContract';
-import { DEAD_ADDRESS, SAFE_BOX_ADDRESS } from 'constants/network';
 import { generalConfig } from 'config/general';
+import { DEAD_ADDRESS, SAFE_BOX_ADDRESS } from 'constants/network';
+import QUERY_KEYS from 'constants/queryKeys';
+import { TOTAL_SUPPLY } from 'constants/token';
+import { Network } from 'enums/network';
+import { ethers } from 'ethers';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { TokenInfo } from 'types/token';
+import thalesContract from 'utils/contracts/thalesContract';
+import { getIsOVM, NetworkId } from 'utils/network';
 
 const priceL2ThalesURL =
     'https://api.1inch.exchange/v3.0/10/quote?fromTokenAddress=0x217D47011b23BB961eB6D93cA9945B7501a5BB11&toTokenAddress=0x7f5c764cbc14f9669b88837ca1490cca17c31607&amount=100000000000000000000';

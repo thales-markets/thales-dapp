@@ -1,27 +1,27 @@
 import Switch from 'components/SwitchInput/SwitchInput';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../styled-components';
-import YourTransactions from './Transactions';
-import Stake from './Stake';
-import Unstake from './Unstake';
-import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
-import { getIsOVM } from 'utils/network';
-import useStakingDataQuery from 'queries/token/useStakingDataQuery';
-import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { StakingData, UserStakingData } from 'types/token';
-import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { getIsMobile } from 'redux/modules/ui';
+import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
+import { getIsOVM } from 'utils/network';
+import { Line } from '../../styled-components';
+import Stake from './Stake';
+import YourTransactions from './Transactions';
+import Unstake from './Unstake';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -324,7 +324,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${STYLE_GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
@@ -334,7 +334,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
         ${(props) =>
             props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
-        grid-gap: ${GRID_GAP_MOBILE + 4}px;
+        grid-gap: ${STYLE_GRID_GAP_MOBILE + 4}px;
     }
 `;
 

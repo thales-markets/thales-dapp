@@ -5,13 +5,12 @@ import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/TableV2';
 import { buildOptionsMarketLink } from 'utils/routes';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import './style.css';
 import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import styled, { useTheme } from 'styled-components';
-import { VaultTradeStatus } from 'constants/vault';
+import { VaultTradeStatus } from 'enums/vault';
 import { ThemeInterface } from 'types/ui';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
@@ -23,7 +22,7 @@ type TradesTableProps = {
     isLoading: boolean;
 };
 
-export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
+const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -45,7 +44,6 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                     accessor: 'currencyKey',
                     Cell: (cellProps: CellProps<VaultTrade, VaultTrade['currencyKey']>) => (
                         <SPAAnchor
-                            className="hover-underline"
                             onClick={(e) => e.stopPropagation()}
                             href={buildOptionsMarketLink(cellProps.row.original.market)}
                         >
@@ -54,7 +52,7 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                                 height={`${isMobile ? '18px' : '22px'}`}
                                 currencyKey={cellProps.cell.value}
                             />
-                            {cellProps.cell.value}
+                            <CurrencyName>{cellProps.cell.value}</CurrencyName>
                         </SPAAnchor>
                     ),
                     sortable: true,
@@ -157,6 +155,12 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
 
 const Status = styled.span<{ color: string }>`
     color: ${(props) => props.color};
+`;
+
+const CurrencyName = styled.span`
+    &:hover {
+        text-decoration: underline;
+    }
 `;
 
 const Icon = styled.i<{ color: string; marginLeft?: string; marginRight?: string }>`

@@ -1,9 +1,9 @@
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import React from 'react';
 import styled from 'styled-components';
 import { FieldContainer, FieldLabel, Input } from '../common';
 import MuiTooltip from '@material-ui/core/Tooltip';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 
 type TextInputProps = {
     value: string;
@@ -52,6 +52,7 @@ const TextInput: React.FC<TextInputProps> = ({
                 )}
                 <StyledInput
                     {...rest}
+                    readOnly={!onChange}
                     value={value}
                     type="text"
                     onChange={onChange}
@@ -81,8 +82,11 @@ const TextInput: React.FC<TextInputProps> = ({
     );
 };
 
-const StyledInput = styled(Input)<{ padding?: string }>`
+const StyledInput = styled(Input)<{ padding?: string; readOnly: boolean }>`
     padding: ${(props) => props.padding || '5px 10px 5px 10px'};
+    &:focus {
+        ${(props) => (props.readOnly ? `border: 1px solid ${props.theme.input.borderColor.primary};` : '')}
+    }
 `;
 
 const RightContainer = styled(FlexDivCentered)`
@@ -105,13 +109,14 @@ const Icon = styled.i`
 const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
         margin: -10px 0 0 0;
-        padding: 2px 8px;
+        padding: 2px 4px;
         font-weight: 600;
         font-size: 13px;
         line-height: 15px;
         color: ${(props) => props.theme.input.textColor.quaternary};
         background-color: ${(props) => props.theme.background.primary};
         text-align: center;
+        max-width: 320px;
     }
 `;
 

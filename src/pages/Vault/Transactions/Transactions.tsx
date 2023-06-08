@@ -1,20 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { orderBy } from 'lodash';
-import { getIsAppReady } from 'redux/modules/app';
-import TradesTable from '../TradesTable';
-import useVaultTradesQuery from 'queries/vault/useVaultTradesQuery';
-import { VaultTrades, VaultTrade, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
 import SelectInput from 'components/SelectInput';
-import { VaultTransaction } from 'constants/vault';
-import UserTransactionsTable from '../UserTransactionsTable';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { VaultTransaction } from 'enums/vault';
+import { orderBy } from 'lodash';
+import useVaultTradesQuery from 'queries/vault/useVaultTradesQuery';
 import useVaultUserTransactionsQuery from 'queries/vault/useVaultUserTransactionsQuery';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
+import { VaultTrade, VaultTrades, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
+import TradesTable from '../TradesTable';
+import UserTransactionsTable from '../UserTransactionsTable';
 
 type TransactionsProps = {
     vaultAddress: string;
@@ -178,7 +178,7 @@ const TableContainer = styled(FlexDivColumn)`
     overflow: auto;
 `;
 
-export const SelectContainer = styled.div`
+const SelectContainer = styled.div`
     width: 230px;
 `;
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { formatPercentage, formatNumberShort } from 'utils/formatters/number';
 import { Percentage, SidebarRowData, Votes, LoaderContainer, ViewMore } from 'pages/Governance/styled-components';
 import { truncateText } from 'utils/formatters/string';
@@ -13,7 +13,7 @@ import {
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import { ThemeInterface } from 'types/ui';
 import {
     ResultRow,

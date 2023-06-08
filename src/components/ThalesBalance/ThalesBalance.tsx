@@ -1,18 +1,17 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getWalletAddress, getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM } from 'utils/network';
 import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
-import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 type ThalesBalanceProps = {
     showTitle?: boolean;

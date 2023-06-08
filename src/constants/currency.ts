@@ -69,16 +69,9 @@ import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 
-export type CurrencyKey = string;
-export type CurrencyKeys = string[];
+export type CurrencyKeyOptionType = { value: string; label: string };
 
-// TODO: standardize this
-export type Category = 'crypto' | 'forex' | 'equities' | 'index' | 'commodity' | 'inverse';
-
-export const CATEGORY: Category[] = ['crypto', 'forex', 'equities', 'index', 'commodity', 'inverse'];
-export const CATEGORY_MAP = keyBy(CATEGORY);
-
-export const SYNTHS = [
+const SYNTHS = [
     'sBTC',
     'sBCH',
     'sETH',
@@ -128,7 +121,7 @@ export const SYNTHS = [
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
-export const CRYPTO_CURRENCY = [
+const CRYPTO_CURRENCY = [
     'ARB',
     'KNC',
     'COMP',
@@ -182,32 +175,17 @@ export const CRYPTO_CURRENCY = [
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
-export const COMMODITY = ['XAU', 'XAG'];
+const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
 
-export const FIAT_CURRENCY = ['USD'];
-export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
-export const FIAT_CURRENCY_SIGN = {
+const FIAT_CURRENCY = ['USD'];
+const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
+const FIAT_CURRENCY_SIGN = {
     [FIAT_CURRENCY_MAP.USD]: '$',
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
-export const OPTIONS_CURRENCY_MAP = {
-    long: 'UP',
-    short: 'DOWN',
-    in: 'IN',
-    out: 'OUT',
-};
-
-export const CURRENCY_TO_OPTION = new Map([
-    [SYNTHS_MAP.sLONG, 'UP'],
-    [SYNTHS_MAP.sSHORT, 'DOWN'],
-]);
-
-export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
 export const THALES_CURRENCY = 'THALES';
-export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';
 
 export const currencyKeyToAssetIconMap = {
@@ -437,193 +415,3 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
 };
-
-export const currencyKeyToDataFeedSourceMap = {
-    [CRYPTO_CURRENCY_MAP.KNC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.COMP]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.REN]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.LEND]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.SNX]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.BTC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ETH]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.XRP]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.BCH]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.LTC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.EOS]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.BNB]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.XTZ]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.XMR]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ADA]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.LINK]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.TRX]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.DASH]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ETC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.BAT]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.DAI]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.REP]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.USDC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.USDT]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.VELO]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ZRX]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.THALES]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.SOL]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.CRV]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.UNI]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.AAVE]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.LYRA]: {
-        source: 'TWAP',
-        link: 'https://optimistic.etherscan.io/address/0xF334F6104A179207DdaCfb41FA3567FEea8595C2',
-    },
-    [CRYPTO_CURRENCY_MAP.LUNA]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.MATIC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.APE]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.CVX]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.OHM]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.PERP]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.OP]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.LOOKS]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.DYDX]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ETC]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.CAKE]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [CRYPTO_CURRENCY_MAP.ARB]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [COMMODITY_MAP.XAU]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-    [COMMODITY_MAP.XAG]: {
-        source: 'CHAINLINK',
-        link: '',
-    },
-};
-
-export const sUSD_EXCHANGE_RATE = 1;
-export const SYNTH_DECIMALS = 18;

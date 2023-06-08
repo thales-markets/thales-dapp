@@ -1,21 +1,16 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { getAddress } from 'utils/formatters/ethers';
-import { defaultNetwork, NetworkId, formatGasLimit } from 'utils/network';
+import { defaultNetwork, NetworkId } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
-import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';
-import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
-import { COLLATERALS_INDEX } from 'constants/options';
+import { COLLATERALS_INDEX } from 'enums/options';
 
 const sliceName = 'wallet';
 
-export type WalletSliceState = {
+type WalletSliceState = {
     walletAddress: string | null;
     networkId: NetworkId;
     networkName: string;
     switchToNetworkId: NetworkId; // used to trigger manually network switch in App.js
-    gasSpeed: GasSpeed;
-    customGasPrice: number | null;
-    gasLimit: number;
     selectedCollateral: COLLATERALS_INDEX;
 };
 
@@ -24,19 +19,13 @@ const initialState: WalletSliceState = {
     networkId: defaultNetwork.networkId,
     networkName: defaultNetwork.name,
     switchToNetworkId: defaultNetwork.networkId,
-    gasSpeed: DEFAULT_GAS_SPEED,
-    customGasPrice: null,
-    gasLimit: DEFAULT_GAS_LIMIT,
     selectedCollateral: COLLATERALS_INDEX.sUSD,
 };
 
-export const walletDetailsSlice = createSlice({
+const walletDetailsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        resetWallet: () => {
-            return initialState;
-        },
         updateWallet: (state, action: PayloadAction<Partial<WalletSliceState>>) => {
             const { payload } = action;
             const newState = {
@@ -67,24 +56,15 @@ export const walletDetailsSlice = createSlice({
         ) => {
             state.switchToNetworkId = action.payload.networkId;
         },
-        setGasSpeed: (state, action: PayloadAction<GasSpeed>) => {
-            state.gasSpeed = action.payload;
-        },
-        setCustomGasPrice: (state, action: PayloadAction<number | null>) => {
-            state.customGasPrice = action.payload;
-        },
-        setGasLimit: (state, action: PayloadAction<number>) => {
-            state.gasLimit = formatGasLimit(action.payload, state.networkId);
-        },
         setSelectedCollateral: (state, action: PayloadAction<number>) => {
             state.selectedCollateral = action.payload;
         },
     },
 });
 
-export const getWalletState = (state: RootState) => state[sliceName];
+const getWalletState = (state: RootState) => state[sliceName];
 export const getNetworkId = (state: RootState) => getWalletState(state).networkId;
-export const getNetworkName = (state: RootState) => getWalletState(state).networkName;
+const getNetworkName = (state: RootState) => getWalletState(state).networkName;
 export const getNetwork = (state: RootState) => ({
     networkId: getNetworkId(state),
     networkName: getNetworkName(state),
@@ -92,22 +72,13 @@ export const getNetwork = (state: RootState) => ({
 export const getSwitchToNetworkId = (state: RootState) => getWalletState(state).switchToNetworkId;
 export const getWalletAddress = (state: RootState) => getWalletState(state).walletAddress;
 export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);
-export const getWalletInfo = (state: RootState) => getWalletState(state);
-
-export const getGasSpeed = (state: RootState) => getWalletState(state).gasSpeed;
-export const getGasLimit = (state: RootState) => getWalletState(state).gasLimit;
-export const getCustomGasPrice = (state: RootState) => getWalletState(state).customGasPrice;
 
 export const getSelectedCollateral = (state: RootState) => getWalletState(state).selectedCollateral;
 
 export const {
     updateNetworkSettings,
     switchToNetworkId,
-    resetWallet,
     updateWallet,
-    setGasSpeed,
-    setCustomGasPrice,
-    setGasLimit,
     setSelectedCollateral,
 } = walletDetailsSlice.actions;
 

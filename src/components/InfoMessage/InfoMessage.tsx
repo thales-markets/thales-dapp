@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as InfoIcon } from 'assets/images/info-circle-blue.svg';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 
 type InfoMessageProps = {
     message: string | null;
@@ -10,7 +10,7 @@ type InfoMessageProps = {
     lineHeight?: string;
 };
 
-export const InfoMessage: React.FC<InfoMessageProps> = ({ message, hideIcon, fontSize, lineHeight }) => {
+const InfoMessage: React.FC<InfoMessageProps> = ({ message, hideIcon, fontSize, lineHeight }) => {
     return (
         <Container>
             <Message fontSize={fontSize} lineHeight={lineHeight}>
@@ -36,7 +36,7 @@ const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     color: ${(props) => props.theme.info.textColor.primary}; ;
 `;
 
-export const StyledInfoIIcon = styled(InfoIcon)`
+const StyledInfoIIcon = styled(InfoIcon)`
     margin-right: 6px;
     min-width: 14px;
     min-height: 14px;

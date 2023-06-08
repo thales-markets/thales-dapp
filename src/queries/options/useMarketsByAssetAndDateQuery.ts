@@ -2,13 +2,14 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { Positions } from 'constants/options';
 import { uniq } from 'lodash';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { truncDecimals } from 'utils/formatters/number';
+import { Positions } from 'enums/options';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
@@ -34,25 +35,40 @@ const useMarketsByAssetAndDateQuery = (
                 );
 
                 const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
-                return finalResult
-                    .map((market: any) => {
-                        const discount = Number(ethers.utils.formatEther(market.priceImpact));
+                let filterFlag = false;
+                const data = finalResult.map((market: any) => {
+                    const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
-                        const price = stableCoinFormatter(market.price, networkId);
-                        const newPrice = (1 - discount) * price;
+                    const price = stableCoinFormatter(market.price, networkId);
+                    const newPrice = (1 - discount) * price;
 
-                        const roi = calculatePotentialProfit(price);
-                        const newRoi = calculatePotentialProfit(newPrice);
+                    const roi = calculatePotentialProfit(price);
+                    const newRoi = calculatePotentialProfit(newPrice);
 
-                        return {
-                            currencyKey: asset,
-                            address: market.market,
-                            liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: Number(truncDecimals(price, 2)),
-                            roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
-                            strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
-                            discount: Math.floor(roi - newRoi),
-                        };
+                    return {
+                        currencyKey: asset,
+                        address: market.market,
+                        liquidity: Number(ethers.utils.formatEther(market.liquidity)),
+                        price: Number(truncDecimals(price, 2)),
+                        roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
+                        strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
+                        discount: Math.floor(roi - newRoi),
+                        url: buildOptionsMarketLink(market.market),
+                    };
+                });
+
+                const dataToFilter = data.sort((a: MarketInfo, b: MarketInfo) => {
+                    return position === Positions.UP ? a.strikePrice - b.strikePrice : b.strikePrice - a.strikePrice;
+                });
+
+                return dataToFilter
+                    .filter((market: MarketInfo) => {
+                        if (filterFlag) {
+                            return;
+                        } else {
+                            if (market.price < 0.1) filterFlag = true;
+                            return market;
+                        }
                     })
                     .sort((a: MarketInfo, b: MarketInfo) => {
                         return b.strikePrice - a.strikePrice;
@@ -102,6 +118,7 @@ const useMarketsByAssetAndDateQuery = (
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
                             discount: Math.floor(roi - newRoi),
+                            url: buildRangeMarketLink(market.market),
                         };
                     })
                     .sort((a: RangedMarketPerPosition, b: RangedMarketPerPosition) => {

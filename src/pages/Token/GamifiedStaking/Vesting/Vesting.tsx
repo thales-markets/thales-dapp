@@ -1,32 +1,34 @@
+import Button from 'components/Button/Button';
 import TileTable from 'components/TileTable';
 import { TileRow } from 'components/TileTable/TileTable';
-import ValidationMessage from 'components/ValidationMessage';
 import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/styled-components';
-import YourTransactions from './Transactions';
+import { ButtonContainer } from 'pages/Token/styled-components';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { UserVestingData } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
-import snxJSConnector from 'utils/snxJSConnector';
-import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
-import Button from 'components/ButtonV2/Button';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { ScreenSizeBreakpoint } from 'constants/ui';
-import { getIsMobile } from 'redux/modules/ui';
+import snxJSConnector from 'utils/snxJSConnector';
+import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -38,10 +40,6 @@ const Vesting: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
     const { escrowThalesContract } = snxJSConnector as any;
     const [lastValidUserVestingData, setLastValidUserVestingData] = useState<UserVestingData | undefined>(undefined);
 
@@ -84,39 +82,9 @@ const Vesting: React.FC = () => {
         return rows;
     };
 
-    useEffect(() => {
-        const fetchL1Fee = async (escrowThalesContractWithSigner: any, toVest: any) => {
-            const txRequest = await escrowThalesContractWithSigner.populateTransaction.vest(toVest);
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        escrowThalesContractWithSigner.estimateGas.vest(rawClaimable),
-                        fetchL1Fee(escrowThalesContractWithSigner, rawClaimable),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(rawClaimable);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || !+claimable || !escrowThalesContract) return;
-        fetchGasLimit();
-    }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
-
     const handleVest = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
 
@@ -126,13 +94,16 @@ const Vesting: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.gamified-staking.vesting.vest.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.earn.gamified-staking.vesting.vest.confirmation-message'), id)
+                );
                 refetchTokenQueries(walletAddress, networkId);
                 setIsClaiming(false);
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsClaiming(false);
         }
     };
@@ -164,16 +135,7 @@ const Vesting: React.FC = () => {
                             {formatCurrencyWithKey(THALES_CURRENCY, claimable, 0, true)}
                         </SectionValueContent>
                     </SectionValue>
-                    <NetworkFeesWrapper>
-                        <Line margin={isMobile ? '0 0 10px 0' : '10px 0'} />
-                        <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
-                    </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </SectionContentWrapper>
             </SectionWrapper>
 
@@ -299,13 +261,6 @@ const SectionValueContent = styled(SectionContent)`
     color: ${(props) => props.theme.textColor.quaternary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 20px;
-    }
-`;
-
-const NetworkFeesWrapper = styled.div`
-    margin: 0 80px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: auto;
     }
 `;
 

@@ -1,25 +1,4 @@
-export enum SpaceKey {
-    TIPS = 'thalesgov.eth',
-    COUNCIL = 'thalescouncil.eth',
-    THALES_STAKERS = 'thales-stakers',
-}
-
-export enum StatusEnum {
-    All = 'all',
-    Pending = 'pending',
-    Active = 'active',
-    Closed = 'closed',
-}
-
-export enum ProposalTypeEnum {
-    Single = 'single-choice',
-    Weighted = 'weighted',
-}
-
 export const SNAPSHOT_GRAPHQL_URL = 'https://hub.snapshot.org/graphql';
-export const SNAPSHOT_MESSAGE_API_URL = 'https://hub.snapshot.org/api/message';
-export const MESSAGE_VOTE_TYPE = 'vote';
-export const MESSAGE_VERSION = '0.1.3';
 
 export const VOTING_COUNCIL_PROPOSAL_ID = '0xfb0b6c5f7eaf8f40032be7f8b38965294a4b809cedcf48b0533e68682ea4043a';
 export const COUNCIL_PROPOSAL_ID = '0xfb0b6c5f7eaf8f40032be7f8b38965294a4b809cedcf48b0533e68682ea4043a';

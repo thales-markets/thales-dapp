@@ -1,11 +1,11 @@
-import Tooltip from 'components/TooltipV2';
+import Tooltip from 'components/Tooltip';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FieldContainer, FieldLabel, Input } from '../common';
 import MuiTooltip from '@material-ui/core/Tooltip';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import { ReactComponent as BalanceIcon } from 'assets/images/token/balance-icon.svg';
 import InlineLoader from 'components/InlineLoader';
 
@@ -148,14 +148,14 @@ const StyledInput = styled(Input)<{ padding?: string }>`
 const RightContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
-    bottom: 8px;
+    bottom: 6px;
 `;
 
 const CurrencyLabel = styled.label<{ hasSeparator?: boolean }>`
-    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
+    border-left: ${(props) => (props.hasSeparator ? `2px solid ${props.theme.input.borderColor.primary}` : 'none')};
     font-weight: bold;
     font-size: 13px;
-    line-height: 15px;
+    line-height: 20px;
     color: ${(props) => props.theme.input.textColor.primary};
     padding-left: 8px;
     padding-right: 12px;
@@ -171,7 +171,7 @@ const MaxButton = styled.button`
     border: none;
     font-weight: 700;
     font-size: 13px;
-    line-height: 15px;
+    line-height: 20px;
     color: ${(props) => props.theme.button.textColor.quaternary};
     text-transform: uppercase;
     cursor: pointer;
@@ -185,13 +185,14 @@ const MaxButton = styled.button`
 const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
         margin: -10px 0 0 0;
-        padding: 2px 8px;
+        padding: 2px 4px;
         font-weight: 600;
         font-size: 13px;
         line-height: 15px;
         color: ${(props) => props.theme.input.textColor.quaternary};
         background-color: ${(props) => props.theme.background.primary};
         text-align: center;
+        max-width: 320px;
     }
 `;
 

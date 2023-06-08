@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import InfoBanner from 'components/InfoBanner';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
@@ -70,7 +70,7 @@ const Info = styled.div`
     text-align: center;
     padding: 10px;
     font-size: 16px;
-    background-color: #1b314f;
+    background-color: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
     z-index: 2;
     position: absolute;

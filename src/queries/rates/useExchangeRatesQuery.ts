@@ -1,9 +1,8 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { CurrencyKey } from 'constants/currency';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-export type Rates = Record<CurrencyKey, number>;
+export type Rates = Record<string, number>;
 
 const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
     return useQuery<Rates>(
@@ -16,7 +15,7 @@ const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
                     snxJSConnector.priceFeedContract.getCurrencies(),
                     snxJSConnector.priceFeedContract.getRates(),
                 ]);
-                currencies.forEach((currency: CurrencyKey, idx: number) => {
+                currencies.forEach((currency: string, idx: number) => {
                     const currencyName = parseBytes32String(currency);
                     exchangeRates[currencyName] = bigNumberFormatter(rates[idx]);
                     exchangeRates[`s${currencyName}`] = bigNumberFormatter(rates[idx]);

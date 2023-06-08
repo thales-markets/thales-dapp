@@ -1,5 +1,5 @@
-import { Positions } from 'constants/options';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
@@ -82,7 +82,7 @@ export const CardRow = styled.div`
     }
 `;
 
-export const CardText = styled.span`
+const CardText = styled.span`
     display: block;
     color: ${(props) => props.theme.textColor.primary};
     line-height: 100%;

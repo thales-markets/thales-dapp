@@ -1,9 +1,10 @@
-import { formatCurrency } from 'utils/formatters/number';
-import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
-import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
+import { POSITIONS_TO_SIDE_MAP, RANGE_SIDE } from 'constants/options';
+import { Positions } from 'enums/options';
 import { TFunction } from 'i18next';
 import { ThemeInterface } from 'types/ui';
-import { POSITIONS_TO_SIDE_MAP, Positions, RANGE_SIDE } from 'constants/options';
+import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
+import { formatCurrency } from 'utils/formatters/number';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 const getOptionSideLabel = (optionSide: string) => {
     switch (optionSide.toLowerCase()) {

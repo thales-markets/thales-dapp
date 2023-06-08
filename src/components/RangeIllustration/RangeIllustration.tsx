@@ -166,11 +166,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
         }
     }, [priceData.left, priceData.right, priceData.current, containerRef]);
 
-    return (
-        <>
-            <Container ref={containerRef} />
-        </>
-    );
+    return <Container ref={containerRef} />;
 };
 
 const Container = styled.canvas`

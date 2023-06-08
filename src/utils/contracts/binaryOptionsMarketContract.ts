@@ -1,4 +1,4 @@
-export const binaryOptionMarketContract = {
+const binaryOptionMarketContract = {
     abi: [
         {
             anonymous: false,

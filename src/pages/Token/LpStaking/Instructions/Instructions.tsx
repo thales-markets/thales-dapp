@@ -1,4 +1,4 @@
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/styled-components';
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';

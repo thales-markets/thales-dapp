@@ -1,0 +1,306 @@
+.icon {
+    display: inline-block;
+    font-family: Icons !important;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.icon-home {
+    display: inline-block;
+    font-family: Homepage Icons !important;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+/* homepage.ttf */
+
+.icon-home--toggle-dark:before {
+    content: '\0041';
+}
+
+.icon-home--toggle-white:before {
+    content: '\0042';
+}
+
+.icon-home--github:before {
+    content: '\0043';
+}
+
+.icon-home--discord:before {
+    content: '\0044';
+}
+
+.icon-home--twitter:before {
+    content: '\0045';
+}
+
+.icon-home--docs:before {
+    content: '\0046';
+}
+
+.icon-home--medium:before {
+    content: '\0047';
+}
+
+.icon-home--left:before {
+    content: '\0048';
+}
+
+.icon-home--thales:before {
+    content: '\0049';
+}
+
+.icon-home--right:before {
+    content: '\004a';
+}
+
+.icon-home--ch:before {
+    content: '\004b';
+}
+
+.icon-home--en:before {
+    content: '\004c';
+}
+
+.icon-home--ru:before {
+    content: '\004d';
+}
+
+.icon-home--optimism:before {
+    content: '\004e';
+}
+
+.icon-home--snx:before {
+    content: '\004f';
+}
+
+.icon-home--link:before {
+    content: '\0050';
+}
+
+.icon-home--royale:before {
+    content: '\0051';
+}
+
+.icon-home--game:before {
+    content: '\0052';
+}
+
+.icon-home--inch:before {
+    content: '\0053';
+}
+
+.icon-home--polygon:before {
+    content: '\0054';
+}
+
+.icon-home--telegram:before {
+    content: '\0055';
+}
+
+.logo--bankless:before {
+    content: '\0056';
+}
+
+.logo--benzinga:before {
+    content: '\0057';
+}
+
+.logo--bloomberg:before {
+    content: '\0058';
+}
+
+.logo--nasdaq:before {
+    content: '\0059';
+}
+
+.logo--yahoo:before {
+    content: '\005A';
+}
+
+/* icons.ttf */
+
+.icon--caret-down:before {
+    content: '\0021';
+}
+
+.icon--caret-up:before {
+    content: '\0022';
+}
+
+.icon--caret-up-down:before {
+    content: '\0023';
+}
+
+.icon--radio-button-selected:before {
+    content: '\0024';
+}
+
+.icon--radio-button:before {
+    content: '\0025';
+}
+
+.icon--unverified:before {
+    content: '\0030';
+}
+
+.icon--unsigned:before {
+    content: '\0031';
+}
+
+.icon--royale-logo:before {
+    content: '\0032';
+}
+
+.icon--gear:before {
+    content: '\0033';
+}
+
+.icon--triangle:before {
+    content: '\0034';
+}
+
+.icon--circle:before {
+    content: '\0035';
+}
+
+.icon--three-dots:before {
+    content: '\0036';
+}
+
+.icon--search:before {
+    content: '\0037';
+}
+
+.icon--stats:before {
+    content: '\0041';
+}
+
+.icon--thales-logo:before {
+    content: '\0044';
+}
+
+.icon--logo:before {
+    content: '\005A';
+}
+
+.icon--clock:before {
+    content: '\0062';
+}
+
+.icon--copy:before {
+    content: '\0064';
+}
+
+.icon--wallet:before {
+    content: '\0066';
+}
+
+.icon--discord:before {
+    content: '\0067';
+}
+
+.icon--arrow-up:before {
+    content: '\0068';
+}
+
+.icon--user-avatar:before {
+    content: '\0069';
+}
+
+.icon--double-arrow:before {
+    content: '\006A';
+}
+
+.icon--arrow-down:before {
+    content: '\006B';
+}
+
+.icon--cn:before {
+    content: '\006C';
+}
+
+.icon--en:before {
+    content: '\006D';
+}
+
+.icon--ru:before {
+    content: '\006E';
+}
+
+.icon--g-theme:before {
+    content: '\006F';
+}
+
+.icon--b-theme:before {
+    content: '\0070';
+}
+
+.icon--ex-mark:before {
+    content: '\0071';
+}
+
+.icon--warning:before {
+    content: '\0072';
+}
+
+.icon--left:before {
+    content: '\0074';
+}
+
+.icon--double-left:before {
+    content: '\0075';
+}
+
+.icon--x-sign:before {
+    content: '\0076';
+}
+
+.icon--dead:before {
+    content: '\0077';
+}
+
+.icon--dead-avatar:before {
+    content: '\0078';
+}
+
+.icon--double-right:before {
+    content: '\0079';
+}
+
+.icon--right:before {
+    content: '\007A';
+}
+
+.icon--error:before {
+    content: '\008B';
+}
+
+.icon--info:before {
+    content: '\008C';
+}
+
+.icon--success:before {
+    content: '\008D';
+}
+
+.icon--bell:before {
+    content: '\0038';
+}
+
+@keyframes shake {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+    75% {
+        transform: rotate(-10deg);
+    }
+}

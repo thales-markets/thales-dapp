@@ -1,44 +1,48 @@
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { THALES_CURRENCY } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import i18n from 'i18n';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
+import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
+import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
-import styled, { useTheme } from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
+import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { VestingInfo } from 'types/token';
-import snxJSConnector from 'utils/snxJSConnector';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
+import { ThemeInterface } from 'types/ui';
 import { formatShortDateWithTime } from 'utils/formatters/date';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
+import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import {
-    ButtonContainerBottom,
-    EarnSection,
-    SectionHeader,
-    ClaimMessage,
-    SectionContentContainer,
-} from '../components';
-import {
+    LearnMore,
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
-    LearnMore,
     Tip37Link,
 } from '../../styled-components';
-import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { THALES_CURRENCY } from 'constants/currency';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { dispatchMarketNotification } from 'utils/options';
-import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
-import i18n from 'i18n';
-import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import Button from 'components/ButtonV2';
-import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import {
+    ButtonContainerBottom,
+    ClaimMessage,
+    EarnSection,
+    SectionContentContainer,
+    SectionHeader,
+} from '../components';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -55,13 +59,9 @@ const RetroRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const { vestingEscrowContract } = snxJSConnector as any;
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
 
@@ -79,51 +79,21 @@ const RetroRewards: React.FC = () => {
         }
     }, [vestingQuery.isSuccess, vestingQuery.data]);
 
-    useEffect(() => {
-        const fetchL1Fee = async (vestingContractWithSigner: any) => {
-            const txRequest = await vestingContractWithSigner.populateTransaction.claim();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            const { vestingEscrowContract } = snxJSConnector as any;
-            try {
-                const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        vestingContractWithSigner.estimateGas.claim(),
-                        fetchL1Fee(vestingContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || !isClaimAvailable) return;
-        fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable]);
-
     const handleClaimRetroRewards = async () => {
         if (isClaimAvailable) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             const { vestingEscrowContract } = snxJSConnector as any;
 
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const tx = await vestingContractWithSigner.claim({
-                    gasLimit,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.snx-stakers.confirmation-message'));
+                    toast.update(id, getSuccessToastOptions(t('options.earn.snx-stakers.confirmation-message'), id));
                     refetchVestingEscrow(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({
@@ -134,7 +104,7 @@ const RetroRewards: React.FC = () => {
                     setIsClaiming(false);
                 }
             } catch (e) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClaiming(false);
             }
         }
@@ -282,7 +252,6 @@ const RetroRewards: React.FC = () => {
                             <Text>{formatCurrencyWithKey(THALES_CURRENCY, locked)}</Text>
                         </div>
                     </AmountsContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
                         <Button disabled={!isClaimAvailable || isClaiming} onClick={handleClaimRetroRewards}>
                             {isClaiming
@@ -295,11 +264,6 @@ const RetroRewards: React.FC = () => {
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>
                     </ButtonContainerBottom>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
                 </StyledSectionContentContainer>
             </GridContainer>
         </EarnSection>

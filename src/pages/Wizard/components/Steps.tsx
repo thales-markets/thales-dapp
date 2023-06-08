@@ -1,10 +1,4 @@
-import useInterval from 'hooks/useInterval';
-import React, { lazy, useEffect, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as Arrow } from 'assets/images/arrow-link.svg';
 import metamask from 'assets/images/metamask.svg';
 import { ReactComponent as InsertCard } from 'assets/images/wizard/insert-card.svg';
@@ -12,16 +6,23 @@ import banxa from 'assets/images/wizard/logo-banxa.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
-import { POLYGON_ID } from 'constants/network';
-import ROUTES from 'constants/routes';
-import SimpleLoader from 'components/SimpleLoader';
-import SPAAnchor from 'components/SPAAnchor';
-import { WizardSteps } from '../Wizard';
 import BungeePlugin from 'components/BungeePlugin';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
+import SPAAnchor from 'components/SPAAnchor';
+import SimpleLoader from 'components/SimpleLoader';
+import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { WizardSteps } from 'enums/wizard';
+import useInterval from 'hooks/useInterval';
+import React, { lazy, useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { Colors } from 'styles/common';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -31,7 +32,7 @@ enum NavItems {
 }
 
 enum Provider {
-    BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY&coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
+    BANXA = 'https://thalesmarket.banxa.com/?coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
     MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg',
     BUNGEE = '',
     LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
@@ -95,7 +96,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
-                    networkId === POLYGON_ID
+                    networkId === Network['POLYGON-MAINNET']
                         ? '&net=polygon_mainnet&bsc=EUR&bdc=MATIC&crys=MATIC'
                         : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
                 setIframe(Provider.MT_PELERIN.toString() + queryParams);
@@ -357,8 +358,12 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Modal>
             )}
             {iframe.length > 0 && (
-                <Modal title="" onClose={() => setIframe('')} shouldCloseOnOverlayClick={true}>
-                    <IFrameWrapper>
+                <Modal
+                    title={iframe === Provider.BANXA ? t('wizard-page.buy-with-banxa') : t('wizard-page.buy-with-mtp')}
+                    onClose={() => setIframe('')}
+                    shouldCloseOnOverlayClick={true}
+                >
+                    <IFrameWrapper background={iframe === Provider.BANXA ? '' : Colors.WHITE}>
                         {iframeLoader && <SimpleLoader />}
                         <IFrame src={iframe} onLoad={() => setIframeLoader(false)} />
                     </IFrameWrapper>
@@ -376,7 +381,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Modal>
             )}
             {showSwap && (
-                <Modal title="" onClose={() => setShowSwap(false)} shouldCloseOnOverlayClick={true}>
+                <Modal
+                    title={t('options.swap.title')}
+                    onClose={() => setShowSwap(false)}
+                    shouldCloseOnOverlayClick={true}
+                >
                     <Swap handleClose={setShowSwap} />
                 </Modal>
             )}
@@ -647,12 +656,12 @@ const Logo = styled.div<{ logoType: Provider }>`
     margin-left: 20px;
 `;
 
-const IFrameWrapper = styled.div`
+const IFrameWrapper = styled.div<{ background?: string }>`
     width: 530px;
     height: 635px;
+    border-radius: 8px;
+    ${(props) => (props.background ? `background: ${props.background};` : '')}
     margin: auto;
-    background: white;
-    border-radius: 15px;
     outline: none;
 `;
 

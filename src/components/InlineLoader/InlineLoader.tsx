@@ -1,12 +1,17 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 
-const InlineLoader: React.FC = () => {
+type InlineLoaderProps = {
+    thickness?: number;
+    size?: number;
+};
+
+const InlineLoader: React.FC<InlineLoaderProps> = ({ thickness, size }) => {
     return (
         <LoaderContainer>
-            <CircularProgress thickness={7} size={15} disableShrink color="inherit" />
+            <CircularProgress thickness={thickness || 7} size={size || 15} disableShrink color="inherit" />
         </LoaderContainer>
     );
 };

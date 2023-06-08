@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 
 export const VoteRow = styled(FlexDivColumnCentered)`
     padding: 10px;

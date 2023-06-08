@@ -1,10 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { CurrencyKey } from 'constants/currency';
 import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 
 type RequestParams = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     currencyVs?: string;
     days?: number;
 };

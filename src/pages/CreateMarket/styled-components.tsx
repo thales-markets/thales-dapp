@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import errorIcon from 'assets/images/errorIcon.svg';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import Select from 'pages/CreateMarket/components/Select';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 export const Container = styled(FlexDiv)`
     padding: 50px 0;
@@ -25,7 +25,7 @@ export const DatePickerRow = styled(FlexDivRow)`
     }
 `;
 
-export const Text = styled.p`
+const Text = styled.p`
     strong {
         font-weight: bold;
     }

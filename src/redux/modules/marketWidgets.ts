@@ -11,19 +11,19 @@ const initialState: UISliceState = {
     isBuy: true,
 };
 
-export const uiSlice = createSlice({
+const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        setBuyState: (state: UISliceState, action: PayloadAction<boolean>) => {
+        setIsBuy: (state: UISliceState, action: PayloadAction<boolean>) => {
             state.isBuy = action.payload;
         },
     },
 });
 
-export const { setBuyState } = uiSlice.actions;
+export const { setIsBuy } = uiSlice.actions;
 
-export const getUIState = (state: RootState) => state[sliceName];
-export const getIsBuyState = (state: RootState) => getUIState(state).isBuy;
+const getUIState = (state: RootState) => state[sliceName];
+export const getIsBuy = (state: RootState) => getUIState(state).isBuy;
 
 export default uiSlice.reducer;

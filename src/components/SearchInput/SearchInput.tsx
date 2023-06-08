@@ -2,7 +2,7 @@ import TextInput from 'components/fields/TextInput';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 
 type SearchInputProps = {
     placeholder?: string;

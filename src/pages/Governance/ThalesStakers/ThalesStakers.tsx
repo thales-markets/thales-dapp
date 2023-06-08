@@ -3,14 +3,14 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import Table from 'components/TableV2';
@@ -19,9 +19,11 @@ import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import Tooltip from 'components/TooltipV2/Tooltip';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
 import SearchInput from 'components/SearchInput';
+import { StakersFilterEnum } from 'enums/governance';
+import Dropdown from '../components/Dropdown/Dropdown';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -29,8 +31,9 @@ const ThalesStakers: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
+    const [filter, setFilter] = useState<StakersFilterEnum>(StakersFilterEnum.All);
 
-    const stakersQuery = useThalesStakersQuery({
+    const stakersQuery = useThalesStakersQuery(filter, {
         enabled: isAppReady,
     });
     const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
@@ -75,6 +78,12 @@ const ThalesStakers: React.FC = () => {
     return (
         <Container>
             <HeaderContainer>
+                <Dropdown
+                    options={Object.values(StakersFilterEnum)}
+                    activeOption={filter}
+                    onSelect={setFilter}
+                    translationKey="stakers-filter"
+                />
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>

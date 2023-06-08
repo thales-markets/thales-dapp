@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'styles/common';
 import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 export const Container = styled(FlexDivRow)`
     width: 100%;

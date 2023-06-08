@@ -1,15 +1,15 @@
+import { L1_TO_L2_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
-import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-import { L1_TO_L2_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
-import { Network } from 'utils/network';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { Network } from 'enums/network';
 
-export const NetworkSwitch: React.FC = () => {
+const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 

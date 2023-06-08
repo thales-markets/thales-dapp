@@ -1,32 +1,32 @@
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { RainbowKitProvider, connectorsForWallets, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/dist/index.css';
+import {
+    braveWallet,
+    coinbaseWallet,
+    imTokenWallet,
+    injectedWallet,
+    ledgerWallet,
+    metaMaskWallet,
+    rainbowWallet,
+    trustWallet,
+    walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 import WalletDisclaimer from 'components/WalletDisclaimer';
+import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
+import { Network } from 'enums/network';
 import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import {
-    injectedWallet,
-    rainbowWallet,
-    metaMaskWallet,
-    coinbaseWallet,
-    walletConnectWallet,
-    braveWallet,
-    ledgerWallet,
-    imTokenWallet,
-    trustWallet,
-} from '@rainbow-me/rainbowkit/wallets';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { optimism, optimismGoerli, arbitrum, mainnet, polygon, bsc } from 'wagmi/chains';
+import { getDefaultTheme } from 'utils/style';
+import { WagmiConfig, configureChains, createClient } from 'wagmi';
+import { arbitrum, bsc, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { Network } from 'utils/network';
-import { ThemeMap } from 'constants/ui';
-import { getDefaultTheme } from 'theme/common';
 dotenv.config();
 
 type RpcProvider = {
@@ -60,6 +60,8 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
 };
 
+const STALL_TIMEOUT = 2000;
+
 const { chains, provider } = configureChains(
     [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc],
     [
@@ -71,10 +73,15 @@ const { chains, provider } = configureChains(
                           process.env.REACT_APP_CHAINNODE_PROJECT_ID
                       }`,
             }),
-            stallTimeout: 2000,
+            stallTimeout: STALL_TIMEOUT,
+            priority: 1,
         }),
-        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '', stallTimeout: 2000 }),
-        publicProvider(),
+        infuraProvider({
+            apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '',
+            stallTimeout: STALL_TIMEOUT,
+            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 2,
+        }),
+        publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
 );
 

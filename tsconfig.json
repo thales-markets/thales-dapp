@@ -19,5 +19,9 @@
         "noUnusedParameters": true,
         "baseUrl": "src"
     },
-    "include": ["src", "./react-table-config.d.ts"]
+    "include": [
+        "src",
+        "./react-table-config.d.ts",
+        "src/pages/Trade/components/AmmTrading/components/SkewSlippageDetails/.tsx"
+    ]
 }

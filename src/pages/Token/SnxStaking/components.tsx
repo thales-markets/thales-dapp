@@ -1,6 +1,6 @@
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;

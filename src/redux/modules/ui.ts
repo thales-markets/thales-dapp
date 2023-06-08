@@ -11,7 +11,7 @@ const initialState: UISliceState = {
     isMobile: false,
 };
 
-export const uiSlice = createSlice({
+const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
@@ -21,7 +21,7 @@ export const uiSlice = createSlice({
     },
 });
 
-export const getUIState = (state: RootState) => state[sliceName];
+const getUIState = (state: RootState) => state[sliceName];
 export const getIsMobile = (state: RootState) => getUIState(state).isMobile;
 
 export const { setIsMobile } = uiSlice.actions;

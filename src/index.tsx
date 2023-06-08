@@ -4,7 +4,7 @@ import Root from './pages/Root';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
 import './i18n';
-import './theme/main.scss';
+import './styles/main.scss';
 
 ReactDOM.render(
     <React.Fragment>

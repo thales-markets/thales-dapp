@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as WarningIcon } from 'assets/images/warning-icon-orange.svg';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'styles/common';
 
 type InfoWarningMessageProps = {
     message: string | null;
@@ -10,7 +10,7 @@ type InfoWarningMessageProps = {
     lineHeight?: string;
 };
 
-export const InfoWarningMessage: React.FC<InfoWarningMessageProps> = ({ message, hideIcon, fontSize, lineHeight }) => {
+const InfoWarningMessage: React.FC<InfoWarningMessageProps> = ({ message, hideIcon, fontSize, lineHeight }) => {
     return (
         <Container>
             <Message fontSize={fontSize} lineHeight={lineHeight}>
@@ -36,7 +36,7 @@ const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     color: ${(props) => props.theme.warning.textColor.primary};
 `;
 
-export const StyledWarningIcon = styled(WarningIcon)`
+const StyledWarningIcon = styled(WarningIcon)`
     margin-right: 4px;
     min-width: 18px;
     min-height: 18px;

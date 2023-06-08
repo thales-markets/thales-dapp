@@ -1,22 +1,18 @@
 import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
-
+import { Cell, Pie, PieChart } from 'recharts';
 import styled, { useTheme } from 'styled-components';
-
-import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetwork, getWalletAddress } from 'redux/modules/wallet';
-
+import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getStableCoinForNetwork } from '../../utils/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
 import { ThemeInterface } from 'types/ui';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 type PieChartProps = {
     claimable?: number;

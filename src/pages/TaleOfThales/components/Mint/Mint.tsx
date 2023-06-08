@@ -11,7 +11,12 @@ import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { useTranslation } from 'react-i18next';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 import { RootState } from 'redux/rootReducer';
@@ -31,7 +36,7 @@ const Mint: React.FC = () => {
     });
     const NFTBalancesMap = NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {};
     const handleMintCollection = async (collectionId: number) => {
-        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        const id = toast.loading(getDefaultToastContent(t('tale-of-thales.mint.loading')), getLoadingToastOptions());
         try {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
@@ -40,15 +45,15 @@ const Mint: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted'), id));
             }
         } catch (e) {
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
         }
     };
 
     const handleMintItem = async (itemId: number) => {
-        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        const id = toast.loading(getDefaultToastContent(t('tale-of-thales.mint.loading')), getLoadingToastOptions());
         try {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
@@ -56,10 +61,10 @@ const Mint: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted'), id));
             }
         } catch (e) {
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
         }
     };
 

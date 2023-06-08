@@ -69,7 +69,7 @@ const UserWallet: React.FC = () => {
                                     style: { marginRight: 5 },
                                 })}
                                 {selectedNetwork.name}
-                                <Arrow className={`icon icon--arrow-down`} />
+                                <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
                             </NetworkItem>
                             {isDropdownOpen && (
                                 <NetworkDropDown>
@@ -108,7 +108,7 @@ const Wrapper = styled.div`
     display: block;
     position: absolute;
     top: 40px;
-    right: 100px;
+    right: 80px;
     width: 260px;
     @media (max-width: 1024px) {
         right: 70px;
@@ -118,7 +118,7 @@ const Wrapper = styled.div`
     @media (max-width: 500px) {
         right: 55px;
         top: 20px;
-        width: 130px;
+        width: 110px;
     }
 `;
 
@@ -129,14 +129,14 @@ const WrapperContainer = styled.div`
     border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     @media (max-width: 500px) {
-        height: 32px;
+        height: 26px;
     }
 `;
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     width: 100%;
     cursor: ${(props) => (props.connected ? 'text' : 'pointer')};
-    padding: 5px 6px;
+    padding: 3px 6px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -164,13 +164,12 @@ const NetworkInfoContainer = styled.div`
 const NetworkDropDown = styled.div`
     z-index: 1000;
     position: absolute;
-    top: 35px;
+    top: 31px;
     left: 130px;
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
-    background-color: var(--background);
-    border: 1px solid rgba(100, 217, 254, 0.5);
+    border-radius: 8px;
+    background: ${(props) => props.theme.background.secondary};
     width: 130px;
     max-width: 130px;
     padding: 5px;
@@ -195,15 +194,22 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: ${(props) => (props.selectedItem ? '6px 13px' : '6px')};
-    font-size: 14px;
+    padding: ${(props) => (props.selectedItem ? '4px 13px' : '6px')};
+    font-size: 13px;
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
+    }
+    svg {
+        width: 16px;
+        height: 16px;
+    }
 `;
 
-const Arrow = styled.i`
-    margin-left: 7px;
-    margin-top: 2px;
+const Icon = styled.i`
+    margin-left: auto;
     font-size: 10px;
-    text-transform: none;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default UserWallet;

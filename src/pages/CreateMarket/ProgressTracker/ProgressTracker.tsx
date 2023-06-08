@@ -1,15 +1,15 @@
-import React from 'react';
-import { FlexDiv } from 'theme/common';
 import stateComplete from 'assets/images/state-completed.svg';
 import stateCurrent from 'assets/images/state-current.svg';
 import stateEmpty from 'assets/images/state-empty.svg';
-import styled from 'styled-components';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { getStableCoinForNetwork } from 'utils/currency';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
+import { getStableCoinForNetwork } from 'utils/currency';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;

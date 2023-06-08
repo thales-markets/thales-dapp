@@ -60,7 +60,7 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     border-radius: 8px;
-    background: var(--color-secondary);
+    background: ${(props) => props.theme.background.secondary};
     cursor: pointer;
 `;
 

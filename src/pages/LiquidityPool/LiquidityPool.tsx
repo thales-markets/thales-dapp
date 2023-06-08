@@ -1,81 +1,87 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button/Button';
+import ElectionsBanner from 'components/ElectionsBanner';
+import Footer from 'components/Footer';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import SimpleLoader from 'components/SimpleLoader';
+import Switch from 'components/SwitchInput/SwitchInput';
+import TimeRemaining from 'components/TimeRemaining';
+import Tooltip from 'components/Tooltip';
+import NumericInput from 'components/fields/NumericInput';
+import RadioButton from 'components/fields/RadioButton';
+import { USD_SIGN } from 'constants/currency';
+import { LINKS } from 'constants/links';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
+import { Network } from 'enums/network';
+import { BigNumber, ethers } from 'ethers';
+import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
+import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { FlexDivRow } from 'styles/common';
+import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
+import { ThemeInterface } from 'types/ui';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
+import { getStableCoinForNetwork } from 'utils/currency';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
+import { refetchLiquidityPoolData } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import PnL from './PnL';
+import Transactions from './Transactions';
+import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
 import {
-    Container,
-    Title,
-    ButtonContainer,
-    Wrapper,
-    ToggleContainer,
-    LiquidityPoolFilledGraphicContainer,
-    LiquidityPoolFilledGraphicPercentage,
-    LiquidityPoolFilledText,
-    RoundInfoContainer,
-    RoundInfo,
-    ContentInfo,
     BoldContent,
-    WarningContentInfo,
-    LoaderContainer,
-    RoundEndContainer,
-    RoundEndLabel,
-    RoundEnd,
+    ButtonContainer,
+    Container,
     ContentContainer,
-    MainContainer,
-    ExternalButton,
-    LiquidityPoolInfoContainer,
-    LiquidityPoolInfoGraphic,
-    LiquidityPoolInfoLabel,
-    LiquidityPoolInfo,
-    LiquidityPoolInfoTitle,
+    ContentInfo,
     ContentInfoContainer,
     CopyContainer,
     Description,
+    ExternalButton,
     GetStakeThalesIcon,
-    TipLink,
+    LiquidityPoolFilledGraphicContainer,
+    LiquidityPoolFilledGraphicPercentage,
+    LiquidityPoolFilledText,
+    LiquidityPoolInfo,
+    LiquidityPoolInfoContainer,
+    LiquidityPoolInfoGraphic,
+    LiquidityPoolInfoLabel,
+    LiquidityPoolInfoTitle,
+    LoaderContainer,
+    MainContainer,
+    RadioButtonContainer,
+    RoundEnd,
+    RoundEndContainer,
+    RoundEndLabel,
+    RoundInfo,
+    RoundInfoContainer,
     SliderContainer,
     SliderRange,
     StyledSlider,
-    RadioButtonContainer,
+    TipLink,
+    Title,
+    ToggleContainer,
+    WarningContentInfo,
+    Wrapper,
     defaultButtonProps,
 } from './styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { LiquidityPoolPnlType, LiquidityPoolTab } from 'constants/liquidityPool';
-import NumericInput from 'components/fields/NumericInput';
-import { getIsAppReady } from 'redux/modules/app';
-import { UserLiquidityPoolData, LiquidityPoolData } from 'types/liquidityPool';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
-import TimeRemaining from 'components/TimeRemaining';
-import snxJSConnector from 'utils/snxJSConnector';
-import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance, Network, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
-import { BigNumber, ethers } from 'ethers';
-import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import SimpleLoader from 'components/SimpleLoader';
-import Transactions from './Transactions';
-import PnL from './PnL';
-import Switch from 'components/SwitchInput/SwitchInput';
-import Tooltip from 'components/TooltipV2';
-import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
-import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
-import { LINKS } from 'constants/links';
-import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
-import { refetchLiquidityPoolData } from 'utils/queryConnector';
-import { getMaxGasLimitForNetwork } from 'constants/options';
-import OpRewardsBanner from 'components/OpRewardsBanner';
-import ElectionsBanner from 'components/ElectionsBanner';
-import Footer from 'components/Footer';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { getStableCoinForNetwork } from 'utils/currency';
-import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { FlexDivRow } from 'theme/common';
-import RadioButton from 'components/fields/RadioButton';
-import Button from 'components/ButtonV2/Button';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -237,7 +243,10 @@ const LiquidityPool: React.FC = () => {
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral, liquidityPoolContract } = snxJSConnector;
         if (signer && collateral && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsAllowing(true);
 
             try {
@@ -253,14 +262,15 @@ const LiquidityPool: React.FC = () => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', { token: collateral })
+                            t('options.market.toast-messsage.approve-success', { token: collateral }),
+                            id
                         )
                     );
                     setIsAllowing(false);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
             }
         }
@@ -269,7 +279,10 @@ const LiquidityPool: React.FC = () => {
     const handleDeposit = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -284,14 +297,17 @@ const LiquidityPool: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    toast.update(id, getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message')));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)
+                    );
                     setAmount('');
                     setIsSubmitting(false);
                     refetchLiquidityPoolData(walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }
@@ -300,7 +316,10 @@ const LiquidityPool: React.FC = () => {
     const handleWithdrawalRequest = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
+            const id = toast.loading(
+                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getLoadingToastOptions()
+            );
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -318,7 +337,7 @@ const LiquidityPool: React.FC = () => {
                 if (txResult && txResult.events) {
                     toast.update(
                         id,
-                        getSuccessToastOptions(t('liquidity-pool.button.request-withdrawal-confirmation-message'))
+                        getSuccessToastOptions(t('liquidity-pool.button.request-withdrawal-confirmation-message'), id)
                     );
                     setAmount('');
                     setIsSubmitting(false);
@@ -326,7 +345,7 @@ const LiquidityPool: React.FC = () => {
                 }
             } catch (e) {
                 console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
         }
@@ -625,7 +644,7 @@ const LiquidityPool: React.FC = () => {
                                                                             step={1}
                                                                             max={90}
                                                                             min={10}
-                                                                            onChange={(_, value) =>
+                                                                            onChange={(_: any, value: any) =>
                                                                                 setWithdrawalPercentage(Number(value))
                                                                             }
                                                                             disabled={isPartialWithdrawalDisabled}

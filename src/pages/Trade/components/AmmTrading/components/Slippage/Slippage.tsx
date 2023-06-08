@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { countDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
 

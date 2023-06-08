@@ -1,28 +1,28 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
-import styled, { useTheme } from 'styled-components';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
-import { TokenInfo } from 'types/token';
-import { getIsAppReady } from 'redux/modules/app';
+import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import Lottie from 'lottie-react';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
+import React, { CSSProperties, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { TokenInfo } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
-import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
-import { getIsOVM, Network, NetworkId } from 'utils/network';
-import Lottie from 'lottie-react';
-import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
-import Tooltip from 'components/TooltipV2/Tooltip';
-import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'constants/ui';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { NetworkId, getIsOVM } from 'utils/network';
 
-export const TokentOverview: React.FC = () => {
+const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -314,15 +314,6 @@ const CryptoName = styled.span`
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 18px;
-    min-height: 18px;
-    margin-bottom: -2px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const ThalesBurnedWrapper = styled.div`
