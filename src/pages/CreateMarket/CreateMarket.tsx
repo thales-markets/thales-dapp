@@ -14,7 +14,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
-import Currency from 'components/Currency';
 import { BigNumber, ethers } from 'ethers';
 import { FlexDivColumn, FlexDivCentered } from 'styles/common';
 import MarketSummary from './MarketSummary';
@@ -261,14 +260,7 @@ const CreateMarket: React.FC = () => {
                                             getSynthName(option.value)?.toLowerCase().includes(rawInput.toLowerCase())
                                         }
                                         formatOptionLabel={(option: any) => {
-                                            return (
-                                                <Currency.Name
-                                                    currencyKey={option.value}
-                                                    showIcon={true}
-                                                    synthIconStyle={{ width: 24, height: 24 }}
-                                                    iconProps={{ type: 'asset' }}
-                                                />
-                                            );
+                                            return <span> {option.value}</span>;
                                         }}
                                         onBlur={() => {
                                             setIsFocused(false);

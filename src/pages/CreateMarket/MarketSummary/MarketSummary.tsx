@@ -1,6 +1,5 @@
 import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
 import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
-import Currency from 'components/Currency';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -43,17 +42,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
         <Wrapper>
             <SummaryHeader>{t('options.create-market.summary.title')}</SummaryHeader>
             <SummaryContent>
-                <CurrencyContainer>
-                    {props.currencyKey && (
-                        <>
-                            <Currency.Icon
-                                synthIconStyle={{ width: 24, height: 24 }}
-                                currencyKey={props.currencyKey.value}
-                            />
-                            {props.currencyKey.label}
-                        </>
-                    )}
-                </CurrencyContainer>
+                <CurrencyContainer>{props.currencyKey && <>{props.currencyKey.label}</>}</CurrencyContainer>
                 <PriceContainer>
                     <PriceItem>
                         <PriceLabel>{t('options.create-market.summary.strike-price')}</PriceLabel>

@@ -1,13 +1,8 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
-import {
-    HistoricalOptionsMarketInfo,
-    OptionsTransaction,
-    RangedMarket,
-    UserPosition,
-    UserPositionsData,
-} from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
+import { UserPosition, UserPositionsData } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
 import { NetworkId } from 'utils/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';

@@ -8,7 +8,7 @@ import { formatCurrency } from 'utils/formatters/number';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/liquidityPool';
+import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
 import { getIsAppReady } from 'redux/modules/app';
 import useUserVaultsAndLpTransactionsQuery from 'queries/user/useUserVaultsAndLpTransactionsQuery';
 import styled from 'styled-components';

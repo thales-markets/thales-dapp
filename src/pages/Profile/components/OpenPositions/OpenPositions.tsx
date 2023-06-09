@@ -8,7 +8,7 @@ import { ThemeInterface } from 'types/ui';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { getAmount, IconLink, TextLink } from '../styled-components';
-import { UserPosition } from 'types/options';
+import { UserPosition } from 'types/profile';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';

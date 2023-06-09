@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
-import { UserLivePositions, UserPosition } from 'types/options';
+import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
@@ -35,6 +35,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { UsingAmmLink } from '../styled-components';
 import Tooltip from 'components/Tooltip/Tooltip';
+import { UserLivePositions } from 'types/options';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 

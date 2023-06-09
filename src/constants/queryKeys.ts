@@ -128,12 +128,6 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        RangedPositions: (walletAddress: string, networkId: NetworkId) => [
-            'user',
-            'rangedPositions',
-            walletAddress,
-            networkId,
-        ],
         EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         VaultsAndLpTransactions: (networkId: NetworkId, walletAddress: string) => [

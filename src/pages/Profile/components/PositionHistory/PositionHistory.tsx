@@ -8,7 +8,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { IconLink, getAmount, getStatus } from '../styled-components';
-import { UserPosition } from 'types/options';
+import { UserPosition } from 'types/profile';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
