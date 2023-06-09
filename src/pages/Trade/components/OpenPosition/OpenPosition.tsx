@@ -147,10 +147,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
                     const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
-                    // changes in cash out value less than 0.01 sUSD are not relevant
+                    // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
-                        roundNumberToDecimals(position.value, 3) !==
-                        roundNumberToDecimals(ammPrice * position.amount, 3);
+                        ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||
+                        ammPrice * position.amount > Number(position.value) * (1 + SLIPPAGE_PERCENTAGE[2] / 100);
                 } catch (e) {
                     console.log(e);
                     totalValueChanged = true;
