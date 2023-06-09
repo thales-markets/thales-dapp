@@ -1,5 +1,5 @@
 import { Positions } from 'enums/options';
-import { HistoricalOptionsMarketInfo, RangedMarket, Trade, Trades } from './options';
+import { HistoricalOptionsMarketInfo, RangedMarket, Trade } from './options';
 import { BigNumber } from 'ethers';
 
 export type UserPosition = {
