@@ -4,7 +4,7 @@ import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
 
-const useUserProfileDataQuery = (
+const useProfileDataQuery = (
     networkId: NetworkId,
     walletAddress: string,
     options?: UseQueryOptions<UserProfileData>
@@ -51,7 +51,6 @@ const useUserProfileDataQuery = (
             gain = investment !== 0 ? profit / investment : 0;
 
             const result = {
-                trades: userTrades,
                 profit,
                 volume,
                 numberOfTrades,
@@ -65,4 +64,4 @@ const useUserProfileDataQuery = (
     );
 };
 
-export default useUserProfileDataQuery;
+export default useProfileDataQuery;

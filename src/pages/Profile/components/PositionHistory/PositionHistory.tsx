@@ -13,33 +13,41 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import useClosedPositionsQuery from 'queries/profile/useClosedPositionsQuery';
 
 type PositionHistoryProps = {
-    claimedPositions: UserPosition[];
-    ripPositions: UserPosition[];
+    searchAddress: string;
     searchText: string;
-    isLoading: boolean;
 };
 
-const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, ripPositions, searchText, isLoading }) => {
+const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, searchText }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const data = useMemo(() => [...claimedPositions, ...ripPositions], [claimedPositions, ripPositions]);
+    const closedPositionsQuery = useClosedPositionsQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const closedPositions: UserPosition[] =
+        closedPositionsQuery.isSuccess && closedPositionsQuery.data ? closedPositionsQuery.data : [];
 
     const filteredData = useMemo(() => {
-        if (searchText === '') return data;
-        return data.filter(
+        if (searchText === '') return closedPositions;
+        return closedPositions.filter(
             (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
-    }, [searchText, data]);
+    }, [searchText, closedPositions]);
 
     const generateRows = (data: UserPosition[]) => {
         try {
-            const rows = data.sort((a, b) => b.maturityDate - a.maturityDate);
-
-            return rows.map((row: UserPosition) => {
+            return data.map((row: UserPosition) => {
                 const cells: any = [
                     {
                         value: getStatus(row.claimed, theme, t),
@@ -107,7 +115,7 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
         return [];
     }, [filteredData]);
 
-    return <TileTable rows={rows as any} isLoading={isLoading} />;
+    return <TileTable rows={rows as any} isLoading={closedPositionsQuery.isLoading} />;
 };
 
 export default PositionHistory;

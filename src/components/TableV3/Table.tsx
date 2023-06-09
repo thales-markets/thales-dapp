@@ -4,7 +4,11 @@ import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { CSSProperties, DependencyList, useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'styles/common';
 import { OptionsMarkets } from 'types/options';
@@ -67,6 +71,8 @@ const Table: React.FC<TableProps> = ({
     showCurrentPrice,
     selectedRowIndex,
 }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidRates, setRates] = useState<Rates>();
 
     const containerRef = useRef('');
@@ -85,7 +91,7 @@ const Table: React.FC<TableProps> = ({
         }
     }, [elementRef.current, containerRef.current]);
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesQuery({ enabled: showCurrentPrice });
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady && showCurrentPrice });
 
     useEffect(() => {
         if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {

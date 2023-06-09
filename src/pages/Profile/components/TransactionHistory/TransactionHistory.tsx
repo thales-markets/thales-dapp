@@ -3,10 +3,10 @@ import { keyBy } from 'lodash';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, RangedMarket, Trade, Trades } from 'types/options';
+import { HistoricalOptionsMarketInfo, RangedMarket, Trade, Trades } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
@@ -18,20 +18,30 @@ import { ArrowLink, getAmount } from '../styled-components';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { getIsMobile } from 'redux/modules/ui';
 import { TradeWithMarket } from 'types/profile';
+import useTradesQuery from 'queries/profile/useTradesQuery';
+import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 
 type TransactionHistoryProps = {
-    markets: OptionsMarkets;
-    trades: Trades;
+    searchAddress: string;
     searchText: string;
-    isLoading: boolean;
 };
 
-const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades, searchText, isLoading }) => {
+const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, searchText }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const tradesQuery = useTradesQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const trades: Trades = tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : [];
+
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
+    const markets = marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : [];
 
     const rangedTrades = trades
         .filter((trade: Trade) => trade.optionSide === 'in' || trade.optionSide === 'out')
@@ -41,7 +51,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
         enabled: isAppReady && rangedTrades.length > 0,
     });
     const rangedMarkets = rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : [];
-    const allMarkets = [...(markets as any), ...rangedMarkets];
+
+    const allMarkets = [...markets, ...rangedMarkets];
 
     const data = useMemo(() => {
         const marketsMap = keyBy(allMarkets, 'address');
@@ -154,7 +165,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
         return [];
     }, [filteredData]);
 
-    return <TileTable rows={rows as any} isLoading={isLoading || rangedMarketsQuery.isLoading} />;
+    return (
+        <TileTable
+            rows={rows as any}
+            isLoading={tradesQuery.isLoading || marketsQuery.isLoading || rangedMarketsQuery.isLoading}
+        />
+    );
 };
 
 export default TransactionHistory;

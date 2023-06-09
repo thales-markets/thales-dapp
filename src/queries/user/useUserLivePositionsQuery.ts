@@ -13,8 +13,9 @@ import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
+import { isOptionClaimable } from 'utils/options';
 
-const useUserLivePositions = (
+const useUserLivePositionsQuery = (
     networkId: NetworkId,
     walletAddress: string,
     options?: UseQueryOptions<UserLivePositions[]>
@@ -22,8 +23,6 @@ const useUserLivePositions = (
     return useQuery<UserLivePositions[]>(
         QUERY_KEYS.User.UserOpenPositions(walletAddress, networkId),
         async () => {
-            const today = new Date();
-
             const [positionBalances, rangedPositionBalances] = await Promise.all([
                 thalesData.binaryOptions.positionBalances({
                     max: Infinity,
@@ -37,15 +36,15 @@ const useUserLivePositions = (
                 }),
             ]);
 
-            const livePositions: any = [];
-            const liveRangedPositions: any = [];
+            const openPositions: any = [];
+            const openRangedPositions: any = [];
             const claimablePositions: any = [];
             const rangedClaimablePositions: any = [];
 
             positionBalances.map((positionBalance: any) => {
                 if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
-                    if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
-                        livePositions.push(positionBalance);
+                    if (positionBalance.position.market.result === null) {
+                        openPositions.push(positionBalance);
                     } else {
                         if (isOptionClaimable(positionBalance)) claimablePositions.push(positionBalance);
                     }
@@ -54,8 +53,8 @@ const useUserLivePositions = (
 
             rangedPositionBalances.map((positionBalance: any) => {
                 if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
-                    if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
-                        liveRangedPositions.push(positionBalance);
+                    if (positionBalance.position.market.result === null) {
+                        openRangedPositions.push(positionBalance);
                     } else {
                         if (isOptionClaimable(positionBalance)) rangedClaimablePositions.push(positionBalance);
                     }
@@ -64,7 +63,7 @@ const useUserLivePositions = (
 
             const [result, resultsRanged] = await Promise.all([
                 Promise.all([
-                    ...livePositions.map(async (positionBalance: any) => {
+                    ...openPositions.map(async (positionBalance: any) => {
                         /*
                             On subgraph there is an issue with plus function, so when user buy the same position several times, 
                             it sums up to value which is higher than it has on contract. Read position balance from contract!
@@ -95,7 +94,7 @@ const useUserLivePositions = (
                     }),
                 ]),
                 Promise.all([
-                    ...liveRangedPositions.map(async (positionBalance: any) => {
+                    ...openRangedPositions.map(async (positionBalance: any) => {
                         const positionContract = new ethers.Contract(
                             positionBalance.position.id,
                             rangedPositionContract.abi,
@@ -201,10 +200,4 @@ const useUserLivePositions = (
     );
 };
 
-const isOptionClaimable = (balance: any) =>
-    (balance.position.side === 'long' && balance.position.market.result === 0) ||
-    (balance.position.side === 'short' && balance.position.market.result === 1) ||
-    (balance.position.side === 'in' && balance.position.market.result === 0) ||
-    (balance.position.side === 'out' && balance.position.market.result === 1);
-
-export default useUserLivePositions;
+export default useUserLivePositionsQuery;

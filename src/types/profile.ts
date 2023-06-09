@@ -20,7 +20,6 @@ export type UserPosition = {
     claimable: boolean;
     claimed: boolean;
     isRanged: boolean;
-    priceDiff?: number;
 };
 
 export type UserPositionsData = {
@@ -33,7 +32,6 @@ export type UserPositionsData = {
 };
 
 export type UserProfileData = {
-    trades: Trades;
     profit: number;
     volume: number;
     numberOfTrades: number;

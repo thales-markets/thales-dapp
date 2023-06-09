@@ -94,7 +94,7 @@ const CreateMarket: React.FC = () => {
         const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
         const isPolygon = getIsPolygon(networkId);
 
-        const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+        const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
         let isCurrencySelected = false;
 

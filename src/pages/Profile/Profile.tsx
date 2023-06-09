@@ -1,10 +1,6 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import SearchInput from 'components/SearchInput/SearchInput';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useAllPositions from 'queries/profile/useAllPositions';
-import useUserProfileDataQuery from 'queries/profile/useUserProfileDataQuery';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,9 +32,11 @@ import ClaimablePositions from './components/ClaimablePositions';
 import PositionHistory from './components/PositionHistory';
 import TransactionHistory from './components/TransactionHistory';
 import OpenPositions from './components/OpenPositions';
-import { UserPositionsData, UserProfileData } from 'types/profile';
+import { UserProfileData } from 'types/profile';
 import ProfileSection from './components/ProfileSection';
 import UserVaultsLp from './components/UserVaultsLp';
+import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
+import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -53,50 +51,24 @@ const Profile: React.FC = () => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [searchAddress, setSearchAddress] = useState<string>('');
+    const [searchText, setSearchText] = useState<string>('');
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-    const markets = marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : [];
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
-        enabled: isAppReady && markets.length > 0,
-    });
-    const exchangeRates =
-        exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data
-            ? exchangeRatesMarketDataQuery.data
-            : null;
-
-    const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
+    const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
+    const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
 
-    const positions: UserPositionsData =
-        userPositionsQuery.isSuccess && userPositionsQuery.data
-            ? userPositionsQuery.data
-            : {
-                  live: [],
-                  claimable: [],
-                  claimed: [],
-                  rip: [],
-                  claimableCount: 0,
-                  claimableAmount: 0,
-              };
-
-    const userProfileDataQuery = useUserProfileDataQuery(
-        networkId,
-        (searchAddress ? searchAddress : walletAddress) as any,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
+    const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const profileData: UserProfileData =
         userProfileDataQuery.isSuccess && userProfileDataQuery.data
             ? userProfileDataQuery.data
             : {
-                  trades: [],
                   profit: 0,
                   volume: 0,
                   numberOfTrades: 0,
@@ -104,7 +76,6 @@ const Profile: React.FC = () => {
                   investment: 0,
               };
 
-    const [searchText, setSearchText] = useState('');
     const queryParamTab = queryString.parse(location.search).tab as NavItems;
     const [view, setView] = useState(
         Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
@@ -201,7 +172,7 @@ const Profile: React.FC = () => {
                             active={view === NavItems.MyPositions}
                         >
                             {t('options.trading-profile.tabs.my-positions')}
-                            {positions.claimableCount > 0 && <Notification> {positions.claimableCount} </Notification>}
+                            {notifications > 0 && <Notification>{notifications}</Notification>}
                         </NavItem>
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('options.trading-profile.tabs.history')}
@@ -221,9 +192,8 @@ const Profile: React.FC = () => {
                                     mobileMaxHeight="360px"
                                 >
                                     <ClaimablePositions
-                                        claimablePositions={positions.claimable}
+                                        searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
-                                        isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileSection>
                                 <ProfileSection
@@ -231,30 +201,24 @@ const Profile: React.FC = () => {
                                     mobileMaxHeight="360px"
                                 >
                                     <OpenPositions
-                                        exchangeRates={exchangeRates}
-                                        livePositions={positions.live}
+                                        searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
-                                        isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileSection>
                             </>
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileSection title={t('options.trading-profile.accordions.position-history')}>
-                                    <PositionHistory
-                                        claimedPositions={positions.claimed}
-                                        ripPositions={positions.rip}
-                                        searchText={searchAddress ? '' : searchText}
-                                        isLoading={userPositionsQuery.isLoading}
-                                    />
-                                </ProfileSection>
                                 <ProfileSection title={t('options.trading-profile.accordions.transaction-history')}>
                                     <TransactionHistory
-                                        markets={markets}
-                                        trades={profileData.trades}
+                                        searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
-                                        isLoading={userProfileDataQuery.isLoading || marketsQuery.isLoading}
+                                    />
+                                </ProfileSection>
+                                <ProfileSection title={t('options.trading-profile.accordions.position-history')}>
+                                    <PositionHistory
+                                        searchAddress={searchAddress}
+                                        searchText={searchAddress ? '' : searchText}
                                     />
                                 </ProfileSection>
                             </>

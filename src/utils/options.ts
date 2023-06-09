@@ -1,10 +1,11 @@
 import orderBy from 'lodash/orderBy';
 import { PHASE } from '../constants/options';
-import { OptionsMarkets, Phase } from '../types/options';
+import { OptionsMarkets, Phase, UserLivePositions } from '../types/options';
 import { getSynthAsset } from './currency';
 import { formatCurrency } from './formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
+import { UserPosition } from 'types/profile';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
@@ -67,3 +68,9 @@ export const getColorPerPosition = (position: Positions, theme: ThemeInterface) 
             return theme.textColor.primary;
     }
 };
+
+export const isOptionClaimable = (positionBalance: any) =>
+    (positionBalance.position.side === 'long' && positionBalance.position.market.result === 0) ||
+    (positionBalance.position.side === 'short' && positionBalance.position.market.result === 1) ||
+    (positionBalance.position.side === 'in' && positionBalance.position.market.result === 0) ||
+    (positionBalance.position.side === 'out' && positionBalance.position.market.result === 1);

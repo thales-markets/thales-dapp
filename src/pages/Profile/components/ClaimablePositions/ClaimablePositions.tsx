@@ -1,5 +1,4 @@
 import { USD_SIGN } from 'constants/currency';
-import { orderBy } from 'lodash';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
@@ -15,35 +14,41 @@ import { getIsMobile } from 'redux/modules/ui';
 import TileTable from 'components/TileTable/TileTable';
 import MyPositionAction from '../MyPositionAction';
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
 
 type ClaimablePositionsProps = {
-    claimablePositions: UserPosition[];
+    searchAddress: string;
     searchText: string;
-    isLoading: boolean;
 };
 
-const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositions, searchText, isLoading }) => {
+const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, searchText }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const data = useMemo(
-        () => orderBy(claimablePositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']),
-        [claimablePositions]
-    );
+    const claimablePositionsQuery = useClaimablePositionsQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const claimablePositions: UserPosition[] =
+        claimablePositionsQuery.isSuccess && claimablePositionsQuery.data ? claimablePositionsQuery.data : [];
 
     const filteredData = useMemo(() => {
-        if (searchText === '') return data;
-        return data.filter(
+        if (searchText === '') return claimablePositions;
+        return claimablePositions.filter(
             (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
-    }, [searchText, data]);
+    }, [searchText, claimablePositions]);
 
     const generateRows = (data: UserPosition[]) => {
         try {
-            const rows = data.sort((a, b) => b.maturityDate - a.maturityDate);
-
-            return rows.map((row: UserPosition) => {
+            return data.map((row: UserPosition) => {
                 const cells: any = [
                     {
                         title: row.isRanged
@@ -120,7 +125,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
         return [];
     }, [filteredData]);
 
-    return <TileTable rows={rows as any} isLoading={isLoading} hideFlow />;
+    return <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />;
 };
 
 export default ClaimablePositions;

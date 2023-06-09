@@ -1,25 +1,24 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
+import { UserPosition } from 'types/profile';
 import { NetworkId } from 'utils/network';
-import { parseBytes32String } from 'ethers/lib/utils.js';
-import { formatStrikePrice } from 'utils/formatters/number';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
-import { orderBy } from 'lodash';
-import { UserLivePositions } from 'types/options';
-import { Positions } from 'enums/options';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
+import { Positions } from 'enums/options';
+import { parseBytes32String } from 'ethers/lib/utils.js';
+import { BigNumber } from 'ethers';
+import { isOptionClaimable } from 'utils/options';
+import { orderBy } from 'lodash';
 
-const useUserNotifications = (
+const useClaimablePositionsQuery = (
     networkId: NetworkId,
     walletAddress: string,
-    options?: UseQueryOptions<UserLivePositions[]>
+    options?: UseQueryOptions<UserPosition[]>
 ) => {
-    return useQuery<UserLivePositions[]>(
-        QUERY_KEYS.User.UserNotifications(walletAddress, networkId),
+    return useQuery<UserPosition[]>(
+        QUERY_KEYS.Profile.ClaimablePositions(walletAddress, networkId),
         async () => {
-            const today = new Date();
-
             const [positionBalances, rangedPositionBalances] = await Promise.all([
                 thalesData.binaryOptions.positionBalances({
                     max: Infinity,
@@ -33,75 +32,78 @@ const useUserNotifications = (
                 }),
             ]);
 
-            const claimablePositions: any = [];
-            const rangedClaimablePositions: any = [];
+            const claimablePositions: UserPosition[] = [];
+            const rangedClaimablePositions: UserPosition[] = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
-                    if (Number(positionBalance.position.market.maturityDate) < today.getTime() / 1000) {
-                        if (isOptionClaimable(positionBalance)) claimablePositions.push(positionBalance);
-                    }
+                if (
+                    bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
+                    positionBalance.position.market.result !== null &&
+                    isOptionClaimable(positionBalance)
+                ) {
+                    claimablePositions.push(positionBalance);
                 }
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
-                    if (Number(positionBalance.position.market.maturityDate) < today.getTime() / 1000) {
-                        if (isOptionClaimable(positionBalance)) rangedClaimablePositions.push(positionBalance);
-                    }
+                if (
+                    bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
+                    positionBalance.position.market.result !== null &&
+                    isOptionClaimable(positionBalance)
+                ) {
+                    rangedClaimablePositions.push(positionBalance);
                 }
             });
 
-            const modifiedLivePositions: UserLivePositions[] = [
+            const modifiedClaimablePositions: UserPosition[] = [
                 ...claimablePositions.map((positionBalance: any) => {
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
-                        amountBigNumber: positionBalance.amount,
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice: formatStrikePrice(
-                            bigNumberFormatter(positionBalance.position.market.strikePrice),
-                            positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
-                        ),
+                        expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
+                        strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
+                        leftPrice: 0,
+                        rightPrice: 0,
+                        finalPrice: positionBalance.position.market.finalPrice / 1e18,
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        claimed: false,
+                        isRanged: false,
                     };
                 }),
-
                 ...rangedClaimablePositions.map((positionBalance: any) => {
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
-                        amountBigNumber: positionBalance.amount,
+                        amountBigNumber: BigNumber.from(0),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice: formatStrikePrice(
-                            bigNumberFormatter(positionBalance.position.market.leftPrice),
-                            positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
-                            bigNumberFormatter(positionBalance.position.market.rightPrice)
-                        ),
+                        expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
+                        strikePrice: 0,
+                        leftPrice: bigNumberFormatter(positionBalance.position.market.leftPrice),
+                        rightPrice: bigNumberFormatter(positionBalance.position.market.rightPrice),
+                        finalPrice: positionBalance.position.market.finalPrice / 1e18,
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        claimed: false,
+                        isRanged: true,
                     };
                 }),
             ];
-            return orderBy(modifiedLivePositions, ['maturityDate', 'currencyKey'], ['asc', 'asc']);
+
+            return orderBy(modifiedClaimablePositions, ['maturityDate', 'value'], ['asc', 'desc']);
         },
         options
     );
 };
 
-const isOptionClaimable = (balance: any) =>
-    (balance.position.side === 'long' && balance.position.market.result === 0) ||
-    (balance.position.side === 'short' && balance.position.market.result === 1) ||
-    (balance.position.side === 'in' && balance.position.market.result === 0) ||
-    (balance.position.side === 'out' && balance.position.market.result === 1);
-
-export default useUserNotifications;
+export default useClaimablePositionsQuery;

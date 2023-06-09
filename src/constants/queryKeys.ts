@@ -27,7 +27,7 @@ const QUERY_KEYS = {
         ],
     },
     Rates: {
-        ExchangeRates: () => ['rates', 'exchangeRates'],
+        ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: NetworkId) => ['rates', 'exchangeRatesMarketData', networkId],
     },
     Medium: {
@@ -88,9 +88,9 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        UserNotifications: (walletAddress: string, networkId: NetworkId) => [
+        Notifications: (walletAddress: string, networkId: NetworkId) => [
             'user',
-            'userNotifications',
+            'notifications',
             walletAddress,
             networkId,
         ],
@@ -104,12 +104,25 @@ const QUERY_KEYS = {
     },
     Profile: {
         Data: (walletAddress: string, networkId: NetworkId) => ['profile', 'data', walletAddress, networkId],
-        AllPositions: (walletAddress: string, networkId: NetworkId) => [
+        OpenPositions: (walletAddress: string, networkId: NetworkId) => [
             'profile',
-            'allPositions',
+            'openPositions',
             walletAddress,
             networkId,
         ],
+        ClaimablePositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'claimablePositions',
+            walletAddress,
+            networkId,
+        ],
+        ClosedPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'closedPositions',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (walletAddress: string, networkId: NetworkId) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
         StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],

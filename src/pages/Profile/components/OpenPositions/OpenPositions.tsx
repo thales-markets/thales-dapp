@@ -1,6 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
-import { orderBy } from 'lodash';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
@@ -16,31 +15,54 @@ import TileTable from 'components/TileTable/TileTable';
 import MaturityDate from 'pages/AMMTrading/components/MaturityDate/MaturityDate';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import useOpenPositionsQuery from 'queries/profile/useOpenPositionsQuery';
 
 type OpenPositionsProps = {
-    exchangeRates: Rates | null;
-    livePositions: UserPosition[];
+    searchAddress: string;
     searchText: string;
-    isLoading: boolean;
 };
 
-const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositions, searchText, isLoading }) => {
+const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const data = useMemo(() => {
-        const mappedPositions = livePositions.map((position: UserPosition) => {
-            return {
-                ...position,
-                priceDiff: position.isRanged
-                    ? 0
-                    : formatPricePercentageDifference(position.strikePrice, exchangeRates?.[position.currencyKey] || 0),
-            };
-        });
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
+        enabled: isAppReady,
+    });
+    const exchangeRates: Rates | null =
+        exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data
+            ? exchangeRatesMarketDataQuery.data
+            : null;
 
-        return orderBy(mappedPositions, ['maturityDate', 'value', 'priceDiff'], ['asc', 'desc', 'asc']);
-    }, [livePositions, exchangeRates]);
+    const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const openPositions: UserPosition[] =
+        openPositionsQuery.isSuccess && openPositionsQuery.data ? openPositionsQuery.data : [];
+
+    const data = useMemo(
+        () =>
+            openPositions.map((position: UserPosition) => {
+                return {
+                    ...position,
+                    priceDiff: position.isRanged
+                        ? 0
+                        : formatPricePercentageDifference(
+                              position.strikePrice,
+                              exchangeRates?.[position.currencyKey] || 0
+                          ),
+                };
+            }),
+        [openPositions, exchangeRates]
+    );
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -51,9 +73,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
 
     const generateRows = (data: UserPosition[]) => {
         try {
-            const rows = data.sort((a, b) => b.maturityDate - a.maturityDate);
-
-            return rows.map((row: UserPosition) => {
+            return data.map((row: UserPosition) => {
                 const cells: any = [
                     {
                         title: row.isRanged
@@ -135,7 +155,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
         return [];
     }, [filteredData]);
 
-    return <TileTable rows={rows as any} isLoading={isLoading} hideFlow />;
+    return <TileTable rows={rows as any} isLoading={openPositionsQuery.isLoading} hideFlow />;
 };
 
 export default OpenPositions;
