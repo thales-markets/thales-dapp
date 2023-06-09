@@ -56,7 +56,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                 </CurrencyContainer>
                 <PriceContainer>
                     <PriceItem>
-                        <PriceLabel>{t('options.create-market.summary.strikePrice')}</PriceLabel>
+                        <PriceLabel>{t('options.create-market.summary.strike-price')}</PriceLabel>
                         <PriceInfo>{formatCurrencyWithSign(USD_SIGN, Number(props.strikingPrice))}</PriceInfo>
                     </PriceItem>
                     <PriceItem>
