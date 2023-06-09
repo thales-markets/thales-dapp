@@ -3,7 +3,7 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
-import useUserOpenPositions from 'queries/user/useUserOpenPositions';
+import useUserLivePositions from 'queries/user/useUserLivePositions';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ const OpenPositions: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', {
+    const positionsQuery = useUserLivePositions(networkId, walletAddress ?? '', {
         enabled: isAppReady && isWalletConnected,
     });
 

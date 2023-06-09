@@ -14,7 +14,7 @@ import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPosit
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
 
-const useUserOpenPositions = (
+const useUserLivePositions = (
     networkId: NetworkId,
     walletAddress: string,
     options?: UseQueryOptions<UserLivePositions[]>
@@ -207,4 +207,4 @@ const isOptionClaimable = (balance: any) =>
     (balance.position.side === 'in' && balance.position.market.result === 0) ||
     (balance.position.side === 'out' && balance.position.market.result === 1);
 
-export default useUserOpenPositions;
+export default useUserLivePositions;

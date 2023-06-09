@@ -6,14 +6,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import {
-    HistoricalOptionsMarketInfo,
-    OptionsMarkets,
-    RangedMarket,
-    Trade,
-    TradeWithMarket,
-    Trades,
-} from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, RangedMarket, Trade, Trades } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
@@ -24,6 +17,7 @@ import { Positions } from 'enums/options';
 import { ArrowLink, getAmount } from '../styled-components';
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { getIsMobile } from 'redux/modules/ui';
+import { TradeWithMarket } from 'types/profile';
 
 type TransactionHistoryProps = {
     markets: OptionsMarkets;
@@ -40,8 +34,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const rangedTrades = trades
-        .filter((trade: any) => trade.optionSide === 'in' || trade.optionSide === 'out')
-        .map((trade: any) => trade.market);
+        .filter((trade: Trade) => trade.optionSide === 'in' || trade.optionSide === 'out')
+        .map((trade: Trade) => trade.market);
 
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, rangedTrades, {
         enabled: isAppReady && rangedTrades.length > 0,

@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
-import { UserProfileData } from 'types/options';
+import { UserProfileData } from 'types/profile';
 
 const useUserProfileDataQuery = (
     networkId: NetworkId,
@@ -10,7 +10,7 @@ const useUserProfileDataQuery = (
     options?: UseQueryOptions<UserProfileData>
 ) => {
     return useQuery<UserProfileData>(
-        QUERY_KEYS.User.ProfileData(walletAddress, networkId),
+        QUERY_KEYS.Profile.Data(walletAddress, networkId),
         async () => {
             let [profit, volume, numberOfTrades, gain, investment] = [0, 0, 0, 0, 0];
 

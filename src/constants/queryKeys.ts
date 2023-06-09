@@ -82,13 +82,6 @@ const QUERY_KEYS = {
         ],
     },
     User: {
-        ProfileData: (walletAddress: string, networkId: NetworkId) => ['user', 'profileData', walletAddress, networkId],
-        AllPositions: (walletAddress: string, networkId: NetworkId) => [
-            'user',
-            'allPositions',
-            walletAddress,
-            networkId,
-        ],
         UserOpenPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'userOpenPositions',
@@ -108,6 +101,15 @@ const QUERY_KEYS = {
             walletAddress,
         ],
         UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['user', 'ammBuyVolume', networkId, period],
+    },
+    Profile: {
+        Data: (walletAddress: string, networkId: NetworkId) => ['profile', 'data', walletAddress, networkId],
+        AllPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'allPositions',
+            walletAddress,
+            networkId,
+        ],
     },
     Token: {
         StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],

@@ -15,7 +15,7 @@ import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPosit
 
 const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<UserPositionsData>) => {
     return useQuery<UserPositionsData>(
-        QUERY_KEYS.User.AllPositions(walletAddress, networkId),
+        QUERY_KEYS.Profile.AllPositions(walletAddress, networkId),
         async () => {
             const today = new Date();
             let claimableCount = 0;
