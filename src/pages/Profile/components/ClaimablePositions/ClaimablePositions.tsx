@@ -66,7 +66,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                         value: formatShortDate(row.maturityDate).toUpperCase(),
                     },
                     {
-                        value: <MyPositionAction position={row} />,
+                        value: <MyPositionAction position={row} isProfileAction />,
                     },
                 ];
 
@@ -90,13 +90,11 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                         currencyKey: row.currencyKey,
                         position: row.side,
                         width: '50px',
+                        displayInRowMobile: true,
                     },
                     cells: cells,
-                    link: isMobile
-                        ? row.isRanged
-                            ? buildRangeMarketLink(row.market)
-                            : buildOptionsMarketLink(row.market)
-                        : undefined,
+                    displayInRowMobile: true,
+                    gap: '8px',
                 };
             });
         } catch (e) {

@@ -443,7 +443,8 @@
                 "cash-out-progress": "Cashing out...",
                 "claim-win": "Claim win",
                 "claim-win-progress": "Claiming win...",
-                "results": "Results in"
+                "results": "Results in",
+                "position-value": "Position value"
             }
         },
         "phases": {

@@ -37,8 +37,9 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
             <CurrencyIcon
                 className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`}
                 fontSize={iconFontSize}
+                displayInRowMobile={displayInRowMobile}
             />
-            <AssetNameContainer displayInRow={displayInRow}>
+            <AssetNameContainer displayInRow={displayInRow} displayInRowMobile={displayInRowMobile}>
                 {!hideFullName && !position && (
                     <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
                 )}
@@ -67,7 +68,7 @@ const AssetContainer = styled.div<{ displayInRowMobile?: boolean; width?: string
     }
 `;
 
-const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
+const AssetNameContainer = styled.div<{ displayInRow?: boolean; displayInRowMobile?: boolean }>`
     display: ${(props) => (props.displayInRow ? 'flex' : 'block')};
     ${(props) => (props.displayInRow ? 'flex-direction: row;' : '')}
     ${(props) => (props.displayInRow ? 'align-items: baseline;' : '')}
@@ -75,7 +76,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     font-size: 15px;
     color: ${(props) => props.theme.textColor.primary};
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        text-align: center;
+        text-align: ${(props) => (props.displayInRowMobile ? 'left' : 'center')};
     }
 `;
 
@@ -95,6 +96,7 @@ const AssetName = styled.span<{ fontSize?: string }>`
 const CurrencyKey = styled.span<{ fontSize?: string }>`
     display: block;
     font-weight: 700;
+    line-height: 120%;
     font-size: ${(props) => props.fontSize || '12px'};
     color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
@@ -108,11 +110,11 @@ const Position = styled.span<{ fontSize?: string; color?: string }>`
     text-transform: uppercase;
 `;
 
-const CurrencyIcon = styled.i<{ fontSize?: string }>`
+const CurrencyIcon = styled.i<{ fontSize?: string; displayInRowMobile?: boolean }>`
     font-size: ${(props) => props.fontSize || '24px'};
     margin-right: 6px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-right: 0px;
+        margin-right: ${(props) => (props.displayInRowMobile ? '4px' : '0')};
     }
 `;
 

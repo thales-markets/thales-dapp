@@ -101,7 +101,7 @@ const Container = styled(FlexDivRow)`
     background: ${(props) => props.theme.background.secondary};
     color: ${(props) => props.theme.textColor.primary};
     padding: 13px 15px;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 13px;
     line-height: 13px;
     margin-bottom: 10px;
@@ -140,6 +140,7 @@ const Label = styled.label`
 const Value = styled.span<{ color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     font-size: 15px;
+    font-weight: 700;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
         span {
