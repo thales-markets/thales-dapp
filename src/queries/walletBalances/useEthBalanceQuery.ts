@@ -5,7 +5,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 const useEthBalanceQuery = (walletAddress: string, options?: UseQueryOptions<string>) => {
     return useQuery<string>(
-        QUERY_KEYS.User.EthBalance(walletAddress),
+        QUERY_KEYS.WalletBalances.Eth(walletAddress),
         async () => {
             const provider = (snxJSConnector as any).provider;
             const balance = await provider.getBalance(walletAddress);

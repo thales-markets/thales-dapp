@@ -16,7 +16,7 @@ const useRangedMarketPositionBalanceQuery = (
     options?: UseQueryOptions<RangedMarketBalanceInfo>
 ) => {
     return useQuery<RangedMarketBalanceInfo>(
-        QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId),
+        QUERY_KEYS.BinaryOptions.UserRangedMarketPositions(marketAddress, walletAddress, networkId),
         async () => {
             const rangedMarket = new ethers.Contract(
                 marketAddress,

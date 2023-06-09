@@ -6,7 +6,6 @@ import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
-import { BALANCE_THRESHOLD } from 'constants/token';
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';

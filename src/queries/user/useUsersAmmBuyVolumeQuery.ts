@@ -20,7 +20,7 @@ const useUsersAmmBuyVolumeQuery = (
     options?: UseQueryOptions<UsersAmmBuyVolume>
 ) => {
     return useQuery<UsersAmmBuyVolume>(
-        QUERY_KEYS.Token.UsersAmmBuyVolume(networkId, period),
+        QUERY_KEYS.User.UsersAmmBuyVolume(networkId, period),
         async () => {
             const baseUrl = `${generalConfig.API_URL}/rewardsv2/${networkId}/${period}`;
             const response = await fetch(baseUrl);

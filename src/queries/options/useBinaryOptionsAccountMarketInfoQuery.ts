@@ -11,7 +11,7 @@ const useBinaryOptionsAccountMarketInfoQuery = (
     options?: UseQueryOptions<AccountMarketInfo>
 ) => {
     return useQuery<AccountMarketInfo>(
-        QUERY_KEYS.BinaryOptions.AccountMarketInfo(marketAddress, walletAddress),
+        QUERY_KEYS.BinaryOptions.UserMarketPositions(marketAddress, walletAddress),
         async () => {
             const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getAccountMarketData(
                 marketAddress,
