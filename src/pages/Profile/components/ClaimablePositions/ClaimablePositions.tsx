@@ -92,6 +92,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                                 )}
                             </SPAAnchor>
                         ),
+                        width: isMobile ? undefined : '30px',
                     },
                 ];
 

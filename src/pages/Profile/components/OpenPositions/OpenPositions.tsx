@@ -106,6 +106,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                                 )}
                             </SPAAnchor>
                         ),
+                        width: isMobile ? undefined : '30px',
                     },
                 ];
 
