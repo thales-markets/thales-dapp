@@ -8,7 +8,6 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import styled, { useTheme } from 'styled-components';
 import { VaultTradeStatus } from 'enums/vault';
 import { ThemeInterface } from 'types/ui';
@@ -25,8 +24,6 @@ type TradesTableProps = {
 const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
         <Table
@@ -47,11 +44,6 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                             onClick={(e) => e.stopPropagation()}
                             href={buildOptionsMarketLink(cellProps.row.original.market)}
                         >
-                            <CurrencyIcon
-                                width={`${isMobile ? '18px' : '22px'}`}
-                                height={`${isMobile ? '18px' : '22px'}`}
-                                currencyKey={cellProps.cell.value}
-                            />
                             <CurrencyName>{cellProps.cell.value}</CurrencyName>
                         </SPAAnchor>
                     ),
