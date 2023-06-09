@@ -11,9 +11,6 @@ import { VaultTrade, VaultTrades } from 'types/vault';
 import styled, { useTheme } from 'styled-components';
 import { VaultTradeStatus } from 'enums/vault';
 import { ThemeInterface } from 'types/ui';
-import { useSelector } from 'react-redux';
-import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
 
 type TradesTableProps = {
     transactions: VaultTrades;
