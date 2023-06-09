@@ -1,11 +1,10 @@
 import orderBy from 'lodash/orderBy';
 import { PHASE } from '../constants/options';
-import { OptionsMarkets, Phase, UserLivePositions } from '../types/options';
+import { OptionsMarkets, Phase } from '../types/options';
 import { getSynthAsset } from './currency';
 import { formatCurrency } from './formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
-import { UserPosition } from 'types/profile';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
