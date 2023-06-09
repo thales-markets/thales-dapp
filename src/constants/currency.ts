@@ -121,15 +121,22 @@ const SYNTHS = [
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
-const CRYPTO_CURRENCY = [
+// Order is important, used for sorting
+export const CRYPTO_CURRENCY = [
+    'BTC',
+    'ETH',
+    'SNX',
     'ARB',
+    'OP',
+    'GMX',
+    'LINK',
+    'MAGIC',
+    'DPX',
+    'MATIC',
     'KNC',
     'COMP',
     'REN',
     'LEND',
-    'SNX',
-    'BTC',
-    'ETH',
     'XRP',
     'BCH',
     'LTC',
@@ -138,7 +145,6 @@ const CRYPTO_CURRENCY = [
     'XTZ',
     'XMR',
     'ADA',
-    'LINK',
     'TRX',
     'DASH',
     'ETC',
@@ -156,26 +162,21 @@ const CRYPTO_CURRENCY = [
     'UNI',
     'CRV',
     'AAVE',
-    'MATIC',
     'LYRA',
     'LUNA',
     'PERP',
     'APE',
     'CVX',
     'OHM',
-    'OP',
     'LOOKS',
     'DYDX',
     'ETC',
     'BUSD',
-    'MAGIC',
-    'DPX',
-    'GMX',
     'CAKE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
-const COMMODITY = ['XAU', 'XAG'];
+export const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
 
 const FIAT_CURRENCY = ['USD'];

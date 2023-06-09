@@ -23,6 +23,7 @@ import OpenPositions from './components/OpenPositions';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 
 const TradePage: React.FC = () => {
     const { t } = useTranslation();
@@ -35,7 +36,7 @@ const TradePage: React.FC = () => {
     const isMainnet = getIsMainnet(networkId);
 
     // states
-    const [currencyKey, setCurrencyKey] = useState('ETH');
+    const [currencyKey, setCurrencyKey] = useState(CRYPTO_CURRENCY_MAP.BTC);
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
     const [positionType, setPositionType] = useState(Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
@@ -79,7 +80,7 @@ const TradePage: React.FC = () => {
         }
     }, [allDates]);
 
-    useEffect(() => setCurrencyKey('ETH'), [networkId]);
+    useEffect(() => setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC), [networkId]);
 
     const getSelectedPrice = () => {
         if (market) {
