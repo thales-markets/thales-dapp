@@ -15,6 +15,8 @@ export const Tile = styled(FlexDiv)<{
     defaultFlowColor?: string;
     lineSmall?: boolean;
     hideFlow?: boolean;
+    displayInRowMobile?: boolean;
+    gap?: string;
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
@@ -28,7 +30,7 @@ export const Tile = styled(FlexDiv)<{
     height: 50px;
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
     margin-left: ${(props) => (props.hideFlow ? '0px' : '40px')};
-    gap: 4px;
+    gap: ${(props) => props.gap || '4px'};
     &:before {
         content: '';
         position: absolute;
@@ -63,9 +65,11 @@ export const Tile = styled(FlexDiv)<{
         }
     }
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: column;
+        flex-direction: ${(props) => (props.displayInRowMobile ? 'row' : 'column')};
         flex-wrap: wrap;
-        min-height: ${(props) => (props.heightSmall ? '50px' : '100px')};
+        min-height: ${(props) =>
+            props.hideFlow && props.displayInRowMobile ? '100%' : props.heightSmall ? '50px' : '100px'};
+        height: ${(props) => (props.hideFlow && props.displayInRowMobile ? '100%' : '50px')};
     }
 `;
 
@@ -131,6 +135,7 @@ export const CellTitle = styled.div<{ fontSize?: number }>`
     color: ${(props) => props.theme.textColor.secondary};
     text-transform: uppercase;
     line-height: 120%;
+    white-space: pre;
 `;
 
 export const CellValue = styled.div<{ fontSize?: number }>`

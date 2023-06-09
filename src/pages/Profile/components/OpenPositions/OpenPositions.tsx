@@ -80,7 +80,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                         value: <MaturityDate maturityDateUnix={row.maturityDate} showFullCounter={true} />,
                     },
                     {
-                        value: <MyPositionAction position={row} />,
+                        value: <MyPositionAction position={row} isProfileAction />,
                     },
                 ];
 
@@ -107,13 +107,11 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ exchangeRates, livePositi
                         currencyKey: row.currencyKey,
                         position: row.side,
                         width: '50px',
+                        displayInRowMobile: true,
                     },
                     cells: cells,
-                    link: isMobile
-                        ? row.isRanged
-                            ? buildRangeMarketLink(row.market, row.side)
-                            : buildOptionsMarketLink(row.market, row.side)
-                        : undefined,
+                    displayInRowMobile: true,
+                    gap: '8px',
                 };
             });
         } catch (e) {

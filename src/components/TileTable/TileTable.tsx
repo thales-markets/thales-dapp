@@ -33,6 +33,8 @@ export type TileRow = {
     disabled?: boolean;
     link?: string;
     heightSmall?: boolean;
+    displayInRowMobile?: boolean;
+    gap?: string;
 };
 
 type Properties = {
@@ -94,6 +96,8 @@ const TileTable: React.FC<Properties> = ({
                                 dotColor={row.dotColor}
                                 backgroundColor={row.backgroundColor}
                                 heightSmall={row.heightSmall}
+                                displayInRowMobile={row.displayInRowMobile}
+                                gap={row.gap}
                                 defaultFlowColor={defaultFlowColor}
                                 lineSmall={lineSmall}
                                 hideFlow={hideFlow}

@@ -13,7 +13,7 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -31,14 +31,19 @@ import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance } from 'utils/network';
 import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
+import { getIsMobile } from 'redux/modules/ui';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { UsingAmmLink } from '../styled-components';
+import Tooltip from 'components/Tooltip/Tooltip';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
 type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
+    isProfileAction?: boolean;
 };
 
-const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
+const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
@@ -47,6 +52,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -270,7 +276,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
         if (position.claimable && position.amount > 0) {
             return (
                 <Button
-                    {...defaultButtonProps}
+                    {...getDefaultButtonProps(isMobile)}
                     disabled={isSubmitting}
                     additionalStyles={additionalButtonStyle}
                     backgroundColor={theme.button.textColor.quaternary}
@@ -288,7 +294,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
         if (position.maturityDate > today.getTime() / 1000 && position.value > 0) {
             return (
                 <Button
-                    {...defaultButtonProps}
+                    {...getDefaultButtonProps(isMobile)}
                     disabled={isAllowing || isSubmitting}
                     additionalStyles={additionalButtonStyle}
                     onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
@@ -304,12 +310,33 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
             );
         }
         if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {
-            return (
+            return isProfileAction ? (
+                <PositionValueContainer>
+                    <Label>{t('options.trade.user-positions.position-value')}</Label>
+                    <Value>
+                        N/A
+                        <Tooltip
+                            overlay={
+                                <Trans
+                                    i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                    components={[
+                                        <span key="1">
+                                            <UsingAmmLink key="2" />
+                                        </span>,
+                                    ]}
+                                />
+                            }
+                            iconFontSize={12}
+                        />
+                    </Value>
+                </PositionValueContainer>
+            ) : (
                 <>
-                    <FlexContainer style={{ minWidth: 180 }}>
+                    <Separator />
+                    <ResultsContainer>
                         <Label>{t('options.trade.user-positions.results')}</Label>
                         <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
-                    </FlexContainer>
+                    </ResultsContainer>
                 </>
             );
         }
@@ -333,11 +360,11 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position }) => {
     );
 };
 
-const defaultButtonProps = {
-    height: '27px',
-    fontSize: '13px',
-    padding: '0px 10px',
-};
+const getDefaultButtonProps = (isMobile: boolean) => ({
+    height: isMobile ? '24px' : '27px',
+    fontSize: isMobile ? '12px' : '13px',
+    padding: '0px 5px',
+});
 
 const additionalButtonStyle: CSSProperties = {
     minWidth: '180px',
@@ -345,50 +372,43 @@ const additionalButtonStyle: CSSProperties = {
     border: 'none',
 };
 
-const AlignedFlex = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: flex-end;
-    width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: column;
-        gap: 6px;
-    }
+const PositionValueContainer = styled(FlexDivColumnCentered)`
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 120%;
+    white-space: nowrap;
+    min-width: 180px;
+    text-align: center;
 `;
 
-const FlexContainer = styled(AlignedFlex)`
+const ResultsContainer = styled(FlexDivCentered)`
     gap: 4px;
-    flex: 1;
-    justify-content: center;
-    &:first-child {
-        min-width: 195px;
-        max-width: 195px;
-    }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: row;
-        gap: 4px;
-    }
-`;
-
-const Label = styled.span`
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
-    color: ${(props) => props.theme.textColor.secondary};
     white-space: nowrap;
+    min-width: 180px;
 `;
 
-// const Separator = styled.div`
-//     min-width: 2px;
-//     width: 2px;
-//     height: 14px;
-//     background: ${(props) => props.theme.background.secondary};
-//     border-radius: 3px;
-//     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-//         display: none;
-//     }
-// `;
+const Label = styled.span`
+    color: ${(props) => props.theme.textColor.secondary};
+`;
+
+const Value = styled.span`
+    color: ${(props) => props.theme.textColor.primary};
+    font-weight: bold;
+    line-height: 100%;
+`;
+
+const Separator = styled.div`
+    min-width: 2px;
+    width: 2px;
+    height: 14px;
+    background: ${(props) => props.theme.background.secondary};
+    border-radius: 3px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
+`;
 
 export default MyPositionAction;
