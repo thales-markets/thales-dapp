@@ -895,6 +895,7 @@
                 "price": "Price",
                 "amount": "Amount",
                 "paid": "Paid",
+                "received": "Received",
                 "expired": "Expired",
                 "expires": "Expires @"
             },

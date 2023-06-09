@@ -119,7 +119,10 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ markets, trades
                         ),
                     },
                     {
-                        title: t('options.trading-profile.history.paid'),
+                        title:
+                            row.orderSide == 'sell'
+                                ? t('options.trading-profile.history.received')
+                                : t('options.trading-profile.history.paid'),
                         value: `$${formatCurrency(paidAmount)}`,
                     },
                     {

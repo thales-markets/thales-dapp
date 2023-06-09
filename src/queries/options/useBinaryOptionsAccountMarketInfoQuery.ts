@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { AccountMarketInfo } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { BALANCE_THRESHOLD } from 'constants/token';
+import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 
 const useBinaryOptionsAccountMarketInfoQuery = (
     marketAddress: string,
@@ -19,11 +19,11 @@ const useBinaryOptionsAccountMarketInfoQuery = (
             );
             return {
                 long:
-                    bigNumberFormatter(result.balances.up) < BALANCE_THRESHOLD
+                    bigNumberFormatter(result.balances.up) < POSITION_BALANCE_THRESHOLD
                         ? 0
                         : bigNumberFormatter(result.balances.up),
                 short:
-                    bigNumberFormatter(result.balances.down) < BALANCE_THRESHOLD
+                    bigNumberFormatter(result.balances.down) < POSITION_BALANCE_THRESHOLD
                         ? 0
                         : bigNumberFormatter(result.balances.down),
             };

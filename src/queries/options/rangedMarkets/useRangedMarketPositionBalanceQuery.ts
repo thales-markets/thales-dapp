@@ -7,7 +7,7 @@ import { NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import erc20Contract from 'utils/contracts/collateralContract';
-import { BALANCE_THRESHOLD } from 'constants/token';
+import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 
 const useRangedMarketPositionBalanceQuery = (
     marketAddress: string,
@@ -46,8 +46,8 @@ const useRangedMarketPositionBalanceQuery = (
             ]);
 
             return {
-                in: bigNumberFormatter(inBalance) < BALANCE_THRESHOLD ? 0 : bigNumberFormatter(inBalance),
-                out: bigNumberFormatter(outBalance) < BALANCE_THRESHOLD ? 0 : bigNumberFormatter(outBalance),
+                in: bigNumberFormatter(inBalance) < POSITION_BALANCE_THRESHOLD ? 0 : bigNumberFormatter(inBalance),
+                out: bigNumberFormatter(outBalance) < POSITION_BALANCE_THRESHOLD ? 0 : bigNumberFormatter(outBalance),
             };
         },
         {

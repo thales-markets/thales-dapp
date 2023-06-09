@@ -9,6 +9,7 @@ import { orderBy } from 'lodash';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
+import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 
 const useUserNotifications = (
     networkId: NetworkId,
@@ -37,7 +38,7 @@ const useUserNotifications = (
             const rangedClaimablePositions: any = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) < today.getTime() / 1000) {
                         if (isOptionClaimable(positionBalance)) claimablePositions.push(positionBalance);
                     }
@@ -45,7 +46,7 @@ const useUserNotifications = (
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) < today.getTime() / 1000) {
                         if (isOptionClaimable(positionBalance)) rangedClaimablePositions.push(positionBalance);
                     }

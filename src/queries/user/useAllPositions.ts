@@ -11,8 +11,7 @@ import {
 import snxJSConnector from 'utils/snxJSConnector';
 import { NetworkId } from 'utils/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
-import { BALANCE_THRESHOLD } from 'constants/token';
-import { RANGE_SIDE, SIDE } from 'constants/options';
+import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { BigNumber, ethers } from 'ethers';
@@ -52,7 +51,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             const rangedRipPositions: UserPosition[] = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (positionBalance.position.market.result === null) {
                         livePositions.push(positionBalance);
                     } else {
@@ -66,7 +65,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (positionBalance.position.market.result === null) {
                         liveRangedPositions.push(positionBalance);
                     } else {

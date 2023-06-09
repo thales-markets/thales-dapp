@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
-import { RANGE_SIDE, SIDE } from 'constants/options';
+import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -11,7 +11,6 @@ import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
-import { BALANCE_THRESHOLD } from 'constants/token';
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
 
@@ -44,7 +43,7 @@ const useUserOpenPositions = (
             const rangedClaimablePositions: any = [];
 
             positionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         livePositions.push(positionBalance);
                     } else {
@@ -54,7 +53,7 @@ const useUserOpenPositions = (
             });
 
             rangedPositionBalances.map((positionBalance: any) => {
-                if (bigNumberFormatter(positionBalance.amount) > BALANCE_THRESHOLD) {
+                if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
                         liveRangedPositions.push(positionBalance);
                     } else {
