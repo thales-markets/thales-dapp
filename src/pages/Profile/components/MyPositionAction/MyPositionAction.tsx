@@ -327,6 +327,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                                 />
                             }
                             iconFontSize={12}
+                            top={-1}
                         />
                     </Value>
                 </PositionValueContainer>

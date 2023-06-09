@@ -268,6 +268,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                             percentage: (market as OptionsMarketInfo).IV,
                                         })}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Value>
                             </SubContainer>
@@ -377,6 +378,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                     <Tooltip
                                         overlay={t('options.market.overview.amm-liquidity-tooltip')}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Header>
                                 {getLiquiditySectionValue(
@@ -477,6 +479,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}
@@ -501,6 +504,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}

@@ -231,6 +231,7 @@ const OPRewards: React.FC = () => {
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
                             iconFontSize={12}
+                            top={-1}
                         />
                     </p>
                 ),
@@ -258,6 +259,7 @@ const OPRewards: React.FC = () => {
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
                             iconFontSize={12}
+                            top={-1}
                         />
                     </p>
                 ),
