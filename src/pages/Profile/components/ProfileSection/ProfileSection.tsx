@@ -5,13 +5,16 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 type ProfileSectionProps = {
     title: string;
     maxHeight?: string;
+    mobileMaxHeight?: string;
 };
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ title, children, maxHeight }) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({ title, children, maxHeight, mobileMaxHeight }) => {
     return (
         <Section>
             <SectionHeader>{title}</SectionHeader>
-            <SectionContent maxHeight={maxHeight}>{children}</SectionContent>
+            <SectionContent maxHeight={maxHeight} mobileMaxHeight={mobileMaxHeight}>
+                {children}
+            </SectionContent>
         </Section>
     );
 };
@@ -40,13 +43,13 @@ const SectionHeader = styled.p`
     }
 `;
 
-const SectionContent = styled.div<{ maxHeight?: string }>`
+const SectionContent = styled.div<{ maxHeight?: string; mobileMaxHeight?: string }>`
     color: ${(props) => props.theme.textColor.primary};
     overflow-y: auto;
     padding-right: 4px;
     max-height: ${(props) => props.maxHeight || '320px'};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        max-height: ${(props) => props.maxHeight || '345px'};
+        max-height: ${(props) => props.mobileMaxHeight || '345px'};
     }
     &::-webkit-scrollbar {
         width: 5px;

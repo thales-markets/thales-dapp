@@ -67,8 +67,7 @@ export const Tile = styled(FlexDiv)<{
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: ${(props) => (props.displayInRowMobile ? 'row' : 'column')};
         flex-wrap: wrap;
-        min-height: ${(props) =>
-            props.hideFlow && props.displayInRowMobile ? '100%' : props.heightSmall ? '50px' : '100px'};
+        min-height: ${(props) => (props.heightSmall ? '50px' : '100px')};
         height: ${(props) => (props.hideFlow && props.displayInRowMobile ? '100%' : '50px')};
     }
 `;

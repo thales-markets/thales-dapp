@@ -216,14 +216,20 @@ const Profile: React.FC = () => {
                     <>
                         {view === NavItems.MyPositions && (
                             <>
-                                <ProfileSection title={t('options.trading-profile.accordions.claimable-positions')}>
+                                <ProfileSection
+                                    title={t('options.trading-profile.accordions.claimable-positions')}
+                                    mobileMaxHeight="360px"
+                                >
                                     <ClaimablePositions
                                         claimablePositions={positions.claimable}
                                         searchText={searchAddress ? '' : searchText}
                                         isLoading={userPositionsQuery.isLoading}
                                     />
                                 </ProfileSection>
-                                <ProfileSection title={t('options.trading-profile.accordions.open-positions')}>
+                                <ProfileSection
+                                    title={t('options.trading-profile.accordions.open-positions')}
+                                    mobileMaxHeight="360px"
+                                >
                                     <OpenPositions
                                         exchangeRates={exchangeRates}
                                         livePositions={positions.live}

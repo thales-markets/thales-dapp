@@ -7,7 +7,7 @@ import { ThemeInterface } from 'types/ui';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { getAmount, IconLink } from '../styled-components';
+import { getAmount, IconLink, TextLink } from '../styled-components';
 import { UserPosition } from 'types/options';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -68,22 +68,32 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ claimablePositi
                     {
                         value: <MyPositionAction position={row} isProfileAction />,
                     },
-                ];
-
-                if (!isMobile) {
-                    cells.push({
+                    {
                         value: (
                             <SPAAnchor
                                 href={
-                                    row.isRanged ? buildRangeMarketLink(row.market) : buildOptionsMarketLink(row.market)
+                                    row.isRanged
+                                        ? buildRangeMarketLink(row.market, row.side)
+                                        : buildOptionsMarketLink(row.market, row.side)
                                 }
                             >
-                                <IconLink className="icon icon--right" />
+                                {isMobile ? (
+                                    <TextLink>
+                                        {t('options.trading-profile.go-to-market')}{' '}
+                                        <IconLink
+                                            className="icon icon--right"
+                                            fontSize="10px"
+                                            marginTop="-2px"
+                                            color={theme.link.textColor.primary}
+                                        />
+                                    </TextLink>
+                                ) : (
+                                    <IconLink className="icon icon--right" />
+                                )}
                             </SPAAnchor>
                         ),
-                        width: '30px',
-                    });
-                }
+                    },
+                ];
 
                 return {
                     asset: {

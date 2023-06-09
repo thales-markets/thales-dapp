@@ -149,10 +149,18 @@ const Value = styled.span<{ color?: string; fontSize?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
 `;
 
-export const IconLink = styled.i<{ color?: string }>`
-    font-size: 20px;
+export const TextLink = styled.span`
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: string }>`
+    font-size: ${(props) => props.fontSize || '20px'};
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
+    margin-top: ${(props) => props.marginTop || '0px'};
 `;
 
 export const ArrowLink: React.FC<{ href: string }> = ({ href }) => {

@@ -916,7 +916,8 @@
                 "round-col": "round",
                 "tx-status-col": "tx status",
                 "no-transactions": "No transactions associated with this wallet"
-            }
+            },
+            "go-to-market": "Go to market"
         }
     },
     "governance": {
