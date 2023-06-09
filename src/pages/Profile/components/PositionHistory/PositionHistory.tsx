@@ -71,7 +71,9 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
                         value: (
                             <SPAAnchor
                                 href={
-                                    row.isRanged ? buildRangeMarketLink(row.market) : buildOptionsMarketLink(row.market)
+                                    row.isRanged
+                                        ? buildRangeMarketLink(row.market, row.side)
+                                        : buildOptionsMarketLink(row.market, row.side)
                                 }
                             >
                                 <IconLink className="icon icon--right" />
@@ -88,8 +90,8 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ claimedPositions, rip
                     cells: cells,
                     link: isMobile
                         ? row.isRanged
-                            ? buildRangeMarketLink(row.market)
-                            : buildOptionsMarketLink(row.market)
+                            ? buildRangeMarketLink(row.market, row.side)
+                            : buildOptionsMarketLink(row.market, row.side)
                         : undefined,
                 };
             });
