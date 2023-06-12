@@ -54,6 +54,10 @@ const getTitle = (t: any) => {
                 </>
             );
         }
+    if (`/${splittedPathname[1]}` === ROUTES.Options.Home && splittedPathname[2] !== undefined)
+        if (splittedPathname[2] !== '') {
+            return t('common.market');
+        }
 };
 
 const Container = styled.div`

@@ -275,7 +275,8 @@
             "warning": "Warning",
             "error": "Error"
         },
-        "progress": "Please wait..."
+        "progress": "Please wait...",
+        "market": "Market"
     },
     "options": {
         "trade": {
