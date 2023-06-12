@@ -233,6 +233,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 fill: theme.textColor.secondary,
                                 width: 100,
                             }}
+                            tickCount={10}
                             tickLine={false}
                             axisLine={false}
                             orientation="right"
@@ -287,6 +288,65 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />
         </Wrapper>
     );
+};
+
+const formatYAxisTick = (value: number) => {
+    return formatCurrencyWithSign(USD_SIGN, value, 2);
+};
+
+const getTicks = (prices: number[]) => {
+    const tickCount = 6;
+    let min = prices[0],
+        max = prices[0];
+    prices.map((price) => {
+        if (price > max) max = price;
+        if (price < min) min = price;
+    });
+
+    const roundedPow = Math.round(Math.log(prices[prices.length - 1]) / Math.log(10));
+    const step = Math.pow(10, roundedPow - 1);
+    const interval = (max - min) / tickCount;
+
+    let final = interval;
+    let stepChange = step;
+
+    if (final < stepChange / 2) {
+        while (final < stepChange / 2) {
+            stepChange = stepChange / 2;
+        }
+        final = stepChange;
+    } else if (final > stepChange * 1.5) {
+        while (final > stepChange * 1.5) {
+            stepChange = stepChange * 1.5;
+        }
+        final = stepChange;
+    }
+
+    // const stepFinal = Math.round(step / diff);
+    // const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
+    // const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
+
+    const startTick = Math.round(min / final) * final - 1 * final;
+    const endTick = Math.round(max / final) * final + 1 * final;
+    const ticks = [];
+
+    for (let tick = startTick; tick <= endTick; tick += final) {
+        ticks.push(tick);
+    }
+
+    if (ticks.length < 10) {
+        let ticksLeft = 10 - ticks.length;
+        while (ticksLeft > 0) {
+            if (ticksLeft % 2 === 0) {
+                ticks.push(ticks[ticks.length - 1] + final);
+            } else {
+                ticks.unshift(ticks[0] - final);
+            }
+            ticksLeft--;
+        }
+    }
+
+    return ticks;
 };
 
 const CustomLabel = (props: any) => {
@@ -377,54 +437,5 @@ const PriceChange = styled.span<{ up: boolean }>`
     line-height: 100%;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;
-
-const formatYAxisTick = (value: number) => {
-    return formatCurrencyWithSign(USD_SIGN, value, 2);
-};
-
-const getTicks = (prices: number[]) => {
-    const tickCount = 6;
-    let min = prices[0],
-        max = prices[0];
-    prices.map((price) => {
-        if (price > max) max = price;
-        if (price < min) min = price;
-    });
-
-    const roundedPow = Math.round(Math.log(prices[prices.length - 1]) / Math.log(10));
-    const step = Math.pow(10, roundedPow - 1);
-    const interval = (max - min) / tickCount;
-
-    let final = interval;
-    let stepChange = step;
-
-    if (final < stepChange / 2) {
-        while (final < stepChange / 2) {
-            stepChange = stepChange / 2;
-        }
-        final = stepChange;
-    }
-
-    if (final > stepChange * 1.5) {
-        while (final > stepChange * 1.5) {
-            stepChange = stepChange * 1.5;
-        }
-        final = stepChange;
-    }
-
-    // const stepFinal = Math.round(step / diff);
-    // const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
-    // const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
-
-    const startTick = Math.round(min / final) * final - 1 * final;
-    const endTick = Math.round(max / final) * final + 1 * final;
-    const ticks = [];
-
-    for (let tick = startTick; tick <= endTick; tick += final) {
-        ticks.push(tick);
-    }
-
-    return ticks;
-};
 
 export default PriceChart;
