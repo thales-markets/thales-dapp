@@ -55,7 +55,6 @@ const getTitle = (t: any) => {
 };
 
 const Container = styled.div`
-    height: 80px;
     width: 100%;
     max-width: 1440px;
     flex: unset;
@@ -63,13 +62,15 @@ const Container = styled.div`
     margin-left: auto;
     margin-right: auto;
     padding: 40px 20px 0px 92px;
+    @media (max-width: 1024px) {
+        margin-bottom: 30px;
+    }
 `;
 
 const PageTitle = styled.p`
     font-weight: 600;
-    font-size: 35px;
+    font-size: 26px;
     color: ${(props) => props.theme.textColor.primary};
-
     @media (max-width: 1024px) {
         display: none;
     }

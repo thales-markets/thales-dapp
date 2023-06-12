@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
-import LanguageSelector from 'components/LanguageSelector';
 import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {
@@ -62,11 +61,6 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             </Link>
 
             <HorizontalLine />
-
-            <LanguageContainerInBurger>
-                <Text>{t('landing-page.language')}</Text>
-                <LanguageSelector isBurger={true} />
-            </LanguageContainerInBurger>
 
             <ThalesButton>
                 <Logo
@@ -212,30 +206,12 @@ const Wrapper = styled.div`
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
 `;
 
-const LanguageContainerInBurger = styled.div`
-    width: 100%;
-    display: block;
-`;
-
 const HorizontalLine = styled.div`
     width: 100%;
     height: 2px;
     background: ${(props) => props.theme.landingPage.textColor.primary};
     position: relative;
     top: -30px;
-`;
-
-const Text = styled.p`
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 1.15em;
-    line-height: 91.91%;
-    margin-top: 12px;
-    z-index: 2;
-    text-align: left;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default BurgerContainer;

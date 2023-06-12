@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -63,9 +62,6 @@ const Header: React.FC = () => {
             >
                 <DotsIcon className="icon icon--three-dots" />
             </DotsContainer>
-            <LanguageContainer>
-                <LanguageSelector />
-            </LanguageContainer>
             <ButtonContainer>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
                     {t('landing-page.use-app')}
@@ -192,17 +188,6 @@ const DotsContainer = styled(CenteredDiv)`
     @media (max-width: 1024px) {
         display: block;
         margin-left: 20px;
-    }
-`;
-
-const LanguageContainer = styled(CenteredDiv)`
-    grid-column-start: 44;
-    grid-column-end: 46;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    z-index: 1000;
-    @media (max-width: 1024px) {
-        display: none;
     }
 `;
 
