@@ -35,6 +35,8 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
     if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
     if (location.pathname === ROUTES.Options.LiquidityPool) return t('liquidity-pool.title');
+    if (location.pathname === ROUTES.Options.Referral) return t('referral-page.title');
+    if (location.pathname === ROUTES.Options.Game) return t('common.sidebar.game-label');
     if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
         if (splittedPathname[2] === '') {
             return t('vaults.title');
