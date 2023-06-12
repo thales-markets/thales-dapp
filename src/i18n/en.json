@@ -191,6 +191,7 @@
         },
         "wallet": {
             "connect-your-wallet": "Connect wallet",
+            "wallet-options": "Wallet options",
             "disclaimer-info": "By connecting a wallet you agree to Thales DAO <terms>Terms of Use</terms> and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <disclaimer>disclaimer</disclaimer>",
             "balance": "Wallet balance"
         },

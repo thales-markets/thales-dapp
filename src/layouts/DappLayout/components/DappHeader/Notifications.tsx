@@ -28,7 +28,7 @@ const Notification: React.FC = () => {
 
     const hasNotifications = notifications > 0;
 
-    return (
+    return isWalletConnected ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
             <Wrapper hasBackground={hasNotifications}>
                 {hasNotifications ? (
@@ -41,6 +41,8 @@ const Notification: React.FC = () => {
                 )}
             </Wrapper>
         </SPAAnchor>
+    ) : (
+        <></>
     );
 };
 

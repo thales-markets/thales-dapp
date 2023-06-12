@@ -25,6 +25,8 @@ const UserWallet: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const [walletText, setWalletText] = useState('');
+
     // TODO: add support for testnets
     const selectedNetwork = useMemo(
         () =>
@@ -37,8 +39,8 @@ const UserWallet: React.FC = () => {
     const { trackEvent } = useMatomo();
 
     return (
-        <Wrapper>
-            <WrapperContainer>
+        <Container isWalletConnected={isWalletConnected}>
+            <Wrapper>
                 <UserSwap />
                 <WalletContainer
                     connected={isWalletConnected}
@@ -51,9 +53,12 @@ const UserWallet: React.FC = () => {
                         }
                         isWalletConnected ? openAccountModal?.() : openConnectModal?.();
                     }}
+                    onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
+                    onMouseLeave={() => setWalletText('')}
                 >
                     {walletAddress
-                        ? truncateAddress(
+                        ? walletText ||
+                          truncateAddress(
                               walletAddress,
                               TRUNCATE_ADDRESS_NUMBER_OF_CHARS,
                               TRUNCATE_ADDRESS_NUMBER_OF_CHARS
@@ -101,16 +106,16 @@ const UserWallet: React.FC = () => {
                         </SelectedNetworkContainer>
                     </OutsideClickHandler>
                 </NetworkInfoContainer>
-            </WrapperContainer>
-        </Wrapper>
+            </Wrapper>
+        </Container>
     );
 };
 
-const Wrapper = styled.div`
+const Container = styled.div<{ isWalletConnected: boolean }>`
     display: block;
     position: absolute;
     top: 40px;
-    right: 132px;
+    right: ${(props) => (props.isWalletConnected ? '132px' : '90px')};
     width: 390px;
 
     @media (max-width: 1024px) {
@@ -125,7 +130,7 @@ const Wrapper = styled.div`
     }
 `;
 
-const WrapperContainer = styled.div`
+const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -138,12 +143,12 @@ const WrapperContainer = styled.div`
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     width: 100%;
+    min-width: 120px;
     cursor: ${(props) => (props.connected ? 'text' : 'pointer')};
     padding: 4px 13px;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: fit-content;
     cursor: pointer;
     border-left: 2px solid ${(props) => props.theme.borderColor.secondary};
     border-right: 2px solid ${(props) => props.theme.borderColor.secondary};
@@ -152,6 +157,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     font-size: 13px;
     text-align: center;
     @media (max-width: 500px) {
+        min-width: fit-content;
         border-right: none;
         padding: 4px 8px;
     }
@@ -202,9 +208,6 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     padding: ${(props) => (props.selectedItem ? '4px 13px' : '6px')};
     font-size: 13px;
     border-radius: 8px;
-    &:hover {
-        background: ${(props) => props.theme.background.primary};
-    }
     svg {
         width: 16px;
         height: 16px;
