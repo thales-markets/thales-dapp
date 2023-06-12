@@ -1,7 +1,9 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import Tooltip from 'components/Tooltip';
 import ROUTES from 'constants/routes';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -10,6 +12,7 @@ import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
 
 const Notification: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -30,16 +33,18 @@ const Notification: React.FC = () => {
 
     return isWalletConnected ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
-            <Wrapper hasBackground={hasNotifications}>
-                {hasNotifications ? (
-                    <>
+            {hasNotifications ? (
+                <Tooltip overlay={t('header.notification.tooltip', { count: notifications })}>
+                    <Wrapper hasBackground={hasNotifications}>
                         <Bell className="icon icon--bell" />
                         <Number>{notifications}</Number>
-                    </>
-                ) : (
+                    </Wrapper>
+                </Tooltip>
+            ) : (
+                <Wrapper hasBackground={hasNotifications}>
                     <Icon className={`icon icon--user-avatar`} />
-                )}
-            </Wrapper>
+                </Wrapper>
+            )}
         </SPAAnchor>
     ) : (
         <></>

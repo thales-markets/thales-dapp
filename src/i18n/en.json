@@ -1,35 +1,11 @@
 {
     "header": {
-        "links": {
-            "learn": {
-                "title": "Learn",
-                "docs": "Documentation",
-                "guides": "Guides",
-                "whitepaper": "Whitepaper"
-            },
-            "governance": "Governance",
-            "faq": "FAQ",
-            "community": "Community",
-            "blog": "Blog",
-            "token": "Token"
-        }
+        "notification": { "tooltip": "You have {{count}} claimable positions" }
     },
     "footer": {
         "discover": "Discover",
         "about": "About",
         "resources": "Resources"
-    },
-    "user-info": {
-        "wallet": {
-            "my-thales": "My Thales",
-            "wallet-options": "Wallet Options",
-            "disconnect-wallet": "Disconnect Wallet",
-            "display-name": "Display Name",
-            "change-display-name": "Change Display Name",
-            "in-wallet": "In wallet",
-            "total-staked": "Total staked",
-            "total-escrowed": "Total escrowed"
-        }
     },
     "landing-page": {
         "title": "Trade, participate and have fun",
@@ -57,6 +33,21 @@
             "secondA": "Thales smart contracts exclusively support sUSD, an uncensorable and decentralized stablecoin, as collateral. This stablecoin is the flagship product of Synthetix.",
             "thirdQ": "What is the utility of the THALES token?",
             "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
+        },
+        "header": {
+            "links": {
+                "learn": {
+                    "title": "Learn",
+                    "docs": "Documentation",
+                    "guides": "Guides",
+                    "whitepaper": "Whitepaper"
+                },
+                "governance": "Governance",
+                "faq": "FAQ",
+                "community": "Community",
+                "blog": "Blog",
+                "token": "Token"
+            }
         },
         "footer": {
             "privacy-policy": "Privacy Policy",
