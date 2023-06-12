@@ -51,7 +51,7 @@ const Container = styled.div`
     height: 120px;
     border-radius: 11px;
     overflow: hidden;
-    margin: 0 0 30px 0;
+    margin: 0 0 20px 0;
     max-width: 100%;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;

@@ -26,6 +26,10 @@ import {
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
 import Toggle from './components/DateToggle';
+import { getNetworkId } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
 
 type PriceChartProps = {
     asset: string;
@@ -58,6 +62,9 @@ const ToggleButtons = [
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
     const theme: ThemeInterface = useTheme();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
 
@@ -65,7 +72,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesQuery();
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
 
     const currentPrice = useMemo(() => {
         if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
@@ -412,7 +419,7 @@ const IconPriceWrapper = styled.div`
 `;
 
 const Icon = styled.i`
-    font-size: 32px;
+    font-size: 28px;
 `;
 
 const Price = styled.span`

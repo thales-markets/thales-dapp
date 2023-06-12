@@ -8,13 +8,11 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import styled, { useTheme } from 'styled-components';
 import { VaultTradeStatus } from 'enums/vault';
 import { ThemeInterface } from 'types/ui';
-import { useSelector } from 'react-redux';
-import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { getColorPerPosition } from 'utils/options';
+import { Positions } from 'enums/options';
 
 type TradesTableProps = {
     transactions: VaultTrades;
@@ -25,8 +23,6 @@ type TradesTableProps = {
 const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
         <Table
@@ -47,11 +43,6 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                             onClick={(e) => e.stopPropagation()}
                             href={buildOptionsMarketLink(cellProps.row.original.market)}
                         >
-                            <CurrencyIcon
-                                width={`${isMobile ? '18px' : '22px'}`}
-                                height={`${isMobile ? '18px' : '22px'}`}
-                                currencyKey={cellProps.cell.value}
-                            />
                             <CurrencyName>{cellProps.cell.value}</CurrencyName>
                         </SPAAnchor>
                     ),
@@ -80,16 +71,15 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                     accessor: 'amount',
                     Cell: (cellProps: CellProps<VaultTrade, VaultTrade['amount']>) => (
                         <p>
-                            {cellProps.cell.value}
-                            <Icon
-                                color={
-                                    cellProps.cell.value === 0 ? theme.textColor.quaternary : theme.textColor.tertiary
-                                }
-                                marginLeft="6px"
-                                className={`v2-icon v2-icon--${
-                                    cellProps.cell.row.original.position === 0 ? 'up' : 'down'
-                                }`}
-                            ></Icon>
+                            {cellProps.cell.value}{' '}
+                            <Text
+                                color={getColorPerPosition(
+                                    cellProps.cell.row.original.position === 0 ? Positions.UP : Positions.DOWN,
+                                    theme
+                                )}
+                            >
+                                {cellProps.cell.row.original.position === 0 ? Positions.UP : Positions.DOWN}
+                            </Text>
                         </p>
                     ),
                     sortable: true,
@@ -109,19 +99,8 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                     accessor: 'result',
                     Cell: (cellProps: CellProps<VaultTrade, VaultTrade['result']>) => (
                         <>
-                            {cellProps.cell.value !== null && (
-                                <Icon
-                                    color={
-                                        cellProps.cell.value === 0
-                                            ? theme.textColor.quaternary
-                                            : theme.textColor.tertiary
-                                    }
-                                    marginRight="6px"
-                                    className={`v2-icon v2-icon--${cellProps.cell.value === 0 ? 'up' : 'down'}`}
-                                ></Icon>
-                            )}
                             {cellProps.row.original.status !== VaultTradeStatus.IN_PROGRESS && (
-                                <Status
+                                <Text
                                     color={
                                         cellProps.row.original.status == VaultTradeStatus.WIN
                                             ? theme.textColor.quaternary
@@ -129,7 +108,7 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                                     }
                                 >
                                     {cellProps.row.original.status}
-                                </Status>
+                                </Text>
                             )}
                         </>
                     ),
@@ -153,7 +132,7 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
     );
 });
 
-const Status = styled.span<{ color: string }>`
+const Text = styled.span<{ color: string }>`
     color: ${(props) => props.color};
 `;
 
@@ -161,13 +140,6 @@ const CurrencyName = styled.span`
     &:hover {
         text-decoration: underline;
     }
-`;
-
-const Icon = styled.i<{ color: string; marginLeft?: string; marginRight?: string }>`
-    font-size: 15px;
-    color: ${(props) => props.color} !important;
-    margin-left: ${(props) => props.marginLeft || '0px'};
-    margin-right: ${(props) => props.marginRight || '0px'};
 `;
 
 export default TradesTable;

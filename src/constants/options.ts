@@ -60,3 +60,5 @@ export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
 };
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
+
+export const POSITION_BALANCE_THRESHOLD = 0.01;

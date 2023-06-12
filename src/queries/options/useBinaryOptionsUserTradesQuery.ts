@@ -52,7 +52,7 @@ const useBinaryOptionsUserTradesQuery = (
     const collateral = snxJSConnector.collateral;
 
     return useQuery<OptionsTransactions>(
-        QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress),
+        QUERY_KEYS.BinaryOptions.UserMarketTrades(marketAddress, walletAddress),
         async () => {
             const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
                 thalesData.binaryOptions.trades({

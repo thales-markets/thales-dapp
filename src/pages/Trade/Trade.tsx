@@ -234,7 +234,7 @@ const RightSide = styled.div`
 
 const Info = styled(FlexDivColumnCentered)`
     font-weight: 700;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 100%;
     text-transform: uppercase;
     margin-bottom: 5px;

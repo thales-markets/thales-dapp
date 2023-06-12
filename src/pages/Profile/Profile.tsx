@@ -1,54 +1,47 @@
-import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import SearchInput from 'components/SearchInput/SearchInput';
-import TableGridSwitch from 'components/TableGridSwitch';
-import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
-import { USD_SIGN } from 'constants/currency';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useAllPositions from 'queries/user/useAllPositions';
-import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
-import useRangedPositions from 'queries/user/useRangedPositions';
 import queryString from 'query-string';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import localStore from 'utils/localStore';
 import { history } from 'utils/routes';
-import { getIsOVM, getIsPolygon } from '../../utils/network';
-import History from './components/History/History';
-import MaturedPositions from './components/MaturedPositions/MaturedPositions';
-import MyPositions from './components/MyPositions/MyPositions';
 import {
     Container,
-    ContainerFixed,
-    ContainerLeft,
-    ContainerRight,
-    ContentWrapper,
-    Label,
+    Header,
+    MainContainer,
     Nav,
     NavItem,
     Notification,
-    PriceContainer,
-    Row,
-    Value,
-    Wrapper,
+    StatsContainer,
+    StatsItem,
+    StatsLabel,
+    StatsValue,
+    Title,
 } from './styled-components';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
+import { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
+import BannerCarousel from 'pages/Trade/components/BannerCarousel';
+import ClaimablePositions from './components/ClaimablePositions';
+import PositionHistory from './components/PositionHistory';
+import TransactionHistory from './components/TransactionHistory';
+import OpenPositions from './components/OpenPositions';
+import { UserProfileData } from 'types/profile';
+import ProfileSection from './components/ProfileSection';
+import UserVaultsLp from './components/UserVaultsLp';
+import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
+import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 
 enum NavItems {
     MyPositions = 'my-positions',
-    MaturedPositions = 'matured-positions',
     History = 'history',
+    VaultsLp = 'vaults-lp',
 }
 
 const Profile: React.FC = () => {
@@ -58,64 +51,35 @@ const Profile: React.FC = () => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [searchAddress, setSearchAddress] = useState<string>('');
+    const [searchText, setSearchText] = useState<string>('');
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-    const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
-        enabled: isAppReady && markets !== undefined && markets?.length > 0,
+    const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
     });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
+    const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
 
-    const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady && walletAddress !== null,
+    const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
     });
+    const profileData: UserProfileData =
+        userProfileDataQuery.isSuccess && userProfileDataQuery.data
+            ? userProfileDataQuery.data
+            : {
+                  profit: 0,
+                  volume: 0,
+                  numberOfTrades: 0,
+                  gain: 0,
+                  investment: 0,
+              };
 
-    const positions = userPositionsQuery.isSuccess
-        ? userPositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
-
-    const userRangePositionsQuery = useRangedPositions(
-        networkId,
-        (searchAddress ? searchAddress : walletAddress) as any,
-        {
-            enabled: isAppReady && walletAddress !== null,
-        }
-    );
-
-    const userRangePositions = userRangePositionsQuery.isSuccess
-        ? userRangePositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
-
-    const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady && walletAddress !== null,
-    });
-    const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
-
-    const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
-    const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
-
-    const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
-    const [searchText, setSearchText] = useState('');
     const queryParamTab = queryString.parse(location.search).tab as NavItems;
     const [view, setView] = useState(
         Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
     );
-
-    const tableViewSwitchClickhandler = () => {
-        setSimpleView(!isSimpleView);
-        localStore.set(tableViewStorageKey, isSimpleView);
-    };
-
-    const showOPBanner = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-
-    const claimable = useMemo(() => {
-        return positions.claimable + userRangePositions.claimable;
-    }, [positions, userRangePositions]);
 
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
@@ -143,127 +107,129 @@ const Profile: React.FC = () => {
 
     return (
         <>
-            {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
-            <Container layout={isSimpleView}>
-                <ContainerFixed>
+            <BannerCarousel />
+            <Container>
+                <Header>
+                    <Title>{t('options.trading-profile.title')}</Title>
                     <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
+                        width="300px"
+                        height="28px"
+                        iconTop="6px"
                     />
-                    <TableGridSwitch
-                        value={!isSimpleView}
-                        clickEventHandler={tableViewSwitchClickhandler}
-                        labels={[t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)]}
-                    />
-                </ContainerFixed>
-                <ContainerLeft layout={isSimpleView}>
-                    <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
+                </Header>
+                <MainContainer>
+                    <StatsContainer>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
+                            <StatsValue
+                                color={
+                                    profileData.profit > 0
+                                        ? theme.textColor.quaternary
+                                        : profileData.profit < 0
+                                        ? theme.textColor.tertiary
+                                        : theme.textColor.primary
+                                }
+                            >
+                                {userProfileDataQuery.isLoading
+                                    ? '-'
+                                    : formatCurrencyWithSign(USD_SIGN, profileData.profit, 2)}
+                            </StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.gain-col')}:</StatsLabel>
+                            <StatsValue
+                                color={
+                                    profileData.gain > 0
+                                        ? theme.textColor.quaternary
+                                        : profileData.gain < 0
+                                        ? theme.textColor.tertiary
+                                        : theme.textColor.primary
+                                }
+                            >
+                                {userProfileDataQuery.isLoading ? '-' : formatPercentage(profileData.gain)}
+                            </StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.trades-col')}:</StatsLabel>
+                            <StatsValue>{userProfileDataQuery.isLoading ? '-' : profileData.numberOfTrades}</StatsValue>
+                        </StatsItem>
+                        <StatsItem>
+                            <StatsLabel>{t('options.leaderboard.table.volume-col')}:</StatsLabel>
+                            <StatsValue>
+                                {userProfileDataQuery.isLoading
+                                    ? '-'
+                                    : formatCurrencyWithSign(USD_SIGN, profileData.volume, 2)}
+                            </StatsValue>
+                        </StatsItem>
+                    </StatsContainer>
+                    <Nav>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
-                            className={view === NavItems.MyPositions ? 'active' : ''}
+                            active={view === NavItems.MyPositions}
                         >
                             {t('options.trading-profile.tabs.my-positions')}
+                            {notifications > 0 && <Notification>{notifications}</Notification>}
                         </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.MaturedPositions)}
-                            className={view === NavItems.MaturedPositions ? 'active' : ''}
-                        >
-                            {t('options.trading-profile.tabs.matured-positions')}
-                            {claimable > 0 && <Notification> {claimable} </Notification>}
-                        </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.History)}
-                            className={view === NavItems.History ? 'active' : ''}
-                        >
+                        <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
+                        <NavItem
+                            onClick={() => onTabClickHandler(NavItems.VaultsLp)}
+                            active={view === NavItems.VaultsLp}
+                        >
+                            {t('options.trading-profile.tabs.vaults-lp')}
+                        </NavItem>
                     </Nav>
-                    <ContentWrapper isScrollable={isSimpleView || view === NavItems.History}>
+                    <>
                         {view === NavItems.MyPositions && (
-                            <MyPositions
-                                isSimpleView={isSimpleView}
-                                exchangeRates={exchangeRates}
-                                positions={positions.live}
-                                rangedPositions={userRangePositions.live}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading}
-                            />
-                        )}
-                        {view === NavItems.MaturedPositions && (
-                            <MaturedPositions
-                                isSimpleView={isSimpleView}
-                                positions={positions.matured}
-                                claimed={positions.claimed}
-                                claimedRange={userRangePositions.claimed}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
-                                rangedPositions={userRangePositions.matured}
-                            />
+                            <>
+                                <ProfileSection
+                                    title={t('options.trading-profile.accordions.claimable-positions')}
+                                    mobileMaxHeight="360px"
+                                >
+                                    <ClaimablePositions
+                                        searchAddress={searchAddress}
+                                        searchText={searchAddress ? '' : searchText}
+                                    />
+                                </ProfileSection>
+                                <ProfileSection
+                                    title={t('options.trading-profile.accordions.open-positions')}
+                                    mobileMaxHeight="360px"
+                                >
+                                    <OpenPositions
+                                        searchAddress={searchAddress}
+                                        searchText={searchAddress ? '' : searchText}
+                                    />
+                                </ProfileSection>
+                            </>
                         )}
                         {view === NavItems.History && (
-                            <History
-                                markets={[...(markets as any)]}
-                                trades={dataForUI ? dataForUI.trades : []}
-                                searchText={searchAddress ? '' : searchText}
-                                isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
-                            />
+                            <>
+                                <ProfileSection title={t('options.trading-profile.accordions.transaction-history')}>
+                                    <TransactionHistory
+                                        searchAddress={searchAddress}
+                                        searchText={searchAddress ? '' : searchText}
+                                    />
+                                </ProfileSection>
+                                <ProfileSection title={t('options.trading-profile.accordions.position-history')}>
+                                    <PositionHistory
+                                        searchAddress={searchAddress}
+                                        searchText={searchAddress ? '' : searchText}
+                                    />
+                                </ProfileSection>
+                            </>
                         )}
-                    </ContentWrapper>
-                </ContainerLeft>
-                <ContainerRight layout={isSimpleView}>
-                    <PieChartOptionsAllocated
-                        claimable={positions.claimableAmount + userRangePositions.claimableAmount}
-                    />
-                    <Wrapper>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.netprofit-col')}: </Label>
-                            <Value
-                                color={
-                                    dataForUI?.userData.profit === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.profit > 0
-                                        ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
-                                }
-                            >
-                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
-                            </Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.gain-col')}: </Label>
-                            <Value
-                                color={
-                                    dataForUI?.userData.gain === 0
-                                        ? theme.textColor.primary
-                                        : dataForUI?.userData.gain > 0
-                                        ? theme.textColor.quaternary
-                                        : theme.textColor.tertiary
-                                }
-                            >
-                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
-                            </Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.trades-col')}: </Label>
-                            <Value>{dataForUI?.userData.trades}</Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.volume-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</Value>
-                        </Row>
-                        <Row>
-                            <Label>{t('options.leaderboard.table.investment-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.investment, 2)}</Value>
-                        </Row>
-                        {!isPolygon && (
-                            <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
-                                <ThalesBalance showTitle={true} />
-                            </PriceContainer>
+                        {view === NavItems.VaultsLp && (
+                            <>
+                                <UserVaultsLp />
+                            </>
                         )}
-                    </Wrapper>
-                </ContainerRight>
+                    </>
+                </MainContainer>
             </Container>
             <Footer />
         </>

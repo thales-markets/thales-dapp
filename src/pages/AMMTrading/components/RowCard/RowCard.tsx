@@ -39,6 +39,7 @@ import {
     UsingAmmLink,
     Value,
 } from './styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 type RowCardProps = {
     isRangedMarket: boolean;
@@ -150,21 +151,6 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
               );
     }, [market.currentPrice, (market as OptionsMarketInfo).strikePrice, market.phase, isRangedMarket]);
 
-    const getColorPerPosition = (position: Positions) => {
-        switch (position) {
-            case Positions.UP:
-                return theme.positionColor.up;
-            case Positions.DOWN:
-                return theme.positionColor.down;
-            case Positions.IN:
-                return theme.positionColor.in;
-            case Positions.OUT:
-                return theme.positionColor.out;
-            default:
-                return theme.textColor.primary;
-        }
-    };
-
     const getMarketPriceSection = () => (
         <SubContainer>
             <Header>
@@ -192,10 +178,12 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     ) => (
         <Value>
             {positionLeftBalance > 0 && <Value>{formatCurrencyWithPrecision(positionLeftBalance)} </Value>}
-            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft)}>{positionLeft}</Value>}
+            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft, theme)}>{positionLeft}</Value>}
             {positionLeftBalance > 0 && positionRightBalance > 0 && ' / '}
             {positionRightBalance > 0 && <Value>{formatCurrencyWithPrecision(positionRightBalance)} </Value>}
-            {positionRightBalance > 0 && <Value color={getColorPerPosition(positionRight)}>{positionRight}</Value>}
+            {positionRightBalance > 0 && (
+                <Value color={getColorPerPosition(positionRight, theme)}>{positionRight}</Value>
+            )}
             {isLoading ? '-' : positionLeftBalance == 0 && positionRightBalance == 0 && 'N/A'}
         </Value>
     );
@@ -210,11 +198,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {(ammData && positionLeftLiquidity > 0) || (ammData && positionRightLiquidity > 0) ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {ammData ? formatCurrency(positionLeftLiquidity, 0) : '0'}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {ammData ? formatCurrency(positionRightLiquidity, 0) : '0'}
                     </Value>
                 </>
@@ -236,11 +224,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {ammData ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionLeftPrice)}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionRightPrice)}
                     </Value>
                 </>
@@ -251,7 +239,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     );
 
     const getResultSectionValue = (positionResult: Positions) => (
-        <Value color={getColorPerPosition(positionResult)}>{positionResult}</Value>
+        <Value color={getColorPerPosition(positionResult, theme)}>{positionResult}</Value>
     );
 
     return (
@@ -280,6 +268,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                             percentage: (market as OptionsMarketInfo).IV,
                                         })}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Value>
                             </SubContainer>
@@ -322,7 +311,13 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                             <SubContainer>
                                 <Header>{t('options.market.overview.price-difference')}</Header>
                                 <Value
-                                    color={priceDifference > 0 ? theme.textColor.quaternary : theme.textColor.tertiary}
+                                    color={
+                                        priceDifference > 0
+                                            ? theme.textColor.quaternary
+                                            : priceDifference < 0
+                                            ? theme.textColor.tertiary
+                                            : theme.textColor.primary
+                                    }
                                 >
                                     {priceDifference ? `${priceDifference.toFixed(2)}%` : 'N/A'}
                                 </Value>
@@ -383,6 +378,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                     <Tooltip
                                         overlay={t('options.market.overview.amm-liquidity-tooltip')}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Header>
                                 {getLiquiditySectionValue(
@@ -483,6 +479,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}
@@ -507,6 +504,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}

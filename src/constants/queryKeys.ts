@@ -5,22 +5,18 @@ import { NetworkId } from 'utils/network';
 
 const QUERY_KEYS = {
     WalletBalances: {
-        Balance: (walletAddress: string, networkId: NetworkId) => ['balance', walletAddress, networkId],
-        Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
-        ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
-        Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+        StableCoinBalance: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'stableCoin',
+            walletAddress,
+            networkId,
+        ],
+        Eth: (walletAddress: string) => ['walletBalances', 'eth', walletAddress],
         Thales: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'thales', walletAddress, networkId],
         OpThales: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
             'opThales',
             walletAddress,
-            networkId,
-        ],
-        Positions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
-            'walletBalances',
-            'positions',
-            walletAddress,
-            marketAddress,
             networkId,
         ],
         MultipleCollateral: (walletAddress: string, networkId: NetworkId) => [
@@ -31,11 +27,8 @@ const QUERY_KEYS = {
         ],
     },
     Rates: {
-        ExchangeRates: () => ['rates', 'exchangeRates'],
+        ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: NetworkId) => ['rates', 'exchangeRatesMarketData', networkId],
-    },
-    Synths: {
-        FrozenSynths: ['synths', 'frozenSynths'],
     },
     Medium: {
         Posts: ['medium', 'posts'],
@@ -43,64 +36,44 @@ const QUERY_KEYS = {
     PriceData: {
         Currency: (currencyKey: string) => ['pricedata', currencyKey],
     },
-    Network: {
-        EthGasPrice: ['network', 'ethGasPrice'],
-        EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],
-    },
     BinaryOptions: {
-        Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
-        RangedMarkets: (networkId: NetworkId, marketIds?: string[]) => [
-            'binaryOptions',
-            'rangedMarkets',
-            networkId,
-            marketIds,
-        ],
-        SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
-        Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
-        RangedMarket: (marketAddress: string) => ['positionalMarkets', 'market', marketAddress],
-        AccountMarketInfo: (marketAddress: string, accountAddress: string) => [
-            'binaryOptions',
-            'markets',
+        Markets: (networkId: NetworkId) => ['markets', networkId],
+        RangedMarkets: (networkId: NetworkId, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
+        SynthsMap: (networkId: NetworkId) => ['synthsMap', networkId],
+        Market: (marketAddress: string) => ['market', marketAddress],
+        RangedMarket: (marketAddress: string) => ['rangedMarket', marketAddress],
+        UserMarketPositions: (marketAddress: string, accountAddress: string) => [
+            'market',
+            'positions',
             marketAddress,
             accountAddress,
         ],
-        RecentTransactions: (marketAddress: string) => ['binaryOptions', 'transactions', marketAddress],
-        UserTransactions: (marketAddress: string, walletAddress: string) => [
-            'binaryOptions',
+        UserRangedMarketPositions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
+            'rangedMarket',
+            'positions',
+            walletAddress,
+            marketAddress,
+            networkId,
+        ],
+        MarketTransactions: (marketAddress: string) => ['market', 'transactions', marketAddress],
+        UserMarketTransactions: (marketAddress: string, walletAddress: string) => [
+            'market',
             'transactions',
             marketAddress,
             walletAddress,
         ],
-        UserMarkets: (walletAddress: string, networkId: NetworkId) => [
-            'binaryOptions',
-            'userMarkets',
-            walletAddress,
-            networkId,
-        ],
-        OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
-        Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
-        UserTrades: (marketAddress: string, walletAddress: string) => [
-            'binaryOptions',
+        MarketTrades: (marketAddress: string) => ['market', 'trades', marketAddress],
+        UserMarketTrades: (marketAddress: string, walletAddress: string) => [
+            'market',
             'trades',
             marketAddress,
             walletAddress,
         ],
-        Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
-        Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
-        OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
-        RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
-        AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
-        RangedAmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'rangedAmm', marketAddress],
-        DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
-        AvailableAssets: (networkId: NetworkId) => ['binaryOptions', 'availableAssets', networkId],
-        MaturityDatesByAsset: (asset: string, networkId: NetworkId) => [
-            'binaryOptions',
-            'maturityDatesByAsset',
-            asset,
-            networkId,
-        ],
+        AmmMaxLimits: (marketAddress: string) => ['amm', marketAddress],
+        RangedAmmMaxLimits: (marketAddress: string) => ['rangedAmm', marketAddress],
+        AvailableAssets: (networkId: NetworkId) => ['availableAssets', networkId],
+        MaturityDatesByAsset: (asset: string, networkId: NetworkId) => ['maturityDatesByAsset', asset, networkId],
         MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: NetworkId) => [
-            'binaryOptions',
             'marketsByAssetAndDate',
             asset,
             date,
@@ -109,33 +82,47 @@ const QUERY_KEYS = {
         ],
     },
     User: {
-        Data: (walletAddress: string, networkId: NetworkId) => ['user', 'transactions', walletAddress, networkId],
-        AllPositions: (walletAddress: string, networkId: NetworkId) => [
-            'user',
-            'allPositions',
-            walletAddress,
-            networkId,
-        ],
         UserOpenPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'userOpenPositions',
             walletAddress,
             networkId,
         ],
-        UserNotifications: (walletAddress: string, networkId: NetworkId) => [
+        Notifications: (walletAddress: string, networkId: NetworkId) => [
             'user',
-            'userNotifications',
+            'notifications',
             walletAddress,
             networkId,
         ],
-        RangedPositions: (walletAddress: string, networkId: NetworkId) => [
+        VaultsAndLpTransactions: (networkId: NetworkId, walletAddress: string) => [
             'user',
-            'rangedPositions',
+            'vaultsAndLpTransactions',
+            networkId,
+            walletAddress,
+        ],
+        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['user', 'ammBuyVolume', networkId, period],
+    },
+    Profile: {
+        Data: (walletAddress: string, networkId: NetworkId) => ['profile', 'data', walletAddress, networkId],
+        OpenPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'openPositions',
             walletAddress,
             networkId,
         ],
-        EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
-        DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
+        ClaimablePositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'claimablePositions',
+            walletAddress,
+            networkId,
+        ],
+        ClosedPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'closedPositions',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (walletAddress: string, networkId: NetworkId) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
         StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],
@@ -187,7 +174,6 @@ const QUERY_KEYS = {
             networkId,
         ],
         Gelato: () => ['token', 'gelato'],
-        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
     },
     TaleOfThales: {
@@ -241,7 +227,6 @@ const QUERY_KEYS = {
             hash,
             walletAddress,
         ],
-        CouncilMembers: () => ['governance', 'councilMembers'],
         ThalesStakers: (filter: string) => ['governance', 'thalesStakers', filter],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',

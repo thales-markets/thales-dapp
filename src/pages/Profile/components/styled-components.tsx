@@ -1,174 +1,172 @@
+import { LINKS } from 'constants/links';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { TFunction } from 'i18next';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
+import { getColorPerPosition } from 'utils/options';
+
+export const Container = styled(FlexDivColumn)`
+    padding-top: 10px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding-top: 5px;
+    }
+`;
 
 export const Content = styled.div`
     display: content;
+    &:not(:last-child) {
+        margin-bottom: 15px;
+    }
 `;
 
-export const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    position: relative;
-    min-height: 200px;
-`;
-
-export const MiddleContrainer = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-    min-width: 180px;
-`;
-
-export const TableText = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 285%;
-    text-align: right;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
-export const CardWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ? props.theme.background.quaternary : 'transparent')};
-    margin-bottom: 15px;
+export const Card = styled(FlexDivRowCentered)`
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 15px;
-    padding: 2px;
-    border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.primary}`)};
+    padding: 20px 25px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 12px 10px;
+    }
     &:hover {
         transform: scale(1.02);
-        border: ${(props) => (props.background ? 'none' : `2px solid ${props.theme.borderColor.secondary}`)};
     }
 `;
+export const CardColumn = styled(FlexDivColumn)``;
 
-export const Card = styled.div`
-    background: ${(props) => props.theme.background.primary};
-    box-sizing: border-box;
-    border-radius: 15px;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    @media (max-width: 380px) {
-        padding: 16px 10px;
-    }
-`;
-export const CardColumn = styled.div<{ ranged?: boolean }>`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    height: 100%;
-    flex: ${(props) => (props.ranged ? 'none' : '2')};
+export const CardRow = styled(FlexDivCentered)`
+    margin-bottom: 10px;
 `;
 
-export const CardRow = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    & > svg {
-        width: 36px !important;
-        height: 36px !important;
-    }
-
-    @media (max-width: 500px) {
-        & > svg {
-            width: 26px !important;
-            height: 26px !important;
-            margin-bottom: 4px;
-        }
-    }
-`;
-
-const CardText = styled.span`
-    display: block;
-    color: ${(props) => props.theme.textColor.primary};
-    line-height: 100%;
-    white-space: pre;
-`;
-
-export const CardSection = styled.div`
-    display: block;
+export const CardSection = styled(FlexDivColumn)`
     &:not(:last-child) {
         margin-bottom: 10px;
     }
-    @media (max-width: 500px) {
-        & > svg {
-            width: 32px !important;
-            height: 32px !important;
-            margin-bottom: 4px;
-        }
-    }
 `;
 
-export const CardRowTitle = styled(CardText)`
-    font-size: 14px;
+export const CardRowTitle = styled.span`
+    font-size: 13px;
+    line-height: 100%;
+    white-space: pre;
+    color: ${(props) => props.theme.textColor.secondary};
     font-weight: 400;
-    text-transform: capitalize;
     margin-bottom: 4px;
-    @media (max-width: 500px) {
-        font-size: 8px;
-    }
-`;
-
-export const CardRowSubtitle = styled(CardText)`
-    font-size: 23px;
-    span {
-        font-size: 23px !important;
-        white-space: pre;
-    }
-    font-weight: 700;
-    @media (max-width: 500px) {
-        font-size: 14px;
-        span {
-            font-size: 14px !important;
-        }
-    }
-
-    @media (max-width: 400px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
+    }
+`;
+
+export const CardRowValue = styled.span<{ color?: string }>`
+    font-size: 18px;
+    line-height: 100%;
+    white-space: pre;
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    font-weight: 700;
+    span {
+        font-size: 18px !important;
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
         span {
-            font-size: 12px !important;
+            font-size: 13px !important;
         }
     }
 `;
 
-export const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    color: ${(props) => (props.priceDiff ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+export const CurrencyIcon = styled.i<{ fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '32px'};
+    margin-right: 6px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 24px;
+    }
 `;
 
-export const getColor = (data: any, theme: ThemeInterface) => {
-    if (data.range) {
-        return data.balances.type === Positions.IN ? theme.positionColor.in : theme.positionColor.out;
+export const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 200px;
+    width: 100%;
+`;
+
+export const NoDataContainer = styled(FlexDivCentered)`
+    color: ${(props) => props.theme.textColor.primary};
+    justify-content: center;
+    margin: 20px 0px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
     }
-    return data.balances.type === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
+  }
+`;
+
+export const TooltipLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const UsingAmmLink: React.FC = () => {
+    const { t } = useTranslation();
+    return (
+        <TooltipLink
+            target="_blank"
+            rel="noreferrer"
+            href={LINKS.AMM.UsingAmm}
+            onClick={(event) => {
+                event?.stopPropagation();
+            }}
+        >
+            {t('common.here')}
+        </TooltipLink>
+    );
 };
 
-export const Icon = styled.i<{ margin?: string; color?: string }>`
-    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-    ${(props) => (props.color ? `color: ${props.color} !important` : '')};
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
+export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => (
+    <Value>
+        {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
+    </Value>
+);
+
+export const getStatus = (claimed: boolean, theme: ThemeInterface, t: TFunction) =>
+    claimed ? (
+        <Value color={theme.textColor.quaternary} fontSize="15px">
+            {t('options.home.market-card.claimed')}
+        </Value>
+    ) : (
+        <Value color={theme.textColor.tertiary} fontSize="15px">
+            {t('options.home.market-card.rip')}
+        </Value>
+    );
+
+const Value = styled.span<{ color?: string; fontSize?: string }>`
+    font-size: ${(props) => props.fontSize || '12px'};
+    color: ${(props) => props.color || props.theme.textColor.primary};
+`;
+
+export const TextLink = styled.span`
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
     }
 `;
 
-export const NoDataText = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 15px;
-    }
+export const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: string }>`
+    font-size: ${(props) => props.fontSize || '20px'};
+    color: ${(props) => props.color || props.theme.textColor.secondary};
+    text-transform: none;
+    margin-top: ${(props) => props.marginTop || '0px'};
 `;
 
-export const NoDataContainer = styled.div`
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin-top: 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-top: 10px;
-    }
-`;
+export const ArrowLink: React.FC<{ href: string }> = ({ href }) => {
+    return (
+        <a target="_blank" rel="noreferrer" href={href}>
+            <IconLink className="icon icon--right" />
+        </a>
+    );
+};

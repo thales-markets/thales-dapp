@@ -1,26 +1,30 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
-import useUserNotifications from 'queries/user/useUserNotifications';
+import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
 
 const Notification: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const notificationQuery = useUserNotifications(networkId, walletAddress, {
-        enabled: walletAddress !== '',
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
     });
 
     const notifications = useMemo(() => {
-        if (notificationQuery.isSuccess) {
-            return notificationQuery.data.length;
+        if (notificationsQuery.isSuccess && notificationsQuery.data) {
+            return notificationsQuery.data;
         }
         return 0;
-    }, [notificationQuery]);
+    }, [notificationsQuery]);
 
     return notifications > 0 ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
