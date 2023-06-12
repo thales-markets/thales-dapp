@@ -15,6 +15,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { useSelector } from 'react-redux';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -42,7 +43,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 <Separator />
                 <FlexContainer>
                     <Label>{t('options.trade.user-positions.size')}</Label>
-                    <Value>{`${formatNumberShort(position.amount)}  ${position.side}`}</Value>
+                    <Value>
+                        {formatNumberShort(position.amount)}{' '}
+                        <Value color={getColorPerPosition(position.side, theme)}>{position.side}</Value>
+                    </Value>
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
@@ -137,8 +141,8 @@ const Label = styled.span`
     white-space: nowrap;
 `;
 
-const Value = styled(Label)`
-    color: ${(props) => props.theme.textColor.primary};
+const Value = styled(Label)<{ color?: string }>`
+    color: ${(props) => props.color || props.theme.textColor.primary};
     white-space: nowrap;
 `;
 
