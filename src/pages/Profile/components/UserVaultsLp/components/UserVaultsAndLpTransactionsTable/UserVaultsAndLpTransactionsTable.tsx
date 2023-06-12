@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 
-export const UserVaultsAndLpTransactionsTable: React.FC = () => {
+const UserVaultsAndLpTransactionsTable: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));

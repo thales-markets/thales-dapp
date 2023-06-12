@@ -6,7 +6,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { buildLiquidityPoolLink } from 'utils/routes';
-import VaultLpDetails from '../VaultLpDetails/VaultLpDetails';
+import VaultLpDetails from '../VaultLpDetails';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';

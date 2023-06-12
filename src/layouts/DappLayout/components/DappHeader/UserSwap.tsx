@@ -36,7 +36,7 @@ type SwapCollateral = {
     balance: number;
 };
 
-export const UserSwap: React.FC = () => {
+const UserSwap: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));

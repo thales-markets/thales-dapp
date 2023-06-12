@@ -7,7 +7,7 @@ import UserLiquidityPool from './components/UserLiquidityPool';
 import UserVault from './components/UserVault';
 import ProfileSection from '../ProfileSection/ProfileSection';
 import { useTranslation } from 'react-i18next';
-import UserVaultsAndLpTransactionsTable from './components/UserVaultsAndLpTransactionsTable/UserVaultsAndLpTransactionsTable';
+import UserVaultsAndLpTransactionsTable from './components/UserVaultsAndLpTransactionsTable';
 
 const UserVaultsLp: React.FC = () => {
     const { t } = useTranslation();
