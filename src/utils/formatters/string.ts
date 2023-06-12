@@ -3,9 +3,3 @@ export const truncateAddress = (address: string, first = 5, last = 5) =>
 
 export const truncateText = (text: string, maxLength: number) =>
     text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-
-export const formatPriceChangeInterval = (days: number | undefined, postfix: string) => {
-    if (!days || days == 1) return `24h ${postfix}`;
-
-    return `${days}d ${postfix}`;
-};

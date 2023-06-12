@@ -227,7 +227,7 @@ const SwapWrapper = styled.div<{ clickable: boolean }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     padding: 4px 13px;
     @media (max-width: 500px) {
-        padding: 4px 8px;
+        padding: 4px 10px;
     }
 `;
 

@@ -55,7 +55,7 @@ const Bell = styled.i`
 const Wrapper = styled.div<{ hasBackground: boolean }>`
     position: absolute;
     top: 40px;
-    right: 80px;
+    right: 30px;
     width: 42px;
     height: 26px;
     display: flex;
@@ -70,7 +70,7 @@ const Wrapper = styled.div<{ hasBackground: boolean }>`
     }
 
     @media (max-width: 500px) {
-        right: 50px;
+        right: 10px;
         top: 20px;
     }
 `;

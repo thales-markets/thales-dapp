@@ -115,7 +115,7 @@ const Container = styled.div<{ isWalletConnected: boolean }>`
     display: block;
     position: absolute;
     top: 40px;
-    right: ${(props) => (props.isWalletConnected ? '132px' : '90px')};
+    right: ${(props) => (props.isWalletConnected ? '82px' : '40px')};
     width: 390px;
 
     @media (max-width: 1024px) {
@@ -124,9 +124,9 @@ const Container = styled.div<{ isWalletConnected: boolean }>`
     }
 
     @media (max-width: 500px) {
-        right: 102px;
+        right: 62px;
         top: 20px;
-        width: 240px;
+        width: 270px;
     }
 `;
 
@@ -159,7 +159,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     @media (max-width: 500px) {
         min-width: fit-content;
         border-right: none;
-        padding: 4px 8px;
+        padding: 4px 10px;
     }
 `;
 
