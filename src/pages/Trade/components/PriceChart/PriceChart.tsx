@@ -359,7 +359,7 @@ const IconPriceWrapper = styled.div`
 `;
 
 const Icon = styled.i`
-    font-size: 32px;
+    font-size: 28px;
 `;
 
 const Price = styled.span`

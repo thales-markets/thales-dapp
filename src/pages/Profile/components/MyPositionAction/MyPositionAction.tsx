@@ -389,7 +389,7 @@ const ResultsContainer = styled(FlexDivCentered)`
     font-size: 13px;
     line-height: 100%;
     white-space: nowrap;
-    min-width: 168px;
+    min-width: 174px;
 `;
 
 const Label = styled.span`

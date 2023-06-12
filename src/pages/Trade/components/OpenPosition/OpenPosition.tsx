@@ -7,6 +7,14 @@ import { UserLivePositions } from 'types/options';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
 import MyPositionAction from 'pages/Profile/components/MyPositionAction/MyPositionAction';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
+import { Positions } from 'enums/options';
+import { RootState } from 'redux/rootReducer';
+import { getIsMobile } from 'redux/modules/ui';
+import { useSelector } from 'react-redux';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -14,6 +22,9 @@ type OpenPositionProps = {
 
 const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+    const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
         <Position>
@@ -40,6 +51,27 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 </FlexContainer>
             </AlignedFlex>
             <MyPositionAction position={position} />
+            <SPAAnchor
+                href={
+                    isRanged
+                        ? buildRangeMarketLink(position.market, position.side)
+                        : buildOptionsMarketLink(position.market, position.side)
+                }
+            >
+                {isMobile ? (
+                    <TextLink>
+                        {t('options.trading-profile.go-to-market')}{' '}
+                        <IconLink
+                            className="icon icon--right"
+                            fontSize="10px"
+                            marginTop="-2px"
+                            color={theme.link.textColor.primary}
+                        />
+                    </TextLink>
+                ) : (
+                    <IconLink className="icon icon--right" />
+                )}
+            </SPAAnchor>
         </Position>
     );
 };
@@ -53,8 +85,8 @@ const Position = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 17px;
-    gap: 10px;
+    padding: 0 8px 0 13px;
+    gap: 4px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
         flex-direction: column;
@@ -62,18 +94,18 @@ const Position = styled.div`
         min-height: 172px;
         padding: 10px 10px;
         margin-bottom: 10px;
-        gap: 10px;
+        gap: 6px;
     }
 `;
 
 const Icon = styled.i`
-    font-size: 31px;
+    font-size: 28px;
 `;
 
 const AlignedFlex = styled.div`
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     justify-content: flex-end;
     width: 100%;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -119,6 +151,23 @@ const Separator = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
+`;
+
+const TextLink = styled.span`
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 700;
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: string }>`
+    font-size: ${(props) => props.fontSize || '20px'};
+    color: ${(props) => props.color || props.theme.textColor.secondary};
+    text-transform: none;
+    margin-top: ${(props) => props.marginTop || '0px'};
 `;
 
 export default OpenPosition;
