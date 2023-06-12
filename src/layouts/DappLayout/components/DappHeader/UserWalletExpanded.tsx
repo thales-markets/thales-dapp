@@ -1,4 +1,4 @@
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivSpaceBetween } from 'styles/common';
+import { FlexDivRow, FlexDivSpaceBetween } from 'styles/common';
 import { truncateAddress } from 'utils/formatters/string';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useDisconnect } from 'wagmi';
@@ -16,7 +16,6 @@ const truncateAddressNumberOfCharacters = 5;
 const UserWalletExpanded: React.FC = () => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
-    const { openAccountModal } = useAccountModal();
     const { disconnect } = useDisconnect();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -43,8 +42,9 @@ const UserWalletExpanded: React.FC = () => {
                 </WalletContainer>
                 {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
-                        <Button onClick={openAccountModal}>{t('common.user-info-card.options')}</Button>
-                        <Button onClick={() => disconnect()}>{t('common.user-info-card.disconnect')}</Button>
+                        <Button height="32px" onClick={() => disconnect()}>
+                            {t('common.user-info-card.disconnect')}
+                        </Button>
                     </WalletOptions>
                 )}
             </Container>
@@ -64,8 +64,7 @@ const UserCardSectionHeader = styled.span`
     text-transform: uppercase;
 `;
 
-const Container = styled.div`
-    display: contents;
+const Container = styled(FlexDivRow)`
     @media (max-width: 1024px) {
         display: flex;
         align-items: center;
@@ -74,7 +73,6 @@ const Container = styled.div`
 `;
 
 const WalletOptions = styled(FlexDivSpaceBetween)`
-    margin-bottom: 18px;
     align-items: center;
     @media (max-width: 1024px) {
         flex: 1;
@@ -89,7 +87,7 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
     justify-content: center;
     max-width: 135px;
     width: 100%;
-    margin: 9px auto;
+    margin: 9px 0;
     padding: 4px 12px;
     border: 2px solid ${(props) => props.theme.textColor.primary};
     border-radius: 20px;

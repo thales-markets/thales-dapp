@@ -26,15 +26,21 @@ const Notification: React.FC = () => {
         return 0;
     }, [notificationsQuery]);
 
-    return notifications > 0 ? (
+    const hasNotifications = notifications > 0;
+
+    return (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
-            <Wrapper>
-                <Bell className="icon icon--bell" />
-                <Number>{notifications}</Number>
+            <Wrapper hasBackground={hasNotifications}>
+                {hasNotifications ? (
+                    <>
+                        <Bell className="icon icon--bell" />
+                        <Number>{notifications}</Number>
+                    </>
+                ) : (
+                    <Icon className={`icon icon--user-avatar`} />
+                )}
             </Wrapper>
         </SPAAnchor>
-    ) : (
-        <></>
     );
 };
 
@@ -44,18 +50,17 @@ const Bell = styled.i`
     animation: shake 1s linear infinite;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ hasBackground: boolean }>`
     position: absolute;
     top: 40px;
-    right: 485px;
+    right: 80px;
     width: 42px;
     height: 26px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2px;
-
-    background: ${(props) => props.theme.background.quaternary};
+    ${(props) => (props.hasBackground ? `background: ${props.theme.background.quaternary};` : '')}
     border-radius: 24px;
 
     @media (max-width: 1024px) {
@@ -63,7 +68,7 @@ const Wrapper = styled.div`
     }
 
     @media (max-width: 500px) {
-        right: 310px;
+        right: 50px;
         top: 20px;
     }
 `;
@@ -72,6 +77,11 @@ const Number = styled.span`
     color: ${(props) => props.theme.background.primary};
     font-size: 13px;
     font-weight: 600;
+`;
+
+const Icon = styled.i`
+    font-size: 22px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default Notification;

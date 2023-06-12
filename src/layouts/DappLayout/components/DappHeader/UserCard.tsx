@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
-const UserSwap = lazy(() => import(/* webpackChunkName: "UserSwap" */ './UserSwap'));
 const UserWallet = lazy(() => import(/* webpackChunkName: "UserWallet" */ './UserWallet'));
 const Notification = lazy(() => import(/* webpackChunkName: "Notification" */ './Notifications'));
 
@@ -18,9 +17,6 @@ const UserCard: React.FC = () => {
 
     return (
         <>
-            <Suspense fallback={<></>}>
-                <UserSwap />
-            </Suspense>
             <Suspense fallback={<></>}>
                 <UserWallet />
             </Suspense>

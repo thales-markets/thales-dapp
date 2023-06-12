@@ -43,14 +43,11 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [preLoadTokens, setPreLoadTokens] = useState([] as any);
+
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
-    const signer = (snxJSConnector as any).signer;
-    const [fromToken, setFromToken] = useState(getFromTokenSwap(networkId));
-
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
         isL2,
@@ -58,21 +55,15 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     );
     const [toToken, setToToken] = useState(toTokenInitialState);
 
+    const [preLoadTokens, setPreLoadTokens] = useState([] as any);
+    const [fromToken, setFromToken] = useState(getFromTokenSwap(networkId));
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-
-    const unsupportedNetwork = ![
-        Network.Mainnet,
-        Network['Mainnet-Ovm'],
-        Network.BSC,
-        Network['POLYGON-MAINNET'],
-        Network.Arbitrum,
-    ].includes(networkId);
 
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
@@ -134,11 +125,15 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 token == ARB_ETH
             ) {
                 setAllowance(true);
-                signer
+                (snxJSConnector as any).signer
                     .getBalance()
                     .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
             } else {
-                const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
+                const erc20Instance = new ethers.Contract(
+                    (token as any).address,
+                    erc20Contract.abi,
+                    (snxJSConnector as any).signer
+                );
 
                 const spender = await approveSpenderQuery.refetch().then((resp: any) => {
                     return resp.data.address;
@@ -156,16 +151,20 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     };
 
     const approve = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
+        const erc20Instance = new ethers.Contract(
+            (fromToken as any).address,
+            erc20Contract.abi,
+            (snxJSConnector as any).signer
+        );
         const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            setLoading(true);
+            setIsLoading(true);
             const req = await approveSpenderQuery.refetch();
             const tx = await erc20Instance.approve(req.data?.address, approveAmount);
             setOpenApprovalModal(false);
             await tx.wait();
-            setLoading(false);
+            setIsLoading(false);
             setIsAllowing(false);
             toast.update(id, getSuccessToastOptions(t('options.swap.approval-success'), id));
             setOpenApprovalModal(false);
@@ -176,7 +175,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         } catch (e) {
             console.log('failed: ', e);
             setIsAllowing(false);
-            setLoading(false);
+            setIsLoading(false);
             toast.update(
                 id,
                 getErrorToastOptions(
@@ -189,7 +188,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     };
 
     const swapTx = async () => {
-        setLoading(true);
+        setIsLoading(true);
         const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
         try {
             const req = await swapQuery.refetch();
@@ -201,10 +200,10 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                     to: data.tx.to,
                     value: BigNumber.from(data.tx.value).toHexString(),
                 };
-                const tx = await signer.sendTransaction(transactionData);
+                const tx = await (snxJSConnector as any).signer.sendTransaction(transactionData);
                 await tx.wait();
                 refetchBalances(walletAddress as any, networkId);
-                setLoading(false);
+                setIsLoading(false);
                 toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol }), id));
                 return {
                     data: (data as any).tx.data,
@@ -217,7 +216,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 };
             }
         } catch (e: any) {
-            setLoading(false);
+            setIsLoading(false);
             toast.update(
                 id,
                 getErrorToastOptions(
@@ -270,6 +269,14 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             );
     };
 
+    const unsupportedNetwork = ![
+        Network.Mainnet,
+        Network['Mainnet-Ovm'],
+        Network.BSC,
+        Network['POLYGON-MAINNET'],
+        Network.Arbitrum,
+    ].includes(networkId);
+
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
@@ -277,7 +284,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                     <ErrorMessage>{t('options.swap.not-supported')}</ErrorMessage>
                 </Container>
             ) : (
-                <Container contentType={` ${isLoading ? 'loading' : ''}`}>
+                <Container contentType={isLoading ? 'loading' : ''}>
                     <SectionWrapper>
                         <NumericInput
                             placeholder={t('common.enter-amount')}
