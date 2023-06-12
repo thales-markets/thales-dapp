@@ -49,7 +49,7 @@ const useThalesStakersQuery = (filter: StakersFilterEnum, options?: UseQueryOpti
             }
 
             return orderBy(
-                stakersFinal.filter((staker: Staker) => staker.totalStakedAmount >= 1),
+                stakersFinal.filter((staker: Staker) => staker.totalStakedAmount > 0),
                 ['totalStakedAmount'],
                 ['desc']
             );
