@@ -40,17 +40,6 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
     justify-content: center;
 `;
 
-export const LoaderContainer = styled.div`
-    display: grid;
-    grid-auto-flow: row;
-    grid-gap: 10px;
-    align-items: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-`;
-
 // TODO: Update color names
 export const Colors = {
     GRAY: '#2B3139',

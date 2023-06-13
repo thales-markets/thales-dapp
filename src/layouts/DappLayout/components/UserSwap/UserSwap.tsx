@@ -3,7 +3,7 @@ import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLLATERALS } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { lazy, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,8 +28,7 @@ import {
 } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsMultiCollateralSupported } from 'utils/network';
-
-const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
+import Swap from 'components/Swap';
 
 type SwapCollateral = {
     type: StableCoins;
@@ -194,7 +193,7 @@ const UserSwap: React.FC = () => {
             </Container>
             {showSwap && (
                 <Modal
-                    title={t('options.swap.title')}
+                    title={t('options.swap.title', { token: swapToStableCoin })}
                     onClose={() => setShowSwap(false)}
                     shouldCloseOnOverlayClick={false}
                     customStyle={{ overlay: { zIndex: 201 } }}

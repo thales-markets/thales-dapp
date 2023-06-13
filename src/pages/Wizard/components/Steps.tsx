@@ -15,7 +15,7 @@ import { Network } from 'enums/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { WizardSteps } from 'enums/wizard';
 import useInterval from 'hooks/useInterval';
-import React, { lazy, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
@@ -23,6 +23,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Colors } from 'styles/common';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import Swap from 'components/Swap';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -39,8 +40,6 @@ enum Provider {
 }
 
 const MMURL = 'https://metamask.io/download/';
-
-const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
 const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurrentStep }) => {
     const { t } = useTranslation();

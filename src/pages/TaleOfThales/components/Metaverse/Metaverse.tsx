@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
-import Container from '../../styled-components/GameContainer';
 import { getIsAppReady } from 'redux/modules/app';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import { Container } from '../styled-components';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',

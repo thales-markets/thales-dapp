@@ -849,7 +849,7 @@
             "end-date": "End date"
         },
         "swap": {
-            "title": "Get USD",
+            "title": "Get {{token}}",
             "button-text": "Get {{token}}",
             "select-token": "Select a token",
             "enter-amount": "Enter amount",
