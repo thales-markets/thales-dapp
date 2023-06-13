@@ -9,7 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import { Container } from '../styled-components';
+import { CenterGame, Container, FullScreenButton, GameWrapper, WalletMessage } from '../styled-components';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',
@@ -85,9 +85,9 @@ const Metaverse: React.FC = () => {
 
     return (
         <Container className="game" style={{ zIndex: 10 }}>
-            {!walletAddress && <Container.Msg>{t('game.connect-wallet-warning')}</Container.Msg>}
-            <Container.Center>
-                <Container.Wrapper>
+            {!walletAddress && <WalletMessage>{t('game.connect-wallet-warning')}</WalletMessage>}
+            <CenterGame>
+                <GameWrapper>
                     <Unity
                         unityContext={unityContext}
                         style={{
@@ -95,9 +95,9 @@ const Metaverse: React.FC = () => {
                             width: '100%',
                         }}
                     />
-                    <Container.Btn onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                </Container.Wrapper>
-            </Container.Center>
+                    <FullScreenButton onClick={handleOnClickFullscreen} src={fullScreenImage} />
+                </GameWrapper>
+            </CenterGame>
         </Container>
     );
 };
