@@ -128,7 +128,7 @@ const Wrapper = styled.div`
         padding: 0 10px;
     }
     max-width: 1440px;
-    min-height: calc(100vh - 66px); // In order to position footer to the bottom (header height is 66px)
+    min-height: 100vh;
 `;
 
 const StyledToastContainer = styled(ToastContainer)`
