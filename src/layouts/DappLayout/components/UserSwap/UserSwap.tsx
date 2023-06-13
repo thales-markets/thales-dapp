@@ -207,17 +207,9 @@ const UserSwap: React.FC = () => {
 };
 
 const Container = styled(FlexDivRow)`
+    position: relative;
     display: flex;
     width: 150px;
-    @media (max-width: 1024px) {
-        right: 334px;
-        top: 20px;
-    }
-
-    @media (max-width: 500px) {
-        right: 174px;
-        top: 20px;
-    }
 `;
 
 const SwapWrapper = styled.div<{ clickable: boolean }>`
@@ -235,8 +227,8 @@ const Dropdown = styled.div`
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 31px;
-    left: 0;
+    top: 30px;
+    right: 0;
     background-color: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     width: 150px;

@@ -9,6 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 import { buildHref } from 'utils/routes';
 
 const Notifications: React.FC = () => {
@@ -33,57 +34,47 @@ const Notifications: React.FC = () => {
 
     return isWalletConnected ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
-            {hasNotifications ? (
-                <Tooltip overlay={t('header.notification.tooltip', { count: notifications })}>
-                    <Wrapper hasBackground={hasNotifications}>
-                        <Bell className="icon icon--bell" />
-                        <Number>{notifications}</Number>
-                    </Wrapper>
-                </Tooltip>
-            ) : (
-                <Wrapper hasBackground={hasNotifications}>
+            <Container>
+                {hasNotifications ? (
+                    <Tooltip overlay={t('header.notification.tooltip', { count: notifications })}>
+                        <Wrapper>
+                            <Bell className="icon icon--bell" />
+                            <Number>{notifications}</Number>
+                        </Wrapper>
+                    </Tooltip>
+                ) : (
                     <Icon className={`icon icon--user-avatar`} />
-                </Wrapper>
-            )}
+                )}
+            </Container>
         </SPAAnchor>
     ) : (
         <></>
     );
 };
 
-const Bell = styled.i`
-    color: ${(props) => props.theme.background.primary};
-    font-size: 13px;
-    animation: shake 1s linear infinite;
+const Container = styled(FlexDivCentered)`
+    height: 26px;
+    margin-left: 10px;
 `;
 
-const Wrapper = styled.div<{ hasBackground: boolean }>`
-    position: absolute;
-    top: 40px;
-    right: 30px;
+const Wrapper = styled(FlexDivCentered)`
     width: 42px;
-    height: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: inherit;
     gap: 2px;
-    ${(props) => (props.hasBackground ? `background: ${props.theme.background.quaternary};` : '')}
+    background: ${(props) => props.theme.background.quaternary};
     border-radius: 24px;
-
-    @media (max-width: 1024px) {
-        top: 20px;
-    }
-
-    @media (max-width: 500px) {
-        right: 10px;
-        top: 20px;
-    }
 `;
 
 const Number = styled.span`
     color: ${(props) => props.theme.background.primary};
     font-size: 13px;
     font-weight: 600;
+`;
+
+const Bell = styled.i`
+    color: ${(props) => props.theme.background.primary};
+    font-size: 13px;
+    animation: shake 1s linear infinite;
 `;
 
 const Icon = styled.i`

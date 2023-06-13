@@ -112,20 +112,8 @@ const UserWallet: React.FC = () => {
 };
 
 const Container = styled.div<{ isWalletConnected: boolean }>`
-    display: block;
-    position: absolute;
-    top: 40px;
-    right: ${(props) => (props.isWalletConnected ? '82px' : '40px')};
-    width: 390px;
-
-    @media (max-width: 1024px) {
-        right: 70px;
-        top: 20px;
-    }
-
+    width: 400px;
     @media (max-width: 500px) {
-        right: 62px;
-        top: 20px;
         width: 270px;
     }
 `;
@@ -164,6 +152,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
 `;
 
 const NetworkInfoContainer = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -175,7 +164,7 @@ const NetworkInfoContainer = styled.div`
 const NetworkDropDown = styled.div`
     z-index: 1000;
     position: absolute;
-    top: 31px;
+    top: 30px;
     right: 0;
     display: flex;
     flex-direction: column;
@@ -208,6 +197,9 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     padding: ${(props) => (props.selectedItem ? '4px 13px' : '6px')};
     font-size: 13px;
     border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
+    }
     svg {
         width: 16px;
         height: 16px;

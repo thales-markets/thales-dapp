@@ -13,9 +13,9 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
-import DappHeaderItem from '../DappHeaderItem/DappHeaderItem';
+import DappHeaderItem from '../components/DappHeaderItem/DappHeaderItem';
 
-const Sidebar: React.FC = () => {
+const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -340,4 +340,4 @@ const Divider = styled.hr`
     }
 `;
 
-export default Sidebar;
+export default DappSidebar;

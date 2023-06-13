@@ -4,7 +4,7 @@ import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 
-const Footer: React.FC = () => {
+const DappFooter: React.FC = () => {
     const year = new Date().getFullYear();
 
     return (
@@ -138,4 +138,4 @@ const FooterIcon = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-export default Footer;
+export default DappFooter;

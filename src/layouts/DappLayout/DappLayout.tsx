@@ -1,6 +1,5 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
-import Footer from 'components/Footer';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
@@ -16,6 +15,8 @@ import { ThemeInterface } from 'types/ui';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import DappHeader from './DappHeader';
+import DappFooter from './DappFooter';
+import DappSidebar from './DappSidebar';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -81,11 +82,12 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     return (
         <Background id="main-content">
             <Suspense fallback={<></>}>
-                <DappHeader />
+                <DappSidebar />
             </Suspense>
             <Wrapper>
+                <DappHeader />
                 {children}
-                <Footer />
+                <DappFooter />
             </Wrapper>
 
             <StyledToastContainer />
@@ -117,7 +119,7 @@ const Wrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 20px 20px 0px 92px;
+    padding: 0 20px 0px 92px;
     @media (max-width: 1024px) {
         padding: 0 20px;
         padding-bottom: 90px !important;

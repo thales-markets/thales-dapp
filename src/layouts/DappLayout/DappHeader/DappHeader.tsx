@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildHref } from 'utils/routes';
-import Sidebar from '../components/Sidebar';
-import UserCard from '../components/UserCard';
+import UserWallet from '../components/UserWallet';
+import Notifications from '../components/Notifications';
+import { FlexDivRow } from 'styles/common';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
@@ -13,12 +15,12 @@ const DappHeader: React.FC = () => {
     return (
         <Container>
             <PageTitle>{getTitle(t)}</PageTitle>
-            <Suspense fallback={<></>}>
-                <UserCard />
-            </Suspense>
-            <Suspense fallback={<></>}>
-                <Sidebar />
-            </Suspense>
+            <FlexDivRow>
+                <Suspense fallback={<></>}>
+                    <UserWallet />
+                </Suspense>
+                <Notifications />
+            </FlexDivRow>
         </Container>
     );
 };
@@ -59,16 +61,14 @@ const getTitle = (t: any) => {
         }
 };
 
-const Container = styled.div`
+const Container = styled(FlexDivRow)`
     width: 100%;
     max-width: 1440px;
-    flex: unset;
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 40px 20px 0px 92px;
-    @media (max-width: 1024px) {
-        margin-bottom: 30px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding-top: 20px;
+        justify-content: end;
     }
 `;
 
