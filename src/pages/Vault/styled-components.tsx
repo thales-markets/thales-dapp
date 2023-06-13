@@ -283,3 +283,34 @@ export const Link = styled.a`
         text-decoration: underline;
     }
 `;
+
+export const Header = styled(FlexDivStart)`
+    font-size: 22px;
+    line-height: 100%;
+    font-weight: bold;
+    width: 100%;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
+`;
+
+export const BackLinkContainer = styled.span`
+    :hover {
+        text-decoration: underline;
+    }
+`;
+
+export const BackIcon = styled.i`
+    font-weight: 400;
+    font-size: 20px;
+    margin-right: 6px;
+    top: -2px;
+    position: relative;
+`;
+
+export const HeaderVaultIcon = styled.i`
+    font-weight: 400;
+    font-size: 23px;
+    margin-left: 8px;
+    position: relative;
+`;

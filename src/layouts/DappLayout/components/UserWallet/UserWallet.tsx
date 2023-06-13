@@ -71,6 +71,7 @@ const UserWallet: React.FC = () => {
                             <NetworkItem
                                 selectedItem={true}
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen && !isLedgerLive)}
+                                noHover
                             >
                                 {React.createElement(selectedNetwork.icon, {
                                     style: { marginRight: 5 },
@@ -190,7 +191,7 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     z-index: 1;
 `;
 
-const NetworkItem = styled.div<{ selectedItem?: boolean }>`
+const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
     display: flex;
     align-items: center;
     width: 100%;
@@ -198,7 +199,7 @@ const NetworkItem = styled.div<{ selectedItem?: boolean }>`
     font-size: 13px;
     border-radius: 8px;
     &:hover {
-        background: ${(props) => props.theme.background.primary};
+        background: ${(props) => (props.noHover ? '' : props.theme.background.primary)};
     }
     svg {
         width: 16px;

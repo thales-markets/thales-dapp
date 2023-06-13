@@ -86,7 +86,7 @@ const MenuItem = styled.li<{ margin?: string }>`
         background: ${(props) => props.theme.background.primary};
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 20px;
     }
 
@@ -118,7 +118,7 @@ const Text = styled.span<{ marginLeft?: string }>`
     display: none;
     margin-left: ${(props) => (props.marginLeft ? props.marginLeft : '20px')};
     text-transform: uppercase;
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
