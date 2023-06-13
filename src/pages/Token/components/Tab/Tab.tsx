@@ -3,7 +3,7 @@ import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
-import Rewards from 'pages/Token/GamifiedStaking/Rewards';
+// import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
 import LpStaking from 'pages/Token/LpStaking';
@@ -21,6 +21,7 @@ import { ThemeInterface } from 'types/ui';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
+import RewardsV2 from 'pages/Token/GamifiedStaking/RewardsV2/RewardsV2';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -28,6 +29,7 @@ const Tab: React.FC<{
     sections: TokenTabSection[];
     selectedSection?: TokenTabSectionIdEnum;
 }> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
+    console.log(setSelectedTab);
     const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -94,14 +96,16 @@ const Tab: React.FC<{
                             <SectionWarning>{sections.find((el) => el.id === activeButtonId)?.warning}</SectionWarning>
                         </SectionRow>
                     )}
-                    <SectionContent>
-                        {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
-                        {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
-                            <Rewards gridGap={STYLE_GRID_GAP} setSelectedTab={setSelectedTab} />
-                        )}
-                        {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
-                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
-                    </SectionContent>
+                    {activeButtonId === TokenTabSectionIdEnum.REWARDS ? (
+                        <RewardsV2 />
+                    ) : (
+                        <SectionContent>
+                            {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
+
+                            {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
+                            {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
+                        </SectionContent>
+                    )}
                 </>
             )}
             {!isL2 && !isArb && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
