@@ -272,7 +272,7 @@ const SidebarHtml = styled.nav`
         padding: 0;
         background: ${(props) => props.theme.background.secondary};
         box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
-        border-radius: 30px;
+        border-radius: 8px;
         width: calc(100% - 40px);
         left: 20px;
         top: unset;
