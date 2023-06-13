@@ -60,6 +60,7 @@ const Container = styled(FlexDivCentered)`
 const Wrapper = styled(FlexDivCentered)`
     width: 42px;
     height: inherit;
+    gap: 2px;
     background: ${(props) => props.theme.background.quaternary};
     border-radius: 24px;
 `;

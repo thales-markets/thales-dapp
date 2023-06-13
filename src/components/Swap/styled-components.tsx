@@ -13,8 +13,8 @@ export const Container = styled.div<{ contentType?: string }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 400px;
-    height: 100%;
+    width: 400px;
+    height: fit-content;
     opacity: ${(props) => (props.contentType === 'loading' ? '0.85' : '')};
     @media screen and (max-width: 500px) {
         width: 325px;
