@@ -65,7 +65,7 @@ const MenuItem = styled.li<{ margin?: string }>`
     align-items: center;
     cursor: pointer;
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-    padding: 20px;
+    padding: 15px 20px;
     color: ${(props) => props.theme.textColor.primary};
     transition: background 300ms;
     &.selected {
@@ -85,11 +85,6 @@ const MenuItem = styled.li<{ margin?: string }>`
         }
         background: ${(props) => props.theme.background.primary};
     }
-
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 0 20px;
-    }
-
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
         padding: 0 10px;
