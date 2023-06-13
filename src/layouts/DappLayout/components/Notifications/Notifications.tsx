@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
 
-const Notification: React.FC = () => {
+const Notifications: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -91,4 +91,4 @@ const Icon = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-export default Notification;
+export default Notifications;

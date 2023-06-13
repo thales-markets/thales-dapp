@@ -1,12 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildHref } from 'utils/routes';
-
-const UserCard = lazy(() => import(/* webpackChunkName: "UserCard" */ './UserCard'));
-const Sidebar = lazy(() => import(/* webpackChunkName: "Sidebar" */ './Sidebar'));
+import Sidebar from '../components/Sidebar';
+import UserCard from '../components/UserCard';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();

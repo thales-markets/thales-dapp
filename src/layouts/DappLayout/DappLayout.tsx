@@ -4,7 +4,7 @@ import Footer from 'components/Footer';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -15,8 +15,7 @@ import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
-
-const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
+import DappHeader from './DappHeader';
 
 type DappLayoutProps = {
     children: React.ReactNode;
