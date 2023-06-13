@@ -29,7 +29,7 @@ const getTitle = (t: any) => {
 
     if (location.pathname === ROUTES.Options.Home) return t('options.trade.title');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('governance.title');
-    if (location.pathname === ROUTES.Options.Token) return t('earn.title');
+    if (location.pathname === ROUTES.Options.Token) return t('options.earn.title');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');

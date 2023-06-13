@@ -328,7 +328,7 @@ const LogoIcon = styled.img`
     cursor: pointer;
     margin: auto;
     margin-top: 10px;
-    margin-bottom: 60px;
+    margin-bottom: 25px;
 `;
 
 const Divider = styled.hr`
