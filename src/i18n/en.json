@@ -271,6 +271,7 @@
     },
     "options": {
         "trade": {
+            "title": "Markets",
             "amm-trading": {
                 "asset-price": "If {{asset}} price is",
                 "pick-price": "pick a price",
@@ -340,6 +341,7 @@
             }
         },
         "earn": {
+            "title": "Thales Token",
             "snx-stakers": {
                 "tab-title": "Strategic investors",
                 "retro-rewards": {
@@ -1141,6 +1143,7 @@
         }
     },
     "game": {
+        "title": "Tale of Thales",
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
     },
     "migration": {

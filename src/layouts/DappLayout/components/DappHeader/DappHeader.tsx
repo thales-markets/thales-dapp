@@ -27,16 +27,16 @@ const DappHeader: React.FC = () => {
 const getTitle = (t: any) => {
     const splittedPathname = location.pathname.split('/');
 
-    if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
-    if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
-    if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
+    if (location.pathname === ROUTES.Options.Home) return t('options.trade.title');
+    if (location.pathname.includes(ROUTES.Governance.Home)) return t('governance.title');
+    if (location.pathname === ROUTES.Options.Token) return t('earn.title');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
     if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
     if (location.pathname === ROUTES.Options.LiquidityPool) return t('liquidity-pool.title');
     if (location.pathname === ROUTES.Options.Referral) return t('referral-page.title');
-    if (location.pathname === ROUTES.Options.Game) return t('common.sidebar.game-label');
+    if (location.pathname === ROUTES.Options.Game) return t('game.title');
     if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
         if (splittedPathname[2] === '') {
             return t('vaults.title');
