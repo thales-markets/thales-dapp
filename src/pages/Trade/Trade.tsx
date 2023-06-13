@@ -1,4 +1,3 @@
-import Footer from 'components/Footer';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -175,7 +174,6 @@ const TradePage: React.FC = () => {
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
             )}
-            <Footer />
         </>
     );
 };

@@ -1,5 +1,6 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
+import Footer from 'components/Footer';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
@@ -83,7 +84,11 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
             <Suspense fallback={<></>}>
                 <DappHeader />
             </Suspense>
-            <Wrapper>{children}</Wrapper>
+            <Wrapper>
+                {children}
+                <Footer />
+            </Wrapper>
+
             <StyledToastContainer />
         </Background>
     );
@@ -122,6 +127,7 @@ const Wrapper = styled.div`
         padding: 0 10px;
     }
     max-width: 1440px;
+    min-height: calc(100vh - 66px); // In order to position footer to the bottom (header height is 66px)
 `;
 
 const StyledToastContainer = styled(ToastContainer)`

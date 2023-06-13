@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button/Button';
 import ElectionsBanner from 'components/ElectionsBanner';
-import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import SimpleLoader from 'components/SimpleLoader';
 import Switch from 'components/SwitchInput/SwitchInput';
@@ -1006,7 +1005,6 @@ const LiquidityPool: React.FC = () => {
                     />
                 )}
             </Wrapper>
-            <Footer />
         </>
     );
 };

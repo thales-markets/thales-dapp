@@ -15,7 +15,6 @@ import { getIsOVM } from 'utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
 import {
     ArrowIcon,
@@ -248,7 +247,6 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                     </SidebarContainer>
                 )}
             </Container>
-            <Footer />
         </>
     );
 };

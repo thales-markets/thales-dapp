@@ -2,6 +2,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 
 const Footer: React.FC = () => {
     const year = new Date().getFullYear();
@@ -39,10 +40,9 @@ const Footer: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div`
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
+const Wrapper = styled(FlexDivCentered)`
+    margin-top: auto;
+    padding-top: 20px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: grid;
         justify-items: center;

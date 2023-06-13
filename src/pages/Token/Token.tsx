@@ -1,5 +1,4 @@
 import ElectionsBanner from 'components/ElectionsBanner';
-import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
@@ -148,7 +147,6 @@ const TokenPage: React.FC = () => {
                 selectedSection={selectedSection}
                 setSelectedSection={setSelectedSection}
             />
-            <Footer />
         </>
     );
 };

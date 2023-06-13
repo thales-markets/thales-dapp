@@ -1,5 +1,4 @@
 import ElectionsBanner from 'components/ElectionsBanner';
-import Footer from 'components/Footer';
 import SearchInput from 'components/SearchInput/SearchInput';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
@@ -231,7 +230,6 @@ const Profile: React.FC = () => {
                     </>
                 </MainContainer>
             </Container>
-            <Footer />
         </>
     );
 };

@@ -65,7 +65,6 @@ import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/Tooltip';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
-import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -846,7 +845,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                     />
                 )}
             </Wrapper>
-            <Footer />
         </>
     );
 };
