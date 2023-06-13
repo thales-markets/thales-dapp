@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SPAAnchor from 'components/SPAAnchor';
 import styled from 'styled-components';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type MenuItem = {
     className?: string;
@@ -89,11 +90,18 @@ const MenuItem = styled.li<{ margin?: string }>`
         padding: 0 20px;
     }
 
-    @media (max-width: 568px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
         padding: 0 10px;
         &.show {
             display: flex;
+        }
+        &:hover {
+            color: ${(props) => props.theme.background.tertiary};
+            .sidebar-icon {
+                color: ${(props) => props.theme.background.tertiary};
+            }
+            background: transparent;
         }
     }
 `;
