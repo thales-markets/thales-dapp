@@ -1,15 +1,19 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import Tooltip from 'components/Tooltip';
 import ROUTES from 'constants/routes';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 import { buildHref } from 'utils/routes';
 
-const Notification: React.FC = () => {
+const Notifications: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -26,46 +30,38 @@ const Notification: React.FC = () => {
         return 0;
     }, [notificationsQuery]);
 
-    return notifications > 0 ? (
+    const hasNotifications = notifications > 0;
+
+    return isWalletConnected ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
-            <Wrapper>
-                <Bell className="icon icon--bell" />
-                <Number>{notifications}</Number>
-            </Wrapper>
+            <Container>
+                {hasNotifications ? (
+                    <Tooltip overlay={t('common.header.notification.tooltip', { count: notifications })}>
+                        <Wrapper>
+                            <Bell className="icon icon--bell" />
+                            <Number>{notifications}</Number>
+                        </Wrapper>
+                    </Tooltip>
+                ) : (
+                    <Icon className={`icon icon--user-avatar`} />
+                )}
+            </Container>
         </SPAAnchor>
     ) : (
         <></>
     );
 };
 
-const Bell = styled.i`
-    color: ${(props) => props.theme.background.primary};
-    font-size: 13px;
-    animation: shake 1s linear infinite;
+const Container = styled(FlexDivCentered)`
+    height: 26px;
+    margin-left: 10px;
 `;
 
-const Wrapper = styled.div`
-    position: absolute;
-    top: 40px;
-    right: 485px;
+const Wrapper = styled(FlexDivCentered)`
     width: 42px;
-    height: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-
+    height: inherit;
     background: ${(props) => props.theme.background.quaternary};
     border-radius: 24px;
-
-    @media (max-width: 1024px) {
-        top: 20px;
-    }
-
-    @media (max-width: 500px) {
-        right: 310px;
-        top: 20px;
-    }
 `;
 
 const Number = styled.span`
@@ -74,4 +70,15 @@ const Number = styled.span`
     font-weight: 600;
 `;
 
-export default Notification;
+const Bell = styled.i`
+    color: ${(props) => props.theme.background.primary};
+    font-size: 13px;
+    animation: shake 1s linear infinite;
+`;
+
+const Icon = styled.i`
+    font-size: 22px;
+    color: ${(props) => props.theme.textColor.primary};
+`;
+
+export default Notifications;

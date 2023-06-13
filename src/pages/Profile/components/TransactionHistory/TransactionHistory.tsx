@@ -104,7 +104,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                 const cells: any = [
                     { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
                     {
-                        title: t('options.trading-profile.history.strike'),
+                        title: t('profile.history.strike'),
                         value: isRanged
                             ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
                                   (row.marketItem as RangedMarket).rightPrice
@@ -112,11 +112,11 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                             : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
                     },
                     {
-                        title: t('options.trading-profile.history.price'),
+                        title: t('profile.history.price'),
                         value: `$${formatCurrency(optionPrice)}`,
                     },
                     {
-                        title: t('options.trading-profile.history.amount'),
+                        title: t('profile.history.amount'),
                         value: getAmount(
                             formatCurrency(amount),
                             OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
@@ -124,16 +124,11 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                         ),
                     },
                     {
-                        title:
-                            row.orderSide == 'sell'
-                                ? t('options.trading-profile.history.received')
-                                : t('options.trading-profile.history.paid'),
+                        title: row.orderSide == 'sell' ? t('profile.history.received') : t('profile.history.paid'),
                         value: `$${formatCurrency(paidAmount)}`,
                     },
                     {
-                        title: marketExpired
-                            ? t('options.trading-profile.history.expired')
-                            : t('options.trading-profile.history.expires'),
+                        title: marketExpired ? t('profile.history.expired') : t('profile.history.expires'),
                         value: formatShortDate(new Date(row.marketItem.maturityDate)),
                     },
                 ];

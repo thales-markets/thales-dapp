@@ -31,15 +31,15 @@ const MarketDetails: React.FC<MarketDetailsProps> = ({
     return (
         <Container>
             <DetailsRow>
-                <TextLabel>{t('options.common.asset')}</TextLabel>
+                <TextLabel>{t('common.asset')}</TextLabel>
                 <TextValue>{getSynthName(currencyKey)}</TextValue>
             </DetailsRow>
             <DetailsRow>
-                <TextLabel>{t('options.common.direction')}</TextLabel>
+                <TextLabel>{t('common.direction')}</TextLabel>
                 <TextValue>{positionType}</TextValue>
             </DetailsRow>
             <DetailsRow>
-                <TextLabel>{t('options.common.strike-price')}</TextLabel>
+                <TextLabel>{t('common.strike-price')}</TextLabel>
                 {strikePrice ? (
                     <TextValue>{formatCurrencyWithSign(USD_SIGN, strikePrice)}</TextValue>
                 ) : (
@@ -50,7 +50,7 @@ const MarketDetails: React.FC<MarketDetailsProps> = ({
                 )}
             </DetailsRow>
             <DetailsRow>
-                <TextLabel>{t('options.common.end-date')}</TextLabel>
+                <TextLabel>{t('common.end-date')}</TextLabel>
                 <TextValue>{formatShortDateWithTime(maturityDate)}</TextValue>
             </DetailsRow>
         </Container>

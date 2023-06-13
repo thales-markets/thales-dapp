@@ -18,3 +18,17 @@ export const Container = styled(FlexDivRow)`
         align-items: center;
     }
 `;
+
+export const Title = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-top: 10px;
+    margin-bottom: 20px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-top: 0px;
+        margin-bottom: 15px;
+    }
+`;

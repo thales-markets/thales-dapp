@@ -23,7 +23,6 @@ const useExchangeRatesQuery = (networkId: NetworkId, options?: UseQueryOptions<R
                 });
             }
 
-            console.log(exchangeRates);
             return exchangeRates;
         },
         {

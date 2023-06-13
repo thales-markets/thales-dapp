@@ -37,12 +37,12 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('options.trade.user-positions.end-date')}</Label>
+                    <Label>{t('markets.user-positions.end-date')}</Label>
                     <Value>{formatShortDateWithTime(position.maturityDate)}</Value>
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('options.trade.user-positions.size')}</Label>
+                    <Label>{t('markets.user-positions.size')}</Label>
                     <Value>
                         {formatNumberShort(position.amount)}{' '}
                         <Value color={getColorPerPosition(position.side, theme)}>{position.side}</Value>
@@ -50,7 +50,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('options.trade.user-positions.paid')}</Label>
+                    <Label>{t('markets.user-positions.paid')}</Label>
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
@@ -64,7 +64,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
             >
                 {isMobile ? (
                     <TextLink>
-                        {t('options.trading-profile.go-to-market')}{' '}
+                        {t('profile.go-to-market')}{' '}
                         <IconLink
                             className="icon icon--right"
                             fontSize="10px"

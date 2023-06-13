@@ -22,15 +22,6 @@ export type UserPosition = {
     isRanged: boolean;
 };
 
-export type UserPositionsData = {
-    live: UserPosition[];
-    claimable: UserPosition[];
-    rip: UserPosition[];
-    claimed: UserPosition[];
-    claimableCount: number;
-    claimableAmount: number;
-};
-
 export type UserProfileData = {
     profit: number;
     volume: number;

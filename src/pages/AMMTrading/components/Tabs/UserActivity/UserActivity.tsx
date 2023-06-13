@@ -65,19 +65,19 @@ const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
                             value: item.timestamp,
                         },
                         {
-                            title: t('options.market.your-activity.paid'),
+                            title: t('markets.market.your-activity.paid'),
                             value: item.paid ? formatCurrencyWithSign(USD_SIGN, item.paid) : 'N/A',
                         },
                         {
-                            title: t('options.market.your-activity.amount'),
+                            title: t('markets.market.your-activity.amount'),
                             value: `${formatCurrency(item.amount)} ${item.side.toUpperCase()}`,
                         },
                         {
-                            title: t('options.market.your-activity.activity'),
+                            title: t('markets.market.your-activity.activity'),
                             value: item.type,
                         },
                         {
-                            title: t('options.market.your-activity.tx-status'),
+                            title: t('markets.market.your-activity.tx-status'),
                             value: item.link,
                         },
                     ],

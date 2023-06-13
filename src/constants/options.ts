@@ -1,13 +1,7 @@
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { NetworkId } from 'utils/network';
-import { OptionSide, Phase, RangedMarketPositionType } from '../types/options';
-
-export const PHASE: Record<Phase, number> = {
-    trading: 0,
-    maturity: 1,
-    expiry: 2,
-};
+import { OptionSide, RangedMarketPositionType } from '../types/options';
 
 export const POSITIONS_TO_SIDE_MAP: Record<Positions, number> = {
     UP: 0,

@@ -106,13 +106,13 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                 defaultPageSize={10}
                 columns={[
                     {
-                        Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.type-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: any) => (
                             <p
@@ -121,13 +121,13 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                                     textTransform: 'uppercase',
                                 }}
                             >
-                                {t(`options.market.transactions-card.table.types.${cellProps.cell.value}`)}
+                                {t(`markets.market.transactions-card.table.types.${cellProps.cell.value}`)}
                             </p>
                         ),
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.amount-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.amount-col')}</>,
                         accessor: 'amount',
                         Cell: (cellProps: any) => (
                             <p style={{ color: getCellColor(cellProps.cell.row.original.type), fontWeight: 'bold' }}>
@@ -146,7 +146,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                         sortType: 'basic',
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.price-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.price-col')}</>,
                         accessor: 'price',
                         Cell: (cellProps: any) => (
                             <p>
@@ -163,7 +163,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                         sortType: priceSort,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.tx-status-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.tx-status-col')}</>,
                         id: 'tx-status',
                         Cell: (cellProps: any) =>
                             cellProps.cell.row.original.status && cellProps.cell.row.original.status === 'pending' ? (

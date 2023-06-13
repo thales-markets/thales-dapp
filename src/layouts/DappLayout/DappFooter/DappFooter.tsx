@@ -2,8 +2,9 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 
-const Footer: React.FC = () => {
+const DappFooter: React.FC = () => {
     const year = new Date().getFullYear();
 
     return (
@@ -14,13 +15,13 @@ const Footer: React.FC = () => {
             </ThalesLogoContainer>
             <FooterIconsWrapper>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
-                    <Trans i18nKey="footer.discover" />
+                    <Trans i18nKey="common.footer.discover" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
-                    <Trans i18nKey="footer.about" />
+                    <Trans i18nKey="common.footer.about" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    <Trans i18nKey="footer.resources" />
+                    <Trans i18nKey="common.footer.resources" />
                 </TextLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                     <FooterIcon className="icon-home icon-home--twitter" />
@@ -39,10 +40,9 @@ const Footer: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div`
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
+const Wrapper = styled(FlexDivCentered)`
+    margin-top: auto;
+    padding-top: 20px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: grid;
         justify-items: center;
@@ -138,4 +138,4 @@ const FooterIcon = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-export default Footer;
+export default DappFooter;

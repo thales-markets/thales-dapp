@@ -1,27 +1,7 @@
-import orderBy from 'lodash/orderBy';
-import { PHASE } from '../constants/options';
-import { OptionsMarkets, Phase } from '../types/options';
-import { getSynthAsset } from './currency';
+import { Phase } from '../types/options';
 import { formatCurrency } from './formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
-
-export const sortOptionsMarkets = (markets: OptionsMarkets) =>
-    orderBy(
-        markets.map((optionsMarket) => {
-            const { phase, timeRemaining } = getPhaseAndEndDate(optionsMarket.maturityDate, optionsMarket.expiryDate);
-
-            return {
-                ...optionsMarket,
-                phase,
-                asset: getSynthAsset(optionsMarket.currencyKey),
-                timeRemaining,
-                phaseNum: PHASE[phase],
-            };
-        }),
-        ['phaseNum', 'discountedSide', 'ammLiquidity'],
-        ['asc', 'asc', 'desc']
-    );
 
 export const getPhaseAndEndDate = (
     maturityDate: number,

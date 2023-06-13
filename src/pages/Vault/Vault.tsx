@@ -35,6 +35,10 @@ import {
     Variables,
     VariablesTitle,
     Link,
+    BackLinkContainer,
+    BackIcon,
+    Header,
+    HeaderVaultIcon,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -65,7 +69,6 @@ import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/Tooltip';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
-import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -80,6 +83,9 @@ import {
     getErrorToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
+import { buildHref } from '../../utils/routes';
+import ROUTES from '../../constants/routes';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -222,7 +228,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer, collateral } = snxJSConnector;
         if (signer && collateral) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsAllowing(true);
@@ -240,7 +246,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', {
+                            t('markets.market.toast-messsage.approve-success', {
                                 token: getDefaultCollateral(networkId),
                             }),
                             id
@@ -260,7 +266,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer } = snxJSConnector;
         if (signer) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
@@ -294,7 +300,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer } = snxJSConnector;
         if (signer) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
@@ -369,6 +375,16 @@ const Vault: React.FC<VaultProps> = (props) => {
             <OpRewardsBanner />
             <ElectionsBanner />
             <Wrapper>
+                <Header>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
+                        <BackLinkContainer>
+                            <BackIcon className={`icon icon--left`} />
+                            {t('vaults.title')}
+                        </BackLinkContainer>
+                    </SPAAnchor>
+                    &nbsp;/ {t(`vault.${vaultId}.title`)}
+                    <HeaderVaultIcon className={`sidebar-icon icon--${vaultId}`} />
+                </Header>
                 {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
                 {vaultData && (
                     <>
@@ -846,7 +862,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                     />
                 )}
             </Wrapper>
-            <Footer />
         </>
     );
 };

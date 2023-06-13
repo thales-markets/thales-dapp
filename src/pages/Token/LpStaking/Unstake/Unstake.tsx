@@ -60,7 +60,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message'),
+                        t('thales-token.gamified-staking.staking.unstake.unstake-confirmation-message'),
                         id
                     )
                 );
@@ -89,11 +89,11 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
         return (
             <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                 {!isUnstaking
-                    ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
+                    ? `${t('thales-token.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                           LP_TOKEN,
                           amountToUnstake
                       )}`
-                    : `${t('options.earn.gamified-staking.staking.unstake.unstaking')} ${formatCurrencyWithKey(
+                    : `${t('thales-token.gamified-staking.staking.unstake.unstaking')} ${formatCurrencyWithKey(
                           LP_TOKEN,
                           amountToUnstake
                       )}...`}
@@ -121,13 +121,13 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         disabled={isUnstaking}
                         currencyLabel={LP_TOKEN}
                         placeholder={t('common.enter-amount')}
-                        label={t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}
+                        label={t('thales-token.gamified-staking.staking.unstake.amount-to-unstake')}
                         onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
                         validationMessage={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
+                                ? `${t('thales-token.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
                                       staked
                                   )}`
                                 : undefined

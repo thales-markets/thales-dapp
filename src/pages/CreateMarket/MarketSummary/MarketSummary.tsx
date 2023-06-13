@@ -40,12 +40,12 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
 
     return (
         <Wrapper>
-            <SummaryHeader>{t('options.create-market.summary.title')}</SummaryHeader>
+            <SummaryHeader>{t('create-market.summary.title')}</SummaryHeader>
             <SummaryContent>
                 <CurrencyContainer>{props.currencyKey && <>{props.currencyKey.label}</>}</CurrencyContainer>
                 <PriceContainer>
                     <PriceItem>
-                        <PriceLabel>{t('options.create-market.summary.strike-price')}</PriceLabel>
+                        <PriceLabel>{t('create-market.summary.strike-price')}</PriceLabel>
                         <PriceInfo>{formatCurrencyWithSign(USD_SIGN, Number(props.strikingPrice))}</PriceInfo>
                     </PriceItem>
                     <PriceItem>
@@ -63,7 +63,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                         )}
                     </PriceItem>
                     <PriceItem>
-                        <PriceLabel>{t('options.create-market.summary.current')}</PriceLabel>
+                        <PriceLabel>{t('create-market.summary.current')}</PriceLabel>
                         <PriceInfo>{formatCurrencyWithSign(USD_SIGN, Number(props.currentPrice))}</PriceInfo>
                     </PriceItem>
                 </PriceContainer>
@@ -71,12 +71,12 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             <MarketInfo>
                 <InfoContainer>
                     <InfoItem>
-                        <Label>{t('options.create-market.summary.dates.maturity-date')}</Label>
+                        <Label>{t('create-market.summary.dates.maturity-date')}</Label>
 
                         <Info>{props.maturityDate}</Info>
                     </InfoItem>
                     <InfoItem>
-                        <Label>{t('options.create-market.summary.dates.time-to-exercise')}</Label>
+                        <Label>{t('create-market.summary.dates.time-to-exercise')}</Label>
                         <Info>{props.timeLeftToExercise}</Info>
                     </InfoItem>
                 </InfoContainer>

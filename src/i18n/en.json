@@ -1,34 +1,163 @@
 {
-    "header": {
-        "links": {
-            "learn": {
-                "title": "Learn",
-                "docs": "Documentation",
-                "guides": "Guides",
-                "whitepaper": "Whitepaper"
-            },
-            "governance": "Governance",
-            "faq": "FAQ",
-            "community": "Community",
-            "blog": "Blog",
-            "token": "Token"
-        }
-    },
-    "footer": {
-        "discover": "Discover",
-        "about": "About",
-        "resources": "Resources"
-    },
-    "user-info": {
+    "common": {
+        "read-more": "Read more",
+        "show-less": "Show less",
+        "max": "max",
+        "save": "Save",
+        "close": "Close",
+        "no-data": "Do not have any data to show",
+        "buy": "buy",
+        "sell": "sell",
+        "eg-val": "e.g. {{val}}",
+        "select-date": "select date",
+        "or": "or",
+        "here": "here",
+        "switch-to-l2": "Switch to L2",
+        "no-data-available": "No data available",
+        "enter-amount": "Enter amount",
+        "enter-percentage": "Enter percentage",
+        "enter-address": "Enter address",
+        "search-placeholder": "Search...",
+        "progress": "Please wait...",
+        "market": "Market",
+        "sort-menu": "Sorting menu",
+        "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>.",
+        "on": "on",
+        "above": "Above",
+        "below": "Below",
+        "between": "Between",
+        "not-between": "Not between",
+        "and": "and",
+        "asset": "Asset",
+        "direction": "Direction",
+        "strike-price": "Strike price",
+        "end-date": "End date",
+        "time-remaining": {
+            "ended": "ended",
+            "years": "years",
+            "year": "year",
+            "months": "months",
+            "month": "month",
+            "weeks": "weeks",
+            "week": "week",
+            "days": "days",
+            "day": "day",
+            "hours": "hours",
+            "hour": "hour",
+            "minutes": "minutes",
+            "minute": "minute",
+            "seconds": "seconds",
+            "second": "second",
+            "days-short": "d",
+            "hours-short": "h",
+            "minutes-short": "m",
+            "seconds-short": "s",
+            "months-short": "mo"
+        },
+        "transaction": {
+            "view": "View",
+            "successful": "Transaction successful"
+        },
+        "tx-status": {
+            "pending": "Pending"
+        },
         "wallet": {
-            "my-thales": "My Thales",
-            "wallet-options": "Wallet Options",
-            "disconnect-wallet": "Disconnect Wallet",
-            "display-name": "Display Name",
-            "change-display-name": "Change Display Name",
-            "in-wallet": "In wallet",
-            "total-staked": "Total staked",
-            "total-escrowed": "Total escrowed"
+            "connect-your-wallet": "Connect wallet",
+            "wallet-options": "Wallet options",
+            "disclaimer-info": "By connecting a wallet you agree to Thales DAO <terms>Terms of Use</terms> and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <disclaimer>disclaimer</disclaimer>",
+            "balance": "Wallet balance"
+        },
+        "errors": {
+            "try-again": "Try again. AMM data is changed.",
+            "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
+            "insufficient-balance": "Insufficient balance",
+            "insufficient-staking-balance": "Insufficient staking balance",
+            "out-of-liquidity": "Out of liquidity",
+            "insufficient-liquidity": "Insufficient liquidity",
+            "enter-amount": "Enter amount",
+            "enter-address": "Enter address",
+            "enter-slippage": "Enter slippage",
+            "invalid-price": "Invalid price",
+            "invalid-address": "Invalid address",
+            "invalid-price-max": "The price cannot be higher than ${{max}}",
+            "invalid-amount-max": "The amount cannot be higher than {{max}}",
+            "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
+            "invalid-slippage": "Invalid slippage",
+            "max-limit-exceeded": "Amount exceeded the amount available on AMM",
+            "user-rejected-tx": "User rejected transaction",
+            "enter-percentage": "Enter percentage",
+            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}"
+        },
+        "enable-wallet-access": {
+            "approve": "Approve",
+            "approve-progress": "Approving",
+            "approve-label": "Approve {{currencyKey}}",
+            "approve-progress-label": "Approving {{currencyKey}}...",
+            "approve-all-label": "Approve all",
+            "custom-amount-label": "Approve amount of"
+        },
+        "header": {
+            "notification": { "tooltip": "You have {{count}} claimable positions" }
+        },
+        "footer": {
+            "discover": "Discover",
+            "about": "About",
+            "resources": "Resources"
+        },
+        "sidebar": {
+            "markets": "Markets",
+            "leaderboard-label": "Leaderboard",
+            "earn-label": "Thales Token",
+            "governance-label": "Governance",
+            "game-label": "Tale of Thales",
+            "profile-label": "Profile",
+            "sport-markets-label": "Overtime markets",
+            "wizard": "Onboarding Wizard",
+            "op-rewards": "OP Rewards",
+            "vaults-label": "Vaults",
+            "liquidity-pool-label": "Provide Liquidity"
+        },
+        "pagination": {
+            "rows-per-page": "Rows per page:"
+        },
+        "unsupported-network": {
+            "title": "Oops! You are on the wrong network!",
+            "description": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
+            "button": {
+                "mainnet": "Switch to Mainnet",
+                "optimism": "Switch to Optimism",
+                "polygon": "Switch to Polygon",
+                "arbitrum": "Switch to Arbitrum",
+                "bsc": "Switch to BNBChain"
+            }
+        },
+        "swap": {
+            "title": "Get {{token}}",
+            "button-text": "Get {{token}}",
+            "select-token": "Select a token",
+            "enter-amount": "Enter amount",
+            "approve": "Give permission to swap {{currency}}",
+            "swap": "Swap",
+            "insufficient-balance": "Insufficient balance",
+            "not-supported": " Swap is not supported on Test networks",
+            "tx-success": "Successfully bought {{token}}",
+            "tx-failed": "Transaction failed",
+            "tx-user-rejected": "User rejected transaction",
+            "approval-success": "Approval successful",
+            "approval-failed": "Approval failed",
+            "from": "From",
+            "balance": "Balance",
+            "to": "To"
+        },
+        "status": {
+            "success": "Success",
+            "info": "Info",
+            "warning": "Warning",
+            "error": "Error"
+        },
+        "banner": {
+            "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
+            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>"
         }
     },
     "landing-page": {
@@ -49,6 +178,8 @@
         "initiatives": "Initiatives",
         "integrations": "Integrations",
         "newest-blog-posts": "Newest blog posts",
+        "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
+        "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
         "faq": {
             "title": "FAQ",
             "firstQ": "What is a Parimutuel Market?",
@@ -58,6 +189,21 @@
             "thirdQ": "What is the utility of the THALES token?",
             "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
         },
+        "header": {
+            "links": {
+                "learn": {
+                    "title": "Learn",
+                    "docs": "Documentation",
+                    "guides": "Guides",
+                    "whitepaper": "Whitepaper"
+                },
+                "governance": "Governance",
+                "faq": "FAQ",
+                "community": "Community",
+                "blog": "Blog",
+                "token": "Token"
+            }
+        },
         "footer": {
             "privacy-policy": "Privacy Policy",
             "terms-of-use": "Terms of Use",
@@ -65,6 +211,523 @@
             "etherscan": "Etherscan",
             "language": "Language",
             "all-rights-reserved": "© {{year}} THALES DAO All rights reserved."
+        }
+    },
+    "create-market": {
+        "title": "Create a new positions market",
+        "subtitle": "To create a new positions market select an asset, a strike price, and the market expiry date. You'll also have to select how many positions tokens you will mint",
+        "note": "* Note: The amount of {{token}} deposited will dictate how many up and down positions tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN positions tokens for this market.",
+        "details": {
+            "select-asset-label": "select asset:",
+            "strike-price-label": "strike price:",
+            "market-maturity-date-label": "market maturity date:",
+            "market-maturity-time-label": "time (UTC):",
+            "funding-amount": {
+                "label": "market funding amount:",
+                "desc": "Note: your {{token}} will be locked up in this contract until the market maturity date"
+            }
+        },
+        "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
+        "summary": {
+            "title": "Market Summary",
+            "strike-price": "Strike price",
+            "current": "Current market price",
+            "dates": {
+                "maturity-date": "Maturity date",
+                "time-to-exercise": "Time to exercise"
+            },
+            "create-market-button-label": "Create market",
+            "creating-market-button-label": "Creating market...",
+            "approve-manager-button-label": "Approve",
+            "waiting-for-approval-button-label": "Approving..."
+        },
+        "select-asset": "Please select asset.",
+        "enter-strike-price": "Please enter strike price.",
+        "difference-warning": "Difference is greater than 100 times.",
+        "progress-tracker": {
+            "approving": "Approving {{currencyKey}}",
+            "creating-market": "Creating market",
+            "finished": "Finished"
+        },
+        "go-to-market": "Go to market"
+    },
+    "markets": {
+        "title": "Markets",
+        "amm-trading": {
+            "asset-price": "If {{asset}} price is",
+            "pick-price": "pick a price",
+            "based-amount": "based on amount",
+            "you-win": "you win",
+            "enter-amount": "Enter amount",
+            "select-price": "Select price",
+            "amm-disabled": "AMM trading disabled",
+            "details-modal": {
+                "confirm-order": "Confirm {{position}} order",
+                "position-price": "Price per position",
+                "position-bonus": "Bonus",
+                "amount-buy": "Amount to buy",
+                "amount-sell": "Amount to sell",
+                "total-pay": "Total to pay",
+                "total-receive": "Total to receive",
+                "potential-profit": "Potential profit",
+                "skew": "Skew impact"
+            },
+            "slippage": {
+                "label": "Slippage tolerance",
+                "enter-value": "Enter value",
+                "invalid-value": "Invalid value"
+            }
+        },
+        "steps": {
+            "choose-asset": "Choose Asset",
+            "choose-date": "Choose Date",
+            "choose-direction": "Choose Direction"
+        },
+        "user-positions": {
+            "your-positions": "Your open positions",
+            "no-positions": "Your open positions will be visible here",
+            "end-date": "End date",
+            "size": "Size",
+            "paid": "Paid",
+            "cash-out": "Cash out",
+            "cash-out-progress": "Cashing out...",
+            "claim-win": "Claim win",
+            "claim-win-progress": "Claiming win...",
+            "results": "Results in",
+            "position-value": "Position value"
+        },
+        "table": {
+            "strike-price-col": "Strike price",
+            "roi": "ROI/BONUS",
+            "price": "Price",
+            "no-markets": "No markets for selected parameters"
+        },
+        "market": {
+            "current-price": "Current price",
+            "strike-price": "Strike price",
+            "out-of-liquidity": "Out Of Liquidity",
+            "iv-tooltip": "Currently set Implied Volatility for this asset is {{percentage}}%",
+            "toast-messsage": {
+                "transaction-pending": "Transaction pending",
+                "approve-success": "Successfully approved"
+            },
+            "ranged-markets": {
+                "strike-range": "Strike range"
+            },
+            "your-activity": {
+                "paid": "Paid",
+                "amount": "Amount",
+                "activity": "Activity",
+                "tx-status": "TX Status"
+            },
+            "row-card": {
+                "views": "Views",
+                "current-view": "View: {{ currentView }} "
+            },
+            "overview": {
+                "final-price-label": "Final {{currencyKey}} price",
+                "maturity-date": "Maturity date",
+                "amm-liquidity": "AMM liquidity",
+                "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
+                "amm-price": "AMM price",
+                "final-result": "Final result",
+                "my-positions": "My positions",
+                "my-position": "My position",
+                "positions-value": "Positions value",
+                "position-value": "Position value",
+                "price-difference": "Price difference"
+            },
+            "widgets": {
+                "chart": "{{currencyKey}} chart",
+                "position-price": "Position price",
+                "recent-transactions-widget": "Market activity",
+                "your-transactions-widget": "Your activity"
+            },
+            "transactions-card": {
+                "table": {
+                    "date-time-col": "date | time",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "price-col": "price",
+                    "tx-status-col": "tx status",
+                    "types": {
+                        "exercise": "Exercise",
+                        "buy": "Buy",
+                        "sell": "Sell",
+                        "mint": "Mint"
+                    }
+                }
+            },
+            "trade-card": {
+                "maturity": {
+                    "card-title": "Market has been closed",
+                    "exercise-options": "You can exercise following positions:",
+                    "nothing-to-exercise": "You don't have positions to exercise.",
+                    "payout-amount-label": "Payout amount",
+                    "end-label": "Time left to exercise",
+                    "confirm-button": {
+                        "label": "Exercise position",
+                        "progress-label": "Exercising in progress...",
+                        "success-label": "Nothing to exercise",
+                        "confirmation-message": "Positions successfully exercised"
+                    }
+                }
+            },
+            "trade-options": {
+                "place-order": {
+                    "swap-confirm-button": {
+                        "buy": {
+                            "label": "Buy",
+                            "progress-label": "Buying in progress...",
+                            "confirmation-message": "Successfully bought"
+                        },
+                        "sell": {
+                            "label": "Sell",
+                            "progress-label": "Selling in progress...",
+                            "confirmation-message": "Successfully sold"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "thales-token": {
+        "title": "Thales Token",
+        "snx-stakers": {
+            "tab-title": "Strategic investors",
+            "retro-rewards": {
+                "title": "Retro unlock",
+                "not-eligible-message": "You are not eligible for this distribution.",
+                "learn-more-text": "Rewards are unlocked linearly. There is no penalty for claiming currently unlocked rewards.",
+                "learn-more": "Learn more",
+                "info-tooltip": "<0>New retro unlock for strategic investors per </0><1 />."
+            },
+            "claim": "Claim",
+            "claimed": "Claimed",
+            "claiming-unlocked": "Claiming",
+            "unlocked": "Unlocked",
+            "locked": "Locked",
+            "start-time": "Start time",
+            "end-time": "End time",
+            "initial-locked": "Initially Locked",
+            "confirmation-message": "Tokens successfully claimed"
+        },
+        "thales-staking": {
+            "staking-rewards": {
+                "confirmation-message": "Tokens successfully claimed",
+                "not-eligible-message": "You are not eligible for these rewards.",
+                "paused-message": "Claiming is paused.",
+                "claim": "Claim",
+                "claiming": "Claiming",
+                "migrated-rewards": {
+                    "claimed-message": "You have already claimed migrated retro rewards."
+                },
+                "unclaimed-rewards": {
+                    "title": "Migrated rewards",
+                    "rewards-label": "Migrated rewards",
+                    "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
+                }
+            }
+        },
+        "gamified-staking": {
+            "tab-title": "Gamified Staking",
+            "staking": {
+                "section-title": "Staking",
+                "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
+                "apy-tooltip": "This is an estimation of the Annual Percentage Yield in THALES tokens from Staking THALES tokens to be distributed at the end of the current epoch.",
+                "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
+                "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
+                "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
+                "total-thales-staked": "Total THALES Staked",
+                "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
+                "staked-share": "My Staked Share",
+                "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked.",
+                "staked-balance": "My Staked Balance",
+                "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
+                "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
+                "staked-directly": "Staked directly",
+                "escrow-balance": "Escrowed balance",
+                "estimated-rewards": "Estimated rewards for this period",
+                "stake": {
+                    "name": "Stake",
+                    "staking": "Staking",
+                    "amount-to-stake": "Amount to stake",
+                    "balance": "Balance",
+                    "confirmation-message": "Tokens successfully staked",
+                    "paused-message": "Staking is paused."
+                },
+                "unstake": {
+                    "name": "Unstake",
+                    "unlock-cooldown-text": "Unlocking starts a cooldown period during which the amount of THALES unstaked isn't counted in your staked balance.",
+                    "cooldown-started-text": "You can unstake {{amount}} in",
+                    "cooldown-ended-text": "You can now unstake {{amount}}",
+                    "cooldown-label": "Cooldown",
+                    "start-unstaking": "Start unstaking",
+                    "cooldown-confirmation-message": "Unstaking successfully started",
+                    "unstake-confirmation-message": "Tokens successfully unstaked",
+                    "unstaking": "Unstaking",
+                    "amount-to-unstake": "Amount to unstake",
+                    "balance": "Balance",
+                    "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
+                    "cancel": "Cancel unstaking",
+                    "canceling": "Canceling unstaking",
+                    "paused-message": "Unstaking is paused.",
+                    "user-lping-message": "You cannot unstake while providing liquidity for Thales or Overtime."
+                }
+            },
+            "rewards": {
+                "section-title": "Rewards",
+                "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You can claim staking rewards weekly.",
+                "section-warning": "Unclaimed weekly rewards are forfeited!",
+                "info": {
+                    "base": "As base rewards",
+                    "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
+                    "bonus": "As bonus rewards",
+                    "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are divided in 21,000 THALES weekly for the Protocol Usage bucket that counts sUSD volume from AMM trading, ranged AMM trading and Overtime sport's AMM trading, and 9,000 THALES per week to SNX stakers. <0>Learn More.</0>",
+                    "bonus-description-arb": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are {{ bonusRewards }}  weekly for the Protocol Usage bucket that counts USDC volume from AMM trading, ranged AMM trading and Overtime sport's AMM trading. <0>Learn More.</0>"
+                },
+                "volume": {
+                    "amm-label": "AMM markets",
+                    "amm-desc": "Current AMM market volume:",
+                    "ranged-label": "Ranged markets",
+                    "ranged-desc": "Current Ranged market volume:",
+                    "sports-desc": "Current Sports market volume:"
+                },
+                "no-thales-staked": "You have no THALES staked",
+                "protocol": {
+                    "label": "Protocol usage bucket",
+                    "volume": "Volume",
+                    "bonus": "Additional volume needed for max possible rewards",
+                    "bonus-eligible": "You are eligible for max bonus rewards",
+                    "rewards": "Max reward",
+                    "estimated-rewards": "Estimated max reward"
+                },
+                "snx": {
+                    "label": "SNX Staking",
+                    "staked": "SNX Staked",
+                    "bonus": "Additional SNX to stake for max possible rewards",
+                    "bonus-eligible": "You are eligible for max bonus rewards",
+                    "rewards": "Max reward",
+                    "estimated-rewards": "Estimated max reward"
+                },
+                "claim": {
+                    "total-label": "Total claimable",
+                    "claim": "Claim Thales rewards",
+                    "claiming": "Claiming",
+                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
+                    "confirmation-message": "Tokens successfully claimed",
+                    "period": "Time left:",
+                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "paused-message": "Claiming is paused.",
+                    "not-eligible-message": "You are not eligible for these rewards.",
+                    "close-period": {
+                        "label": "Close period",
+                        "progress-label": "Closing period...",
+                        "confirmation-message": "Period successfully closed"
+                    },
+                    "op-tooltip": "OP token rewards for Gamified Staking are distributed directly to your wallet every 2 weeks."
+                },
+                "claim-on-behalf": {
+                    "label-1": "Looking to automate your claim?",
+                    "label-2": "Whitelist an address to claim on your behalf",
+                    "enable": "Enable claim on behalf"
+                },
+                "lp-staking": {
+                    "label-1": "thales/eth",
+                    "label-2": "LP Staking",
+                    "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
+                },
+                "base-label": "Thales staking base rewards"
+            },
+            "vesting": {
+                "section-title": "Vesting",
+                "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance.",
+                "vest": {
+                    "available-to-vest": "Available to vest",
+                    "vest": "Vest",
+                    "vesting": "Vesting",
+                    "confirmation-message": "Tokens successfully vested"
+                },
+                "schedule-label": "Vesting schedule",
+                "schedule-no-results": "No vesting schedule found."
+            },
+            "merge-account": {
+                "section-title": "Account Preferences",
+                "section-description": "<0>Account merging has been implemented per </0><1 />.",
+                "source-account-label": "Source",
+                "destination-account-label": "Destination",
+                "delegate-volume-address-label": "Address",
+                "confirmation-message": "Account successfully merged",
+                "delegation-confirmation-message": "Successfully delegated volume",
+                "merge-account-disabled-message": "Account merging is disabled.",
+                "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
+                "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                "merge-account": "Merge Account",
+                "how-merge-account-works": "How merge account works",
+                "merge-account-description-1": "The \"Merge Account\" functionality gives a THALES staker the ability to transfer all its staked THALES and staking rewards from one wallet to another. This comes in handy for those who want to cycle wallets or for those whose wallet has been compromised.",
+                "merge-account-description-2": "This account merging only works for the entire balance of staked and vested THALES, partial reassignments will not be possible. It's also worth noting that on the receiving wallet, the THALES tokens staked will still need a 7-day countdown to unstake and the vested rewards will also be subject to the standard 10-weeks cooldown when claiming.",
+                "delegate-volume": "Delegate Volume",
+                "how-delegate-volume-works": "How delegate volume works",
+                "delegate-volume-description-1": "The \"Delegate Volume\" functionality gives you the ability to direct the volume generated from one wallet that you own to another wallet.",
+                "delegate-volume-description-2": "This simple step comes in handy for those who stake their THALES with a hardware wallet but do their trading on another hot wallet for convenience's sake (for example using Overtime on their mobile wallet), this way the volume generated can count towards the \"Protocol Volume bucket\" of gamified THALES staking rewards.",
+                "delegate-volume-description-3": "This delegation of volume can be stopped at any time and it has checks in place to avoid a wallet directing it's volume to another while still boosting it's own.",
+                "addresses-delegating-to-you": "Addresses delegating to you",
+                "merge-blocked-message": {
+                    "title": "In order to merge account, you need to",
+                    "src-claim": "Claim the staking rewards from the source account.",
+                    "src-unstaking": "Cancel ustaking from the source account.",
+                    "dest-claim": "Claim the staking rewards from the destination account.",
+                    "dest-unstaking": "Cancel ustaking from the destination account."
+                },
+                "merge-button": {
+                    "label": "Merge",
+                    "progress-label": "Merging in progress..."
+                },
+                "delegate-button": {
+                    "label": "Delegate",
+                    "progress-label": "Delegating in progress...",
+                    "remove-delegation": "Remove delegation"
+                }
+            }
+        },
+        "lp-staking": {
+            "tab-title": "LP staking",
+            "section-title": "How LP Staking works?",
+            "instructions": {
+                "step1-label": "Connect wallet",
+                "step1-desc": "Connect your wallet to Optimism network and the Thales dapp in the top right corner of this page.",
+                "step2-label": "Wrap ETH into WETH",
+                "step2-desc": "To be able to provide liquidity and be eligible for LP rewards, you need to have Wrapped Ethereum. You can wrap your ETH to WETH on Optimism using this <0>Uniswap page</0>.",
+                "step3-label": "Provide liquidity",
+                "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Arrakis Finance UI (<0>here</0>). Once the transaction is confirmed, you will receive THALES/WETH G-UNI LP tokens in your wallet that represent your share of the liquidity pool.",
+                "step4-label": "Stake",
+                "step4-desc": "Now that you have your G-UNI LP tokens, you need to stake them on this page to start receiving THALES+OP rewards.",
+                "step5-label": "Claim rewards",
+                "step5-desc": "Now that you've staked your LP tokens you'll see your rewards accruing in the Rewards card of the LP staking page."
+            },
+            "info": {
+                "staked-balance": "My staked LP tokens balance",
+                "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
+                "lp-tokens": "LP tokens",
+                "tvl": "Total value locked<0/>",
+                "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
+                "share": "My staked share",
+                "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."
+            },
+            "apr": {
+                "total": "APR in total",
+                "total-tooltip": "Total current Annual Percentage Return as sum of both OP and THALES rewards.",
+                "thales": "THALES APR",
+                "thales-tooltip": "Current Annual Percentage Return in THALES tokens.",
+                "op": "OP APR",
+                "op-tooltip": "Current Annual Percentage Return in OP tokens."
+            },
+            "claim": {
+                "title": "Unclaimed rewards",
+                "total-label": "Total claimable",
+                "claim-rewards": "Claim rewards",
+                "claiming-rewards": "Claiming rewards",
+                "claimed": "Successfully claimed"
+            }
+        },
+        "table": {
+            "title": "Your activity",
+            "date-time-col": "date | time",
+            "type-col": "type",
+            "amount-col": "amount",
+            "tx-status-col": "tx status",
+            "no-results": {
+                "all": "No transactions associated with this wallet.",
+                "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
+                "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
+                "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
+                "claimMigratedRewards": "No migrated rewards transactions associated with this wallet.",
+                "claimMigratedRetroRewards": "No migrated retro rewards transactions associated with this wallet.",
+                "stake": "No stake transactions associated with this wallet.",
+                "startUnstake": "No start unstaking transactions associated with this wallet.",
+                "cancelUnstake": "No cancel unstaking transactions associated with this wallet.",
+                "unstake": "No unstake transactions associated with this wallet.",
+                "addToEscrow": "No add to escrow transactions associated with this wallet.",
+                "vest": "No vest transactions associated with this wallet.",
+                "lpStake": "No LP stake transactions associated with this wallet.",
+                "lpUnstake": "No LP unstake transactions associated with this wallet.",
+                "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
+                "mergeAccount": "No merge account transactions associated with this wallet.",
+                "delegateVolume": "No delegate volume transactions associated with this wallet.",
+                "removeDelegation": "No remove delegation transactions associated with this wallet."
+            },
+            "types": {
+                "claimRetroAirdrop": "Claim retro airdrop",
+                "claimRetroUnlocked": "Claim retro unlock",
+                "claimStakingRewards": "Claim staking rewards",
+                "claimMigratedRewards": "Claim migrated rewards",
+                "claimMigratedRetroRewards": "Claim migrated retro rewards",
+                "stake": "Stake",
+                "startUnstake": "Start unstaking",
+                "cancelUnstake": "Cancel unstaking",
+                "unstake": "Unstake",
+                "addToEscrow": "Add to escrow",
+                "vest": "Vest",
+                "lpStake": "LP stake",
+                "lpUnstake": "LP unstake",
+                "lpClaimStakingRewards": "Claim LP staking rewards",
+                "mergeAccount": "Merge account",
+                "delegateVolume": "Delegate Volume",
+                "removeDelegation": "Remove Delegation"
+            },
+            "filter": {
+                "button": "filters",
+                "all": "All",
+                "claimRetroAirdrop": "Retro airdrop",
+                "claimRetroUnlocked": "Retro unlock",
+                "claimStakingRewards": "Reward claims",
+                "claimMigratedRewards": "Migrated rewards",
+                "claimMigratedRetroRewards": "Migrated retro rewards",
+                "stake": "Stake",
+                "startUnstake": "Start unstaking",
+                "cancelUnstake": "Cancel unstaking",
+                "unstake": "Unstake",
+                "addToEscrow": "Add to escrow",
+                "vest": "Vest",
+                "lpStake": "LP stake",
+                "lpUnstake": "LP unstake",
+                "lpClaimStakingRewards": "LP staking rewards",
+                "mergeAccount": "Merge account",
+                "delegateVolume": "Delegate Volume",
+                "removeDelegation": "Remove Delegation"
+            }
+        },
+        "overview": {
+            "token-tooltip": "View THALES contract",
+            "price-label": "Price",
+            "price-tooltip": "View DODO pool",
+            "price-tooltip-l2": "Swap on UNISWAP",
+            "price-tooltip-camelot": "Swap on Camelot",
+            "market-cap-label": "Market cap",
+            "circulating-supply-label": "Circulating supply",
+            "total-burned-label": "Total THALES burned",
+            "total-supply-label": "Total supply",
+            "celer-bridge": "Celer cBridge",
+            "celer-bridge-tooltip": "Fast bridge THALES between chains"
+        },
+        "claim-on-behalf": {
+            "title": "Claim on behalf",
+            "description": "<0>Claim on behalf has been implemented per </0><1 />.",
+            "guide": "<0>Please check this </0><1 /><0> on how to automate your weekly claims</0>.",
+            "guide-link": "guid",
+            "label": "Enter account for which you want to enable/disable claim on your behalf:",
+            "enable-button": {
+                "label": "Enable",
+                "progress-label": "Enabling in progress...",
+                "confirmation-message": "Claim on behalf successfully enabled for the account"
+            },
+            "disable-button": {
+                "label": "Disable",
+                "progress-label": "Disabling in progress...",
+                "confirmation-message": "Claim on behalf successfully disabled for the account"
+            },
+            "enabled-addresses-title": "Accounts that are enabled to claim on your behalf",
+            "no-enabled-addresses-message": "No addresses assigned."
         }
     },
     "referral-page": {
@@ -176,751 +839,6 @@
         "buy-button3": "Bridge to {{network}}",
         "buy-button4": "Send from Exchange"
     },
-    "common": {
-        "read-more": "Read more",
-        "show-less": "Show less",
-        "max": "max",
-        "save": "Save",
-        "close": "Close",
-        "transaction": {
-            "view": "View"
-        },
-        "no-data": "Do not have any data to show",
-        "tx-status": {
-            "pending": "Pending"
-        },
-        "wallet": {
-            "connect-your-wallet": "Connect wallet",
-            "disclaimer-info": "By connecting a wallet you agree to Thales DAO <terms>Terms of Use</terms> and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <disclaimer>disclaimer</disclaimer>",
-            "balance": "Wallet balance"
-        },
-        "errors": {
-            "try-again": "Try again. AMM data is changed.",
-            "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
-            "insufficient-balance": "Insufficient balance",
-            "insufficient-staking-balance": "Insufficient staking balance",
-            "out-of-liquidity": "Out of liquidity",
-            "insufficient-liquidity": "Insufficient liquidity",
-            "enter-amount": "Enter amount",
-            "enter-address": "Enter address",
-            "enter-slippage": "Enter slippage",
-            "invalid-price": "Invalid price",
-            "invalid-address": "Invalid address",
-            "invalid-price-max": "The price cannot be higher than ${{max}}",
-            "invalid-amount-max": "The amount cannot be higher than {{max}}",
-            "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
-            "invalid-slippage": "Invalid slippage",
-            "max-limit-exceeded": "Amount exceeded the amount available on AMM",
-            "user-rejected-tx": "User rejected transaction",
-            "enter-percentage": "Enter percentage",
-            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}"
-        },
-        "buy": "buy",
-        "sell": "sell",
-        "eg-val": "e.g. {{val}}",
-        "select-date": "select date",
-        "or": "or",
-        "enable-wallet-access": {
-            "approve": "Approve",
-            "approve-progress": "Approving",
-            "approve-label": "Approve {{currencyKey}}",
-            "approve-progress-label": "Approving {{currencyKey}}...",
-            "approve-all-label": "Approve all",
-            "custom-amount-label": "Approve amount of"
-        },
-        "sidebar": {
-            "markets": "Markets",
-            "leaderboard-label": "Leaderboard",
-            "earn-label": "Thales Token",
-            "governance-label": "Governance",
-            "game-label": "Tale of Thales",
-            "profile-label": "Profile",
-            "sport-markets-label": "Overtime markets",
-            "wizard": "Onboarding Wizard",
-            "op-rewards": "OP Rewards",
-            "vaults-label": "Vaults",
-            "liquidity-pool-label": "Provide Liquidity"
-        },
-        "here": "here",
-        "pagination": {
-            "rows-per-page": "Rows per page:"
-        },
-        "unsupported-network": {
-            "title": "Oops! You are on the wrong network!",
-            "description": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
-            "button": {
-                "mainnet": "Switch to Mainnet",
-                "optimism": "Switch to Optimism",
-                "polygon": "Switch to Polygon",
-                "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BNBChain"
-            }
-        },
-        "user-info-card": {
-            "wallet": "Wallet",
-            "change": "Change",
-            "language": "Language",
-            "disconnect": "Disconnect",
-            "options": "Options"
-        },
-        "no-data-available": "No data available",
-        "enter-amount": "Enter amount",
-        "enter-percentage": "Enter percentage",
-        "enter-address": "Enter address",
-        "search-placeholder": "Search...",
-        "status": {
-            "success": "Success",
-            "info": "Info",
-            "warning": "Warning",
-            "error": "Error"
-        },
-        "progress": "Please wait..."
-    },
-    "options": {
-        "trade": {
-            "amm-trading": {
-                "asset-price": "If {{asset}} price is",
-                "pick-price": "pick a price",
-                "based-amount": "based on amount",
-                "you-win": "you win",
-                "enter-amount": "Enter amount",
-                "select-price": "Select price",
-                "details-modal": {
-                    "confirm-order": "Confirm {{position}} order",
-                    "position-price": "Price per position",
-                    "position-bonus": "Bonus",
-                    "amount-buy": "Amount to buy",
-                    "amount-sell": "Amount to sell",
-                    "total-pay": "Total to pay",
-                    "total-receive": "Total to receive",
-                    "potential-profit": "Potential profit",
-                    "skew": "Skew impact"
-                },
-                "slippage": {
-                    "label": "Slippage tolerance",
-                    "enter-value": "Enter value",
-                    "invalid-value": "Invalid value"
-                }
-            },
-            "steps": {
-                "choose-asset": "Choose Asset",
-                "choose-date": "Choose Date",
-                "choose-direction": "Choose Direction"
-            },
-            "user-positions": {
-                "your-positions": "Your open positions",
-                "no-positions": "Your open positions will be visible here",
-                "end-date": "End date",
-                "size": "Size",
-                "paid": "Paid",
-                "cash-out": "Cash out",
-                "cash-out-progress": "Cashing out...",
-                "claim-win": "Claim win",
-                "claim-win-progress": "Claiming win...",
-                "results": "Results in",
-                "position-value": "Position value"
-            }
-        },
-        "filters-labels": {
-            "sort-menu": "Sorting menu"
-        },
-        "home": {
-            "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
-            "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
-            "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
-            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
-            "market-card": {
-                "current-asset-price": "Current price",
-                "strike-price": "Strike price",
-                "claimed": "CLAIMED",
-                "rip": "RIP",
-                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
-            },
-            "markets-table": {
-                "strike-price-col": "Strike price",
-                "final-asset-price-col": "Final price",
-                "out-of-liquidity": "Out Of Liquidity",
-                "roi": "ROI/BONUS",
-                "price": "Price",
-                "iv-tooltip": "Currently set Implied Volatility for this asset is {{percentage}}%",
-                "no-markets": "No markets for selected parameters"
-            }
-        },
-        "earn": {
-            "snx-stakers": {
-                "tab-title": "Strategic investors",
-                "retro-rewards": {
-                    "title": "Retro unlock",
-                    "not-eligible-message": "You are not eligible for this distribution.",
-                    "learn-more-text": "Rewards are unlocked linearly. There is no penalty for claiming currently unlocked rewards.",
-                    "learn-more": "Learn more",
-                    "info-tooltip": "<0>New retro unlock for strategic investors per </0><1 />."
-                },
-                "claim": "Claim",
-                "claimed": "Claimed",
-                "claiming-unlocked": "Claiming",
-                "unlocked": "Unlocked",
-                "locked": "Locked",
-                "start-time": "Start time",
-                "end-time": "End time",
-                "initial-locked": "Initially Locked",
-                "confirmation-message": "Tokens successfully claimed"
-            },
-            "thales-staking": {
-                "staking-rewards": {
-                    "confirmation-message": "Tokens successfully claimed",
-                    "not-eligible-message": "You are not eligible for these rewards.",
-                    "paused-message": "Claiming is paused.",
-                    "claim": "Claim",
-                    "claiming": "Claiming",
-                    "migrated-rewards": {
-                        "claimed-message": "You have already claimed migrated retro rewards."
-                    },
-                    "unclaimed-rewards": {
-                        "title": "Migrated rewards",
-                        "rewards-label": "Migrated rewards",
-                        "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
-                    }
-                }
-            },
-            "gamified-staking": {
-                "tab-title": "Gamified Staking",
-                "staking": {
-                    "section-title": "Staking",
-                    "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
-                    "apy-tooltip": "This is an estimation of the Annual Percentage Yield in THALES tokens from Staking THALES tokens to be distributed at the end of the current epoch.",
-                    "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
-                    "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
-                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
-                    "total-thales-staked": "Total THALES Staked",
-                    "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
-                    "staked-share": "My Staked Share",
-                    "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked.",
-                    "staked-balance": "My Staked Balance",
-                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
-                    "staked-directly": "Staked directly",
-                    "escrow-balance": "Escrowed balance",
-                    "estimated-rewards": "Estimated rewards for this period",
-                    "stake": {
-                        "name": "Stake",
-                        "staking": "Staking",
-                        "amount-to-stake": "Amount to stake",
-                        "balance": "Balance",
-                        "confirmation-message": "Tokens successfully staked",
-                        "paused-message": "Staking is paused."
-                    },
-                    "unstake": {
-                        "name": "Unstake",
-                        "unlock-cooldown-text": "Unlocking starts a cooldown period during which the amount of THALES unstaked isn't counted in your staked balance.",
-                        "cooldown-started-text": "You can unstake {{amount}} in",
-                        "cooldown-ended-text": "You can now unstake {{amount}}",
-                        "cooldown-label": "Cooldown",
-                        "start-unstaking": "Start unstaking",
-                        "cooldown-confirmation-message": "Unstaking successfully started",
-                        "unstake-confirmation-message": "Tokens successfully unstaked",
-                        "unstaking": "Unstaking",
-                        "amount-to-unstake": "Amount to unstake",
-                        "balance": "Balance",
-                        "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
-                        "cancel": "Cancel unstaking",
-                        "canceling": "Canceling unstaking",
-                        "paused-message": "Unstaking is paused.",
-                        "user-lping-message": "You cannot unstake while providing liquidity for Thales or Overtime."
-                    }
-                },
-                "rewards": {
-                    "section-title": "Rewards",
-                    "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You can claim staking rewards weekly.",
-                    "section-warning": "Unclaimed weekly rewards are forfeited!",
-                    "info": {
-                        "base": "As base rewards",
-                        "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
-                        "bonus": "As bonus rewards",
-                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are divided in 21,000 THALES weekly for the Protocol Usage bucket that counts sUSD volume from AMM trading, ranged AMM trading and Overtime sport's AMM trading, and 9,000 THALES per week to SNX stakers. <0>Learn More.</0>",
-                        "bonus-description-arb": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are {{ bonusRewards }}  weekly for the Protocol Usage bucket that counts USDC volume from AMM trading, ranged AMM trading and Overtime sport's AMM trading. <0>Learn More.</0>"
-                    },
-                    "volume": {
-                        "amm-label": "AMM markets",
-                        "amm-desc": "Current AMM market volume:",
-                        "ranged-label": "Ranged markets",
-                        "ranged-desc": "Current Ranged market volume:",
-                        "sports-desc": "Current Sports market volume:"
-                    },
-                    "no-thales-staked": "You have no THALES staked",
-                    "protocol": {
-                        "label": "Protocol usage bucket",
-                        "volume": "Volume",
-                        "bonus": "Additional volume needed for max possible rewards",
-                        "bonus-eligible": "You are eligible for max bonus rewards",
-                        "rewards": "Max reward",
-                        "estimated-rewards": "Estimated max reward"
-                    },
-                    "snx": {
-                        "label": "SNX Staking",
-                        "staked": "SNX Staked",
-                        "bonus": "Additional SNX to stake for max possible rewards",
-                        "bonus-eligible": "You are eligible for max bonus rewards",
-                        "rewards": "Max reward",
-                        "estimated-rewards": "Estimated max reward"
-                    },
-                    "claim": {
-                        "total-label": "Total claimable",
-                        "claim": "Claim Thales rewards",
-                        "claiming": "Claiming",
-                        "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                        "confirmation-message": "Tokens successfully claimed",
-                        "period": "Time left:",
-                        "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
-                        "paused-message": "Claiming is paused.",
-                        "not-eligible-message": "You are not eligible for these rewards.",
-                        "close-period": {
-                            "label": "Close period",
-                            "progress-label": "Closing period...",
-                            "confirmation-message": "Period successfully closed"
-                        },
-                        "op-tooltip": "OP token rewards for Gamified Staking are distributed directly to your wallet every 2 weeks."
-                    },
-                    "claim-on-behalf": {
-                        "label-1": "Looking to automate your claim?",
-                        "label-2": "Whitelist an address to claim on your behalf",
-                        "enable": "Enable claim on behalf"
-                    },
-                    "lp-staking": {
-                        "label-1": "thales/eth",
-                        "label-2": "LP Staking",
-                        "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
-                    },
-                    "base-label": "Thales staking base rewards"
-                },
-                "vesting": {
-                    "section-title": "Vesting",
-                    "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance.",
-                    "vest": {
-                        "available-to-vest": "Available to vest",
-                        "vest": "Vest",
-                        "vesting": "Vesting",
-                        "confirmation-message": "Tokens successfully vested"
-                    },
-                    "schedule-label": "Vesting schedule",
-                    "schedule-no-results": "No vesting schedule found."
-                },
-                "merge-account": {
-                    "section-title": "Account Preferences",
-                    "section-description": "<0>Account merging has been implemented per </0><1 />.",
-                    "source-account-label": "Source",
-                    "destination-account-label": "Destination",
-                    "delegate-volume-address-label": "Address",
-                    "confirmation-message": "Account successfully merged",
-                    "delegation-confirmation-message": "Successfully delegated volume",
-                    "merge-account-disabled-message": "Account merging is disabled.",
-                    "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
-                    "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
-                    "merge-account": "Merge Account",
-                    "how-merge-account-works": "How merge account works",
-                    "merge-account-description-1": "The \"Merge Account\" functionality gives a THALES staker the ability to transfer all its staked THALES and staking rewards from one wallet to another. This comes in handy for those who want to cycle wallets or for those whose wallet has been compromised.",
-                    "merge-account-description-2": "This account merging only works for the entire balance of staked and vested THALES, partial reassignments will not be possible. It's also worth noting that on the receiving wallet, the THALES tokens staked will still need a 7-day countdown to unstake and the vested rewards will also be subject to the standard 10-weeks cooldown when claiming.",
-                    "delegate-volume": "Delegate Volume",
-                    "how-delegate-volume-works": "How delegate volume works",
-                    "delegate-volume-description-1": "The \"Delegate Volume\" functionality gives you the ability to direct the volume generated from one wallet that you own to another wallet.",
-                    "delegate-volume-description-2": "This simple step comes in handy for those who stake their THALES with a hardware wallet but do their trading on another hot wallet for convenience's sake (for example using Overtime on their mobile wallet), this way the volume generated can count towards the \"Protocol Volume bucket\" of gamified THALES staking rewards.",
-                    "delegate-volume-description-3": "This delegation of volume can be stopped at any time and it has checks in place to avoid a wallet directing it's volume to another while still boosting it's own.",
-                    "addresses-delegating-to-you": "Addresses delegating to you",
-                    "merge-blocked-message": {
-                        "title": "In order to merge account, you need to",
-                        "src-claim": "Claim the staking rewards from the source account.",
-                        "src-unstaking": "Cancel ustaking from the source account.",
-                        "dest-claim": "Claim the staking rewards from the destination account.",
-                        "dest-unstaking": "Cancel ustaking from the destination account."
-                    },
-                    "merge-button": {
-                        "label": "Merge",
-                        "progress-label": "Merging in progress..."
-                    },
-                    "delegate-button": {
-                        "label": "Delegate",
-                        "progress-label": "Delegating in progress...",
-                        "remove-delegation": "Remove delegation"
-                    }
-                }
-            },
-            "lp-staking": {
-                "tab-title": "LP staking",
-                "section-title": "How LP Staking works?",
-                "instructions": {
-                    "step1-label": "Connect wallet",
-                    "step1-desc": "Connect your wallet to Optimism network and the Thales dapp in the top right corner of this page.",
-                    "step2-label": "Wrap ETH into WETH",
-                    "step2-desc": "To be able to provide liquidity and be eligible for LP rewards, you need to have Wrapped Ethereum. You can wrap your ETH to WETH on Optimism using this <0>Uniswap page</0>.",
-                    "step3-label": "Provide liquidity",
-                    "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Arrakis Finance UI (<0>here</0>). Once the transaction is confirmed, you will receive THALES/WETH G-UNI LP tokens in your wallet that represent your share of the liquidity pool.",
-                    "step4-label": "Stake",
-                    "step4-desc": "Now that you have your G-UNI LP tokens, you need to stake them on this page to start receiving THALES+OP rewards.",
-                    "step5-label": "Claim rewards",
-                    "step5-desc": "Now that you've staked your LP tokens you'll see your rewards accruing in the Rewards card of the LP staking page."
-                },
-                "info": {
-                    "staked-balance": "My staked LP tokens balance",
-                    "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
-                    "lp-tokens": "LP tokens",
-                    "tvl": "Total value locked<0/>",
-                    "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
-                    "share": "My staked share",
-                    "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."
-                },
-                "apr": {
-                    "total": "APR in total",
-                    "total-tooltip": "Total current Annual Percentage Return as sum of both OP and THALES rewards.",
-                    "thales": "THALES APR",
-                    "thales-tooltip": "Current Annual Percentage Return in THALES tokens.",
-                    "op": "OP APR",
-                    "op-tooltip": "Current Annual Percentage Return in OP tokens."
-                },
-                "claim": {
-                    "title": "Unclaimed rewards",
-                    "total-label": "Total claimable",
-                    "claim-rewards": "Claim rewards",
-                    "claiming-rewards": "Claiming rewards",
-                    "claimed": "Successfully claimed"
-                }
-            },
-            "table": {
-                "title": "Your activity",
-                "date-time-col": "date | time",
-                "type-col": "type",
-                "amount-col": "amount",
-                "tx-status-col": "tx status",
-                "no-results": {
-                    "all": "No transactions associated with this wallet.",
-                    "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
-                    "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
-                    "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
-                    "claimMigratedRewards": "No migrated rewards transactions associated with this wallet.",
-                    "claimMigratedRetroRewards": "No migrated retro rewards transactions associated with this wallet.",
-                    "stake": "No stake transactions associated with this wallet.",
-                    "startUnstake": "No start unstaking transactions associated with this wallet.",
-                    "cancelUnstake": "No cancel unstaking transactions associated with this wallet.",
-                    "unstake": "No unstake transactions associated with this wallet.",
-                    "addToEscrow": "No add to escrow transactions associated with this wallet.",
-                    "vest": "No vest transactions associated with this wallet.",
-                    "lpStake": "No LP stake transactions associated with this wallet.",
-                    "lpUnstake": "No LP unstake transactions associated with this wallet.",
-                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
-                    "mergeAccount": "No merge account transactions associated with this wallet.",
-                    "delegateVolume": "No delegate volume transactions associated with this wallet.",
-                    "removeDelegation": "No remove delegation transactions associated with this wallet."
-                },
-                "types": {
-                    "claimRetroAirdrop": "Claim retro airdrop",
-                    "claimRetroUnlocked": "Claim retro unlock",
-                    "claimStakingRewards": "Claim staking rewards",
-                    "claimMigratedRewards": "Claim migrated rewards",
-                    "claimMigratedRetroRewards": "Claim migrated retro rewards",
-                    "stake": "Stake",
-                    "startUnstake": "Start unstaking",
-                    "cancelUnstake": "Cancel unstaking",
-                    "unstake": "Unstake",
-                    "addToEscrow": "Add to escrow",
-                    "vest": "Vest",
-                    "lpStake": "LP stake",
-                    "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "Claim LP staking rewards",
-                    "mergeAccount": "Merge account",
-                    "delegateVolume": "Delegate Volume",
-                    "removeDelegation": "Remove Delegation"
-                },
-                "filter": {
-                    "button": "filters",
-                    "all": "All",
-                    "claimRetroAirdrop": "Retro airdrop",
-                    "claimRetroUnlocked": "Retro unlock",
-                    "claimStakingRewards": "Reward claims",
-                    "claimMigratedRewards": "Migrated rewards",
-                    "claimMigratedRetroRewards": "Migrated retro rewards",
-                    "stake": "Stake",
-                    "startUnstake": "Start unstaking",
-                    "cancelUnstake": "Cancel unstaking",
-                    "unstake": "Unstake",
-                    "addToEscrow": "Add to escrow",
-                    "vest": "Vest",
-                    "lpStake": "LP stake",
-                    "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "LP staking rewards",
-                    "mergeAccount": "Merge account",
-                    "delegateVolume": "Delegate Volume",
-                    "removeDelegation": "Remove Delegation"
-                }
-            },
-            "overview": {
-                "token-tooltip": "View THALES contract",
-                "price-label": "Price",
-                "price-tooltip": "View DODO pool",
-                "price-tooltip-l2": "Swap on UNISWAP",
-                "price-tooltip-camelot": "Swap on Camelot",
-                "market-cap-label": "Market cap",
-                "circulating-supply-label": "Circulating supply",
-                "total-burned-label": "Total THALES burned",
-                "total-supply-label": "Total supply",
-                "celer-bridge": "Celer cBridge",
-                "celer-bridge-tooltip": "Fast bridge THALES between chains"
-            },
-            "claim-on-behalf": {
-                "title": "Claim on behalf",
-                "description": "<0>Claim on behalf has been implemented per </0><1 />.",
-                "guide": "<0>Please check this </0><1 /><0> on how to automate your weekly claims</0>.",
-                "guide-link": "guid",
-                "label": "Enter account for which you want to enable/disable claim on your behalf:",
-                "enable-button": {
-                    "label": "Enable",
-                    "progress-label": "Enabling in progress...",
-                    "confirmation-message": "Claim on behalf successfully enabled for the account"
-                },
-                "disable-button": {
-                    "label": "Disable",
-                    "progress-label": "Disabling in progress...",
-                    "confirmation-message": "Claim on behalf successfully disabled for the account"
-                },
-                "enabled-addresses-title": "Accounts that are enabled to claim on your behalf",
-                "no-enabled-addresses-message": "No addresses assigned."
-            }
-        },
-        "create-market": {
-            "title": "Create a new positions market",
-            "subtitle": "To create a new positions market select an asset, a strike price, and the market expiry date. You'll also have to select how many positions tokens you will mint",
-            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down positions tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN positions tokens for this market.",
-            "details": {
-                "select-asset-label": "select asset:",
-                "strike-price-label": "strike price:",
-                "market-maturity-date-label": "market maturity date:",
-                "market-maturity-time-label": "time (UTC):",
-                "funding-amount": {
-                    "label": "market funding amount:",
-                    "desc": "Note: your {{token}} will be locked up in this contract until the market maturity date"
-                }
-            },
-            "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
-            "summary": {
-                "title": "Market Summary",
-                "strike-price": "Strike price",
-                "current": "Current market price",
-                "dates": {
-                    "maturity-date": "Maturity date",
-                    "time-to-exercise": "Time to exercise"
-                },
-                "create-market-button-label": "Create market",
-                "creating-market-button-label": "Creating market...",
-                "approve-manager-button-label": "Approve",
-                "waiting-for-approval-button-label": "Approving..."
-            },
-            "select-asset": "Please select asset.",
-            "enter-strike-price": "Please enter strike price.",
-            "difference-warning": "Difference is greater than 100 times.",
-            "progress-tracker": {
-                "approving": "Approving {{currencyKey}}",
-                "creating-market": "Creating market",
-                "finished": "Finished"
-            },
-            "go-to-market": "Go to market"
-        },
-        "market": {
-            "toast-messsage": {
-                "transaction-pending": "Transaction pending",
-                "approve-success": "Successfully approved"
-            },
-            "ranged-markets": {
-                "strike-range": "Strike range"
-            },
-            "your-activity": {
-                "paid": "Paid",
-                "amount": "Amount",
-                "activity": "Activity",
-                "tx-status": "TX Status"
-            },
-            "row-card": {
-                "views": "Views",
-                "current-view": "View: {{ currentView }} "
-            },
-            "overview": {
-                "final-price-label": "Final {{currencyKey}} price",
-                "maturity-date": "Maturity date",
-                "amm-liquidity": "AMM liquidity",
-                "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
-                "amm-price": "AMM price",
-                "final-result": "Final result",
-                "my-positions": "My positions",
-                "my-position": "My position",
-                "positions-value": "Positions value",
-                "position-value": "Position value",
-                "price-difference": "Price difference"
-            },
-            "widgets": {
-                "chart": "{{currencyKey}} chart",
-                "position-price": "Position price",
-                "recent-transactions-widget": "Market activity",
-                "your-transactions-widget": "Your activity"
-            },
-            "transactions-card": {
-                "table": {
-                    "date-time-col": "date | time",
-                    "type-col": "type",
-                    "amount-col": "amount",
-                    "price-col": "price",
-                    "tx-status-col": "tx status",
-                    "types": {
-                        "exercise": "Exercise",
-                        "buy": "Buy",
-                        "sell": "Sell",
-                        "mint": "Mint"
-                    }
-                }
-            },
-            "trade-card": {
-                "maturity": {
-                    "card-title": "Market has been closed",
-                    "exercise-options": "You can exercise following positions:",
-                    "nothing-to-exercise": "You don't have positions to exercise.",
-                    "payout-amount-label": "Payout amount",
-                    "end-label": "Time left to exercise",
-                    "confirm-button": {
-                        "label": "Exercise position",
-                        "progress-label": "Exercising in progress...",
-                        "success-label": "Nothing to exercise",
-                        "confirmation-message": "Positions successfully exercised"
-                    }
-                }
-            },
-            "trade-options": {
-                "place-order": {
-                    "swap-confirm-button": {
-                        "buy": {
-                            "label": "Buy",
-                            "progress-label": "Buying in progress...",
-                            "confirmation-message": "Successfully bought"
-                        },
-                        "sell": {
-                            "label": "Sell",
-                            "progress-label": "Selling in progress...",
-                            "confirmation-message": "Successfully sold"
-                        }
-                    }
-                }
-            }
-        },
-        "leaderboard": {
-            "table": {
-                "trades-col": "Trades",
-                "volume-col": "Volume",
-                "netprofit-col": "Net Profit",
-                "gain-col": "Gain"
-            },
-            "trades": {
-                "table": {
-                    "amount-col": "Amount"
-                }
-            }
-        },
-        "common": {
-            "time-remaining": {
-                "ended": "ended",
-                "years": "years",
-                "year": "year",
-                "months": "months",
-                "month": "month",
-                "weeks": "weeks",
-                "week": "week",
-                "days": "days",
-                "day": "day",
-                "hours": "hours",
-                "hour": "hour",
-                "minutes": "minutes",
-                "minute": "minute",
-                "seconds": "seconds",
-                "second": "second",
-                "days-short": "d",
-                "hours-short": "h",
-                "minutes-short": "m",
-                "seconds-short": "s",
-                "months-short": "mo"
-            },
-            "on": "on",
-            "above": "Above",
-            "below": "Below",
-            "between": "Between",
-            "not-between": "Not between",
-            "and": "and",
-            "asset": "Asset",
-            "direction": "Direction",
-            "strike-price": "Strike price",
-            "end-date": "End date"
-        },
-        "swap": {
-            "title": "Get USD",
-            "button-text": "Get {{token}}",
-            "select-token": "Select a token",
-            "enter-amount": "Enter amount",
-            "approve": "Give permission to swap {{currency}}",
-            "swap": "Swap",
-            "insufficient-balance": "Insufficient balance",
-            "not-supported": " Swap is not supported on Test networks",
-            "tx-success": "Successfully bought {{token}}",
-            "tx-failed": "Transaction failed",
-            "tx-user-rejected": "User rejected transaction",
-            "approval-success": "Approval successful",
-            "approval-failed": "Approval failed",
-            "from": "From",
-            "balance": "Balance",
-            "to": "To",
-            "progress": "Please wait..."
-        },
-        "trading-profile": {
-            "title": "Trading Profile",
-            "chart-info": {
-                "in-wallet": "in wallet",
-                "claimable": "Claimable"
-            },
-            "tabs": {
-                "my-positions": "My Positions",
-                "history": "History",
-                "vaults-lp": "Vaults/LP"
-            },
-            "accordions": {
-                "claimable-positions": "Claimable positions",
-                "open-positions": "Open positions",
-                "position-history": "Position history",
-                "transaction-history": "Transaction history"
-            },
-            "search-placeholder": "Search wallet",
-            "history": {
-                "strike": "Strike",
-                "price": "Price",
-                "amount": "Amount",
-                "paid": "Paid",
-                "received": "Received",
-                "expired": "Expired",
-                "expires": "Expires @"
-            },
-            "vaults-lp": {
-                "vaults-title": "Vaults",
-                "lp-title": "Liquidity Pool",
-                "thales-lp-title": "Thales Liquidity Pool",
-                "history-title": "History",
-                "my-position-label": "My position",
-                "vault-pnl-label": "Vault PnL",
-                "lp-pnl-label": "LP PnL",
-                "round-label": "Round",
-                "round-end-label": "The round ends in",
-                "round-ended-label": "Round ended",
-                "date-time-col": "date | time",
-                "name-col": "name",
-                "type-col": "type",
-                "amount-col": "amount",
-                "round-col": "round",
-                "tx-status-col": "tx status",
-                "no-transactions": "No transactions associated with this wallet"
-            },
-            "go-to-market": "Go to market"
-        }
-    },
     "governance": {
         "title": "Governance",
         "you": "You",
@@ -999,14 +917,6 @@
             "optimism": "optimism",
             "arbitrum": "arbitrum"
         }
-    },
-    "optimism": {
-        "switch-to-l2": "Switch to L2"
-    },
-    "amm": {
-        "transaction-successful": "Transaction successful",
-        "progress": "Please wait...",
-        "amm-disabled": "AMM trading disabled"
     },
     "articles": {
         "token": {
@@ -1148,6 +1058,7 @@
         }
     },
     "game": {
+        "title": "Tale of Thales",
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
     },
     "migration": {
@@ -1373,6 +1284,72 @@
                 "deposit": "Deposit",
                 "withdrawalRequest": "Withdrawal Request",
                 "claim": "Withdrawal Claim"
+            }
+        }
+    },
+    "profile": {
+        "title": "Trading Profile",
+        "go-to-market": "Go to market",
+        "strike-price": "Strike price",
+        "final-price": "Final price",
+        "current-price": "Current price",
+        "claimed": "CLAIMED",
+        "rip": "RIP",
+        "chart-info": {
+            "in-wallet": "in wallet",
+            "claimable": "Claimable"
+        },
+        "tabs": {
+            "my-positions": "My Positions",
+            "history": "History",
+            "vaults-lp": "Vaults/LP"
+        },
+        "accordions": {
+            "claimable-positions": "Claimable positions",
+            "open-positions": "Open positions",
+            "position-history": "Position history",
+            "transaction-history": "Transaction history"
+        },
+        "search-placeholder": "Search wallet",
+        "history": {
+            "strike": "Strike",
+            "price": "Price",
+            "amount": "Amount",
+            "paid": "Paid",
+            "received": "Received",
+            "expired": "Expired",
+            "expires": "Expires @"
+        },
+        "vaults-lp": {
+            "vaults-title": "Vaults",
+            "lp-title": "Liquidity Pool",
+            "thales-lp-title": "Thales Liquidity Pool",
+            "history-title": "History",
+            "my-position-label": "My position",
+            "vault-pnl-label": "Vault PnL",
+            "lp-pnl-label": "LP PnL",
+            "round-label": "Round",
+            "round-end-label": "The round ends in",
+            "round-ended-label": "Round ended",
+            "date-time-col": "date | time",
+            "name-col": "name",
+            "type-col": "type",
+            "amount-col": "amount",
+            "round-col": "round",
+            "tx-status-col": "tx status",
+            "no-transactions": "No transactions associated with this wallet"
+        },
+        "leaderboard": {
+            "table": {
+                "trades-col": "Trades",
+                "volume-col": "Volume",
+                "netprofit-col": "Net Profit",
+                "gain-col": "Gain"
+            },
+            "trades": {
+                "table": {
+                    "amount-col": "Amount"
+                }
             }
         }
     }

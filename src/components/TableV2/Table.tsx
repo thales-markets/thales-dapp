@@ -166,8 +166,8 @@ const Table: React.FC<TableProps> = ({
             <>
                 {isMobile ? (
                     <MobileDropdownMenu
-                        buttonTitle={t('options.filters-labels.sort-menu')}
-                        dropdownTitle={t('options.filters-labels.sort-menu')}
+                        buttonTitle={t('common.sort-menu')}
+                        dropdownTitle={t('common.sort-menu')}
                         items={sortHeaderMenus}
                     />
                 ) : (

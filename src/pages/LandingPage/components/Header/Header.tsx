@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -20,40 +19,40 @@ const Header: React.FC = () => {
             <Links>
                 <PositionedContainer>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                        {t('header.links.learn.title')}
+                        {t('landing-page.header.links.learn.title')}
                     </Link>
                     <DropDownContainer>
                         <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                            {t('header.links.learn.docs')}
+                            {t('landing-page.header.links.learn.docs')}
                         </Link>
                         <Link
                             target="_blank"
                             rel="noreferrer"
                             href="https://docs.thalesmarket.io/using-thales/why-use-thales"
                         >
-                            {t('header.links.learn.guides')}
+                            {t('landing-page.header.links.learn.guides')}
                         </Link>
                         <Link
                             rel="noreferrer"
                             onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
                         >
-                            {t('header.links.learn.whitepaper')}
+                            {t('landing-page.header.links.learn.whitepaper')}
                         </Link>
 
-                        <HashLink to="/#faq-section">{t('header.links.faq')}</HashLink>
+                        <HashLink to="/#faq-section">{t('landing-page.header.links.faq')}</HashLink>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                    {t('header.links.community')}
+                    {t('landing-page.header.links.community')}
                 </Link>
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                    {t('header.links.blog')}
+                    {t('landing-page.header.links.blog')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
-                    {t('header.links.governance')}
+                    {t('landing-page.header.links.governance')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
-                    {t('header.links.token')}
+                    {t('landing-page.header.links.token')}
                 </Link>
             </Links>
             <DotsContainer
@@ -63,9 +62,6 @@ const Header: React.FC = () => {
             >
                 <DotsIcon className="icon icon--three-dots" />
             </DotsContainer>
-            <LanguageContainer>
-                <LanguageSelector />
-            </LanguageContainer>
             <ButtonContainer>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
                     {t('landing-page.use-app')}
@@ -192,17 +188,6 @@ const DotsContainer = styled(CenteredDiv)`
     @media (max-width: 1024px) {
         display: block;
         margin-left: 20px;
-    }
-`;
-
-const LanguageContainer = styled(CenteredDiv)`
-    grid-column-start: 44;
-    grid-column-end: 46;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    z-index: 1000;
-    @media (max-width: 1024px) {
-        display: none;
     }
 `;
 

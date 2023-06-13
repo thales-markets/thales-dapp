@@ -77,7 +77,7 @@ const ClaimMigratedRewards: React.FC = () => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.earn.thales-staking.staking-rewards.confirmation-message'),
+                            t('thales-token.thales-staking.staking-rewards.confirmation-message'),
                             id
                         )
                     );
@@ -114,11 +114,11 @@ const ClaimMigratedRewards: React.FC = () => {
         >
             <SectionHeader>
                 <div>
-                    {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.title')}
+                    {t('thales-token.thales-staking.staking-rewards.unclaimed-rewards.title')}
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey="options.earn.thales-staking.staking-rewards.unclaimed-rewards.info-tooltip"
+                                i18nKey="thales-token.thales-staking.staking-rewards.unclaimed-rewards.info-tooltip"
                                 components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
@@ -131,7 +131,7 @@ const ClaimMigratedRewards: React.FC = () => {
             <GridContainer style={{ height: '100%' }}>
                 <StyledStakingRewardsItem style={{ gridColumn: 'span 12' }}>
                     <StakingRewardsLabel>
-                        {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
+                        {t('thales-token.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
                     </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
                 </StyledStakingRewardsItem>
@@ -139,19 +139,19 @@ const ClaimMigratedRewards: React.FC = () => {
                     <ButtonContainer>
                         <Button onClick={handleClaimOngoingAirdrop} disabled={!isClaimAvailable || isClaiming}>
                             {isClaiming
-                                ? t('options.earn.thales-staking.staking-rewards.claiming') +
+                                ? t('thales-token.thales-staking.staking-rewards.claiming') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
-                                : t('options.earn.thales-staking.staking-rewards.claim') +
+                                : t('thales-token.thales-staking.staking-rewards.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
                         </Button>
                         {migratedRewards && migratedRewards.isPaused && (
                             <ClaimMessage>
-                                {t('options.earn.thales-staking.staking-rewards.paused-message')}
+                                {t('thales-token.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
                         {migratedRewards && !migratedRewards.isPaused && !migratedRewards.hasClaimRights && (
                             <ClaimMessage>
-                                {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
+                                {t('thales-token.thales-staking.staking-rewards.not-eligible-message')}
                             </ClaimMessage>
                         )}
                         {migratedRewards &&
@@ -159,7 +159,7 @@ const ClaimMigratedRewards: React.FC = () => {
                             migratedRewards.hasClaimRights &&
                             migratedRewards.claimed && (
                                 <ClaimMessage>
-                                    {t('options.earn.thales-staking.staking-rewards.migrated-rewards.claimed-message')}
+                                    {t('thales-token.thales-staking.staking-rewards.migrated-rewards.claimed-message')}
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>

@@ -94,7 +94,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
 
     const handleExercise = async () => {
         const id = toast.loading(
-            getDefaultToastContent(t('options.market.trade-card.maturity.confirm-button.progress-label')),
+            getDefaultToastContent(t('markets.market.trade-card.maturity.confirm-button.progress-label')),
             getLoadingToastOptions()
         );
 
@@ -115,7 +115,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t('options.market.trade-card.maturity.confirm-button.confirmation-message'),
+                        t('markets.market.trade-card.maturity.confirm-button.confirmation-message'),
                         id
                     )
                 );
@@ -134,7 +134,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
 
     return (
         <>
-            <Header>{t('options.market.trade-card.maturity.card-title')}</Header>
+            <Header>{t('markets.market.trade-card.maturity.card-title')}</Header>
             {accountMarketInfoQuery.isLoading || rangedMarketsBalance.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -143,8 +143,8 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                 <Container>
                     <Label>
                         {nothingToExercise
-                            ? t('options.market.trade-card.maturity.nothing-to-exercise')
-                            : t('options.market.trade-card.maturity.exercise-options')}
+                            ? t('markets.market.trade-card.maturity.nothing-to-exercise')
+                            : t('markets.market.trade-card.maturity.exercise-options')}
                     </Label>
                     <PositionsContainer>
                         <Position
@@ -164,7 +164,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                     </PositionsContainer>
                     <InfoContainer>
                         <InfoItem>
-                            <InfoLabel>{t('options.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
+                            <InfoLabel>{t('markets.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
                             <Info>
                                 {formatCurrencyWithKey(
                                     getStableCoinForNetwork(networkId),
@@ -179,7 +179,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             </Info>
                         </InfoItem>
                         <InfoItem>
-                            <InfoLabel>{t('options.market.trade-card.maturity.end-label')}</InfoLabel>
+                            <InfoLabel>{t('markets.market.trade-card.maturity.end-label')}</InfoLabel>
                             <TimeRemaining
                                 end={market.timeRemaining}
                                 fontSize={13}
@@ -204,10 +204,10 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                         additionalStyles={additionalButtonStyle}
                     >
                         {nothingToExercise
-                            ? t('options.market.trade-card.maturity.confirm-button.success-label')
+                            ? t('markets.market.trade-card.maturity.confirm-button.success-label')
                             : !isExercising
-                            ? t('options.market.trade-card.maturity.confirm-button.label')
-                            : t('options.market.trade-card.maturity.confirm-button.progress-label')}
+                            ? t('markets.market.trade-card.maturity.confirm-button.label')
+                            : t('markets.market.trade-card.maturity.confirm-button.progress-label')}
                     </Button>
                 </Container>
             )}

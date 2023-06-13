@@ -2,7 +2,6 @@ import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import footerW from 'assets/images/landing-page/footer-white.png';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
-import LanguageSelector from 'components/LanguageSelector';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,10 +31,6 @@ const Footer: React.FC<HeaderInput> = ({ className }) => {
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>
-                    </ButtonWrapper>
-                    <ButtonWrapper>
-                        <Label>{t('landing-page.footer.language').toUpperCase()}</Label>
-                        <LanguageSelector />
                     </ButtonWrapper>
                 </FooterButtonsWrapper>
                 <FooterIconsWrapper>
@@ -302,15 +297,6 @@ const DAPPLink = styled.a`
         line-height: 26px;
         color: ${(props) => props.theme.landingPage.textColor.primary};
     }
-`;
-
-const Label = styled.span`
-    align-self: center;
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 26px;
 `;
 
 const IconLink = styled.a``;

@@ -6,8 +6,8 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import Container from '../../styled-components/GameContainer';
 import { generalConfig } from 'config/general';
+import { Container, CenterGame, FullScreenButton, GameWrapper, WalletMessage } from '../styled-components';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-game/build.loader.js',
@@ -52,9 +52,9 @@ const Story: React.FC = () => {
 
     return (
         <Container className="game" style={{ zIndex: 10 }}>
-            {!walletAddress && <Container.Msg>{t('game.connect-wallet-warning')}</Container.Msg>}
-            <Container.Center>
-                <Container.Wrapper>
+            {!walletAddress && <WalletMessage>{t('game.connect-wallet-warning')}</WalletMessage>}
+            <CenterGame>
+                <GameWrapper>
                     <Unity
                         unityContext={unityContext}
                         style={{
@@ -62,9 +62,9 @@ const Story: React.FC = () => {
                             width: '100%',
                         }}
                     />
-                    <Container.Btn onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                </Container.Wrapper>
-            </Container.Center>
+                    <FullScreenButton onClick={handleOnClickFullscreen} src={fullScreenImage} />
+                </GameWrapper>
+            </CenterGame>
         </Container>
     );
 };

@@ -41,7 +41,7 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
             <Table
                 columns={[
                     {
-                        Header: <>{t('options.earn.table.date-time-col')}</>,
+                        Header: <>{t('thales-token.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['timestamp']>) => (
                             <p>{formatShortDateWithTime(cellProps.cell.value)}</p>
@@ -49,12 +49,12 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.earn.table.type-col')}</>,
+                        Header: <>{t('thales-token.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['type']>) => (
                             <p>
                                 {t(
-                                    `options.earn.table.types.${
+                                    `thales-token.table.types.${
                                         cellProps.cell.value === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
                                             ? TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
                                             : cellProps.cell.value
@@ -65,7 +65,7 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.earn.table.amount-col')}</>,
+                        Header: <>{t('thales-token.table.amount-col')}</>,
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
@@ -90,7 +90,7 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
                         sortType: amountSort,
                     },
                     {
-                        Header: <>{t('options.earn.table.tx-status-col')}</>,
+                        Header: <>{t('thales-token.table.tx-status-col')}</>,
                         id: 'tx-status',
                         Cell: (cellProps: CellProps<TokenTransaction>) => (
                             <ViewEtherscanLink hash={cellProps.cell.row.original.hash} />

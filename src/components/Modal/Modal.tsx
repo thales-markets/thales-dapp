@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import ReactModal from 'react-modal';
 import styled, { CSSProperties } from 'styled-components';
@@ -75,7 +76,8 @@ const Container = styled.div<{ mobileStyle?: CSSProperties }>`
     background: ${(props) => props.theme.background.primary};
     padding: 20px;
     border-radius: 8px;
-    @media (max-width: 575px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 13px;
         ${(props) => (props.mobileStyle ? convertCssToStyledProperties(props.mobileStyle) : '')}
     }
     max-height: 100vh;
@@ -84,7 +86,7 @@ const Container = styled.div<{ mobileStyle?: CSSProperties }>`
 
 const Header = styled(FlexDivRow)<{ mobileStyle?: CSSProperties }>`
     margin-bottom: 20px;
-    @media (max-width: 575px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => props.mobileStyle && convertCssToStyledProperties(props.mobileStyle)}
     }
 `;

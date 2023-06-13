@@ -213,16 +213,6 @@ export type Trade = {
 
 export type Trades = Trade[];
 
-export type UsersAssets = {
-    market: HistoricalOptionsMarketInfo;
-    balances: {
-        long: number;
-        short: number;
-        longValue?: number;
-        shortValue?: number;
-    };
-};
-
 export type UserLivePositions = {
     positionAddress: string;
     currencyKey: string;

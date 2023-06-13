@@ -96,7 +96,7 @@ const Vesting: React.FC = () => {
             if (txResult && txResult.transactionHash) {
                 toast.update(
                     id,
-                    getSuccessToastOptions(t('options.earn.gamified-staking.vesting.vest.confirmation-message'), id)
+                    getSuccessToastOptions(t('thales-token.gamified-staking.vesting.vest.confirmation-message'), id)
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setIsClaiming(false);
@@ -113,9 +113,9 @@ const Vesting: React.FC = () => {
         return (
             <Button onClick={handleVest} disabled={disabled} width="auto">
                 {!isClaiming
-                    ? t('options.earn.gamified-staking.vesting.vest.vest') +
+                    ? t('thales-token.gamified-staking.vesting.vest.vest') +
                       ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`
-                    : t('options.earn.gamified-staking.vesting.vest.vesting') +
+                    : t('thales-token.gamified-staking.vesting.vest.vesting') +
                       ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}...`}
             </Button>
         );
@@ -127,7 +127,7 @@ const Vesting: React.FC = () => {
                 <SectionContentWrapper>
                     <SectionLabel>
                         <SectionLabelContent>
-                            {t('options.earn.gamified-staking.vesting.vest.available-to-vest')}
+                            {t('thales-token.gamified-staking.vesting.vest.available-to-vest')}
                         </SectionLabelContent>
                     </SectionLabel>
                     <SectionValue>
@@ -143,7 +143,7 @@ const Vesting: React.FC = () => {
                 <SectionContentWrapper>
                     <ScheduleLabel>
                         <ScheduleLabelContent>
-                            {t('options.earn.gamified-staking.vesting.schedule-label')}
+                            {t('thales-token.gamified-staking.vesting.schedule-label')}
                         </ScheduleLabelContent>
                     </ScheduleLabel>
                     <TileTable
@@ -152,7 +152,7 @@ const Vesting: React.FC = () => {
                         isLoading={userVestingDataQuery.isLoading}
                         noResultsMessage={
                             scheduleData.length === 0
-                                ? t(`options.earn.gamified-staking.vesting.schedule-no-results`)
+                                ? t(`thales-token.gamified-staking.vesting.schedule-no-results`)
                                 : undefined
                         }
                         defaultFlowColor={theme.background.quaternary}

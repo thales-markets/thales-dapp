@@ -45,7 +45,7 @@ const TokentOverview: React.FC = () => {
             <ItemContainer>
                 <FlexDivCentered>
                     <CustomIcon className={`sidebar-icon icon--token`} />
-                    <Tooltip overlay={t('options.earn.overview.token-tooltip')}>
+                    <Tooltip overlay={t('thales-token.overview.token-tooltip')}>
                         <StyledLink
                             href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
                             target="_blank"
@@ -58,7 +58,7 @@ const TokentOverview: React.FC = () => {
                 </FlexDivCentered>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.price-label')}</Title>
+                <Title>{t('thales-token.overview.price-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.price ? (
                         <Tooltip overlay={t(getTitleForPrice(networkId))}>
@@ -73,7 +73,7 @@ const TokentOverview: React.FC = () => {
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.market-cap-label')}</Title>
+                <Title>{t('thales-token.overview.market-cap-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.marketCap
                         ? formatCurrencyWithSign(USD_SIGN, Math.round(tokenInfo.marketCap), 0, true)
@@ -81,7 +81,7 @@ const TokentOverview: React.FC = () => {
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
+                <Title>{t('thales-token.overview.circulating-supply-label')}</Title>
                 <Content>
                     {tokenInfo
                         ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.circulatingSupply), 0, true)
@@ -91,7 +91,7 @@ const TokentOverview: React.FC = () => {
             <ItemContainer>
                 <ThalesBurnedWrapper>
                     <Title color={theme.error.textColor.primary} noWrap={true}>
-                        {t('options.earn.overview.total-burned-label')}
+                        {t('thales-token.overview.total-burned-label')}
                     </Title>
                     <Lottie animationData={thalesBurnedAnimation} style={thalesBurnedStyle} />
                 </ThalesBurnedWrapper>
@@ -102,7 +102,7 @@ const TokentOverview: React.FC = () => {
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.total-supply-label')}</Title>
+                <Title>{t('thales-token.overview.total-supply-label')}</Title>
                 <Content>
                     {tokenInfo
                         ? formatCurrencyWithKey(
@@ -116,7 +116,7 @@ const TokentOverview: React.FC = () => {
             </ItemContainer>
             <ItemContainer>
                 <FlexDivCentered>
-                    <Tooltip overlay={t('options.earn.overview.celer-bridge-tooltip')}>
+                    <Tooltip overlay={t('thales-token.overview.celer-bridge-tooltip')}>
                         <StyledLink
                             href={
                                 isL2
@@ -126,7 +126,7 @@ const TokentOverview: React.FC = () => {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
+                            <CryptoName>{t('thales-token.overview.celer-bridge')}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
                         </StyledLink>
                     </Tooltip>
@@ -151,12 +151,12 @@ const getUrlForSwap = (networkId: NetworkId) => {
 const getTitleForPrice = (networkId: NetworkId) => {
     switch (networkId) {
         case Network['Mainnet-Ovm']:
-            return 'options.earn.overview.price-tooltip-l2';
+            return 'thales-token.overview.price-tooltip-l2';
         case Network.Arbitrum:
-            return 'options.earn.overview.price-tooltip-camelot';
+            return 'thales-token.overview.price-tooltip-camelot';
 
         default:
-            return 'options.earn.overview.price-tooltip-l2';
+            return 'thales-token.overview.price-tooltip-l2';
     }
 };
 

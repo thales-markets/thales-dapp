@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
-import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
 import { getIsArbitrum, getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
@@ -14,8 +13,10 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
+import DappHeaderItem from '../components/DappHeaderItem/DappHeaderItem';
+import { ScreenSizeBreakpoint } from '../../../enums/ui';
 
-const Sidebar: React.FC = () => {
+const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -214,7 +215,7 @@ const Sidebar: React.FC = () => {
 const ThreeDotsContainer = styled.div`
     display: none;
     align-items: center;
-    @media (max-width: 568px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
     }
 `;
@@ -226,7 +227,8 @@ const ItemsContainer = styled.div`
     overflow-y: auto;
     margin-right: -10px;
     height: 100%;
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-right: 0;
         flex-direction: row;
         justify-content: space-around;
     }
@@ -249,7 +251,7 @@ const SidebarHtml = styled.nav`
         display: none;
     }
 
-    @media (min-width: 1024px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}px) {
         &:hover {
             width: 300px;
             span {
@@ -267,15 +269,15 @@ const SidebarHtml = styled.nav`
         }
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0;
         background: ${(props) => props.theme.background.secondary};
         box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
-        border-radius: 30px;
-        width: calc(100% - 40px);
-        left: 20px;
+        border-radius: 8px;
+        width: calc(100% - 20px);
+        left: 10px;
         top: unset;
-        bottom: 20px;
+        bottom: 10px;
         height: 55px;
 
         .sidebar-logoSmall {
@@ -299,7 +301,7 @@ const SidebarHtml = styled.nav`
         ${ItemsContainer} {
             transition: all 0.5s ease;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
         }
         ${ThreeDotsContainer} {
@@ -328,16 +330,16 @@ const LogoIcon = styled.img`
     cursor: pointer;
     margin: auto;
     margin-top: 10px;
-    margin-bottom: 60px;
+    margin-bottom: 25px;
 `;
 
 const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 3px solid ${(props) => props.theme.borderColor.secondary};
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
-export default Sidebar;
+export default DappSidebar;

@@ -23,7 +23,7 @@ const Home: React.FC = () => {
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>
                     <Trans
-                        i18nKey="options.home.polygon-trading-competition-1"
+                        i18nKey="landing-page.polygon-trading-competition-1"
                         components={{
                             bold: (
                                 <strong
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
                     />
                     ,
                     <Trans
-                        i18nKey="options.home.polygon-trading-competition-2"
+                        i18nKey="landing-page.polygon-trading-competition-2"
                         components={{
                             bold: (
                                 <a

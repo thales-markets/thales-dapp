@@ -20,7 +20,7 @@ const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width 
     const textLink = useMemo(() => {
         return (
             <Trans
-                i18nKey="options.home.elections-banner-message"
+                i18nKey="common.banner.elections-banner-message"
                 components={{
                     bold: (
                         <SPAAnchor

@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 
-export const UserVaultsAndLpTransactionsTable: React.FC = () => {
+const UserVaultsAndLpTransactionsTable: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -42,7 +42,7 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                 <Table
                     columns={[
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.date-time-col')}</>,
+                            Header: <>{t('profile.vaults-lp.date-time-col')}</>,
                             accessor: 'timestamp',
                             Cell: (
                                 cellProps: CellProps<
@@ -53,7 +53,7 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                             sortable: true,
                         },
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.name-col')}</>,
+                            Header: <>{t('profile.vaults-lp.name-col')}</>,
                             accessor: 'name',
                             Cell: (
                                 cellProps: CellProps<
@@ -63,14 +63,14 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                             ) => (
                                 <p>
                                     {cellProps.cell.value === 'lp'
-                                        ? t(`options.trading-profile.vaults-lp.thales-lp-title`)
+                                        ? t(`profile.vaults-lp.thales-lp-title`)
                                         : t(`vault.${cellProps.cell.value}.title`)}
                                 </p>
                             ),
                             sortable: true,
                         },
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.type-col')}</>,
+                            Header: <>{t('profile.vaults-lp.type-col')}</>,
                             accessor: 'type',
                             Cell: (
                                 cellProps: CellProps<
@@ -82,7 +82,7 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                             sortType: 'alphanumeric',
                         },
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.amount-col')}</>,
+                            Header: <>{t('profile.vaults-lp.amount-col')}</>,
                             accessor: 'amount',
                             Cell: (
                                 cellProps: CellProps<
@@ -102,19 +102,17 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                             sortType: 'basic',
                         },
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.round-col')}</>,
+                            Header: <>{t('profile.vaults-lp.round-col')}</>,
                             accessor: 'round',
                             Cell: (
                                 cellProps: CellProps<
                                     VaultsAndLiquidityPoolUserTransaction,
                                     VaultsAndLiquidityPoolUserTransaction['round']
                                 >
-                            ) => (
-                                <p>{`${t('options.trading-profile.vaults-lp.round-label')} ${cellProps.cell.value}`}</p>
-                            ),
+                            ) => <p>{`${t('profile.vaults-lp.round-label')} ${cellProps.cell.value}`}</p>,
                         },
                         {
-                            Header: <>{t('options.trading-profile.vaults-lp.tx-status-col')}</>,
+                            Header: <>{t('profile.vaults-lp.tx-status-col')}</>,
                             accessor: 'hash',
                             Cell: (
                                 cellProps: CellProps<
@@ -127,7 +125,7 @@ export const UserVaultsAndLpTransactionsTable: React.FC = () => {
                     data={userTransactions}
                     isLoading={userTransactionsQuery.isLoading}
                     hidePagination
-                    noResultsMessage={t('options.trading-profile.vaults-lp.no-transactions')}
+                    noResultsMessage={t('profile.vaults-lp.no-transactions')}
                 />
             </TableContainer>
         </Container>

@@ -1,4 +1,3 @@
-import Footer from 'components/Footer';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -114,7 +113,7 @@ const TradePage: React.FC = () => {
                         <LeftSide>
                             <DropdownsWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-asset')}</Info>
+                                    <Info>{t('markets.steps.choose-asset')}</Info>
                                     {allAssets && (
                                         <AssetDropdown
                                             asset={currencyKey}
@@ -124,7 +123,7 @@ const TradePage: React.FC = () => {
                                     )}
                                 </PositionedWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-date')}</Info>
+                                    <Info>{t('markets.steps.choose-date')}</Info>
                                     <DatesDropdown
                                         date={maturityDate}
                                         setDate={setMaturityDate}
@@ -141,7 +140,7 @@ const TradePage: React.FC = () => {
                         </LeftSide>
                         <RightSide>
                             <PositionedWrapper>
-                                <Info>{t('options.trade.steps.choose-direction')}</Info>
+                                <Info>{t('markets.steps.choose-direction')}</Info>
                                 <RadioButtons onChange={setPositionType} selected={positionType} />
                             </PositionedWrapper>
 
@@ -175,7 +174,6 @@ const TradePage: React.FC = () => {
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
             )}
-            <Footer />
         </>
     );
 };
