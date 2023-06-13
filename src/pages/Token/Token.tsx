@@ -44,6 +44,7 @@ const TokenPage: React.FC = () => {
             id: TokenTabSectionIdEnum.REWARDS,
             title: t('thales-token.gamified-staking.rewards.section-title'),
             warning: t('thales-token.gamified-staking.rewards.section-warning'),
+            description: '',
             isButton: true,
         },
         {

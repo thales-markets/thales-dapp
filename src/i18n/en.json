@@ -477,7 +477,9 @@
             },
             "rewards": {
                 "section-title": "Rewards",
-                "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You can claim staking rewards weekly.",
+                "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You have to claim staking rewards weekly before they expire on next weeks snapshot.",
+                "section-base-rewards": "Base inflationary rewards of 60,000 THALES per week are shared among all THALES tokens staked proportionally.",
+                "section-bonus-rewards": "Additionally,  there are 30,000 THALES as bonus weekly rewards for all THALES stakers that for this week have driven Trading Volume, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
@@ -512,11 +514,14 @@
                 },
                 "claim": {
                     "total-label": "Total claimable",
-                    "claim": "Claim Thales rewards",
+                    "your-rewards": "Your current claimable rewards",
+                    "gamified-rewards": "Gamified staking rewards",
+                    "base-rewards": "Base rewards as Thales Staker",
+                    "claim": "Claim rewards",
                     "claiming": "Claiming",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
                     "confirmation-message": "Tokens successfully claimed",
-                    "period": "Time left:",
+                    "period": "Time left to claim:",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "paused-message": "Claiming is paused.",
                     "not-eligible-message": "You are not eligible for these rewards.",
