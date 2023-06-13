@@ -156,7 +156,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             erc20Contract.abi,
             (snxJSConnector as any).signer
         );
-        const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             setIsLoading(true);
@@ -166,7 +166,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             await tx.wait();
             setIsLoading(false);
             setIsAllowing(false);
-            toast.update(id, getSuccessToastOptions(t('options.swap.approval-success'), id));
+            toast.update(id, getSuccessToastOptions(t('common.swap.approval-success'), id));
             setOpenApprovalModal(false);
             return {
                 data: (req.data as any).data,
@@ -179,7 +179,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.approval-failed'),
+                    (e as any).code === 4001 ? t('common.swap.tx-user-rejected') : t('common.swap.approval-failed'),
                     id
                 )
             );
@@ -189,7 +189,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
 
     const swapTx = async () => {
         setIsLoading(true);
-        const id = toast.loading(getDefaultToastContent(t('options.swap.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             const req = await swapQuery.refetch();
             if (req.isSuccess) {
@@ -204,7 +204,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 await tx.wait();
                 refetchBalances(walletAddress as any, networkId);
                 setIsLoading(false);
-                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol }), id));
+                toast.update(id, getSuccessToastOptions(t('common.swap.tx-success', { token: toToken.symbol }), id));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -220,7 +220,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'),
+                    (e as any).code === 4001 ? t('common.swap.tx-user-rejected') : t('common.swap.tx-failed'),
                     id
                 )
             );
@@ -232,7 +232,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         if (!fromToken)
             return (
                 <Button disabled={true} {...defaultButtonProps}>
-                    {t('options.swap.select-token')}
+                    {t('common.swap.select-token')}
                 </Button>
             );
 
@@ -243,14 +243,14 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                     onClick={() => setOpenApprovalModal(true)}
                     {...defaultButtonProps}
                 >
-                    {t('options.swap.approve', { currency: (fromToken as any).symbol })}
+                    {t('common.swap.approve', { currency: (fromToken as any).symbol })}
                 </Button>
             );
 
         if (fromToken && allowance && Number(amount) <= 0)
             return (
                 <Button disabled={true} {...defaultButtonProps}>
-                    {t('options.swap.enter-amount')}
+                    {t('common.swap.enter-amount')}
                 </Button>
             );
 
@@ -264,7 +264,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                     disabled={Number(amount) > Number(balance)}
                     {...defaultButtonProps}
                 >
-                    {Number(amount) > Number(balance) ? t('options.swap.insufficient-balance') : t('options.swap.swap')}
+                    {Number(amount) > Number(balance) ? t('common.swap.insufficient-balance') : t('common.swap.swap')}
                 </Button>
             );
     };
@@ -281,14 +281,14 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
                 <Container contentType="unsupported">
-                    <ErrorMessage>{t('options.swap.not-supported')}</ErrorMessage>
+                    <ErrorMessage>{t('common.swap.not-supported')}</ErrorMessage>
                 </Container>
             ) : (
                 <Container contentType={isLoading ? 'loading' : ''}>
                     <SectionWrapper>
                         <NumericInput
                             placeholder={t('common.enter-amount')}
-                            label={t('options.swap.from')}
+                            label={t('common.swap.from')}
                             value={amount !== '' ? Number(amount) : ''}
                             onChange={(_: any, value: any) => {
                                 setAmount(value);
@@ -297,12 +297,12 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                             onMaxButton={() => {
                                 setAmount(Number(balance).toFixed(5));
                             }}
-                            balance={`${t('options.swap.balance')}: ${Number(balance).toFixed(4)}`}
+                            balance={`${t('common.swap.balance')}: ${Number(balance).toFixed(4)}`}
                         />
                     </SectionWrapper>
                     <SectionWrapper>
                         <NumericInput
-                            label={t('options.swap.to')}
+                            label={t('common.swap.to')}
                             value={
                                 previewData
                                     ? Number(

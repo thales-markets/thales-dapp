@@ -127,7 +127,7 @@ const Stake: React.FC = () => {
             if (txResult && txResult.transactionHash) {
                 toast.update(
                     id,
-                    getSuccessToastOptions(t('options.earn.gamified-staking.staking.stake.confirmation-message'), id)
+                    getSuccessToastOptions(t('thales-token.gamified-staking.staking.stake.confirmation-message'), id)
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 setAmountToStake('');
@@ -193,11 +193,11 @@ const Stake: React.FC = () => {
         return (
             <Button disabled={isButtonDisabled} onClick={handleStakeThales}>
                 {!isStaking
-                    ? `${t('options.earn.gamified-staking.staking.stake.name')} ${formatCurrencyWithKey(
+                    ? `${t('thales-token.gamified-staking.staking.stake.name')} ${formatCurrencyWithKey(
                           THALES_CURRENCY,
                           amountToStake
                       )}`
-                    : `${t('options.earn.gamified-staking.staking.stake.staking')} ${formatCurrencyWithKey(
+                    : `${t('thales-token.gamified-staking.staking.stake.staking')} ${formatCurrencyWithKey(
                           THALES_CURRENCY,
                           amountToStake
                       )}...`}
@@ -225,7 +225,7 @@ const Stake: React.FC = () => {
                         disabled={isStaking || isUnstaking || isStakingPaused}
                         currencyLabel={THALES_CURRENCY}
                         placeholder={t('common.enter-amount')}
-                        label={t('options.earn.gamified-staking.staking.stake.amount-to-stake')}
+                        label={t('thales-token.gamified-staking.staking.stake.amount-to-stake')}
                         onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
                         validationMessage={t(`common.errors.insufficient-balance-wallet`, {
@@ -233,7 +233,7 @@ const Stake: React.FC = () => {
                         })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.stake.balance')}: ${formatCurrency(
+                                ? `${t('thales-token.gamified-staking.staking.stake.balance')}: ${formatCurrency(
                                       thalesBalance
                                   )}`
                                 : undefined
@@ -244,7 +244,7 @@ const Stake: React.FC = () => {
                 <StakeButtonDiv>
                     {getStakeButton()}
                     {isStakingPaused && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.staking.stake.paused-message')}</ClaimMessage>
+                        <ClaimMessage>{t('thales-token.gamified-staking.staking.stake.paused-message')}</ClaimMessage>
                     )}
                 </StakeButtonDiv>
             </SectionContentContainer>

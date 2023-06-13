@@ -43,7 +43,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.chart', { currencyKey: market.currencyKey }),
+                      title: t('markets.market.widgets.chart', { currencyKey: market.currencyKey }),
                       index: 1,
                   },
               ]
@@ -51,7 +51,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.position-price'),
+                      title: t('markets.market.widgets.position-price'),
                       index: 2,
                   },
               ]
@@ -59,13 +59,13 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.your-transactions-widget'),
+                      title: t('markets.market.widgets.your-transactions-widget'),
                       index: 3,
                   },
               ]
             : []),
         {
-            title: t('options.market.widgets.recent-transactions-widget'),
+            title: t('markets.market.widgets.recent-transactions-widget'),
             index: 4,
         },
     ];
@@ -76,10 +76,10 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
                 <RowCard isRangedMarket={isRangedMarket} />
                 <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
                     {currentTab
-                        ? t('options.market.row-card.current-view', {
+                        ? t('markets.market.row-card.current-view', {
                               currentView: tabItems.find((item) => item.index == currentTab)?.title,
                           })
-                        : t('options.market.row-card.views')}
+                        : t('markets.market.row-card.views')}
                 </ViewButton>
                 {showViewsDropdown && (
                     <ViewsDropDownWrapper>

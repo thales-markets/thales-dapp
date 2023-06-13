@@ -243,7 +243,7 @@ const LiquidityPool: React.FC = () => {
         const { signer, collateral, liquidityPoolContract } = snxJSConnector;
         if (signer && collateral && liquidityPoolContract) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsAllowing(true);
@@ -261,7 +261,7 @@ const LiquidityPool: React.FC = () => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', { token: collateral }),
+                            t('markets.market.toast-messsage.approve-success', { token: collateral }),
                             id
                         )
                     );
@@ -279,7 +279,7 @@ const LiquidityPool: React.FC = () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
@@ -316,7 +316,7 @@ const LiquidityPool: React.FC = () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);

@@ -110,9 +110,9 @@ const Profile: React.FC = () => {
             <BannerCarousel />
             <Container>
                 <Header>
-                    <Title>{t('options.trading-profile.title')}</Title>
+                    <Title>{t('profile.title')}</Title>
                     <SearchInput
-                        placeholder={t('options.trading-profile.search-placeholder')}
+                        placeholder={t('profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
                         width="300px"
@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
                 <MainContainer>
                     <StatsContainer>
                         <StatsItem>
-                            <StatsLabel>{t('options.leaderboard.table.netprofit-col')}:</StatsLabel>
+                            <StatsLabel>{t('profile.leaderboard.table.netprofit-col')}:</StatsLabel>
                             <StatsValue
                                 color={
                                     profileData.profit > 0
@@ -139,7 +139,7 @@ const Profile: React.FC = () => {
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
-                            <StatsLabel>{t('options.leaderboard.table.gain-col')}:</StatsLabel>
+                            <StatsLabel>{t('profile.leaderboard.table.gain-col')}:</StatsLabel>
                             <StatsValue
                                 color={
                                     profileData.gain > 0
@@ -153,11 +153,11 @@ const Profile: React.FC = () => {
                             </StatsValue>
                         </StatsItem>
                         <StatsItem>
-                            <StatsLabel>{t('options.leaderboard.table.trades-col')}:</StatsLabel>
+                            <StatsLabel>{t('profile.leaderboard.table.trades-col')}:</StatsLabel>
                             <StatsValue>{userProfileDataQuery.isLoading ? '-' : profileData.numberOfTrades}</StatsValue>
                         </StatsItem>
                         <StatsItem>
-                            <StatsLabel>{t('options.leaderboard.table.volume-col')}:</StatsLabel>
+                            <StatsLabel>{t('profile.leaderboard.table.volume-col')}:</StatsLabel>
                             <StatsValue>
                                 {userProfileDataQuery.isLoading
                                     ? '-'
@@ -170,24 +170,24 @@ const Profile: React.FC = () => {
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
                             active={view === NavItems.MyPositions}
                         >
-                            {t('options.trading-profile.tabs.my-positions')}
+                            {t('profile.tabs.my-positions')}
                             {notifications > 0 && <Notification>{notifications}</Notification>}
                         </NavItem>
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
-                            {t('options.trading-profile.tabs.history')}
+                            {t('profile.tabs.history')}
                         </NavItem>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.VaultsLp)}
                             active={view === NavItems.VaultsLp}
                         >
-                            {t('options.trading-profile.tabs.vaults-lp')}
+                            {t('profile.tabs.vaults-lp')}
                         </NavItem>
                     </Nav>
                     <>
                         {view === NavItems.MyPositions && (
                             <>
                                 <ProfileSection
-                                    title={t('options.trading-profile.accordions.claimable-positions')}
+                                    title={t('profile.accordions.claimable-positions')}
                                     mobileMaxHeight="360px"
                                 >
                                     <ClaimablePositions
@@ -195,10 +195,7 @@ const Profile: React.FC = () => {
                                         searchText={searchAddress ? '' : searchText}
                                     />
                                 </ProfileSection>
-                                <ProfileSection
-                                    title={t('options.trading-profile.accordions.open-positions')}
-                                    mobileMaxHeight="360px"
-                                >
+                                <ProfileSection title={t('profile.accordions.open-positions')} mobileMaxHeight="360px">
                                     <OpenPositions
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
@@ -208,13 +205,13 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileSection title={t('options.trading-profile.accordions.transaction-history')}>
+                                <ProfileSection title={t('profile.accordions.transaction-history')}>
                                     <TransactionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
                                     />
                                 </ProfileSection>
-                                <ProfileSection title={t('options.trading-profile.accordions.position-history')}>
+                                <ProfileSection title={t('profile.accordions.position-history')}>
                                     <PositionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}

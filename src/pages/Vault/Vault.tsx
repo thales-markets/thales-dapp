@@ -221,7 +221,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer, collateral } = snxJSConnector;
         if (signer && collateral) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsAllowing(true);
@@ -239,7 +239,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', {
+                            t('markets.market.toast-messsage.approve-success', {
                                 token: getDefaultCollateral(networkId),
                             }),
                             id
@@ -259,7 +259,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer } = snxJSConnector;
         if (signer) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
@@ -293,7 +293,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         const { signer } = snxJSConnector;
         if (signer) {
             const id = toast.loading(
-                getDefaultToastContent(t('options.market.toast-messsage.transaction-pending')),
+                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);

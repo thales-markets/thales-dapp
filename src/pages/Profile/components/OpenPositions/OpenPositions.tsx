@@ -77,26 +77,26 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                 const cells: any = [
                     {
                         title: row.isRanged
-                            ? t('options.market.ranged-markets.strike-range')
-                            : t(`options.home.markets-table.strike-price-col`),
+                            ? t('markets.market.ranged-markets.strike-range')
+                            : t(`profile.strike-price`),
                         value: row.isRanged
                             ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
                             : `$${formatCurrency(row.strikePrice)}`,
                     },
                     {
-                        title: t('options.home.market-card.current-asset-price'),
+                        title: t('profile.current-price'),
                         value: formatCurrencyWithSign(USD_SIGN, exchangeRates?.[row.currencyKey] || 0),
                     },
                     {
-                        title: t('options.leaderboard.trades.table.amount-col'),
+                        title: t('profile.leaderboard.trades.table.amount-col'),
                         value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
                     },
                     {
-                        title: t('options.trading-profile.history.paid'),
+                        title: t('profile.history.paid'),
                         value: `$${formatCurrency(row.paid)}`,
                     },
                     {
-                        title: t('options.trading-profile.history.expires'),
+                        title: t('profile.history.expires'),
                         value: <MaturityDate maturityDateUnix={row.maturityDate} showFullCounter={true} />,
                     },
                     {
@@ -113,7 +113,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                             >
                                 {isMobile ? (
                                     <TextLink>
-                                        {t('options.trading-profile.go-to-market')}{' '}
+                                        {t('profile.go-to-market')}{' '}
                                         <IconLink
                                             className="icon icon--right"
                                             fontSize="10px"

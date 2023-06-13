@@ -15,13 +15,13 @@ const DappFooter: React.FC = () => {
             </ThalesLogoContainer>
             <FooterIconsWrapper>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
-                    <Trans i18nKey="footer.discover" />
+                    <Trans i18nKey="common.footer.discover" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
-                    <Trans i18nKey="footer.about" />
+                    <Trans i18nKey="common.footer.about" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    <Trans i18nKey="footer.resources" />
+                    <Trans i18nKey="common.footer.resources" />
                 </TextLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                     <FooterIcon className="icon-home icon-home--twitter" />

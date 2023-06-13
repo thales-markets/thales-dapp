@@ -54,22 +54,22 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                     },
                     {
                         title: row.isRanged
-                            ? t('options.market.ranged-markets.strike-range')
-                            : t(`options.home.markets-table.strike-price-col`),
+                            ? t('markets.market.ranged-markets.strike-range')
+                            : t(`profile.strike-price`),
                         value: row.isRanged
                             ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
                             : `$${formatCurrency(row.strikePrice)}`,
                     },
                     {
-                        title: t('options.home.markets-table.final-asset-price-col'),
+                        title: t('profile.final-price'),
                         value: formatCurrencyWithSign(USD_SIGN, row.finalPrice),
                     },
                     {
-                        title: t('options.leaderboard.trades.table.amount-col'),
+                        title: t('profile.leaderboard.trades.table.amount-col'),
                         value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
                     },
                     {
-                        title: t('options.trading-profile.history.expired'),
+                        title: t('profile.history.expired'),
                         value: formatShortDate(row.maturityDate).toUpperCase(),
                     },
                 ];

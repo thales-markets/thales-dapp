@@ -337,7 +337,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
-        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             const providerOptions = {
@@ -352,7 +352,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`), id));
+                toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -454,7 +454,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
-        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
         const priceChanged = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
@@ -501,7 +501,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     id,
                     getSuccessToastOptions(
                         t(
-                            `options.market.trade-options.place-order.swap-confirm-button.${
+                            `markets.market.trade-options.place-order.swap-confirm-button.${
                                 isBuy ? 'buy' : 'sell'
                             }.confirmation-message`
                         ),
@@ -598,10 +598,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const getSubmitButton = () => {
         if (!market.address) {
-            return <Button disabled={true}>{t('options.trade.amm-trading.select-price')}</Button>;
+            return <Button disabled={true}>{t('markets.amm-trading.select-price')}</Button>;
         }
         if (isAmmTradingDisabled) {
-            return <Button disabled={true}>{t('amm.amm-disabled')}</Button>;
+            return <Button disabled={true}>{t('markets.amm-disabled')}</Button>;
         }
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
@@ -634,11 +634,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
                     ? t(
-                          `options.market.trade-options.place-order.swap-confirm-button.${
+                          `markets.market.trade-options.place-order.swap-confirm-button.${
                               isBuy ? 'buy' : 'sell'
                           }.progress-label`
                       )
-                    : t(`options.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'buy' : 'sell'}.label`)}
+                    : t(`markets.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'buy' : 'sell'}.label`)}
             </Button>
         );
     };
@@ -669,7 +669,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     <NumericInput
                         value={paidAmount}
                         disabled={isFormDisabled}
-                        placeholder={t('options.trade.amm-trading.enter-amount')}
+                        placeholder={t('markets.amm-trading.enter-amount')}
                         onChange={(_, value) => setPaidAmount(value)}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}

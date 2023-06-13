@@ -23,16 +23,16 @@ const UserVaultsLp: React.FC = () => {
 
     return (
         <>
-            <ProfileSection title={t('options.trading-profile.vaults-lp.lp-title')} maxHeight="100%">
+            <ProfileSection title={t('profile.vaults-lp.lp-title')} maxHeight="100%">
                 <UserLiquidityPool />
             </ProfileSection>
-            <ProfileSection title={t('options.trading-profile.vaults-lp.vaults-title')} maxHeight="100%">
+            <ProfileSection title={t('profile.vaults-lp.vaults-title')} maxHeight="100%">
                 {vaults.map((obj) => {
                     if (obj.vaultAddress)
                         return <UserVault key={obj.key} vaultName={obj.key} vaultAddress={obj.vaultAddress} />;
                 })}
             </ProfileSection>
-            <ProfileSection title={t('options.trading-profile.vaults-lp.history-title')} maxHeight="100%">
+            <ProfileSection title={t('profile.vaults-lp.history-title')} maxHeight="100%">
                 <UserVaultsAndLpTransactionsTable />
             </ProfileSection>
         </>

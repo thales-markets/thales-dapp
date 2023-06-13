@@ -39,11 +39,11 @@ export const getAmount = (amount: number | string, position: Positions, theme: T
 export const getStatus = (claimed: boolean, theme: ThemeInterface, t: TFunction) =>
     claimed ? (
         <Value color={theme.textColor.quaternary} fontSize="15px">
-            {t('options.home.market-card.claimed')}
+            {t('profile.claimed')}
         </Value>
     ) : (
         <Value color={theme.textColor.tertiary} fontSize="15px">
-            {t('options.home.market-card.rip')}
+            {t('profile.rip')}
         </Value>
     );
 

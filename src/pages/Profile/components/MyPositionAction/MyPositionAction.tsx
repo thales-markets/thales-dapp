@@ -96,7 +96,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
-        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
             const providerOptions = {
@@ -111,7 +111,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`), id));
+                toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                 handleCashout();
                 setIsAllowing(false);
             }
@@ -167,7 +167,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         };
 
         setIsSubmitting(true);
-        const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
         const totalValueChanged = await fetchAmmPriceData(position.paid);
         if (totalValueChanged) {
@@ -207,7 +207,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`),
+                        t(`markets.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`),
                         id
                     )
                 );
@@ -242,7 +242,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             setIsSubmitting(true);
 
             const marketContractWithSigner = marketContract.connect(snxJSConnector.signer);
-            const id = toast.loading(getDefaultToastContent(t('amm.progress')), getLoadingToastOptions());
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
             try {
                 const providerOptions = {
@@ -257,7 +257,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t(`options.market.trade-card.maturity.confirm-button.confirmation-message`),
+                            t(`markets.market.trade-card.maturity.confirm-button.confirmation-message`),
                             id
                         )
                     );
@@ -285,8 +285,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 >
                     {`${
                         isSubmitting
-                            ? t(`options.trade.user-positions.claim-win-progress`)
-                            : t('options.trade.user-positions.claim-win')
+                            ? t(`markets.user-positions.claim-win-progress`)
+                            : t('markets.user-positions.claim-win')
                     } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
                 </Button>
             );
@@ -304,8 +304,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                         ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
                         : `${
                               isSubmitting
-                                  ? t(`options.trade.user-positions.cash-out-progress`)
-                                  : t('options.trade.user-positions.cash-out')
+                                  ? t(`markets.user-positions.cash-out-progress`)
+                                  : t('markets.user-positions.cash-out')
                           } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
                 </Button>
             );
@@ -313,13 +313,13 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {
             return isProfileAction ? (
                 <PositionValueContainer>
-                    <Label>{t('options.trade.user-positions.position-value')}</Label>
+                    <Label>{t('markets.user-positions.position-value')}</Label>
                     <Value>
                         N/A
                         <Tooltip
                             overlay={
                                 <Trans
-                                    i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                    i18nKey={t('common.no-liquidity-tooltip')}
                                     components={[
                                         <span key="1">
                                             <UsingAmmLink key="2" />
@@ -336,7 +336,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 <>
                     <Separator />
                     <ResultsContainer>
-                        <Label>{t('options.trade.user-positions.results')}</Label>
+                        <Label>{t('markets.user-positions.results')}</Label>
                         <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
                     </ResultsContainer>
                 </>

@@ -56,8 +56,8 @@ const Staking: React.FC = () => {
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const stakeOptions = {
-        stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
-        unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },
+        stake: { value: 'stake', label: t('thales-token.gamified-staking.staking.stake.name') },
+        unstake: { value: 'unstake', label: t('thales-token.gamified-staking.staking.unstake.name') },
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
 
@@ -155,7 +155,7 @@ const Staking: React.FC = () => {
             {/* First row */}
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.apy', 'APY')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.apy', 'APY')}
                     <SectionValue>
                         <SectionValueContent>
                             {formattedAPY}%
@@ -166,8 +166,8 @@ const Staking: React.FC = () => {
                                         <Trans
                                             i18nKey={
                                                 isL2
-                                                    ? 'options.earn.gamified-staking.staking.bonus-apy-tooltip'
-                                                    : 'options.earn.gamified-staking.staking.bonus-apy-tooltip-arb'
+                                                    ? 'thales-token.gamified-staking.staking.bonus-apy-tooltip'
+                                                    : 'thales-token.gamified-staking.staking.bonus-apy-tooltip-arb'
                                             }
                                             components={[
                                                 <span key="1" />,
@@ -188,7 +188,7 @@ const Staking: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.staked-share')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.staked-share')}
                     <SectionValue>
                         <SectionValueContent>{formatCurrencyWithPrecision(myStakedShare)}%</SectionValueContent>
                     </SectionValue>
@@ -198,7 +198,7 @@ const Staking: React.FC = () => {
             {/* First and Second row */}
             <SectionWrapper rows={2} backgroundType={BackgroundType.INFO}>
                 <SectionContentWrapper background={false}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.staked-balance')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.staked-balance')}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
@@ -207,13 +207,13 @@ const Staking: React.FC = () => {
                 </SectionContentWrapper>
                 {notEligibleForStakingRewards && (
                     <StakedBalanceInfo>
-                        {t('options.earn.gamified-staking.staking.not-eligible-message')}
+                        {t('thales-token.gamified-staking.staking.not-eligible-message')}
                     </StakedBalanceInfo>
                 )}
                 <SectionContentWrapper background={false}>
                     <SectionDetails positionUp={true}>
                         <SectionDetailsLabel>
-                            {t('options.earn.gamified-staking.staking.staked-directly')}
+                            {t('thales-token.gamified-staking.staking.staked-directly')}
                         </SectionDetailsLabel>
                         <SectionDetailsValue unavailable={notEligibleForStakingRewards} floatNone={unstakingAmount > 0}>
                             {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
@@ -221,7 +221,7 @@ const Staking: React.FC = () => {
                         {unstakingAmount > 0 && (
                             <UnstakingInfo>
                                 {`${t(
-                                    'options.earn.gamified-staking.staking.unstake.unstaking'
+                                    'thales-token.gamified-staking.staking.unstake.unstaking'
                                 )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}
                             </UnstakingInfo>
                         )}
@@ -229,7 +229,7 @@ const Staking: React.FC = () => {
                     <Line margin={isMobile ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
-                            {t('options.earn.gamified-staking.staking.escrow-balance')}
+                            {t('thales-token.gamified-staking.staking.escrow-balance')}
                         </SectionDetailsLabel>
                         <SectionDetailsValue>
                             {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
@@ -241,7 +241,7 @@ const Staking: React.FC = () => {
             {/* Second row */}
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.total-thales-staked')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.total-thales-staked')}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
@@ -251,7 +251,7 @@ const Staking: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.estimated-rewards', '', true)}
+                    {getSectionLabel('thales-token.gamified-staking.staking.estimated-rewards', '', true)}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
@@ -260,7 +260,7 @@ const Staking: React.FC = () => {
                                 <Tooltip
                                     overlay={
                                         <Trans
-                                            i18nKey="options.earn.gamified-staking.staking.bonus-estimated-rewards-tooltip"
+                                            i18nKey="thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip"
                                             components={[
                                                 <span key="1" />,
                                                 isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,

@@ -36,7 +36,7 @@ const Notifications: React.FC = () => {
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
             <Container>
                 {hasNotifications ? (
-                    <Tooltip overlay={t('header.notification.tooltip', { count: notifications })}>
+                    <Tooltip overlay={t('common.header.notification.tooltip', { count: notifications })}>
                         <Wrapper>
                             <Bell className="icon icon--bell" />
                             <Number>{notifications}</Number>

@@ -339,7 +339,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.earn.gamified-staking.rewards.claim.confirmation-message'),
+                            t('thales-token.gamified-staking.rewards.claim.confirmation-message'),
                             id
                         )
                     );
@@ -367,7 +367,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message'),
+                            t('thales-token.gamified-staking.rewards.claim.close-period.confirmation-message'),
                             id
                         )
                     );
@@ -388,12 +388,12 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         }
 
         return (
-            <Tooltip overlay={t('options.earn.gamified-staking.rewards.claim.button-tooltip')}>
+            <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.button-tooltip')}>
                 <ButtonWrapperTooltip>
                     <Button disabled={!isClaimAvailable} onClick={handleClaimStakingRewards}>
                         {isClaiming
-                            ? t('options.earn.gamified-staking.rewards.claim.claiming')
-                            : t('options.earn.gamified-staking.rewards.claim.claim')}
+                            ? t('thales-token.gamified-staking.rewards.claim.claiming')
+                            : t('thales-token.gamified-staking.rewards.claim.claim')}
                     </Button>
                 </ButtonWrapperTooltip>
             </Tooltip>
@@ -404,7 +404,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         return (
             <SectionContentWrapper noGrid={true}>
                 <RewardPeriod>
-                    <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
+                    <PeriodLabel>{t('thales-token.gamified-staking.rewards.claim.period')}</PeriodLabel>
                     {stakingData ? (
                         <TimeRemaining end={stakingData.closingDate} fontSize={isMobile ? 12 : 15} showFullCounter />
                     ) : (
@@ -413,14 +413,14 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     {canClosePeriod && (
                         <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
                             {isClosingPeriod
-                                ? t('options.earn.gamified-staking.rewards.claim.close-period.progress-label')
-                                : t('options.earn.gamified-staking.rewards.claim.close-period.label')}
+                                ? t('thales-token.gamified-staking.rewards.claim.close-period.progress-label')
+                                : t('thales-token.gamified-staking.rewards.claim.close-period.label')}
                         </Button>
                     )}
                 </RewardPeriod>
                 <SectionLabel type={SectionType.CLAIM}>
                     <SectionLabelContent type={SectionType.CLAIM}>
-                        {t('options.earn.gamified-staking.rewards.claim.total-label')}
+                        {t('thales-token.gamified-staking.rewards.claim.total-label')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.CLAIM}>
@@ -430,9 +430,9 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionValue>
                 <ButtonContainer>
                     <ClaimMessage above={true}>
-                        {isPaused ? t('options.earn.gamified-staking.rewards.claim.paused-message') : ''}
-                        {isClaimed ? t('options.earn.gamified-staking.rewards.claim.claimed-message') : ''}
-                        {notEligible ? t('options.earn.gamified-staking.rewards.claim.not-eligible-message') : ''}
+                        {isPaused ? t('thales-token.gamified-staking.rewards.claim.paused-message') : ''}
+                        {isClaimed ? t('thales-token.gamified-staking.rewards.claim.claimed-message') : ''}
+                        {notEligible ? t('thales-token.gamified-staking.rewards.claim.not-eligible-message') : ''}
                     </ClaimMessage>
                     {getClaimButton()}
                 </ButtonContainer>
@@ -445,16 +445,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionContentWrapper>
                 <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
-                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-1')}
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.label-1')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'} textDefault={true}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF} textDefault={true}>
-                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
-                    {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
+                    {t('thales-token.gamified-staking.rewards.claim-on-behalf.enable')}
                 </Button>
             </SectionContentWrapper>
         );
@@ -465,12 +465,12 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionContentWrapper background={false} noGrid={true}>
                 <SectionLabel type={SectionType.LP_STAKING} margin={'34px 0 0 0'}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
-                        {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
+                        {t('thales-token.gamified-staking.rewards.lp-staking.label-1')}
                     </SectionLabelContent>
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey="options.earn.gamified-staking.rewards.lp-staking.tooltip"
+                                i18nKey="thales-token.gamified-staking.rewards.lp-staking.tooltip"
                                 components={[
                                     <LpStakingLink key="1" onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)} />,
                                 ]}
@@ -480,7 +480,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionLabel>
                 <SectionLabel type={SectionType.LP_STAKING}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
-                        {t('options.earn.gamified-staking.rewards.lp-staking.label-2')}
+                        {t('thales-token.gamified-staking.rewards.lp-staking.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.LP_STAKING}>
@@ -498,22 +498,22 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             {/* First row */}
             <SectionWrapper columns={4}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info.base'),
+                    t('thales-token.gamified-staking.rewards.info.base'),
                     baseRewardsFormatted,
-                    t('options.earn.gamified-staking.rewards.info.base-description', {
+                    t('thales-token.gamified-staking.rewards.info.base-description', {
                         baseRewards: baseRewardsFormatted,
                     })
                 )}
             </SectionWrapper>
             <SectionWrapper columns={8}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info.bonus'),
+                    t('thales-token.gamified-staking.rewards.info.bonus'),
                     bonusRewardsFormatted,
                     <Trans
                         i18nKey={
                             isL2
-                                ? 'options.earn.gamified-staking.rewards.info.bonus-description'
-                                : 'options.earn.gamified-staking.rewards.info.bonus-description-arb'
+                                ? 'thales-token.gamified-staking.rewards.info.bonus-description'
+                                : 'thales-token.gamified-staking.rewards.info.bonus-description-arb'
                         }
                         values={{
                             bonusRewards: bonusRewardsFormatted,
@@ -527,17 +527,17 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper columns={4} backgroundType={BackgroundType.AMM}>
                 {getVolumeSection(
                     ROUTES.Options.Home,
-                    t('options.earn.gamified-staking.rewards.volume.amm-label'),
+                    t('thales-token.gamified-staking.rewards.volume.amm-label'),
                     ammVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.amm-desc')
+                    t('thales-token.gamified-staking.rewards.volume.amm-desc')
                 )}
             </SectionWrapper>
             <SectionWrapper columns={4} backgroundType={BackgroundType.RANGED}>
                 {getVolumeSection(
                     ROUTES.Options.RangeMarkets,
-                    t('options.earn.gamified-staking.rewards.volume.ranged-label'),
+                    t('thales-token.gamified-staking.rewards.volume.ranged-label'),
                     rangedVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.ranged-desc')
+                    t('thales-token.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
             {isMobile && (
@@ -565,7 +565,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     LINKS.SportMarkets,
                     '',
                     sportsVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.sports-desc'),
+                    t('thales-token.gamified-staking.rewards.volume.sports-desc'),
                     logoOvertime
                 )}
             </SectionWrapper>
@@ -604,16 +604,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper columns={5} startColumn={2}>
                 {getRewardSection(
                     {
-                        main: t('options.earn.gamified-staking.rewards.protocol.label'),
-                        volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
+                        main: t('thales-token.gamified-staking.rewards.protocol.label'),
+                        volume: t('thales-token.gamified-staking.rewards.protocol.volume'),
                         bonus: protocolVolumeNeededForBonusFormatted.length
-                            ? t('options.earn.gamified-staking.rewards.protocol.bonus')
+                            ? t('thales-token.gamified-staking.rewards.protocol.bonus')
                             : hasUserStaked
-                            ? t('options.earn.gamified-staking.rewards.protocol.bonus-eligible')
-                            : t('options.earn.gamified-staking.rewards.no-thales-staked'),
+                            ? t('thales-token.gamified-staking.rewards.protocol.bonus-eligible')
+                            : t('thales-token.gamified-staking.rewards.no-thales-staked'),
                         rewards: isClaimAvailable
-                            ? t('options.earn.gamified-staking.rewards.protocol.rewards')
-                            : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
+                            ? t('thales-token.gamified-staking.rewards.protocol.rewards')
+                            : t('thales-token.gamified-staking.rewards.protocol.estimated-rewards'),
                         bonusEligible: hasUserStaked,
                     },
                     {
@@ -630,16 +630,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 <SectionWrapper columns={5}>
                     {getRewardSection(
                         {
-                            main: t('options.earn.gamified-staking.rewards.snx.label'),
-                            volume: t('options.earn.gamified-staking.rewards.snx.staked'),
+                            main: t('thales-token.gamified-staking.rewards.snx.label'),
+                            volume: t('thales-token.gamified-staking.rewards.snx.staked'),
                             bonus: snxNeededForMaxBonusFormatted.length
-                                ? t('options.earn.gamified-staking.rewards.snx.bonus')
+                                ? t('thales-token.gamified-staking.rewards.snx.bonus')
                                 : hasUserStaked
-                                ? t('options.earn.gamified-staking.rewards.snx.bonus-eligible')
-                                : t('options.earn.gamified-staking.rewards.no-thales-staked'),
+                                ? t('thales-token.gamified-staking.rewards.snx.bonus-eligible')
+                                : t('thales-token.gamified-staking.rewards.no-thales-staked'),
                             rewards: isClaimAvailable
-                                ? t('options.earn.gamified-staking.rewards.snx.rewards')
-                                : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
+                                ? t('thales-token.gamified-staking.rewards.snx.rewards')
+                                : t('thales-token.gamified-staking.rewards.snx.estimated-rewards'),
                             bonusEligible: hasUserStaked,
                         },
                         {
@@ -681,7 +681,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionContentWrapper>
                         <SectionLabel type={SectionType.REWARD}>
                             <SectionLabelContent type={SectionType.REWARD}>
-                                {t('options.earn.gamified-staking.rewards.base-label')}
+                                {t('thales-token.gamified-staking.rewards.base-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.REWARD}>
@@ -719,7 +719,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionContentWrapper>
                         <SectionLabel type={SectionType.REWARD}>
                             <SectionLabelContent type={SectionType.REWARD}>
-                                {t('options.earn.gamified-staking.rewards.base-label')}
+                                {t('thales-token.gamified-staking.rewards.base-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.REWARD}>

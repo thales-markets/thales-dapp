@@ -84,8 +84,8 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                     id,
                     getSuccessToastOptions(
                         canClaimOnBehalf
-                            ? t('options.earn.claim-on-behalf.disable-button.confirmation-message')
-                            : t('options.earn.claim-on-behalf.enable-button.confirmation-message'),
+                            ? t('thales-token.claim-on-behalf.disable-button.confirmation-message')
+                            : t('thales-token.claim-on-behalf.enable-button.confirmation-message'),
                         id
                     )
                 );
@@ -126,17 +126,17 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
             <Button width={width} disabled={isButtonDisabled} onClick={handleSubmit}>
                 {!canClaimOnBehalf
                     ? !isSubmitting
-                        ? t('options.earn.claim-on-behalf.enable-button.label')
-                        : t('options.earn.claim-on-behalf.enable-button.progress-label')
+                        ? t('thales-token.claim-on-behalf.enable-button.label')
+                        : t('thales-token.claim-on-behalf.enable-button.progress-label')
                     : !isSubmitting
-                    ? t('options.earn.claim-on-behalf.disable-button.label')
-                    : t('options.earn.claim-on-behalf.disable-button.progress-label')}
+                    ? t('thales-token.claim-on-behalf.disable-button.label')
+                    : t('thales-token.claim-on-behalf.disable-button.progress-label')}
             </Button>
         );
     };
     return (
         <Modal
-            title={t('options.earn.claim-on-behalf.title')}
+            title={t('thales-token.claim-on-behalf.title')}
             onClose={onClose}
             shouldCloseOnOverlayClick={false}
             customStyle={{ overlay: { zIndex: 201 } }}
@@ -144,13 +144,13 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
             <Container>
                 <Description>
                     <Trans
-                        i18nKey={`options.earn.claim-on-behalf.description`}
+                        i18nKey={`thales-token.claim-on-behalf.description`}
                         components={[<span key="1" />, <Tip66Link key="2" />]}
                     />
                 </Description>
                 <Description>
                     <Trans
-                        i18nKey={`options.earn.claim-on-behalf.guide`}
+                        i18nKey={`thales-token.claim-on-behalf.guide`}
                         components={[<span key="1" />, <ClaimOnBehalfGuideLink key="2" />]}
                     />
                 </Description>
@@ -159,7 +159,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                         value={account}
                         onChange={(e: any) => setAccount(e.target.value)}
                         disabled={isSubmitting || !isWalletConnected}
-                        label={t('options.earn.claim-on-behalf.label')}
+                        label={t('thales-token.claim-on-behalf.label')}
                         placeholder={t('common.enter-address')}
                         showValidation={!isAccountValid}
                         validationMessage={t(`common.errors.invalid-address`)}
@@ -167,14 +167,14 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                 </InputContainer>
                 <ButtonContainer>{getSubmitButton()}</ButtonContainer>
                 <EnabledAddressesTitle>
-                    {t('options.earn.claim-on-behalf.enabled-addresses-title')}:
+                    {t('thales-token.claim-on-behalf.enabled-addresses-title')}:
                 </EnabledAddressesTitle>
                 {enabledAddresses.length > 0 || stakingClaimOnBehalfQuery.isLoading ? (
                     enabledAddresses.map((address) => (
                         <EnabledAddressesItem key={address}>{address}</EnabledAddressesItem>
                     ))
                 ) : (
-                    <NoAddresses>{t('options.earn.claim-on-behalf.no-enabled-addresses-message')}</NoAddresses>
+                    <NoAddresses>{t('thales-token.claim-on-behalf.no-enabled-addresses-message')}</NoAddresses>
                 )}
             </Container>
         </Modal>

@@ -28,10 +28,10 @@ const DappHeader: React.FC = () => {
 const getTitle = (t: any) => {
     const splittedPathname = location.pathname.split('/');
 
-    if (location.pathname === ROUTES.Options.Home) return t('options.trade.title');
+    if (location.pathname === ROUTES.Options.Home) return t('markets.title');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('governance.title');
-    if (location.pathname === ROUTES.Options.Token) return t('options.earn.title');
-    if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
+    if (location.pathname === ROUTES.Options.Token) return t('thales-token.title');
+    if (location.pathname === ROUTES.Options.Profile) return t('profile.title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
     if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');

@@ -155,10 +155,10 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <SubContainer>
             <Header>
                 {market?.phase == 'maturity'
-                    ? t('options.market.overview.final-price-label', {
+                    ? t('markets.market.overview.final-price-label', {
                           currencyKey: market.currencyKey,
                       })
-                    : t('options.home.market-card.current-asset-price')}
+                    : t('markets.market.current-price')}
             </Header>
             <Value>
                 {market?.phase == 'maturity'
@@ -208,7 +208,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                 </>
             ) : (
                 <Value color={ammData ? theme.warning.textColor.primary : theme.textColor.primary}>
-                    {ammData ? t('options.home.markets-table.out-of-liquidity') : '-'}
+                    {ammData ? t('markets.market..out-of-liquidity') : '-'}
                 </Value>
             )}
         </Value>
@@ -264,7 +264,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                 <Value>
                                     {`${(market as OptionsMarketInfo).IV}% IV`}
                                     <Tooltip
-                                        overlay={t('options.home.markets-table.iv-tooltip', {
+                                        overlay={t('markets.market.iv-tooltip', {
                                             percentage: (market as OptionsMarketInfo).IV,
                                         })}
                                         iconFontSize={12}
@@ -277,7 +277,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                     {isRangedMarket && (
                         <ColumnContainer>
                             <SubContainer>
-                                <Header>{t('options.market.ranged-markets.strike-range')}</Header>
+                                <Header>{t('markets.market.ranged-markets.strike-range')}</Header>
                                 <Value>
                                     {`> ${formatCurrencyWithSign(USD_SIGN, (market as RangedMarketData).leftPrice)}`}
                                     <br />
@@ -289,7 +289,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
 
                     <ColumnContainer>
                         <SubContainer>
-                            <Header>{t('options.market.overview.maturity-date')}</Header>
+                            <Header>{t('markets.market.overview.maturity-date')}</Header>
                             <Value>
                                 <MaturityDate maturityDateUnix={market.maturityDate} showFullCounter={true} />
                             </Value>
@@ -298,7 +298,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                             getMarketPriceSection()
                         ) : (
                             <SubContainer>
-                                <Header>{t('options.home.market-card.strike-price')}</Header>
+                                <Header>{t('markets.market.strike-price')}</Header>
                                 <Value>
                                     {formatCurrencyWithSign(USD_SIGN, (market as OptionsMarketInfo).strikePrice)}
                                 </Value>
@@ -309,7 +309,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <ColumnContainer>
                             {getMarketPriceSection()}
                             <SubContainer>
-                                <Header>{t('options.market.overview.price-difference')}</Header>
+                                <Header>{t('markets.market.overview.price-difference')}</Header>
                                 <Value
                                     color={
                                         priceDifference > 0
@@ -328,8 +328,8 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <SubContainer>
                             <Header>
                                 {market?.phase !== 'maturity'
-                                    ? t('options.market.overview.my-positions')
-                                    : t('options.market.overview.my-position')}
+                                    ? t('markets.market.overview.my-positions')
+                                    : t('markets.market.overview.my-position')}
                             </Header>
                             {getMyPositionsSectionValue(
                                 isRangedMarket ? Positions.IN : Positions.UP,
@@ -342,8 +342,8 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <SubContainer>
                             <Header>
                                 {market?.phase !== 'maturity'
-                                    ? t('options.market.overview.positions-value')
-                                    : t('options.market.overview.position-value')}
+                                    ? t('markets.market.overview.positions-value')
+                                    : t('markets.market.overview.position-value')}
                             </Header>
                             <Value>
                                 <PositionPrice
@@ -374,9 +374,9 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <ColumnContainer>
                             <SubContainer>
                                 <Header>
-                                    {t('options.market.overview.amm-liquidity')}
+                                    {t('markets.market.overview.amm-liquidity')}
                                     <Tooltip
-                                        overlay={t('options.market.overview.amm-liquidity-tooltip')}
+                                        overlay={t('markets.market.overview.amm-liquidity-tooltip')}
                                         iconFontSize={12}
                                         top={-1}
                                     />
@@ -390,7 +390,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                 )}
                             </SubContainer>
                             <SubContainer>
-                                <Header>{t('options.market.overview.amm-price')}</Header>
+                                <Header>{t('markets.market.overview.amm-price')}</Header>
                                 {getPriceSectionValue(
                                     isRangedMarket ? Positions.IN : Positions.UP,
                                     isRangedMarket ? Positions.OUT : Positions.DOWN,
@@ -404,7 +404,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                     {market?.phase == 'maturity' && (
                         <ColumnContainer>
                             <SubContainer>
-                                <Header>{t('options.market.overview.final-result')}</Header>
+                                <Header>{t('markets.market.overview.final-result')}</Header>
                                 {getResultSectionValue(
                                     isRangedMarket
                                         ? market.result == 'out'
@@ -470,7 +470,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                i18nKey={t('common.no-liquidity-tooltip')}
                                 components={[
                                     <span key="1">
                                         <UsingAmmLink key="2" />
@@ -495,7 +495,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                i18nKey={t('common.no-liquidity-tooltip')}
                                 components={[
                                     <span key="1">
                                         <UsingAmmLink key="2" />

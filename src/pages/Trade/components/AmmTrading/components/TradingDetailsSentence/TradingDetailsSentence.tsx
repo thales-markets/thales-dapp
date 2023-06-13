@@ -46,18 +46,18 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
 
     const positionTypeFormatted =
         market.positionType === Positions.UP
-            ? t('options.common.above')
+            ? t('common.above')
             : market.positionType === Positions.DOWN
-            ? t('options.common.below')
+            ? t('common.below')
             : market.positionType === Positions.IN
-            ? t('options.common.between')
-            : t('options.common.not-between');
+            ? t('common.between')
+            : t('common.not-between');
 
     return (
         <ColumnSpaceBetween>
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{t('options.trade.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
+                    <TextLabel>{t('markets.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
                     {market.address ? (
                         <>
                             <SentanceTextValue uppercase={true}>{positionTypeFormatted}</SentanceTextValue>
@@ -71,7 +71,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                                             )}
                                         </SentanceTextValue>
                                         <Text>
-                                            <TextLabel>{' ' + t('options.common.and')}</TextLabel>
+                                            <TextLabel>{' ' + t('common.and')}</TextLabel>
                                         </Text>
                                         <SentanceTextValue>
                                             {formatCurrencyWithSign(
@@ -88,7 +88,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                             )}
                         </>
                     ) : (
-                        <SentanceTextValue>{'( ' + t('options.trade.amm-trading.pick-price') + ' )'}</SentanceTextValue>
+                        <SentanceTextValue>{'( ' + t('markets.amm-trading.pick-price') + ' )'}</SentanceTextValue>
                     )}
                 </Text>
             </FlexDivCentered>
@@ -99,7 +99,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                             {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).leftPrice)}
                         </SentanceTextValue>
                         <Text>
-                            <TextLabel>{' ' + t('options.common.and')}</TextLabel>
+                            <TextLabel>{' ' + t('common.and')}</TextLabel>
                         </Text>
                         <SentanceTextValue>
                             {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).rightPrice)}
@@ -109,17 +109,17 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             )}
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{t('options.common.on')}</TextLabel>
+                    <TextLabel>{t('common.on')}</TextLabel>
                     <SentanceTextValue>{formatShortDateWithTime(maturityDate)}</SentanceTextValue>
                 </Text>
             </FlexDivCentered>
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
+                    <TextLabel>{t('markets.amm-trading.you-win')}</TextLabel>
                     <SentanceTextValue isProfit={true}>
                         {Number(priceProfit) > 0 && Number(paidAmount) > 0
                             ? potentialWinFormatted
-                            : '( ' + t('options.trade.amm-trading.based-amount') + ' )'}
+                            : '( ' + t('markets.amm-trading.based-amount') + ' )'}
                     </SentanceTextValue>
                 </Text>
             </FlexDivCentered>

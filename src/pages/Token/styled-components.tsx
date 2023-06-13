@@ -237,7 +237,7 @@ export const ClaimOnBehalfGuideLink: React.FC = () => {
     const { t } = useTranslation();
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.ClaimOnBehalfGuide}>
-            {t('options.earn.claim-on-behalf.guide-link')}
+            {t('thales-token.claim-on-behalf.guide-link')}
         </TooltipLink>
     );
 };

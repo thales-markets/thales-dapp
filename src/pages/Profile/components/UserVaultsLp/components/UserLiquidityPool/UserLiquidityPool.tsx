@@ -64,7 +64,7 @@ const UserLiquidityPool: React.FC = () => {
         <SPAAnchor href={buildLiquidityPoolLink()}>
             <VaultLpDetails
                 icon={'liquidity-pool'}
-                title={t(`options.trading-profile.vaults-lp.thales-lp-title`)}
+                title={t(`profile.vaults-lp.thales-lp-title`)}
                 position={userLiquidityPoolData?.balanceTotal || 0}
                 pnl={liquidityPoolData?.lifetimePnl || 0}
                 round={liquidityPoolData?.round || 0}
@@ -77,7 +77,7 @@ const UserLiquidityPool: React.FC = () => {
     ) : (
         <VaultLpDetails
             icon={'liquidity-pool'}
-            title={t(`options.trading-profile.vaults-lp.thales-lp-title`)}
+            title={t(`profile.vaults-lp.thales-lp-title`)}
             position={userLiquidityPoolData?.balanceTotal || 0}
             pnl={liquidityPoolData?.lifetimePnl || 0}
             round={liquidityPoolData?.round || 0}

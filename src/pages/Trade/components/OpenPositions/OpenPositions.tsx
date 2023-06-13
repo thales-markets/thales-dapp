@@ -36,7 +36,7 @@ const OpenPositions: React.FC = () => {
 
     return (
         <Wrapper>
-            <Title>{t('options.trade.user-positions.your-positions')}</Title>
+            <Title>{t('markets.user-positions.your-positions')}</Title>
             {positionsQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -48,7 +48,7 @@ const OpenPositions: React.FC = () => {
                             <OpenPosition position={position} key={`position${index}`} />
                         ))}
                     </PositionsWrapper>
-                    {noPositions && <NoPositionsText>{t('options.trade.user-positions.no-positions')}</NoPositionsText>}
+                    {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>
             )}
         </Wrapper>

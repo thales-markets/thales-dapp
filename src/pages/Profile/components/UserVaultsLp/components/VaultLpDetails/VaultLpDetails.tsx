@@ -52,14 +52,14 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
                 <Title>{title}</Title>
             </TitleWrapper>
             <Item hideBorder>
-                <Label>{t('options.trading-profile.vaults-lp.my-position-label')}</Label>
+                <Label>{t('profile.vaults-lp.my-position-label')}</Label>
                 {getTextValue(formatCurrencyWithSign(USD_SIGN, position))}
             </Item>
             <Item>
                 <Label>
                     {icon === 'liquidity-pool'
-                        ? t('options.trading-profile.vaults-lp.lp-pnl-label')
-                        : t('options.trading-profile.vaults-lp.vault-pnl-label')}
+                        ? t('profile.vaults-lp.lp-pnl-label')
+                        : t('profile.vaults-lp.vault-pnl-label')}
                 </Label>
                 {getTextValue(
                     formatPercentageWithSign(pnl),
@@ -71,15 +71,15 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
                 )}
             </Item>
             <Item>
-                <Label>{t('options.trading-profile.vaults-lp.round-label')}</Label>
+                <Label>{t('profile.vaults-lp.round-label')}</Label>
                 {getTextValue(`#${round}`)}
             </Item>
             <Item>
-                <Label>{t('options.trading-profile.vaults-lp.round-end-label')}</Label>
+                <Label>{t('profile.vaults-lp.round-end-label')}</Label>
 
                 {getTextValue(
                     isRoundEnded ? (
-                        t('options.trading-profile.vaults-lp.round-ended-label')
+                        t('profile.vaults-lp.round-ended-label')
                     ) : (
                         <TimeRemaining end={roundEndTime} fontSize={15} showFullCounter />
                     )

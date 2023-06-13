@@ -111,7 +111,7 @@ const UserSwap: React.FC = () => {
         if (isWalletConnected) {
             setSwapTextIndex(index);
             setSwapText(
-                t('options.swap.button-text', {
+                t('common.swap.button-text', {
                     token: stableCoin,
                 })
             );
@@ -195,7 +195,7 @@ const UserSwap: React.FC = () => {
             {showSwap && (
                 <Suspense fallback={<></>}>
                     <Modal
-                        title={t('options.swap.title')}
+                        title={t('common.swap.title')}
                         onClose={() => setShowSwap(false)}
                         shouldCloseOnOverlayClick={false}
                         customStyle={{ overlay: { zIndex: 201 } }}
