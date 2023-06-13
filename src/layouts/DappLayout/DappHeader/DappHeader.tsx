@@ -1,106 +1,59 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
-import SPAAnchor from 'components/SPAAnchor';
-import { buildHref } from 'utils/routes';
 import UserWallet from '../components/UserWallet';
 import Notifications from '../components/Notifications';
-import { FlexDivRow } from 'styles/common';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import Logo from '../components/Logo/Logo';
+import { FlexDivRowCentered } from '../../../styles/common';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { getIsMobile } from '../../../redux/modules/ui';
 
 const DappHeader: React.FC = () => {
-    const { t } = useTranslation();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
-        <Container>
-            <PageTitle>{getTitle(t)}</PageTitle>
-            <FlexDivRow>
-                <Suspense fallback={<></>}>
-                    <UserWallet />
-                </Suspense>
-                <Notifications />
-            </FlexDivRow>
+        <Container maxWidth={getMaxWidth()}>
+            <LeftContainer>
+                <Logo />
+                {isMobile && <Notifications />}
+            </LeftContainer>
+            <RightContainer>
+                <UserWallet />
+                {!isMobile && <Notifications />}
+            </RightContainer>
         </Container>
     );
 };
 
-const getTitle = (t: any) => {
+const getMaxWidth = () => {
     const splittedPathname = location.pathname.split('/');
+    if (`/${splittedPathname[1]}` === ROUTES.Options.Home || location.pathname === ROUTES.Options.Profile)
+        return '974px';
 
-    if (location.pathname === ROUTES.Options.Home) return t('markets.title');
-    if (location.pathname.includes(ROUTES.Governance.Home)) return t('governance.title');
-    if (location.pathname === ROUTES.Options.Token) return t('thales-token.title');
-    if (location.pathname === ROUTES.Options.Profile) return t('profile.title');
-    if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
-    if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
-    if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
-    if (location.pathname === ROUTES.Options.LiquidityPool) return t('liquidity-pool.title');
-    if (location.pathname === ROUTES.Options.Referral) return t('referral-page.title');
-    if (location.pathname === ROUTES.Options.Game) return t('game.title');
-    if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
-        if (splittedPathname[2] === '') {
-            return t('vaults.title');
-        } else {
-            return (
-                <>
-                    <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
-                        <BackLinkContainer>
-                            <BackIcon className={`icon icon--left`} />
-                            {t('vaults.title')}
-                        </BackLinkContainer>
-                    </SPAAnchor>{' '}
-                    / {t(`vault.${splittedPathname[2]}.title`)}
-                    <TitleVaultIcon className={`sidebar-icon icon--${splittedPathname[2]}`} />
-                </>
-            );
-        }
-    if (`/${splittedPathname[1]}` === ROUTES.Options.Home && splittedPathname[2] !== undefined)
-        if (splittedPathname[2] !== '') {
-            return t('common.market');
-        }
+    if (location.pathname === ROUTES.Options.Wizard) return '900px';
+    return '1440px';
 };
 
-const Container = styled(FlexDivRow)`
+const Container = styled(FlexDivRowCentered)<{ maxWidth: string }>`
     width: 100%;
-    max-width: 1440px;
-    padding-top: 40px;
-    padding-bottom: 20px;
+    max-width: ${(props) => props.maxWidth};
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding-top: 20px;
-        justify-content: end;
+        flex-direction: column;
     }
 `;
 
-const PageTitle = styled.p`
-    font-weight: 600;
-    font-size: 26px;
-    color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 1024px) {
-        display: none;
+const LeftContainer = styled(FlexDivRowCentered)`
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-bottom: 10px;
+        width: 100%;
     }
 `;
 
-export const BackLinkContainer = styled.span`
-    :hover {
-        text-decoration: underline;
-    }
-`;
-
-export const BackIcon = styled.i`
-    font-weight: 400;
-    font-size: 28px;
-    margin-right: 6px;
-    top: -2px;
-    position: relative;
-`;
-
-export const TitleVaultIcon = styled.i`
-    font-weight: 400;
-    font-size: 36px;
-    margin-left: 8px;
-    top: -2px;
-    position: relative;
-`;
+const RightContainer = styled(FlexDivRowCentered)``;
 
 export default DappHeader;

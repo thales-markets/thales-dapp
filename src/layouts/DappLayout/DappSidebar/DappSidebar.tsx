@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
 import DappHeaderItem from '../components/DappHeaderItem/DappHeaderItem';
+import { ScreenSizeBreakpoint } from '../../../enums/ui';
 
 const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
@@ -214,7 +215,7 @@ const DappSidebar: React.FC = () => {
 const ThreeDotsContainer = styled.div`
     display: none;
     align-items: center;
-    @media (max-width: 568px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
     }
 `;
@@ -226,7 +227,7 @@ const ItemsContainer = styled.div`
     overflow-y: auto;
     margin-right: -10px;
     height: 100%;
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0;
         flex-direction: row;
         justify-content: space-around;
@@ -250,7 +251,7 @@ const SidebarHtml = styled.nav`
         display: none;
     }
 
-    @media (min-width: 1024px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}px) {
         &:hover {
             width: 300px;
             span {
@@ -268,15 +269,15 @@ const SidebarHtml = styled.nav`
         }
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0;
         background: ${(props) => props.theme.background.secondary};
         box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
         border-radius: 8px;
-        width: calc(100% - 40px);
-        left: 20px;
+        width: calc(100% - 20px);
+        left: 10px;
         top: unset;
-        bottom: 20px;
+        bottom: 10px;
         height: 55px;
 
         .sidebar-logoSmall {
@@ -336,7 +337,7 @@ const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 3px solid ${(props) => props.theme.borderColor.secondary};
-    @media (max-width: 1024px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

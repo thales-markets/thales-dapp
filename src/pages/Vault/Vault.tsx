@@ -35,6 +35,10 @@ import {
     Variables,
     VariablesTitle,
     Link,
+    BackLinkContainer,
+    BackIcon,
+    Header,
+    HeaderVaultIcon,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -79,6 +83,9 @@ import {
     getErrorToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
+import { buildHref } from '../../utils/routes';
+import ROUTES from '../../constants/routes';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -368,6 +375,16 @@ const Vault: React.FC<VaultProps> = (props) => {
             <OpRewardsBanner />
             <ElectionsBanner />
             <Wrapper>
+                <Header>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
+                        <BackLinkContainer>
+                            <BackIcon className={`icon icon--left`} />
+                            {t('vaults.title')}
+                        </BackLinkContainer>
+                    </SPAAnchor>
+                    &nbsp;/ {t(`vault.${vaultId}.title`)}
+                    <HeaderVaultIcon className={`sidebar-icon icon--${vaultId}`} />
+                </Header>
                 {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
                 {vaultData && (
                     <>
