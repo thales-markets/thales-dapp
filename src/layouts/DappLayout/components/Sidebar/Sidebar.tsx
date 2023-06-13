@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
-import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
 import { getIsArbitrum, getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
@@ -14,6 +13,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
+import DappHeaderItem from '../DappHeaderItem/DappHeaderItem';
 
 const Sidebar: React.FC = () => {
     const { t } = useTranslation();

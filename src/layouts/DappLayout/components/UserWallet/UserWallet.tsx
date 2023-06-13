@@ -11,7 +11,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { NetworkId, defaultNetwork, hasEthereumInjected } from 'utils/network';
-import UserSwap from './UserSwap';
+import UserSwap from '../UserSwap';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
