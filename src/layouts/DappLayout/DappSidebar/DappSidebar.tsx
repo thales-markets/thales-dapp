@@ -227,6 +227,7 @@ const ItemsContainer = styled.div`
     margin-right: -10px;
     height: 100%;
     @media (max-width: 1024px) {
+        margin-right: 0;
         flex-direction: row;
         justify-content: space-around;
     }
@@ -299,7 +300,7 @@ const SidebarHtml = styled.nav`
         ${ItemsContainer} {
             transition: all 0.5s ease;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
         }
         ${ThreeDotsContainer} {
