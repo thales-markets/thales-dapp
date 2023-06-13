@@ -3,7 +3,7 @@ import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLLATERALS } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -193,14 +193,16 @@ const UserSwap: React.FC = () => {
                 )}
             </Container>
             {showSwap && (
-                <Modal
-                    title={t('options.swap.title')}
-                    onClose={() => setShowSwap(false)}
-                    shouldCloseOnOverlayClick={false}
-                    customStyle={{ overlay: { zIndex: 201 } }}
-                >
-                    <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
-                </Modal>
+                <Suspense fallback={<></>}>
+                    <Modal
+                        title={t('options.swap.title')}
+                        onClose={() => setShowSwap(false)}
+                        shouldCloseOnOverlayClick={false}
+                        customStyle={{ overlay: { zIndex: 201 } }}
+                    >
+                        <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
+                    </Modal>
+                </Suspense>
             )}
         </OutsideClickHandler>
     );
