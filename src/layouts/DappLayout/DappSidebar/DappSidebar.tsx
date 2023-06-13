@@ -13,7 +13,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
-import DappHeaderItem from '../components/DappHeaderItem/DappHeaderItem';
+import DappHeaderItem from '../components/DappHeaderItem';
 import { ScreenSizeBreakpoint } from '../../../enums/ui';
 
 const DappSidebar: React.FC = () => {
