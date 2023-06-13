@@ -136,6 +136,12 @@ export default {
             secondary: Colors.BLUE_SKY,
         },
     },
+    tokenPage: {
+        border: {
+            primary: Colors.GRAY,
+            secondary: Colors.PURPLE,
+        },
+    },
     toastMessages: {
         success: {
             background: {

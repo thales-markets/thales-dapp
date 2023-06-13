@@ -542,6 +542,20 @@
                     "label-2": "LP Staking",
                     "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
                 },
+                "gamified-rewards": "Gamified staking rewards",
+                "gamified-rewards-how": "How gamified staking rewards work?",
+                "card": {
+                    "title-1": "THALES staked multipler",
+                    "content-1": "The more Thales you stake, you have better chance to increase your Thales Multiplier score that can influence your final points as it multiplies your total user volume.",
+                    "title-2": "Trading Volume points",
+                    "content-2": "Use varity of our AMM markets to trade and to increase your user volume. All trading volume is multiplied with 1.",
+                    "title-3": "AMM LP points",
+                    "content-3": "If you are not Pro Trader you can always make deposit in our Liquidity Providing Pool. All your volume from LP pools is multiplied with 0.5.",
+                    "title-4": "Vaults points",
+                    "content-4": "Or you can make deposit to various vaults we offer. All your volume from vaults is multiplied with 0.25.",
+                    "title-5": "Total score",
+                    "content-5": "Finally, your total user volume (Trading, AMM and Vaults volume) is multiplied with Thales multiplier. Thales multiplier can be value from 1 till 5, where more you stake the higher Thales multiplier is. It is calculated like 1 + 4 x User Thales Staked / Biggest Thales Staker"
+                },
                 "base-label": "Thales staking base rewards"
             },
             "vesting": {

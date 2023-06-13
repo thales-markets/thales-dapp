@@ -27,6 +27,7 @@ import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import StakingSteps from './components/StakingSteps/StakingSteps';
 
 const RewardsV2: React.FC = () => {
     const { t } = useTranslation();
@@ -260,6 +261,7 @@ const RewardsV2: React.FC = () => {
                     </ClaimSection>
                 </Div>
             </Header>
+            <StakingSteps />
         </Wrapper>
     );
 };
@@ -279,7 +281,7 @@ const Div = styled.div`
 `;
 
 const WrapperBorder = styled.div`
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.tokenPage.border.primary};
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
@@ -291,7 +293,7 @@ const WrapperBorder = styled.div`
 `;
 
 const ClaimSection = styled.div`
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.tokenPage.border.primary};
     border-radius: 8px;
     min-height: 162px;
     padding: 0 20px;
