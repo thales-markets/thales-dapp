@@ -26,7 +26,12 @@ import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContr
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchUserOpenPositions } from 'utils/queryConnector';
+import {
+    refetchBalances,
+    refetchUserNotifications,
+    refetchUserOpenPositions,
+    refetchUserProfileQueries,
+} from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance } from 'utils/network';
@@ -213,10 +218,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 );
 
                 refetchBalances(walletAddress, networkId);
-                isRangedMarket
-                    ? refetchRangedAmmData(walletAddress, position.market, networkId)
-                    : refetchAmmData(walletAddress, position.market);
+                refetchUserNotifications(walletAddress, networkId);
                 refetchUserOpenPositions(walletAddress, networkId);
+                refetchUserProfileQueries(walletAddress, networkId);
 
                 setIsSubmitting(false);
 
@@ -262,7 +266,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                         )
                     );
                     refetchBalances(walletAddress, networkId);
+                    refetchUserNotifications(walletAddress, networkId);
                     refetchUserOpenPositions(walletAddress, networkId);
+                    refetchUserProfileQueries(walletAddress, networkId);
                     setIsSubmitting(false);
                 }
             } catch (e) {
