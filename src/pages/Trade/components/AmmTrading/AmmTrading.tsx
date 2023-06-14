@@ -597,14 +597,14 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     };
 
     const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+        }
         if (!market.address) {
             return <Button disabled={true}>{t('markets.amm-trading.select-price')}</Button>;
         }
         if (isAmmTradingDisabled) {
             return <Button disabled={true}>{t('markets.amm-disabled')}</Button>;
-        }
-        if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (outOfLiquidity) {
             return <Button disabled={true}>{t(`common.errors.out-of-liquidity`)}</Button>;
