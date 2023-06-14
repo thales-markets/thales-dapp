@@ -1,6 +1,6 @@
-import { ZERO_ADDRESS } from '@1inch/limit-order-protocol';
 import { BigNumber, ethers } from 'ethers';
 import { OptionSide, RangedMarketPositionType } from 'types/options';
+import { ZERO_ADDRESS } from '../constants/network';
 
 export const getQuoteFromAMM = (
     isNonDefaultStable: boolean,
@@ -82,7 +82,7 @@ export const prepareTransactionForAMM = async (
     parsedTotal: BigNumber,
     parsedSlippage: BigNumber,
     sellToken: string | undefined,
-    referral: string,
+    referral: string | null,
     providerOptions:
         | {
               gasLimit: number | null;
