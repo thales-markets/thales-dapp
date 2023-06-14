@@ -609,7 +609,7 @@
                 "staked-balance": "My staked LP tokens balance",
                 "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
                 "lp-tokens": "LP tokens",
-                "tvl": "Total value locked<0/>",
+                "tvl": "Total value locked (tvl)",
                 "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
                 "share": "My staked share",
                 "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."

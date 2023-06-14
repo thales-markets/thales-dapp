@@ -263,7 +263,7 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            <Trans i18nKey="thales-token.lp-staking.info.tvl" components={[isMobile ? '' : ' (tvl)']} />
+                            <Trans i18nKey="thales-token.lp-staking.info.tvl" />
                         </SectionLabelContent>
                         <Tooltip overlay={t('thales-token.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>
