@@ -205,7 +205,7 @@ const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props
 const BalanceContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
-    bottom: 41px;
+    bottom: 40px;
     font-weight: normal;
     font-size: 13px;
     line-height: 15px;
