@@ -28,6 +28,8 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import StakingSteps from './components/StakingSteps/StakingSteps';
+import StakingOverview from './components/StakingOverview/StakingOverview';
+import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 
 const RewardsV2: React.FC = () => {
     const { t } = useTranslation();
@@ -262,6 +264,8 @@ const RewardsV2: React.FC = () => {
                 </Div>
             </Header>
             <StakingSteps />
+            <StakingOverview />
+            <PointsBreakdown />
         </Wrapper>
     );
 };

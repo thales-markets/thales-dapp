@@ -556,6 +556,29 @@
                     "title-5": "Total score",
                     "content-5": "Finally, your total user volume (Trading, AMM and Vaults volume) is multiplied with Thales multiplier. Thales multiplier can be value from 1 till 5, where more you stake the higher Thales multiplier is. It is calculated like 1 + 4 x User Thales Staked / Biggest Thales Staker"
                 },
+                "overview": {
+                    "title": "Overview for this round",
+                    "your-points": "Your current total points",
+                    "total-points": "Total global points",
+                    "bonus-rewards": "Your bonus rewards",
+                    "leaderboard-rank": "Your leaderboard rank"
+                },
+                "points": {
+                    "your-points": "Your points breakdown",
+                    "your-multiplier": "Your staked Thales multiplier",
+                    "trading": "Trading",
+                    "amm-lp": "AMM LP",
+                    "vaults": "Vaults",
+                    "total-volume": "Total volume",
+                    "total-amm": "Total AMM LP balances",
+                    "total-vaults": "Total vaults balances",
+                    "trading-multiplier": "Trading multiplier",
+                    "points": "Points",
+                    "your-thales": "Your Thales staked",
+                    "divider": "Staking divider",
+                    "your-current-points": "YOUR CURRENT POINTS"
+                },
+
                 "base-label": "Thales staking base rewards"
             },
             "vesting": {

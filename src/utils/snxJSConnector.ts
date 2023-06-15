@@ -21,6 +21,7 @@ import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
+import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -49,6 +50,7 @@ type SnxJSConnector = {
     taleOfThalesNFTContract?: ethers.Contract;
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
+    stakingBonusRewardsManager?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -98,6 +100,7 @@ const snxJSConnector: SnxJSConnector = {
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
+        this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
     },
 };
 
