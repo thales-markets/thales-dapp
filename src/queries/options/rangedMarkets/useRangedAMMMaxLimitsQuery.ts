@@ -51,17 +51,17 @@ const useRangedAMMMaxLimitsQuery = (
                 },
             };
 
-            const { ammContract, binaryOptionsMarketDataContract } = snxJSConnector;
-            if (ammContract && binaryOptionsMarketDataContract) {
+            const { rangedMarketAMMContract, binaryOptionsMarketDataContract } = snxJSConnector;
+            if (rangedMarketAMMContract && binaryOptionsMarketDataContract) {
                 const rangedAmmMarketData = await binaryOptionsMarketDataContract.getRangedAmmMarketData(marketAddress);
 
                 const [maxBuyInPrice, maxBuyOutPrice] = await Promise.all([
-                    ammContract.buyFromAmmQuote(
+                    rangedMarketAMMContract.buyFromAmmQuote(
                         marketAddress,
                         RANGE_SIDE['in'],
                         (rangedAmmMarketData.inBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
                     ),
-                    ammContract.buyFromAmmQuote(
+                    rangedMarketAMMContract.buyFromAmmQuote(
                         marketAddress,
                         RANGE_SIDE['out'],
                         (rangedAmmMarketData.outBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
