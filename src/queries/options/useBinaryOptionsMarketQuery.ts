@@ -26,9 +26,6 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 const { phase, timeRemaining } = getPhaseAndEndDate(maturityDate, expiryDate);
 
                 const currencyKey = parseBytes32String(oracleDetails.key);
-                const IV = bigNumberFormatter(
-                    await snxJSConnector.ammContract?.impliedVolatilityPerAsset(oracleDetails.key)
-                );
 
                 return {
                     isResolved: resolution.resolved,
@@ -58,7 +55,6 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                     },
                     longAddress: options.up,
                     shortAddress: options.down,
-                    IV,
                 } as OptionsMarketInfo;
             } catch (e) {
                 console.log(e);
