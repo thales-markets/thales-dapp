@@ -344,6 +344,20 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                     <ResultsContainer>
                         <Label>{t('markets.user-positions.results')}</Label>
                         <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
+                        <Tooltip
+                            overlay={
+                                <Trans
+                                    i18nKey={t('common.no-liquidity-tooltip')}
+                                    components={[
+                                        <span key="1">
+                                            <UsingAmmLink key="2" />
+                                        </span>,
+                                    ]}
+                                />
+                            }
+                            iconFontSize={12}
+                            marginLeft={1}
+                        />
                     </ResultsContainer>
                 </>
             );
