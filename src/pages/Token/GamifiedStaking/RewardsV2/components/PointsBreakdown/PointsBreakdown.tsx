@@ -34,7 +34,10 @@ const PointsBreakdown: React.FC = () => {
 
     return (
         <Container>
-            <FlexDiv></FlexDiv>
+            <FlexDiv>
+                <Title>{t('thales-token.gamified-staking.rewards.points.your-points')}</Title>
+                <Title>{t('thales-token.gamified-staking.rewards.points.your-multiplier')}</Title>
+            </FlexDiv>
             <FlexDiv>
                 <ColumnFlex>
                     <Row>
@@ -152,6 +155,7 @@ const FlexDiv = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+    justify-content: space-between;
 `;
 
 const ColumnFlex = styled.div`
@@ -260,6 +264,15 @@ const TotalPoints = styled.div`
     height: 30px;
     border-radius: 8px;
     margin-top: 8px;
+`;
+
+const Title = styled.p`
+    font-weight: 400;
+    font-size: 18px;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-bottom: 10px;
+    margin-top: 20px;
+    text-transform: capitalize;
 `;
 
 export default PointsBreakdown;
