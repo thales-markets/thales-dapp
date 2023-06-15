@@ -232,11 +232,7 @@ const Stake: React.FC = () => {
                             currencyKey: THALES_CURRENCY,
                         })}
                         balance={
-                            isWalletConnected
-                                ? `${t('thales-token.gamified-staking.staking.stake.balance')}: ${formatCurrency(
-                                      thalesBalance
-                                  )}`
-                                : undefined
+                            isWalletConnected ? `${t('common.balance')}: ${formatCurrency(thalesBalance)}` : undefined
                         }
                         isBalanceLoading={thalesBalanceQuery.isLoading}
                     />

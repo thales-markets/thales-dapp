@@ -3,13 +3,14 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, RANGE_SIDE } from 'constants/options';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 export type RangeAmmMaxLimits = {
     in: {
         maxBuy: number;
         maxSell: number;
         buyPrice: number;
+        maxBuyPrice: number;
         sellPrice: number;
         priceImpact: number;
     };
@@ -17,6 +18,7 @@ export type RangeAmmMaxLimits = {
         maxBuy: number;
         maxSell: number;
         buyPrice: number;
+        maxBuyPrice: number;
         sellPrice: number;
         priceImpact: number;
     };
@@ -35,6 +37,7 @@ const useRangedAMMMaxLimitsQuery = (
                     maxBuy: 0,
                     maxSell: 0,
                     buyPrice: 0,
+                    maxBuyPrice: 0,
                     sellPrice: 0,
                     priceImpact: 0,
                 },
@@ -42,6 +45,7 @@ const useRangedAMMMaxLimitsQuery = (
                     maxBuy: 0,
                     maxSell: 0,
                     buyPrice: 0,
+                    maxBuyPrice: 0,
                     sellPrice: 0,
                     priceImpact: 0,
                 },
@@ -73,6 +77,18 @@ const useRangedAMMMaxLimitsQuery = (
                     ammContract.getPriceImpact(marketAddress, RANGE_SIDE['in']),
                     ammContract.getPriceImpact(marketAddress, RANGE_SIDE['out']),
                 ]);
+                const [maxBuyInPrice, maxBuyOutPrice] = await Promise.all([
+                    ammContract.buyFromAmmQuote(
+                        marketAddress,
+                        RANGE_SIDE['in'],
+                        (maxBuyIn as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                    ),
+                    ammContract.buyFromAmmQuote(
+                        marketAddress,
+                        RANGE_SIDE['out'],
+                        (maxBuyOut as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                    ),
+                ]);
 
                 ammMaxLimits.in.maxBuy =
                     stableCoinFormatter(buyInPrice, networkId) !== 0
@@ -91,7 +107,9 @@ const useRangedAMMMaxLimitsQuery = (
                         ? bigNumberFormatter(maxSellOut) * AMM_MAX_BUFFER_PERCENTAGE
                         : 0;
                 ammMaxLimits.in.buyPrice = stableCoinFormatter(buyInPrice, networkId);
+                ammMaxLimits.in.maxBuyPrice = stableCoinFormatter(maxBuyInPrice, networkId);
                 ammMaxLimits.out.buyPrice = stableCoinFormatter(buyOutPrice, networkId);
+                ammMaxLimits.out.maxBuyPrice = stableCoinFormatter(maxBuyOutPrice, networkId);
                 ammMaxLimits.in.sellPrice = stableCoinFormatter(sellInPrice, networkId);
                 ammMaxLimits.out.sellPrice = stableCoinFormatter(sellOutPrice, networkId);
                 ammMaxLimits.in.priceImpact = bigNumberFormatter(inPriceImpact);

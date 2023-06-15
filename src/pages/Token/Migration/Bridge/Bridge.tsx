@@ -200,10 +200,7 @@ const Bridge: React.FC = () => {
                     validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                     balance={
                         isWalletConnected
-                            ? `${t('thales-token.gamified-staking.staking.stake.balance')}: ${formatCurrencyWithKey(
-                                  THALES_CURRENCY,
-                                  opThalesBalance
-                              )}`
+                            ? `${t('common.balance')}: ${formatCurrencyWithKey(THALES_CURRENCY, opThalesBalance)}`
                             : undefined
                     }
                     isBalanceLoading={opThalesBalanceQuery.isLoading}

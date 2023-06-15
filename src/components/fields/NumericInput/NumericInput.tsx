@@ -23,9 +23,9 @@ type NumericInputProps = {
     currencyLabel?: string;
     tooltip?: string;
     onMaxButton?: any;
-    string?: number;
     balance?: string;
     isBalanceLoading?: boolean;
+    info?: string;
     inputPadding?: string;
     margin?: string;
     inputFontSize?: string;
@@ -52,6 +52,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
     onMaxButton,
     balance,
     isBalanceLoading,
+    info,
     inputPadding,
     margin,
     inputFontSize,
@@ -90,6 +91,11 @@ const NumericInput: React.FC<NumericInputProps> = ({
                         <StyledBalanceIcon />
                         {isBalanceLoading ? <InlineLoader /> : balance}
                     </BalanceContainer>
+                )}
+                {info && (
+                    <InfoWrapper>
+                        <InfoText>{info}</InfoText>
+                    </InfoWrapper>
                 )}
                 <StyledInput
                     {...rest}
@@ -199,7 +205,7 @@ const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props
 const BalanceContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
-    bottom: 40px;
+    bottom: 41px;
     font-weight: normal;
     font-size: 13px;
     line-height: 15px;
@@ -223,6 +229,25 @@ const CurrencyComponentContainer = styled(FlexDivCentered)<{ hasSeparator?: bool
         opacity: 0.4;
         cursor: default;
     }
+`;
+
+const InfoWrapper = styled.div`
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    background: ${(props) => props.theme.background.primary};
+    padding: 0 5px;
+`;
+
+const InfoText = styled.span`
+    font-size: 13px;
+    line-height: 16px;
+    color: ${(props) => props.theme.textColor.secondary};
+    text-transform: uppercase;
 `;
 
 export default NumericInput;

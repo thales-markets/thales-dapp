@@ -296,7 +296,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                             onMaxButton={() => {
                                 setAmount(Number(balance).toFixed(5));
                             }}
-                            balance={`${t('common.swap.balance')}: ${Number(balance).toFixed(4)}`}
+                            balance={`${t('common.balance')}: ${Number(balance).toFixed(4)}`}
                         />
                     </SectionWrapper>
                     <SectionWrapper>

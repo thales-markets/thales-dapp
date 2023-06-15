@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 export type AmmMaxLimits = {
     maxBuyLong: number;
@@ -13,6 +13,8 @@ export type AmmMaxLimits = {
     isMarketInAmmTrading: boolean;
     buyLongPrice: number;
     buyShortPrice: number;
+    maxBuyLongPrice: number;
+    maxBuyShortPrice: number;
     sellLongPrice: number;
     sellShortPrice: number;
     buyLongPriceImpact: number;
@@ -33,6 +35,8 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                 isMarketInAmmTrading: false,
                 buyLongPrice: 0,
                 buyShortPrice: 0,
+                maxBuyLongPrice: 0,
+                maxBuyShortPrice: 0,
                 sellLongPrice: 0,
                 sellShortPrice: 0,
                 buyLongPriceImpact: 0,
@@ -72,6 +76,18 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                     ammContract.sellPriceImpact(marketAddress, SIDE['long'], parsedAmount),
                     ammContract.sellPriceImpact(marketAddress, SIDE['short'], parsedAmount),
                 ]);
+                const [maxBuyLongPrice, maxBuyShortPrice] = await Promise.all([
+                    ammContract.buyFromAmmQuote(
+                        marketAddress,
+                        SIDE['long'],
+                        (maxBuyLong as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                    ),
+                    ammContract.buyFromAmmQuote(
+                        marketAddress,
+                        SIDE['short'],
+                        (maxBuyShort as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                    ),
+                ]);
 
                 ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong) * AMM_MAX_BUFFER_PERCENTAGE;
                 ammMaxLimits.maxSellLong = bigNumberFormatter(maxSellLong) * AMM_MAX_BUFFER_PERCENTAGE;
@@ -79,6 +95,8 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                 ammMaxLimits.maxSellShort = bigNumberFormatter(maxSellShort) * AMM_MAX_BUFFER_PERCENTAGE;
                 ammMaxLimits.buyLongPrice = stableCoinFormatter(buyLongPrice, networkId);
                 ammMaxLimits.buyShortPrice = stableCoinFormatter(buyShortPrice, networkId);
+                ammMaxLimits.maxBuyLongPrice = stableCoinFormatter(maxBuyLongPrice, networkId);
+                ammMaxLimits.maxBuyShortPrice = stableCoinFormatter(maxBuyShortPrice, networkId);
                 ammMaxLimits.sellLongPrice = stableCoinFormatter(sellLongPrice, networkId);
                 ammMaxLimits.sellShortPrice = stableCoinFormatter(sellShortPrice, networkId);
                 ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(buyLongPriceImpact) - MIN_SCEW_IMPACT;

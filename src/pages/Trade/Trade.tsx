@@ -170,6 +170,8 @@ const TradePage: React.FC = () => {
                                 positionType: Positions.UP,
                             }
                         }
+                        showBuyLiquidity
+                        showWalletBalance
                     />
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>

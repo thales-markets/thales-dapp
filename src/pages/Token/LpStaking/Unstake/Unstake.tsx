@@ -125,13 +125,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
                         validationMessage={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
-                        balance={
-                            isWalletConnected
-                                ? `${t('thales-token.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
-                                      staked
-                                  )}`
-                                : undefined
-                        }
+                        balance={isWalletConnected ? `${t('common.balance')}: ${formatCurrency(staked)}` : undefined}
                     />
                 </InputContainer>
                 <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>

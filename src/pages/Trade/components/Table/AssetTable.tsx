@@ -15,7 +15,6 @@ type TableProps = {
     setMarket: React.Dispatch<React.SetStateAction<MarketInfo | RangedMarketPerPosition | undefined>>;
     position: Positions;
     isLoading: boolean;
-    // highlightMarkets: Set<string>;
 };
 
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoading }) => {
@@ -25,19 +24,19 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
-    const [firstMarketAddress, setFirstMarketAddress] = useState(markets.length ? markets[0].address : '');
-
-    // queries
+    const [firstPositionMarketAddress, setFirstPositionMarketAddress] = useState(
+        markets.length ? position + markets[0].address : ''
+    );
 
     // hooks
     useEffect(() => {
-        const marketAddress = markets.length ? markets[0].address : '';
-        if (firstMarketAddress !== marketAddress) {
+        const positionMarketAddress = markets.length ? position + markets[0].address : '';
+        if (firstPositionMarketAddress !== positionMarketAddress) {
             setRowIndex(undefined);
             setMarket(undefined);
         }
-        setFirstMarketAddress(marketAddress);
-    }, [markets, setMarket, firstMarketAddress]);
+        setFirstPositionMarketAddress(positionMarketAddress);
+    }, [markets, setMarket, firstPositionMarketAddress]);
 
     const noMarkets = markets.length === 0;
 
