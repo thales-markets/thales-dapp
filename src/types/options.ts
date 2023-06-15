@@ -134,12 +134,6 @@ export type RangedMarketData = {
     phase: Phase;
     timeRemaining: number;
     result: RangedMarketPositionType;
-    availablePositions: {
-        toBuyIn: number;
-        toBuyOut: number;
-        toSellIn: number;
-        toSellOut: number;
-    };
     inAddress: string;
     outAddress: string;
     leftMarketAddress: string;
