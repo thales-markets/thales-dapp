@@ -65,7 +65,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             }}
                             src={
                                 selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
-                                selectedSection === TokenTabSectionIdEnum.STAKING
+                                (selectedSection === TokenTabSectionIdEnum.STAKING || selectedSection === undefined)
                                     ? stakingActiveIcon
                                     : stakingIcon
                             }

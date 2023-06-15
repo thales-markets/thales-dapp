@@ -49,8 +49,8 @@ const LpStaking: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const stakeOptions = {
-        stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
-        unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },
+        stake: { value: 'stake', label: t('thales-token.gamified-staking.staking.stake.name') },
+        unstake: { value: 'unstake', label: t('thales-token.gamified-staking.staking.unstake.name') },
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -87,9 +87,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper columnsSpan={1} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.apr.total')}
+                            {t('thales-token.lp-staking.apr.total')}
                         </SectionLabelContent>
-                        <Tooltip overlay={t('options.earn.lp-staking.apr.total-tooltip')} />
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.total-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO} colored={true}>
@@ -101,14 +101,14 @@ const LpStaking: React.FC = () => {
 
                 <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.INFO}>
                     <SectionDetails positionUp={true}>
-                        <SectionDetailsLabel>{t('options.earn.lp-staking.apr.thales')}</SectionDetailsLabel>
-                        <Tooltip overlay={t('options.earn.lp-staking.apr.thales-tooltip')} />
+                        <SectionDetailsLabel>{t('thales-token.lp-staking.apr.thales')}</SectionDetailsLabel>
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.thales-tooltip')} />
                         <SectionDetailsValue>{gelatoQuery.isLoading ? '0%' : gelatoData?.apr}</SectionDetailsValue>
                     </SectionDetails>
                     <Line margin={'0 15px'} />
                     <SectionDetails positionUp={false}>
-                        <SectionDetailsLabel>{t('options.earn.lp-staking.apr.op')}</SectionDetailsLabel>
-                        <Tooltip overlay={t('options.earn.lp-staking.apr.op-tooltip')} />
+                        <SectionDetailsLabel>{t('thales-token.lp-staking.apr.op')}</SectionDetailsLabel>
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.op-tooltip')} />
                         <SectionDetailsValue>
                             {gelatoQuery.isLoading ? '0%' : gelatoData?.secondApr}
                         </SectionDetailsValue>
@@ -132,7 +132,7 @@ const LpStaking: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    toast.update(id, getSuccessToastOptions(t('options.earn.lp-staking.claim.claimed'), id));
+                    toast.update(id, getSuccessToastOptions(t('thales-token.lp-staking.claim.claimed'), id));
                     refetchTokenQueries(walletAddress, networkId);
                     refetchLPStakingQueries(walletAddress, networkId);
                     setIsClaiming(false);
@@ -155,8 +155,8 @@ const LpStaking: React.FC = () => {
         return (
             <Button onClick={handleClaimStakingRewards} disabled={buttonDisabled}>
                 {isClaiming
-                    ? t('options.earn.lp-staking.claim.claiming-rewards') + ` ...`
-                    : t('options.earn.lp-staking.claim.claim-rewards')}
+                    ? t('thales-token.lp-staking.claim.claiming-rewards') + ` ...`
+                    : t('thales-token.lp-staking.claim.claim-rewards')}
             </Button>
         );
     };
@@ -168,7 +168,7 @@ const LpStaking: React.FC = () => {
                     <SectionWrapper columnsOnMobile={2} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                         <SectionContentWrapper>
                             <SectionLabelContent type={SectionType.CLAIM_INFO}>
-                                {t('options.earn.lp-staking.claim.title')}
+                                {t('thales-token.lp-staking.claim.title')}
                             </SectionLabelContent>
                         </SectionContentWrapper>
                     </SectionWrapper>
@@ -201,7 +201,7 @@ const LpStaking: React.FC = () => {
                     <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.CLAIM}>
                         <SectionLabel type={SectionType.CLAIM}>
                             <SectionLabelContent type={SectionType.CLAIM}>
-                                {t('options.earn.lp-staking.claim.total-label')}
+                                {t('thales-token.lp-staking.claim.total-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.CLAIM}>
@@ -233,9 +233,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper background={false} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.info.staked-balance')}
+                            {t('thales-token.lp-staking.info.staked-balance')}
                         </SectionLabelContent>
-                        <Tooltip overlay={t('options.earn.lp-staking.info.staked-balance-tooltip')} />
+                        <Tooltip overlay={t('thales-token.lp-staking.info.staked-balance-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -254,7 +254,7 @@ const LpStaking: React.FC = () => {
                 <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                     <SectionContentWrapper>
                         <SectionLabelContent type={SectionType.CLAIM_INFO}>
-                            {t('options.earn.lp-staking.claim.title')}
+                            {t('thales-token.lp-staking.claim.title')}
                         </SectionLabelContent>
                     </SectionContentWrapper>
                 </SectionWrapper>
@@ -263,9 +263,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            <Trans i18nKey="options.earn.lp-staking.info.tvl" components={[isMobile ? '' : ' (tvl)']} />
+                            <Trans i18nKey="thales-token.lp-staking.info.tvl" />
                         </SectionLabelContent>
-                        <Tooltip overlay={t('options.earn.lp-staking.info.tvl-tooltip')} />
+                        <Tooltip overlay={t('thales-token.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -278,9 +278,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.info.share')}
+                            {t('thales-token.lp-staking.info.share')}
                         </SectionLabelContent>
-                        <Tooltip overlay={t('options.earn.lp-staking.info.share-tooltip')} />
+                        <Tooltip overlay={t('thales-token.lp-staking.info.share-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>

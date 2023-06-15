@@ -28,7 +28,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Image src={props.isWalletAccessEnabled ? stateComplete : stateCurrent}></Image>
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label style={{ left: -36 }}>
-                    {t('options.create-market.progress-tracker.approving', {
+                    {t('create-market.progress-tracker.approving', {
                         currencyKey: getStableCoinForNetwork(networkId),
                     })}
                 </Label>
@@ -40,11 +40,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     }
                 ></Image>
                 <Line className={props.isMarketCreated ? 'fill' : ''}></Line>
-                <Label>{t('options.create-market.progress-tracker.creating-market')}</Label>
+                <Label>{t('create-market.progress-tracker.creating-market')}</Label>
             </ProgressTrackerStep>
             <ProgressTrackerStep style={{ flex: 0 }}>
                 <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
-                <Label style={{ left: -20 }}>{t('options.create-market.progress-tracker.finished')}</Label>
+                <Label style={{ left: -20 }}>{t('create-market.progress-tracker.finished')}</Label>
             </ProgressTrackerStep>
         </Wrapper>
     );

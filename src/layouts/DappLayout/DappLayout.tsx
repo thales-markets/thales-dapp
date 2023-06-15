@@ -3,7 +3,7 @@ import axios from 'axios';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -14,8 +14,10 @@ import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
-
-const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
+import DappHeader from './DappHeader';
+import DappFooter from './DappFooter';
+import DappSidebar from './DappSidebar';
+import { ScreenSizeBreakpoint } from '../../enums/ui';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -80,10 +82,13 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     return (
         <Background id="main-content">
-            <Suspense fallback={<></>}>
+            <Wrapper>
+                <DappSidebar />
                 <DappHeader />
-            </Suspense>
-            <Wrapper>{children}</Wrapper>
+                {children}
+                <DappFooter />
+            </Wrapper>
+
             <StyledToastContainer />
         </Background>
     );
@@ -113,15 +118,13 @@ const Wrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 20px 20px 0px 92px;
-    @media (max-width: 1024px) {
-        padding: 0 20px;
-        padding-bottom: 90px !important;
-    }
-    @media (max-width: 568px) {
-        padding: 0 10px;
+    padding: 30px 20px 0px 92px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 10px 10px 0 10px;
+        padding-bottom: 50px !important;
     }
     max-width: 1440px;
+    min-height: 100vh;
 `;
 
 const StyledToastContainer = styled(ToastContainer)`

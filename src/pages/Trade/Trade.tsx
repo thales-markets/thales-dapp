@@ -1,4 +1,3 @@
-import Footer from 'components/Footer';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -23,6 +22,7 @@ import OpenPositions from './components/OpenPositions';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 
 const TradePage: React.FC = () => {
     const { t } = useTranslation();
@@ -35,7 +35,7 @@ const TradePage: React.FC = () => {
     const isMainnet = getIsMainnet(networkId);
 
     // states
-    const [currencyKey, setCurrencyKey] = useState('ETH');
+    const [currencyKey, setCurrencyKey] = useState(CRYPTO_CURRENCY_MAP.BTC);
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
     const [positionType, setPositionType] = useState(Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
@@ -79,7 +79,7 @@ const TradePage: React.FC = () => {
         }
     }, [allDates]);
 
-    useEffect(() => setCurrencyKey('ETH'), [networkId]);
+    useEffect(() => setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC), [networkId]);
 
     const getSelectedPrice = () => {
         if (market) {
@@ -113,7 +113,7 @@ const TradePage: React.FC = () => {
                         <LeftSide>
                             <DropdownsWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-asset')}</Info>
+                                    <Info>{t('markets.steps.choose-asset')}</Info>
                                     {allAssets && (
                                         <AssetDropdown
                                             asset={currencyKey}
@@ -123,7 +123,7 @@ const TradePage: React.FC = () => {
                                     )}
                                 </PositionedWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-date')}</Info>
+                                    <Info>{t('markets.steps.choose-date')}</Info>
                                     <DatesDropdown
                                         date={maturityDate}
                                         setDate={setMaturityDate}
@@ -140,7 +140,7 @@ const TradePage: React.FC = () => {
                         </LeftSide>
                         <RightSide>
                             <PositionedWrapper>
-                                <Info>{t('options.trade.steps.choose-direction')}</Info>
+                                <Info>{t('markets.steps.choose-direction')}</Info>
                                 <RadioButtons onChange={setPositionType} selected={positionType} />
                             </PositionedWrapper>
 
@@ -174,7 +174,6 @@ const TradePage: React.FC = () => {
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
             )}
-            <Footer />
         </>
     );
 };
@@ -233,7 +232,7 @@ const RightSide = styled.div`
 
 const Info = styled(FlexDivColumnCentered)`
     font-weight: 700;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 100%;
     text-transform: uppercase;
     margin-bottom: 5px;

@@ -93,7 +93,7 @@ const RetroRewards: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    toast.update(id, getSuccessToastOptions(t('options.earn.snx-stakers.confirmation-message'), id));
+                    toast.update(id, getSuccessToastOptions(t('thales-token.snx-stakers.confirmation-message'), id));
                     refetchVestingEscrow(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({
@@ -120,16 +120,16 @@ const RetroRewards: React.FC = () => {
         }
         return [
             {
-                name: t('options.earn.snx-stakers.unlocked'),
+                name: t('thales-token.snx-stakers.unlocked'),
                 value: vestingInfo.unlocked,
                 color: theme.textColor.quaternary,
             },
             {
-                name: t('options.earn.snx-stakers.claimed'),
+                name: t('thales-token.snx-stakers.claimed'),
                 value: vestingInfo.totalClaimed,
                 color: theme.warning.textColor.primary,
             },
-            { name: t('options.earn.snx-stakers.locked'), value: locked, color: theme.error.textColor.primary },
+            { name: t('thales-token.snx-stakers.locked'), value: locked, color: theme.error.textColor.primary },
         ];
     }, [vestingInfo, locked, selectedLanguage]);
 
@@ -153,11 +153,11 @@ const RetroRewards: React.FC = () => {
         >
             <SectionHeader>
                 <div>
-                    {t('options.earn.snx-stakers.retro-rewards.title')}
+                    {t('thales-token.snx-stakers.retro-rewards.title')}
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey="options.earn.snx-stakers.retro-rewards.info-tooltip"
+                                i18nKey="thales-token.snx-stakers.retro-rewards.info-tooltip"
                                 components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
@@ -171,7 +171,7 @@ const RetroRewards: React.FC = () => {
                 <StyledSectionContentContainer>
                     <PieChartContainer>
                         <InfoDiv>
-                            <InfoLabel>{t('options.earn.snx-stakers.start-time')}</InfoLabel>
+                            <InfoLabel>{t('thales-token.snx-stakers.start-time')}</InfoLabel>
                             <InfoContent>
                                 {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
                             </InfoContent>
@@ -198,7 +198,7 @@ const RetroRewards: React.FC = () => {
                             )}
                         </PieChart>
                         <InfoDiv style={{ alignItems: 'flex-end' }}>
-                            <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>
+                            <InfoLabel>{t('thales-token.snx-stakers.end-time')}</InfoLabel>
                             <InfoContent style={{ textAlign: 'right' }}>
                                 {vestingInfo.endTime > 0 && formatShortDateWithTime(vestingInfo.endTime)}
                             </InfoContent>
@@ -206,7 +206,7 @@ const RetroRewards: React.FC = () => {
                         <PieChartCenterDiv>
                             <FlexDivColumnCentered>
                                 <PieChartCenterText disabled={!vestingInfo.initialLocked}>
-                                    {t('options.earn.snx-stakers.initial-locked')}
+                                    {t('thales-token.snx-stakers.initial-locked')}
                                 </PieChartCenterText>
                                 <GradientText
                                     gradient={`${
@@ -230,38 +230,38 @@ const RetroRewards: React.FC = () => {
                             </FlexDivColumnCentered>
                         </PieChartCenterDiv>
                         <LearnMore top="61%" style={{ fontSize: '13px' }}>
-                            <Tooltip overlay={t('options.earn.snx-stakers.retro-rewards.learn-more-text')}>
-                                <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
+                            <Tooltip overlay={t('thales-token.snx-stakers.retro-rewards.learn-more-text')}>
+                                <span>{t('thales-token.snx-stakers.retro-rewards.learn-more')}</span>
                             </Tooltip>
                         </LearnMore>
                     </PieChartContainer>
                     <AmountsContainer>
                         <div>
                             <Dot backgroundColor={theme.textColor.quaternary} />
-                            {t('options.earn.snx-stakers.unlocked')}:{' '}
+                            {t('thales-token.snx-stakers.unlocked')}:{' '}
                             <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</Text>
                         </div>
                         <div>
                             <Dot backgroundColor={theme.warning.textColor.primary} />
-                            {t('options.earn.snx-stakers.claimed')}:{' '}
+                            {t('thales-token.snx-stakers.claimed')}:{' '}
                             <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</Text>
                         </div>
                         <div>
                             <Dot backgroundColor={theme.error.textColor.primary} />
-                            {t('options.earn.snx-stakers.locked')}:{' '}
+                            {t('thales-token.snx-stakers.locked')}:{' '}
                             <Text>{formatCurrencyWithKey(THALES_CURRENCY, locked)}</Text>
                         </div>
                     </AmountsContainer>
                     <ButtonContainerBottom>
                         <Button disabled={!isClaimAvailable || isClaiming} onClick={handleClaimRetroRewards}>
                             {isClaiming
-                                ? t('options.earn.snx-stakers.claiming-unlocked') +
+                                ? t('thales-token.snx-stakers.claiming-unlocked') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
-                                : t('options.earn.snx-stakers.claim') +
+                                : t('thales-token.snx-stakers.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
                         </Button>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
-                            {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
+                            {t('thales-token.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>
                     </ButtonContainerBottom>
                 </StyledSectionContentContainer>

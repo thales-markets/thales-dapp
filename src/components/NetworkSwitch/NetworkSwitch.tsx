@@ -49,7 +49,7 @@ const NetworkSwitch: React.FC = () => {
             <Container>
                 <OptimismButton onClick={switchOrAddOptimismNetwork}>
                     <InnerButton>
-                        <FlexDiv>{t('optimism.switch-to-l2')}</FlexDiv>
+                        <FlexDiv>{t('common.switch-to-l2')}</FlexDiv>
                     </InnerButton>
                 </OptimismButton>
             </Container>

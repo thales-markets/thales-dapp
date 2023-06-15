@@ -37,6 +37,17 @@ export const SectionWrapper = styled(FlexDivColumn)`
     margin: 10px;
 `;
 
+export const LoaderContainer = styled.div`
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 10px;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+`;
+
 export const defaultButtonProps = {
     margin: '10px',
 };

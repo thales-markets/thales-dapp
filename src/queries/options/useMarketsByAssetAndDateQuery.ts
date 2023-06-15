@@ -7,7 +7,7 @@ import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
-import { truncDecimals } from 'utils/formatters/number';
+import { truncToDecimals } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
@@ -49,7 +49,7 @@ const useMarketsByAssetAndDateQuery = (
                         currencyKey: asset,
                         address: market.market,
                         liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                        price: Number(truncDecimals(price, 2)),
+                        price: Number(truncToDecimals(price)),
                         roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
                         strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
                         discount: Math.floor(roi - newRoi),
@@ -113,7 +113,7 @@ const useMarketsByAssetAndDateQuery = (
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: Number(truncDecimals(price, 2)),
+                            price: Number(truncToDecimals(price)),
                             roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),

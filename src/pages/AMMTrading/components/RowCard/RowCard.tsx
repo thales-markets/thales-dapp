@@ -39,6 +39,7 @@ import {
     UsingAmmLink,
     Value,
 } from './styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 type RowCardProps = {
     isRangedMarket: boolean;
@@ -150,29 +151,14 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
               );
     }, [market.currentPrice, (market as OptionsMarketInfo).strikePrice, market.phase, isRangedMarket]);
 
-    const getColorPerPosition = (position: Positions) => {
-        switch (position) {
-            case Positions.UP:
-                return theme.positionColor.up;
-            case Positions.DOWN:
-                return theme.positionColor.down;
-            case Positions.IN:
-                return theme.positionColor.in;
-            case Positions.OUT:
-                return theme.positionColor.out;
-            default:
-                return theme.textColor.primary;
-        }
-    };
-
     const getMarketPriceSection = () => (
         <SubContainer>
             <Header>
                 {market?.phase == 'maturity'
-                    ? t('options.market.overview.final-price-label', {
+                    ? t('markets.market.overview.final-price-label', {
                           currencyKey: market.currencyKey,
                       })
-                    : t('options.home.market-card.current-asset-price')}
+                    : t('markets.market.current-price')}
             </Header>
             <Value>
                 {market?.phase == 'maturity'
@@ -192,10 +178,12 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     ) => (
         <Value>
             {positionLeftBalance > 0 && <Value>{formatCurrencyWithPrecision(positionLeftBalance)} </Value>}
-            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft)}>{positionLeft}</Value>}
+            {positionLeftBalance > 0 && <Value color={getColorPerPosition(positionLeft, theme)}>{positionLeft}</Value>}
             {positionLeftBalance > 0 && positionRightBalance > 0 && ' / '}
             {positionRightBalance > 0 && <Value>{formatCurrencyWithPrecision(positionRightBalance)} </Value>}
-            {positionRightBalance > 0 && <Value color={getColorPerPosition(positionRight)}>{positionRight}</Value>}
+            {positionRightBalance > 0 && (
+                <Value color={getColorPerPosition(positionRight, theme)}>{positionRight}</Value>
+            )}
             {isLoading ? '-' : positionLeftBalance == 0 && positionRightBalance == 0 && 'N/A'}
         </Value>
     );
@@ -210,17 +198,17 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {(ammData && positionLeftLiquidity > 0) || (ammData && positionRightLiquidity > 0) ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {ammData ? formatCurrency(positionLeftLiquidity, 0) : '0'}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {ammData ? formatCurrency(positionRightLiquidity, 0) : '0'}
                     </Value>
                 </>
             ) : (
                 <Value color={ammData ? theme.warning.textColor.primary : theme.textColor.primary}>
-                    {ammData ? t('options.home.markets-table.out-of-liquidity') : '-'}
+                    {ammData ? t('markets.market..out-of-liquidity') : '-'}
                 </Value>
             )}
         </Value>
@@ -236,11 +224,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <Value>
             {ammData ? (
                 <>
-                    <Value color={getColorPerPosition(positionLeft)}>
+                    <Value color={getColorPerPosition(positionLeft, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionLeftPrice)}
                     </Value>
                     {' / '}
-                    <Value color={getColorPerPosition(positionRight)}>
+                    <Value color={getColorPerPosition(positionRight, theme)}>
                         {formatCurrencyWithSign(USD_SIGN, positionRightPrice)}
                     </Value>
                 </>
@@ -251,7 +239,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     );
 
     const getResultSectionValue = (positionResult: Positions) => (
-        <Value color={getColorPerPosition(positionResult)}>{positionResult}</Value>
+        <Value color={getColorPerPosition(positionResult, theme)}>{positionResult}</Value>
     );
 
     return (
@@ -276,10 +264,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                 <Value>
                                     {`${(market as OptionsMarketInfo).IV}% IV`}
                                     <Tooltip
-                                        overlay={t('options.home.markets-table.iv-tooltip', {
+                                        overlay={t('markets.market.iv-tooltip', {
                                             percentage: (market as OptionsMarketInfo).IV,
                                         })}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Value>
                             </SubContainer>
@@ -288,7 +277,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                     {isRangedMarket && (
                         <ColumnContainer>
                             <SubContainer>
-                                <Header>{t('options.market.ranged-markets.strike-range')}</Header>
+                                <Header>{t('markets.market.ranged-markets.strike-range')}</Header>
                                 <Value>
                                     {`> ${formatCurrencyWithSign(USD_SIGN, (market as RangedMarketData).leftPrice)}`}
                                     <br />
@@ -300,7 +289,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
 
                     <ColumnContainer>
                         <SubContainer>
-                            <Header>{t('options.market.overview.maturity-date')}</Header>
+                            <Header>{t('markets.market.overview.maturity-date')}</Header>
                             <Value>
                                 <MaturityDate maturityDateUnix={market.maturityDate} showFullCounter={true} />
                             </Value>
@@ -309,7 +298,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                             getMarketPriceSection()
                         ) : (
                             <SubContainer>
-                                <Header>{t('options.home.market-card.strike-price')}</Header>
+                                <Header>{t('markets.market.strike-price')}</Header>
                                 <Value>
                                     {formatCurrencyWithSign(USD_SIGN, (market as OptionsMarketInfo).strikePrice)}
                                 </Value>
@@ -320,9 +309,15 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <ColumnContainer>
                             {getMarketPriceSection()}
                             <SubContainer>
-                                <Header>{t('options.market.overview.price-difference')}</Header>
+                                <Header>{t('markets.market.overview.price-difference')}</Header>
                                 <Value
-                                    color={priceDifference > 0 ? theme.textColor.quaternary : theme.textColor.tertiary}
+                                    color={
+                                        priceDifference > 0
+                                            ? theme.textColor.quaternary
+                                            : priceDifference < 0
+                                            ? theme.textColor.tertiary
+                                            : theme.textColor.primary
+                                    }
                                 >
                                     {priceDifference ? `${priceDifference.toFixed(2)}%` : 'N/A'}
                                 </Value>
@@ -333,8 +328,8 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <SubContainer>
                             <Header>
                                 {market?.phase !== 'maturity'
-                                    ? t('options.market.overview.my-positions')
-                                    : t('options.market.overview.my-position')}
+                                    ? t('markets.market.overview.my-positions')
+                                    : t('markets.market.overview.my-position')}
                             </Header>
                             {getMyPositionsSectionValue(
                                 isRangedMarket ? Positions.IN : Positions.UP,
@@ -347,8 +342,8 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <SubContainer>
                             <Header>
                                 {market?.phase !== 'maturity'
-                                    ? t('options.market.overview.positions-value')
-                                    : t('options.market.overview.position-value')}
+                                    ? t('markets.market.overview.positions-value')
+                                    : t('markets.market.overview.position-value')}
                             </Header>
                             <Value>
                                 <PositionPrice
@@ -379,10 +374,11 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         <ColumnContainer>
                             <SubContainer>
                                 <Header>
-                                    {t('options.market.overview.amm-liquidity')}
+                                    {t('markets.market.overview.amm-liquidity')}
                                     <Tooltip
-                                        overlay={t('options.market.overview.amm-liquidity-tooltip')}
+                                        overlay={t('markets.market.overview.amm-liquidity-tooltip')}
                                         iconFontSize={12}
+                                        top={-1}
                                     />
                                 </Header>
                                 {getLiquiditySectionValue(
@@ -394,7 +390,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                                 )}
                             </SubContainer>
                             <SubContainer>
-                                <Header>{t('options.market.overview.amm-price')}</Header>
+                                <Header>{t('markets.market.overview.amm-price')}</Header>
                                 {getPriceSectionValue(
                                     isRangedMarket ? Positions.IN : Positions.UP,
                                     isRangedMarket ? Positions.OUT : Positions.DOWN,
@@ -408,7 +404,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                     {market?.phase == 'maturity' && (
                         <ColumnContainer>
                             <SubContainer>
-                                <Header>{t('options.market.overview.final-result')}</Header>
+                                <Header>{t('markets.market.overview.final-result')}</Header>
                                 {getResultSectionValue(
                                     isRangedMarket
                                         ? market.result == 'out'
@@ -474,7 +470,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                i18nKey={t('common.no-liquidity-tooltip')}
                                 components={[
                                     <span key="1">
                                         <UsingAmmLink key="2" />
@@ -483,6 +479,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}
@@ -498,7 +495,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                     <Tooltip
                         overlay={
                             <Trans
-                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                i18nKey={t('common.no-liquidity-tooltip')}
                                 components={[
                                     <span key="1">
                                         <UsingAmmLink key="2" />
@@ -507,6 +504,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({
                             />
                         }
                         iconFontSize={12}
+                        top={-1}
                     />
                 </>
             )}

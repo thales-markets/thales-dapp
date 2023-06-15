@@ -6,7 +6,6 @@ import WizardFaq from './components/WizardFaq';
 import WizardVideo from './components/WizardVideo';
 import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { WizardSteps } from 'enums/wizard';
 
@@ -45,7 +44,6 @@ const Wizard: React.FC = () => {
                 />
                 <WizardFaq />
             </Wrapper>
-            <Footer />
         </>
     );
 };

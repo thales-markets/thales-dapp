@@ -125,7 +125,7 @@ const Unstake: React.FC = () => {
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message'),
+                        t('thales-token.gamified-staking.staking.unstake.cooldown-confirmation-message'),
                         id
                     )
                 );
@@ -155,7 +155,7 @@ const Unstake: React.FC = () => {
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message'),
+                        t('thales-token.gamified-staking.staking.unstake.unstake-confirmation-message'),
                         id
                     )
                 );
@@ -203,22 +203,22 @@ const Unstake: React.FC = () => {
                     {unstakingEnded && (
                         <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                             {!isUnstaking
-                                ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
+                                ? `${t('thales-token.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                                       THALES_CURRENCY,
                                       unstakingAmount
                                   )}`
                                 : `${t(
-                                      'options.earn.gamified-staking.staking.unstake.unstaking'
+                                      'thales-token.gamified-staking.staking.unstake.unstaking'
                                   )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}...`}
                         </Button>
                     )}
                     <Button disabled={isCancelUnstakeButtonDisabled} onClick={handleCancelUnstakingThales}>
                         {!isCanceling
-                            ? `${t('options.earn.gamified-staking.staking.unstake.cancel')} ${formatCurrencyWithKey(
+                            ? `${t('thales-token.gamified-staking.staking.unstake.cancel')} ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
                                   unstakingAmount
                               )}`
-                            : `${t('options.earn.gamified-staking.staking.unstake.canceling')} ${formatCurrencyWithKey(
+                            : `${t('thales-token.gamified-staking.staking.unstake.canceling')} ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
                                   unstakingAmount
                               )}...`}
@@ -234,14 +234,14 @@ const Unstake: React.FC = () => {
         }
 
         return (
-            <Tooltip overlay={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip')}>
+            <Tooltip overlay={t('thales-token.gamified-staking.staking.unstake.start-unstaking-tooltip')}>
                 <ButtonWrapperTooltip>
                     <Button disabled={isStartUnstakeButtonDisabled} onClick={handleStartUnstakingThales}>
                         {!isUnstaking
                             ? `${t(
-                                  'options.earn.gamified-staking.staking.unstake.start-unstaking'
+                                  'thales-token.gamified-staking.staking.unstake.start-unstaking'
                               )} ${formatCurrencyWithKey(THALES_CURRENCY, amountToUnstake)}`
-                            : `${t('options.earn.gamified-staking.staking.unstake.unstaking')} ${formatCurrencyWithKey(
+                            : `${t('thales-token.gamified-staking.staking.unstake.unstaking')} ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
                                   amountToUnstake
                               )}...`}
@@ -252,24 +252,24 @@ const Unstake: React.FC = () => {
     };
 
     const dateTimeTranslationMap = {
-        years: t('options.common.time-remaining.years'),
-        year: t('options.common.time-remaining.year'),
-        months: t('options.common.time-remaining.months'),
-        month: t('options.common.time-remaining.month'),
-        weeks: t('options.common.time-remaining.weeks'),
-        week: t('options.common.time-remaining.week'),
-        days: t('options.common.time-remaining.days'),
-        day: t('options.common.time-remaining.day'),
-        hours: t('options.common.time-remaining.hours'),
-        hour: t('options.common.time-remaining.hour'),
-        minutes: t('options.common.time-remaining.minutes'),
-        minute: t('options.common.time-remaining.minute'),
-        seconds: t('options.common.time-remaining.seconds'),
-        second: t('options.common.time-remaining.second'),
-        'days-short': t('options.common.time-remaining.days-short'),
-        'hours-short': t('options.common.time-remaining.hours-short'),
-        'minutes-short': t('options.common.time-remaining.minutes-short'),
-        'seconds-short': t('options.common.time-remaining.seconds-short'),
+        years: t('common.time-remaining.years'),
+        year: t('common.time-remaining.year'),
+        months: t('common.time-remaining.months'),
+        month: t('common.time-remaining.month'),
+        weeks: t('common.time-remaining.weeks'),
+        week: t('common.time-remaining.week'),
+        days: t('common.time-remaining.days'),
+        day: t('common.time-remaining.day'),
+        hours: t('common.time-remaining.hours'),
+        hour: t('common.time-remaining.hour'),
+        minutes: t('common.time-remaining.minutes'),
+        minute: t('common.time-remaining.minute'),
+        seconds: t('common.time-remaining.seconds'),
+        second: t('common.time-remaining.second'),
+        'days-short': t('common.time-remaining.days-short'),
+        'hours-short': t('common.time-remaining.hours-short'),
+        'minutes-short': t('common.time-remaining.minutes-short'),
+        'seconds-short': t('common.time-remaining.seconds-short'),
     };
 
     const unstakeIntervalToDuration = intervalToDuration({
@@ -295,19 +295,19 @@ const Unstake: React.FC = () => {
                     <UnstakingTitleText>
                         {isUnstakingInContract
                             ? unstakingEnded
-                                ? t('options.earn.gamified-staking.staking.unstake.cooldown-ended-text', {
+                                ? t('thales-token.gamified-staking.staking.unstake.cooldown-ended-text', {
                                       amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
                                   })
-                                : t('options.earn.gamified-staking.staking.unstake.cooldown-started-text', {
+                                : t('thales-token.gamified-staking.staking.unstake.cooldown-started-text', {
                                       amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
                                   })
-                            : t('options.earn.gamified-staking.staking.unstake.unlock-cooldown-text')}
+                            : t('thales-token.gamified-staking.staking.unstake.unlock-cooldown-text')}
                     </UnstakingTitleText>
                     {((!unstakingEnded && isUnstakingInContract) || !isUnstakingInContract) && (
                         <UnstakingPeriodWrapper>
                             <UnstakingPeriodConatiner>
                                 <CooldownText>
-                                    {t('options.earn.gamified-staking.staking.unstake.cooldown-label')}
+                                    {t('thales-token.gamified-staking.staking.unstake.cooldown-label')}
                                 </CooldownText>
                                 <CooldownCounter>
                                     {!isUnstakingInContract ? (
@@ -331,7 +331,7 @@ const Unstake: React.FC = () => {
                         disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused || isUserLPing}
                         currencyLabel={THALES_CURRENCY}
                         placeholder={t('common.enter-amount')}
-                        label={t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}
+                        label={t('thales-token.gamified-staking.staking.unstake.amount-to-unstake')}
                         onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
                         validationMessage={t(`common.errors.insufficient-balance-wallet`, {
@@ -339,7 +339,7 @@ const Unstake: React.FC = () => {
                         })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
+                                ? `${t('thales-token.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
                                       thalesStaked
                                   )}`
                                 : undefined
@@ -350,11 +350,11 @@ const Unstake: React.FC = () => {
                 <ButtonsContainer twoButtons={isUnstakingInContract && unstakingEnded}>
                     {getSubmitButton()}
                     {isStakingPaused && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.staking.unstake.paused-message')}</ClaimMessage>
+                        <ClaimMessage>{t('thales-token.gamified-staking.staking.unstake.paused-message')}</ClaimMessage>
                     )}
                     {isUserLPing && (
                         <ClaimMessage>
-                            {t('options.earn.gamified-staking.staking.unstake.user-lping-message')}
+                            {t('thales-token.gamified-staking.staking.unstake.user-lping-message')}
                         </ClaimMessage>
                     )}
                 </ButtonsContainer>

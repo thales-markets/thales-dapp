@@ -67,7 +67,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
         <Modal
             shouldCloseOnOverlayClick={false}
             onClose={onClose}
-            title={t('options.trade.amm-trading.details-modal.confirm-order', { position: positionType })}
+            title={t('markets.amm-trading.details-modal.confirm-order', { position: positionType })}
             customStyle={{ overlay: { zIndex: 201 } }}
         >
             <Container>

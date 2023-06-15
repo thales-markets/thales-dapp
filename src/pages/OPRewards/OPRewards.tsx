@@ -32,7 +32,6 @@ import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'u
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { Rewards, emptyRewards } from 'types/rewards';
-import Footer from 'components/Footer/Footer';
 import { getIsMobile } from 'redux/modules/ui';
 
 const THALES_REWARDS = [
@@ -231,6 +230,7 @@ const OPRewards: React.FC = () => {
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
                             iconFontSize={12}
+                            top={-1}
                         />
                     </p>
                 ),
@@ -258,6 +258,7 @@ const OPRewards: React.FC = () => {
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
                             iconFontSize={12}
+                            top={-1}
                         />
                     </p>
                 ),
@@ -293,134 +294,127 @@ const OPRewards: React.FC = () => {
         NOW.getTime() > periodRangeTimestamps[period - 1].maxTimestamp * 1000;
 
     return (
-        <>
-            <Wrapper>
-                <ElectionsBanner />
-                <Description>
-                    <p>
-                        <Trans i18nKey={'op-rewards.ended-competition'} components={{ bold: <BoldText /> }} />
-                    </p>
-                    <Trans
-                        i18nKey={'op-rewards.description-1'}
-                        values={{
-                            thales: THALES_REWARDS[period - 1].toLocaleString(),
-                            op: OP_REWARDS[period - 1].toLocaleString(),
-                        }}
-                        components={{
-                            bold: <BoldText />,
-                            p: <p />,
-                            ul: <ul />,
-                            li: <li />,
-                        }}
-                    />
-                    <p>
-                        <Trans i18nKey={'op-rewards.description-itm'} components={{ bold: <BoldText /> }} />
-                    </p>
-                    <p>
-                        <Trans i18nKey={'op-rewards.description-otm'} components={{ bold: <BoldText /> }} />
-                    </p>
-                    <p>
-                        <Trans i18nKey={'op-rewards.length-info'} components={{ bold: <BoldText /> }} />
-                    </p>
-                </Description>
-                <SummaryWrapper>
-                    <SummaryRow>
-                        <SelectInput
-                            options={options}
-                            handleChange={(value) => setPeriod(Number(value))}
-                            defaultValue={period - 1}
-                            width={300}
-                            height={44}
-                            fontSize={18}
-                        />
-                        {periodRangeTimestamps && periodRangeTimestamps[period - 1]?.maxTimestamp && (
-                            <SummaryItem width="33%">
-                                <SummaryLabel>
-                                    {isRoundedEnded
-                                        ? t('op-rewards.round-ended-label')
-                                        : `${t('op-rewards.round-end-label')}:`}
-                                </SummaryLabel>
-                                {!isRoundedEnded && (
-                                    <SummaryInfo>
-                                        <TimeRemaining
-                                            end={periodRangeTimestamps[period - 1].maxTimestamp * 1000}
-                                            fontSize={isMobile ? 15 : 18}
-                                            showFullCounter
-                                            zIndex={0}
-                                        />
-                                    </SummaryInfo>
-                                )}
-                            </SummaryItem>
-                        )}
-                        <SummaryItem width="66%" mobileDirection="column">
-                            <SummarySubItem>
-                                <SummaryLabel>{t('op-rewards.itm-volume-label')}:</SummaryLabel>
-                                <SummaryInfo>{formatCurrencyWithSign(USD_SIGN, summaryData.itmVolume)}</SummaryInfo>
-                            </SummarySubItem>
-                            <SummarySubItem>
-                                <SummaryLabel>{t('op-rewards.otm-volume-label')}:</SummaryLabel>
-                                <SummaryInfo>{formatCurrencyWithSign(USD_SIGN, summaryData.otmVolume)}</SummaryInfo>
-                            </SummarySubItem>
-                        </SummaryItem>
-                    </SummaryRow>
-                    <SummaryRow>
-                        {myData && (
-                            <SummaryItem mobileDirection="column">
-                                <MyRewardsContainer>
-                                    <SummaryLabel>{t('op-rewards.my-rewards-label')}:</SummaryLabel>
-                                </MyRewardsContainer>
-                                <MyRewardsContainer>
-                                    <MyRewardsTotal>
-                                        {formatCurrencyWithKey(THALES_CURRENCY, myData.totalRewards.thales)}
-                                    </MyRewardsTotal>
-                                    <MyRewardsList>
-                                        <MyRewards>{`${formatCurrency(
-                                            myData.otmInfo.rewards.thales
-                                        )} (ITM)`}</MyRewards>
-                                        <MyRewards>{`${formatCurrency(
-                                            myData.itmInfo.rewards.thales
-                                        )} (OTM)`}</MyRewards>
-                                    </MyRewardsList>
-                                </MyRewardsContainer>
-                                <MyRewardsContainer>
-                                    <MyRewardsTotal>
-                                        {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, myData.totalRewards.op)}
-                                    </MyRewardsTotal>
-                                    <MyRewardsList>
-                                        <MyRewards>{`${formatCurrency(myData.otmInfo.rewards.op)} (ITM)`}</MyRewards>
-                                        <MyRewards>{`${formatCurrency(myData.itmInfo.rewards.op)} (OTM)`}</MyRewards>
-                                    </MyRewardsList>
-                                </MyRewardsContainer>
-                            </SummaryItem>
-                        )}
-                        <SearchInput
-                            text={searchQuery}
-                            placeholder={t('op-rewards.search-placeholder')}
-                            handleChange={(value) => setSearchQuery(value)}
-                            width="320px"
-                            height="44px"
-                            iconTop="14px"
-                        />
-                    </SummaryRow>
-                </SummaryWrapper>
-                <Table
-                    data={tableData}
-                    columns={getColumns()}
-                    isLoading={isLoading}
-                    searchQuery={searchQuery}
-                    hasStickyRow={true}
-                    initialState={{
-                        sortBy: [
-                            {
-                                id: 'totalRewards',
-                                desc: true,
-                            },
-                        ],
+        <Wrapper>
+            <ElectionsBanner />
+            <Description>
+                <p>
+                    <Trans i18nKey={'op-rewards.ended-competition'} components={{ bold: <BoldText /> }} />
+                </p>
+                <Trans
+                    i18nKey={'op-rewards.description-1'}
+                    values={{
+                        thales: THALES_REWARDS[period - 1].toLocaleString(),
+                        op: OP_REWARDS[period - 1].toLocaleString(),
+                    }}
+                    components={{
+                        bold: <BoldText />,
+                        p: <p />,
+                        ul: <ul />,
+                        li: <li />,
                     }}
                 />
-            </Wrapper>
-            <Footer />
-        </>
+                <p>
+                    <Trans i18nKey={'op-rewards.description-itm'} components={{ bold: <BoldText /> }} />
+                </p>
+                <p>
+                    <Trans i18nKey={'op-rewards.description-otm'} components={{ bold: <BoldText /> }} />
+                </p>
+                <p>
+                    <Trans i18nKey={'op-rewards.length-info'} components={{ bold: <BoldText /> }} />
+                </p>
+            </Description>
+            <SummaryWrapper>
+                <SummaryRow>
+                    <SelectInput
+                        options={options}
+                        handleChange={(value) => setPeriod(Number(value))}
+                        defaultValue={period - 1}
+                        width={300}
+                        height={44}
+                        fontSize={18}
+                    />
+                    {periodRangeTimestamps && periodRangeTimestamps[period - 1]?.maxTimestamp && (
+                        <SummaryItem width="33%">
+                            <SummaryLabel>
+                                {isRoundedEnded
+                                    ? t('op-rewards.round-ended-label')
+                                    : `${t('op-rewards.round-end-label')}:`}
+                            </SummaryLabel>
+                            {!isRoundedEnded && (
+                                <SummaryInfo>
+                                    <TimeRemaining
+                                        end={periodRangeTimestamps[period - 1].maxTimestamp * 1000}
+                                        fontSize={isMobile ? 15 : 18}
+                                        showFullCounter
+                                        zIndex={0}
+                                    />
+                                </SummaryInfo>
+                            )}
+                        </SummaryItem>
+                    )}
+                    <SummaryItem width="66%" mobileDirection="column">
+                        <SummarySubItem>
+                            <SummaryLabel>{t('op-rewards.itm-volume-label')}:</SummaryLabel>
+                            <SummaryInfo>{formatCurrencyWithSign(USD_SIGN, summaryData.itmVolume)}</SummaryInfo>
+                        </SummarySubItem>
+                        <SummarySubItem>
+                            <SummaryLabel>{t('op-rewards.otm-volume-label')}:</SummaryLabel>
+                            <SummaryInfo>{formatCurrencyWithSign(USD_SIGN, summaryData.otmVolume)}</SummaryInfo>
+                        </SummarySubItem>
+                    </SummaryItem>
+                </SummaryRow>
+                <SummaryRow>
+                    {myData && (
+                        <SummaryItem mobileDirection="column">
+                            <MyRewardsContainer>
+                                <SummaryLabel>{t('op-rewards.my-rewards-label')}:</SummaryLabel>
+                            </MyRewardsContainer>
+                            <MyRewardsContainer>
+                                <MyRewardsTotal>
+                                    {formatCurrencyWithKey(THALES_CURRENCY, myData.totalRewards.thales)}
+                                </MyRewardsTotal>
+                                <MyRewardsList>
+                                    <MyRewards>{`${formatCurrency(myData.otmInfo.rewards.thales)} (ITM)`}</MyRewards>
+                                    <MyRewards>{`${formatCurrency(myData.itmInfo.rewards.thales)} (OTM)`}</MyRewards>
+                                </MyRewardsList>
+                            </MyRewardsContainer>
+                            <MyRewardsContainer>
+                                <MyRewardsTotal>
+                                    {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, myData.totalRewards.op)}
+                                </MyRewardsTotal>
+                                <MyRewardsList>
+                                    <MyRewards>{`${formatCurrency(myData.otmInfo.rewards.op)} (ITM)`}</MyRewards>
+                                    <MyRewards>{`${formatCurrency(myData.itmInfo.rewards.op)} (OTM)`}</MyRewards>
+                                </MyRewardsList>
+                            </MyRewardsContainer>
+                        </SummaryItem>
+                    )}
+                    <SearchInput
+                        text={searchQuery}
+                        placeholder={t('op-rewards.search-placeholder')}
+                        handleChange={(value) => setSearchQuery(value)}
+                        width="320px"
+                        height="44px"
+                        iconTop="14px"
+                    />
+                </SummaryRow>
+            </SummaryWrapper>
+            <Table
+                data={tableData}
+                columns={getColumns()}
+                isLoading={isLoading}
+                searchQuery={searchQuery}
+                hasStickyRow={true}
+                initialState={{
+                    sortBy: [
+                        {
+                            id: 'totalRewards',
+                            desc: true,
+                        },
+                    ],
+                }}
+            />
+        </Wrapper>
     );
 };
 

@@ -10,7 +10,7 @@ const useBinaryOptionsUserTransactionsQuery = (
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
     return useQuery<OptionsTransactions>(
-        QUERY_KEYS.BinaryOptions.UserTransactions(marketAddress, walletAddress),
+        QUERY_KEYS.BinaryOptions.UserMarketTransactions(marketAddress, walletAddress),
         () =>
             thalesData.binaryOptions.optionTransactions({
                 market: marketAddress,

@@ -68,7 +68,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
             gridColumns={gridColumns}
             gridColumnStart={gridColumnStart}
         >
-            <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
+            <SectionHeader>{t('thales-token.table.title')}</SectionHeader>
             <FilterWrapper>
                 <FilterContainer
                     onMouseEnter={() => (isMobile ? '' : setShowFilters(true))}
@@ -83,7 +83,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                         borderColor={theme.button.borderColor.tertiary}
                         onClick={() => setShowFilters(!showFilters)}
                     >
-                        {t(`options.earn.table.filter.button`)}
+                        {t(`thales-token.table.filter.button`)}
                     </Button>
                     <DropDownWrapper hidden={!showFilters}>
                         <DropDown>
@@ -98,7 +98,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                                         className={filter === filterItem ? 'selected' : ''}
                                         key={filterItem}
                                     >
-                                        {t(`options.earn.table.filter.${filterItem}`)}
+                                        {t(`thales-token.table.filter.${filterItem}`)}
                                     </FilterText>
                                 );
                             })}
@@ -110,7 +110,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                 <TransactionsTable
                     transactions={filteredTransactions}
                     isLoading={userTokenTransactionsQuery.isLoading}
-                    noResultsMessage={t(`options.earn.table.no-results.${filter}`)}
+                    noResultsMessage={t(`thales-token.table.no-results.${filter}`)}
                 />
             </SectionContent>
         </SectionContainer>

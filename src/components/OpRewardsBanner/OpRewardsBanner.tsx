@@ -25,7 +25,7 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
     const textLink = useMemo(() => {
         return (
             <Trans
-                i18nKey="options.home.op-rewards-banner-message"
+                i18nKey="common.banner.op-rewards-banner-message"
                 components={{
                     bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
                 }}

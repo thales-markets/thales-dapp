@@ -54,18 +54,18 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
     return (
         <Container>
             <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.position-price')}</TextLabel>
+                <TextLabel>{t('markets.amm-trading.details-modal.position-price')}</TextLabel>
                 {getTextValue(formatCurrencyWithSign(USD_SIGN, positionPrice), positionPrice > 0, isLoading)}
             </DetailsRow>
             {isBuy && (
                 <DetailsRow>
-                    <TextLabel>{t('options.trade.amm-trading.details-modal.position-bonus')}</TextLabel>
+                    <TextLabel>{t('markets.amm-trading.details-modal.position-bonus')}</TextLabel>
                     {getTextValue(getFormattedBonus(positionBonus), positionBonus > 0, isLoading, true)}
                 </DetailsRow>
             )}
             <DetailsRow>
                 <TextLabel>
-                    {t(`options.trade.amm-trading.details-modal.${isBuy ? 'amount-buy' : 'total-receive'}`)}
+                    {t(`markets.amm-trading.details-modal.${isBuy ? 'amount-buy' : 'total-receive'}`)}
                 </TextLabel>
                 {getTextValue(
                     formatCurrencyWithKey(isBuy ? positionType : getStableCoinForNetwork(networkId), positionAmount),
@@ -74,9 +74,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
                 )}
             </DetailsRow>
             <DetailsRow>
-                <TextLabel>
-                    {t(`options.trade.amm-trading.details-modal.${isBuy ? 'total-pay' : 'amount-sell'}`)}
-                </TextLabel>
+                <TextLabel>{t(`markets.amm-trading.details-modal.${isBuy ? 'total-pay' : 'amount-sell'}`)}</TextLabel>
                 {getTextValue(
                     formatCurrencyWithKey(isBuy ? selectedStable : positionType, paidAmount),
                     paidAmount > 0,
@@ -85,7 +83,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
             </DetailsRow>
             {isBuy && (
                 <DetailsRow>
-                    <TextLabel>{t('options.trade.amm-trading.details-modal.potential-profit')}</TextLabel>
+                    <TextLabel>{t('markets.amm-trading.details-modal.potential-profit')}</TextLabel>
                     {getTextValue(
                         `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), profit)} (${formatPercentage(
                             calculateAndFormatPercentage(paidAmount, positionAmount)

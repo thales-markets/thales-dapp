@@ -45,7 +45,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
         return [
             {
                 id: 'strikePrice',
-                Header: t(`options.home.markets-table.strike-price-col`),
+                Header: t(`markets.table.strike-price-col`),
                 accessor: (row: any, index: number) => {
                     return (
                         <TableText selected={rowIndex === index} price={false}>
@@ -62,7 +62,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 width: '180px',
             },
             {
-                Header: t(`options.home.markets-table.roi`),
+                Header: t(`markets.table.roi`),
                 accessor: (row: any, index: number) => (
                     <PriceContainer>
                         <TableText selected={rowIndex === index} price={true}>
@@ -79,7 +79,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             },
             {
                 id: 'price',
-                Header: t(`options.home.markets-table.price`),
+                Header: t(`markets.table.price`),
                 accessor: 'price',
                 Cell: (props: any) => {
                     return (
@@ -102,7 +102,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             {isLoading ? (
                 <SimpleLoader />
             ) : noMarkets ? (
-                <NoMarketsText>{t(`options.home.markets-table.no-markets`)}</NoMarketsText>
+                <NoMarketsText>{t(`markets.table.no-markets`)}</NoMarketsText>
             ) : (
                 <TableV3
                     onTableRowClick={(row) => {

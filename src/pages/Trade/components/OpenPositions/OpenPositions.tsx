@@ -3,7 +3,7 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
-import useUserOpenPositions from 'queries/user/useUserOpenPositions';
+import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ const OpenPositions: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', {
+    const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -36,7 +36,7 @@ const OpenPositions: React.FC = () => {
 
     return (
         <Wrapper>
-            <Title>{t('options.trade.user-positions.your-positions')}</Title>
+            <Title>{t('markets.user-positions.your-positions')}</Title>
             {positionsQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -48,7 +48,7 @@ const OpenPositions: React.FC = () => {
                             <OpenPosition position={position} key={`position${index}`} />
                         ))}
                     </PositionsWrapper>
-                    {noPositions && <NoPositionsText>{t('options.trade.user-positions.no-positions')}</NoPositionsText>}
+                    {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>
             )}
         </Wrapper>

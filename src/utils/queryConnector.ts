@@ -26,7 +26,7 @@ export const refetchMarketQueries = (
 
     if (walletAddress) {
         queryConnector.queryClient.invalidateQueries(
-            QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarketAddress, walletAddress)
+            QUERY_KEYS.BinaryOptions.UserMarketPositions(optionsMarketAddress, walletAddress)
         );
     }
 };
@@ -41,25 +41,37 @@ export const refetchRangeMarketQueries = (
 
     if (walletAddress) {
         queryConnector.queryClient.invalidateQueries(
-            QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId)
+            QUERY_KEYS.BinaryOptions.UserRangedMarketPositions(marketAddress, walletAddress, networkId)
         );
     }
 };
 
+export const refetchUserNotifications = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Notifications(walletAddress, networkId));
+};
+
 export const refetchUserOpenPositions = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.UserOpenPositions(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
+};
+
+export const refetchUserProfileQueries = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Data(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.ClaimablePositions(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.ClosedPositions(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Trades(walletAddress, networkId));
 };
 
 export const refetchAmmData = (walletAddress: string, marketAddress: string) => {
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.BinaryOptions.AccountMarketInfo(marketAddress, walletAddress)
+        QUERY_KEYS.BinaryOptions.UserMarketPositions(marketAddress, walletAddress)
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
 
 export const refetchRangedAmmData = (walletAddress: string, marketAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId)
+        QUERY_KEYS.BinaryOptions.UserRangedMarketPositions(marketAddress, walletAddress, networkId)
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
@@ -93,7 +105,7 @@ export const refetchVestingEscrow = (walletAddress: string, networkId: NetworkId
 };
 
 export const refetchBalances = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Balance(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
     );

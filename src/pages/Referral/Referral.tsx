@@ -49,7 +49,6 @@ import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
-import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
 import OutsideClickHandler from 'react-outside-click-handler';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
@@ -522,7 +521,6 @@ const Referral: React.FC = () => {
                 </FooterLink>
                 .
             </ReferralFooter>
-            <Footer />
         </>
     );
 };

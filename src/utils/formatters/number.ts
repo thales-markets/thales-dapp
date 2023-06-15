@@ -65,13 +65,6 @@ export const formatCurrencyWithSign = (
     )}`;
 };
 
-export const formatCurrencyWithSignInRange = (
-    sign: string | null | undefined,
-    leftValue: NumericValue,
-    rightValue: NumericValue,
-    decimals?: number
-) => formatCurrencyWithSign(sign, leftValue, decimals) + ' - ' + formatCurrencyWithSign(sign, rightValue, decimals);
-
 export const formatCurrencyWithKey = (
     currencyKey: string,
     value: NumericValue,
@@ -79,20 +72,9 @@ export const formatCurrencyWithKey = (
     trimDecimals?: boolean
 ) => `${formatCurrency(value, decimals || getPrecision(value), trimDecimals)} ${currencyKey}`;
 
-export const getPercentageDifference = (firstNumber: number, secondNumber: number): number =>
-    Math.abs(((firstNumber - secondNumber) / firstNumber) * 100);
-
+// Bug: when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
 export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
     const matchedValue = value.toString().match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
-    return matchedValue !== null ? matchedValue[0] : '0';
-};
-
-// TODO: test it more as truncToDecimals has bug for 0.0000001
-export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
-    const matchedValue = value
-        .toFixed(decimals + 1) // when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
-        .replace(/(?<=[1-9])0+/, '') // remove trailing zeros added by toFixed (excluding 0.00)
-        .match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 

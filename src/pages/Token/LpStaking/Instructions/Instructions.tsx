@@ -42,39 +42,39 @@ const Instructions: React.FC = () => {
                 )}
                 <StepsWrapper firstRow={false}>
                     <StepInfo ref={step1}>
-                        <StepInfoLabel>{t('options.earn.lp-staking.instructions.step1-label')}</StepInfoLabel>
+                        <StepInfoLabel>{t('thales-token.lp-staking.instructions.step1-label')}</StepInfoLabel>
                         <StepInfoDescription>
-                            {t('options.earn.lp-staking.instructions.step1-desc')}
+                            {t('thales-token.lp-staking.instructions.step1-desc')}
                         </StepInfoDescription>
                     </StepInfo>
                     <StepInfo ref={step2}>
-                        <StepInfoLabel>{t('options.earn.lp-staking.instructions.step2-label')}</StepInfoLabel>
+                        <StepInfoLabel>{t('thales-token.lp-staking.instructions.step2-label')}</StepInfoLabel>
                         <StepInfoDescription>
                             <Trans
-                                i18nKey="options.earn.lp-staking.instructions.step2-desc"
+                                i18nKey="thales-token.lp-staking.instructions.step2-desc"
                                 components={[<UniswapExchangeLink key="1" />]}
                             />
                         </StepInfoDescription>
                     </StepInfo>
                     <StepInfo ref={step3}>
-                        <StepInfoLabel>{t('options.earn.lp-staking.instructions.step3-label')}</StepInfoLabel>
+                        <StepInfoLabel>{t('thales-token.lp-staking.instructions.step3-label')}</StepInfoLabel>
                         <StepInfoDescription>
                             <Trans
-                                i18nKey="options.earn.lp-staking.instructions.step3-desc"
+                                i18nKey="thales-token.lp-staking.instructions.step3-desc"
                                 components={[<ProvideLiquidityLink key="1" />]}
                             />
                         </StepInfoDescription>
                     </StepInfo>
                     <StepInfo ref={step4}>
-                        <StepInfoLabel>{t('options.earn.lp-staking.instructions.step4-label')}</StepInfoLabel>
+                        <StepInfoLabel>{t('thales-token.lp-staking.instructions.step4-label')}</StepInfoLabel>
                         <StepInfoDescription>
-                            {t('options.earn.lp-staking.instructions.step4-desc')}
+                            {t('thales-token.lp-staking.instructions.step4-desc')}
                         </StepInfoDescription>
                     </StepInfo>
                     <StepInfo ref={step5}>
-                        <StepInfoLabel>{t('options.earn.lp-staking.instructions.step5-label')}</StepInfoLabel>
+                        <StepInfoLabel>{t('thales-token.lp-staking.instructions.step5-label')}</StepInfoLabel>
                         <StepInfoDescription>
-                            {t('options.earn.lp-staking.instructions.step5-desc')}
+                            {t('thales-token.lp-staking.instructions.step5-desc')}
                         </StepInfoDescription>
                     </StepInfo>
                 </StepsWrapper>

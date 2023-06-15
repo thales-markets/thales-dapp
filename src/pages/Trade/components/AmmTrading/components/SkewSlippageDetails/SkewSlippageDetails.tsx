@@ -21,7 +21,7 @@ const SkewSlippageDetails: React.FC<SkewSlippageDetailsProps> = ({ skew, slippag
         <Container>
             {!hideScew && (
                 <DetailsRow>
-                    <TextLabel>{t('options.trade.amm-trading.details-modal.skew')}</TextLabel>
+                    <TextLabel>{t('markets.amm-trading.details-modal.skew')}</TextLabel>
                     <TextValue>{formatPercentage(skew)}</TextValue>
                 </DetailsRow>
             )}

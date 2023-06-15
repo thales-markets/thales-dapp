@@ -1,6 +1,5 @@
 import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
 import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
-import Currency from 'components/Currency';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -41,22 +40,12 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
 
     return (
         <Wrapper>
-            <SummaryHeader>{t('options.create-market.summary.title')}</SummaryHeader>
+            <SummaryHeader>{t('create-market.summary.title')}</SummaryHeader>
             <SummaryContent>
-                <CurrencyContainer>
-                    {props.currencyKey && (
-                        <>
-                            <Currency.Icon
-                                synthIconStyle={{ width: 24, height: 24 }}
-                                currencyKey={props.currencyKey.value}
-                            />
-                            {props.currencyKey.label}
-                        </>
-                    )}
-                </CurrencyContainer>
+                <CurrencyContainer>{props.currencyKey && <>{props.currencyKey.label}</>}</CurrencyContainer>
                 <PriceContainer>
                     <PriceItem>
-                        <PriceLabel>{t('options.create-market.summary.strikePrice')}</PriceLabel>
+                        <PriceLabel>{t('create-market.summary.strike-price')}</PriceLabel>
                         <PriceInfo>{formatCurrencyWithSign(USD_SIGN, Number(props.strikingPrice))}</PriceInfo>
                     </PriceItem>
                     <PriceItem>
@@ -74,7 +63,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                         )}
                     </PriceItem>
                     <PriceItem>
-                        <PriceLabel>{t('options.create-market.summary.current')}</PriceLabel>
+                        <PriceLabel>{t('create-market.summary.current')}</PriceLabel>
                         <PriceInfo>{formatCurrencyWithSign(USD_SIGN, Number(props.currentPrice))}</PriceInfo>
                     </PriceItem>
                 </PriceContainer>
@@ -82,12 +71,12 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             <MarketInfo>
                 <InfoContainer>
                     <InfoItem>
-                        <Label>{t('options.create-market.summary.dates.maturity-date')}</Label>
+                        <Label>{t('create-market.summary.dates.maturity-date')}</Label>
 
                         <Info>{props.maturityDate}</Info>
                     </InfoItem>
                     <InfoItem>
-                        <Label>{t('options.create-market.summary.dates.time-to-exercise')}</Label>
+                        <Label>{t('create-market.summary.dates.time-to-exercise')}</Label>
                         <Info>{props.timeLeftToExercise}</Info>
                     </InfoItem>
                 </InfoContainer>

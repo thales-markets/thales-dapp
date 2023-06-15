@@ -98,6 +98,7 @@ export type RangedMarket = {
     timestamp: number;
     currencyKey: string;
     maturityDate: number;
+    expiryDate: number;
     leftPrice: number;
     rightPrice: number;
     inAddress: string;
@@ -133,12 +134,6 @@ export type RangedMarketData = {
     phase: Phase;
     timeRemaining: number;
     result: RangedMarketPositionType;
-    availablePositions: {
-        toBuyIn: number;
-        toBuyOut: number;
-        toSellIn: number;
-        toSellOut: number;
-    };
     inAddress: string;
     outAddress: string;
     leftMarketAddress: string;
@@ -205,19 +200,12 @@ export type Trade = {
     makerAmount: number;
     takerAmount: number;
     blockNumber: number;
+    market: string;
+    orderSide: OrderSide;
+    optionSide: OptionSide | RangedMarketPositionType;
 };
 
 export type Trades = Trade[];
-
-export type UsersAssets = {
-    market: HistoricalOptionsMarketInfo;
-    balances: {
-        long: number;
-        short: number;
-        longValue?: number;
-        shortValue?: number;
-    };
-};
 
 export type UserLivePositions = {
     positionAddress: string;

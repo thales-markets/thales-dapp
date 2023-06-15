@@ -20,9 +20,9 @@ type Cell = {
     color?: string;
     title?: string;
     titleFontSize?: number;
-    value: string | number;
+    value: string | number | ReactElement;
     valueFontSize?: number;
-    test?: number;
+    width?: string;
 };
 
 export type TileRow = {
@@ -33,6 +33,8 @@ export type TileRow = {
     disabled?: boolean;
     link?: string;
     heightSmall?: boolean;
+    displayInRowMobile?: boolean;
+    gap?: string;
 };
 
 type Properties = {
@@ -42,6 +44,7 @@ type Properties = {
     isLoading?: boolean;
     noResultsMessage?: string;
     defaultFlowColor?: string;
+    hideFlow?: boolean;
 };
 
 const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
@@ -61,6 +64,7 @@ const TileTable: React.FC<Properties> = ({
     isLoading,
     noResultsMessage,
     defaultFlowColor,
+    hideFlow,
 }) => {
     const { t } = useTranslation();
 
@@ -92,13 +96,16 @@ const TileTable: React.FC<Properties> = ({
                                 dotColor={row.dotColor}
                                 backgroundColor={row.backgroundColor}
                                 heightSmall={row.heightSmall}
+                                displayInRowMobile={row.displayInRowMobile}
+                                gap={row.gap}
                                 defaultFlowColor={defaultFlowColor}
                                 lineSmall={lineSmall}
+                                hideFlow={hideFlow}
                                 key={index}
                             >
                                 {row.asset && <AssetInfo {...row.asset} />}
                                 {cells.map((cell, index) => (
-                                    <Cell direction={cell.flexDirection} key={index}>
+                                    <Cell direction={cell.flexDirection} key={index} width={cell.width}>
                                         {cell.title && (
                                             <CellTitle fontSize={cell.titleFontSize}>{cell.title}</CellTitle>
                                         )}

@@ -14,7 +14,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
-import Currency from 'components/Currency';
 import { BigNumber, ethers } from 'ethers';
 import { FlexDivColumn, FlexDivCentered } from 'styles/common';
 import MarketSummary from './MarketSummary';
@@ -95,7 +94,7 @@ const CreateMarket: React.FC = () => {
         const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
         const isPolygon = getIsPolygon(networkId);
 
-        const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+        const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
         let isCurrencySelected = false;
 
@@ -209,8 +208,8 @@ const CreateMarket: React.FC = () => {
                 return (
                     <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                         {isAllowing
-                            ? t('options.create-market.summary.waiting-for-approval-button-label')
-                            : t('options.create-market.summary.approve-manager-button-label')}
+                            ? t('create-market.summary.waiting-for-approval-button-label')
+                            : t('create-market.summary.approve-manager-button-label')}
                     </Button>
                 );
             }
@@ -218,8 +217,8 @@ const CreateMarket: React.FC = () => {
                 return (
                     <Button disabled={isButtonDisabled || isCreatingMarket} onClick={handleMarketCreation}>
                         {isCreatingMarket
-                            ? t('options.create-market.summary.creating-market-button-label')
-                            : t('options.create-market.summary.create-market-button-label')}
+                            ? t('create-market.summary.creating-market-button-label')
+                            : t('create-market.summary.create-market-button-label')}
                     </Button>
                 );
             }
@@ -234,15 +233,15 @@ const CreateMarket: React.FC = () => {
 
         return isNetworkSupported(networkId) ? (
             <>
-                <Title>{t('options.create-market.title')}</Title>
+                <Title>{t('create-market.title')}</Title>
                 <Container>
                     <FlexDivColumn style={{ flex: 1 }}>
                         <div>
                             <Description>
-                                {t('options.create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
+                                {t('create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
                             </Description>
                             <Description>
-                                {t('options.create-market.note', { token: getStableCoinForNetwork(networkId) })}
+                                {t('create-market.note', { token: getStableCoinForNetwork(networkId) })}
                             </Description>
                         </div>
                         <InputsWrapper>
@@ -261,14 +260,7 @@ const CreateMarket: React.FC = () => {
                                             getSynthName(option.value)?.toLowerCase().includes(rawInput.toLowerCase())
                                         }
                                         formatOptionLabel={(option: any) => {
-                                            return (
-                                                <Currency.Name
-                                                    currencyKey={option.value}
-                                                    showIcon={true}
-                                                    synthIconStyle={{ width: 24, height: 24 }}
-                                                    iconProps={{ type: 'asset' }}
-                                                />
-                                            );
+                                            return <span> {option.value}</span>;
                                         }}
                                         onBlur={() => {
                                             setIsFocused(false);
@@ -292,11 +284,11 @@ const CreateMarket: React.FC = () => {
                                         isDisabled={isCreatingMarket || isMarketCreated}
                                     />
                                     <InputLabel style={{ zIndex: 100 }}>
-                                        {t('options.create-market.details.select-asset-label')}
+                                        {t('create-market.details.select-asset-label')}
                                     </InputLabel>
                                     <ErrorMessage
                                         show={!isCurrencyKeyValid && !isFocused}
-                                        text={t('options.create-market.select-asset')}
+                                        text={t('create-market.select-asset')}
                                     />
                                 </ShortInputContainer>
                                 <ShortInputContainer
@@ -336,12 +328,12 @@ const CreateMarket: React.FC = () => {
                                             }
                                         }}
                                         disabled={isCreatingMarket || isMarketCreated}
-                                        label={t('options.create-market.details.strike-price-label')}
+                                        label={t('create-market.details.strike-price-label')}
                                         currencyLabel={USD_SIGN}
                                         showValidation={!isStrikePriceValid}
-                                        validationMessage={t('options.create-market.enter-strike-price')}
+                                        validationMessage={t('create-market.enter-strike-price')}
                                     />
-                                    {showWarning && <Error>{t('options.create-market.difference-warning')}</Error>}
+                                    {showWarning && <Error>{t('create-market.difference-warning')}</Error>}
                                 </ShortInputContainer>
                             </Row>
                             <Row>
@@ -382,9 +374,7 @@ const CreateMarket: React.FC = () => {
                                                 },
                                             }}
                                         />
-                                        <InputLabel>
-                                            {t('options.create-market.details.market-maturity-date-label')}
-                                        </InputLabel>
+                                        <InputLabel>{t('create-market.details.market-maturity-date-label')}</InputLabel>
                                     </ShortInputContainer>
                                     <ShortInputContainer
                                         style={{
@@ -424,7 +414,7 @@ const CreateMarket: React.FC = () => {
                                             }}
                                         />
                                         <InputLabel style={{ wordBreak: 'break-all' }}>
-                                            {t('options.create-market.details.market-maturity-time-label')}
+                                            {t('create-market.details.market-maturity-time-label')}
                                         </InputLabel>
                                     </ShortInputContainer>
                                 </DatePickerRow>
@@ -445,15 +435,15 @@ const CreateMarket: React.FC = () => {
                                                 : setIsAmountValid(false);
                                         }}
                                         disabled={isCreatingMarket || isMarketCreated}
-                                        label={t('options.create-market.details.funding-amount.label')}
+                                        label={t('create-market.details.funding-amount.label')}
                                         currencyLabel={getStableCoinForNetwork(networkId)}
                                         showValidation={!isAmountValid}
-                                        validationMessage={t('options.create-market.min-amount', {
+                                        validationMessage={t('create-market.min-amount', {
                                             minimum: MIN_FUNDING_AMOUNT,
                                         })}
                                     />
                                     <NoteText>
-                                        {t('options.create-market.details.funding-amount.desc', {
+                                        {t('create-market.details.funding-amount.desc', {
                                             token: getStableCoinForNetwork(networkId),
                                         })}
                                     </NoteText>
@@ -480,7 +470,7 @@ const CreateMarket: React.FC = () => {
                     <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
                     {isMarketCreated && (
                         <Button onClick={() => navigateToOptionsMarket(market)}>
-                            {t('options.create-market.go-to-market')}
+                            {t('create-market.go-to-market')}
                         </Button>
                     )}
                 </ButtonContainer>

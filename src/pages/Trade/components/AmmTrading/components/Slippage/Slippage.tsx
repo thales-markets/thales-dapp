@@ -44,7 +44,7 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
 
     return (
         <Container>
-            <Text>{t('options.trade.amm-trading.slippage.label')}</Text>
+            <Text>{t('markets.amm-trading.slippage.label')}</Text>
             <Row>
                 {fixed.length && (
                     <FlexDivRowCentered>
@@ -57,11 +57,11 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                 )}
                 <NumericInput
                     value={slippage}
-                    placeholder={t('options.trade.amm-trading.slippage.enter-value')}
+                    placeholder={t('markets.amm-trading.slippage.enter-value')}
                     onChange={(_, value) => onInputValueChange(value)}
                     currencyLabel="%"
                     showValidation={slippage !== '' && !isSlippageValid(Number(slippage))}
-                    validationMessage={t('options.trade.amm-trading.slippage.invalid-value')}
+                    validationMessage={t('markets.amm-trading.slippage.invalid-value')}
                     margin="0px"
                     inputPadding="5px 10px"
                     inputFontSize="13px"
