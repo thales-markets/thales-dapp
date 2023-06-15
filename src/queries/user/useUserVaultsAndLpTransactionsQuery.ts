@@ -47,7 +47,6 @@ const useUserVaultsAndLpTransactionsQuery = (
                     }
                 );
 
-                console.log(vaultsUserTransactionsWithName, liquidityPoolUserTransactionsWithName);
                 return orderBy(
                     [...vaultsUserTransactionsWithName, ...liquidityPoolUserTransactionsWithName],
                     ['timestamp'],

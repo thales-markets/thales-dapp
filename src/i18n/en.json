@@ -32,6 +32,7 @@
         "direction": "Direction",
         "strike-price": "Strike price",
         "end-date": "End date",
+        "balance": "Balance",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -146,7 +147,6 @@
             "approval-success": "Approval successful",
             "approval-failed": "Approval failed",
             "from": "From",
-            "balance": "Balance",
             "to": "To"
         },
         "status": {
@@ -261,6 +261,7 @@
             "enter-amount": "Enter amount",
             "select-price": "Select price",
             "amm-disabled": "AMM trading disabled",
+            "max-buy": "Max buy",
             "details-modal": {
                 "confirm-order": "Confirm {{position}} order",
                 "position-price": "Price per position",
@@ -452,7 +453,6 @@
                     "name": "Stake",
                     "staking": "Staking",
                     "amount-to-stake": "Amount to stake",
-                    "balance": "Balance",
                     "confirmation-message": "Tokens successfully staked",
                     "paused-message": "Staking is paused."
                 },
@@ -467,7 +467,6 @@
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
                     "amount-to-unstake": "Amount to unstake",
-                    "balance": "Balance",
                     "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
@@ -651,7 +650,7 @@
                 "staked-balance": "My staked LP tokens balance",
                 "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
                 "lp-tokens": "LP tokens",
-                "tvl": "Total value locked<0/>",
+                "tvl": "Total value locked (tvl)",
                 "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
                 "share": "My staked share",
                 "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."

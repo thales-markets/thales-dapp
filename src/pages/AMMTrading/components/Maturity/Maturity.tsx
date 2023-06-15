@@ -30,7 +30,12 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
-import { refetchMarketQueries, refetchBalances, refetchRangeMarketQueries } from 'utils/queryConnector';
+import {
+    refetchMarketQueries,
+    refetchBalances,
+    refetchRangeMarketQueries,
+    refetchUserNotifications,
+} from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'utils/formatters/number';
@@ -123,6 +128,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                     ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
                     : refetchMarketQueries(walletAddress, BOMContract.address, market.address);
                 refetchBalances(walletAddress, networkId);
+                refetchUserNotifications(walletAddress, networkId);
                 setIsExercising(false);
             }
         } catch (e) {

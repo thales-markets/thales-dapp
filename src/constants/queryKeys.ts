@@ -82,7 +82,7 @@ const QUERY_KEYS = {
         ],
     },
     User: {
-        UserOpenPositions: (walletAddress: string, networkId: NetworkId) => [
+        OpenPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'userOpenPositions',
             walletAddress,

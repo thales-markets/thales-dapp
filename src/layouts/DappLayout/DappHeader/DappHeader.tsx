@@ -4,7 +4,7 @@ import ROUTES from 'constants/routes';
 import UserWallet from '../components/UserWallet';
 import Notifications from '../components/Notifications';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import Logo from '../components/Logo/Logo';
+import Logo from '../components/Logo';
 import { FlexDivRowCentered } from '../../../styles/common';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';

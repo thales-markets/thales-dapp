@@ -25,8 +25,8 @@ const useRangedMarketPositionBalanceQuery = (
             );
 
             const positions = await rangedMarket.positions();
-            const inPositionAddress = await positions[0];
-            const outPositionAddress = await positions[1];
+            const inPositionAddress = positions.inp;
+            const outPositionAddress = positions.outp;
 
             const inPosition = new ethers.Contract(
                 inPositionAddress,

@@ -97,12 +97,14 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
             maxOut: 0,
             priceIn: 0,
             priceOut: 0,
+            iv: 0,
         };
         if (!isRangedMarket && ammMaxLimits) {
             ammData.maxUp = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
             ammData.maxDown = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
             ammData.priceUp = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
             ammData.priceDown = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
+            ammData.iv = ammMaxLimits.iv;
         } else if (isRangedMarket && rangedAmmMaxLimits) {
             ammData.maxIn = isBuy ? rangedAmmMaxLimits.in.maxBuy : rangedAmmMaxLimits.in.maxSell;
             ammData.maxOut = isBuy ? rangedAmmMaxLimits.out.maxBuy : rangedAmmMaxLimits.out.maxSell;
@@ -262,10 +264,10 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                         {!isRangedMarket && (
                             <SubContainer>
                                 <Value>
-                                    {`${(market as OptionsMarketInfo).IV}% IV`}
+                                    {`${ammData?.iv || 0}% IV`}
                                     <Tooltip
                                         overlay={t('markets.market.iv-tooltip', {
-                                            percentage: (market as OptionsMarketInfo).IV,
+                                            percentage: ammData?.iv || 0,
                                         })}
                                         iconFontSize={12}
                                         top={-1}

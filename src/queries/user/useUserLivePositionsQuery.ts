@@ -21,7 +21,7 @@ const useUserLivePositionsQuery = (
     options?: UseQueryOptions<UserLivePositions[]>
 ) => {
     return useQuery<UserLivePositions[]>(
-        QUERY_KEYS.User.UserOpenPositions(walletAddress, networkId),
+        QUERY_KEYS.User.OpenPositions(walletAddress, networkId),
         async () => {
             const [positionBalances, rangedPositionBalances] = await Promise.all([
                 thalesData.binaryOptions.positionBalances({

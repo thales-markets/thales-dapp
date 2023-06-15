@@ -51,7 +51,6 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
-const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
 const App = () => {
@@ -266,14 +265,6 @@ const App = () => {
                                 <Route exact path={ROUTES.Options.LiquidityPool}>
                                     <DappLayout>
                                         <LiquidityPool />
-                                    </DappLayout>
-                                </Route>
-                            )}
-
-                            {!isPolygon && !isMainnet && (
-                                <Route exact path={ROUTES.Options.OPRewards}>
-                                    <DappLayout>
-                                        <OPRewards />
                                     </DappLayout>
                                 </Route>
                             )}

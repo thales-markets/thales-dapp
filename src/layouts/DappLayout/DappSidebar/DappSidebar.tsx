@@ -4,7 +4,7 @@ import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsArbitrum, getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
+import { getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -13,7 +13,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
-import DappHeaderItem from '../components/DappHeaderItem/DappHeaderItem';
+import DappHeaderItem from '../components/DappHeaderItem';
 import { ScreenSizeBreakpoint } from '../../../enums/ui';
 
 const DappSidebar: React.FC = () => {
@@ -25,7 +25,6 @@ const DappSidebar: React.FC = () => {
 
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
     const isMainnet = getIsMainnet(networkId);
 
     const [collapse, setCollapse] = useState(false);
@@ -35,7 +34,6 @@ const DappSidebar: React.FC = () => {
     const showWizardPage = !isMobile;
     const showReferralPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC;
-    const showOPRewardsPage = !isMainnet && !isPolygon && !isBSC && !isArbitrum;
     const showGovernancePage = !isMainnet;
     const showGamePage = !isMainnet;
     const showProfilePage = !isMainnet && isWalletConnected;
@@ -129,17 +127,6 @@ const DappSidebar: React.FC = () => {
                         href={buildHref(ROUTES.Options.Token)}
                         iconName="token"
                         label={t('common.sidebar.earn-label')}
-                    />
-                )}
-
-                {showOPRewardsPage && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.OPRewards)}
-                        iconName="optimism"
-                        label={t('common.sidebar.op-rewards')}
                     />
                 )}
 
