@@ -727,7 +727,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 : undefined
                         }
                         info={
-                            showBuyLiquidity && market.address
+                            showBuyLiquidity && market.address && (isDetailsPage ? liquidity : true)
                                 ? `${t('markets.amm-trading.max-buy')}: ${formatCurrencyWithSign(
                                       USD_SIGN,
                                       truncToDecimals(liquidityPrice, 0),
