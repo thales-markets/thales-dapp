@@ -76,6 +76,7 @@ import {
     TradingDetailsContainer,
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
+import Tooltip from 'components/Tooltip';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -688,11 +689,19 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         paidAmount={paidAmount}
                         breakFirstLine={false}
                     />
-                    <DetailsIcon
-                        className="icon icon--gear"
-                        disabled={isDetailsIconDisabled}
-                        onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
-                    />
+                    <Tooltip
+                        overlay={
+                            isDetailsIconDisabled
+                                ? t('markets.amm-trading.details-modal.tooltip-disabled')
+                                : t('markets.amm-trading.details-modal.tooltip')
+                        }
+                    >
+                        <DetailsIcon
+                            className="icon icon--gear"
+                            disabled={isDetailsIconDisabled}
+                            onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
+                        />
+                    </Tooltip>
                 </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
