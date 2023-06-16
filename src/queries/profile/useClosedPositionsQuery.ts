@@ -56,7 +56,7 @@ const useClosedPositionsQuery = (
                 if (
                     bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
                     positionBalance.position.market.result !== null &&
-                    isOptionClaimable(positionBalance)
+                    !isOptionClaimable(positionBalance)
                 ) {
                     rangedRipPositions.push(positionBalance);
                 }
