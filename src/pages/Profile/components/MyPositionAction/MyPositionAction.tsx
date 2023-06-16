@@ -41,6 +41,7 @@ import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { UsingAmmLink } from '../styled-components';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { UserLivePositions } from 'types/options';
+import { ZERO_ADDRESS } from 'constants/network';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
@@ -66,6 +67,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
     const [isAllowing, setIsAllowing] = useState(false);
 
     useEffect(() => {
+        if (position.positionAddress === ZERO_ADDRESS) {
+            return;
+        }
         const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.provider);
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';

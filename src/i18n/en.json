@@ -271,7 +271,9 @@
                 "total-pay": "Total to pay",
                 "total-receive": "Total to receive",
                 "potential-profit": "Potential profit",
-                "skew": "Skew impact"
+                "skew": "Skew impact",
+                "tooltip": "Trading details",
+                "tooltip-disabled": "Trading details (pick a price and enter amount)"
             },
             "slippage": {
                 "label": "Slippage tolerance",

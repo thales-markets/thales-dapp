@@ -51,16 +51,22 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                 const ammMarketData = await binaryOptionsMarketDataContract.getAmmMarketData(marketAddress);
 
                 const [maxBuyLongPrice, maxBuyShortPrice] = await Promise.all([
-                    ammContract.buyFromAmmQuote(
-                        marketAddress,
-                        SIDE['long'],
-                        (ammMarketData.upBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
-                    ),
-                    ammContract.buyFromAmmQuote(
-                        marketAddress,
-                        SIDE['short'],
-                        (ammMarketData.downBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
-                    ),
+                    ammMarketData.upBuyLiquidity > 0
+                        ? ammContract.buyFromAmmQuote(
+                              marketAddress,
+                              SIDE['long'],
+                              (ammMarketData.upBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                          )
+                        : 0,
+                    ammMarketData.downBuyLiquidity > 0
+                        ? ammContract.buyFromAmmQuote(
+                              marketAddress,
+                              SIDE['short'],
+                              (ammMarketData.downBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
                 ]);
 
                 ammMaxLimits.maxBuyLong = bigNumberFormatter(ammMarketData.upBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;

@@ -56,16 +56,24 @@ const useRangedAMMMaxLimitsQuery = (
                 const rangedAmmMarketData = await binaryOptionsMarketDataContract.getRangedAmmMarketData(marketAddress);
 
                 const [maxBuyInPrice, maxBuyOutPrice] = await Promise.all([
-                    rangedMarketAMMContract.buyFromAmmQuote(
-                        marketAddress,
-                        RANGE_SIDE['in'],
-                        (rangedAmmMarketData.inBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
-                    ),
-                    rangedMarketAMMContract.buyFromAmmQuote(
-                        marketAddress,
-                        RANGE_SIDE['out'],
-                        (rangedAmmMarketData.outBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
-                    ),
+                    rangedAmmMarketData.inBuyLiquidity > 0
+                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                              marketAddress,
+                              RANGE_SIDE['in'],
+                              (rangedAmmMarketData.inBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
+                    rangedAmmMarketData.outBuyLiquidity > 0
+                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                              marketAddress,
+                              RANGE_SIDE['out'],
+                              (rangedAmmMarketData.outBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
                 ]);
 
                 ammMaxLimits.in.buyPrice = stableCoinFormatter(rangedAmmMarketData.inBuyPrice, networkId);

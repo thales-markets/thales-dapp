@@ -241,6 +241,7 @@ const InfoWrapper = styled.div`
     width: fit-content;
     background: ${(props) => props.theme.background.primary};
     padding: 0 5px;
+    z-index: 1;
 `;
 
 const InfoText = styled.span`

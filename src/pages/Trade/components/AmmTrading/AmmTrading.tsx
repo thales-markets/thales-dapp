@@ -76,6 +76,7 @@ import {
     TradingDetailsContainer,
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
+import Tooltip from 'components/Tooltip';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -300,6 +301,14 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         isAmmTradingDisabled ||
         !hasAllowance;
 
+    const isDetailsIconDisabled =
+        !isPaidAmountEntered ||
+        !isPositionPricePositive ||
+        !isPositionAmountPositive ||
+        isSubmitting ||
+        insufficientLiquidity ||
+        isAmmTradingDisabled;
+
     const isFormDisabled = !market.address || isSubmitting || outOfLiquidity || isAmmTradingDisabled;
 
     const approvalCurrencyAddress = isBuy
@@ -400,9 +409,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         }
 
         const calcPrice = !positionPrice ? Number(basePrice) : Number(positionPrice);
-        if (market.address && totalToPay > 0 && calcPrice > 0) {
+        if (market.address && totalToPay > 0 && calcPrice > 0 && liquidity > 0) {
             let suggestedAmount = isBuy ? totalToPay / calcPrice : totalToPay;
-            if (isBuy && isMax && suggestedAmount >= liquidity) {
+            if (isBuy && suggestedAmount > liquidity) {
                 suggestedAmount = liquidity;
             }
 
@@ -410,50 +419,36 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
                 const contract = isRangedMarket ? rangedMarketAMMContract : ammContract;
 
-                const getQuote = async (amount: number) => {
-                    const parsedAmount = ethers.utils.parseEther(amount.toString());
-                    const promises = isRangedMarket
-                        ? getQuoteFromRangedAMM(
-                              isNonDefaultStable,
-                              isBuy,
-                              contract,
-                              parsedAmount,
-                              market.address,
-                              POSITIONS_TO_SIDE_MAP[market.positionType],
-                              collateral.address
-                          )
-                        : getQuoteFromAMM(
-                              isNonDefaultStable,
-                              isBuy,
-                              contract,
-                              parsedAmount,
-                              market.address,
-                              POSITIONS_TO_SIDE_MAP[market.positionType],
-                              collateral.address
-                          );
+                const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
+                const promises = isRangedMarket
+                    ? getQuoteFromRangedAMM(
+                          isNonDefaultStable,
+                          isBuy,
+                          contract,
+                          parsedAmount,
+                          market.address,
+                          POSITIONS_TO_SIDE_MAP[market.positionType],
+                          collateral.address
+                      )
+                    : getQuoteFromAMM(
+                          isNonDefaultStable,
+                          isBuy,
+                          contract,
+                          parsedAmount,
+                          market.address,
+                          POSITIONS_TO_SIDE_MAP[market.positionType],
+                          collateral.address
+                      );
 
-                    const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
-                    const ammQuote = isNonDefaultStable ? (ammQuotes as any)[0] : ammQuotes;
-                    const formattedAmmQuote = stableCoinFormatter(
-                        ammQuote,
-                        networkId,
-                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                    );
+                const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
+                const ammQuote = isNonDefaultStable ? (ammQuotes as any)[0] : ammQuotes;
+                const formattedAmmQuote = stableCoinFormatter(
+                    ammQuote,
+                    networkId,
+                    isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                );
 
-                    return {
-                        formattedAmmQuote,
-                        ammPriceImpact,
-                    };
-                };
-
-                let quoteAmount = suggestedAmount;
-                let quotes = await getQuote(suggestedAmount);
-                if (quotes.formattedAmmQuote === 0) {
-                    quoteAmount = liquidity;
-                    quotes = await getQuote(quoteAmount);
-                }
-
-                const ammPrice = quotes.formattedAmmQuote / quoteAmount;
+                const ammPrice = formattedAmmQuote / suggestedAmount;
 
                 let calcAmount = totalToPay / ammPrice;
                 if (isBuy && isMax) {
@@ -465,9 +460,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     }
                 }
 
-                setPositionAmount(isBuy ? calcAmount : quotes.formattedAmmQuote);
+                setPositionAmount(isBuy ? calcAmount : formattedAmmQuote);
                 setPositionPrice(ammPrice);
-                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(quotes.ammPriceImpact) - MIN_SCEW_IMPACT : 0);
+                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPriceProfit(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
 
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
@@ -578,7 +573,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(Number(paidAmount), false);
-    }, [paidAmount, market.address, walletAddress, selectedStableIndex, market.positionType]);
+    }, [paidAmount, market.address, walletAddress, selectedStableIndex, market.positionType, liquidity]);
 
     useInterval(async () => {
         fetchAmmPriceData(Number(paidAmount), true);
@@ -614,7 +609,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
 
     useEffect(() => {
-        if (market.address) {
+        if (market.address && liquidity > 0) {
             setInsufficientLiquidity(isBuy ? Number(positionAmount) > liquidity : Number(paidAmount) > liquidity);
         }
     }, [positionAmount, paidAmount, liquidity, market.address, isBuy]);
@@ -694,11 +689,19 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         paidAmount={paidAmount}
                         breakFirstLine={false}
                     />
-                    <DetailsIcon
-                        className="icon icon--gear"
-                        disabled={isButtonDisabled}
-                        onClick={() => !isButtonDisabled && setOpenTradingDetailsModal(true)}
-                    />
+                    <Tooltip
+                        overlay={
+                            isDetailsIconDisabled
+                                ? t('markets.amm-trading.details-modal.tooltip-disabled')
+                                : t('markets.amm-trading.details-modal.tooltip')
+                        }
+                    >
+                        <DetailsIcon
+                            className="icon icon--gear"
+                            disabled={isDetailsIconDisabled}
+                            onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
+                        />
+                    </Tooltip>
                 </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
@@ -724,10 +727,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 : undefined
                         }
                         info={
-                            showBuyLiquidity && market.address
+                            showBuyLiquidity && market.address && (isDetailsPage ? liquidity : true)
                                 ? `${t('markets.amm-trading.max-buy')}: ${formatCurrencyWithSign(
                                       USD_SIGN,
-                                      liquidityPrice,
+                                      truncToDecimals(liquidityPrice, 0),
                                       0
                                   )} (${formatCurrency(liquidity, 0)} ${market.positionType})`
                                 : undefined
