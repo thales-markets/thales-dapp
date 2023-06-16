@@ -31,7 +31,7 @@ const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOption
             const { stakingBonusRewardsManager } = snxJSConnector;
             console.log(stakingBonusRewardsManager);
             try {
-                const period = (await stakingThalesContract?.periodsOfStaking()) - 1;
+                const period = await stakingThalesContract?.periodsOfStaking();
                 const [
                     vaultsVolume,
                     lpVolume,

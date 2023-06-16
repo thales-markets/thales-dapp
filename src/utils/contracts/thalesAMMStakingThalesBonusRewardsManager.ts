@@ -14,7 +14,7 @@ const stakingBonusRewardsManager = {
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: 'TBD',
+        [Network.Arbitrum]: '0x6535F4cCC70E0CCb192a8A224d5eBA420DDF9e3f',
     },
     abi: [
         {
