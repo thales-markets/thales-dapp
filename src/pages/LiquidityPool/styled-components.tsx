@@ -263,7 +263,7 @@ export const LiquidityPoolInfoContainer = styled(FlexDivStart)`
 export const LiquidityPoolInfoLabel = styled.span`
     white-space: nowrap;
     margin-right: 6px;
-    width: 122px;
+    width: 125px;
 `;
 
 export const LiquidityPoolInfoGraphic = styled(FlexDivStart)<{ background: string; widthPercentage: number }>`
