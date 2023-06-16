@@ -23,8 +23,6 @@ const StakingOverview: React.FC = () => {
         }
     }, [query.isSuccess, query.data]);
 
-    console.log(query);
-
     const stakingData: OverviewData | undefined = useMemo(() => {
         if (stakingData) {
             return query.data;

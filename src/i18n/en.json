@@ -577,6 +577,14 @@
                     "divider": "Staking divider",
                     "your-current-points": "YOUR CURRENT POINTS"
                 },
+                "base-rewards": {
+                    "title": "Base staking Rewards",
+                    "balance": "Your staked balance",
+                    "total": "Total Thales staked",
+                    "share": "Your staked share",
+                    "rewards": "Your base rewards",
+                    "stake-more": "Stake more"
+                },
 
                 "base-label": "Thales staking base rewards"
             },

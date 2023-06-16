@@ -30,6 +30,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import StakingSteps from './components/StakingSteps/StakingSteps';
 import StakingOverview from './components/StakingOverview/StakingOverview';
 import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
+import BaseRewards from './components/BaseRewards/BaseRewards';
 
 const RewardsV2: React.FC = () => {
     const { t } = useTranslation();
@@ -183,7 +184,6 @@ const RewardsV2: React.FC = () => {
         );
     };
 
-    console.log('userStakingData: ', userStakingData);
     return (
         <Wrapper>
             <Header>
@@ -266,6 +266,7 @@ const RewardsV2: React.FC = () => {
             <StakingSteps />
             <StakingOverview />
             <PointsBreakdown />
+            <BaseRewards />
         </Wrapper>
     );
 };

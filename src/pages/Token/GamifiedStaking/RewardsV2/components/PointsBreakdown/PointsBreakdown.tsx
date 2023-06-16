@@ -23,8 +23,6 @@ const PointsBreakdown: React.FC = () => {
         }
     }, [query.isSuccess, query.data]);
 
-    console.log(query);
-
     const stakingData: PointsData | undefined = useMemo(() => {
         if (stakingData) {
             return query.data;

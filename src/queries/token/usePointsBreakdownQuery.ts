@@ -29,7 +29,7 @@ const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOption
         async () => {
             const { stakingThalesContract } = snxJSConnector;
             const { stakingBonusRewardsManager } = snxJSConnector;
-            console.log(stakingBonusRewardsManager);
+
             try {
                 const period = await stakingThalesContract?.periodsOfStaking();
                 const [
@@ -55,9 +55,6 @@ const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOption
                     stakingBonusRewardsManager?.stakingBaseDivider(),
                     stakingBonusRewardsManager?.userRoundBonusPoints(walletAddress, period),
                 ]);
-
-                console.log('stakedBalance: ', bigNumberFormatter(stakedBalance));
-                console.log('thalesDivider: ', Number(thalesDivider));
 
                 return {
                     vaultsVolume: formatCurrencyWithKey(USD_SIGN, bigNumberFormatter(vaultsVolume)),

@@ -28,8 +28,7 @@ const Tab: React.FC<{
     setSelectedTab: (tabId: string) => void;
     sections: TokenTabSection[];
     selectedSection?: TokenTabSectionIdEnum;
-}> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
-    console.log(setSelectedTab);
+}> = ({ selectedTab, sections, selectedSection }) => {
     const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
