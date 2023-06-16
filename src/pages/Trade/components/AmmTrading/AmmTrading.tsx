@@ -409,7 +409,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         }
 
         const calcPrice = !positionPrice ? Number(basePrice) : Number(positionPrice);
-        if (market.address && totalToPay > 0 && calcPrice > 0) {
+        if (market.address && totalToPay > 0 && calcPrice > 0 && liquidity > 0) {
             let suggestedAmount = isBuy ? totalToPay / calcPrice : totalToPay;
             if (isBuy && suggestedAmount > liquidity) {
                 suggestedAmount = liquidity;
@@ -573,7 +573,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(Number(paidAmount), false);
-    }, [paidAmount, market.address, walletAddress, selectedStableIndex, market.positionType]);
+    }, [paidAmount, market.address, walletAddress, selectedStableIndex, market.positionType, liquidity]);
 
     useInterval(async () => {
         fetchAmmPriceData(Number(paidAmount), true);
@@ -609,7 +609,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
 
     useEffect(() => {
-        if (market.address) {
+        if (market.address && liquidity > 0) {
             setInsufficientLiquidity(isBuy ? Number(positionAmount) > liquidity : Number(paidAmount) > liquidity);
         }
     }, [positionAmount, paidAmount, liquidity, market.address, isBuy]);
