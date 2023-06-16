@@ -562,7 +562,9 @@
                     "your-points": "Your current total points",
                     "total-points": "Total global points",
                     "bonus-rewards": "Your bonus rewards",
-                    "leaderboard-rank": "Your leaderboard rank"
+                    "leaderboard-rank": "Your leaderboard rank",
+                    "of-total-points": "Of total points",
+                    "of-total-rewards": "Of total rewards"
                 },
                 "points": {
                     "your-points": "Your points breakdown",

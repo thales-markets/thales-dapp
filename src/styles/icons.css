@@ -290,6 +290,14 @@
     content: '\007A';
 }
 
+.icon--controller:before {
+    content: '\004a';
+}
+
+.icon--hexagon:before {
+    content: '\0048';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);

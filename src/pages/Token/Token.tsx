@@ -166,7 +166,6 @@ const Container = styled.div`
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
-    overflow: hidden;
 `;
 
 export default TokenPage;

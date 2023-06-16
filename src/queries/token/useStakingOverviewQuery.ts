@@ -10,7 +10,7 @@ export type OverviewData = {
     userPoints: string;
     totalPoints: string;
     bonusRewards: string;
-    share: string;
+    share: number;
     estimatedRewards: string;
 };
 
@@ -29,17 +29,17 @@ const useStakingOverviewQuery = (walletAddress: string, options?: UseQueryOption
                     stakingBonusRewardsManager?.getUserRoundBonusShare(walletAddress, period),
                 ]);
 
+                console.log('share: ', bigNumberFormatter(share));
                 return {
                     period: Number(period),
-                    userPoints: truncToDecimals(bigNumberFormatter(userPoints)),
-                    totalPoints: truncToDecimals(bigNumberFormatter(totalPoints)),
-                    bonusRewards: truncToDecimals(bigNumberFormatter(bonusRewards)),
-                    share: truncToDecimals(bigNumberFormatter(share)),
-                    estimatedRewards: formatCurrencyWithKey(
-                        THALES_CURRENCY,
-                        bigNumberFormatter(share) * bigNumberFormatter(bonusRewards),
-                        2
-                    ),
+                    userPoints: formatCurrencyWithKey('', bigNumberFormatter(userPoints)),
+                    totalPoints: formatCurrencyWithKey('', bigNumberFormatter(totalPoints)),
+                    bonusRewards: formatCurrencyWithKey('', bigNumberFormatter(bonusRewards)),
+                    share: bigNumberFormatter(share),
+                    estimatedRewards:
+                        truncToDecimals(bigNumberFormatter(share) * bigNumberFormatter(bonusRewards)) +
+                        '/' +
+                        formatCurrencyWithKey(THALES_CURRENCY, bigNumberFormatter(bonusRewards), 2),
                 };
             } catch (e) {
                 console.log(e);
