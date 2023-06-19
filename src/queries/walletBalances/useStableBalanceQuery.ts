@@ -9,7 +9,7 @@ import { StableCoins } from 'types/options';
 
 const useStableBalanceQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
-        QUERY_KEYS.WalletBalances.Balance(walletAddress ?? '', networkId),
+        QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress ?? '', networkId),
         async () => {
             try {
                 const collateral = snxJSConnector.collateral;

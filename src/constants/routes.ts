@@ -1,4 +1,4 @@
-export const ROUTES = {
+const ROUTES = {
     Home: '/',
     Article: {
         Token: '/article/token',
@@ -27,6 +27,7 @@ export const ROUTES = {
         OPRewards: '/op-rewards',
         Vaults: '/vaults',
         Vault: '/vaults/:vaultId',
+        LiquidityPool: '/liquidity-pool',
     },
     Governance: {
         Home: '/governance',

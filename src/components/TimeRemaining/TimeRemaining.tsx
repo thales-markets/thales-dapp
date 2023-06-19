@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import intervalToDuration from 'date-fns/intervalToDuration';
-//import differenceInHours from 'date-fns/differenceInHours';
 import differenceInWeeks from 'date-fns/differenceInWeeks';
 import { formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
 import styled from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 type TimeRemainingProps = {
     end: Date | number;
@@ -18,9 +18,8 @@ type TimeRemainingProps = {
 };
 
 const ONE_SECOND_IN_MS = 1000;
-//const ENDING_SOON_IN_HOURS = 48;
 
-export const TimeRemaining: React.FC<TimeRemainingProps> = ({
+const TimeRemaining: React.FC<TimeRemainingProps> = ({
     end,
     onEnded,
     fontSize,
@@ -29,7 +28,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     zIndex,
 }) => {
     const now = Date.now();
-    const [timeElapsed, setTimeElapsed] = useState(now >= end);
+    const [timeElapsed, setTimeElapsed] = useState(now >= Number(end));
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, end)));
     const [showRemainingInWeeks, setShowRemainingInWeeks] = useState(weeksDiff > 4);
     const [countdownDisabled, setCountdownDisabled] = useState(timeElapsed || showRemainingInWeeks);
@@ -39,25 +38,25 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     const { t } = useTranslation();
 
     const dateTimeTranslationMap = {
-        years: t('options.common.time-remaining.years'),
-        year: t('options.common.time-remaining.year'),
-        months: t('options.common.time-remaining.months'),
-        month: t('options.common.time-remaining.month'),
-        weeks: t('options.common.time-remaining.weeks'),
-        week: t('options.common.time-remaining.week'),
-        days: t('options.common.time-remaining.days'),
-        day: t('options.common.time-remaining.day'),
-        hours: t('options.common.time-remaining.hours'),
-        hour: t('options.common.time-remaining.hour'),
-        minutes: t('options.common.time-remaining.minutes'),
-        minute: t('options.common.time-remaining.minute'),
-        seconds: t('options.common.time-remaining.seconds'),
-        second: t('options.common.time-remaining.second'),
-        'days-short': t('options.common.time-remaining.days-short'),
-        'hours-short': t('options.common.time-remaining.hours-short'),
-        'minutes-short': t('options.common.time-remaining.minutes-short'),
-        'seconds-short': t('options.common.time-remaining.seconds-short'),
-        'months-short': t('options.common.time-remaining.months-short'),
+        years: t('common.time-remaining.years'),
+        year: t('common.time-remaining.year'),
+        months: t('common.time-remaining.months'),
+        month: t('common.time-remaining.month'),
+        weeks: t('common.time-remaining.weeks'),
+        week: t('common.time-remaining.week'),
+        days: t('common.time-remaining.days'),
+        day: t('common.time-remaining.day'),
+        hours: t('common.time-remaining.hours'),
+        hour: t('common.time-remaining.hour'),
+        minutes: t('common.time-remaining.minutes'),
+        minute: t('common.time-remaining.minute'),
+        seconds: t('common.time-remaining.seconds'),
+        second: t('common.time-remaining.second'),
+        'days-short': t('common.time-remaining.days-short'),
+        'hours-short': t('common.time-remaining.hours-short'),
+        'minutes-short': t('common.time-remaining.minutes-short'),
+        'seconds-short': t('common.time-remaining.seconds-short'),
+        'months-short': t('common.time-remaining.months-short'),
     };
 
     useEffect(() => {
@@ -68,15 +67,15 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
 
     useMemo(() => {
         const today = Date.now();
-        setTimeElapsed(today >= end);
+        setTimeElapsed(today >= Number(end));
         setWeekDiff(Math.abs(differenceInWeeks(today, end)));
         setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, end)) > 4);
-        setCountdownDisabled(today >= end || Math.abs(differenceInWeeks(today, end)) > 4);
+        setCountdownDisabled(today >= Number(end) || Math.abs(differenceInWeeks(today, end)) > 4);
         setDuration(intervalToDuration({ start: today, end }));
     }, [end]);
 
     useInterval(() => {
-        if (now <= end) {
+        if (now <= Number(end)) {
             setDuration(intervalToDuration({ start: now, end }));
         } else {
             setTimeElapsed(true);
@@ -87,9 +86,9 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     return (
         <Container fontSize={fontSize} duration={duration} showBorder={showBorder} zIndex={zIndex}>
             {timeElapsed
-                ? t('options.common.time-remaining.ended')
+                ? t('common.time-remaining.ended')
                 : showRemainingInWeeks
-                ? `${weeksDiff} ${t('options.common.time-remaining.weeks')}`
+                ? `${weeksDiff} ${t('common.time-remaining.weeks')}`
                 : showFullCounter
                 ? formattedDurationFull(duration, dateTimeTranslationMap)
                 : formattedDuration(duration, dateTimeTranslationMap)}
@@ -97,19 +96,19 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     );
 };
 
-const getColor = (duration: Duration) => {
+const getColor = (duration: Duration, theme: ThemeInterface) => {
     if (duration.years || duration.months || duration.days) {
-        return `var(--primary-color)`;
+        return theme.textColor.primary;
     }
     if (duration.hours) {
-        return `#FFCC00`;
+        return theme.warning.textColor.primary;
     }
     if (duration.minutes && duration.minutes > 10) {
         if (duration.minutes > 10) {
-            return `#FF8800`;
+            return theme.warning.textColor.secondary;
         }
     }
-    return '#D82418';
+    return theme.error.textColor.primary;
 };
 
 const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean; zIndex?: number }>`
@@ -117,9 +116,14 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     @media (max-width: 512px) {
         font-size: ${(props) => props.fontSize || 10}px;
     }
-    color: ${(props) => getColor(props.duration)};
-    border: 1px solid
-        ${(props) => (props.showBorder ? (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent') : 'none')};
+    color: ${(props) => getColor(props.duration, props.theme)};
+    border: ${(props) =>
+        props.showBorder
+            ? '1px solid ' +
+              (getColor(props.duration, props.theme) === props.theme.error.textColor.primary
+                  ? props.theme.error.textColor.primary
+                  : 'transparent')
+            : 'none'};
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;

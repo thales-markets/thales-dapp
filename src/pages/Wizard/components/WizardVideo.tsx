@@ -50,12 +50,11 @@ const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: st
 };
 
 const VideoHeader = styled.p`
-    font-family: 'Titillium Web';
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 30px;
     margin-bottom: 20px;
 `;

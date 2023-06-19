@@ -1,11 +1,11 @@
-import { Tooltip, withStyles } from '@material-ui/core';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'styles/common';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
     align-items: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const Container = styled(FlexDivRow)`
@@ -13,13 +13,13 @@ export const Container = styled(FlexDivRow)`
     position: relative;
     align-items: start;
     margin-top: 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         width: 95%;
     }
 `;
 
-export const ContentContainer = styled(FlexDivColumn)`
+const ContentContainer = styled(FlexDivColumn)`
     width: 100%;
     flex: initial;
     align-items: center;
@@ -37,7 +37,7 @@ export const LeftContainer = styled(ContentContainer)`
     margin-right: 25px;
     width: 60%;
     align-items: start;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0px;
         padding-top: 0px;
         width: 100%;
@@ -45,11 +45,11 @@ export const LeftContainer = styled(ContentContainer)`
 `;
 
 export const RightContainer = styled(ContentContainer)`
-    border: 2px solid #64d9fe;
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 10px 20px;
         width: 100%;
     }
@@ -58,7 +58,7 @@ export const RightContainer = styled(ContentContainer)`
 export const RoundInfoWrapper = styled(FlexDivColumn)`
     width: 100%;
     padding: 0px 20px 20px 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 0px 20px;
         width: 95%;
     }
@@ -70,7 +70,7 @@ export const RoundEndContainer = styled(FlexDivColumn)`
     span {
         font-size: 30px;
         font-weight: 600;
-        color: #64d9fe;
+        color: ${(props) => props.theme.textColor.quaternary};
     }
     margin-bottom: 15px;
 `;
@@ -82,11 +82,11 @@ export const RoundEndLabel = styled.p`
 export const RoundEnd = styled.p`
     font-weight: 600;
     font-size: 25px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -96,9 +96,9 @@ export const RoundAllocationContainer = styled(FlexDivColumn)`
     max-width: 200px;
     padding: 5px 0;
     :not(:last-child) {
-        border-right: 2px solid rgba(100, 217, 254, 0.4);
+        border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         :not(:last-child) {
             border-right: none;
         }
@@ -112,19 +112,17 @@ export const RoundAllocationLabel = styled.p`
 export const RoundAllocation = styled.p`
     font-size: 25px;
     font-weight: 600;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const RoundInfoContainer = styled(FlexDivColumn)`
     align-items: center;
 `;
 
-export const RoundInfoLabel = styled.p``;
-
 export const RoundInfo = styled.p`
     font-size: 20px;
     font-weight: 600;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const Description = styled.div`
@@ -135,13 +133,13 @@ export const Description = styled.div`
     p {
         margin-bottom: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
     }
 `;
 
 export const Info = styled(Description)`
-    border-bottom: 3px solid rgba(100, 217, 254, 0.4);
+    border-bottom: 3px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 10px;
     padding-top: 0px;
 `;
@@ -163,7 +161,7 @@ export const VariablesTitle = styled.span`
     font-size: 20px;
     line-height: 100%;
     margin-top: 10px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const Variables = styled(Description)`
@@ -180,7 +178,7 @@ export const ContentInfo = styled.p`
 `;
 
 export const WarningContentInfo = styled(ContentInfo)`
-    color: #ffcc00;
+    ${(props) => props.theme.warning.textColor.primary};
 `;
 
 export const BoldContent = styled.span`
@@ -196,7 +194,7 @@ export const Title = styled.span`
     margin-top: 10px;
     width: 100%;
     text-align: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0px;
         font-size: 25px;
     }
@@ -208,7 +206,7 @@ export const TitleVaultIcon = styled.i`
     margin-right: 8px;
     top: -3px;
     position: relative;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 30px;
     }
 `;
@@ -227,7 +225,7 @@ export const VaultFilledGraphicContainer = styled(FlexDivStart)`
     position: relative;
     width: 100%;
     height: 14px;
-    background: #3b4472;
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 15px;
     margin-bottom: 10px;
 `;
@@ -239,37 +237,8 @@ export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number
     height: 10px;
     left: 2px;
     top: 2px;
-    background: linear-gradient(269.97deg, #64d9fe 16.18%, #3f75ff 77.77%);
+    background: linear-gradient(90deg, #36d1dc -1.48%, #5b86e5 102.44%);
     border-radius: 15px;
-`;
-
-export const SubmitButton = styled.button`
-    background: linear-gradient(88.84deg, #2fc9dd 19.98%, #1ca6b9 117.56%);
-    border-radius: 30px;
-    margin: 20px 20px;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 23px;
-    color: #04045a;
-    width: 252px;
-    border: none;
-    padding: 7px;
-    cursor: pointer;
-    text-transform: uppercase;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
-export const CloseRoundButton = styled(SubmitButton)`
-    margin: 0;
-    width: auto;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 14px;
-    top: -2px;
-    position: relative;
 `;
 
 export const ButtonContainer = styled(FlexDivCentered)<{ mobileDirection?: string }>`
@@ -286,17 +255,6 @@ export const ButtonContainer = styled(FlexDivCentered)<{ mobileDirection?: strin
         }
     }
 `;
-
-export const ValidationTooltip = withStyles(() => ({
-    tooltip: {
-        minWidth: '100%',
-        width: '100%',
-        margin: '1px',
-        backgroundColor: '#FDB7B7',
-        color: '#F30101',
-        fontSize: '12px',
-    },
-}))(Tooltip);
 
 export const LeftLoaderContainer = styled(FlexDivCentered)`
     position: relative;
@@ -315,13 +273,44 @@ export const ToggleContainer = styled(FlexDiv)`
     margin-bottom: 20px;
     width: 100%;
     text-transform: uppercase;
-    border-bottom: 2px solid rgba(100, 217, 254, 0.4);
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 20px;
 `;
 
 export const Link = styled.a`
-    color: #64d9fe;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;
     }
+`;
+
+export const Header = styled(FlexDivStart)`
+    font-size: 22px;
+    line-height: 100%;
+    font-weight: bold;
+    width: 100%;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
+`;
+
+export const BackLinkContainer = styled.span`
+    :hover {
+        text-decoration: underline;
+    }
+`;
+
+export const BackIcon = styled.i`
+    font-weight: 400;
+    font-size: 20px;
+    margin-right: 6px;
+    top: -2px;
+    position: relative;
+`;
+
+export const HeaderVaultIcon = styled.i`
+    font-weight: 400;
+    font-size: 23px;
+    margin-left: 8px;
+    position: relative;
 `;

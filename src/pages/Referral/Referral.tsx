@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
 import {
     DescriptionContainer,
     FormWrapper,
     HeaderContainer,
-    InputField,
     KeyValue,
     Label,
     RowContrainer,
@@ -13,6 +11,18 @@ import {
     StatValue,
     TableWrapper,
     Text,
+    MenuContainer,
+    MenuItem,
+    Tab,
+    BoldText,
+    ViewsDropDownWrapper,
+    ViewButton,
+    ViewsDropDown,
+    ViewTitle,
+    ViewItem,
+    ReferralFooter,
+    StyledLink,
+    FooterLink,
 } from './styled-components';
 import Button from 'components/Button';
 import { Trans, useTranslation } from 'react-i18next';
@@ -26,7 +36,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import Container from 'pages/Leaderboard/styled-components';
 import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
 import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
 import { buildReferrerLink } from 'utils/routes';
@@ -34,22 +43,24 @@ import ROUTES from 'constants/routes';
 import useReferrerQuery from 'queries/referral/useReferrerQuery';
 import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
-import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
-import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
-import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
 import OutsideClickHandler from 'react-outside-click-handler';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import { generalConfig } from 'config/general';
 import axios from 'axios';
 import snxJSConnector from 'utils/snxJSConnector';
+import TextInput from 'components/fields/TextInput/TextInput';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
+import ToastMessage from 'components/ToastMessage';
 
 const tabs = [
     {
@@ -68,6 +79,7 @@ const tabs = [
 
 const Referral: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -80,7 +92,7 @@ const Referral: React.FC = () => {
     const [reffererID, setReffererID] = useState('');
     const [savedReffererID, setSavedReffererID] = useState('');
     const [showMore, setShowMore] = useState(false);
-    const [textHeight, setHeight] = useState('170px');
+    const [textHeight, setHeight] = useState('150px');
     const [showViewsDropdown, setShowViewsDropdown] = useState(false);
 
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
@@ -160,7 +172,10 @@ const Referral: React.FC = () => {
 
     const copyLink = () => {
         navigator.clipboard.writeText(referralLink);
-        toast(t('referral-page.modal.copied'), { type: 'success' });
+        toast(
+            <ToastMessage id="customId" type="success" message={t('referral-page.modal.copied')} />,
+            getSuccessToastOptions('', 'customId')
+        );
     };
 
     const populateReferralLink = (landingPageId: number, reffererId: string) => {
@@ -195,11 +210,17 @@ const Referral: React.FC = () => {
             previousReffererID: savedReffererID,
         });
         if (response.data.error) {
-            toast(t('referral-page.generate.id-exists'), { type: 'error' });
+            toast(
+                <ToastMessage id="customId" type="error" message={t('referral-page.generate.id-exists')} />,
+                getErrorToastOptions('', 'customId')
+            );
         } else {
             populateReferralLink(landingPage, reffererID);
             setSavedReffererID(reffererID);
-            toast(t('referral-page.generate.id-create-success'), { type: 'success' });
+            toast(
+                <ToastMessage id="customId" type="success" message={t('referral-page.generate.id-create-success')} />,
+                getSuccessToastOptions('', 'customId')
+            );
         }
     }, [reffererID, walletAddress, savedReffererID, t]);
 
@@ -216,8 +237,8 @@ const Referral: React.FC = () => {
     }, [reffererIDQuery.isSuccess, reffererIDQuery.data]);
 
     const handleReadMore = () => {
-        if (!showMore) setHeight('370px');
-        if (showMore) setHeight('170px');
+        if (!showMore) setHeight('100%');
+        if (showMore) setHeight('150px');
         setShowMore(!showMore);
     };
 
@@ -242,21 +263,30 @@ const Referral: React.FC = () => {
                             defaultValue={0}
                         />
                     </RowContrainer>
-                    <Label>{t('referral-page.choose-referral')}</Label>
                     <RowContrainer>
-                        <InputField value={reffererID} onChange={(e) => setReffererID(e.target.value)} />
+                        <TextInput
+                            value={reffererID}
+                            onChange={(e: any) => setReffererID(e.target.value)}
+                            label={t('referral-page.choose-referral')}
+                            placeholder={t('referral-page.choose-referral-placeholder')}
+                        />
                     </RowContrainer>
                     <Button
                         disabled={!reffererID || savedReffererID === reffererID}
-                        padding={'5px 0px'}
-                        margin={'9px 0px 9px 0'}
-                        active={true}
-                        hoverShadow={'var(--button-shadow)'}
-                        onClickHandler={generateLinkHandler}
+                        margin={'0px 0px 10px 0px'}
+                        fontSize="15px"
+                        height="30px"
+                        onClick={generateLinkHandler}
                     >
                         {t('referral-page.generate.link-btn')}
                     </Button>
-                    <InputWithIcon text={referralLink} onIconClick={copyLink} customIconClass={'icon icon--copy'} />
+                    <TextInput
+                        value={referralLink}
+                        onIconClick={copyLink}
+                        iconClass={'icon icon--copy'}
+                        inputFontSize="13px"
+                        inputPadding="5px 30px 5px 10px"
+                    />
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>
@@ -272,8 +302,8 @@ const Referral: React.FC = () => {
                         <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02)}</StatValue>
                     </KeyValue>
                     <KeyValue>
-                        <StatLabel color={UI_COLORS.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue color={UI_COLORS.GREEN}>
+                        <StatLabel color={theme.textColor.quaternary}>{t('referral-page.statistics.earned')}</StatLabel>
+                        <StatValue color={theme.textColor.quaternary}>
                             {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned)}
                         </StatValue>
                     </KeyValue>
@@ -284,7 +314,6 @@ const Referral: React.FC = () => {
                             i18nKey={'referral-page.description'}
                             components={{ bold: <BoldText />, italic: <i /> }}
                         />
-                        {/* <TextGradient /> */}
                     </Text>
                     <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
@@ -315,317 +344,185 @@ const Referral: React.FC = () => {
                     </ViewsDropDown>
                 </ViewsDropDownWrapper>
             )}
-            <Container.Main justifyContent="flex-start" hide={false}>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 0}
-                    onClick={() => setTabIndex(tabs[0].id)}
-                >
+            <MenuContainer>
+                <MenuItem active={tabIndex == 0} onClick={() => setTabIndex(tabs[0].id)}>
                     {t(tabs[0].i18label)}
-                </Container.Main.Item>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 1}
-                    onClick={() => setTabIndex(tabs[1].id)}
-                >
+                </MenuItem>
+                <MenuItem active={tabIndex == 1} onClick={() => setTabIndex(tabs[1].id)}>
                     {t(tabs[1].i18label)}
-                </Container.Main.Item>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 2}
-                    onClick={() => setTabIndex(tabs[2].id)}
-                >
+                </MenuItem>
+                <MenuItem active={tabIndex == 2} onClick={() => setTabIndex(tabs[2].id)}>
                     {t(tabs[2].i18label)}
-                </Container.Main.Item>
-            </Container.Main>
-            <Container.Tab>
-                <>
-                    {tabIndex == tabs[0].id && (
-                        <TableWrapper>
-                            <Table
-                                data={transactionData}
-                                defaultPage={10}
-                                containerStyle={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                }}
-                                columns={[
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'trader',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
-                                        disableSortBy: true,
+                </MenuItem>
+            </MenuContainer>
+            <Tab>
+                {tabIndex == tabs[0].id && (
+                    <TableWrapper>
+                        <Table
+                            data={transactionData}
+                            isLoading={transactionsQuery.isLoading}
+                            columns={[
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'trader',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.volume')}</>,
+                                    accessor: 'volume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.earned')}</>,
+                                    accessor: 'amount',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.transaction-date')}</>,
+                                    accessor: 'timestamp',
+                                    Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.tx-info')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+                {tabIndex == tabs[1].id && (
+                    <TableWrapper>
+                        <Table
+                            data={tradersData}
+                            isLoading={tradersQuery.isLoading}
+                            columns={[
+                                {
+                                    id: 'index',
+                                    Header: <>{t('referral-page.table.index')}</>,
+                                    Cell: (cellProps: any) => {
+                                        return <p>{cellProps?.row?.id ? Number(cellProps?.row?.id) + 1 : ''}</p>;
                                     },
-                                    {
-                                        Header: <>{t('referral-page.table.volume')}</>,
-                                        accessor: 'volume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('volume'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.earned')}</>,
-                                        accessor: 'amount',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('amount'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.transaction-date')}</>,
-                                        accessor: 'timestamp',
-                                        Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.tx-info')}</>,
-                                        accessor: 'id',
-                                        disableSortBy: true,
-                                        Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                    {tabIndex == tabs[1].id && (
-                        <TableWrapper>
-                            <Table
-                                data={tradersData}
-                                defaultPage={10}
-                                containerStyle={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                }}
-                                columns={[
-                                    {
-                                        id: 'index',
-                                        Header: <>{t('referral-page.table.index')}</>,
-                                        Cell: (cellProps: any) => {
-                                            return <p>{cellProps?.row?.id ? Number(cellProps?.row?.id) + 1 : ''}</p>;
-                                        },
-                                        disableSortBy: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'id',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
-                                        disableSortBy: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.trades')}</>,
-                                        accessor: 'trades',
-                                        Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-volume')}</>,
-                                        accessor: 'totalVolume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('totalVolume'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-earned')}</>,
-                                        accessor: 'totalEarned',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('totalEarned'),
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                    {tabIndex == tabs[2].id && (
-                        <TableWrapper>
-                            <Table
-                                data={affiliateCompetitionData}
-                                defaultPage={10}
-                                containerStyle={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                }}
-                                columns={[
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'id',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
-                                        disableSortBy: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.trades')}</>,
-                                        accessor: 'trades',
-                                        Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
-                                        sortable: true,
-                                        sortType: customColumnSort('trades'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-volume')}</>,
-                                        accessor: 'totalVolume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('totalVolume'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-earned')}</>,
-                                        accessor: 'totalEarned',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                        sortType: customColumnSort('totalEarned'),
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.first-transaction')}</>,
-                                        accessor: 'timestamp',
-                                        Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
-                                        sortable: true,
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                </>
-            </Container.Tab>
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.trades')}</>,
+                                    accessor: 'trades',
+                                    Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-volume')}</>,
+                                    accessor: 'totalVolume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-earned')}</>,
+                                    accessor: 'totalEarned',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+                {tabIndex == tabs[2].id && (
+                    <TableWrapper>
+                        <Table
+                            data={affiliateCompetitionData}
+                            isLoading={affiliateLeaderboardQuery.isLoading}
+                            columns={[
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.trades')}</>,
+                                    accessor: 'trades',
+                                    Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-volume')}</>,
+                                    accessor: 'totalVolume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-earned')}</>,
+                                    accessor: 'totalEarned',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.first-transaction')}</>,
+                                    accessor: 'timestamp',
+                                    Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
+                                    sortable: true,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+            </Tab>
             <ReferralFooter>
                 {t('referral-page.footer.sharing')}
-                <Tooltip
-                    message={t('referral-page.disclaimer')}
-                    type={'info'}
-                    iconColor={'var(--primary-color)'}
-                    container={{ width: '15px' }}
-                    interactive={true}
-                />
-                {t('referral-page.footer.and')}{' '}
-                <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={termsOfUse}
-                    style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
-                >
-                    {' '}
+                <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={14} />
+                &nbsp;
+                {t('referral-page.footer.and')}
+                &nbsp;
+                <FooterLink target="_blank" rel="noreferrer" href={termsOfUse}>
                     {t('referral-page.footer.terms')}
-                </a>
+                </FooterLink>
+                .
             </ReferralFooter>
-            <Footer />
         </>
     );
 };
-
-const BoldText = styled.span`
-    font-weight: 900;
-`;
-
-const ReferralFooter = styled.div`
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    font-size: 16px;
-    color: var(--primary-color);
-    @media screen and (max-width: 520px) {
-        margin-top: 50px;
-        margin-bottom: 10px;
-        display: inline-block;
-        div {
-            display: inline;
-        }
-    }
-`;
-
-const customColumnSort = (propertyName: string) => (rowA: any, rowB: any, desc: boolean) => {
-    if (desc) {
-        return +rowA.original[propertyName] > +rowB.original[propertyName] ? 1 : -1;
-    } else {
-        return +rowA.original[propertyName] < +rowB.original[propertyName] ? 1 : -1;
-    }
-};
-
-const ViewButton = styled.div`
-    display: none;
-    @media (max-width: 768px) {
-        display: block;
-        align-self: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: 6px 20px;
-        border: 1.5px solid rgba(100, 217, 254, 0.5);
-        box-sizing: border-box;
-        border-radius: 30px;
-        background: transparent;
-        font-family: Roboto !important;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #64d9fe;
-    }
-`;
-
-const ViewsDropDownWrapper = styled.div`
-    position: relative;
-    width: 100%;
-    height: 0;
-    z-index: 2;
-`;
-
-const ViewsDropDown = styled.div`
-    display: none;
-    @media (max-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
-        border: 2px solid rgba(100, 217, 254, 0.5);
-        box-sizing: border-box;
-        border-radius: 12px;
-        padding: 15px 20px;
-        max-width: 240px;
-        position: absolute;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: -56px;
-        z-index: 2;
-    }
-`;
-
-const ViewTitle = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 100%;
-    text-transform: uppercase;
-    color: #64d9fe;
-    @media (min-width: 769px) {
-        display: none;
-    }
-    margin-bottom: 10px;
-`;
-
-const ViewItem = styled.div<{ active: boolean }>`
-    @media (max-width: 768px) {
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 162.5%;
-        text-transform: uppercase;
-        cursor: pointer;
-        font-family: Roboto !important;
-        font-style: normal;
-        color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
-    }
-`;
 
 export default Referral;

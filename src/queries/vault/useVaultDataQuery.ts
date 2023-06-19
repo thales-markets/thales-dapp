@@ -2,10 +2,8 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { NetworkId } from 'utils/network';
+import { getDefaultDecimalsForNetwork, NetworkId } from 'utils/network';
 import { VaultData } from 'types/vault';
-import vaultContract from 'utils/contracts/sportVaultContract';
-import { ethers } from 'ethers';
 
 const useVaultDataQuery = (
     vaultAddress: string,
@@ -43,93 +41,61 @@ const useVaultDataQuery = (
             };
 
             try {
-                const sportVaultContract = new ethers.Contract(
-                    vaultAddress,
-                    vaultContract.abi,
-                    snxJSConnector.provider
-                );
-                if (sportVaultContract) {
-                    const [
-                        vaultStarted,
-                        maxAllowedDeposit,
-                        round,
-                        roundEndTime,
-                        availableAllocationNextRound,
-                        minDepositAmount,
-                        maxAllowedUsers,
-                        usersCurrentlyInVault,
-                        canCloseCurrentRound,
-                        paused,
-                        utilizationRate,
-                        priceLowerLimit,
-                        priceUpperLimit,
-                        skewImpactLimit,
-                        allocationLimitsPerMarketPerRound,
-                        minTradeAmount,
-                        roundLength,
-                    ] = await Promise.all([
-                        sportVaultContract?.vaultStarted(),
-                        sportVaultContract?.maxAllowedDeposit(),
-                        sportVaultContract?.round(),
-                        sportVaultContract?.getCurrentRoundEnd(),
-                        sportVaultContract?.getAvailableToDeposit(),
-                        sportVaultContract?.minDepositAmount(),
-                        sportVaultContract?.maxAllowedUsers(),
-                        sportVaultContract?.usersCurrentlyInVault(),
-                        sportVaultContract?.canCloseCurrentRound(),
-                        sportVaultContract?.paused(),
-                        sportVaultContract?.utilizationRate(),
-                        sportVaultContract?.priceLowerLimit(),
-                        sportVaultContract?.priceUpperLimit(),
-                        sportVaultContract?.skewImpactLimit(),
-                        sportVaultContract?.allocationLimitsPerMarketPerRound(),
-                        sportVaultContract?.minTradeAmount(),
-                        sportVaultContract?.roundLength(),
-                    ]);
+                const { ammVaultDataContract } = snxJSConnector;
+                if (ammVaultDataContract) {
+                    const contractVaultData = await ammVaultDataContract.getAmmVaultData(vaultAddress);
 
-                    vaultData.vaultStarted = vaultStarted;
-                    vaultData.maxAllowedDeposit = bigNumberFormatter(maxAllowedDeposit);
-                    vaultData.round = Number(round);
-                    vaultData.roundEndTime = Number(roundEndTime) * 1000;
-                    vaultData.availableAllocationNextRound = bigNumberFormatter(availableAllocationNextRound);
+                    vaultData.vaultStarted = contractVaultData.vaultStarted;
+                    vaultData.maxAllowedDeposit = bigNumberFormatter(
+                        contractVaultData.maxAllowedDeposit,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
+                    vaultData.round = Number(contractVaultData.round);
+                    vaultData.roundEndTime = Number(contractVaultData.roundEndTime) * 1000;
+                    vaultData.availableAllocationNextRound = bigNumberFormatter(
+                        contractVaultData.availableAllocationNextRound,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     vaultData.isRoundEnded = new Date().getTime() > vaultData.roundEndTime;
-                    vaultData.minDepositAmount = bigNumberFormatter(minDepositAmount);
-                    vaultData.maxAllowedUsers = Number(maxAllowedUsers);
-                    vaultData.usersCurrentlyInVault = Number(usersCurrentlyInVault);
-                    vaultData.canCloseCurrentRound = canCloseCurrentRound;
-                    vaultData.paused = paused;
-                    vaultData.utilizationRate = bigNumberFormatter(utilizationRate);
-                    vaultData.priceLowerLimit = bigNumberFormatter(priceLowerLimit);
-                    vaultData.priceUpperLimit = bigNumberFormatter(priceUpperLimit);
-                    vaultData.skewImpactLimit = bigNumberFormatter(skewImpactLimit);
+                    vaultData.minDepositAmount = bigNumberFormatter(
+                        contractVaultData.minDepositAmount,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
+                    vaultData.maxAllowedUsers = Number(contractVaultData.maxAllowedUsers);
+                    vaultData.usersCurrentlyInVault = Number(contractVaultData.usersCurrentlyInVault);
+                    vaultData.canCloseCurrentRound = contractVaultData.canCloseCurrentRound;
+                    vaultData.paused = contractVaultData.paused;
+                    vaultData.utilizationRate = bigNumberFormatter(contractVaultData.utilizationRate);
+                    vaultData.priceLowerLimit = bigNumberFormatter(contractVaultData.priceLowerLimit);
+                    vaultData.priceUpperLimit = bigNumberFormatter(contractVaultData.priceUpperLimit);
+                    vaultData.skewImpactLimit = bigNumberFormatter(contractVaultData.skewImpactLimit);
                     vaultData.allocationLimitsPerMarketPerRound =
-                        bigNumberFormatter(allocationLimitsPerMarketPerRound) / 100;
-                    vaultData.minTradeAmount = bigNumberFormatter(minTradeAmount);
-                    vaultData.roundLength = Number(roundLength) / 60 / 60 / 24;
-
-                    const [
-                        allocationCurrentRound,
-                        allocationNextRound,
-                        lifetimePnl,
-                        allocationSpentInARound,
-                        tradingAllocation,
-                    ] = await Promise.all([
-                        sportVaultContract?.allocationPerRound(vaultData.round),
-                        sportVaultContract?.capPerRound(vaultData.round + 1),
-                        sportVaultContract?.cumulativeProfitAndLoss(vaultData.round > 0 ? vaultData.round - 1 : 0),
-                        sportVaultContract?.allocationSpentInARound(vaultData.round),
-                        sportVaultContract?.tradingAllocation(),
-                    ]);
-
-                    vaultData.allocationCurrentRound = bigNumberFormatter(allocationCurrentRound);
-                    vaultData.allocationNextRound = bigNumberFormatter(allocationNextRound);
+                        bigNumberFormatter(contractVaultData.allocationLimitsPerMarketPerRound) / 100;
+                    vaultData.minTradeAmount = bigNumberFormatter(contractVaultData.minTradeAmount);
+                    vaultData.roundLength = Number(contractVaultData.roundLength) / 60 / 60 / 24;
+                    vaultData.allocationCurrentRound = bigNumberFormatter(
+                        contractVaultData.allocationCurrentRound,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
+                    vaultData.allocationNextRound = bigNumberFormatter(
+                        contractVaultData.allocationNextRound,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     vaultData.allocationNextRoundPercentage =
                         (vaultData.allocationNextRound / vaultData.maxAllowedDeposit) * 100;
                     vaultData.lifetimePnl =
-                        bigNumberFormatter(lifetimePnl) === 0 ? 0 : bigNumberFormatter(lifetimePnl) - 1;
-                    vaultData.allocationSpentInARound = bigNumberFormatter(allocationSpentInARound);
+                        bigNumberFormatter(contractVaultData.lifetimePnl) === 0
+                            ? 0
+                            : bigNumberFormatter(contractVaultData.lifetimePnl) - 1;
+                    vaultData.allocationSpentInARound = bigNumberFormatter(
+                        contractVaultData.allocationSpentInARound,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     vaultData.availableAllocationInARound =
-                        bigNumberFormatter(tradingAllocation) - vaultData.allocationSpentInARound;
+                        bigNumberFormatter(
+                            contractVaultData.tradingAllocation,
+                            getDefaultDecimalsForNetwork(networkId)
+                        ) - vaultData.allocationSpentInARound;
 
                     return vaultData;
                 }
@@ -139,7 +105,6 @@ const useVaultDataQuery = (
             return undefined;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

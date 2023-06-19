@@ -9,7 +9,7 @@ const useNFTCollectionsQuery = (
     networkId: NetworkId,
     options?: UseQueryOptions<Record<number, boolean>>
 ) => {
-    return useQuery(
+    return useQuery<Record<number, boolean>>(
         QUERY_KEYS.TaleOfThales.NFTCollections(walletAddress, networkId),
         async () => {
             const response = {} as Record<number, boolean>;
@@ -26,7 +26,6 @@ const useNFTCollectionsQuery = (
             return response;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

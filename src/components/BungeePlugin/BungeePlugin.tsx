@@ -1,32 +1,28 @@
-import { Bridge } from '@socket.tech/plugin';
-import { SYNTHS_MAP } from 'constants/currency';
+import { Bridge, Customize } from '@socket.tech/plugin';
+import { Network } from 'enums/network';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { Network } from 'utils/network';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
+import { NetworkId, getDefaultCollateral } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
+import { hexToRGB } from 'utils/style';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
-import { destinationTokens } from './tokens';
 
-type CustomizationProps = {
-    width?: number;
-    responsiveWidth?: boolean;
-    borderRadius?: number;
-    accent?: string;
-    onAccent?: string;
-    primary?: string;
-    secondary?: string;
-    text?: string;
-    secondaryText?: string;
-    interactive?: string;
-    onInteractive?: string;
-    outline?: string;
-};
+const SUPPORTED_DESTINATION_NETWORKS = [
+    Network['Mainnet-Ovm'],
+    Network.Arbitrum,
+    Network['POLYGON-MAINNET'],
+    Network.BSC,
+];
 
 const BungeePlugin: React.FC = () => {
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const apiKey = process.env.REACT_APP_BUNGEE_API_KEY || '';
     if (!apiKey) {
@@ -34,42 +30,47 @@ const BungeePlugin: React.FC = () => {
     }
 
     const defaultSourceNetwork = Network.Mainnet;
-    const destinationNetworks = [Network['Mainnet-Ovm']];
-    const defaultDestNetwork = Network['Mainnet-Ovm'];
-
+    const destinationNetworks = SUPPORTED_DESTINATION_NETWORKS.includes(networkId)
+        ? SUPPORTED_DESTINATION_NETWORKS.filter((id: number) => id === networkId)
+        : SUPPORTED_DESTINATION_NETWORKS;
+    const defaultDestNetwork = destinationNetworks[0];
     const allSourceTokensQuery = useAllSourceTokensQuery(apiKey, defaultDestNetwork, { enabled: isAppReady });
-    const sourceTokens = allSourceTokensQuery.isSuccess && allSourceTokensQuery.data ? allSourceTokensQuery.data : [];
+    const allTokens = allSourceTokensQuery.isSuccess && allSourceTokensQuery.data ? allSourceTokensQuery.data : [];
 
-    const tokenList = [...sourceTokens, ...destinationTokens];
+    const defaultSrcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'; // native token
+    const defaultDestinationToken = allTokens.filter(
+        (token) =>
+            token.chainId === defaultDestNetwork &&
+            token.symbol === getDefaultCollateral(defaultDestNetwork as NetworkId).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
+    )[0]?.address;
 
-    const defaultDestinationToken = destinationTokens.filter(
-        (token) => token.chainId === Network['Mainnet-Ovm'] && token.symbol === SYNTHS_MAP.sUSD
-    )[0].address;
-
-    const customize: CustomizationProps = {
+    // All colors should stricktly be in RGB format
+    const customize: Customize = {
         width: 386,
         responsiveWidth: false,
-        accent: 'rgb(100,217,254)', // button
-        onAccent: 'rgb(15,28,109)', // button text
-        primary: 'rgb(4,4,90)',
-        secondary: 'rgb(71,152,204)',
-        text: 'rgb(255,255,255)',
-        secondaryText: 'rgb(255,255,255)',
-        interactive: 'rgb(4,4,90)', // dropdown
-        onInteractive: 'rgb(255,255,255)', // dropdown text
-        outline: 'rgb(100,217,254)',
+        accent: hexToRGB(theme.button.background.primary), // button
+        onAccent: hexToRGB(theme.button.textColor.primary), // button text
+        primary: hexToRGB(theme.background.primary), // background
+        secondary: hexToRGB(theme.background.secondary), // main button wrapper
+        text: hexToRGB(theme.textColor.primary),
+        secondaryText: hexToRGB(theme.textColor.primary),
+        interactive: hexToRGB(theme.button.background.secondary), // dropdown
+        onInteractive: hexToRGB(theme.textColor.primary), // dropdown text
+        outline: hexToRGB(theme.button.background.tertiary),
+        fontFamily: theme.fontFamily.primary,
     };
 
     return (
         <BungeeWrapper>
             <Bridge
-                provider={snxJSConnector.provider}
+                provider={snxJSConnector.signer?.provider}
                 API_KEY={apiKey}
                 sourceNetworks={SOURCE_NETWORK_IDS}
                 defaultSourceNetwork={defaultSourceNetwork}
                 destNetworks={destinationNetworks}
                 defaultDestNetwork={defaultDestNetwork}
-                tokenList={tokenList}
+                tokenList={allTokens}
+                defaultSourceToken={defaultSrcToken}
                 defaultDestToken={defaultDestinationToken}
                 customize={customize}
             />
@@ -83,12 +84,6 @@ const BungeeWrapper = styled.div`
     height: 469px;
     margin: auto;
     position: relative;
-    top: 100px;
-    background: #04045a;
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
-    border-radius: 15px;
-    outline: none;
 `;
 
 export default BungeePlugin;

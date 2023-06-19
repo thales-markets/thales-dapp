@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import mediumPostsQuery from '../queries/mediumPostsQuery';
+import useMediumPostsQuery from '../queries/mediumPostsQuery';
 
 // import nextArrow from 'assets/images/arrow-next.svg';
 // import backArrow from 'assets/images/arrow-previous.svg';
@@ -18,7 +18,7 @@ const formatDate = (timestamp: Date) => {
 };
 
 const BlogPosts: React.FC = () => {
-    const blogPostsQuery = mediumPostsQuery({ enabled: true });
+    const blogPostsQuery = useMediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
     const blogPosts =
         blogPostsQuery.isSuccess && blogPostsQuery?.data?.length
@@ -112,7 +112,7 @@ const BlogCard = styled.div`
     margin-right: 10px;
     flex: 1;
     padding: 40px 30px 50px 30px;
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     position: relative;
@@ -132,7 +132,7 @@ const BlogTitle = styled.p`
     font-size: 1.56em;
     line-height: 91.91%;
     text-transform: capitalize;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-bottom: 15px;
 `;
 
@@ -142,7 +142,7 @@ const BlogDescription = styled.div`
     font-weight: 300;
     font-size: 1em;
     line-height: 1.2em;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 const MediumIcon = styled.i`
@@ -157,12 +157,12 @@ const MediumDate = styled.i`
     font-size: 1em;
     bottom: 1.2em;
     left: 30px;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     font-style: italic;
 `;
 
 const Arrow = styled.i`
-    color: 'var(--color)';
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     @media (max-width: 600px) {
         display: none !important;
@@ -181,7 +181,7 @@ const DotContainer = styled.div`
 `;
 
 const Dot = styled.div`
-    background: var(--color);
+    background: ${(props) => props.theme.landingPage.textColor.primary};
     width: 1em;
     height: 1em;
     border-radius: 50%;

@@ -1,27 +1,44 @@
+import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'enums/governance';
+import makeBlockie from 'ethereum-blockies-base64';
+import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
-import { Proposal } from 'types/governance';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
-import { truncateAddress } from 'utils/formatters/string';
-import { formatShortDateWithTime } from 'utils/formatters/date';
+import { FlexDivRow, FlexDivRowCentered } from 'styles/common';
+import { Proposal } from 'types/governance';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { useTranslation } from 'react-i18next';
-import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
-import { Network } from 'utils/network';
-import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'constants/governance';
+import { truncateAddress } from 'utils/formatters/string';
+import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
+import { Network } from 'enums/network';
+import snxJSConnector from 'utils/snxJSConnector';
+import { Blockie, StyledLink } from '../styled-components';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
-import snxJSConnector from 'utils/snxJSConnector';
-import makeBlockie from 'ethereum-blockies-base64';
-import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
+import {
+    ArrowIcon,
+    Body,
+    Container,
+    DetailsContainer,
+    DetailsTitle,
+    DetailsWrapper,
+    Divider,
+    Label,
+    Status,
+    StatusContainer,
+    StatusWrapper,
+    Text,
+    Title,
+    VoteHeader,
+    VoteNote,
+    VotingPowerTitle,
+} from './styled-components';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
@@ -168,138 +185,5 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
         </Container>
     );
 };
-
-const Container = styled(FlexDivColumnCentered)`
-    padding: 10px 40px;
-    @media (max-width: 767px) {
-        padding: 10px 20px;
-    }
-`;
-
-const StatusContainer = styled(FlexDivColumnCentered)`
-    margin-bottom: 30px;
-    align-items: center;
-`;
-
-const Title = styled(FlexDivColumnCentered)`
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    color: #f6f6fe;
-    margin-bottom: 40px;
-`;
-
-const DetailsWrapper = styled(FlexDivRow)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
-`;
-
-const DetailsContainer = styled(FlexDivColumnCentered)`
-    padding: 15px;
-    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
-    border-radius: 5px;
-    border: 2px solid #242371;
-    color: #f6f6fe;
-    &:first-child {
-        margin-right: 40px;
-        @media (max-width: 767px) {
-            flex-direction: column;
-            margin-right: 0px;
-            margin-bottom: 10px;
-        }
-    }
-`;
-
-const Label = styled.span`
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: #b8c6e5;
-    margin-bottom: 5px;
-`;
-
-const Text = styled.span`
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-`;
-
-const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
-    padding: 1px;
-    border-radius: 10px;
-    width: 200px;
-    background: ${(props) => getColor(props.status)};
-`;
-
-const Status = styled(FlexDivColumnCentered)<{ status: string }>`
-    height: 48px;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    letter-spacing: 2px;
-    color: ${(props) => getColor(props.status)};
-    background: #04045a;
-    border-radius: 10px;
-    text-transform: uppercase;
-    width: 198px;
-`;
-
-const Body = styled(FlexDivColumn)`
-    margin-top: 15px;
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 24px;
-    color: #f6f6fe;
-    p {
-        margin-bottom: 15px;
-    }
-    a {
-        color: #b8c6e5;
-        &:hover {
-            color: #00f9ff;
-        }
-    }
-    table {
-        overflow-y: auto;
-        display: block;
-        th,
-        td {
-            border: 1px solid rgba(202, 145, 220, 0.2);
-            padding: 6px 13px;
-        }
-    }
-    h2 {
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 24px;
-        color: #f6f6fe;
-        margin-top: 24px;
-        margin-bottom: 16px;
-    }
-`;
-
-const VoteHeader = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-        align-items: start;
-    }
-`;
-
-const VoteNote = styled(FlexDivRow)`
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 24px;
-    text-align: center;
-    color: #b8c6e5;
-    text-transform: uppercase;
-    margin-top: 42px;
-    margin-left: 5px;
-`;
 
 export default ProposalDetails;

@@ -1,5 +1,6 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'styles/common';
 
 export const GridContainer = styled.div`
     position: relative;
@@ -8,38 +9,38 @@ export const GridContainer = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 1px;
     padding: 0;
-    background: rgba(100, 217, 254, 0.6);
-    border-radius: 15px;
-    border: 1px solid rgba(100, 217, 254, 0.6);
+    background: ${(props) => props.theme.borderColor.secondary};
+    border-radius: 8px;
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     z-index: 0;
     width: 100%;
     overflow: hidden;
 `;
 
-export const StakeInfoItem = styled(FlexDivColumnCentered)`
+const StakeInfoItem = styled(FlexDivColumnCentered)`
     text-align: center;
     padding: 10px;
     grid-column: span 6;
-    background: #04045a;
+    background: ${(props) => props.theme.background.primary};
 `;
 
 export const StakingRewardsItem = styled(StakeInfoItem)<{
     orderOnMobile?: number;
 }>`
     grid-column: span 4;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
     }
 `;
 
-export const StakingRewardsLabel = styled.span<{ color: string }>`
+export const StakingRewardsLabel = styled.span`
     height: 30px;
     font-weight: 600;
     font-size: 14px;
     line-height: 24px;
-    color: #04045a;
-    background: ${(props) => props.color};
+    color: ${(props) => props.theme.textColor.secondary};
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 5px;
     width: fit-content;
     padding: 3px 8px;
@@ -52,14 +53,14 @@ export const StakingRewardsContent = styled.span`
     font-size: 20px;
     line-height: 32px;
     letter-spacing: 0.5px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const GridAction = styled(FlexDivColumnCentered)`
     grid-column: span 12;
-    background: #04045a;
+    background: ${(props) => props.theme.background.primary};
     padding: 20px 100px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px;
         order: 10;
     }

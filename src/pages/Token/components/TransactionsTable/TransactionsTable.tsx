@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatTxTimestamp } from 'utils/formatters/date';
-import Table from 'components/Table';
-import { TokenTransaction, TokenTransactions, TransactionFilterEnum } from 'types/token';
+import { formatShortDateWithTime } from 'utils/formatters/date';
+import Table from 'components/TableV2';
+import { TokenTransaction, TokenTransactions } from 'types/token';
+import { TransactionFilterEnum } from 'enums/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { EMPTY_VALUE } from 'constants/placeholder';
 
@@ -15,7 +16,7 @@ type TransactionsTableProps = {
     isLoading: boolean;
 };
 
-export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
+const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
 
     const amountSort = useMemo(
@@ -40,21 +41,20 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
             <Table
                 columns={[
                     {
-                        Header: <>{t('options.earn.table.date-time-col')}</>,
+                        Header: <>{t('thales-token.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['timestamp']>) => (
-                            <p>{formatTxTimestamp(cellProps.cell.value)}</p>
+                            <p>{formatShortDateWithTime(cellProps.cell.value)}</p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.earn.table.type-col')}</>,
+                        Header: <>{t('thales-token.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['type']>) => (
                             <p>
                                 {t(
-                                    `options.earn.table.types.${
+                                    `thales-token.table.types.${
                                         cellProps.cell.value === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
                                             ? TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
                                             : cellProps.cell.value
@@ -65,8 +65,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.earn.table.amount-col')}</>,
-                        sortType: amountSort,
+                        Header: <>{t('thales-token.table.amount-col')}</>,
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
@@ -88,9 +87,10 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                             </p>
                         ),
                         sortable: true,
+                        sortType: amountSort,
                     },
                     {
-                        Header: <>{t('options.earn.table.tx-status-col')}</>,
+                        Header: <>{t('thales-token.table.tx-status-col')}</>,
                         id: 'tx-status',
                         Cell: (cellProps: CellProps<TokenTransaction>) => (
                             <ViewEtherscanLink hash={cellProps.cell.row.original.hash} />
@@ -100,7 +100,8 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
-                tableHeadCellStyles={{ color: '#64D9FE' }}
+                preventMobileView
+                hidePagination
             />
         </>
     );

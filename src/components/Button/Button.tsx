@@ -5,15 +5,11 @@ type ButtonProps = {
     width?: string;
     height?: string;
     padding?: string;
-    active?: boolean;
-    activeTextColor?: string;
-    activeBgColor?: string;
-    inactiveTextColor?: string;
-    inactiveBgColor?: string;
-    hoverShadow?: string;
-    hoverBorderEffect?: boolean;
     margin?: string;
-    onClickHandler?: () => void;
+    textColor?: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    onClick?: () => void;
     fontSize?: string;
     disabled?: boolean;
     additionalStyles?: CSSProperties;
@@ -24,15 +20,11 @@ const Button: React.FC<ButtonProps> = ({
     width,
     height,
     padding,
-    active,
-    activeTextColor,
-    activeBgColor,
-    inactiveTextColor,
-    inactiveBgColor,
-    hoverShadow,
-    hoverBorderEffect,
+    textColor,
+    backgroundColor,
+    borderColor,
     margin,
-    onClickHandler,
+    onClick,
     disabled,
     additionalStyles,
     fontSize,
@@ -43,15 +35,11 @@ const Button: React.FC<ButtonProps> = ({
             width={width}
             height={height}
             padding={padding}
-            active={active}
-            activeTextColor={activeTextColor}
-            activeBgColor={activeBgColor}
-            inactiveTextColor={inactiveTextColor}
-            inactiveBgColor={inactiveBgColor}
-            hoverShadow={hoverShadow}
-            hoverBorderEffect={hoverBorderEffect}
             margin={margin}
-            onClick={() => (onClickHandler ? onClickHandler() : '')}
+            textColor={textColor}
+            backgroundColor={backgroundColor}
+            borderColor={borderColor}
+            onClick={onClick}
             disabled={disabled}
             fontSize={fontSize}
             style={additionalStyles}
@@ -65,53 +53,31 @@ const Wrapper = styled.button<{
     width?: string;
     height?: string;
     padding?: string;
-    active?: boolean;
-    activeTextColor?: string;
-    activeBgColor?: string;
-    inactiveTextColor?: string;
-    inactiveBgColor?: string;
-    hoverShadow?: string;
-    hoverBorderEffect?: boolean;
     margin?: string;
-    disabled?: boolean;
+    textColor?: string;
+    backgroundColor?: string;
+    borderColor?: string;
     fontSize?: string;
 }>`
     display: flex;
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    ${(_props) => (_props?.width ? `width: ${_props.width}` : '')};
-    ${(_props) => (_props?.height ? `height: ${_props.height}` : '')};
-    border: 1px solid var(--button-bg-active);
+    width: ${(props) => props.width || 'auto'};
+    min-height: ${(props) => props.height || '34px'};
+    border: 1px solid ${(props) => props.borderColor || props.theme.button.background.primary};
     border-radius: 30px;
-    font-family: Roboto !important;
     font-weight: 700;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
-    cursor: ${(_props) => (_props?.disabled ? 'not-allowed' : 'pointer')};
-    color: ${(_props) =>
-        _props?.active
-            ? _props.activeTextColor
-                ? _props.activeTextColor
-                : 'var(--button-text-active)'
-            : _props.inactiveTextColor
-            ? _props.inactiveTextColor
-            : 'var(--button-text-inactive)'};
-    background-color: ${(_props) =>
-        _props?.active
-            ? _props.activeBgColor
-                ? _props.activeBgColor
-                : 'var(--button-bg-active)'
-            : _props.inactiveBgColor
-            ? _props.inactiveBgColor
-            : 'var(--button-bg-inactive)'};
-    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
-    ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
-    &:hover {
-        ${(_props) => (_props?.hoverShadow && !_props?.disabled ? `box-shadow:${_props.hoverShadow}` : '')}
-        ${(_props) => (_props?.hoverBorderEffect && !_props?.disabled ? `border:var(--primary-color)` : '')}
-    }
+    font-size: ${(props) => props.fontSize || '18px'};
+    cursor: pointer;
+    color: ${(props) => props.textColor || props.theme.button.textColor.primary};
+    background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
+    margin: ${(props) => props.margin || ''};
+    padding: ${(props) => props.padding || '0 30px'};
+    outline: none;
     &:disabled {
-        opacity: 0.6;
+        opacity: 0.5;
+        cursor: default;
     }
 `;
 

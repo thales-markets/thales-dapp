@@ -8,7 +8,7 @@ const useNFTBalancesQuery = (
     networkId: NetworkId,
     options?: UseQueryOptions<Record<number, boolean>>
 ) => {
-    return useQuery(
+    return useQuery<Record<number, boolean>>(
         QUERY_KEYS.TaleOfThales.NFTBalances(walletAddress, networkId),
         async () => {
             const NFTBalances = {} as Record<number, boolean>;
@@ -22,7 +22,6 @@ const useNFTBalancesQuery = (
             return NFTBalances;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

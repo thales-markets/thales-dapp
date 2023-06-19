@@ -1,38 +1,39 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, Text, Button } from 'theme/common';
+import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
-import ThalesStakersTable from './ThalesStakersTable';
-import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Network } from 'utils/network';
-
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const DEFAULT_ORDER_BY = 2;
+import { Network } from 'enums/network';
+import { Blockie, StyledLink } from '../styled-components';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import Table from 'components/TableV2';
+import { THALES_CURRENCY } from 'constants/currency';
+import { truncateAddress } from 'utils/formatters/string';
+import { CellProps } from 'react-table';
+import makeBlockie from 'ethereum-blockies-base64';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
+import SearchInput from 'components/SearchInput';
+import { StakersFilterEnum } from 'enums/governance';
+import Dropdown from '../components/Dropdown/Dropdown';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
+    const [filter, setFilter] = useState<StakersFilterEnum>(StakersFilterEnum.All);
 
-    const stakersQuery = useThalesStakersQuery({
+    const stakersQuery = useThalesStakersQuery(filter, {
         enabled: isAppReady,
     });
     const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
@@ -54,19 +55,6 @@ const ThalesStakers: React.FC = () => {
         }
     }, [stakers]);
 
-    const filteredStakers = useMemo(() => {
-        return stakers.sort((a, b) => {
-            switch (orderBy) {
-                case 1:
-                    return sortByField(a, b, orderDirection, 'id');
-                case 2:
-                    return sortByField(a, b, orderDirection, 'totalStakedAmount');
-                default:
-                    return 0;
-            }
-        });
-    }, [stakers, orderBy, orderDirection]);
-
     const findByEnsName = (address: string) => {
         if (ensNames && ensNames[address]) {
             const ensName = ensNames[address];
@@ -78,91 +66,114 @@ const ThalesStakers: React.FC = () => {
     const searchFilteredStakers = useDebouncedMemo(
         () => {
             return addressSearch
-                ? filteredStakers.filter((staker: Staker) => {
+                ? stakers.filter((staker: Staker) => {
                       return staker.id.toLowerCase().includes(addressSearch.toLowerCase()) || findByEnsName(staker.id);
                   })
-                : filteredStakers;
+                : stakers;
         },
-        [filteredStakers, addressSearch, orderBy, orderDirection],
+        [stakers, addressSearch],
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
-
-    const resetFilters = () => {
-        setAddressSearch('');
-    };
 
     return (
         <Container>
             <HeaderContainer>
+                <Dropdown
+                    options={Object.values(StakersFilterEnum)}
+                    activeOption={filter}
+                    onSelect={setFilter}
+                    translationKey="stakers-filter"
+                />
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
-                <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
+                <SearchInput
+                    text={addressSearch}
+                    placeholder={t('op-rewards.search-placeholder')}
+                    handleChange={setAddressSearch}
+                    width="320px"
+                />
             </HeaderContainer>
-            <ThalesStakersTable
-                stakers={addressSearch ? searchFilteredStakers : filteredStakers}
-                isLoading={stakersQuery.isLoading}
-                orderBy={orderBy}
-                orderDirection={orderDirection}
-                setOrderBy={setOrderBy}
-                setOrderDirection={setOrderDirection}
-            >
-                <NoStakers>
-                    <>
-                        <Text className="text-l bold pale-grey">{t('governance.stakers.no-stakers-found')}</Text>
-                        <Button className="primary" onClick={resetFilters}>
-                            {t('governance.stakers.view-all-stakers')}
-                        </Button>
-                    </>
-                </NoStakers>
-            </ThalesStakersTable>
+            <TableContainer>
+                <Table
+                    columns={[
+                        {
+                            Header: <>{t('governance.stakers.staker-col')}</>,
+                            accessor: 'id',
+                            Cell: (cellProps: CellProps<Staker, Staker['id']>) => (
+                                <StyledLink
+                                    href={getEtherscanAddressLink(Network.Mainnet, cellProps.cell.value)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <FlexDiv style={{ textAlign: 'left' }}>
+                                        <Blockie src={makeBlockie(cellProps.cell.value)} style={{ marginBottom: 2 }} />
+                                        <StakerCell staker={cellProps.cell.row.original} />
+                                        <ArrowIcon />
+                                    </FlexDiv>
+                                </StyledLink>
+                            ),
+                            sortable: true,
+                        },
+                        {
+                            Header: <>{t('governance.stakers.total-staked-col')}</>,
+                            accessor: 'totalStakedAmount',
+                            Cell: (cellProps: CellProps<Staker, Staker['totalStakedAmount']>) => {
+                                const amountTooltip = `${formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    cellProps.cell.row.original.stakedAmount
+                                )} (${t('governance.stakers.tooltip-staked-directly')}) + ${formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    cellProps.cell.row.original.escrowedAmount
+                                )} (${t('governance.stakers.tooltip-escrowed-amount')})`;
+
+                                return (
+                                    <Tooltip overlay={amountTooltip}>
+                                        <Amount>{formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)}</Amount>
+                                    </Tooltip>
+                                );
+                            },
+                            sortable: true,
+                        },
+                    ]}
+                    data={addressSearch ? searchFilteredStakers : stakers}
+                    isLoading={stakersQuery.isLoading}
+                    noResultsMessage={t('governance.stakers.no-stakers-found')}
+                    searchQuery={addressSearch}
+                    preventMobileView
+                    initialState={{
+                        sortBy: [
+                            {
+                                id: 'totalStakedAmount',
+                                desc: true,
+                            },
+                        ],
+                    }}
+                />
+            </TableContainer>
         </Container>
     );
 };
 
-const sortByField = (a: Staker, b: Staker, direction: OrderDirection, field: keyof Staker) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
+type StakerCellProps = {
+    staker: Staker;
 };
 
-const Container = styled(FlexDivColumnCentered)`
-    padding-top: 30px;
-    @media (max-width: 767px) {
-        padding-top: 10px;
-    }
-`;
+const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
+    const [stakerEns, setStakerEns] = useState<string | null>(null);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-const HeaderContainer = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
-`;
+    useEffect(() => {
+        const fetchStakerEns = async () => {
+            const stakerEns = await (snxJSConnector as any).provider.lookupAddress(staker.id);
+            setStakerEns(stakerEns);
+        };
+        if (networkId === Network.Mainnet) {
+            fetchStakerEns();
+        }
+    }, [staker]);
 
-const NoStakers = styled(FlexDivColumn)`
-    min-height: 300px;
-    background: #04045a;
-    justify-content: space-evenly;
-    align-items: center;
-    align-self: center;
-    border-radius: 0 0 23px 23px;
-    width: 100%;
-`;
-
-const Info = styled.div`
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 24px;
-    color: #f6f6fe;
-    margin-left: 30px;
-    @media (max-width: 767px) {
-        margin-left: 0;
-    }
-`;
+    return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;
+};
 
 export default ThalesStakers;

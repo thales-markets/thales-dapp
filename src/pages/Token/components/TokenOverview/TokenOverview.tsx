@@ -1,27 +1,30 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
-import styled from 'styled-components';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
-import { TokenInfo } from 'types/token';
-import { getIsAppReady } from 'redux/modules/app';
+import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import Lottie from 'lottie-react';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
-import { LightTooltip } from '../components';
+import React, { CSSProperties, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { TokenInfo } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
-import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
-import { getIsOVM, Network, NetworkId } from 'utils/network';
-import Lottie from 'lottie-react';
-import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { NetworkId, getIsOVM } from 'utils/network';
 
-export const TokentOverview: React.FC = () => {
+const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | undefined>(undefined);
@@ -42,7 +45,7 @@ export const TokentOverview: React.FC = () => {
             <ItemContainer>
                 <FlexDivCentered>
                     <CustomIcon className={`sidebar-icon icon--token`} />
-                    <LightTooltip title={t('options.earn.overview.token-tooltip')}>
+                    <Tooltip overlay={t('thales-token.overview.token-tooltip')}>
                         <StyledLink
                             href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
                             target="_blank"
@@ -51,26 +54,26 @@ export const TokentOverview: React.FC = () => {
                             <CryptoName>{THALES_CURRENCY}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                         </StyledLink>
-                    </LightTooltip>
+                    </Tooltip>
                 </FlexDivCentered>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.price-label')}</Title>
+                <Title>{t('thales-token.overview.price-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.price ? (
-                        <LightTooltip title={t(getTitleForPrice(networkId))}>
+                        <Tooltip overlay={t(getTitleForPrice(networkId))}>
                             <StyledLink href={getUrlForSwap(networkId)} target="_blank" rel="noreferrer">
                                 {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                 <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                             </StyledLink>
-                        </LightTooltip>
+                        </Tooltip>
                     ) : (
                         <>{EMPTY_VALUE}</>
                     )}
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.market-cap-label')}</Title>
+                <Title>{t('thales-token.overview.market-cap-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.marketCap
                         ? formatCurrencyWithSign(USD_SIGN, Math.round(tokenInfo.marketCap), 0, true)
@@ -78,7 +81,7 @@ export const TokentOverview: React.FC = () => {
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
+                <Title>{t('thales-token.overview.circulating-supply-label')}</Title>
                 <Content>
                     {tokenInfo
                         ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.circulatingSupply), 0, true)
@@ -87,19 +90,19 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
             <ItemContainer>
                 <ThalesBurnedWrapper>
-                    <Title color={'#E26565'} noWrap={true}>
-                        {t('options.earn.overview.total-burned-label')}
+                    <Title color={theme.error.textColor.primary} noWrap={true}>
+                        {t('thales-token.overview.total-burned-label')}
                     </Title>
                     <Lottie animationData={thalesBurnedAnimation} style={thalesBurnedStyle} />
                 </ThalesBurnedWrapper>
-                <Content color={'#E26565'}>
+                <Content color={theme.error.textColor.primary}>
                     {tokenInfo
                         ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.thalesBurned), 0, true)
                         : EMPTY_VALUE}
                 </Content>
             </ItemContainer>
             <ItemContainer>
-                <Title>{t('options.earn.overview.total-supply-label')}</Title>
+                <Title>{t('thales-token.overview.total-supply-label')}</Title>
                 <Content>
                     {tokenInfo
                         ? formatCurrencyWithKey(
@@ -113,7 +116,7 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
             <ItemContainer>
                 <FlexDivCentered>
-                    <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
+                    <Tooltip overlay={t('thales-token.overview.celer-bridge-tooltip')}>
                         <StyledLink
                             href={
                                 isL2
@@ -123,10 +126,10 @@ export const TokentOverview: React.FC = () => {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
+                            <CryptoName>{t('thales-token.overview.celer-bridge')}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
                         </StyledLink>
-                    </LightTooltip>
+                    </Tooltip>
                 </FlexDivCentered>
             </ItemContainer>
         </Container>
@@ -148,12 +151,12 @@ const getUrlForSwap = (networkId: NetworkId) => {
 const getTitleForPrice = (networkId: NetworkId) => {
     switch (networkId) {
         case Network['Mainnet-Ovm']:
-            return 'options.earn.overview.price-tooltip-l2';
+            return 'thales-token.overview.price-tooltip-l2';
         case Network.Arbitrum:
-            return 'options.earn.overview.price-tooltip-camelot';
+            return 'thales-token.overview.price-tooltip-camelot';
 
         default:
-            return 'options.earn.overview.price-tooltip-l2';
+            return 'thales-token.overview.price-tooltip-l2';
     }
 };
 
@@ -163,17 +166,18 @@ const ItemContainer: React.FC<{ className?: string }> = (props) => (
     </InnerItemContainer>
 );
 
-const Container = styled(FlexDiv)`
-    background: #04045a;
-    border-radius: 16px;
-    border: 2px solid rgba(100, 217, 254, 0.5);
+const Container = styled(FlexDivCentered)`
+    min-height: 76px;
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 15px;
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     margin-bottom: 10px;
     flex-wrap: wrap;
     @media (max-width: 1024px) {
         padding-left: 10px;
         padding-right: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         border-radius: 23px;
         margin-top: 20px;
         padding-left: 0;
@@ -184,12 +188,13 @@ const Container = styled(FlexDiv)`
             &:nth-child(1) {
                 flex-basis: 50%;
                 order: 1;
-                border-bottom: 1px solid rgba(1, 38, 81, 0.8) !important;
+                border-bottom: 1px solid ${(props) => props.theme.borderColor.primary} !important;
                 justify-content: flex-start;
             }
             &:nth-child(2) {
                 flex-basis: 50%;
                 order: 2;
+                border-bottom: 1px solid ${(props) => props.theme.borderColor.primary} !important;
                 justify-content: flex-start;
             }
             &:nth-child(3) {
@@ -215,7 +220,7 @@ const Container = styled(FlexDiv)`
             &:nth-child(7) {
                 flex-basis: 100%;
                 order: 7;
-                border-top: 1px solid rgba(1, 38, 81, 0.8) !important;
+                border-top: 1px solid ${(props) => props.theme.borderColor.primary} !important;
             }
             &:nth-child(7) span {
                 font-size: 14px;
@@ -227,18 +232,17 @@ const Container = styled(FlexDiv)`
 
 const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
-    min-height: 76px;
+    height: 50px;
     &:not(:last-child) {
-        border-right: 2px solid rgba(1, 38, 81, 0.5);
+        border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
-    color: #b8c6e5;
     @media (max-width: 1192px) {
         min-height: 60px;
     }
     @media (max-width: 1024px) {
         flex-basis: 33%;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-height: 50px;
     }
 `;
@@ -248,24 +252,22 @@ const Item = styled(FlexDivColumnCentered)`
 `;
 
 const Title = styled.p<{ color?: string; noWrap?: boolean }>`
-    font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 13px;
     line-height: 18px;
-    color: ${(props) => props.color || '#b8c6e5'};
+    color: ${(props) => props.color || props.theme.textColor.primary};
     ${(props) => (props.noWrap ? 'white-space: nowrap;' : '')};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
         line-height: 16px;
     }
 `;
 
 const Content = styled.div<{ fontSize?: number; color?: string }>`
-    font-style: normal;
     font-weight: bold;
     font-size: ${(props) => props.fontSize || 16}px;
     line-height: 18px;
-    color: ${(props) => props.color || '#f6f6fe'};
+    color: ${(props) => props.color || props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -275,7 +277,7 @@ const Content = styled.div<{ fontSize?: number; color?: string }>`
         font-size: 14px;
         line-height: 16px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-weight: 600;
         font-size: 14px;
         line-height: 16px;
@@ -283,26 +285,23 @@ const Content = styled.div<{ fontSize?: number; color?: string }>`
 `;
 
 const StyledLink = styled.a`
-    color: #f6f6fe;
-    &path {
-        fill: #f6f6fe;
+    color: ${(props) => props.theme.link.textColor.secondary};
+    & path {
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: #64d9fe;
-        & path {
-            fill: #64d9fe;
-        }
+        text-decoration: underline;
     }
-    @media (max-width: 767px) {
-        color: #64d9fe;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        color: ${(props) => props.theme.link.textColor.secondary};
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
-    @media (max-width: 767px) {
-        color: #64d9fe;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        color: ${(props) => props.theme.link.textColor.secondary};
         & path {
-            fill: #64d9fe;
+            fill: ${(props) => props.theme.link.textColor.secondary};
         }
     }
 `;
@@ -312,19 +311,9 @@ const CustomIcon = styled.i`
 `;
 
 const CryptoName = styled.span`
-    font-style: normal;
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 18px;
-    min-height: 18px;
-    margin-bottom: -2px;
-    @media (max-width: 767px) {
-        display: none;
-    }
 `;
 
 const ThalesBurnedWrapper = styled.div`

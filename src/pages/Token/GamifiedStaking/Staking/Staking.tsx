@@ -1,29 +1,27 @@
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
-import {
-    StyledInfoIcon,
-    StyledInfoIconGreen,
-    StyledMaterialTooltip,
-    Tip125Link,
-    Tip17Link,
-} from 'pages/Token/components';
-import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import React, { useMemo, useState } from 'react';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { StakingData, UserStakingData } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../components';
-import YourTransactions from './Transactions';
-import Stake from './Stake';
-import Unstake from './Unstake';
-import { isMobile } from 'utils/device';
-import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 import { getIsOVM } from 'utils/network';
+import { Line } from '../../styled-components';
+import Stake from './Stake';
+import YourTransactions from './Transactions';
+import Unstake from './Unstake';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -47,53 +45,77 @@ const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** 
 
 const Staking: React.FC = () => {
     const { t } = useTranslation();
-
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isL2 = getIsOVM(networkId);
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
+    const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
+    const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const stakeOptions = {
-        stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
-        unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },
+        stake: { value: 'stake', label: t('thales-token.gamified-staking.staking.stake.name') },
+        unstake: { value: 'unstake', label: t('thales-token.gamified-staking.staking.unstake.name') },
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
 
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady,
-    });
-    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
+    const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
 
-    const totalStakedAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.totalStakedAmount : 0;
-    const fixedPeriodReward =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.fixedPeriodReward : 0;
-    const totalEscrowedRewards =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.totalEscrowedRewards : 0;
-    const totalEscrowBalanceNotIncludedInStaking =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data
-            ? escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking
-            : 0;
-    const maxBonusRewardsPercentage =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.maxBonusRewardsPercentage : 0;
-    const thalesStaked =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.thalesStaked : 0;
-    const escrowedBalance =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.escrowedBalance : 0;
-    const unstakingAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.unstakingAmount : 0;
+    const isL2 = getIsOVM(networkId);
+
+    useEffect(() => {
+        if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
+            setLastValidStakingData(stakingDataQuery.data);
+        }
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data]);
+
+    const stakingData: StakingData | undefined = useMemo(() => {
+        if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
+            return stakingDataQuery.data;
+        }
+        return lastValidStakingData;
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
+
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    useEffect(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            setLastValidUserStakingData(userStakingDataQuery.data);
+        }
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
+
+    const userStakingData: UserStakingData | undefined = useMemo(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            return userStakingDataQuery.data;
+        }
+        return lastValidUserStakingData;
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
+
+    const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
+    const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
+    const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
+    const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
+    const maxBonusRewardsPercentage = stakingData ? stakingData.maxBonusRewardsPercentage : 0;
+
+    const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
+    const escrowedBalance = userStakingData ? userStakingData.escrowedBalance : 0;
+    const unstakingAmount = userStakingData ? userStakingData.unstakingAmount : 0;
 
     const APR = useMemo(
         () =>
             totalStakedAmount === 0
                 ? 0
-                : (Number(fixedPeriodReward) * 52 * 100) /
+                : (Number(baseRewardsPool) * 52 * 100) /
                   (Number(totalStakedAmount) +
                       Number(totalEscrowedRewards) -
                       Number(totalEscrowBalanceNotIncludedInStaking)),
-        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+        [baseRewardsPool, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
     const bonusAPR = useMemo(() => (APR * maxBonusRewardsPercentage) / 100, [APR]);
@@ -116,20 +138,12 @@ const Staking: React.FC = () => {
         return (
             <SectionLabel>
                 <SectionLabelContent>{t(labelTransKey, defaultValue)}</SectionLabelContent>
-                {!noIcon && (
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={<Trans i18nKey={labelTransKey + '-tooltip'} />}
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
-                )}
+                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} mobileIconFontSize={11} />}
             </SectionLabel>
         );
     };
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * fixedPeriodReward, [myStakedShare]);
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
     const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
         estimatedRewards,
     ]);
@@ -141,20 +155,19 @@ const Staking: React.FC = () => {
             {/* First row */}
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.apy', 'APY')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.apy', 'APY')}
                     <SectionValue>
                         <SectionValueContent>
                             {formattedAPY}%
                             <BonusInfo>
                                 {' + ' + formattedBonusAPY}%
-                                <StyledMaterialTooltip
-                                    arrow={true}
-                                    title={
+                                <Tooltip
+                                    overlay={
                                         <Trans
                                             i18nKey={
                                                 isL2
-                                                    ? 'options.earn.gamified-staking.staking.bonus-apy-tooltip'
-                                                    : 'options.earn.gamified-staking.staking.bonus-apy-tooltip-arb'
+                                                    ? 'thales-token.gamified-staking.staking.bonus-apy-tooltip'
+                                                    : 'thales-token.gamified-staking.staking.bonus-apy-tooltip-arb'
                                             }
                                             components={[
                                                 <span key="1" />,
@@ -163,10 +176,11 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    interactive
-                                >
-                                    <StyledInfoIconGreen />
-                                </StyledMaterialTooltip>
+                                    iconColor={theme.textColor.quaternary}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
+                                />
                             </BonusInfo>
                         </SectionValueContent>
                     </SectionValue>
@@ -174,7 +188,7 @@ const Staking: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.staked-share')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.staked-share')}
                     <SectionValue>
                         <SectionValueContent>{formatCurrencyWithPrecision(myStakedShare)}%</SectionValueContent>
                     </SectionValue>
@@ -184,7 +198,7 @@ const Staking: React.FC = () => {
             {/* First and Second row */}
             <SectionWrapper rows={2} backgroundType={BackgroundType.INFO}>
                 <SectionContentWrapper background={false}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.staked-balance')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.staked-balance')}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
@@ -193,13 +207,13 @@ const Staking: React.FC = () => {
                 </SectionContentWrapper>
                 {notEligibleForStakingRewards && (
                     <StakedBalanceInfo>
-                        {t('options.earn.gamified-staking.staking.not-eligible-message')}
+                        {t('thales-token.gamified-staking.staking.not-eligible-message')}
                     </StakedBalanceInfo>
                 )}
                 <SectionContentWrapper background={false}>
                     <SectionDetails positionUp={true}>
                         <SectionDetailsLabel>
-                            {t('options.earn.gamified-staking.staking.staked-directly')}
+                            {t('thales-token.gamified-staking.staking.staked-directly')}
                         </SectionDetailsLabel>
                         <SectionDetailsValue unavailable={notEligibleForStakingRewards} floatNone={unstakingAmount > 0}>
                             {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
@@ -207,15 +221,15 @@ const Staking: React.FC = () => {
                         {unstakingAmount > 0 && (
                             <UnstakingInfo>
                                 {`${t(
-                                    'options.earn.gamified-staking.staking.unstake.unstaking'
+                                    'thales-token.gamified-staking.staking.unstake.unstaking'
                                 )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}
                             </UnstakingInfo>
                         )}
                     </SectionDetails>
-                    <Line margin={isMobile() ? '3px 10px' : '0 15px'} />
+                    <Line margin={isMobile ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
-                            {t('options.earn.gamified-staking.staking.escrow-balance')}
+                            {t('thales-token.gamified-staking.staking.escrow-balance')}
                         </SectionDetailsLabel>
                         <SectionDetailsValue>
                             {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
@@ -227,7 +241,7 @@ const Staking: React.FC = () => {
             {/* Second row */}
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.total-thales-staked')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.total-thales-staked')}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
@@ -237,17 +251,16 @@ const Staking: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('options.earn.gamified-staking.staking.estimated-rewards', '', true)}
+                    {getSectionLabel('thales-token.gamified-staking.staking.estimated-rewards', '', true)}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
                             <BonusInfo>
                                 {' + ' + formatCurrency(bonusEstimatedRewards)}
-                                <StyledMaterialTooltip
-                                    arrow={true}
-                                    title={
+                                <Tooltip
+                                    overlay={
                                         <Trans
-                                            i18nKey="options.earn.gamified-staking.staking.bonus-estimated-rewards-tooltip"
+                                            i18nKey="thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip"
                                             components={[
                                                 <span key="1" />,
                                                 isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,
@@ -255,10 +268,11 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    interactive
-                                >
-                                    <StyledInfoIconGreen />
-                                </StyledMaterialTooltip>
+                                    iconColor={theme.textColor.quaternary}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
+                                />
                             </BonusInfo>
                         </SectionValueContent>
                     </SectionValue>
@@ -279,8 +293,7 @@ const Staking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '23px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
+                        borderColor={theme.borderColor.primary}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -311,34 +324,27 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${(isMobile() ? GRID_GAP_MOBILE : GRID_GAP) + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${STYLE_GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
-    background: ${(props) => {
-        switch (props.backgroundType) {
-            case BackgroundType.INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
-            case BackgroundType.STAKE:
-                return '#64d9fe80';
-            default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
-        }
-    }};
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
-        ${(props) => (props.backgroundType === BackgroundType.STAKE ? '' : 'background: #464dcf')};
+        ${(props) =>
+            props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
+        grid-gap: ${STYLE_GRID_GAP_MOBILE + 4}px;
     }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => (props.backgroundType === BackgroundType.INFO ? 'background: none' : '')};
     }
 `;
@@ -346,7 +352,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?
 const SectionLabel = styled.div`
     display: flex;
     padding: 10px 15px 5px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -355,23 +361,21 @@ const SectionValue = styled.div`
     display: flex;
     padding: 5px 15px 10px 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 10px 10px 10px;
     }
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    font-style: normal;
     text-transform: uppercase;
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 17px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
         line-height: 12px;
     }
@@ -382,17 +386,16 @@ const SectionValueContent = styled(SectionContent)`
     font-size: 23px;
     line-height: 30px;
     letter-spacing: 0.035em;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
-        color: #64d9fe;
     }
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
     padding: ${(props) => (props.positionUp ? '15px 15px 5px 15px' : '5px 15px 15px 15px')};
     text-align: end;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
     }
 `;
@@ -405,8 +408,8 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: #ffffff;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -418,23 +421,23 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.unavailable ? '#ffcc00' : '#ffffff')};
-    @media (max-width: 768px) {
+    color: ${(props) => (props.unavailable ? props.theme.warning.textColor.primary : props.theme.textColor.primary)};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 14px;
     }
 `;
 
 const BonusInfo = styled.span`
-    color: #50ce99;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const StakedBalanceInfo = styled.div`
     position: absolute;
     top: 80px;
     padding: 10px 15px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     font-size: 14px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
         top: 130px;
         font-size: 12px;
@@ -444,7 +447,8 @@ const StakedBalanceInfo = styled.div`
 const UnstakingInfo = styled.span`
     font-weight: 400;
     font-size: 12px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: ${(props) => props.theme.button.background.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     border-radius: 5px;
     padding: 3px 5px;
     margin-left: 5px;

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
-import LanguageSelector from 'components/LanguageSelector/V2';
 import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {
@@ -26,17 +25,17 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 target="_blank"
                 rel="noreferrer"
             >
-                {t('header.links.learn.title')}
+                {t('landing-page.header.links.learn.title')}
             </Link>
             <DropDownContainer className={`dropdown-icon ${openLinksLearn ? 'open' : ''}`}>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    {t('header.links.learn.docs')}
+                    {t('landing-page.header.links.learn.docs')}
                 </Link>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/using-thales/why-use-thales">
-                    {t('header.links.learn.guides')}
+                    {t('landing-page.header.links.learn.guides')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>
-                    {t('header.links.learn.whitepaper')}
+                    {t('landing-page.header.links.learn.whitepaper')}
                 </Link>
                 <HashLink
                     to="/#faq-section"
@@ -44,29 +43,24 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                         setBurgerState(!burgerState);
                     }}
                 >
-                    {t('header.links.faq')}
+                    {t('landing-page.header.links.faq')}
                 </HashLink>
             </DropDownContainer>
 
             <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                {t('header.links.community')}
+                {t('landing-page.header.links.community')}
             </Link>
             <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                {t('header.links.blog')}
+                {t('landing-page.header.links.blog')}
             </Link>
             <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
-                {t('header.links.governance')}
+                {t('landing-page.header.links.governance')}
             </Link>
             <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
-                {t('header.links.token')}
+                {t('landing-page.header.links.token')}
             </Link>
 
             <HorizontalLine />
-
-            <LanguageContainerInBurger>
-                <Text>{t('landing-page.language')}</Text>
-                <LanguageSelector isBurger={true} />
-            </LanguageContainerInBurger>
 
             <ThalesButton>
                 <Logo
@@ -91,7 +85,7 @@ const Logo = styled.i`
     grid-row-end: 4;
     font-size: 8.3em;
     line-height: 34px;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     flex: 1;
 `;
@@ -125,7 +119,7 @@ const DropDownContainer = styled.div`
         line-height: 1.6em;
         text-align: left;
         text-transform: uppercase;
-        color: var(--color);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         padding: 10px;
         border-radius: 7px;
         &:hover {
@@ -145,7 +139,7 @@ const Link = styled.a`
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     @media (max-width: 1024px) {
         margin-bottom: 60px;
     }
@@ -158,8 +152,8 @@ const Link = styled.a`
             right: -32px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid var(--color);
-            border-right: 2px solid var(--color);
+            border-top: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
+            border-right: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
             transform: rotate(135deg);
         }
         &.open:after {
@@ -172,17 +166,17 @@ const Link = styled.a`
 const Xicon = styled.i`
     font-size: 20px;
     font-weight: 100;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     position: absolute;
     top: 37px;
     right: 25px;
 `;
 
 const ThalesButton = styled.div`
-    background: #1b314f;
+    background: ${(props) => props.theme.landingPage.background.secondary};
     &,
     & * {
-        color: #f7f7f7 !important;
+        color: ${(props) => props.theme.landingPage.textColor.primary} !important;
     }
 
     display: flex;
@@ -208,34 +202,16 @@ const Wrapper = styled.div`
     align-items: flex-start;
     padding: 100px 40px;
     width: 100%;
-    background: var(--main-background);
+    background: ${(props) => props.theme.landingPage.background.primary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
-`;
-
-const LanguageContainerInBurger = styled.div`
-    width: 100%;
-    display: block;
 `;
 
 const HorizontalLine = styled.div`
     width: 100%;
     height: 2px;
-    background: var(--color);
+    background: ${(props) => props.theme.landingPage.textColor.primary};
     position: relative;
     top: -30px;
-`;
-
-const Text = styled.p`
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 1.15em;
-    line-height: 91.91%;
-    margin-top: 12px;
-    z-index: 2;
-    text-align: left;
-    text-transform: uppercase;
-    color: var(--color);
 `;
 
 export default BurgerContainer;

@@ -1,36 +1,39 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { FlexDiv, FlexDivColumnCentered, FlexDivCentered, FlexDivRow } from 'theme/common';
-import { Input, InputContainer } from 'pages/Token/components/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
-import { getAddress, isAddress } from 'ethers/lib/utils';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import onboardConnector from 'utils/onboardConnector';
-import ValidationMessage from 'components/ValidationMessage';
-import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { getIsAppReady } from 'redux/modules/app';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import { ArrowContainer } from 'pages/Token/Migration/components';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
-import { isMobile } from 'utils/device';
-import YourTransactions from './Transactions';
-import Button, { ButtonType } from 'pages/Token/components/Button/Button';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import { formatGasLimit, getL1FeeInWei, getIsOVM } from 'utils/network';
-import { ZERO_ADDRESS } from 'constants/network';
-import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { orderBy } from 'lodash';
-import { TransactionFilterEnum } from 'types/token';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import Button from 'components/Button/Button';
+import TextInput from 'components/fields/TextInput/TextInput';
+import { ZERO_ADDRESS } from 'constants/network';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import { TransactionFilterEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { getAddress, isAddress } from 'ethers/lib/utils';
+import { orderBy } from 'lodash';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import snxJSConnector from 'utils/snxJSConnector';
+import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
@@ -39,10 +42,7 @@ const MergeAccount: React.FC = () => {
     const [delegateDestAddress, setDelegateDestAddress] = useState<string>('');
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { stakingThalesContract } = snxJSConnector as any;
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
@@ -60,12 +60,12 @@ const MergeAccount: React.FC = () => {
             isAddress(delegateDestAddress) &&
             getAddress(walletAddress) !== getAddress(delegateDestAddress));
 
-    const srcStakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady,
+    const srcStakingThalesQuery = useUserStakingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
-    const destStakingThalesQuery = useStakingThalesQuery(destAddress, networkId, {
-        enabled: isAppReady && isDestAddressValid,
+    const destStakingThalesQuery = useUserStakingDataQuery(destAddress, networkId, {
+        enabled: isAppReady && isDestAddressValid && !!destAddress,
     });
 
     const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
@@ -142,67 +142,35 @@ const MergeAccount: React.FC = () => {
     const isDelegateButtonDisabled =
         isDelegating || !isDelegateDestAddressEntered || !isDelegateDestAddressValid || !isWalletConnected;
 
-    const isL2 = getIsOVM(networkId);
-
-    useEffect(() => {
-        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.delegateVolume(
-                getAddress(ZERO_ADDRESS)
-            );
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-
-        const fetchGasLimit = async () => {
-            try {
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
-                        fetchL1Fee(stakingThalesContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
-                        getAddress(ZERO_ADDRESS)
-                    );
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-
-        fetchGasLimit();
-    }, [walletAddress]);
-
     const handleMerge = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsMerging(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
             const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress), {
-                gasLimit: MAX_L2_GAS_LIMIT,
+                gasLimit: getMaxGasLimitForNetwork(networkId),
             });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.gamified-staking.merge-account.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('thales-token.gamified-staking.merge-account.confirmation-message'), id)
+                );
                 setDestAddress('');
                 setIsMerging(false);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsMerging(false);
         }
     };
 
     const handleDelegate = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsDelegating(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -210,114 +178,72 @@ const MergeAccount: React.FC = () => {
             const tx = await stakingThalesContractWithSigner.delegateVolume(
                 getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress),
                 {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 }
             );
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t('options.earn.gamified-staking.merge-account.delegation-confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t('thales-token.gamified-staking.merge-account.delegation-confirmation-message'),
+                        id
+                    )
                 );
                 setDelegateDestAddress('');
                 setIsDelegating(false);
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsDelegating(false);
         }
     };
 
     const getMergeButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDestAddressEntered && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleMerge}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleMerge}>
                 {!isMerging
-                    ? t('options.earn.gamified-staking.merge-account.merge-button.label')
-                    : t('options.earn.gamified-staking.merge-account.merge-button.progress-label')}
+                    ? t('thales-token.gamified-staking.merge-account.merge-button.label')
+                    : t('thales-token.gamified-staking.merge-account.merge-button.progress-label')}
             </Button>
         );
     };
 
     const getDelegateButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         if (delegatedVolumeAddress !== ZERO_ADDRESS) {
             return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} onClickHandler={handleDelegate}>
-                    {t(`options.earn.gamified-staking.merge-account.delegate-button.remove-delegation`)}
+                <Button onClick={handleDelegate}>
+                    {t(`thales-token.gamified-staking.merge-account.delegate-button.remove-delegation`)}
                 </Button>
             );
         }
 
         if (!isDelegateDestAddressValid) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDelegateDestAddressEntered) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
 
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isDelegateButtonDisabled}
-                disabled={isDelegateButtonDisabled}
-                onClickHandler={handleDelegate}
-            >
+            <Button disabled={isDelegateButtonDisabled} onClick={handleDelegate}>
                 {!isDelegating
-                    ? t('options.earn.gamified-staking.merge-account.delegate-button.label')
-                    : t('options.earn.gamified-staking.merge-account.delegate-button.progress-label')}
+                    ? t('thales-token.gamified-staking.merge-account.delegate-button.label')
+                    : t('thales-token.gamified-staking.merge-account.delegate-button.progress-label')}
             </Button>
         );
     };
@@ -325,19 +251,19 @@ const MergeAccount: React.FC = () => {
     const getBlockedMergeMessage = () => {
         return (
             <>
-                <div>{t('options.earn.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
+                <div>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
                 <ul>
                     {hasSrcAccountSomethingToClaim && (
-                        <li>{t('options.earn.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
                     )}
                     {isSrcAccountUnstaking && (
-                        <li>{t('options.earn.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}</li>
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}</li>
                     )}
                     {hasDestAccountSomethingToClaim && (
-                        <li>{t('options.earn.gamified-staking.merge-account.merge-blocked-message.dest-claim')}</li>
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-claim')}</li>
                     )}
                     {isDestAccountUnstaking && (
-                        <li>{t('options.earn.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}</li>
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}</li>
                     )}
                 </ul>
             </>
@@ -348,10 +274,10 @@ const MergeAccount: React.FC = () => {
         <>
             <SectionWrapper>
                 <SectionContentWrapper>
-                    <SectionTitle>{t('options.earn.gamified-staking.merge-account.delegate-volume')}</SectionTitle>
+                    <SectionTitle>{t('thales-token.gamified-staking.merge-account.delegate-volume')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
-                            <StyledInput
+                            <TextInput
                                 value={
                                     delegatedVolumeAddress !== ZERO_ADDRESS
                                         ? delegatedVolumeAddress
@@ -359,39 +285,34 @@ const MergeAccount: React.FC = () => {
                                 }
                                 onChange={(e: any) => setDelegateDestAddress(e.target.value)}
                                 disabled={delegatedVolumeAddress !== ZERO_ADDRESS || isDelegating || !isWalletConnected}
-                                className={isDelegateDestAddressValid ? '' : 'error'}
+                                label={t('thales-token.gamified-staking.merge-account.delegate-volume-address-label')}
+                                placeholder={t('common.enter-address')}
+                                showValidation={!isDelegateDestAddressValid}
+                                validationMessage={t(`common.errors.invalid-address`)}
                             />
-                            <InputLabel>
-                                {t('options.earn.gamified-staking.merge-account.delegate-volume-address-label')}:
-                            </InputLabel>
                         </div>
-                        <FieldValidationMessage
-                            showValidation={!isDelegateDestAddressValid}
-                            message={t(`common.errors.invalid-address`)}
-                        />
                     </InputContainer>
-                    <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                     <ButtonContainer>{getDelegateButton()}</ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionDescription width={addressesThatDelegateToYou.length ? 4 : 8}>
                 <SectionDescriptionTitle>
-                    {t('options.earn.gamified-staking.merge-account.how-delegate-volume-works')}
+                    {t('thales-token.gamified-staking.merge-account.how-delegate-volume-works')}
                 </SectionDescriptionTitle>
                 <SectionDescriptionParagraph>
-                    {t('options.earn.gamified-staking.merge-account.delegate-volume-description-1')}
+                    {t('thales-token.gamified-staking.merge-account.delegate-volume-description-1')}
                 </SectionDescriptionParagraph>
                 <SectionDescriptionParagraph>
-                    {t('options.earn.gamified-staking.merge-account.delegate-volume-description-2')}
+                    {t('thales-token.gamified-staking.merge-account.delegate-volume-description-2')}
                 </SectionDescriptionParagraph>
                 <SectionDescriptionParagraph>
-                    {t('options.earn.gamified-staking.merge-account.delegate-volume-description-3')}
+                    {t('thales-token.gamified-staking.merge-account.delegate-volume-description-3')}
                 </SectionDescriptionParagraph>
             </SectionDescription>
             {!!addressesThatDelegateToYou.length && (
                 <AddressesDelegatingToYouContainer>
                     <AddressesDelegatingToYouTitle>
-                        {t('options.earn.gamified-staking.merge-account.addresses-delegating-to-you')}
+                        {t('thales-token.gamified-staking.merge-account.addresses-delegating-to-you')}
                     </AddressesDelegatingToYouTitle>
                     {addressesThatDelegateToYou.map((address) => (
                         <StyledLink
@@ -401,7 +322,7 @@ const MergeAccount: React.FC = () => {
                             rel="noreferrer"
                         >
                             <DelegationAddress key={address}>
-                                {address} <ArrowIcon width="10" height="10" />
+                                {address} <ArrowHyperlinkIcon width="10" height="10" />
                             </DelegationAddress>
                         </StyledLink>
                     ))}
@@ -409,64 +330,56 @@ const MergeAccount: React.FC = () => {
             )}
             <SectionWrapper>
                 <SectionContentWrapper>
-                    <SectionTitle>{t('options.earn.gamified-staking.merge-account.merge-account')}</SectionTitle>
+                    <SectionTitle>{t('thales-token.gamified-staking.merge-account.merge-account')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
-                        <StyledInput value={walletAddress} disabled={true} onChange={undefined} />
-                        <InputLabel>
-                            {t('options.earn.gamified-staking.merge-account.source-account-label')}:
-                        </InputLabel>
+                        <TextInput
+                            value={walletAddress}
+                            disabled={true}
+                            label={t('thales-token.gamified-staking.merge-account.source-account-label')}
+                        />
                     </InputContainer>
                     <ArrowContainer>
                         <ArrowDown />
                     </ArrowContainer>
                     <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
-                            <StyledInput
+                            <TextInput
                                 value={destAddress}
                                 onChange={(e: any) => setDestAddress(e.target.value)}
                                 disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
-                                className={isDestAddressValid ? '' : 'error'}
+                                label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
+                                placeholder={t('common.enter-address')}
+                                showValidation={!isDestAddressValid}
+                                validationMessage={t(`common.errors.invalid-address`)}
                             />
-                            <InputLabel>
-                                {t('options.earn.gamified-staking.merge-account.destination-account-label')}:
-                            </InputLabel>
                         </div>
-                        <FieldValidationMessage
-                            showValidation={!isDestAddressValid}
-                            message={t(`common.errors.invalid-address`)}
-                        />
                     </InputContainer>
                     <MessageContainer>
-                        <MergeInfo>{t('options.earn.gamified-staking.merge-account.info-message')}</MergeInfo>
+                        <MergeInfo>{t('thales-token.gamified-staking.merge-account.info-message')}</MergeInfo>
                     </MessageContainer>
                     <MessageContainer>
-                        <MergeInfo>{t('options.earn.gamified-staking.merge-account.warning-message')}</MergeInfo>
+                        <MergeInfo>{t('thales-token.gamified-staking.merge-account.warning-message')}</MergeInfo>
                     </MessageContainer>
                     <ButtonContainer>
                         {getMergeButton()}
                         {!isAccountMergingEnabled && (
                             <Message>
-                                {t('options.earn.gamified-staking.merge-account.merge-account-disabled-message')}
+                                {t('thales-token.gamified-staking.merge-account.merge-account-disabled-message')}
                             </Message>
                         )}
                         {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
                     </ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionDescription>
                 <SectionDescriptionTitle>
-                    {t('options.earn.gamified-staking.merge-account.how-merge-account-works')}
+                    {t('thales-token.gamified-staking.merge-account.how-merge-account-works')}
                 </SectionDescriptionTitle>
                 <SectionDescriptionParagraph>
-                    {t('options.earn.gamified-staking.merge-account.merge-account-description-1')}
+                    {t('thales-token.gamified-staking.merge-account.merge-account-description-1')}
                 </SectionDescriptionParagraph>
                 <SectionDescriptionParagraph>
-                    {t('options.earn.gamified-staking.merge-account.merge-account-description-2')}
+                    {t('thales-token.gamified-staking.merge-account.merge-account-description-2')}
                 </SectionDescriptionParagraph>
             </SectionDescription>
             <YourTransactions gridColumns={12} gridColumnStart={1} />
@@ -478,9 +391,9 @@ const SectionWrapper = styled.section`
     box-sizing: border-box;
     border-radius: 15px;
     grid-column: 1 / span 4;
-    background: #64d9fe80;
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -497,7 +410,7 @@ const SectionDescription = styled.section<{ width?: number }>`
     border-radius: 15px;
     grid-column: 5 / span ${(props) => props.width || 8};
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -517,7 +430,7 @@ const SectionDescriptionParagraph = styled(FlexDivRow)`
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     padding: 20px;
     height: 100%;
@@ -526,7 +439,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     @media (max-width: 1192px) {
         padding: 10px 15px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
         box-shadow: none;
     }
@@ -547,7 +460,7 @@ const Message = styled.div`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 10px;
     div {
         margin-bottom: 5px;
@@ -555,40 +468,6 @@ const Message = styled.div`
     ul {
         list-style: initial;
         margin-left: 15px;
-    }
-`;
-
-const StyledInput = styled(Input)`
-    height: 45px;
-    text-overflow: ellipsis;
-    border-radius: 10px;
-    padding: 5px 15px 8px 120px;
-    width: 100%;
-    @media (max-width: 1192px) {
-        height: 60px;
-        font-size: 15px;
-    }
-`;
-
-const InputLabel = styled.label`
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
-    color: #64d9fe;
-    padding-left: 8px;
-    pointer-events: none;
-    z-index: 3;
-    position: absolute;
-    text-transform: uppercase;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    @media (max-width: 1192px) {
-        font-size: 9px;
-    }
-    @media (max-width: 768px) {
-        font-size: 12px;
-        padding-left: 10px;
     }
 `;
 
@@ -602,7 +481,7 @@ const MergeInfo = styled.div`
 const AddressesDelegatingToYouContainer = styled.div`
     grid-column: 9 / span 4;
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -621,33 +500,26 @@ const DelegationAddress = styled.div`
     line-height: 138.69%;
     text-transform: uppercase;
     margin-bottom: 5px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 11px;
     }
 `;
 
 const StyledLink = styled.a`
-    color: #f6f6fe;
+    color: ${(props) => props.theme.link.textColor.secondary};
     &path {
-        fill: #f6f6fe;
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: #64d9fe;
-        & path {
-            fill: #64d9fe;
-        }
-    }
-    @media (max-width: 767px) {
-        color: #64d9fe;
+        text-decoration: underline;
     }
 `;
 
-const ArrowIcon = styled(ArrowHyperlinkIcon)`
-    @media (max-width: 767px) {
-        color: #64d9fe;
-        & path {
-            fill: #64d9fe;
-        }
+const ArrowContainer = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
     }
 `;
 

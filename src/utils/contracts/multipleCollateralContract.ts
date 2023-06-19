@@ -1,5 +1,5 @@
 import { POLYGON_DAI, POLYGON_USDC, POLYGON_USDT } from 'components/Swap/tokens';
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
 const sUSDABI = [
     {
@@ -1102,7 +1102,7 @@ const abi = [
     },
 ];
 
-export const multipleCollateral = {
+const multipleCollateral = {
     sUSD: {
         addresses: {
             [Network.Mainnet]: 'TBD',

@@ -3,20 +3,24 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, RANGE_SIDE } from 'constants/options';
-import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 
 export type RangeAmmMaxLimits = {
     in: {
         maxBuy: number;
         maxSell: number;
         buyPrice: number;
+        maxBuyPrice: number;
         sellPrice: number;
+        priceImpact: number;
     };
     out: {
         maxBuy: number;
         maxSell: number;
         buyPrice: number;
+        maxBuyPrice: number;
         sellPrice: number;
+        priceImpact: number;
     };
 };
 
@@ -26,72 +30,81 @@ const useRangedAMMMaxLimitsQuery = (
     options?: UseQueryOptions<RangeAmmMaxLimits>
 ) => {
     return useQuery<RangeAmmMaxLimits>(
-        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
+        QUERY_KEYS.BinaryOptions.RangedAmmMaxLimits(marketAddress),
         async () => {
             const ammMaxLimits: RangeAmmMaxLimits = {
                 in: {
                     maxBuy: 0,
                     maxSell: 0,
                     buyPrice: 0,
+                    maxBuyPrice: 0,
                     sellPrice: 0,
+                    priceImpact: 0,
                 },
                 out: {
                     maxBuy: 0,
                     maxSell: 0,
                     buyPrice: 0,
+                    maxBuyPrice: 0,
                     sellPrice: 0,
+                    priceImpact: 0,
                 },
             };
 
-            const ammContract = snxJSConnector.rangedMarketAMMContract;
-            if (ammContract) {
-                const parsedAmount = ethers.utils.parseEther('1');
-                const [
-                    maxBuyIn,
-                    maxSellIn,
-                    maxBuyOut,
-                    maxSellOut,
-                    buyInPrice,
-                    buyOutPrice,
-                    sellInPrice,
-                    sellOutPrice,
-                ] = await Promise.all([
-                    ammContract.availableToBuyFromAMM(marketAddress, RANGE_SIDE['in']),
-                    ammContract.availableToSellToAMM(marketAddress, RANGE_SIDE['in']),
-                    ammContract.availableToBuyFromAMM(marketAddress, RANGE_SIDE['out']),
-                    ammContract.availableToSellToAMM(marketAddress, RANGE_SIDE['out']),
-                    ammContract.buyFromAmmQuote(marketAddress, RANGE_SIDE['in'], parsedAmount),
-                    ammContract.buyFromAmmQuote(marketAddress, RANGE_SIDE['out'], parsedAmount),
-                    ammContract.sellToAmmQuote(marketAddress, RANGE_SIDE['in'], parsedAmount),
-                    ammContract.sellToAmmQuote(marketAddress, RANGE_SIDE['out'], parsedAmount),
+            const { rangedMarketAMMContract, binaryOptionsMarketDataContract } = snxJSConnector;
+            if (rangedMarketAMMContract && binaryOptionsMarketDataContract) {
+                const rangedAmmMarketData = await binaryOptionsMarketDataContract.getRangedAmmMarketData(marketAddress);
+
+                const [maxBuyInPrice, maxBuyOutPrice] = await Promise.all([
+                    rangedAmmMarketData.inBuyLiquidity > 0
+                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                              marketAddress,
+                              RANGE_SIDE['in'],
+                              (rangedAmmMarketData.inBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
+                    rangedAmmMarketData.outBuyLiquidity > 0
+                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                              marketAddress,
+                              RANGE_SIDE['out'],
+                              (rangedAmmMarketData.outBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
                 ]);
 
+                ammMaxLimits.in.buyPrice = stableCoinFormatter(rangedAmmMarketData.inBuyPrice, networkId);
+                ammMaxLimits.out.buyPrice = stableCoinFormatter(rangedAmmMarketData.outBuyPrice, networkId);
+                ammMaxLimits.in.maxBuyPrice = stableCoinFormatter(maxBuyInPrice, networkId);
+                ammMaxLimits.out.maxBuyPrice = stableCoinFormatter(maxBuyOutPrice, networkId);
+                ammMaxLimits.in.sellPrice = stableCoinFormatter(rangedAmmMarketData.inSellPrice, networkId);
+                ammMaxLimits.out.sellPrice = stableCoinFormatter(rangedAmmMarketData.outSellPrice, networkId);
                 ammMaxLimits.in.maxBuy =
-                    stableCoinFormatter(buyInPrice, networkId) !== 0
-                        ? bigNumberFormatter(maxBuyIn) * AMM_MAX_BUFFER_PERCENTAGE
+                    ammMaxLimits.in.buyPrice !== 0
+                        ? bigNumberFormatter(rangedAmmMarketData.inBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE
                         : 0;
                 ammMaxLimits.in.maxSell =
-                    stableCoinFormatter(sellInPrice, networkId) !== 0
-                        ? bigNumberFormatter(maxSellIn) * AMM_MAX_BUFFER_PERCENTAGE
+                    ammMaxLimits.in.sellPrice !== 0
+                        ? bigNumberFormatter(rangedAmmMarketData.inSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE
                         : 0;
                 ammMaxLimits.out.maxBuy =
-                    stableCoinFormatter(buyOutPrice, networkId) !== 0
-                        ? bigNumberFormatter(maxBuyOut) * AMM_MAX_BUFFER_PERCENTAGE
+                    ammMaxLimits.out.buyPrice !== 0
+                        ? bigNumberFormatter(rangedAmmMarketData.outBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE
                         : 0;
                 ammMaxLimits.out.maxSell =
-                    stableCoinFormatter(sellOutPrice, networkId) !== 0
-                        ? bigNumberFormatter(maxSellOut) * AMM_MAX_BUFFER_PERCENTAGE
+                    ammMaxLimits.out.sellPrice !== 0
+                        ? bigNumberFormatter(rangedAmmMarketData.outSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE
                         : 0;
-                ammMaxLimits.in.buyPrice = stableCoinFormatter(buyInPrice, networkId);
-                ammMaxLimits.out.buyPrice = stableCoinFormatter(buyOutPrice, networkId);
-                ammMaxLimits.in.sellPrice = stableCoinFormatter(sellInPrice, networkId);
-                ammMaxLimits.out.sellPrice = stableCoinFormatter(sellOutPrice, networkId);
+                ammMaxLimits.in.priceImpact = bigNumberFormatter(rangedAmmMarketData.inPriceImpact);
+                ammMaxLimits.out.priceImpact = bigNumberFormatter(rangedAmmMarketData.outPriceImpact);
             }
 
             return ammMaxLimits;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

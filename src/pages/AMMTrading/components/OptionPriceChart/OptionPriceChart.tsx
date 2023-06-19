@@ -2,24 +2,24 @@ import { isNumber } from 'lodash';
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, YAxis, CartesianGrid, XAxis, Tooltip } from 'recharts';
 import format from 'date-fns/format';
-import { tooltipContentStyle, tooltipItemStyle, tooltipLabelStyle } from './styles/Tooltip';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import { MarketType } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
-import { UI_COLORS } from 'constants/ui';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type OptionPriceChartProps = {
     data:
         | Array<{ timestamp: number; firstPositionPrice: number | undefined; secondPositionPrice: number | undefined }>
         | [];
-    marketType: MarketType;
+    isRangedMarket: boolean;
 };
 
-const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType }) => {
+const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, isRangedMarket }) => {
+    const theme: ThemeInterface = useTheme();
+
     return (
         <ResponsiveContainer width={'100%'} height={'100%'}>
-            <LineChart data={data} margin={{ top: 10, bottom: 10, left: 10, right: -10 }}>
+            <LineChart data={data} margin={chartMargin}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <YAxis
                     domain={[0, 1]}
@@ -27,27 +27,27 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                     tickLine={false}
                     axisLine={false}
                     orientation={'right'}
-                    tick={{ fill: 'var(--primary-color)' }}
+                    tick={{ fill: theme.textColor.primary }}
                 />
                 <XAxis
                     dataKey={'timestamp'}
-                    dy={15}
+                    dy={10}
                     tickFormatter={(val: any) => {
                         if (!isNumber(val)) {
                             return '';
                         }
                         return format(val, 'dd MMM');
                     }}
-                    tick={{ fill: 'var(--primary-color)' }}
+                    tick={{ fill: theme.textColor.primary }}
                     interval="preserveStartEnd"
                 />
                 {data && (
                     <Tooltip
                         // @ts-ignore
-                        cursor={{ strokeWidth: 2, stroke: '#F6F6FE' }}
-                        contentStyle={tooltipContentStyle}
+                        cursor={{ strokeWidth: 2, stroke: theme.textColor.primary }}
+                        contentStyle={{ ...tooltipContentStyle, background: theme.background.secondary }}
                         itemStyle={tooltipItemStyle}
-                        labelStyle={tooltipLabelStyle}
+                        labelStyle={{ ...tooltipLabelStyle, color: theme.textColor.primary }}
                         formatter={(val: string | number) => formatCurrencyWithSign(USD_SIGN, val)}
                         labelFormatter={(label: any) => {
                             if (!isNumber(label)) {
@@ -59,23 +59,43 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                 )}
                 <Line
                     type="linear"
-                    dataKey="secondPositionPrice"
-                    name={marketType == MARKET_TYPE[0] ? 'DOWN' : 'OUT'}
-                    strokeWidth={3}
-                    stroke={marketType == MARKET_TYPE[0] ? UI_COLORS.RED : UI_COLORS.OUT_COLOR}
-                    dot={{ strokeWidth: 8 }}
+                    dataKey="firstPositionPrice"
+                    strokeWidth={2}
+                    name={isRangedMarket ? 'IN' : 'UP'}
+                    stroke={isRangedMarket ? theme.positionColor.in : theme.positionColor.up}
+                    dot={{ strokeWidth: 3 }}
                 />
                 <Line
                     type="linear"
-                    dataKey="firstPositionPrice"
-                    strokeWidth={3}
-                    name={marketType == MARKET_TYPE[0] ? 'UP' : 'IN'}
-                    stroke={marketType == MARKET_TYPE[0] ? UI_COLORS.GREEN : UI_COLORS.IN_COLOR}
-                    dot={{ strokeWidth: 8 }}
+                    dataKey="secondPositionPrice"
+                    name={isRangedMarket ? 'OUT' : 'DOWN'}
+                    strokeWidth={2}
+                    stroke={isRangedMarket ? theme.positionColor.out : theme.positionColor.down}
+                    dot={{ strokeWidth: 3 }}
                 />
             </LineChart>
         </ResponsiveContainer>
     );
+};
+
+const chartMargin = { top: 10, bottom: 10, left: 10, right: -10 };
+
+const tooltipContentStyle = {
+    border: 'none',
+    borderRadius: 10,
+};
+
+const tooltipItemStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    letterSpacing: 0.4,
+};
+
+const tooltipLabelStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    lineHeight: 1.8,
+    letterSpacing: 1,
 };
 
 export default OptionPriceChart;

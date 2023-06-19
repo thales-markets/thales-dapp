@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled from 'styled-components';
 import ClaimMigratedRewards from './ClaimMigratedRewards';
@@ -9,7 +10,7 @@ const SnxStaking: React.FC = () => {
         <Container>
             <ClaimMigratedRewards />
             <RetroRewards />
-            <YourTransactions />
+            <YourTransactions gridColumns={10} />
         </Container>
     );
 };
@@ -21,11 +22,10 @@ const Container = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 20px;
     padding: 20px;
-    border-radius: 10px;
-    background: #04045a;
+    background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         background: transparent;
         border: none;
         padding: 1px;

@@ -11,7 +11,12 @@ import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import { useTranslation } from 'react-i18next';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 import { RootState } from 'redux/rootReducer';
@@ -31,7 +36,7 @@ const Mint: React.FC = () => {
     });
     const NFTBalancesMap = NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {};
     const handleMintCollection = async (collectionId: number) => {
-        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        const id = toast.loading(getDefaultToastContent(t('tale-of-thales.mint.loading')), getLoadingToastOptions());
         try {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
@@ -40,15 +45,15 @@ const Mint: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted'), id));
             }
         } catch (e) {
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
         }
     };
 
     const handleMintItem = async (itemId: number) => {
-        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        const id = toast.loading(getDefaultToastContent(t('tale-of-thales.mint.loading')), getLoadingToastOptions());
         try {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
@@ -56,10 +61,10 @@ const Mint: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted'), id));
             }
         } catch (e) {
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
         }
     };
 
@@ -142,7 +147,7 @@ const CollectionTitleContainer = styled.div`
 
 const CollectionTitle = styled.span`
     font-family: basis33 !important;
-    color: var(--primary-color);
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
     font-size: 28px;
     line-height: 105%;
@@ -151,7 +156,7 @@ const CollectionTitle = styled.span`
 
 const NFTTitle = styled.span`
     font-family: basis33 !important;
-    color: var(--background);
+    color: ${(props) => props.theme.button.textColor.primary};
     z-index: 1;
     text-transform: uppercase;
     font-size: 25px;
@@ -184,8 +189,8 @@ const StyledNFTContainerImage = styled.img`
 const Button = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed #04045a;
-    color: var(--background);
+    border: 2px dashed ${(props) => props.theme.button.borderColor.quaternary};
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 100%;
     height: 35px;
     font-size: 25px;
@@ -202,8 +207,8 @@ const Button = styled.button<{ invisible?: boolean }>`
 const CollectionButton = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed #04045a;
-    color: var(--background);
+    border: 2px dashed ${(props) => props.theme.button.borderColor.quaternary};
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 350px;
     height: 35px;
     font-size: 25px;

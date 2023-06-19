@@ -1,17 +1,17 @@
-import React, { useMemo } from 'react';
-import useProposalsQuery from 'queries/governance/useProposalsQuery';
-import { SpaceKey, StatusEnum } from 'constants/governance';
-import { Proposal } from 'types/governance';
-import ProposalCard from '../ProposalCard';
-import styled from 'styled-components';
-import { navigateToGovernance } from 'utils/routes';
-import { Button, FlexDivColumn, Text } from 'theme/common';
-import { useTranslation } from 'react-i18next';
-import { LoaderContainer } from '../components';
+import Button from 'components/Button/Button';
 import SimpleLoader from 'components/SimpleLoader';
-import { RootState } from 'redux/rootReducer';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import useProposalsQuery from 'queries/governance/useProposalsQuery';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { RootState } from 'redux/rootReducer';
+import { Proposal } from 'types/governance';
+import { navigateToGovernance } from 'utils/routes';
+import ProposalCard from '../ProposalCard';
+import { LoaderContainer } from '../styled-components';
+import { NoProposals, NoProposalsText, Wrapper } from './styled-components';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
@@ -56,10 +56,8 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
             {!hasProposals && !isLoading && (
                 <NoProposals>
                     <>
-                        <Text className="text-l bold pale-grey">{t('governance.proposal.no-proposals-found')}</Text>
-                        <Button className="primary" onClick={resetFilters}>
-                            {t('governance.proposal.view-all-proposals')}
-                        </Button>
+                        <NoProposalsText>{t('governance.proposal.no-proposals-found')}</NoProposalsText>
+                        <Button onClick={resetFilters}>{t('governance.proposal.view-all-proposals')}</Button>
                     </>
                 </NoProposals>
             )}
@@ -71,27 +69,5 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
         </>
     );
 };
-
-const NoProposals = styled(FlexDivColumn)`
-    margin-top: 30px;
-    min-height: 400px;
-    background: #04045a;
-    justify-content: space-evenly;
-    align-items: center;
-    align-self: center;
-    border-radius: 5px;
-`;
-
-const Wrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
-    margin-top: 25px;
-    padding: 0 30px;
-    @media (max-width: 767px) {
-        grid-template-columns: repeat(1, 1fr);
-        padding: 0;
-    }
-`;
 
 export default ProposalList;

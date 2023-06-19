@@ -1,29 +1,16 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import Steps from './components/Steps';
 import WizardText, { Text } from './components/WizardText';
 import WizardFaq from './components/WizardFaq';
 import WizardVideo from './components/WizardVideo';
-import Loader from 'components/Loader';
 import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
-
-export enum WizardSteps {
-    INSTALL_METAMASK,
-    CONNECT_METAMASK,
-    BUY,
-    EXCHANGE,
-    TRADE,
-}
+import { WizardSteps } from 'enums/wizard';
 
 const Wizard: React.FC = () => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const initialStep =
         typeof window.ethereum === 'undefined' ? WizardSteps.INSTALL_METAMASK : WizardSteps.CONNECT_METAMASK;
@@ -31,39 +18,32 @@ const Wizard: React.FC = () => {
 
     return (
         <>
-            {networkId !== 1 ? (
-                <>
-                    <OpRewardsBanner width={70} />
-                    <ElectionsBanner width={70} />
-                    <Wrapper>
-                        <TextHeader>{t('wizard-page.header')}</TextHeader>
-                        <TextIntro>
-                            <Trans
-                                i18nKey="wizard-page.intro"
-                                components={{
-                                    b: <strong />,
-                                }}
-                            />
-                        </TextIntro>
-                        <WizardVideo
-                            header={false}
-                            videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
-                            videoTitle="On-boarding Wizard video walk through for Thales platform"
-                        />
-                        <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
-                        <WizardText step={currentStep}></WizardText>
-                        <WizardVideo
-                            header={true}
-                            videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
-                            videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
-                        />
-                        <WizardFaq />
-                    </Wrapper>
-                    <Footer />
-                </>
-            ) : (
-                <Loader hideMainnet={true} />
-            )}
+            <OpRewardsBanner width={72} />
+            <ElectionsBanner width={72} />
+            <Wrapper>
+                <TextHeader>{t('wizard-page.header')}</TextHeader>
+                <TextIntro>
+                    <Trans
+                        i18nKey="wizard-page.intro"
+                        components={{
+                            b: <strong />,
+                        }}
+                    />
+                </TextIntro>
+                <WizardVideo
+                    header={false}
+                    videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
+                    videoTitle="On-boarding Wizard video walk through for Thales platform"
+                />
+                <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
+                <WizardText step={currentStep}></WizardText>
+                <WizardVideo
+                    header={true}
+                    videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
+                    videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
+                />
+                <WizardFaq />
+            </Wrapper>
         </>
     );
 };

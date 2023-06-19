@@ -1,4 +1,4 @@
-import { SpaceKey } from 'constants/governance';
+import { SpaceKey } from 'enums/governance';
 
 export type SpaceData = {
     id: SpaceKey;
@@ -21,6 +21,8 @@ export type SpaceStrategy = {
         address?: string;
         decimals: number;
         symbol: string;
+        blockOptimism?: number;
+        blockArbitrum?: number;
     };
 };
 

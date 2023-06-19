@@ -1,23 +1,26 @@
+import Button from 'components/Button';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
-import LpStaking from 'pages/Token/LpStaking/LpStaking';
-import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
+import LpStaking from 'pages/Token/LpStaking';
 import Migration from 'pages/Token/Migration';
 import SnxStaking from 'pages/Token/SnxStaking';
+import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
+import styled, { useTheme } from 'styled-components';
+import { TokenTabSection } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
-import MigrationInfo from '../MigrationInfo';
 import { history } from 'utils/routes';
-import queryString from 'query-string';
-import { useLocation } from 'react-router-dom';
+import MigrationInfo from '../MigrationInfo';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -25,6 +28,7 @@ const Tab: React.FC<{
     sections: TokenTabSection[];
     selectedSection?: TokenTabSectionIdEnum;
 }> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
+    const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
@@ -49,12 +53,19 @@ const Tab: React.FC<{
                                     return (
                                         <Button
                                             key={index}
-                                            type={ButtonType.default}
-                                            active={activeButtonId == el.id}
-                                            width={el.buttonWidth || '172px'}
+                                            textColor={theme.button.textColor.secondary}
+                                            backgroundColor={
+                                                activeButtonId == el.id
+                                                    ? theme.button.background.tertiary
+                                                    : theme.button.background.secondary
+                                            }
+                                            borderColor={theme.button.borderColor.tertiary}
+                                            width="210px"
                                             margin={'0 20px 0 0'}
                                             padding={'5px 20px'}
-                                            onClickHandler={() => {
+                                            fontSize="15px"
+                                            additionalStyles={{ whiteSpace: 'nowrap' }}
+                                            onClick={() => {
                                                 const paramTab = queryString.parse(location.search).tab;
                                                 history.push({
                                                     pathname: location.pathname,
@@ -86,7 +97,7 @@ const Tab: React.FC<{
                     <SectionContent>
                         {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
                         {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
-                            <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
+                            <Rewards gridGap={STYLE_GRID_GAP} setSelectedTab={setSelectedTab} />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
                         {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
@@ -104,21 +115,15 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
-                <MigrationInfo messageKey="lp-staking" tipNumber={23} />
-            )}
             {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>
     );
 };
 
-export const GRID_GAP = 20;
-export const GRID_GAP_MOBILE = 10;
-
 const Container = styled.div`
     margin-top: 10px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0;
     }
 `;
@@ -130,17 +135,16 @@ const SectionRow = styled.div`
 const SectionHeader = styled.p`
     height: 50px;
     padding-top: 7px;
-    font-family: Roboto;
     font-weight: 600;
     font-size: 32px;
     line-height: 35px;
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 1192px) {
         height: 40px;
         font-size: 25px;
         line-height: 25px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: auto;
         padding-top: 0;
         padding-bottom: 10px;
@@ -150,13 +154,12 @@ const SectionHeader = styled.p`
 `;
 
 const SectionDescription = styled.p`
-    font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: #ffffff;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -169,8 +172,8 @@ const WarningIcon = styled.i`
     margin-right: 4px;
     line-height: 18px;
     padding-top: 5px;
-    color: #e53720;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.tertiary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -178,13 +181,12 @@ const WarningIcon = styled.i`
 `;
 
 const SectionWarning = styled.p`
-    font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: #e53720;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.tertiary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -192,17 +194,18 @@ const SectionWarning = styled.p`
 `;
 
 const SectionButtons = styled.div`
-    margin-left: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-left: auto;
     margin-bottom: 10px;
     margin-top: 10px;
+    height: 30px;
     @media (max-width: 1192px) {
         margin-bottom: 0;
         margin-top: 5px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -212,18 +215,18 @@ const SectionContent = styled.div`
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: auto min-content;
-    grid-gap: ${GRID_GAP}px;
+    grid-gap: ${STYLE_GRID_GAP}px;
     padding: 10px 0;
     border-radius: 10px;
-    background: #04045a;
+    background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;
-    color: #ffffff;
-    @media (max-width: 767px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         background: transparent;
         border: none;
         padding: 1px;
-        grid-gap: ${GRID_GAP_MOBILE}px;
+        grid-gap: ${STYLE_GRID_GAP_MOBILE}px;
         margin-bottom: 0;
     }
 `;

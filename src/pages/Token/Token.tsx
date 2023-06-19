@@ -1,5 +1,4 @@
 import ElectionsBanner from 'components/ElectionsBanner';
-import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
@@ -9,8 +8,8 @@ import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
-import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
+import { FlexDivColumn } from 'styles/common';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
@@ -28,7 +27,7 @@ const TokenPage: React.FC = () => {
     const tabs = [
         {
             id: TokenTabEnum.GAMIFIED_STAKING,
-            name: t('options.earn.gamified-staking.tab-title'),
+            name: t('thales-token.gamified-staking.tab-title'),
         },
     ];
 
@@ -36,29 +35,29 @@ const TokenPage: React.FC = () => {
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.STAKING,
-            title: t('options.earn.gamified-staking.staking.section-title'),
-            description: t('options.earn.gamified-staking.staking.section-description'),
+            title: t('thales-token.gamified-staking.staking.section-title'),
+            description: t('thales-token.gamified-staking.staking.section-description'),
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.REWARDS,
-            title: t('options.earn.gamified-staking.rewards.section-title'),
-            description: t('options.earn.gamified-staking.rewards.section-description'),
-            warning: t('options.earn.gamified-staking.rewards.section-warning'),
+            title: t('thales-token.gamified-staking.rewards.section-title'),
+            description: t('thales-token.gamified-staking.rewards.section-description'),
+            warning: t('thales-token.gamified-staking.rewards.section-warning'),
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.VESTING,
-            title: t('options.earn.gamified-staking.vesting.section-title'),
-            description: t('options.earn.gamified-staking.vesting.section-description'),
+            title: t('thales-token.gamified-staking.vesting.section-title'),
+            description: t('thales-token.gamified-staking.vesting.section-description'),
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
-            title: t('options.earn.gamified-staking.merge-account.section-title'),
+            title: t('thales-token.gamified-staking.merge-account.section-title'),
             description: '',
             isButton: true,
             buttonWidth: 'auto',
@@ -66,7 +65,7 @@ const TokenPage: React.FC = () => {
         {
             tab: TokenTabEnum.LP_STAKING,
             id: TokenTabSectionIdEnum.LP_STAKING,
-            title: t('options.earn.lp-staking.section-title'),
+            title: t('thales-token.lp-staking.section-title'),
             description: '',
             isButton: false,
         },
@@ -75,7 +74,7 @@ const TokenPage: React.FC = () => {
     if (isL2) {
         tabs.push({
             id: TokenTabEnum.LP_STAKING,
-            name: t('options.earn.lp-staking.tab-title'),
+            name: t('thales-token.lp-staking.tab-title'),
         });
     }
 
@@ -86,7 +85,7 @@ const TokenPage: React.FC = () => {
         });
         tabs.push({
             id: TokenTabEnum.STRATEGIC_INVESTORS,
-            name: t('options.earn.snx-stakers.tab-title'),
+            name: t('thales-token.snx-stakers.tab-title'),
         });
     }
 
@@ -95,9 +94,16 @@ const TokenPage: React.FC = () => {
     const tabIds = tabs.map((tab) => tab.id);
     const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
     const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : defaultTab);
+
+    const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
+    const activeButtonId = Object.values(TokenTabSectionIdEnum).includes(paramActiveButtonId)
+        ? paramActiveButtonId
+        : undefined;
     const defaultSection =
         selectedTab === TokenTabEnum.GAMIFIED_STAKING
-            ? TokenTabSectionIdEnum.STAKING
+            ? activeButtonId
+                ? activeButtonId
+                : TokenTabSectionIdEnum.STAKING
             : selectedTab === TokenTabEnum.LP_STAKING
             ? TokenTabSectionIdEnum.LP_STAKING
             : undefined;
@@ -141,7 +147,6 @@ const TokenPage: React.FC = () => {
                 selectedSection={selectedSection}
                 setSelectedSection={setSelectedSection}
             />
-            <Footer />
         </>
     );
 };

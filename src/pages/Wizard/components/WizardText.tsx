@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { WizardSteps } from '../Wizard';
+import { WizardSteps } from 'enums/wizard';
 
 const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
     return (
@@ -66,13 +66,11 @@ const Wrapper = styled.div`
 `;
 
 export const Text = styled.p`
-    font-family: 'Titillium Web';
-    font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 24px;
     text-align: justify;
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 14px;
     strong {
         font-weight: 800;

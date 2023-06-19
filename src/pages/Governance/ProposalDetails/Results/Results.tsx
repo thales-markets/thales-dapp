@@ -1,19 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { formatPercentage, formatNumberShort } from 'utils/formatters/number';
-import {
-    ResultLabel,
-    Percentage,
-    RowPercentage,
-    RowPercentageIndicator,
-    ResultRow,
-    SidebarRowData,
-    Votes,
-    LoaderContainer,
-    ViewMore,
-} from 'pages/Governance/components';
+import { Percentage, SidebarRowData, Votes, LoaderContainer, ViewMore } from 'pages/Governance/styled-components';
 import { truncateText } from 'utils/formatters/string';
-import styled from 'styled-components';
+import { useTheme } from 'styled-components';
 import {
     FIRST_COUNCIL_ELECTIONS_ID,
     NUMBER_OF_COUNCIL_MEMBERS,
@@ -23,7 +13,15 @@ import {
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { LightMediumTooltip } from 'components/OldVersion/old-components';
+import Tooltip from 'components/Tooltip';
+import { ThemeInterface } from 'types/ui';
+import {
+    ResultRow,
+    RowPercentage,
+    RowPercentageIndicator,
+    ResultLabel,
+    RowPercentageContainer,
+} from './styled-components';
 
 type ResultsProps = {
     proposalResults?: ProposalResults;
@@ -43,6 +41,7 @@ const Results: React.FC<ResultsProps> = ({
     showAll,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
     const spaceSymbol =
         proposalId.toLowerCase() === FIRST_COUNCIL_ELECTIONS_ID.toLowerCase() || !proposalResults
@@ -90,15 +89,10 @@ const Results: React.FC<ResultsProps> = ({
                         return (
                             <ResultRow
                                 key={label}
-                                backgroundColor={
-                                    (isCouncilVoting || isCouncilResults) && index < numberOfCouncilMemebers
-                                        ? '#03044e'
-                                        : '#04045a'
-                                }
                                 opacity={isCouncilResults && index >= numberOfCouncilMemebers ? 0.5 : 1}
                                 borderColor={
                                     (isCouncilVoting || isCouncilResults) && index === numberOfCouncilMemebers - 1
-                                        ? '#3f1fb4'
+                                        ? theme.borderColor.primary
                                         : undefined
                                 }
                                 paddingBottom={
@@ -111,9 +105,9 @@ const Results: React.FC<ResultsProps> = ({
                             >
                                 <SidebarRowData>
                                     <FlexDiv>
-                                        <LightMediumTooltip title={choice.choice}>
+                                        <Tooltip overlay={choice.choice}>
                                             <ResultLabel>{label}</ResultLabel>
-                                        </LightMediumTooltip>
+                                        </Tooltip>
                                         <Votes>{`${formatNumberShort(
                                             results.resultsByVoteBalance[choice.i]
                                         )} ${spaceSymbol}`}</Votes>
@@ -147,9 +141,5 @@ const Results: React.FC<ResultsProps> = ({
         </>
     );
 };
-
-const RowPercentageContainer = styled.div`
-    position: relative;
-`;
 
 export default Results;

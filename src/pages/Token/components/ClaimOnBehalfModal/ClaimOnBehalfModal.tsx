@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
-import { Modal } from '@material-ui/core';
-import TextInput from 'pages/Token/components/TextInput';
-import { InputContainer, InputLabel } from '../components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { InputContainer } from '../styled-components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import onboardConnector from 'utils/onboardConnector';
-import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
-import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
-import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehalfQuery';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
+import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
+import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/Button/Button';
+import TextInput from 'components/fields/TextInput';
+import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -27,13 +30,13 @@ type ClaimOnBehalfModalProps = {
 
 const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [account, setAccount] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const { stakingThalesContract } = snxJSConnector as any;
 
     const isAccountEntered = account !== undefined && account.trim() !== '';
@@ -61,8 +64,8 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
         isSubmitting || !isAccountEntered || !isAccountValid || !isWalletConnected || canClaimOnBehalf === undefined;
 
     const handleSubmit = async () => {
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
-            setTxErrorMessage(null);
             setIsSubmitting(true);
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
@@ -71,136 +74,107 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                 getAddress(account),
                 !canClaimOnBehalf,
                 {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 }
             );
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    canClaimOnBehalf
-                        ? t('options.earn.claim-on-behalf.disable-button.confirmation-message')
-                        : t('options.earn.claim-on-behalf.enable-button.confirmation-message')
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        canClaimOnBehalf
+                            ? t('thales-token.claim-on-behalf.disable-button.confirmation-message')
+                            : t('thales-token.claim-on-behalf.enable-button.confirmation-message'),
+                        id
+                    )
                 );
                 setAccount('');
                 setIsSubmitting(false);
                 onClose();
             }
         } catch (e) {
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsSubmitting(false);
         }
     };
 
     const getSubmitButton = () => {
+        const width = '300px';
         if (!isWalletConnected) {
             return (
-                <Button
-                    type={ButtonType.submit}
-                    width={'50%'}
-                    active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
+                <Button width={width} onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (!isAccountValid) {
             return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                <Button width={width} disabled={true}>
                     {t(`common.errors.invalid-address`)}
                 </Button>
             );
         }
         if (!isAccountEntered) {
             return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                <Button width={width} disabled={true}>
                     {t(`common.errors.enter-address`)}
                 </Button>
             );
         }
         return (
-            <Button
-                type={ButtonType.submit}
-                width={'50%'}
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleSubmit}
-            >
+            <Button width={width} disabled={isButtonDisabled} onClick={handleSubmit}>
                 {!canClaimOnBehalf
                     ? !isSubmitting
-                        ? t('options.earn.claim-on-behalf.enable-button.label')
-                        : t('options.earn.claim-on-behalf.enable-button.progress-label')
+                        ? t('thales-token.claim-on-behalf.enable-button.label')
+                        : t('thales-token.claim-on-behalf.enable-button.progress-label')
                     : !isSubmitting
-                    ? t('options.earn.claim-on-behalf.disable-button.label')
-                    : t('options.earn.claim-on-behalf.disable-button.progress-label')}
+                    ? t('thales-token.claim-on-behalf.disable-button.label')
+                    : t('thales-token.claim-on-behalf.disable-button.progress-label')}
             </Button>
         );
     };
     return (
         <Modal
-            open={true}
-            onClose={(_, reason) => {
-                if (reason !== 'backdropClick') onClose();
-            }}
-            style={{ backdropFilter: 'blur(10px)' }}
+            title={t('thales-token.claim-on-behalf.title')}
+            onClose={onClose}
+            shouldCloseOnOverlayClick={false}
+            customStyle={{ overlay: { zIndex: 2000 } }}
         >
             <Container>
-                <Header>
-                    <div>{t('options.earn.claim-on-behalf.title')}</div>
-                    <XButton onClick={onClose} />
-                </Header>
                 <Description>
                     <Trans
-                        i18nKey={`options.earn.claim-on-behalf.description`}
+                        i18nKey={`thales-token.claim-on-behalf.description`}
                         components={[<span key="1" />, <Tip66Link key="2" />]}
                     />
                 </Description>
                 <Description>
                     <Trans
-                        i18nKey={`options.earn.claim-on-behalf.guide`}
+                        i18nKey={`thales-token.claim-on-behalf.guide`}
                         components={[<span key="1" />, <ClaimOnBehalfGuideLink key="2" />]}
                     />
                 </Description>
-                <Label>{t('options.earn.claim-on-behalf.label')}:</Label>
-                <InputContainer>
+                <InputContainer marginTop={20}>
                     <TextInput
                         value={account}
                         onChange={(e: any) => setAccount(e.target.value)}
                         disabled={isSubmitting || !isWalletConnected}
-                        className={isAccountValid ? '' : 'error'}
-                        autoFocus={true}
-                    />
-                    <InputLabel>{t('options.earn.claim-on-behalf.account-label')}:</InputLabel>
-                    <FieldValidationMessage
+                        label={t('thales-token.claim-on-behalf.label')}
+                        placeholder={t('common.enter-address')}
                         showValidation={!isAccountValid}
-                        message={t(`common.errors.invalid-address`)}
+                        validationMessage={t(`common.errors.invalid-address`)}
                     />
                 </InputContainer>
-                <ButtonContainer>
-                    {!isButtonDisabled && (
-                        <Message>
-                            {canClaimOnBehalf
-                                ? t('options.earn.claim-on-behalf.disable-message')
-                                : t('options.earn.claim-on-behalf.enable-message')}
-                        </Message>
-                    )}
-                    {getSubmitButton()}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </ButtonContainer>
+                <ButtonContainer>{getSubmitButton()}</ButtonContainer>
                 <EnabledAddressesTitle>
-                    {t('options.earn.claim-on-behalf.enabled-addresses-title')}:
+                    {t('thales-token.claim-on-behalf.enabled-addresses-title')}:
                 </EnabledAddressesTitle>
                 {enabledAddresses.length > 0 || stakingClaimOnBehalfQuery.isLoading ? (
                     enabledAddresses.map((address) => (
                         <EnabledAddressesItem key={address}>{address}</EnabledAddressesItem>
                     ))
                 ) : (
-                    <NoAddresses>{t('options.earn.claim-on-behalf.no-enabled-addresses-message')}</NoAddresses>
+                    <NoAddresses>{t('thales-token.claim-on-behalf.no-enabled-addresses-message')}</NoAddresses>
                 )}
             </Container>
         </Modal>
@@ -208,50 +182,21 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 };
 
 const Container = styled(FlexDivColumnCentered)`
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 15px;
     min-width: 70px;
-    background: #04045a;
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
-    margin: auto;
     position: relative;
-    top: calc(50% - 200px);
-    padding: 20px;
-    width: 570px;
-    height: fit-content;
-`;
-
-const Header = styled(FlexDivRowCentered)`
-    font-weight: 600;
-    font-size: 20px;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
-    padding: 0px 2px 50px 2px;
+    width: 380px;
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
-    padding-top: 15px;
-    padding-bottom: 10px;
     align-items: center;
 `;
 
-const Message = styled.div`
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    color: #ffcc00;
-    margin-bottom: 10px;
-`;
-
 const Description = styled(FlexDivCentered)`
-    font-size: 16px;
-    line-height: 20px;
-    padding: 0 2px 20px 2px;
+    font-size: 13px;
+    line-height: 18px;
     text-align: start;
     display: inline;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Label = styled(Description)`
@@ -259,21 +204,21 @@ const Label = styled(Description)`
 `;
 
 const EnabledAddressesTitle = styled(Label)`
-    font-weight: bold;
-    padding: 30px 2px 4px 2px;
-    font-size: 14px;
-    border-bottom: 1px solid #f6f6fe;
+    padding: 30px 2px 4px 0;
+    font-size: 13px;
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.secondary};
 `;
 
 const EnabledAddressesItem = styled(Label)`
-    padding: 5px 2px 4px 2px;
-    border-bottom: 1px dotted #f6f6fe;
+    padding: 5px 2px 4px 0;
+    border-bottom: 1px dotted ${(props) => props.theme.borderColor.secondary};
     :last-child {
         margin-bottom: 10px;
     }
 `;
 
 const NoAddresses = styled(EnabledAddressesItem)`
+    font-size: 13px;
     text-align: center;
 `;
 

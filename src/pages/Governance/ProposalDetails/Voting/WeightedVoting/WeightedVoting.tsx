@@ -1,25 +1,38 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
-import { Proposal } from 'types/governance';
-import { useTranslation } from 'react-i18next';
-import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
-import { refetchProposal } from 'utils/queryConnector';
-import { dispatchMarketNotification } from 'utils/options';
-import { percentageOfTotal } from 'utils/voting/weighted';
-import { ProposalTypeEnum, SpaceKey } from 'constants/governance';
-import ValidationMessage from 'components/ValidationMessage';
-import voting from 'utils/voting';
-import pitches from '../pitches.json';
-import { Dialog, withStyles } from '@material-ui/core';
-import useProposalQuery from 'queries/governance/useProposalQuery';
-import { CloseIconContainer } from 'components/OldVersion/old-components';
+import { Web3Provider } from '@ethersproject/providers';
+import { Dialog } from '@material-ui/core';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import Button from 'components/Button/Button';
+import { ProposalTypeEnum, SpaceKey } from 'enums/governance';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
+import useProposalQuery from 'queries/governance/useProposalQuery';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumnCentered,
+    FlexDivRowCentered,
+    FlexDivSpaceBetween,
+} from 'styles/common';
+import { Proposal } from 'types/governance';
+import { refetchProposal } from 'utils/queryConnector';
+import voting from 'utils/voting';
+import { percentageOfTotal } from 'utils/voting/weighted';
+import pitches from '../pitches.json';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -31,7 +44,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number[]>(new Array(proposal.choices.length + 1).fill(0));
     const [isVoting, setIsVoting] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [modalInfo, setModalInfo] = useState({ isOpen: false, author: '', content: '' });
 
     const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
@@ -71,7 +83,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     }
 
     const handleVote = async () => {
-        setTxErrorMessage(null);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         setIsVoting(true);
         try {
             const formattedChoices = { ...selectedChoices };
@@ -80,7 +92,8 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
             const hub = 'https://hub.snapshot.org';
             const client = new snapshot.Client712(hub);
 
-            await client.vote((snxJSConnector as any).provider, walletAddress, {
+            // using Web3Provider instead of wagmi provider due to an error _signTypedData is not a function
+            await client.vote(new Web3Provider(window.ethereum as any, 'any'), walletAddress, {
                 space: proposal.space.id,
                 proposal: proposal.id,
                 type: proposal.type as ProposalType,
@@ -90,11 +103,11 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
             });
 
             refetchProposal(proposal.space.id, proposal.id, walletAddress);
-            dispatchMarketNotification(t('governance.proposal.vote-confirmation-message'));
+            toast.update(id, getSuccessToastOptions(t('governance.proposal.vote-confirmation-message'), id));
             setIsVoting(false);
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsVoting(false);
         }
     };
@@ -186,17 +199,16 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 )}
             </VoteContainer>
             <FlexDivCentered>
-                <VoteButton disabled={!isOptionSelected || isVoting || !hasVotingRights} onClick={handleVote}>
+                <Button
+                    disabled={!isOptionSelected || isVoting || !hasVotingRights}
+                    onClick={handleVote}
+                    margin="20px 0"
+                >
                     {!isVoting
                         ? t(`governance.proposal.submit-vote-label`)
                         : t(`governance.proposal.vote-progress-label`)}
-                </VoteButton>
+                </Button>
             </FlexDivCentered>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
             <PitchModal
                 onClose={() => setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })}
                 open={modalInfo.isOpen}
@@ -221,13 +233,13 @@ const Weighted = styled(FlexDivSpaceBetween)`
     flex: 1;
     box-sizing: content-box;
     height: 50px;
-    border: 1px solid #748bc6;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
     font-size: 20px;
     line-height: 50px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -235,24 +247,14 @@ const Weighted = styled(FlexDivSpaceBetween)`
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
-        color: #f6f6fe;
-        background: #03044e;
-        input {
-            color: #f6f6fe;
-        }
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
-        color: #f6f6fe;
-        background: #03044e;
-        input {
-            color: #f6f6fe;
-        }
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
         font-size: 16px;
         line-height: 46px;
@@ -264,14 +266,14 @@ const Option = styled(FlexDivRowCentered)`
     padding-right: 5px;
     white-space: break-spaces;
     line-height: 22px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-left: 10px;
     }
 `;
 
 const Selection = styled(FlexDiv)`
     width: 230px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 165px;
     }
 `;
@@ -280,14 +282,14 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
     min-width: 45px;
-    border-left: 2px solid #748bc6;
-    border-right: 2px solid #748bc6;
+    border-left: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     &:hover {
-        border-left: 2px solid #64d9fe;
-        border-right: 2px solid #64d9fe;
+        border-left: 2px solid ${(props) => props.theme.borderColor.quaternary};
+        border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 35px;
         min-width: 35px;
     }
@@ -297,7 +299,7 @@ const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 80px;
     min-width: 80px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 55px;
         min-width: 55px;
     }
@@ -313,11 +315,11 @@ const Input = styled.input`
     min-width: 60px;
     font-weight: bold;
     font-size: 20px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.primary};
     text-align: center;
     overfloe: hidden;
     text-overflow: ellipsis;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         max-width: 40px;
         min-width: 40px;
@@ -327,7 +329,7 @@ const Input = styled.input`
 const SeePitchWrapper = styled.div`
     align-self: center;
     margin-bottom: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 35px;
     }
 `;
@@ -337,7 +339,7 @@ const SeePitchButton = styled.button`
     font-size: 16px;
     line-height: 36px;
     border-radius: 23px;
-    border: 2px solid #516aff;
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     cursor: pointer;
     color: white;
     background: transparent;
@@ -346,25 +348,28 @@ const SeePitchButton = styled.button`
     font-size: 15px;
     &:disabled {
         opacity: 0.4;
-        cursor: not-allowed;
+        cursor: default;
     }
-    @media (max-width: 767px) {
+    &:hover:not(:disabled) {
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 0;
         line-height: 26px;
     }
 `;
 
-const PitchModal = withStyles(() => ({
-    paper: {
-        borderRadius: '15px',
-        width: '900px',
-        maxWidth: '900px',
-        background: '#04045a',
-        overflow: 'auto',
-        border: '2px solid #64D9FE',
-        color: '#F6F6FE',
-    },
-}))(Dialog);
+const PitchModal = styled((props) => <Dialog classes={{ papper: props.className }} {...props} />)`
+    & .MuiDialog-paper {
+        border-radius: 15px;
+        width: 900px;
+        max-width: 900px;
+        background: ${(props) => props.theme.background.primary};
+        overflow: auto;
+        border: 2px solid ${(props) => props.theme.borderColor.primary};
+        color: ${(props) => props.theme.textColor.primary};
+    }
+`;
 
 const PitchContainer = styled.div`
     position: relative;
@@ -385,6 +390,17 @@ const PitchContent = styled.div`
     line-height: 24px;
 `;
 
+const CloseIconContainer = styled(CloseIcon)`
+    :hover {
+        cursor: pointer;
+    }
+    @media (max-width: 512px) {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
+    }
+`;
+
 const CloseDialog = styled(CloseIconContainer)`
     position: absolute;
     top: 0;
@@ -392,7 +408,7 @@ const CloseDialog = styled(CloseIconContainer)`
 `;
 
 const VotingWrapper = styled(FlexDiv)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;

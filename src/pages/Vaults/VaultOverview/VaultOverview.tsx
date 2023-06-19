@@ -17,7 +17,6 @@ import {
     VaultSectionIcon,
 } from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
-import i18n from 'i18n';
 import { VAULT_MAP } from 'constants/vault';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -28,8 +27,9 @@ import { VaultData } from 'types/vault';
 import { formatPercentage, formatPercentageWithSign } from 'utils/formatters/number';
 import SimpleLoader from 'components/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
-import { FlexDivColumn } from 'theme/common';
-import { UI_COLORS } from 'constants/ui';
+import { FlexDivColumn } from 'styles/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type VaultOverviewProps = {
     vaultId: string;
@@ -37,7 +37,7 @@ type VaultOverviewProps = {
 
 const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
     const { t } = useTranslation();
-    const language = i18n.language;
+    const theme: ThemeInterface = useTheme();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidVaultData, setLastValidVaultData] = useState<VaultData | undefined>(undefined);
@@ -63,7 +63,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
 
     return (
         <SpaContainer>
-            <SPAAnchor href={buildVaultLink(vaultId, language)}>
+            <SPAAnchor href={buildVaultLink(vaultId)}>
                 <FlexDivColumn style={{ height: '100%' }}>
                     <VaultContainer>
                         <VaultTitle>
@@ -119,10 +119,10 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                         <VaultInfo
                                             color={
                                                 vaultData.lifetimePnl === 0
-                                                    ? UI_COLORS.WHITE
+                                                    ? theme.textColor.primary
                                                     : vaultData.lifetimePnl > 0
-                                                    ? UI_COLORS.GREEN
-                                                    : UI_COLORS.RED
+                                                    ? theme.textColor.quaternary
+                                                    : theme.textColor.tertiary
                                             }
                                         >
                                             {formatPercentageWithSign(vaultData.lifetimePnl)}
@@ -130,7 +130,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                     </VaultInfoContainer>
                                     <VaultInfoContainer>
                                         <VaultInfoLabel>{t('vault.round-end-label')}:</VaultInfoLabel>
-                                        <VaultInfo color="#64D9FE">
+                                        <VaultInfo color={theme.textColor.quaternary}>
                                             {vaultData.isRoundEnded ? (
                                                 t('vault.round-ended-label')
                                             ) : (

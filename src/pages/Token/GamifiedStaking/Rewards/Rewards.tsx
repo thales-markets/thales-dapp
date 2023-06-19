@@ -1,49 +1,54 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import arrowLink from 'assets/images/arrow-link.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
-import ValidationMessage from 'components/ValidationMessage';
+import Button from 'components/Button/Button';
+import TimeRemaining from 'components/TimeRemaining';
+import Tooltip from 'components/Tooltip/Tooltip';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import { EMPTY_VALUE } from 'constants/placeholder';
 import ROUTES from 'constants/routes';
+import { TokenTabEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
-import NetworkFees from 'pages/Token/components/NetworkFees';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import {
     ButtonContainer,
     ClaimMessage,
     DashedLine,
     DashedLineVertical,
     Line,
-    StyledInfoIcon,
-    StyledMaterialTooltip,
     Tip125Link,
     Tip48Link,
-} from 'pages/Token/components';
-import YourTransactions from './Transactions';
+} from 'pages/Token/styled-components';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
-import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDivEnd } from 'theme/common';
-import { StakingReward, TokenTabEnum } from 'types/token';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
-import { dispatchMarketNotification } from 'utils/options';
-import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
-import snxJSConnector from 'utils/snxJSConnector';
-import { isMobile } from 'utils/device';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
+import styled, { useTheme } from 'styled-components';
+import { Colors, FlexDivEnd } from 'styles/common';
+import { StakingData, UserStakingData } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import { getStableCoinForNetwork } from 'utils/currency';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getIsOVM } from 'utils/network';
+import { refetchTokenQueries } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import YourTransactions from './Transactions';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -61,131 +66,114 @@ type RewardsProperties = {
 
 const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+    const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [stakingRewards, setStakingRewards] = useState<StakingReward | undefined>(undefined);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
+    const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
-
     const { stakingThalesContract } = snxJSConnector as any;
 
-    const isClaimAvailable =
-        stakingRewards &&
-        stakingRewards.hasClaimRights &&
-        !stakingRewards.claimed &&
-        !stakingRewards.isClaimPaused &&
-        isWalletConnected &&
-        !!stakingThalesContract &&
-        !isClaiming &&
-        !isClosingPeriod;
-
-    const isClosingPeriodAvailable = isWalletConnected && !!stakingThalesContract && !isClaiming && !isClosingPeriod;
-
-    const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
-        enabled: isAppReady && !!stakingThalesContract,
+    const stakingDataQuery = useStakingDataQuery(networkId, {
+        enabled: isAppReady,
     });
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, { enabled: isAppReady });
-    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, { enabled: isAppReady });
 
-    const totalStakedAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.totalStakedAmount : 0;
-    const fixedPeriodReward =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.fixedPeriodReward : 0;
-    const totalEscrowedRewards =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.totalEscrowedRewards : 0;
-    const totalEscrowBalanceNotIncludedInStaking =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data
-            ? escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking
-            : 0;
-    const thalesStaked =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.thalesStaked : 0;
-    const escrowedBalance =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.escrowedBalance : 0;
+    useEffect(() => {
+        if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
+            setLastValidStakingData(stakingDataQuery.data);
+        }
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data]);
+
+    const stakingData: StakingData | undefined = useMemo(() => {
+        if (stakingData) {
+            return stakingDataQuery.data;
+        }
+        return lastValidStakingData;
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
+
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    useEffect(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            setLastValidUserStakingData(userStakingDataQuery.data);
+        }
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
+
+    const userStakingData: UserStakingData | undefined = useMemo(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            return userStakingDataQuery.data;
+        }
+        return lastValidUserStakingData;
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
+
+    const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
+    const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
+    const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
+    const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
+
+    const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
+    const escrowedBalance = userStakingData ? userStakingData.escrowedBalance : 0;
 
     const totalThalesStaked = useMemo(
         () => totalStakedAmount + totalEscrowedRewards - totalEscrowBalanceNotIncludedInStaking,
         [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
-
     const myStakedShare = useMemo(
         () => (totalThalesStaked === 0 ? 0 : (100 * (thalesStaked + escrowedBalance)) / totalThalesStaked),
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * fixedPeriodReward, [myStakedShare]);
+    const isL2 = getIsOVM(networkId);
 
-    useEffect(() => {
-        if (stakingRewardsQuery.isSuccess && stakingRewardsQuery.data) {
-            setStakingRewards(stakingRewardsQuery.data);
-        }
-    }, [stakingRewardsQuery.isSuccess, stakingRewardsQuery.data]);
+    const snxVolumeRewardsMultiplier = stakingData ? stakingData.snxVolumeRewardsMultiplier : 0;
+    const ammVolumeRewardsMultiplier = stakingData ? stakingData.ammVolumeRewardsMultiplier : 0;
+    const maxSnxBonusPercentage = stakingData ? stakingData.maxSnxBonusPercentage : 0;
+    const maxAmmBonusPercentage = stakingData ? stakingData.maxAmmBonusPercentage : 0;
 
-    useEffect(() => {
-        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
-            const txRequest = await stakingThalesContractWithSigner.populateTransaction.claimReward();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
+    const totalThalesRewards = userStakingData ? userStakingData.rewards : 0;
+    const baseRewards = userStakingData ? userStakingData.baseRewards : 0;
+    const snxBonus = userStakingData ? userStakingData.snxBonus : 0;
+    const ammBonus = userStakingData ? userStakingData.ammBonus : 0;
+    const maxSnxBonus = userStakingData ? userStakingData.maxSnxBonus : 0;
+    const maxAmmBonus = userStakingData ? userStakingData.maxAmmBonus : 0;
+    const snxStaked = userStakingData ? userStakingData.snxStaked : 0;
+    const ammVolume = userStakingData ? userStakingData.ammVolume : 0;
+    const thalesAmmVolume = userStakingData ? userStakingData.thalesAmmVolume : 0;
+    const rangedAmmVolume = userStakingData ? userStakingData.rangedAmmVolume : 0;
+    const sportsAmmVolume = userStakingData ? userStakingData.sportsAmmVolume : 0;
 
-        const fetchGasLimit = async () => {
-            if (stakingRewards) {
-                try {
-                    const stakingThalesContractWithSigner = stakingThalesContract.connect(
-                        (snxJSConnector as any).signer
-                    );
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            stakingThalesContractWithSigner.estimateGas.claimReward(),
-                            fetchL1Fee(stakingThalesContractWithSigner),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.claimReward();
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    }
-                } catch (e) {
-                    console.log(e);
-                    setGasLimit(null);
-                }
-            }
-        };
-        if (!isClaimAvailable) return;
-        fetchGasLimit();
-    }, [walletAddress, isClaimAvailable]);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-    const totalThalesRewards = stakingRewards ? stakingRewards.rewards : 0;
-    const baseRewards = stakingRewards ? stakingRewards.baseRewards : 0;
-    const baseRewardsPool = stakingRewards ? stakingRewards.baseRewardsPool : 0;
-    const thalesAmmVolume = stakingRewards ? stakingRewards.thalesAmmVolume : 0;
-    const rangedAmmVolume = stakingRewards ? stakingRewards.rangedAmmVolume : 0;
-    const sportsAmmVolume = stakingRewards ? stakingRewards.sportsAmmVolume : 0;
-    const ammVolume = stakingRewards ? stakingRewards.ammVolume : 0;
-    const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
-    const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
-    const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
-    const snxBonus = stakingRewards ? stakingRewards.snxBonus : 0;
-    const snxStaked = stakingRewards ? stakingRewards.snxStaked : 0;
-    const maxSnxBonus = stakingRewards ? stakingRewards.maxSnxBonus : 0;
-    const snxVolumeRewardsMultiplier = stakingRewards ? stakingRewards.snxVolumeRewardsMultiplier : 0;
-    const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
-    const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
-
-    const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
-    const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
+    const canClosePeriod = stakingData && stakingData.canClosePeriod;
+    const isClosingPeriodAvailable = isWalletConnected && !!stakingThalesContract && !isClaiming && !isClosingPeriod;
+    const isPaused = stakingData && stakingData.isPaused;
+    const isClaimed = stakingData && userStakingData && !stakingData.isPaused && userStakingData.claimed;
+    const notEligible =
+        stakingData &&
+        userStakingData &&
+        !stakingData.isPaused &&
+        !userStakingData.claimed &&
+        !userStakingData.hasClaimRights &&
+        isWalletConnected;
+    const isClaimAvailable =
+        stakingData &&
+        userStakingData &&
+        userStakingData.hasClaimRights &&
+        !userStakingData.claimed &&
+        !stakingData.isPaused &&
+        isWalletConnected &&
+        !!stakingThalesContract &&
+        !isClaiming &&
+        !isClosingPeriod;
 
     const maxAmmVolume = baseRewards * ammVolumeRewardsMultiplier;
     const additionalAmmVolume = maxAmmVolume - ammVolume > 0 ? maxAmmVolume - ammVolume : 0;
@@ -221,7 +209,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
-    const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
     const protocolVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolume);
     const protocolVolumeNeededForBonusFormatted =
         ammVolumeNeededForMaxBonus > 0
@@ -229,18 +216,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             : '';
 
     const protocolMaxRewardFormatted = isClaimAvailable
-        ? isL2
-            ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
-              ' + ' +
-              formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
-            : formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
-        : isL2
-        ? formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
-          ' + ' +
-          formatCurrencyWithKey(
-              CRYPTO_CURRENCY_MAP.OP,
-              estimatedRewards * (maxAmmBonusPercentage / 100) * OP_REWARDS_MULTIPLIER
-          )
+        ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
         : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100));
 
     // SNX staking
@@ -256,6 +232,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         formatCurrencyWithKey(THALES_CURRENCY, lpStakingRewards) +
         ' + ' +
         formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, lpStakingSecondRewards);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const getInfoSection = (label: string, value: string, desc: string | ReactElement) => {
         return (
@@ -320,10 +300,20 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel color={!label.bonusEligible ? '#ffcc00' : !value.bonus ? '#50ce99' : ''}>
+                    <SectionDetailsLabel
+                        color={
+                            !label.bonusEligible
+                                ? theme.warning.textColor.primary
+                                : !value.bonus
+                                ? theme.textColor.quaternary
+                                : ''
+                        }
+                    >
                         {label.bonus}
                     </SectionDetailsLabel>
-                    {value.bonus && <SectionDetailsValue color={'#50ce99'}>{value.bonus}</SectionDetailsValue>}
+                    {value.bonus && (
+                        <SectionDetailsValue color={theme.textColor.quaternary}>{value.bonus}</SectionDetailsValue>
+                    )}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
@@ -335,50 +325,58 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     };
 
     const handleClaimStakingRewards = async () => {
-        setShowTooltip(false);
-        if (isClaimAvailable && stakingRewards) {
+        if (isClaimAvailable) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.claimReward({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.gamified-staking.rewards.claim.confirmation-message'));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('thales-token.gamified-staking.rewards.claim.confirmation-message'),
+                            id
+                        )
+                    );
                     refetchTokenQueries(walletAddress, networkId);
-                    refetchUserTokenTransactions(walletAddress, networkId);
                     setIsClaiming(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClaiming(false);
             }
         }
     };
 
     const handleClosePeriod = async () => {
-        if (stakingRewards && stakingRewards.canClosePeriod) {
+        if (canClosePeriod) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClosingPeriod(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.closePeriod()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(
-                        t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message')
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('thales-token.gamified-staking.rewards.claim.close-period.confirmation-message'),
+                            id
+                        )
                     );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClosingPeriod(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClosingPeriod(false);
             }
         }
@@ -386,38 +384,19 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const getClaimButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button type={ButtonType.submit} active={true} onClickHandler={() => onboardConnector.connectWallet()}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         return (
-            <StyledMaterialTooltip
-                arrow
-                title={t('options.earn.gamified-staking.rewards.claim.button-tooltip') as string}
-                open={showTooltip}
-            >
+            <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.button-tooltip')}>
                 <ButtonWrapperTooltip>
-                    <Button
-                        type={ButtonType.submit}
-                        active={isClaimAvailable}
-                        disabled={!isClaimAvailable}
-                        onMouseOverHandler={() => {
-                            setShowTooltip(true);
-                        }}
-                        onMouseOutHandler={() => {
-                            setShowTooltip(false);
-                        }}
-                        onClickHandler={handleClaimStakingRewards}
-                    >
+                    <Button disabled={!isClaimAvailable} onClick={handleClaimStakingRewards}>
                         {isClaiming
-                            ? t('options.earn.gamified-staking.rewards.claim.claiming')
-                            : t('options.earn.gamified-staking.rewards.claim.claim')}
+                            ? t('thales-token.gamified-staking.rewards.claim.claiming')
+                            : t('thales-token.gamified-staking.rewards.claim.claim')}
                     </Button>
                 </ButtonWrapperTooltip>
-            </StyledMaterialTooltip>
+            </Tooltip>
         );
     };
 
@@ -425,80 +404,38 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         return (
             <SectionContentWrapper noGrid={true}>
                 <RewardPeriod>
-                    <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
-                    {stakingRewards ? (
-                        <TimeRemaining
-                            end={stakingRewards.closingDate}
-                            fontSize={isMobile() ? 12 : 15}
-                            showFullCounter
-                        />
+                    <PeriodLabel>{t('thales-token.gamified-staking.rewards.claim.period')}</PeriodLabel>
+                    {stakingData ? (
+                        <TimeRemaining end={stakingData.closingDate} fontSize={isMobile ? 12 : 15} showFullCounter />
                     ) : (
-                        '-'
+                        EMPTY_VALUE
                     )}
-                    {stakingRewards && stakingRewards.canClosePeriod && (
-                        <Button
-                            type={ButtonType.label}
-                            onClickHandler={handleClosePeriod}
-                            active={isClosingPeriodAvailable}
-                            disabled={!isClosingPeriodAvailable}
-                        >
+                    {canClosePeriod && (
+                        <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
                             {isClosingPeriod
-                                ? t('options.earn.gamified-staking.rewards.claim.close-period.progress-label')
-                                : t('options.earn.gamified-staking.rewards.claim.close-period.label')}
+                                ? t('thales-token.gamified-staking.rewards.claim.close-period.progress-label')
+                                : t('thales-token.gamified-staking.rewards.claim.close-period.label')}
                         </Button>
                     )}
                 </RewardPeriod>
                 <SectionLabel type={SectionType.CLAIM}>
                     <SectionLabelContent type={SectionType.CLAIM}>
-                        {t('options.earn.gamified-staking.rewards.claim.total-label')}
+                        {t('thales-token.gamified-staking.rewards.claim.total-label')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.CLAIM}>
                     <SectionValueContent type={SectionType.CLAIM}>
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
-                    {isL2 && (
-                        <>
-                            <SectionValueContent type={SectionType.CLAIM} isOp={true}>
-                                {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
-                            </SectionValueContent>
-                            <StyledMaterialTooltip
-                                arrow={true}
-                                title={<Trans i18nKey="options.earn.gamified-staking.rewards.claim.op-tooltip" />}
-                                interactive
-                            >
-                                <StyledInfoIcon />
-                            </StyledMaterialTooltip>
-                        </>
-                    )}
                 </SectionValue>
-                <NetworkFeesWrapper>
-                    <Line margin={'0 0 10px 0'} />
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
-                </NetworkFeesWrapper>
                 <ButtonContainer>
                     <ClaimMessage above={true}>
-                        {stakingRewards && stakingRewards.isClaimPaused
-                            ? t('options.earn.gamified-staking.rewards.claim.paused-message')
-                            : ''}
-                        {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed
-                            ? t('options.earn.gamified-staking.rewards.claim.claimed-message')
-                            : ''}
-                        {stakingRewards &&
-                        !stakingRewards.isClaimPaused &&
-                        !stakingRewards.claimed &&
-                        !stakingRewards.hasClaimRights &&
-                        isWalletConnected
-                            ? t('options.earn.gamified-staking.rewards.claim.not-eligible-message')
-                            : ''}
+                        {isPaused ? t('thales-token.gamified-staking.rewards.claim.paused-message') : ''}
+                        {isClaimed ? t('thales-token.gamified-staking.rewards.claim.claimed-message') : ''}
+                        {notEligible ? t('thales-token.gamified-staking.rewards.claim.not-eligible-message') : ''}
                     </ClaimMessage>
                     {getClaimButton()}
                 </ButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
             </SectionContentWrapper>
         );
     };
@@ -508,21 +445,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionContentWrapper>
                 <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
-                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-1')}
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.label-1')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'} textDefault={true}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF} textDefault={true}>
-                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
-                <Button
-                    type={ButtonType.popup}
-                    active={true}
-                    margin={'30px 0 5px auto'}
-                    onClickHandler={() => setShowClaimOnBehalfModal(true)}
-                >
-                    {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
+                <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
+                    {t('thales-token.gamified-staking.rewards.claim-on-behalf.enable')}
                 </Button>
             </SectionContentWrapper>
         );
@@ -533,26 +465,22 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionContentWrapper background={false} noGrid={true}>
                 <SectionLabel type={SectionType.LP_STAKING} margin={'34px 0 0 0'}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
-                        {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
+                        {t('thales-token.gamified-staking.rewards.lp-staking.label-1')}
                     </SectionLabelContent>
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
-                                i18nKey="options.earn.gamified-staking.rewards.lp-staking.tooltip"
+                                i18nKey="thales-token.gamified-staking.rewards.lp-staking.tooltip"
                                 components={[
                                     <LpStakingLink key="1" onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)} />,
                                 ]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                    />
                 </SectionLabel>
                 <SectionLabel type={SectionType.LP_STAKING}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
-                        {t('options.earn.gamified-staking.rewards.lp-staking.label-2')}
+                        {t('thales-token.gamified-staking.rewards.lp-staking.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.LP_STAKING}>
@@ -570,22 +498,22 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             {/* First row */}
             <SectionWrapper columns={4}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info.base'),
+                    t('thales-token.gamified-staking.rewards.info.base'),
                     baseRewardsFormatted,
-                    t('options.earn.gamified-staking.rewards.info.base-description', {
+                    t('thales-token.gamified-staking.rewards.info.base-description', {
                         baseRewards: baseRewardsFormatted,
                     })
                 )}
             </SectionWrapper>
             <SectionWrapper columns={8}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info.bonus'),
+                    t('thales-token.gamified-staking.rewards.info.bonus'),
                     bonusRewardsFormatted,
                     <Trans
                         i18nKey={
                             isL2
-                                ? 'options.earn.gamified-staking.rewards.info.bonus-description'
-                                : 'options.earn.gamified-staking.rewards.info.bonus-description-arb'
+                                ? 'thales-token.gamified-staking.rewards.info.bonus-description'
+                                : 'thales-token.gamified-staking.rewards.info.bonus-description-arb'
                         }
                         values={{
                             bonusRewards: bonusRewardsFormatted,
@@ -599,20 +527,20 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper columns={4} backgroundType={BackgroundType.AMM}>
                 {getVolumeSection(
                     ROUTES.Options.Home,
-                    t('options.earn.gamified-staking.rewards.volume.amm-label'),
+                    t('thales-token.gamified-staking.rewards.volume.amm-label'),
                     ammVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.amm-desc')
+                    t('thales-token.gamified-staking.rewards.volume.amm-desc')
                 )}
             </SectionWrapper>
             <SectionWrapper columns={4} backgroundType={BackgroundType.RANGED}>
                 {getVolumeSection(
                     ROUTES.Options.RangeMarkets,
-                    t('options.earn.gamified-staking.rewards.volume.ranged-label'),
+                    t('thales-token.gamified-staking.rewards.volume.ranged-label'),
                     rangedVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.ranged-desc')
+                    t('thales-token.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={4}
@@ -622,7 +550,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     mobileLong={true}
                 />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={10}
@@ -637,12 +565,12 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     LINKS.SportMarkets,
                     '',
                     sportsVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.sports-desc'),
+                    t('thales-token.gamified-staking.rewards.volume.sports-desc'),
                     logoOvertime
                 )}
             </SectionWrapper>
 
-            {isMobile() ? (
+            {isMobile ? (
                 <DashedLineVertical gridRow={5} columnStart={7} marginLeft={-5} marginTop={-gridGap} heightPer={135} />
             ) : (
                 <>
@@ -676,16 +604,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper columns={5} startColumn={2}>
                 {getRewardSection(
                     {
-                        main: t('options.earn.gamified-staking.rewards.protocol.label'),
-                        volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
+                        main: t('thales-token.gamified-staking.rewards.protocol.label'),
+                        volume: t('thales-token.gamified-staking.rewards.protocol.volume'),
                         bonus: protocolVolumeNeededForBonusFormatted.length
-                            ? t('options.earn.gamified-staking.rewards.protocol.bonus')
+                            ? t('thales-token.gamified-staking.rewards.protocol.bonus')
                             : hasUserStaked
-                            ? t('options.earn.gamified-staking.rewards.protocol.bonus-eligible')
-                            : t('options.earn.gamified-staking.rewards.no-thales-staked'),
+                            ? t('thales-token.gamified-staking.rewards.protocol.bonus-eligible')
+                            : t('thales-token.gamified-staking.rewards.no-thales-staked'),
                         rewards: isClaimAvailable
-                            ? t('options.earn.gamified-staking.rewards.protocol.rewards')
-                            : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
+                            ? t('thales-token.gamified-staking.rewards.protocol.rewards')
+                            : t('thales-token.gamified-staking.rewards.protocol.estimated-rewards'),
                         bonusEligible: hasUserStaked,
                     },
                     {
@@ -693,25 +621,25 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         volume: protocolVolumeFormatted,
                         bonus: protocolVolumeNeededForBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
-                        mainAddition: isL2 ? protocolRewardOp : undefined,
+                        mainAddition: undefined,
                     }
                 )}
             </SectionWrapper>
-            {isMobile() && <PlusSectionConnect>+</PlusSectionConnect>}
+            {isMobile && <PlusSectionConnect>+</PlusSectionConnect>}
             {isL2 && (
                 <SectionWrapper columns={5}>
                     {getRewardSection(
                         {
-                            main: t('options.earn.gamified-staking.rewards.snx.label'),
-                            volume: t('options.earn.gamified-staking.rewards.snx.staked'),
+                            main: t('thales-token.gamified-staking.rewards.snx.label'),
+                            volume: t('thales-token.gamified-staking.rewards.snx.staked'),
                             bonus: snxNeededForMaxBonusFormatted.length
-                                ? t('options.earn.gamified-staking.rewards.snx.bonus')
+                                ? t('thales-token.gamified-staking.rewards.snx.bonus')
                                 : hasUserStaked
-                                ? t('options.earn.gamified-staking.rewards.snx.bonus-eligible')
-                                : t('options.earn.gamified-staking.rewards.no-thales-staked'),
+                                ? t('thales-token.gamified-staking.rewards.snx.bonus-eligible')
+                                : t('thales-token.gamified-staking.rewards.no-thales-staked'),
                             rewards: isClaimAvailable
-                                ? t('options.earn.gamified-staking.rewards.snx.rewards')
-                                : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
+                                ? t('thales-token.gamified-staking.rewards.snx.rewards')
+                                : t('thales-token.gamified-staking.rewards.snx.estimated-rewards'),
                             bonusEligible: hasUserStaked,
                         },
                         {
@@ -724,11 +652,11 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionWrapper>
             )}
 
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={10} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
-            {!isMobile() && (
+            {!isMobile && (
                 <>
                     <DashedLine gridRow={5} widthPer={42.5} />
                     <DashedLineVertical gridRow={5} columnStart={4} marginTop={-gridGap} heightPer={135} />
@@ -744,7 +672,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fourth row */}
-            {!isMobile() && isL2 ? (
+            {!isMobile && isL2 ? (
                 <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
                     {getClaimOnBehalfSection()}
                 </SectionWrapper>
@@ -753,7 +681,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionContentWrapper>
                         <SectionLabel type={SectionType.REWARD}>
                             <SectionLabelContent type={SectionType.REWARD}>
-                                {t('options.earn.gamified-staking.rewards.base-label')}
+                                {t('thales-token.gamified-staking.rewards.base-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.REWARD}>
@@ -767,7 +695,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper startColumn={isL2 ? undefined : 4} columns={6} backgroundType={BackgroundType.CLAIM}>
                 {getClaimSection()}
             </SectionWrapper>
-            {!isMobile() && isL2 && (
+            {!isMobile && isL2 && (
                 <SectionWrapper
                     columns={3}
                     backgroundType={BackgroundType.LP_STAKING}
@@ -778,10 +706,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             <DashedLine gridRow={7} widthPer={0} />
-            {!isMobile() && (
+            {!isMobile && (
                 <DashedLineVertical gridRow={7} columnStart={7} marginTop={-gridGap} heightPer={210} marginLeft={-10} />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={12} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
@@ -791,7 +719,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionContentWrapper>
                         <SectionLabel type={SectionType.REWARD}>
                             <SectionLabelContent type={SectionType.REWARD}>
-                                {t('options.earn.gamified-staking.rewards.base-label')}
+                                {t('thales-token.gamified-staking.rewards.base-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.REWARD}>
@@ -802,14 +730,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </SectionContentWrapper>
                 </SectionWrapper>
             ) : (
-                <SectionWrapper
-                    marginTop={-gridGap}
-                    startColumn={5}
-                    columns={4}
-                    backgroundType={BackgroundType.CLAIM_ON_BEHALF}
-                >
-                    {getClaimOnBehalfSection()}
-                </SectionWrapper>
+                !isMobile && (
+                    <SectionWrapper
+                        marginTop={-gridGap}
+                        startColumn={5}
+                        columns={4}
+                        backgroundType={BackgroundType.CLAIM_ON_BEHALF}
+                    >
+                        {getClaimOnBehalfSection()}
+                    </SectionWrapper>
+                )
             )}
 
             {/* Sixth row */}
@@ -861,15 +791,15 @@ const SectionWrapper = styled.section<{
             case BackgroundType.AMM:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
-            case BackgroundType.LP_STAKING:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
             case BackgroundType.SPORTS:
-                return '#303656';
-            case BackgroundType.CLAIM:
+                return Colors.GRAY_PURPLE;
             case BackgroundType.CLAIM_ON_BEHALF:
-                return '#64d9fe80';
+            case BackgroundType.CLAIM:
+            case BackgroundType.LP_STAKING:
+                return props.theme.borderColor.primary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.borderColor.primary;
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
@@ -898,10 +828,11 @@ const SectionWrapper = styled.section<{
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span
             ${(props) =>
-                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType ?? -1)
+                props.backgroundType !== undefined &&
+                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType)
                     ? 6
                     : 12};
         ${(props) => (props.backgroundType === BackgroundType.SPORTS ? 'grid-column-start: 4;' : '')}
@@ -914,19 +845,18 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     ${(props) => (props.noGrid ? '' : 'display: grid;')}
     position: relative;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
@@ -962,7 +892,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -996,7 +926,7 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -1037,13 +967,22 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+                return `
+                    font-weight: 700;
+                    font-size: 23px;
+                    color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
+                    text-transform: uppercase;
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+                        font-size: 20px;
+                    }
+                `;
             case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
                     font-size: 23px;
-                    color: ${props.isOp ? '#ffffff' : '#64D9FE'};
+                    color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
                         font-size: 20px;
                     }
                 `;
@@ -1076,7 +1015,7 @@ const SectionDescriptionContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -1092,8 +1031,8 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => props.color ?? '#ffffff'};
-    @media (max-width: 768px) {
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -1104,14 +1043,14 @@ const SectionDetailsValue = styled.span<{ color?: string }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => props.color ?? '#ffffff'};
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
 `;
 
 const ButtonWrapperTooltip = styled.div`
     width: 70%;
     display: flex;
     justify-content: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -1125,16 +1064,9 @@ const PeriodLabel = styled(SectionContent)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    color: #64d9fe;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
-    }
-`;
-
-const NetworkFeesWrapper = styled.div`
-    margin: 0 50px;
-    @media (max-width: 768px) {
-        margin: auto;
     }
 `;
 
@@ -1147,7 +1079,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: #64d9fe;
+    color: ${(props) => props.theme.borderColor.primary};
     font-weight: 700;
     font-size: 30px;
 `;

@@ -1,0 +1,152 @@
+.sidebar-icon {
+    display: inline-block;
+    font-family: SidebarIcons !important;
+    vertical-align: middle;
+    font-size: 32px;
+    color: #ffffff;
+}
+
+.icon--token:before {
+    content: '\0043';
+}
+
+.icon--swap:before {
+    content: '\0044';
+}
+
+.icon--leaderboard:before {
+    content: '\0045';
+}
+
+.icon--governance:before {
+    content: '\0071';
+}
+
+.icon--ranged-markets:before {
+    content: '\0072';
+}
+
+.icon--create-market:before {
+    content: '\0057';
+}
+
+.icon--markets:before {
+    content: '\0059';
+}
+
+.icon--competition:before {
+    content: '\0045';
+}
+
+.icon--thales-royale:before {
+    content: '\005A';
+}
+
+.icon--optimism:before {
+    content: '\0067';
+}
+
+.icon--ethereum:before {
+    content: '\0065';
+}
+
+.icon--card-menu:before {
+    content: '\0064';
+}
+
+.icon--wallet:before {
+    content: '\0063';
+}
+
+.icon--game:before {
+    content: '\0061';
+}
+
+.icon--profile:before {
+    content: '\0054';
+}
+
+.icon--ethereum-icon:before {
+    content: '\0050';
+}
+
+.icon--gb-flag:before {
+    content: '\006E';
+}
+
+.icon--cn-flag:before {
+    content: '\006F';
+}
+
+.icon--ru-flag:before {
+    content: '\006D';
+}
+
+.icon--light-mode:before {
+    content: '\0053';
+}
+
+.icon--dark-mode:before {
+    content: '\0052';
+}
+
+.icon--first-place:before {
+    content: '\0047';
+}
+
+.icon--second-place:before {
+    content: '\0048';
+}
+
+.icon--third-place:before {
+    content: '\0049';
+}
+
+.icon--exotic-markets:before {
+    content: '\0070';
+}
+
+.icon--overtime-markets:before {
+    content: '\0076';
+}
+
+.icon--referral-page:before {
+    content: '\0073';
+}
+
+.icon--wizard:before {
+    content: '\0075';
+}
+
+.icon--wizard {
+    width: 32px;
+    font-size: 44px;
+}
+
+.icon--discount-vault::before {
+    content: '\0078';
+}
+
+.icon--degen-discount-vault::before {
+    content: '\0077';
+}
+
+.icon--safu-discount-vault::before {
+    content: '\007B';
+}
+
+.icon--strategy::before {
+    content: '\007D';
+}
+
+.icon--risks::before {
+    content: '\007A';
+}
+
+.icon--vaults::before {
+    content: '\007C';
+}
+
+.icon--liquidity-pool::before {
+    content: '\005B';
+}

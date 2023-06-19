@@ -1,16 +1,14 @@
 import React from 'react';
 import TradingViewWidget from 'react-tradingview-widget';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-
 import { assetToTradingViewMap } from 'config/tradingView';
-
-import { Container, CopyrightLabel, TradingViewLink } from './styled-components/Container';
+import { Container, CopyrightLabel, TradingViewLink } from './styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
-    const marketInfo = useMarketContext() || useRangedMarketContext();
+    const market = useMarketContext() || useRangedMarketContext();
+    const symbol = assetToTradingViewMap[market.currencyKey] || `${market.currencyKey}USDT`;
 
-    const symbol = assetToTradingViewMap[marketInfo?.currencyKey] || `${marketInfo?.currencyKey}USDT`;
     return (
         <Container>
             <div id="tradingview_f42fd"></div>
@@ -29,12 +27,6 @@ const TradingView: React.FC = () => {
                 <TradingViewLink href={`https://www.tradingview.com/symbols/${symbol}`}>{symbol}</TradingViewLink>
                 {' by TradingView'}
             </CopyrightLabel>
-            {/* <div className="tradingview-widget-copyright">
-                <a href="https://www.tradingview.com/symbols/NASDAQ-AAPL/" rel="noopener noreferrer" target="_blank">
-                    <span class="blue-text">AAPL Chart</span>
-                </a>{' '}
-                by TradingView
-            </div> */}
         </Container>
     );
 };

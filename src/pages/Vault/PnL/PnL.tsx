@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import { getIsAppReady } from 'redux/modules/app';
-import { VaultPnls } from 'types/vault';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useVaultPnlsQuery from 'queries/vault/useVaultPnlsQuery';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { ThemeInterface } from 'types/ui';
+import { VaultPnls } from 'types/vault';
 import { formatPercentageWithSign } from 'utils/formatters/number';
-import { UI_COLORS } from 'constants/ui';
 
 type PnlProps = {
     vaultAddress: string;
@@ -19,6 +20,7 @@ type PnlProps = {
 
 const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [vaultPnls, setVaultPnls] = useState<VaultPnls>([]);
@@ -55,7 +57,13 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                 <LifetimePnlContainer>
                     <LifetimePnlLabel>{t('vault.pnl.lifetime-pnl')}:</LifetimePnlLabel>
                     <LifetimePnl
-                        color={lifetimePnl === 0 ? UI_COLORS.WHITE : lifetimePnl > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
+                        color={
+                            lifetimePnl === 0
+                                ? theme.textColor.primary
+                                : lifetimePnl > 0
+                                ? theme.textColor.quaternary
+                                : theme.textColor.tertiary
+                        }
                     >
                         {formatPercentageWithSign(lifetimePnl)}
                     </LifetimePnl>
@@ -65,12 +73,12 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                 <ChartContainer>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={vaultPnls}>
-                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke="#5F6180" />
+                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke={theme.textColor.secondary} />
                             <XAxis
                                 dataKey="round"
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#5F6180' }}
+                                tick={{ fill: theme.textColor.secondary }}
                                 style={{
                                     fontSize: '15px',
                                 }}
@@ -81,7 +89,7 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                                 }}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#5F6180' }}
+                                tick={{ fill: theme.textColor.secondary }}
                                 style={{
                                     fontSize: '15px',
                                 }}
@@ -89,14 +97,14 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{ fill: '#5F6180', fillOpacity: '0.3' }}
+                                cursor={{ fill: theme.textColor.secondary, fillOpacity: '0.2' }}
                                 wrapperStyle={{ outline: 'none' }}
                             />
                             <Bar dataKey="pnl" radius={[4, 4, 0, 0]} maxBarSize={60}>
                                 {vaultPnls.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
-                                        fill={entry.pnl > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
+                                        fill={entry.pnl > 0 ? theme.textColor.quaternary : theme.textColor.tertiary}
                                     />
                                 ))}
                             </Bar>
@@ -112,7 +120,7 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
 
 const Container = styled(FlexDivColumn)`
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 95%;
     }
 `;
@@ -126,8 +134,8 @@ const TooltipContainer = styled(FlexDivColumnCentered)`
     border-radius: 3px;
     z-index: 999;
     padding: 2px 12px;
-    background: #f6f6fe;
-    color: #303656;
+    background: ${(props) => props.theme.background.tertiary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const TooltipAmount = styled(FlexDivColumn)`
@@ -141,7 +149,7 @@ const Header = styled(FlexDivRow)<{ noData?: boolean }>`
 `;
 
 const Title = styled.span`
-    color: #5f6180;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const LifetimePnlContainer = styled(FlexDivRow)`
@@ -157,10 +165,10 @@ const LifetimePnl = styled.p<{ color: string }>`
 `;
 
 const NoData = styled(FlexDivCentered)`
-    border: 2px dotted #5f6180;
+    border: 2px dotted ${(props) => props.theme.borderColor.secondary};
     margin-bottom: 10px;
     height: 200px;
-    color: #5f6180;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 export default PnL;

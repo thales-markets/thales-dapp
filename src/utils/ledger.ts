@@ -1,4 +1,4 @@
-export const isIframe = (): boolean => {
+const isIframe = (): boolean => {
     try {
         return window.self !== window.top;
     } catch (error) {

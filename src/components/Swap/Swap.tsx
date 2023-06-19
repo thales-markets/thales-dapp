@@ -1,63 +1,52 @@
 import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
 import SimpleLoader from 'components/SimpleLoader';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import NumericInput from 'components/fields/NumericInput';
+import {
+    getDefaultToastContent,
+    getLoadingToastOptions,
+    getErrorToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { Network, OneInchLiquidityProtocol } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
-import { get } from 'lodash';
-import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
+import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import {
-    checkAllowance,
-    getIsArbitrum,
-    getIsBSC,
-    getIsOVM,
-    getIsPolygon,
-    getTransactionPrice,
-    Network,
-} from 'utils/network';
-import { refetchUserBalance } from 'utils/queryConnector';
+import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { refetchBalances } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
-import SwapDialog from './styled-components';
+import { Container, ErrorMessage, LoaderContainer, SectionWrapper, defaultButtonProps } from './styled-components';
 import {
+    ARB_ETH,
+    BSC_BNB,
     ETH_Eth,
     OP_Eth,
     POLYGON_MATIC,
-    mapTokenByNetwork,
     TokenSymbol,
-    getTokenForSwap,
     getFromTokenSwap,
-    BSC_BNB,
-    ARB_ETH,
+    getTokenForSwap,
+    mapTokenByNetwork,
 } from './tokens';
-import { toast } from 'react-toastify';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import { OneInchLiquidityProtocol } from 'constants/network';
-import snxJSConnector from 'utils/snxJSConnector';
 
-const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
+const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [preLoadTokens, setPreLoadTokens] = useState([] as any);
+
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
-    const signer = (snxJSConnector as any).signer;
-    const [fromToken, setFromToken] = useState(getFromTokenSwap(networkId));
-
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
         isL2,
@@ -65,29 +54,15 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     );
     const [toToken, setToToken] = useState(toTokenInitialState);
 
+    const [preLoadTokens, setPreLoadTokens] = useState([] as any);
+    const [fromToken, setFromToken] = useState(getFromTokenSwap(networkId));
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
-    const [isLoading, setLoading] = useState(false);
-    const [showSceleton, setShowSceleton] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-
-    const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
-    const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
-
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
-
-    const unsupportedNetwork = ![
-        Network.Mainnet,
-        Network['Mainnet-Ovm'],
-        Network.BSC,
-        Network['POLYGON-MAINNET'],
-        Network.Arbitrum,
-    ].includes(networkId);
 
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
@@ -116,17 +91,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
 
     useEffect(() => {
         if (fromToken && Number(amount) > 0) {
-            setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
                 if (resp.data) {
                     setPreviewData(resp.data as any);
-                    setShowSceleton(false);
                 }
             });
         } else if (fromToken) {
             Number(amount) !== 0 ? setAmount('') : '';
             setPreviewData(undefined);
-            setShowSceleton(false);
         }
     }, [fromToken, toToken, amount]);
 
@@ -152,11 +124,15 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                 token == ARB_ETH
             ) {
                 setAllowance(true);
-                signer
+                (snxJSConnector as any).signer
                     .getBalance()
                     .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
             } else {
-                const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
+                const erc20Instance = new ethers.Contract(
+                    (token as any).address,
+                    erc20Contract.abi,
+                    (snxJSConnector as any).signer
+                );
 
                 const spender = await approveSpenderQuery.refetch().then((resp: any) => {
                     return resp.data.address;
@@ -174,18 +150,22 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     };
 
     const approve = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
-        const id = toast.loading(t('options.swap.progress'));
+        const erc20Instance = new ethers.Contract(
+            (fromToken as any).address,
+            erc20Contract.abi,
+            (snxJSConnector as any).signer
+        );
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            setLoading(true);
+            setIsLoading(true);
             const req = await approveSpenderQuery.refetch();
             const tx = await erc20Instance.approve(req.data?.address, approveAmount);
             setOpenApprovalModal(false);
             await tx.wait();
-            setLoading(false);
+            setIsLoading(false);
             setIsAllowing(false);
-            toast.update(id, getSuccessToastOptions(t('options.swap.approval-success')));
+            toast.update(id, getSuccessToastOptions(t('common.swap.approval-success'), id));
             setOpenApprovalModal(false);
             return {
                 data: (req.data as any).data,
@@ -194,11 +174,12 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         } catch (e) {
             console.log('failed: ', e);
             setIsAllowing(false);
-            setLoading(false);
+            setIsLoading(false);
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.approval-failed')
+                    (e as any).code === 4001 ? t('common.swap.tx-user-rejected') : t('common.swap.approval-failed'),
+                    id
                 )
             );
             setOpenApprovalModal(false);
@@ -206,8 +187,8 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     };
 
     const swapTx = async () => {
-        setLoading(true);
-        const id = toast.loading(t('options.swap.progress'));
+        setIsLoading(true);
+        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             const req = await swapQuery.refetch();
             if (req.isSuccess) {
@@ -218,11 +199,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                     to: data.tx.to,
                     value: BigNumber.from(data.tx.value).toHexString(),
                 };
-                const tx = await signer.sendTransaction(transactionData);
+                const tx = await (snxJSConnector as any).signer.sendTransaction(transactionData);
                 await tx.wait();
-                refetchUserBalance(walletAddress as any, networkId);
-                setLoading(false);
-                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol })));
+                refetchBalances(walletAddress as any, networkId);
+                setIsLoading(false);
+                toast.update(id, getSuccessToastOptions(t('common.swap.tx-success', { token: toToken.symbol }), id));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -234,206 +215,123 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                 };
             }
         } catch (e: any) {
-            setLoading(false);
+            setIsLoading(false);
             toast.update(
                 id,
                 getErrorToastOptions(
-                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed')
+                    (e as any).code === 4001 ? t('common.swap.tx-user-rejected') : t('common.swap.tx-failed'),
+                    id
                 )
             );
             console.log('failed: ', e);
         }
     };
 
-    const getButton = (royaleTheme: boolean) => {
+    const getButton = () => {
         if (!fromToken)
             return (
-                <SwapDialog.ConfirmButton royaleTheme={royaleTheme} disabled={true} className="disabled primary">
-                    {t('options.swap.select-token')}
-                </SwapDialog.ConfirmButton>
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t('common.swap.select-token')}
+                </Button>
             );
 
         if (fromToken && !allowance)
             return (
-                <SwapDialog.ConfirmButton
-                    royaleTheme={royaleTheme}
+                <Button
                     disabled={!fromToken || isAllowing}
-                    className={!fromToken || isAllowing ? 'disabled primary' : 'primary'}
                     onClick={() => setOpenApprovalModal(true)}
+                    {...defaultButtonProps}
                 >
-                    {t('options.swap.approve', { currency: (fromToken as any).symbol })}
-                </SwapDialog.ConfirmButton>
+                    {t('common.swap.approve', { currency: (fromToken as any).symbol })}
+                </Button>
             );
 
         if (fromToken && allowance && Number(amount) <= 0)
             return (
-                <SwapDialog.ConfirmButton royaleTheme={royaleTheme} className="disabled primary" disabled={true}>
-                    {t('options.swap.enter-amount')}
-                </SwapDialog.ConfirmButton>
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t('common.swap.enter-amount')}
+                </Button>
             );
 
         if (fromToken && allowance && Number(amount) > 0)
             return (
-                <SwapDialog.ConfirmButton
-                    royaleTheme={royaleTheme}
-                    className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
+                <Button
                     onClick={async () => {
                         await swapTx();
                         handleClose(false);
                     }}
                     disabled={Number(amount) > Number(balance)}
+                    {...defaultButtonProps}
                 >
-                    {Number(amount) > Number(balance) ? t('options.swap.insufficient-balance') : t('options.swap.swap')}
-                </SwapDialog.ConfirmButton>
+                    {Number(amount) > Number(balance) ? t('common.swap.insufficient-balance') : t('common.swap.swap')}
+                </Button>
             );
     };
+
+    const unsupportedNetwork = ![
+        Network.Mainnet,
+        Network['Mainnet-Ovm'],
+        Network.BSC,
+        Network['POLYGON-MAINNET'],
+        Network.Arbitrum,
+    ].includes(networkId);
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
-                <SwapDialog royaleTheme={royaleTheme} contentType="unsupported">
-                    <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />{' '}
-                    <SwapDialog.ErrorMessage royaleTheme={royaleTheme}>
-                        {t('options.swap.not-supported')}
-                    </SwapDialog.ErrorMessage>
-                </SwapDialog>
+                <Container contentType="unsupported">
+                    <ErrorMessage>{t('common.swap.not-supported')}</ErrorMessage>
+                </Container>
             ) : (
-                <SwapDialog royaleTheme={royaleTheme} contentType={` ${isLoading ? 'loading' : ''}`}>
-                    <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />
-                    <SwapDialog.SectionWrapper royaleTheme={royaleTheme}>
-                        <FlexDivRowCentered>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>{t('options.swap.from')}:</SwapDialog.Text>
-                            <FlexDivRow>
-                                <SwapDialog.Text
-                                    royaleTheme={royaleTheme}
-                                    style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        setAmount(Number(balance).toFixed(5));
-                                    }}
-                                >
-                                    {t('options.swap.balance')}: {Number(balance).toFixed(4)}
-                                </SwapDialog.Text>
-                                <SwapDialog.MaxButton
-                                    royaleTheme={royaleTheme}
-                                    onClick={() => {
-                                        setAmount(Number(balance).toFixed(5));
-                                    }}
-                                >
-                                    {t('options.swap.max')}
-                                </SwapDialog.MaxButton>
-                            </FlexDivRow>
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <SwapDialog.TokenSelect
-                                royaleTheme={royaleTheme}
-                                options={preLoadTokens}
-                                formatOptionLabel={(option: any) => {
-                                    return (
-                                        <FlexDivRowCentered>
-                                            <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
-                                            <FlexDivColumnCentered>
-                                                <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
-                                                    {option.symbol}
-                                                </SwapDialog.Text>
-                                            </FlexDivColumnCentered>
-                                        </FlexDivRowCentered>
-                                    );
-                                }}
-                                isDisabled={true}
-                                value={fromToken}
-                                onChange={(option: any) => {
-                                    setFromToken(option);
-                                }}
-                            ></SwapDialog.TokenSelect>
-
-                            <SwapDialog.NumInput
-                                royaleTheme={royaleTheme}
-                                screenWidth={window.innerWidth}
-                                placeholder="0"
-                                value={amount !== '' ? Number(amount) : ''}
-                                onChange={(_: any, value: any) => {
-                                    setAmount(value);
-                                }}
-                            ></SwapDialog.NumInput>
-                        </FlexDivRowCentered>
-                    </SwapDialog.SectionWrapper>
-                    <SwapDialog.SceletonWrapper royaleTheme={royaleTheme} className={showSceleton ? 'visible' : ''}>
-                        <FlexDivRowCentered>
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="small" />
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="large" />
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <FlexDivCentered>
-                                <SwapDialog.ImageSceleton royaleTheme={royaleTheme} />
-                                <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="medium" />
-                            </FlexDivCentered>
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="medium" />
-                        </FlexDivRowCentered>
-                    </SwapDialog.SceletonWrapper>
-                    <SwapDialog.SectionWrapper royaleTheme={royaleTheme} className={showSceleton ? 'hide' : ''}>
-                        <FlexDivRowCentered>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>{t('options.swap.to')}:</SwapDialog.Text>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>
-                                {t('options.swap.estimated-gas')}:{' '}
-                                {previewData
-                                    ? formatCurrencyWithSign(
-                                          USD_SIGN,
-                                          getTransactionPrice(
-                                              gasPrice,
-                                              Number((previewData as any).estimatedGas),
-                                              ethRate
-                                          )
-                                      )
-                                    : 'n/a'}
-                            </SwapDialog.Text>
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <SwapDialog.TokenSelect
-                                royaleTheme={royaleTheme}
-                                options={preLoadTokens}
-                                formatOptionLabel={(option: any) => {
-                                    return (
-                                        <FlexDivRowCentered>
-                                            <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
-                                            <FlexDivColumnCentered>
-                                                <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
-                                                    {option.symbol}
-                                                </SwapDialog.Text>
-                                            </FlexDivColumnCentered>
-                                        </FlexDivRowCentered>
-                                    );
-                                }}
-                                isDisabled={false}
-                                value={toToken}
-                                components={
-                                    preLoadTokens?.length == 1
-                                        ? {
-                                              Menu: () => null,
-                                              MenuList: () => null,
-                                              DropdownIndicator: () => null,
-                                              IndicatorSeparator: () => null,
-                                          }
-                                        : {
-                                              IndicatorSeparator: () => null,
-                                          }
-                                }
-                                onChange={(option: any) => {
-                                    setToToken(option);
-                                }}
-                            ></SwapDialog.TokenSelect>
-                            <SwapDialog.NumericText royaleTheme={royaleTheme}>
-                                {previewData
+                <Container contentType={isLoading ? 'loading' : ''}>
+                    <SectionWrapper>
+                        <NumericInput
+                            placeholder={t('common.enter-amount')}
+                            label={t('common.swap.from')}
+                            value={amount !== '' ? Number(amount) : ''}
+                            onChange={(_: any, value: any) => {
+                                setAmount(value);
+                            }}
+                            currencyLabel={fromToken.symbol}
+                            onMaxButton={() => {
+                                setAmount(Number(balance).toFixed(5));
+                            }}
+                            balance={`${t('common.balance')}: ${Number(balance).toFixed(4)}`}
+                        />
+                    </SectionWrapper>
+                    <SectionWrapper>
+                        <NumericInput
+                            label={t('common.swap.to')}
+                            value={
+                                previewData
                                     ? Number(
                                           ethers.utils.formatUnits(
                                               (previewData as any).toTokenAmount,
                                               (previewData as any).toToken.decimals
                                           )
                                       ).toFixed(4)
-                                    : 'n/a'}
-                            </SwapDialog.NumericText>
-                        </FlexDivRowCentered>
-                    </SwapDialog.SectionWrapper>
-                    {getButton(royaleTheme)}
+                                    : 'n/a'
+                            }
+                            onChange={() => {}}
+                            disabled={true}
+                            currencyLabel={preLoadTokens?.length == 1 ? toToken.symbol : undefined}
+                            currencyComponent={
+                                preLoadTokens?.length > 1 ? (
+                                    <CollateralSelector
+                                        collateralArray={preLoadTokens.map((item: any) => item.symbol)}
+                                        selectedItem={preLoadTokens.findIndex(
+                                            (item: any) => item.symbol === toToken.symbol
+                                        )}
+                                        onChangeCollateral={(index) => {
+                                            setToToken(preLoadTokens[index]);
+                                        }}
+                                    />
+                                ) : undefined
+                            }
+                            enableCurrencyComponentOnly
+                        />
+                    </SectionWrapper>
+                    {getButton()}
                     {isLoading && (
                         <LoaderContainer>
                             <SimpleLoader />
@@ -447,10 +345,9 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                             isAllowing={isAllowing}
                             onSubmit={approve}
                             onClose={() => setOpenApprovalModal(false)}
-                            isRoyale={royaleTheme}
                         />
                     )}
-                </SwapDialog>
+                </Container>
             )}
         </OutsideClickHandler>
     );

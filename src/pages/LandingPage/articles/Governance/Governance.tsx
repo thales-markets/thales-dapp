@@ -3,7 +3,7 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDivCentered } from 'styles/common';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header/Header';
 import { Background } from '../../Home';
@@ -195,7 +195,7 @@ const H1 = styled.h1`
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 1em;
     margin-bottom: 1.3em;
 `;
@@ -208,7 +208,7 @@ const H2 = styled.h2`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -217,7 +217,7 @@ const Paragraph = styled.p`
     line-height: 1em;
     &,
     & * {
-        color: var(--color);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
@@ -235,7 +235,7 @@ const Paragraph = styled.p`
 `;
 
 const ListWrapper = styled.div`
-    border: 1px solid var(--color);
+    border: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
     border-radius: 7px;
     width: 38em;
     margin-bottom: 4em;
@@ -247,7 +247,7 @@ const ListWrapper = styled.div`
 
 const List = styled.ul`
     list-style: disc;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-left: 2em;
     padding: 1.5em;
     & > li {
@@ -265,7 +265,7 @@ const List = styled.ul`
 
 const NestedList = styled.ul`
     list-style: none;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     & li {
         &:before {
             content: '\\25BA \\0020';
@@ -278,7 +278,7 @@ const NestedList = styled.ul`
             font-size: 1.4em;
             font-weight: 300;
             line-height: 170%;
-            color: var(--color);
+            color: ${(props) => props.theme.landingPage.textColor.primary};
             &:hover {
                 font-size: 1.6em;
                 transition: 0.2s;
@@ -297,7 +297,7 @@ const NestedList = styled.ul`
 
 const ListItem = styled.li`
     height: 3em;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 const ChartWrapper = styled(FlexDivCentered)`

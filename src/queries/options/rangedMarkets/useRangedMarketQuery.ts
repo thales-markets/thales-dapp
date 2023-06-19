@@ -32,18 +32,10 @@ const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<R
                     marketDataLeftMarket,
                     marketParametersLeftMarket,
                     marketParametersRightMarket,
-                    // availableToBuyIn,
-                    // availableToBuyOut,
-                    // availableToSellIn,
-                    // availableToSellOut,
                 ] = await Promise.all([
                     (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketData(leftMarketAddress),
                     (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketParameters(leftMarketAddress),
                     (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketParameters(rightMarketAddress),
-                    // (snxJSConnector as any).rangedMarketAMMContract.availableToBuyFromAMM(marketAddress, 0),
-                    // (snxJSConnector as any).rangedMarketAMMContract.availableToBuyFromAMM(marketAddress, 1),
-                    // (snxJSConnector as any).rangedMarketAMMContract.availableToSellToAMM(marketAddress, 0),
-                    // (snxJSConnector as any).rangedMarketAMMContract.availableToSellToAMM(marketAddress, 1),
                 ]);
 
                 const { times } = marketParametersLeftMarket;
@@ -54,32 +46,22 @@ const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<R
 
                 const { phase, timeRemaining } = getPhaseAndEndDate(maturityDate, expiryDate);
 
-                const currencyKey = parseBytes32String(marketParametersLeftMarket?.oracleDetails.key);
+                const currencyKey = parseBytes32String(marketParametersLeftMarket.oracleDetails.key);
                 return {
                     isResolved: resolved,
                     address: marketAddress,
                     currencyKey,
                     asset: getSynthAsset(currencyKey),
                     currentPrice: bigNumberFormatter(oraclePriceAndTimestamp.price),
-                    finalPrice: bigNumberFormatter(marketParametersLeftMarket?.oracleDetails.finalPrice),
-                    leftPrice: bigNumberFormatter(marketParametersLeftMarket?.oracleDetails.strikePrice),
-                    rightPrice: bigNumberFormatter(marketParametersRightMarket?.oracleDetails.strikePrice),
+                    finalPrice: bigNumberFormatter(marketParametersLeftMarket.oracleDetails.finalPrice),
+                    leftPrice: bigNumberFormatter(marketParametersLeftMarket.oracleDetails.strikePrice),
+                    rightPrice: bigNumberFormatter(marketParametersRightMarket.oracleDetails.strikePrice),
                     maturityDate,
                     expiryDate,
                     phase,
                     result: RANGE_SIDE[result],
-                    availablePositions: {
-                        toBuyIn: 0,
-                        toBuyOut: 0,
-                        toSellIn: 0,
-                        toSellOut: 0,
-                        // toBuyIn: bigNumberFormatter(availableToBuyIn),
-                        // toBuyOut: bigNumberFormatter(availableToBuyOut),
-                        // toSellIn: bigNumberFormatter(availableToSellIn),
-                        // toSellOut: bigNumberFormatter(availableToSellOut),
-                    },
-                    inAddress: positions[0],
-                    outAddress: positions[1],
+                    inAddress: positions.inp,
+                    outAddress: positions.outp,
                     timeRemaining,
                     leftMarketAddress,
                     rightMarketAddress,
@@ -90,7 +72,6 @@ const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<R
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

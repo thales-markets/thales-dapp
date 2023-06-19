@@ -1,10 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import dotenv from 'dotenv';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { BigNumber } from '@ethersproject/bignumber';
-
-dotenv.config();
 
 interface Preview {
     toToken: Token;
@@ -15,7 +12,7 @@ interface Preview {
     protocols: [];
 }
 
-export interface Token {
+interface Token {
     address: string;
     decimals: number;
     logoURI: string;

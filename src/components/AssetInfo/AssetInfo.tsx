@@ -1,100 +1,121 @@
 import React from 'react';
 import styled from 'styled-components';
-
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getSynthName } from 'utils/currency';
+import { Positions } from 'enums/options';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import { getColorPerPosition } from 'utils/options';
 
 export type AssetInfoProps = {
     currencyKey: string;
-    logoSize?: string;
+    iconFontSize?: string;
     assetNameFontSize?: string;
     currencyKeyFontSize?: string;
     displayInRow?: boolean;
     displayInRowMobile?: boolean;
     hideFullName?: boolean;
-    iconType?: number;
+    position?: Positions;
+    width?: string;
 };
 
 const AssetInfo: React.FC<AssetInfoProps> = ({
     currencyKey,
-    logoSize,
+    iconFontSize,
     assetNameFontSize,
     currencyKeyFontSize,
     displayInRow,
     hideFullName,
     displayInRowMobile,
-    iconType,
+    position,
+    width,
 }) => {
-    const isMobile = window.innerWidth < 768;
+    const theme: ThemeInterface = useTheme();
 
     return (
-        <AssetContainer displayInRowMobile={displayInRowMobile}>
+        <AssetContainer displayInRowMobile={displayInRowMobile} width={width}>
             <CurrencyIcon
-                synthIconStyle={{
-                    marginRight: isMobile ? 0 : 7,
-                    height: isMobile ? '30px' : logoSize || '24px',
-                    width: isMobile ? '30px' : logoSize || '24px',
-                }}
-                currencyKey={currencyKey}
-                width={logoSize}
-                height={logoSize}
-                iconType={iconType}
+                className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`}
+                fontSize={iconFontSize}
+                displayInRowMobile={displayInRowMobile}
             />
-            <AssetNameContainer displayInRow={displayInRow}>
-                {!hideFullName && <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>}
+            <AssetNameContainer displayInRow={displayInRow} displayInRowMobile={displayInRowMobile}>
+                {!hideFullName && !position && (
+                    <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
+                )}
                 <CurrencyKey fontSize={currencyKeyFontSize}>{currencyKey}</CurrencyKey>
+                {position && (
+                    <Position fontSize={currencyKeyFontSize} color={getColorPerPosition(position, theme)}>
+                        {position}
+                    </Position>
+                )}
             </AssetNameContainer>
         </AssetContainer>
     );
 };
 
-const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
+const AssetContainer = styled.div<{ displayInRowMobile?: boolean; width?: string }>`
     display: flex;
     flex-direction: row;
     justify-content: start;
     align-items: center;
     flex: 1;
-    @media screen and (max-width: 767px) {
+    max-width: ${(props) => props.width || ''};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-height: 100%;
         flex-direction: ${(props) => (props.displayInRowMobile ? 'row' : 'column')};
         justify-content: ${(props) => (props.displayInRowMobile ? 'flex-start' : 'space-evenly')};
     }
 `;
 
-const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
-    display: ${(_props) => (_props?.displayInRow ? 'flex' : 'block')};
-    ${(_props) => (_props?.displayInRow ? 'flex-direction: row;' : '')}
-    ${(_props) => (_props?.displayInRow ? 'align-items: baseline;' : '')}
+const AssetNameContainer = styled.div<{ displayInRow?: boolean; displayInRowMobile?: boolean }>`
+    display: ${(props) => (props.displayInRow ? 'flex' : 'block')};
+    ${(props) => (props.displayInRow ? 'flex-direction: row;' : '')}
+    ${(props) => (props.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
-    color: var(--primary-color) !important;
-    @media screen and (max-width: 767px) {
-        text-align: center;
+    color: ${(props) => props.theme.textColor.primary};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        text-align: ${(props) => (props.displayInRowMobile ? 'left' : 'center')};
     }
 `;
 
 const AssetName = styled.span<{ fontSize?: string }>`
-    font-family: Titillium Regular !important;
-    font-style: normal;
     display: block;
-    font-weight: 300;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    font-weight: 700;
+    font-size: ${(props) => props.fontSize || '12px'};
+    color: ${(props) => props.theme.textColor.secondary};
     text-transform: uppercase;
     line-height: 120%;
     margin-right: 2px;
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
-    font-family: Titillium Regular !important;
-    font-style: normal;
     display: block;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
-    text-transform: uppercase;
     font-weight: 700;
+    line-height: 120%;
+    font-size: ${(props) => props.fontSize || '12px'};
+    color: ${(props) => props.theme.textColor.primary};
+    text-transform: uppercase;
+`;
+
+const Position = styled.span<{ fontSize?: string; color?: string }>`
+    display: block;
+    font-weight: 700;
+    font-size: ${(props) => props.fontSize || '12px'};
+    color: ${(props) => props.color};
+    text-transform: uppercase;
+`;
+
+const CurrencyIcon = styled.i<{ fontSize?: string; displayInRowMobile?: boolean }>`
+    font-size: ${(props) => props.fontSize || '24px'};
+    margin-right: 6px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-right: ${(props) => (props.displayInRowMobile ? '4px' : '0')};
+    }
 `;
 
 export default AssetInfo;

@@ -1,6 +1,6 @@
-import { Network } from 'utils/network';
+import { Network } from 'enums/network';
 
-export const airdrop = {
+const airdrop = {
     addresses: {
         [Network.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
         [Network.Ropsten]: 'TBD',

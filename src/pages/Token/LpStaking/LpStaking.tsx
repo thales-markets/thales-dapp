@@ -1,32 +1,36 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/Button/Button';
+import Switch from 'components/SwitchInput/SwitchInput';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { ethers } from 'ethers';
+import useGelatoQuery from 'queries/token/useGelatoQuery';
+import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { ButtonContainer, Line, StyledInfoIcon, StyledMaterialTooltip } from '../components';
-import Instructions from './Instructions';
-import YourTransactions from './Transactions';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import useLPStakingQuery from 'queries/token/useLPStakingQuery';
-import useGelatoQuery from 'queries/token/useGelatoQuery';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
-import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import Switch from 'components/SwitchInput/SwitchInputNew';
-import Stake from './Stake';
-import Unstake from './Unstake';
-import NetworkFees from '../components/NetworkFees';
-import ValidationMessage from 'components/ValidationMessage';
-import Button from '../components/Button';
-import { ButtonType } from '../components/Button/Button';
-import onboardConnector from 'utils/onboardConnector';
+import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatGasLimit } from 'utils/network';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { ethers } from 'ethers';
-import { dispatchMarketNotification } from 'utils/options';
-import { refetchLPStakingQuery } from 'utils/queryConnector';
-import { isMobile } from 'utils/device';
+import { ButtonContainer, Line } from '../styled-components';
+import Instructions from './Instructions';
+import Stake from './Stake';
+import YourTransactions from './Transactions';
+import Unstake from './Unstake';
+import { toast } from 'react-toastify';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 
 enum SectionType {
     INFO,
@@ -36,20 +40,20 @@ enum SectionType {
 
 const LpStaking: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const stakeOptions = {
-        stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
-        unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },
+        stake: { value: 'stake', label: t('thales-token.gamified-staking.staking.stake.name') },
+        unstake: { value: 'unstake', label: t('thales-token.gamified-staking.staking.unstake.name') },
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
     const [isClaiming, setIsClaiming] = useState(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -74,23 +78,6 @@ const LpStaking: React.FC = () => {
     const { lpStakingRewardsContract } = snxJSConnector as any;
 
     useEffect(() => {
-        const fetchGasLimit = async () => {
-            try {
-                const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const gasEstimate = await lpStakingRewardsContractWithSigner.estimateGas.getReward();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || (!rewards && !secondRewards)) return;
-        fetchGasLimit();
-    }, [isWalletConnected, rewards, secondRewards]);
-
-    useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
@@ -100,15 +87,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper columnsSpan={1} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.apr.total')}
+                            {t('thales-token.lp-staking.apr.total')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.total-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.total-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO} colored={true}>
@@ -120,26 +101,14 @@ const LpStaking: React.FC = () => {
 
                 <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.INFO}>
                     <SectionDetails positionUp={true}>
-                        <SectionDetailsLabel>{t('options.earn.lp-staking.apr.thales')}</SectionDetailsLabel>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.thales-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <SectionDetailsLabel>{t('thales-token.lp-staking.apr.thales')}</SectionDetailsLabel>
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.thales-tooltip')} />
                         <SectionDetailsValue>{gelatoQuery.isLoading ? '0%' : gelatoData?.apr}</SectionDetailsValue>
                     </SectionDetails>
                     <Line margin={'0 15px'} />
                     <SectionDetails positionUp={false}>
-                        <SectionDetailsLabel>{t('options.earn.lp-staking.apr.op')}</SectionDetailsLabel>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.op-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <SectionDetailsLabel>{t('thales-token.lp-staking.apr.op')}</SectionDetailsLabel>
+                        <Tooltip overlay={t('thales-token.lp-staking.apr.op-tooltip')} />
                         <SectionDetailsValue>
                             {gelatoQuery.isLoading ? '0%' : gelatoData?.secondApr}
                         </SectionDetailsValue>
@@ -151,25 +120,26 @@ const LpStaking: React.FC = () => {
 
     const handleClaimStakingRewards = async () => {
         if (rewards || secondRewards) {
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
             try {
-                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
                 );
                 const tx = (await lpStakingRewardsContractWithSigner.getReward({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.lp-staking.claim.claimed'));
-                    refetchLPStakingQuery(walletAddress, networkId);
+                    toast.update(id, getSuccessToastOptions(t('thales-token.lp-staking.claim.claimed'), id));
+                    refetchTokenQueries(walletAddress, networkId);
+                    refetchLPStakingQueries(walletAddress, networkId);
                     setIsClaiming(false);
                 }
             } catch (e) {
                 console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsClaiming(false);
             }
         }
@@ -177,31 +147,16 @@ const LpStaking: React.FC = () => {
 
     const getClaimButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    width={isMobile() ? '100%' : '50%'}
-                    type={ButtonType.submit}
-                    active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         const buttonDisabled = isClaiming || (!rewards && !secondRewards);
 
         return (
-            <Button
-                type={ButtonType.submit}
-                onClickHandler={handleClaimStakingRewards}
-                active={!buttonDisabled}
-                disabled={buttonDisabled}
-                width={isMobile() ? '100%' : '50%'}
-            >
+            <Button onClick={handleClaimStakingRewards} disabled={buttonDisabled}>
                 {isClaiming
-                    ? t('options.earn.lp-staking.claim.claiming-rewards') + ` ...`
-                    : t('options.earn.lp-staking.claim.claim-rewards')}
+                    ? t('thales-token.lp-staking.claim.claiming-rewards') + ` ...`
+                    : t('thales-token.lp-staking.claim.claim-rewards')}
             </Button>
         );
     };
@@ -209,11 +164,11 @@ const LpStaking: React.FC = () => {
     const getClaimSection = () => {
         return (
             <SectionContentWrapper columnsTemplate={2}>
-                {isMobile() && (
+                {isMobile && (
                     <SectionWrapper columnsOnMobile={2} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                         <SectionContentWrapper>
                             <SectionLabelContent type={SectionType.CLAIM_INFO}>
-                                {t('options.earn.lp-staking.claim.title')}
+                                {t('thales-token.lp-staking.claim.title')}
                             </SectionLabelContent>
                         </SectionContentWrapper>
                     </SectionWrapper>
@@ -246,7 +201,7 @@ const LpStaking: React.FC = () => {
                     <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.CLAIM}>
                         <SectionLabel type={SectionType.CLAIM}>
                             <SectionLabelContent type={SectionType.CLAIM}>
-                                {t('options.earn.lp-staking.claim.total-label')}
+                                {t('thales-token.lp-staking.claim.total-label')}
                             </SectionLabelContent>
                         </SectionLabel>
                         <SectionValue type={SectionType.CLAIM}>
@@ -257,16 +212,7 @@ const LpStaking: React.FC = () => {
                                 )}`}
                             </SectionValueContent>
                         </SectionValue>
-                        <Line margin={'0 0 10px 0'} />
-                        <NetworkFees gasLimit={gasLimit} />
-                        <ButtonContainer>
-                            {getClaimButton()}
-                            <ValidationMessage
-                                showValidation={txErrorMessage !== null}
-                                message={txErrorMessage}
-                                onDismiss={() => setTxErrorMessage(null)}
-                            />
-                        </ButtonContainer>
+                        <ButtonContainer>{getClaimButton()}</ButtonContainer>
                     </SectionContentWrapper>
                 </SectionWrapper>
             </SectionContentWrapper>
@@ -287,15 +233,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper background={false} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.info.staked-balance')}
+                            {t('thales-token.lp-staking.info.staked-balance')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.staked-balance-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('thales-token.lp-staking.info.staked-balance-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -310,11 +250,11 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Third row */}
-            {!isMobile() && (
+            {!isMobile && (
                 <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                     <SectionContentWrapper>
                         <SectionLabelContent type={SectionType.CLAIM_INFO}>
-                            {t('options.earn.lp-staking.claim.title')}
+                            {t('thales-token.lp-staking.claim.title')}
                         </SectionLabelContent>
                     </SectionContentWrapper>
                 </SectionWrapper>
@@ -323,18 +263,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            <Trans
-                                i18nKey="options.earn.lp-staking.info.tvl"
-                                components={[isMobile() ? '' : ' (tvl)']}
-                            />
+                            <Trans i18nKey="thales-token.lp-staking.info.tvl" />
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.tvl-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('thales-token.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -347,15 +278,9 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.info.share')}
+                            {t('thales-token.lp-staking.info.share')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.share-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('thales-token.lp-staking.info.share-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -387,8 +312,6 @@ const LpStaking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '25px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -444,17 +367,16 @@ const SectionWrapper = styled.section<{
                 return 'none';
             case BackgroundType.INFO:
             case BackgroundType.CLAIM_INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
             case BackgroundType.CLAIM:
-                return '#64d9fe80';
+                return props.theme.background.secondary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.columnsOnMobile ? props.columnsOnMobile : 12)};
         order: ${(props) => props.orderOnMobile ?? 10};
         ${(props) => {
@@ -466,9 +388,9 @@ const SectionWrapper = styled.section<{
                 case BackgroundType.CLAIM_CONTAINER:
                     return 'background: none';
                 case BackgroundType.INFO:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
                 default:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
             }
         }}
     }
@@ -492,7 +414,7 @@ const SectionContentWrapper = styled.div<{
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     ${(props) => {
@@ -508,7 +430,7 @@ const SectionContentWrapper = styled.div<{
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.backgroundType) {
                 case BackgroundType.STAKE:
@@ -530,8 +452,7 @@ const SectionContentWrapper = styled.div<{
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
@@ -553,7 +474,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -586,7 +507,7 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) => (props.type === SectionType.CLAIM_INFO ? 16 : 12)}px;
         ${(props) => (props.type === SectionType.CLAIM_INFO ? 'padding-top: 0' : '')};
     }
@@ -612,7 +533,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.type) {
                 case SectionType.INFO:
@@ -631,7 +552,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
 const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?: boolean }>`
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    ${(props) => (props.colored ? 'color: #50ce99;' : '')}
+    ${(props) => (props.colored ? `color: ${props.theme.textColor.quaternary};` : '')}
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
@@ -644,23 +565,22 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: ${props.theme.textColor.quaternary};
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: ${props.theme.textColor.primary};
                 `;
             default:
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
-        color: #64d9fe;
     }
 `;
 
@@ -675,8 +595,8 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 17px;
     letter-spacing: 0.035em;
-    color: #ffffff;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -686,8 +606,8 @@ const SectionDetailsValue = styled.span`
     font-weight: 500;
     font-size: 15px;
     line-height: 17px;
-    color: #50ce99;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.quaternary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
     }
 `;
@@ -701,13 +621,13 @@ const VerticalLineRight = styled.hr`
 
 const VerticalLineWrapper = styled.div`
     position: relative;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         order: 10;
     }
 `;
 
 const VerticalLineCenter = styled.hr`
-    border: 1px solid #64d9fe80;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     position: absolute;
     top: -18px;
     left: 0;

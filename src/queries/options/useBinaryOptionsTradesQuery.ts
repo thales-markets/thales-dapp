@@ -1,17 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
-import {
-    OptionsTransactions,
-    OptionsTransaction,
-    Trades,
-    Trade,
-    MarketType,
-    RangedMarketPositionType,
-} from 'types/options';
+import { OptionsTransactions, OptionsTransaction, Trades, Trade, RangedMarketPositionType } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionSide, OrderSide } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
@@ -40,13 +32,13 @@ const useBinaryOptionsTradesQuery = (
     firstPositionAddress: string,
     secondPositionAddress: string,
     networkId: number,
-    marketType: MarketType,
+    isRangedMarket: boolean,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
     const collateral = snxJSConnector.collateral;
 
     return useQuery<OptionsTransactions>(
-        QUERY_KEYS.BinaryOptions.Trades(marketAddress),
+        QUERY_KEYS.BinaryOptions.MarketTrades(marketAddress),
         async () => {
             const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
                 thalesData.binaryOptions.trades({
@@ -72,27 +64,12 @@ const useBinaryOptionsTradesQuery = (
             ]);
 
             const trades = [
-                ...mapToOptionTransactions(
-                    firstPositionBuys,
-                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
-                    'buy',
-                    marketAddress
-                ),
-                ...mapToOptionTransactions(
-                    firstPositionSells,
-                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
-                    'sell',
-                    marketAddress
-                ),
-                ...mapToOptionTransactions(
-                    secondPositionBuys,
-                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
-                    'buy',
-                    marketAddress
-                ),
+                ...mapToOptionTransactions(firstPositionBuys, isRangedMarket ? 'in' : 'long', 'buy', marketAddress),
+                ...mapToOptionTransactions(firstPositionSells, isRangedMarket ? 'in' : 'long', 'sell', marketAddress),
+                ...mapToOptionTransactions(secondPositionBuys, isRangedMarket ? 'out' : 'short', 'buy', marketAddress),
                 ...mapToOptionTransactions(
                     secondPositionSells,
-                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
+                    isRangedMarket ? 'out' : 'short',
                     'sell',
                     marketAddress
                 ),
@@ -100,7 +77,6 @@ const useBinaryOptionsTradesQuery = (
             return trades;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
