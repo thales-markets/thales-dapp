@@ -211,6 +211,10 @@ const Container = styled(FlexDivRow)`
     position: relative;
     display: flex;
     width: 150px;
+    @media (max-width: 500px) {
+        min-width: 138px;
+        width: 100%;
+    }
 `;
 
 const SwapWrapper = styled.div<{ clickable: boolean }>`
@@ -220,7 +224,7 @@ const SwapWrapper = styled.div<{ clickable: boolean }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     padding: 4px 13px;
     @media (max-width: 500px) {
-        padding: 4px 10px;
+        padding: 4px 7px;
     }
 `;
 
@@ -237,6 +241,10 @@ const Dropdown = styled.div`
     text-align: center;
     z-index: 101;
     gap: 5px;
+    @media (max-width: 500px) {
+        min-width: 138px;
+        width: 100%;
+    }
 `;
 
 const BalanceWrapper = styled.div<{ clickable: boolean }>`

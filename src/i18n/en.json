@@ -98,7 +98,7 @@
             "custom-amount-label": "Approve amount of"
         },
         "header": {
-            "notification": { "tooltip": "You have {{count}} claimable positions" }
+            "notification": { "tooltip": "You have {{count}} claimable position(s)" }
         },
         "footer": {
             "discover": "Discover",

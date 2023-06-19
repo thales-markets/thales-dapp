@@ -12,6 +12,7 @@ import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { NetworkId, defaultNetwork, hasEthereumInjected } from 'utils/network';
 import UserSwap from '../UserSwap';
+import { getIsMobile } from 'redux/modules/ui';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -24,6 +25,7 @@ const UserWallet: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [walletText, setWalletText] = useState('');
 
@@ -37,6 +39,15 @@ const UserWallet: React.FC = () => {
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { trackEvent } = useMatomo();
+
+    // currently not supported network synchronization between browser without integrated wallet and wallet app on mobile
+    const hideNetworkSwitcher =
+        isMobile &&
+        !window.ethereum?.isMetaMask &&
+        !window.ethereum?.isBraveWallet &&
+        !window.ethereum?.isCoinbaseWallet &&
+        !window.ethereum?.isTrust &&
+        !window.ethereum?.isCoinbaseWallet;
 
     return (
         <Container isWalletConnected={isWalletConnected}>
@@ -77,9 +88,13 @@ const UserWallet: React.FC = () => {
                                     style: { marginRight: 5 },
                                 })}
                                 {selectedNetwork.name}
-                                <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                                {!hideNetworkSwitcher && (
+                                    <Icon
+                                        className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`}
+                                    />
+                                )}
                             </NetworkItem>
-                            {isDropdownOpen && (
+                            {!hideNetworkSwitcher && isDropdownOpen && (
                                 <NetworkDropDown>
                                     {Object.keys(SUPPORTED_MAINNET_NETWORK_IDS_MAP).map((id) => (
                                         <NetworkItem
@@ -115,7 +130,7 @@ const UserWallet: React.FC = () => {
 const Container = styled.div<{ isWalletConnected: boolean }>`
     width: 400px;
     @media (max-width: 500px) {
-        width: 270px;
+        width: 100%;
     }
 `;
 
@@ -147,8 +162,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     text-align: center;
     @media (max-width: 500px) {
         min-width: fit-content;
-        border-right: none;
-        padding: 4px 10px;
+        padding: 4px 7px;
     }
 `;
 
@@ -157,9 +171,6 @@ const NetworkInfoContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    @media (max-width: 500px) {
-        display: none;
-    }
 `;
 
 const NetworkDropDown = styled.div`
@@ -177,6 +188,9 @@ const NetworkDropDown = styled.div`
     justify-content: center;
     align-items: center;
     gap: 5px;
+    @media (max-width: 500px) {
+        width: 110px;
+    }
 `;
 
 const SelectedNetworkContainer = styled.div<{ cursor: string }>`
@@ -189,6 +203,9 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;
+    @media (max-width: 500px) {
+        width: 110px;
+    }
 `;
 
 const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
@@ -204,6 +221,9 @@ const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
     svg {
         width: 16px;
         height: 16px;
+    }
+    @media (max-width: 500px) {
+        ${(props) => (props.selectedItem ? 'padding: 4px 7px' : '')}
     }
 `;
 

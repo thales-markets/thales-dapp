@@ -636,7 +636,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             return <Button disabled={true}>{t('markets.amm-trading.select-price')}</Button>;
         }
         if (isAmmTradingDisabled) {
-            return <Button disabled={true}>{t('markets.amm-disabled')}</Button>;
+            return <Button disabled={true}>{t('markets.amm-trading.amm-disabled')}</Button>;
         }
         if (outOfLiquidity) {
             return <Button disabled={true}>{t(`common.errors.out-of-liquidity`)}</Button>;

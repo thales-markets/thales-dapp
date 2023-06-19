@@ -86,17 +86,6 @@ const DappSidebar: React.FC = () => {
                     />
                 )}
 
-                {/* {isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Leaderboard)}
-                        iconName="leaderboard"
-                        label={t('common.sidebar.leaderboard-label')}
-                    />
-                )} */}
-
                 {showWizardPage && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
