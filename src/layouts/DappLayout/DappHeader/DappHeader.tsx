@@ -17,7 +17,7 @@ const DappHeader: React.FC = () => {
         <Container maxWidth={getMaxWidth()}>
             <LeftContainer>
                 <FlexDivRow>
-                    {isMobile && <Icon className="sidebar-icon icon--card-menu" onClick={sidebarMenuClickHandler} />}
+                    {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
                 </FlexDivRow>
                 {isMobile && <Notifications />}

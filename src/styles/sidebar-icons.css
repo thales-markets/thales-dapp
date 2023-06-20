@@ -146,3 +146,7 @@
 .icon--strategy::before {
     content: '\007D';
 }
+
+.icon--nav-menu:before {
+    content: '\0064';
+}

@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
 import DappHeaderItem from '../components/DappHeaderItem';
 import { ScreenSizeBreakpoint } from '../../../enums/ui';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
@@ -38,115 +39,123 @@ const DappSidebar: React.FC = () => {
     const showProfileDivider = showGamePage || showProfilePage;
 
     return (
-        <SidebarHtml id="sidebar">
-            <ItemsContainer onClick={removeCollapse}>
-                <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
-                    <LogoIcon width="38" height="42" src={logoSmallIcon} />
-                </SPAAnchor>
-                <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
-                    <LogoIcon height="42" src={logoIcon} />
-                </SPAAnchor>
+        <OutsideClickHandler
+            onOutsideClick={(e) => {
+                isMobile && e.target instanceof HTMLElement && !e.target.className.includes('icon--nav-menu')
+                    ? removeCollapse()
+                    : {};
+            }}
+        >
+            <SidebarHtml id="sidebar">
+                <ItemsContainer onClick={removeCollapse}>
+                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
+                        <LogoIcon width="38" height="42" src={logoSmallIcon} />
+                    </SPAAnchor>
+                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
+                        <LogoIcon height="42" src={logoIcon} />
+                    </SPAAnchor>
 
-                <DappHeaderItem
-                    className={`${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
-                    href={buildHref(ROUTES.Options.Home)}
-                    iconName="markets"
-                    label={t('common.sidebar.markets')}
-                />
-
-                {showVaultsPage && (
                     <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Vaults)}
-                        iconName="vaults"
-                        label={t('common.sidebar.vaults-label')}
+                        className={`${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.Home)}
+                        iconName="markets"
+                        label={t('common.sidebar.markets')}
                     />
-                )}
 
-                {showLP && (
+                    {showVaultsPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Vaults)}
+                            iconName="vaults"
+                            label={t('common.sidebar.vaults-label')}
+                        />
+                    )}
+
+                    {showLP && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.LiquidityPool)}
+                            iconName="liquidity-pool"
+                            label={t('common.sidebar.liquidity-pool-label')}
+                        />
+                    )}
+
+                    {showWizardPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Wizard)}
+                            iconName="wizard"
+                            label={t('common.sidebar.wizard')}
+                        />
+                    )}
+
+                    {showReferralPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Referral ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Referral)}
+                            iconName="referral-page"
+                            label={t('referral-page.title')}
+                        />
+                    )}
+
+                    <Divider />
+
+                    {showTokenPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Token)}
+                            iconName="token"
+                            label={t('common.sidebar.earn-label')}
+                        />
+                    )}
+
+                    {showGovernancePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Governance.Home)}
+                            iconName="governance"
+                            label={t('common.sidebar.governance-label')}
+                        />
+                    )}
+
+                    {showProfileDivider && <Divider />}
+
+                    {showGamePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Game ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Game)}
+                            iconName="game"
+                            label={t('common.sidebar.game-label')}
+                        />
+                    )}
+
+                    {showProfilePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Profile)}
+                            iconName="profile"
+                            label={t('common.sidebar.profile-label')}
+                        />
+                    )}
+
+                    <Divider />
                     <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.LiquidityPool)}
-                        iconName="liquidity-pool"
-                        label={t('common.sidebar.liquidity-pool-label')}
+                        href={LINKS.SportMarkets}
+                        iconName="overtime-markets"
+                        label={t('common.sidebar.sport-markets-label')}
+                        onClick={(event: any) => {
+                            event.preventDefault();
+                            if (isMobile) {
+                                window.location.replace(LINKS.SportMarkets);
+                            } else {
+                                window.open(LINKS.SportMarkets);
+                            }
+                        }}
+                        simpleOnClick={true}
                     />
-                )}
-
-                {showWizardPage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Wizard)}
-                        iconName="wizard"
-                        label={t('common.sidebar.wizard')}
-                    />
-                )}
-
-                {showReferralPage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Referral ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Referral)}
-                        iconName="referral-page"
-                        label={t('referral-page.title')}
-                    />
-                )}
-
-                <Divider />
-
-                {showTokenPage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Token)}
-                        iconName="token"
-                        label={t('common.sidebar.earn-label')}
-                    />
-                )}
-
-                {showGovernancePage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Governance.Home)}
-                        iconName="governance"
-                        label={t('common.sidebar.governance-label')}
-                    />
-                )}
-
-                {showProfileDivider && <Divider />}
-
-                {showGamePage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Game ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Game)}
-                        iconName="game"
-                        label={t('common.sidebar.game-label')}
-                    />
-                )}
-
-                {showProfilePage && (
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Profile)}
-                        iconName="profile"
-                        label={t('common.sidebar.profile-label')}
-                    />
-                )}
-
-                <Divider />
-                <DappHeaderItem
-                    href={LINKS.SportMarkets}
-                    iconName="overtime-markets"
-                    label={t('common.sidebar.sport-markets-label')}
-                    onClick={(event: any) => {
-                        event.preventDefault();
-                        if (isMobile) {
-                            window.location.replace(LINKS.SportMarkets);
-                        } else {
-                            window.open(LINKS.SportMarkets);
-                        }
-                    }}
-                    simpleOnClick={true}
-                />
-            </ItemsContainer>
-        </SidebarHtml>
+                </ItemsContainer>
+            </SidebarHtml>
+        </OutsideClickHandler>
     );
 };
 
