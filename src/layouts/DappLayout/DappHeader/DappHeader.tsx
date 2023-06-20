@@ -17,7 +17,7 @@ const DappHeader: React.FC = () => {
         <Container maxWidth={getMaxWidth()}>
             <LeftContainer>
                 <FlexDivRow>
-                    {isMobile && <Icon className="sidebar-icon icon--card-menu" />}
+                    {isMobile && <Icon className="sidebar-icon icon--card-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
                 </FlexDivRow>
                 {isMobile && <Notifications />}
@@ -28,6 +28,21 @@ const DappHeader: React.FC = () => {
             </RightContainer>
         </Container>
     );
+};
+
+const sidebarMenuClickHandler = () => {
+    const root = document.getElementById('root');
+    const content = document.getElementById('main-content');
+    const sidebar = document.getElementById('sidebar');
+    if (root?.classList.contains('collapse')) {
+        sidebar?.classList.remove('collapse');
+        content?.classList.remove('collapse');
+        root?.classList.remove('collapse');
+    } else {
+        root?.classList.add('collapse');
+        content?.classList.add('collapse');
+        sidebar?.classList.add('collapse');
+    }
 };
 
 const getMaxWidth = () => {

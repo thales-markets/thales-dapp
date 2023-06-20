@@ -86,11 +86,9 @@ const MenuItem = styled.li<{ margin?: string }>`
         background: ${(props) => props.theme.background.primary};
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
+        display: flex;
         padding: 0 10px;
-        &.show {
-            display: flex;
-        }
+
         &:hover {
             color: ${(props) => props.theme.background.tertiary};
             .sidebar-icon {
