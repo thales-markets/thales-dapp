@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
+import Tooltip from 'components/Tooltip';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -73,7 +74,9 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                         />
                     </TextLink>
                 ) : (
-                    <IconLink className="icon icon--right" />
+                    <Tooltip overlay={t('common.tooltip.open-market')}>
+                        <IconLink className="icon icon--right" />
+                    </Tooltip>
                 )}
             </SPAAnchor>
         </Position>

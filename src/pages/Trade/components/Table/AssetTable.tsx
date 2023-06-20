@@ -1,5 +1,6 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TableV3 from 'components/TableV3';
+import Tooltip from 'components/Tooltip';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -86,7 +87,9 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                             <TableText selected={rowIndex === props.row.index} price={false}>
                                 {props.row.original.price}
                             </TableText>
-                            <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                            <Tooltip overlay={t('common.tooltip.open-market')}>
+                                <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                            </Tooltip>
                         </>
                     );
                 },
@@ -124,7 +127,7 @@ const Icon = styled.i<{ selected: boolean }>`
     transform: rotate(-90deg);
     font-size: 14px;
     margin-left: 10px;
-    visibility: ${(props) => (props.selected ? 'show' : 'hidden')}; ;
+    visibility: ${(props) => (props.selected ? 'visible' : 'hidden')}; ;
 `;
 
 const getTableHeaderStyle = (color: string): React.CSSProperties => {

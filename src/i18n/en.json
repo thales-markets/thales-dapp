@@ -158,6 +158,9 @@
         "banner": {
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>"
+        },
+        "tooltip": {
+            "open-market": "Go to Market page"
         }
     },
     "landing-page": {
@@ -272,8 +275,8 @@
                 "total-receive": "Total to receive",
                 "potential-profit": "Potential profit",
                 "skew": "Skew impact",
-                "tooltip": "Trading details",
-                "tooltip-disabled": "Trading details (pick a price and enter amount)"
+                "tooltip": "Slippage and trading details",
+                "tooltip-disabled": "Slippage and trading details (pick a price and enter amount)"
             },
             "slippage": {
                 "label": "Slippage tolerance",
