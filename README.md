@@ -19,7 +19,7 @@ The trading UI is available on [thalesmarket.io](https://thalesmarket.io).
 ## Ethereum stack
 
 -   ethers.js v5 - Ethereum wallet implementation.
--   Blocknative Onboard - for ethereum wallet connectivity.
+-   RainbowKit - for ethereum wallet connectivity.
 -   [@synthetixio/contracts-interface](https://github.com/Synthetixio/js-monorepo/tree/master/packages/contracts-interface) - for interactions with the Synthetix protocol.
 -   [0x](https://github.com/0xProject/protocol) - for interactions with the 0x protocol.
 -   [thales-data](https://github.com/thales-markets/thales-data) - for historical data (powered by [TheGraph](https://thegraph.com/))
