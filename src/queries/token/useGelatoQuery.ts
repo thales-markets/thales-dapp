@@ -1,7 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
 import { formatCurrency } from 'utils/formatters/number';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
@@ -16,9 +15,6 @@ interface Balance {
     totalApr: string;
 }
 
-const priceL2ThalesURL =
-    'https://api.1inch.exchange/v3.0/10/quote?fromTokenAddress=0x217D47011b23BB961eB6D93cA9945B7501a5BB11&toTokenAddress=0x7f5c764cbc14f9669b88837ca1490cca17c31607&amount=100000000000000000000';
-
 type Rates = {
     ethereum: { usd: number };
     optimism: { usd: number };
@@ -26,20 +22,12 @@ type Rates = {
 };
 
 const getRates = async (): Promise<Rates> => {
-    const [resThales, resRewardTokens] = await Promise.all([
-        fetch(priceL2ThalesURL),
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,optimism&vs_currencies=usd'),
-    ]);
-    const dataThales = await resThales.json();
-    const dataRewardTokens = await resRewardTokens.json();
-    const toAmount = (
-        Number(ethers.utils.formatUnits(dataThales.toTokenAmount, dataThales.toToken.decimals)) / 100
-    ).toFixed(4);
+    const resRates = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,optimism,thales&vs_currencies=usd'
+    );
+    const dataRates = await resRates.json();
 
-    return {
-        ...dataRewardTokens,
-        thales: { usd: Number(toAmount) },
-    };
+    return dataRates;
 };
 
 const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
