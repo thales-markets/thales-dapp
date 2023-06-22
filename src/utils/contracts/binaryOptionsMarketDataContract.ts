@@ -203,6 +203,97 @@ const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
+            name: 'getAmmMarketData',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'uint256',
+                            name: 'upBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'upBuyPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'downBuyPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'upSellPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'downSellPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'iv',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'bool',
+                            name: 'isMarketInAMMTrading',
+                            type: 'bool',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.AmmMarketData',
+                    name: '',
+                    type: 'tuple',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'getAvailableAssets',
             outputs: [
@@ -216,8 +307,19 @@ const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'getBasePricesForAllActiveMarkets',
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'start',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'end',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getBatchBasePricesForAllActiveMarkets',
             outputs: [
                 {
                     components: [
@@ -246,8 +348,19 @@ const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'getLiquidityForAllActiveMarkets',
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'start',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'end',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getBatchPriceImpactForAllActiveMarkets',
             outputs: [
                 {
                     components: [
@@ -257,17 +370,17 @@ const binaryOptionsMarketDataContract = {
                             type: 'address',
                         },
                         {
-                            internalType: 'uint256',
-                            name: 'upLiquidity',
-                            type: 'uint256',
+                            internalType: 'int256',
+                            name: 'upPriceImpact',
+                            type: 'int256',
                         },
                         {
-                            internalType: 'uint256',
-                            name: 'downLiquidity',
-                            type: 'uint256',
+                            internalType: 'int256',
+                            name: 'downPriceImpact',
+                            type: 'int256',
                         },
                     ],
-                    internalType: 'struct PositionalMarketData.ActiveMarketsLiquidity[]',
+                    internalType: 'struct PositionalMarketData.ActiveMarketsPriceImpact[]',
                     name: '',
                     type: 'tuple[]',
                 },
@@ -522,66 +635,6 @@ const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'getPriceImpactForAllActiveMarkets',
-            outputs: [
-                {
-                    components: [
-                        {
-                            internalType: 'address',
-                            name: 'market',
-                            type: 'address',
-                        },
-                        {
-                            internalType: 'int256',
-                            name: 'upPriceImpact',
-                            type: 'int256',
-                        },
-                        {
-                            internalType: 'int256',
-                            name: 'downPriceImpact',
-                            type: 'int256',
-                        },
-                    ],
-                    internalType: 'struct PositionalMarketData.ActiveMarketsPriceImpact[]',
-                    name: '',
-                    type: 'tuple[]',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'getPricesForAllActiveMarkets',
-            outputs: [
-                {
-                    components: [
-                        {
-                            internalType: 'address',
-                            name: 'market',
-                            type: 'address',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'upPrice',
-                            type: 'uint256',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'downPrice',
-                            type: 'uint256',
-                        },
-                    ],
-                    internalType: 'struct PositionalMarketData.ActiveMarketsPrices[]',
-                    name: '',
-                    type: 'tuple[]',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             inputs: [
                 {
                     internalType: 'address[]',
@@ -629,7 +682,7 @@ const binaryOptionsMarketDataContract = {
                             type: 'uint256',
                         },
                     ],
-                    internalType: 'struct PositionalMarketData.ActiveMarketsInfoPerPosition[]',
+                    internalType: 'struct PositionalMarketData.RangedMarketsInfoPerPosition[]',
                     name: '',
                     type: 'tuple[]',
                 },
@@ -645,32 +698,62 @@ const binaryOptionsMarketDataContract = {
                     type: 'address',
                 },
             ],
-            name: 'getRangedMarketPricesAndLiquidity',
+            name: 'getRangedAmmMarketData',
             outputs: [
                 {
                     components: [
                         {
                             internalType: 'uint256',
-                            name: 'inPrice',
+                            name: 'inBuyLiquidity',
                             type: 'uint256',
                         },
                         {
                             internalType: 'uint256',
-                            name: 'outPrice',
+                            name: 'outBuyLiquidity',
                             type: 'uint256',
                         },
                         {
                             internalType: 'uint256',
-                            name: 'inLiquidity',
+                            name: 'inSellLiquidity',
                             type: 'uint256',
                         },
                         {
                             internalType: 'uint256',
-                            name: 'outLiquidity',
+                            name: 'outSellLiquidity',
                             type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'inBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'inSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'inPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'outPriceImpact',
+                            type: 'int256',
                         },
                     ],
-                    internalType: 'struct PositionalMarketData.RangedMarketPricesAndLiqudity',
+                    internalType: 'struct PositionalMarketData.RangedAmmMarketData',
                     name: '',
                     type: 'tuple',
                 },

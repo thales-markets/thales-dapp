@@ -52,7 +52,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
     );
 
     return (
-        <Container>
+        <Container marginBottom={isBuy ? '15px' : '53px'}>
             <DetailsRow>
                 <TextLabel>{t('markets.amm-trading.details-modal.position-price')}</TextLabel>
                 {getTextValue(formatCurrencyWithSign(USD_SIGN, positionPrice), positionPrice > 0, isLoading)}
@@ -98,11 +98,11 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
     );
 };
 
-const Container = styled(FlexDivColumnCentered)`
+const Container = styled(FlexDivColumnCentered)<{ marginBottom: string }>`
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: ${(props) => props.marginBottom};
 `;
 
 export default TradingDetails;

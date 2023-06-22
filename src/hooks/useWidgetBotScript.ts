@@ -23,7 +23,7 @@ const useWidgetBotScript = (preventWidgetLoad: boolean, theme: ThemeInterface) =
                     }
                     @media (max-width: 950px) {
                         &:not(.open) .button {
-                            margin-bottom: 80px;
+                            margin-bottom: 25px;
                             width: 45px;
                             height: 45px;
                         }

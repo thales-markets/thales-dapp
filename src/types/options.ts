@@ -162,7 +162,6 @@ export type OptionsMarketInfo = {
         creator: number;
         pool: number;
     };
-    IV?: any;
     availableLongs: number;
     availableShorts: number;
     longAddress: string;

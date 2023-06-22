@@ -1,5 +1,6 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TableV3 from 'components/TableV3';
+import Tooltip from 'components/Tooltip';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,7 +16,6 @@ type TableProps = {
     setMarket: React.Dispatch<React.SetStateAction<MarketInfo | RangedMarketPerPosition | undefined>>;
     position: Positions;
     isLoading: boolean;
-    // highlightMarkets: Set<string>;
 };
 
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoading }) => {
@@ -25,19 +25,19 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
-    const [firstMarketAddress, setFirstMarketAddress] = useState(markets.length ? markets[0].address : '');
-
-    // queries
+    const [firstPositionMarketAddress, setFirstPositionMarketAddress] = useState(
+        markets.length ? position + markets[0].address : ''
+    );
 
     // hooks
     useEffect(() => {
-        const marketAddress = markets.length ? markets[0].address : '';
-        if (firstMarketAddress !== marketAddress) {
+        const positionMarketAddress = markets.length ? position + markets[0].address : '';
+        if (firstPositionMarketAddress !== positionMarketAddress) {
             setRowIndex(undefined);
             setMarket(undefined);
         }
-        setFirstMarketAddress(marketAddress);
-    }, [markets, setMarket, firstMarketAddress]);
+        setFirstPositionMarketAddress(positionMarketAddress);
+    }, [markets, setMarket, firstPositionMarketAddress]);
 
     const noMarkets = markets.length === 0;
 
@@ -87,7 +87,9 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                             <TableText selected={rowIndex === props.row.index} price={false}>
                                 {props.row.original.price}
                             </TableText>
-                            <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                            <Tooltip overlay={t('common.tooltip.open-market')}>
+                                <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                            </Tooltip>
                         </>
                     );
                 },
@@ -125,7 +127,7 @@ const Icon = styled.i<{ selected: boolean }>`
     transform: rotate(-90deg);
     font-size: 14px;
     margin-left: 10px;
-    visibility: ${(props) => (props.selected ? 'show' : 'hidden')}; ;
+    visibility: ${(props) => (props.selected ? 'visible' : 'hidden')}; ;
 `;
 
 const getTableHeaderStyle = (color: string): React.CSSProperties => {

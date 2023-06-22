@@ -159,6 +159,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         maturityDate={market.maturityDate}
                                         market={getAmmTradingMarket(market)}
                                         isDetailsPage={true}
+                                        showBuyLiquidity={orderSide === 'buy'}
                                     />
                                 </AmmTradingContainer>
                             </>

@@ -10,6 +10,7 @@ import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { truncToDecimals } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
+import { ZERO_ADDRESS } from 'constants/network';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
@@ -26,9 +27,7 @@ const useMarketsByAssetAndDateQuery = (
                     ethers.utils.formatBytes32String(asset),
                     Number(date / 1000)
                 );
-                const allMarkets = uniq(result).filter(
-                    (value) => value !== '0x0000000000000000000000000000000000000000'
-                );
+                const allMarkets = uniq(result).filter((value) => value !== ZERO_ADDRESS);
                 const result1 = await (snxJSConnector as any).binaryOptionsMarketDataContract.getActiveMarketsInfoPerPosition(
                     allMarkets,
                     position === Positions.UP ? 0 : 1

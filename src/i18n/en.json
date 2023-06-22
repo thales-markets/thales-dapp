@@ -32,6 +32,7 @@
         "direction": "Direction",
         "strike-price": "Strike price",
         "end-date": "End date",
+        "balance": "Balance",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -97,7 +98,7 @@
             "custom-amount-label": "Approve amount of"
         },
         "header": {
-            "notification": { "tooltip": "You have {{count}} claimable positions" }
+            "notification": { "tooltip": "You have {{count}} claimable position(s)" }
         },
         "footer": {
             "discover": "Discover",
@@ -146,7 +147,6 @@
             "approval-success": "Approval successful",
             "approval-failed": "Approval failed",
             "from": "From",
-            "balance": "Balance",
             "to": "To"
         },
         "status": {
@@ -158,6 +158,9 @@
         "banner": {
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>"
+        },
+        "tooltip": {
+            "open-market": "Go to Market page"
         }
     },
     "landing-page": {
@@ -261,6 +264,7 @@
             "enter-amount": "Enter amount",
             "select-price": "Select price",
             "amm-disabled": "AMM trading disabled",
+            "max-buy": "Max buy",
             "details-modal": {
                 "confirm-order": "Confirm {{position}} order",
                 "position-price": "Price per position",
@@ -270,7 +274,9 @@
                 "total-pay": "Total to pay",
                 "total-receive": "Total to receive",
                 "potential-profit": "Potential profit",
-                "skew": "Skew impact"
+                "skew": "Skew impact",
+                "tooltip": "Slippage and trading details",
+                "tooltip-disabled": "Slippage and trading details (pick a price and enter amount)"
             },
             "slippage": {
                 "label": "Slippage tolerance",
@@ -452,7 +458,6 @@
                     "name": "Stake",
                     "staking": "Staking",
                     "amount-to-stake": "Amount to stake",
-                    "balance": "Balance",
                     "confirmation-message": "Tokens successfully staked",
                     "paused-message": "Staking is paused."
                 },
@@ -467,7 +472,6 @@
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
                     "amount-to-unstake": "Amount to unstake",
-                    "balance": "Balance",
                     "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",

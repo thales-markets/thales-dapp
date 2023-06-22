@@ -139,7 +139,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
             title={t('thales-token.claim-on-behalf.title')}
             onClose={onClose}
             shouldCloseOnOverlayClick={false}
-            customStyle={{ overlay: { zIndex: 201 } }}
+            customStyle={{ overlay: { zIndex: 2000 } }}
         >
             <Container>
                 <Description>

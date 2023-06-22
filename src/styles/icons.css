@@ -174,12 +174,28 @@
     content: '\0037';
 }
 
+.icon--bell:before {
+    content: '\0038';
+}
+
 .icon--stats:before {
     content: '\0041';
 }
 
 .icon--thales-logo:before {
     content: '\0044';
+}
+
+.icon--info:before {
+    content: '\0046';
+}
+
+.icon--error:before {
+    content: '\0047';
+}
+
+.icon--success:before {
+    content: '\0057';
 }
 
 .icon--logo:before {
@@ -272,22 +288,6 @@
 
 .icon--right:before {
     content: '\007A';
-}
-
-.icon--error:before {
-    content: '\008B';
-}
-
-.icon--info:before {
-    content: '\008C';
-}
-
-.icon--success:before {
-    content: '\008D';
-}
-
-.icon--bell:before {
-    content: '\0038';
 }
 
 @keyframes shake {

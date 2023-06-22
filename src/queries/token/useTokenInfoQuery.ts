@@ -7,10 +7,7 @@ import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { TokenInfo } from 'types/token';
 import thalesContract from 'utils/contracts/thalesContract';
-import { getIsOVM, NetworkId } from 'utils/network';
-
-const priceL2ThalesURL =
-    'https://api.1inch.exchange/v3.0/10/quote?fromTokenAddress=0x217D47011b23BB961eB6D93cA9945B7501a5BB11&toTokenAddress=0x7f5c764cbc14f9669b88837ca1490cca17c31607&amount=100000000000000000000';
+import { NetworkId } from 'utils/network';
 
 const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<TokenInfo | undefined>) => {
     return useQuery<TokenInfo | undefined>(
@@ -22,15 +19,6 @@ const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<Token
                     await fetch(`${generalConfig.API_URL}/token/circulatingsupply`),
                     await fetch(`${generalConfig.API_URL}/token/marketcap`),
                 ]);
-                let toAmount;
-
-                if (getIsOVM(networkId)) {
-                    const res = await fetch(priceL2ThalesURL);
-                    const data = await res.json();
-                    toAmount = Number(
-                        Number(ethers.utils.formatUnits(data.toTokenAmount, data.toToken.decimals)) / 100
-                    ).toFixed(4);
-                }
 
                 const infuraProvider = new ethers.providers.InfuraProvider(
                     Network.Mainnet,
@@ -59,7 +47,7 @@ const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<Token
                     Number(ethers.utils.formatEther(opThalesBurnedBalance));
 
                 const tokenInfo: TokenInfo = {
-                    price: getIsOVM(networkId) ? Number(toAmount) : Number(await price.text()),
+                    price: Number(await price.text()),
                     circulatingSupply: Number(await circulatingSupply.text()),
                     marketCap: Number(await marketCap.text()),
                     totalSupply: TOTAL_SUPPLY,

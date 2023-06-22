@@ -213,7 +213,7 @@ const NavFooter = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 130px;
+    bottom: 75px;
     right: -20px;
     width: 100px;
     padding: 0 10px;
@@ -226,7 +226,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 190px;
+    bottom: 135px;
     right: -20px;
     width: 100px;
 `;

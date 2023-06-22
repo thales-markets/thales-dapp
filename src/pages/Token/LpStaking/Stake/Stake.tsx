@@ -201,11 +201,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         showValidation={!isAmountValid}
                         validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
                         balance={
-                            isWalletConnected
-                                ? `${t('thales-token.gamified-staking.staking.stake.balance')}: ${formatCurrency(
-                                      lpTokensBalance
-                                  )}`
-                                : undefined
+                            isWalletConnected ? `${t('common.balance')}: ${formatCurrency(lpTokensBalance)}` : undefined
                         }
                         isBalanceLoading={lpTokensBalanceQuery.isLoading}
                     />
