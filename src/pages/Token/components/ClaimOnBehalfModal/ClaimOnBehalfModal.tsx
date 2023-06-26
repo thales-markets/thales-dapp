@@ -23,6 +23,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -185,6 +186,9 @@ const Container = styled(FlexDivColumnCentered)`
     min-width: 70px;
     position: relative;
     width: 380px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 325px;
+    }
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
