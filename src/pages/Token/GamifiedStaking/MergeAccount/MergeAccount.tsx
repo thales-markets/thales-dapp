@@ -255,6 +255,9 @@ const MergeAccount: React.FC = () => {
             <>
                 <div>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
                 <ul>
+                    {isUserLPing && (
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.user-lping')}</li>
+                    )}
                     {hasSrcAccountSomethingToClaim && (
                         <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
                     )}

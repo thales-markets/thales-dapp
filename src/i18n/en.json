@@ -579,6 +579,7 @@
                 "merge-blocked-message": {
                     "title": "In order to merge account, you need to",
                     "src-claim": "Claim the staking rewards from the source account.",
+                    "user-lping": "Can not merge accounts while lping.",
                     "src-unstaking": "Cancel ustaking from the source account.",
                     "dest-claim": "Claim the staking rewards from the destination account.",
                     "dest-unstaking": "Cancel ustaking from the destination account."
