@@ -104,6 +104,7 @@ const MergeAccount: React.FC = () => {
             ? srcStakingThalesQuery.data.mergeAccountEnabled
             : true;
 
+    const isUserLPing = srcStakingThalesQuery.data && srcStakingThalesQuery.data?.isUserLPing;
     const hasSrcAccountSomethingToClaim =
         srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data ? srcStakingThalesQuery.data.rewards > 0 : false;
     const isSrcAccountUnstaking =
@@ -126,6 +127,7 @@ const MergeAccount: React.FC = () => {
 
     const isMergeBlocked =
         isAccountMergingEnabled &&
+        isUserLPing &&
         (hasSrcAccountSomethingToClaim ||
             isSrcAccountUnstaking ||
             hasDestAccountSomethingToClaim ||
