@@ -127,9 +127,9 @@ const MergeAccount: React.FC = () => {
 
     const isMergeBlocked =
         isAccountMergingEnabled &&
-        isUserLPing &&
         (hasSrcAccountSomethingToClaim ||
             isSrcAccountUnstaking ||
+            isUserLPing ||
             hasDestAccountSomethingToClaim ||
             isDestAccountUnstaking);
 
