@@ -68,7 +68,7 @@ const useUserStakingDataQuery = (
                         stakingDataContract.getStakingData(),
                         stakingDataContract.getUserStakingData(walletAddress),
                         sportLiquidityPoolContract.isUserLPing(walletAddress),
-                        parlayLiquidityPoolContract.isUserLping(walletAddress),
+                        parlayLiquidityPoolContract.isUserLPing(walletAddress),
                         liquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
