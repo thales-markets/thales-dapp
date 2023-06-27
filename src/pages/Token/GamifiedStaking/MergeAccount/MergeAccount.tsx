@@ -361,7 +361,7 @@ const MergeAccount: React.FC = () => {
                             <TextInput
                                 value={destAddress}
                                 onChange={(e: any) => setDestAddress(e.target.value)}
-                                disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
+                                disabled={isMerging || !isAccountMergingEnabled || isMergeBlocked || !isWalletConnected}
                                 label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
                                 placeholder={t('common.enter-address')}
                                 showValidation={!isDestAddressValid}
