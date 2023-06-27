@@ -165,11 +165,13 @@ const Table: React.FC<TableProps> = ({
         <>
             <>
                 {isMobile ? (
-                    <MobileDropdownMenu
-                        buttonTitle={t('common.sort-menu')}
-                        dropdownTitle={t('common.sort-menu')}
-                        items={sortHeaderMenus}
-                    />
+                    data.length > 0 && (
+                        <MobileDropdownMenu
+                            buttonTitle={t('common.sort-menu')}
+                            dropdownTitle={t('common.sort-menu')}
+                            items={sortHeaderMenus}
+                        />
+                    )
                 ) : (
                     <TableHeader>
                         {headerGroups.map((headerGroup: any, headerGroupIndex) => (
