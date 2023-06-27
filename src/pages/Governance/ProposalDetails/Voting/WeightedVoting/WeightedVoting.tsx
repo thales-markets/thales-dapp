@@ -63,6 +63,12 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
         }
     }, [myVote]);
 
+    useEffect(() => {
+        if (selectedChoices.some((value) => value > 0)) {
+            setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
+        }
+    }, [walletAddress]);
+
     function addVote(i: number, selectedChoices: number[]) {
         selectedChoices[i] = selectedChoices[i] ? (selectedChoices[i] += 1) : 1;
     }
@@ -131,14 +137,17 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
 
                     return (
                         <VotingWrapper key={choice}>
-                            <Weighted key={choice} className={selected ? 'selected' : ''}>
+                            <Weighted key={choice} className={selected ? 'selected' : ''} isDisabled={!hasVotingRights}>
                                 <Option>{choice}</Option>
                                 <Selection>
                                     <PlusMinus
+                                        isDisabled={!hasVotingRights}
                                         onClick={() => {
-                                            const newSelectedChoices = [...selectedChoices];
-                                            removeVote(i + 1, newSelectedChoices);
-                                            setSelectedChoices(newSelectedChoices);
+                                            if (hasVotingRights) {
+                                                const newSelectedChoices = [...selectedChoices];
+                                                removeVote(i + 1, newSelectedChoices);
+                                                setSelectedChoices(newSelectedChoices);
+                                            }
                                         }}
                                     >
                                         -
@@ -148,6 +157,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                                         min="0"
                                         step="1"
                                         value={selectedChoiceValue}
+                                        disabled={!hasVotingRights}
                                         onChange={(e) => {
                                             const { value } = e.target;
                                             const parsedInt = parseInt(value);
@@ -162,10 +172,13 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                                         onFocus={(e) => e.target.select()}
                                     />
                                     <PlusMinus
+                                        isDisabled={!hasVotingRights}
                                         onClick={() => {
-                                            const newSelectedChoices = [...selectedChoices];
-                                            addVote(i + 1, newSelectedChoices);
-                                            setSelectedChoices(newSelectedChoices);
+                                            if (hasVotingRights) {
+                                                const newSelectedChoices = [...selectedChoices];
+                                                addVote(i + 1, newSelectedChoices);
+                                                setSelectedChoices(newSelectedChoices);
+                                            }
                                         }}
                                     >
                                         +
@@ -229,7 +242,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     );
 };
 
-const Weighted = styled(FlexDivSpaceBetween)`
+const Weighted = styled(FlexDivSpaceBetween)<{ isDisabled?: boolean }>`
     flex: 1;
     box-sizing: content-box;
     height: 50px;
@@ -244,15 +257,16 @@ const Weighted = styled(FlexDivSpaceBetween)`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    opacity: ${(props) => (props.isDisabled ? '0.5' : '1')};
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover {
-        margin: -1px;
-        margin-bottom: 19px;
-        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
+        ${(props) => (props.isDisabled ? '' : 'margin: -1px;')}
+        ${(props) => (props.isDisabled ? '' : 'margin-bottom: 19px;')}
+        ${(props) => (props.isDisabled ? '' : `border: 2px solid ${props.theme.borderColor.quaternary};`)}
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
@@ -278,16 +292,16 @@ const Selection = styled(FlexDiv)`
     }
 `;
 
-const PlusMinus = styled(FlexDivColumnCentered)`
+const PlusMinus = styled(FlexDivColumnCentered)<{ isDisabled?: boolean }>`
     text-align: center;
     max-width: 45px;
     min-width: 45px;
     border-left: 2px solid ${(props) => props.theme.borderColor.primary};
     border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     &:hover {
-        border-left: 2px solid ${(props) => props.theme.borderColor.quaternary};
-        border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
-        cursor: pointer;
+        ${(props) => (props.isDisabled ? '' : `border-left: 2px solid ${props.theme.borderColor.quaternary};`)}
+        ${(props) => (props.isDisabled ? '' : `border-right: 2px solid ${props.theme.borderColor.quaternary};`)}
+        ${(props) => (props.isDisabled ? '' : 'cursor: pointer;')}
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 35px;
