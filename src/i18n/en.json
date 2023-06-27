@@ -719,7 +719,7 @@
             "description": "<0>Claim on behalf has been implemented per </0><1 />.",
             "guide": "<0>Please check this </0><1 /><0> on how to automate your weekly claims</0>.",
             "guide-link": "guid",
-            "label": "Enter account for which you want to enable/disable claim on your behalf:",
+            "label": "Enter account for which you want to enable/disable claim on your behalf",
             "enable-button": {
                 "label": "Enable",
                 "progress-label": "Enabling in progress...",
