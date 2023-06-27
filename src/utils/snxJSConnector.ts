@@ -3,6 +3,7 @@ import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import liquidityPoolDataContract from 'utils/contracts/liquidityPoolDataContract';
 import sportLiquidityPoolContract from 'utils/contracts/sportLiquidityPoolContract';
+import parlayLiquidityPoolContract from 'utils/contracts/parlayLiquidityPoolContract';
 import stakingDataContract from 'utils/contracts/stakingDataContract';
 import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
@@ -44,6 +45,7 @@ type SnxJSConnector = {
     bridgeContract?: ethers.Contract;
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
     sportLiquidityPoolContract?: ethers.Contract;
+    parlayLiquidityPoolContract?: ethers.Contract;
     liquidityPoolContract?: ethers.Contract;
     liquidityPoolDataContract?: ethers.Contract;
     taleOfThalesNFTContract?: ethers.Contract;
@@ -93,6 +95,7 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.sportLiquidityPoolContract = conditionalInitializeContract(sportLiquidityPoolContract, contractSettings);
+        this.parlayLiquidityPoolContract = conditionalInitializeContract(parlayLiquidityPoolContract, contractSettings);
         this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
         this.liquidityPoolDataContract = conditionalInitializeContract(liquidityPoolDataContract, contractSettings);
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);

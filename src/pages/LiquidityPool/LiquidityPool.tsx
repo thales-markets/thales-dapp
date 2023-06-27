@@ -350,6 +350,67 @@ const LiquidityPool: React.FC = () => {
         }
     };
 
+    const closeRound = async () => {
+        const id = toast.loading(getDefaultToastContent(t('liquidity-pool.closing-round')), getLoadingToastOptions());
+        setIsSubmitting(true);
+        try {
+            const { signer, liquidityPoolContract } = snxJSConnector;
+
+            if (signer && liquidityPoolContract) {
+                const lpContractWithSigner = liquidityPoolContract.connect(signer);
+
+                const canCloseCurrentRound = await lpContractWithSigner?.canCloseCurrentRound();
+                const roundClosingPrepared = await lpContractWithSigner?.roundClosingPrepared();
+
+                let getUsersCountInCurrentRound = await lpContractWithSigner?.getUsersCountInCurrentRound();
+                let usersProcessedInRound = await lpContractWithSigner?.usersProcessedInRound();
+                if (canCloseCurrentRound) {
+                    try {
+                        if (!roundClosingPrepared) {
+                            const tx = await lpContractWithSigner.prepareRoundClosing({
+                                type: 2,
+                            });
+                            await tx.wait().then(() => {
+                                console.log('prepareRoundClosing closed');
+                            });
+                            await delay(1000 * 2);
+                        }
+
+                        while (usersProcessedInRound < getUsersCountInCurrentRound) {
+                            const tx = await lpContractWithSigner.processRoundClosingBatch(100, {
+                                type: 2,
+                            });
+                            await tx.wait().then(() => {
+                                console.log('processRoundClosingBatch for batch done');
+                            });
+                            await delay(1000 * 2);
+                            getUsersCountInCurrentRound = await lpContractWithSigner.getUsersCountInCurrentRound();
+                            usersProcessedInRound = await lpContractWithSigner.usersProcessedInRound();
+                        }
+
+                        const tx = await lpContractWithSigner.closeRound({
+                            type: 2,
+                        });
+                        await tx.wait().then(() => {
+                            console.log('Round closed');
+                        });
+
+                        toast.update(id, getSuccessToastOptions(t('liquidity-pool.round-successfully-closed'), id));
+                        setIsSubmitting(false);
+                    } catch (e) {
+                        toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+                        setIsSubmitting(false);
+                        console.log(e);
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('E ', e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+            setIsSubmitting(false);
+        }
+    };
+
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
             return (
@@ -465,6 +526,11 @@ const LiquidityPool: React.FC = () => {
                                                     fontSize={20}
                                                     showFullCounter
                                                 />
+                                            )}
+                                            {liquidityPoolData.canCloseCurrentRound && (
+                                                <Button disabled={isSubmitting} onClick={closeRound}>
+                                                    {t('liquidity-pool.button.close-round')}
+                                                </Button>
                                             )}
                                         </RoundEnd>
                                     </RoundEndContainer>
@@ -1034,6 +1100,10 @@ const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: num
         nextRoundBalancePercenatage,
         maxAllowancePercenatage,
     };
+};
+
+const delay = (interval: number) => {
+    return new Promise((resolve) => setTimeout(resolve, interval));
 };
 
 export default LiquidityPool;
