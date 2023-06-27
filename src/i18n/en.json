@@ -580,7 +580,7 @@
                 "merge-blocked-message": {
                     "title": "In order to merge account, you need to",
                     "src-claim": "Claim the staking rewards from the source account.",
-                    "user-lping": "You can't merge  account while providing liquidity for Thales or Overtime.",
+                    "user-lping": "You can't merge account while providing liquidity for Thales or Overtime.",
                     "src-unstaking": "Cancel ustaking from the source account.",
                     "dest-claim": "Claim the staking rewards from the destination account.",
                     "dest-unstaking": "Cancel ustaking from the destination account."
