@@ -580,6 +580,7 @@
                 "merge-blocked-message": {
                     "title": "In order to merge account, you need to",
                     "src-claim": "Claim the staking rewards from the source account.",
+                    "user-lping": "You can't merge account while providing liquidity for Thales or Overtime.",
                     "src-unstaking": "Cancel ustaking from the source account.",
                     "dest-claim": "Claim the staking rewards from the destination account.",
                     "dest-unstaking": "Cancel ustaking from the destination account."
@@ -1257,6 +1258,8 @@
         "full-withdrawal-label": "Full withdrawal",
         "partial-withdrawal-label": "Partial withdrawal",
         "withdrawal-amount-label": "Withdrawal amount: <bold>{{amount}}</bold>",
+        "closing-round": "Closing round...",
+        "round-successfully-closed": "Round successfully closed",
         "tabs": {
             "deposit": "Deposit",
             "withdraw": "Withdraw"
@@ -1268,7 +1271,8 @@
             "request-withdrawal-label": "Request withdrawal",
             "request-withdrawal-confirmation-message": "Withdrawal request successfully sent",
             "get-thales-label": "Get THALES",
-            "stake-thales-label": "Stake THALES"
+            "stake-thales-label": "Stake THALES",
+            "close-round": "Close round"
         },
         "pnl": {
             "pnl-per-round": {

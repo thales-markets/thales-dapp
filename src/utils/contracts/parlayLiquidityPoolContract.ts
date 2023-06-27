@@ -1,19 +1,19 @@
 import { Network } from 'enums/network';
 
-const liquidityPoolContract = {
+const parlayLiquidityPoolContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',
         [Network.Rinkeby]: 'TBD',
         [Network.Kovan]: 'TBD',
         [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: '0xC10a0A6fF6496E0BD896F9f6da5a7B640b85ea40',
+        [Network['Mainnet-Ovm']]: '0x2Dc1fe64Afa2281FF38dF998bE029E94C561937f',
         [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: '0x7e98D27847e06261bE499E248060DCD6F7B82303',
+        [Network['Goerli-Ovm']]: '0xA5D52005df7C457B014A54b3cF9812c861Ea9dF9',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
+        [Network.Arbitrum]: '0x6848f7C1B5aa2da86F6529bed9d641A67663f0bE',
     },
     abi: [
         {
@@ -315,6 +315,19 @@ const liquidityPoolContract = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'address',
+                    name: 'sportAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'SportAMMChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'uint256',
                     name: '_stakedThalesMultiplier',
                     type: 'uint256',
@@ -334,19 +347,6 @@ const liquidityPoolContract = {
                 },
             ],
             name: 'StakingThalesChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'thalesAMM',
-                    type: 'address',
-                },
-            ],
-            name: 'ThalesAMMChanged',
             type: 'event',
         },
         {
@@ -540,19 +540,6 @@ const liquidityPoolContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'batchSize',
-                    type: 'uint256',
-                },
-            ],
-            name: 'exerciseMarketsReadyToExercisedBatch',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             inputs: [],
             name: 'firstRoundStartTime',
             outputs: [
@@ -658,52 +645,6 @@ const liquidityPoolContract = {
                     name: 'market',
                     type: 'address',
                 },
-                {
-                    internalType: 'uint256',
-                    name: 'optionsAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'enum IThalesAMM.Position',
-                    name: 'position',
-                    type: 'uint8',
-                },
-            ],
-            name: 'getOptionsForBuy',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'optionsAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: 'position',
-                    type: 'address',
-                },
-            ],
-            name: 'getOptionsForBuyByAddress',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
             ],
             name: 'getOrCreateMarketPool',
             outputs: [
@@ -755,6 +696,25 @@ const liquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_round',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getTradingMarketsPerRound',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'numOfMarkets',
+                    type: 'uint256',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'getUsersCountInCurrentRound',
             outputs: [
@@ -797,8 +757,8 @@ const liquidityPoolContract = {
                             type: 'address',
                         },
                         {
-                            internalType: 'contract IThalesAMM',
-                            name: '_thalesAMM',
+                            internalType: 'address',
+                            name: '_parlayAMM',
                             type: 'address',
                         },
                         {
@@ -832,7 +792,7 @@ const liquidityPoolContract = {
                             type: 'bool',
                         },
                     ],
-                    internalType: 'struct ThalesAMMLiquidityPool.InitParams',
+                    internalType: 'struct ParlayAMMLiquidityPool.InitParams',
                     name: 'params',
                     type: 'tuple',
                 },
@@ -904,19 +864,6 @@ const liquidityPoolContract = {
                     internalType: 'bool',
                     name: '',
                     type: 'bool',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'marketsProcessedInRound',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
                 },
             ],
             stateMutability: 'view',
@@ -1021,6 +968,38 @@ const liquidityPoolContract = {
                     internalType: 'address',
                     name: '',
                     type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'parlayAMM',
+            outputs: [
+                {
+                    internalType: 'contract IParlayMarketsAMM',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'parlayMarketRound',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
                 },
             ],
             stateMutability: 'view',
@@ -1256,6 +1235,19 @@ const liquidityPoolContract = {
         {
             inputs: [
                 {
+                    internalType: 'contract IParlayMarketsAMM',
+                    name: '_parlayAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'setParlayAmm',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
                     internalType: 'bool',
                     name: '_setPausing',
                     type: 'bool',
@@ -1314,19 +1306,6 @@ const liquidityPoolContract = {
                 },
             ],
             name: 'setStakingThales',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'contract IThalesAMM',
-                    name: '_thalesAMM',
-                    type: 'address',
-                },
-            ],
-            name: 'setThalesAmm',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1415,19 +1394,6 @@ const liquidityPoolContract = {
         },
         {
             inputs: [],
-            name: 'thalesAMM',
-            outputs: [
-                {
-                    internalType: 'contract IThalesAMM',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
             name: 'totalDeposited',
             outputs: [
                 {
@@ -1472,6 +1438,24 @@ const liquidityPoolContract = {
                 },
             ],
             name: 'transferOwnershipAtInit',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'transferToPool',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1636,4 +1620,4 @@ const liquidityPoolContract = {
     ],
 };
 
-export default liquidityPoolContract;
+export default parlayLiquidityPoolContract;

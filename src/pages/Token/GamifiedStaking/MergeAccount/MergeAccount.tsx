@@ -104,6 +104,7 @@ const MergeAccount: React.FC = () => {
             ? srcStakingThalesQuery.data.mergeAccountEnabled
             : true;
 
+    const isUserLPing = srcStakingThalesQuery.data && srcStakingThalesQuery.data?.isUserLPing;
     const hasSrcAccountSomethingToClaim =
         srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data ? srcStakingThalesQuery.data.rewards > 0 : false;
     const isSrcAccountUnstaking =
@@ -128,6 +129,7 @@ const MergeAccount: React.FC = () => {
         isAccountMergingEnabled &&
         (hasSrcAccountSomethingToClaim ||
             isSrcAccountUnstaking ||
+            isUserLPing ||
             hasDestAccountSomethingToClaim ||
             isDestAccountUnstaking);
 
@@ -253,6 +255,9 @@ const MergeAccount: React.FC = () => {
             <>
                 <div>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
                 <ul>
+                    {isUserLPing && (
+                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.user-lping')}</li>
+                    )}
                     {hasSrcAccountSomethingToClaim && (
                         <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
                     )}
