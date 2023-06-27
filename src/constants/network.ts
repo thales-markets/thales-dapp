@@ -90,7 +90,7 @@ const BSC_NETWORK: Record<number, OptimismNetwork> = {
     56: {
         chainId: '0x38',
         chainName: 'BSC',
-        rpcUrls: ['https://polygon-rpc.com'],
+        rpcUrls: ['https://bsc-dataseed.binance.org/'],
         blockExplorerUrls: ['https://bscscan.com/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
@@ -104,7 +104,7 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     42161: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
-        rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
+        rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
@@ -154,7 +154,6 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
         name: 'Polygon',
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            // const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -219,7 +218,22 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     });
                     callback && callback();
                 } catch (switchError: any) {
-                    console.log(switchError);
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [bscNetworkParams],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: bscNetworkParams.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
                 }
             }
         },
@@ -238,7 +252,22 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     });
                     callback && callback();
                 } catch (switchError: any) {
-                    console.log(switchError);
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [arbNetworkParams],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: arbNetworkParams.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
                 }
             }
         },

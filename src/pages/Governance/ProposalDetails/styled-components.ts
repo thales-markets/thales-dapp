@@ -95,6 +95,7 @@ export const Body = styled(FlexDivColumn)`
     }
     a {
         color: ${(props) => props.theme.link.textColor.primary};
+        word-wrap: break-word;
         &:hover {
             text-decoration: underline;
         }
