@@ -299,6 +299,16 @@ const App = () => {
                                 </DappLayout>
                             </Route>
 
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarkets}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Markets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            ></Route>
+
                             <Route exact path={ROUTES.Options.Wizard}>
                                 <DappLayout>
                                     <Wizard />
