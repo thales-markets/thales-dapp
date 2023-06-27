@@ -1,24 +1,19 @@
 import {
     currencyKeyToAssetIconMap,
-    CurrencyKey,
     CRYPTO_CURRENCY_MAP,
-    FIAT_CURRENCY_MAP,
     SYNTHS_MAP,
     currencyKeyToNameMap,
+    CRYPTO_CURRENCY,
+    COMMODITY,
 } from 'constants/currency';
-
-export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
-export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
-export const isFiatCurrency = (currencyKey: CurrencyKey) => !!FIAT_CURRENCY_MAP[currencyKey];
-export const toMarketPair = (baseCurrencyKey: CurrencyKey, quoteCurrencyKey: CurrencyKey) =>
-    `${baseCurrencyKey}-${quoteCurrencyKey}`;
+import { COLLATERALS_INDEX } from 'enums/options';
+import { StableCoins } from 'types/options';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from './network';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
-export const toInverseSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^s/i, 'i');
-export const toStandardSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^i/i, 's');
-export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^(i|s)/i, '');
+const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
 
-export const getAssetIcon = (currencyKey: CurrencyKey) =>
+export const getAssetIcon = (currencyKey: string) =>
     currencyKeyToAssetIconMap[currencyKey] || currencyKeyToAssetIconMap[`s${currencyKey}`];
 
 export const getSynthName = (currencyKey: string) =>
@@ -26,3 +21,57 @@ export const getSynthName = (currencyKey: string) =>
 
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
+
+export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
+    if (customStable) {
+        return customStable as StableCoins;
+    }
+
+    if (getIsArbitrum(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
+    }
+
+    if (getIsBSC(networkId)) {
+        return CRYPTO_CURRENCY_MAP.BUSD;
+    }
+
+    if (getIsPolygon(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
+    }
+
+    return SYNTHS_MAP.sUSD;
+};
+
+type StableBalances = {
+    sUSD: number | null;
+    DAI: number | null;
+    USDC: number | null;
+    USDT: number | null;
+};
+
+export const getDefaultStableIndexByBalance = (balancesObject: any) => {
+    let index = COLLATERALS_INDEX['sUSD'];
+    if (balancesObject?.sUSD < 1) {
+        for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
+            if (value && value > 1) {
+                index = COLLATERALS_INDEX[key as StableCoins];
+                break;
+            }
+        }
+    }
+
+    return index;
+};
+
+export const getStableCoinBalance = (balancesQueryObject: any, currency: StableCoins) => {
+    if (balancesQueryObject && currency) {
+        return balancesQueryObject[currency] ? balancesQueryObject[currency] : 0;
+    }
+    return 0;
+};
+
+export const getCurrencyPriority = (currency: string) => {
+    const currencyPriority = CRYPTO_CURRENCY.indexOf(currency);
+    const commodityPriority = CRYPTO_CURRENCY.length + COMMODITY.indexOf(currency);
+    return currencyPriority !== -1 ? currencyPriority : commodityPriority;
+};

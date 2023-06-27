@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { Proposal, ProposalResults } from 'types/governance';
 import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';
 import { truncateAddress, truncateText } from 'utils/formatters/string';
 import {
     Blockie,
-    VoteLabel,
     Percentage,
-    VoteRow,
     SidebarRowData,
     Votes,
     StyledLink,
-    NoVotes,
     LoaderContainer,
     ViewMore,
-} from 'pages/Governance/components';
+} from 'pages/Governance/styled-components';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { NetworkId } from '@synthetixio/contracts-interface';
-import { FIRST_COUNCIL_ELECTIONS_ID, ProposalTypeEnum } from 'constants/governance';
+import { Network } from 'enums/network';
+import { FIRST_COUNCIL_ELECTIONS_ID } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
-import { LightMediumTooltip } from 'pages/Options/Market/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { VoteRow, VoteLabel, NoVotes } from './styled-components';
+import { ProposalTypeEnum } from 'enums/governance';
 
 type HistoryProps = {
     proposal: Proposal;
@@ -59,7 +58,7 @@ const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading 
                                 <SidebarRowData fontWeight={300}>
                                     <FlexDivCentered>
                                         <StyledLink
-                                            href={getEtherscanAddressLink(NetworkId.Mainnet, vote.voter)}
+                                            href={getEtherscanAddressLink(Network.Mainnet, vote.voter)}
                                             target="_blank"
                                             rel="noreferrer"
                                         >
@@ -68,9 +67,9 @@ const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading 
                                                 <Voter address={vote.voter} walletAddress={walletAddress} />
                                             </FlexDivCentered>
                                         </StyledLink>
-                                        <LightMediumTooltip title={votes}>
+                                        <Tooltip overlay={votes}>
                                             <Votes>{formattedVotes}</Votes>
-                                        </LightMediumTooltip>
+                                        </Tooltip>
                                     </FlexDivCentered>
                                     <Percentage>{`${formatNumberShort(vote.balance)} ${spaceSymbol}`}</Percentage>
                                 </SidebarRowData>
@@ -111,7 +110,7 @@ const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
             const stakerEns = await (snxJSConnector as any).provider.lookupAddress(address);
             setVoterEns(stakerEns);
         };
-        if (networkId === NetworkId.Mainnet) {
+        if (networkId === Network.Mainnet) {
             fetchVoterEns();
         }
     }, [address]);
@@ -130,9 +129,9 @@ const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
             : address;
 
     return (
-        <LightMediumTooltip title={voterTooltip}>
+        <Tooltip overlay={voterTooltip}>
             <VoteLabel>{voter}</VoteLabel>
-        </LightMediumTooltip>
+        </Tooltip>
     );
 };
 

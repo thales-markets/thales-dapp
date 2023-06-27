@@ -1,26 +1,7 @@
-import { MarketWidgetKey } from 'constants/ui';
-import orderBy from 'lodash/orderBy';
-import { PHASE } from '../constants/options';
-import { OptionsMarkets, Phase } from '../types/options';
-import { getSynthAsset } from './currency';
-import { Color } from '@material-ui/lab';
-
-export const sortOptionsMarkets = (markets: OptionsMarkets) =>
-    orderBy(
-        markets.map((optionsMarket) => {
-            const { phase, timeRemaining } = getPhaseAndEndDate(optionsMarket.maturityDate, optionsMarket.expiryDate);
-
-            return {
-                ...optionsMarket,
-                phase,
-                asset: getSynthAsset(optionsMarket.currencyKey),
-                timeRemaining,
-                phaseNum: PHASE[phase],
-            };
-        }),
-        ['phaseNum', 'ammLiquidity'],
-        ['asc', 'desc']
-    );
+import { Phase } from '../types/options';
+import { formatCurrency } from './formatters/number';
+import { ThemeInterface } from 'types/ui';
+import { Positions } from 'enums/options';
 
 export const getPhaseAndEndDate = (
     maturityDate: number,
@@ -48,48 +29,27 @@ export const getPhaseAndEndDate = (
     };
 };
 
-export const isMarketWidgetVisible = (
-    marketWidget: MarketWidgetKey,
-    visibilityMap: Record<MarketWidgetKey, boolean>,
-    marketPhase: string,
-    isCustomMarket: boolean,
-    isWalletConected: boolean,
-    isCustomizationVisibility: boolean,
-    ammSelected: boolean,
-    isL2: boolean
-) => {
-    switch (marketWidget) {
-        case MarketWidgetKey.AMM:
-            return (
-                marketPhase === 'trading' &&
-                ammSelected &&
-                isL2 &&
-                (visibilityMap[marketWidget] || isCustomizationVisibility)
-            );
-        case MarketWidgetKey.ORDERBOOK:
-        case MarketWidgetKey.TRADE:
-            return (
-                marketPhase === 'trading' &&
-                (!ammSelected || !isL2) &&
-                (visibilityMap[marketWidget] || isCustomizationVisibility)
-            );
-        case MarketWidgetKey.MATURITY_PHASE:
-            return marketPhase === 'maturity' && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.YOUR_TRANSACTIONS:
-            return isWalletConected && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.CHART_TRADING_VIEW:
-            return !isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.CUSTOM_MARKET_RESULTS:
-            return isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
+export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);
+
+export const getFormattedBonus = (bonus: number | undefined) => `+${formatCurrency(Number(bonus))}%`;
+
+export const getColorPerPosition = (position: Positions, theme: ThemeInterface) => {
+    switch (position) {
+        case Positions.UP:
+            return theme.positionColor.up;
+        case Positions.DOWN:
+            return theme.positionColor.down;
+        case Positions.IN:
+            return theme.positionColor.in;
+        case Positions.OUT:
+            return theme.positionColor.out;
         default:
-            return visibilityMap[marketWidget] || isCustomizationVisibility;
+            return theme.textColor.primary;
     }
 };
 
-export const dispatchMarketNotification = (message: string, type?: Color) => {
-    const marketNotificationEvent = new CustomEvent('market-notification', {
-        bubbles: true,
-        detail: { text: message, type: type },
-    });
-    document.dispatchEvent(marketNotificationEvent);
-};
+export const isOptionClaimable = (positionBalance: any) =>
+    (positionBalance.position.side === 'long' && positionBalance.position.market.result === 0) ||
+    (positionBalance.position.side === 'short' && positionBalance.position.market.result === 1) ||
+    (positionBalance.position.side === 'in' && positionBalance.position.market.result === 0) ||
+    (positionBalance.position.side === 'out' && positionBalance.position.market.result === 1);

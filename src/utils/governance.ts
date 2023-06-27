@@ -1,17 +1,16 @@
 import snapshot from '@snapshot-labs/snapshot.js';
-import { SpaceKey } from 'constants/governance';
-// import { getCurrentTimestampSeconds } from 'utils/formatters/date';
-import { ethers } from 'ethers';
-import { truncateAddress, truncateText } from './formatters/string';
 import {
-    OLD_COUNCIL_END_DATE,
-    NUMBER_OF_COUNCIL_MEMBERS_OLD,
     NUMBER_OF_COUNCIL_MEMBERS,
+    NUMBER_OF_COUNCIL_MEMBERS_OLD,
+    OLD_COUNCIL_END_DATE,
     PROPOSAL_APPROVAL_VOTES,
     PROPOSAL_APPROVAL_VOTES_OLD,
 } from 'constants/governance';
+import { SpaceKey, StatusEnum } from 'enums/governance';
+import { ethers } from 'ethers';
+import { ThemeInterface } from 'types/ui';
 
-export function getENSForAddresses(addresses: any[]) {
+function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
         snapshot.utils
             .subgraphRequest('https://api.thegraph.com/subgraphs/name/ensdomains/ens', {
@@ -65,21 +64,6 @@ export async function getProfiles(addresses: any) {
     );
 }
 
-export function getUsername(address: string, youText: string, profile: any, walletAddress: string, short = true) {
-    if (address.toLowerCase() === walletAddress.toLowerCase()) {
-        return youText;
-    }
-
-    if (profile) {
-        if (profile.ens) {
-            return short ? truncateText(profile.ens, 12) : profile.ens;
-        }
-        return short ? truncateAddress(address) : address;
-    }
-
-    return short ? truncateAddress(address) : address;
-}
-
 export const getProposalUrl = (spaceKey: SpaceKey, id: string) => `https://snapshot.org/#/${spaceKey}/proposal/${id}`;
 
 export const getProposalApprovalData = (proposalStartDate: number) => {
@@ -92,4 +76,15 @@ export const getProposalApprovalData = (proposalStartDate: number) => {
             ? PROPOSAL_APPROVAL_VOTES_OLD
             : PROPOSAL_APPROVAL_VOTES;
     return { numberOfCouncilMembers, proposalApprovalVotes };
+};
+
+export const getStatusColor = (status: string, theme: ThemeInterface) => {
+    switch (status) {
+        case StatusEnum.Pending:
+            return theme.textColor.secondary;
+        case StatusEnum.Closed:
+            return theme.info.textColor.secondary;
+        default:
+            return theme.textColor.quaternary;
+    }
 };

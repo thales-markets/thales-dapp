@@ -1,13 +1,13 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
-import { OptionsTransactions, OptionsTransaction, Trades, Trade } from 'types/options';
+import { OptionsTransactions, OptionsTransaction, Trades, Trade, RangedMarketPositionType } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionSide, OrderSide } from 'types/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
-    optionSide: OptionSide,
+    optionSide: OptionSide | RangedMarketPositionType,
     orderSide: OrderSide,
     marketAddress: string
 ): OptionsTransactions =>
@@ -29,51 +29,54 @@ const mapToOptionTransactions = (
 
 const useBinaryOptionsTradesQuery = (
     marketAddress: string,
-    longAddress: string,
-    shortAddress: string,
+    firstPositionAddress: string,
+    secondPositionAddress: string,
     networkId: number,
+    isRangedMarket: boolean,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
 
     return useQuery<OptionsTransactions>(
-        QUERY_KEYS.BinaryOptions.Trades(marketAddress),
+        QUERY_KEYS.BinaryOptions.MarketTrades(marketAddress),
         async () => {
-            const [longBuys, longSells, shortBuys, shortSells] = await Promise.all([
+            const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
                 thalesData.binaryOptions.trades({
-                    makerToken: SynthsUSD.address,
-                    takerToken: longAddress,
+                    makerToken: collateral?.address,
+                    takerToken: firstPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: longAddress,
-                    takerToken: SynthsUSD.address,
+                    makerToken: firstPositionAddress,
+                    takerToken: collateral?.address,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: SynthsUSD.address,
-                    takerToken: shortAddress,
+                    makerToken: collateral?.address,
+                    takerToken: secondPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: shortAddress,
-                    takerToken: SynthsUSD.address,
+                    makerToken: secondPositionAddress,
+                    takerToken: collateral?.address,
                     network: networkId,
                 }),
             ]);
 
             const trades = [
-                ...mapToOptionTransactions(longBuys, 'long', 'buy', marketAddress),
-                ...mapToOptionTransactions(longSells, 'long', 'sell', marketAddress),
-                ...mapToOptionTransactions(shortBuys, 'short', 'buy', marketAddress),
-                ...mapToOptionTransactions(shortSells, 'short', 'sell', marketAddress),
+                ...mapToOptionTransactions(firstPositionBuys, isRangedMarket ? 'in' : 'long', 'buy', marketAddress),
+                ...mapToOptionTransactions(firstPositionSells, isRangedMarket ? 'in' : 'long', 'sell', marketAddress),
+                ...mapToOptionTransactions(secondPositionBuys, isRangedMarket ? 'out' : 'short', 'buy', marketAddress),
+                ...mapToOptionTransactions(
+                    secondPositionSells,
+                    isRangedMarket ? 'out' : 'short',
+                    'sell',
+                    marketAddress
+                ),
             ];
             return trades;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

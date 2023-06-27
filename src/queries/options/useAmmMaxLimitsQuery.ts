@@ -1,9 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { MIN_SCEW_IMPACT, SIDE } from 'constants/options';
-import { ethers } from 'ethers';
+import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
+import { BigNumber } from 'ethers';
 
 export type AmmMaxLimits = {
     maxBuyLong: number;
@@ -13,15 +13,18 @@ export type AmmMaxLimits = {
     isMarketInAmmTrading: boolean;
     buyLongPrice: number;
     buyShortPrice: number;
+    maxBuyLongPrice: number;
+    maxBuyShortPrice: number;
     sellLongPrice: number;
     sellShortPrice: number;
     buyLongPriceImpact: number;
     buyShortPriceImpact: number;
     sellLongPriceImpact: number;
     sellShortPriceImpact: number;
+    iv: number;
 };
 
-const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<AmmMaxLimits>) => {
+const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?: UseQueryOptions<AmmMaxLimits>) => {
     return useQuery<AmmMaxLimits>(
         QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
         async () => {
@@ -33,65 +36,66 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
                 isMarketInAmmTrading: false,
                 buyLongPrice: 0,
                 buyShortPrice: 0,
+                maxBuyLongPrice: 0,
+                maxBuyShortPrice: 0,
                 sellLongPrice: 0,
                 sellShortPrice: 0,
                 buyLongPriceImpact: 0,
                 buyShortPriceImpact: 0,
                 sellLongPriceImpact: 0,
                 sellShortPriceImpact: 0,
+                iv: 0,
             };
-            const ammContract = snxJSConnector.ammContract;
-            if (ammContract) {
-                const parsedAmount = ethers.utils.parseEther('1');
-                const [
-                    maxBuyLong,
-                    maxSellLong,
-                    maxBuyShort,
-                    maxSellShort,
-                    isMarketInAmmTrading,
-                    buyLongPrice,
-                    buyShortPrice,
-                    sellLongPrice,
-                    sellShortPrice,
-                    buyLongPriceImpact,
-                    buyShortPriceImpact,
-                    sellLongPriceImpact,
-                    sellShortPriceImpact,
-                ] = await Promise.all([
-                    ammContract.availableToBuyFromAMM(marketAddress, SIDE['long']),
-                    ammContract.availableToSellToAMM(marketAddress, SIDE['long']),
-                    ammContract.availableToBuyFromAMM(marketAddress, SIDE['short']),
-                    ammContract.availableToSellToAMM(marketAddress, SIDE['short']),
-                    ammContract.isMarketInAMMTrading(marketAddress),
-                    ammContract.buyFromAmmQuote(marketAddress, SIDE['long'], parsedAmount),
-                    ammContract.buyFromAmmQuote(marketAddress, SIDE['short'], parsedAmount),
-                    ammContract.sellToAmmQuote(marketAddress, SIDE['long'], parsedAmount),
-                    ammContract.sellToAmmQuote(marketAddress, SIDE['short'], parsedAmount),
-                    ammContract.buyPriceImpact(marketAddress, SIDE['long'], parsedAmount),
-                    ammContract.buyPriceImpact(marketAddress, SIDE['short'], parsedAmount),
-                    ammContract.sellPriceImpact(marketAddress, SIDE['long'], parsedAmount),
-                    ammContract.sellPriceImpact(marketAddress, SIDE['short'], parsedAmount),
+            const { ammContract, binaryOptionsMarketDataContract } = snxJSConnector;
+            if (ammContract && binaryOptionsMarketDataContract) {
+                const ammMarketData = await binaryOptionsMarketDataContract.getAmmMarketData(marketAddress);
+
+                const [maxBuyLongPrice, maxBuyShortPrice] = await Promise.all([
+                    ammMarketData.upBuyLiquidity > 0
+                        ? ammContract.buyFromAmmQuote(
+                              marketAddress,
+                              SIDE['long'],
+                              (ammMarketData.upBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
+                          )
+                        : 0,
+                    ammMarketData.downBuyLiquidity > 0
+                        ? ammContract.buyFromAmmQuote(
+                              marketAddress,
+                              SIDE['short'],
+                              (ammMarketData.downBuyLiquidity as BigNumber)
+                                  .mul(AMM_MAX_BUFFER_PERCENTAGE * 100)
+                                  .div(100)
+                          )
+                        : 0,
                 ]);
 
-                ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong);
-                ammMaxLimits.maxSellLong = bigNumberFormatter(maxSellLong);
-                ammMaxLimits.maxBuyShort = bigNumberFormatter(maxBuyShort);
-                ammMaxLimits.maxSellShort = bigNumberFormatter(maxSellShort);
-                ammMaxLimits.buyLongPrice = bigNumberFormatter(buyLongPrice);
-                ammMaxLimits.buyShortPrice = bigNumberFormatter(buyShortPrice);
-                ammMaxLimits.sellLongPrice = bigNumberFormatter(sellLongPrice);
-                ammMaxLimits.sellShortPrice = bigNumberFormatter(sellShortPrice);
-                ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(buyLongPriceImpact) - MIN_SCEW_IMPACT;
-                ammMaxLimits.buyShortPriceImpact = bigNumberFormatter(buyShortPriceImpact) - MIN_SCEW_IMPACT;
-                ammMaxLimits.sellLongPriceImpact = bigNumberFormatter(sellLongPriceImpact) - MIN_SCEW_IMPACT;
-                ammMaxLimits.sellShortPriceImpact = bigNumberFormatter(sellShortPriceImpact) - MIN_SCEW_IMPACT;
-                ammMaxLimits.isMarketInAmmTrading = isMarketInAmmTrading;
+                ammMaxLimits.maxBuyLong = bigNumberFormatter(ammMarketData.upBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxSellLong =
+                    bigNumberFormatter(ammMarketData.upSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxBuyShort =
+                    bigNumberFormatter(ammMarketData.downBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxSellShort =
+                    bigNumberFormatter(ammMarketData.downSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.buyLongPrice = stableCoinFormatter(ammMarketData.upBuyPrice, networkId);
+                ammMaxLimits.buyShortPrice = stableCoinFormatter(ammMarketData.downBuyPrice, networkId);
+                ammMaxLimits.maxBuyLongPrice = stableCoinFormatter(maxBuyLongPrice, networkId);
+                ammMaxLimits.maxBuyShortPrice = stableCoinFormatter(maxBuyShortPrice, networkId);
+                ammMaxLimits.sellLongPrice = stableCoinFormatter(ammMarketData.upSellPrice, networkId);
+                ammMaxLimits.sellShortPrice = stableCoinFormatter(ammMarketData.downSellPrice, networkId);
+                ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(ammMarketData.upBuyPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.buyShortPriceImpact =
+                    bigNumberFormatter(ammMarketData.downBuyPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.sellLongPriceImpact =
+                    bigNumberFormatter(ammMarketData.upSellPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.sellShortPriceImpact =
+                    bigNumberFormatter(ammMarketData.downSellPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.iv = bigNumberFormatter(ammMarketData.iv);
+                ammMaxLimits.isMarketInAmmTrading = ammMarketData.isMarketInAMMTrading;
             }
 
             return ammMaxLimits;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

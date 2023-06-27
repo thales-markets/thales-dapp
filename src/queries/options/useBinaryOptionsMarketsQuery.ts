@@ -12,7 +12,8 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                 max: Infinity,
                 network: networkId,
             });
-            return optionsMarkets.filter((currentMarket) => !currentMarket.customMarket);
+
+            return optionsMarkets;
         },
         options
     );

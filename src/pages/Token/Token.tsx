@@ -1,158 +1,152 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
-import ThalesStaking from './ThalesStaking';
-import SnxStaking from './SnxStaking';
-import Vesting from './Vesting';
-import LPStaking from './LPStaking';
-import LPStakingL2 from './LPStakingL2';
-import { useLocation } from 'react-router-dom';
-import { history } from 'utils/routes';
+import ElectionsBanner from 'components/ElectionsBanner';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
-import TokenOverview from './components/TokenOverview';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
-import Migration from './Migration';
-import MigrationNotice from './components/MigrationNotice';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import TokenNavFooter from './MobileFooter/TokenNavFooter';
-import Notice from './components/Notice';
-import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
-import MigratedRewards from './MigratedRewards';
+import { useLocation } from 'react-router-dom';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivColumn } from 'styles/common';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
+import MigrationNotice from './components/MigrationNotice';
+import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
+import TabContainer from './components/TabContainer';
+import TokenOverview from './components/TokenOverview';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
-    const defaultTab = isL2 ? 'staking' : 'migration';
+    const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
     const tabs = [
         {
-            id: 'staking',
-            name: t('options.earn.thales-staking.tab-title'),
-            disabled: false,
+            id: TokenTabEnum.GAMIFIED_STAKING,
+            name: t('thales-token.gamified-staking.tab-title'),
+        },
+    ];
+
+    const tabSections = [
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.STAKING,
+            title: t('thales-token.gamified-staking.staking.section-title'),
+            description: t('thales-token.gamified-staking.staking.section-description'),
+            isButton: true,
         },
         {
-            id: 'vesting',
-            name: t('options.earn.vesting.tab-title'),
-            disabled: false,
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.REWARDS,
+            title: t('thales-token.gamified-staking.rewards.section-title'),
+            description: t('thales-token.gamified-staking.rewards.section-description'),
+            warning: t('thales-token.gamified-staking.rewards.section-warning'),
+            isButton: true,
         },
         {
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
-            disabled: false,
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.VESTING,
+            title: t('thales-token.gamified-staking.vesting.section-title'),
+            description: t('thales-token.gamified-staking.vesting.section-description'),
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
+            title: t('thales-token.gamified-staking.merge-account.section-title'),
+            description: '',
+            isButton: true,
+            buttonWidth: 'auto',
+        },
+        {
+            tab: TokenTabEnum.LP_STAKING,
+            id: TokenTabSectionIdEnum.LP_STAKING,
+            title: t('thales-token.lp-staking.section-title'),
+            description: '',
+            isButton: false,
         },
     ];
 
     if (isL2) {
         tabs.push({
-            id: 'migrated-rewards',
-            name: t('migration.migrated-rewards-title'),
-            disabled: false,
-        });
-    } else {
-        tabs.unshift({
-            id: 'migration',
-            name: t('migration.title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'strategic-investors',
-            name: t('options.earn.snx-stakers.tab-title'),
-            disabled: false,
+            id: TokenTabEnum.LP_STAKING,
+            name: t('thales-token.lp-staking.tab-title'),
         });
     }
 
-    const tabIds = tabs.map((tab) => tab.id);
-    const isTabEnabled = (tabId: string) => {
-        const tab = tabs.find((tab) => tab.id === tabId);
-        return tab ? !tab.disabled : false;
-    };
+    if (!isL2 && !isArb) {
+        tabs.push({
+            id: TokenTabEnum.MIGRATION,
+            name: t('migration.title'),
+        });
+        tabs.push({
+            id: TokenTabEnum.STRATEGIC_INVESTORS,
+            name: t('thales-token.snx-stakers.tab-title'),
+        });
+    }
 
     const location = useLocation();
     const paramTab = queryString.parse(location.search).tab;
-    const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
+    const tabIds = tabs.map((tab) => tab.id);
+    const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
     const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : defaultTab);
 
-    const optionsTabContent: Array<{
-        id: string;
-        name: string;
-        disabled: boolean;
-    }> = useMemo(() => tabs, [t, isL2]);
+    const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
+    const activeButtonId = Object.values(TokenTabSectionIdEnum).includes(paramActiveButtonId)
+        ? paramActiveButtonId
+        : undefined;
+    const defaultSection =
+        selectedTab === TokenTabEnum.GAMIFIED_STAKING
+            ? activeButtonId
+                ? activeButtonId
+                : TokenTabSectionIdEnum.STAKING
+            : selectedTab === TokenTabEnum.LP_STAKING
+            ? TokenTabSectionIdEnum.LP_STAKING
+            : undefined;
+    const [selectedSection, setSelectedSection] = useState(defaultSection);
 
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
-        const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
+        const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
         setSelectedTab(isTabAvailable ? paramTab : defaultTab);
     }, [location, isL2]);
 
+    useEffect(() => {
+        const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
+        const section = tabSections.find((section) => section.id === paramActiveButtonId);
+        setSelectedSection(section?.id);
+    }, [selectedTab]);
+
     return (
         <>
+            {isL2 && <OpRewardsBanner />}
+            <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />
-                    {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
-                    {isL2 && (
-                        <Notice>
-                            <MigrateText>{t('options.earn.snx-stakers.olympus-notice')}</MigrateText>
-                            <FlexDivCentered>
-                                <MigrateButton
-                                    onClick={() =>
-                                        window.open('https://pro.olympusdao.finance/#/partners/Thales', '_blank')
-                                    }
-                                >
-                                    {t('options.earn.snx-stakers.olympus-button-text')}
-                                </MigrateButton>
-                            </FlexDivCentered>
-                        </Notice>
-                    )}
+                    {!isL2 && !isArb && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
+
                     <MainContentContainer>
-                        <OptionsTabContainer>
-                            {optionsTabContent.map((tab, index) => (
-                                <OptionsTab
-                                    isActive={tab.id === selectedTab}
-                                    key={index}
-                                    index={index}
-                                    showFourTabs={isL2}
-                                    onClick={() => {
-                                        if (tab.disabled) return;
-                                        history.push({
-                                            pathname: location.pathname,
-                                            search: queryString.stringify({
-                                                tab: tab.id,
-                                            }),
-                                        });
-                                        setSelectedTab(tab.id);
-                                    }}
-                                    className={`${tab.id === selectedTab ? 'selected' : ''} ${
-                                        tab.disabled ? 'disabled' : ''
-                                    }`}
-                                >
-                                    <InnerOptionsTab paddingLeft={tab.disabled ? 40 : 0}>
-                                        {`${tab.name} ${
-                                            tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
-                                        }`}
-                                    </InnerOptionsTab>
-                                </OptionsTab>
-                            ))}
-                        </OptionsTabContainer>
-                        <WidgetsContainer>
-                            <InnerWidgetsContainer>
-                                {selectedTab === 'staking' && <ThalesStaking />}
-                                {selectedTab === 'strategic-investors' && <SnxStaking />}
-                                {selectedTab === 'vesting' && <Vesting />}
-                                {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
-                                {selectedTab === 'migration' && !isL2 && <Migration />}
-                                {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
-                            </InnerWidgetsContainer>
-                        </WidgetsContainer>
+                        <TabContainer
+                            tabItems={tabs}
+                            selectedTab={selectedTab}
+                            setSelectedTab={setSelectedTab}
+                            tabSections={tabSections}
+                            selectedSection={selectedSection}
+                        />
                     </MainContentContainer>
                 </FlexDivColumn>
             </Container>
-            <TokenNavFooter selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+            <TokenNavFooter
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                selectedSection={selectedSection}
+                setSelectedSection={setSelectedSection}
+            />
         </>
     );
 };
@@ -173,103 +167,6 @@ const Container = styled.div`
 const MainContentContainer = styled.div`
     padding-top: 5px;
     overflow: hidden;
-    @media (max-width: 767px) {
-        padding-bottom: 100px;
-    }
-`;
-
-const OptionsTabContainer = styled.div`
-    height: 44px;
-    position: relative;
-    width: 95%;
-    margin: auto;
-    @media (max-width: 767px) {
-        display: none;
-    }
-`;
-
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number; showFourTabs: boolean }>`
-    position: absolute;
-    top: 0;
-    left: ${(props) => props.index * (props.showFourTabs ? 24.5 : 19.5)}%;
-    background: linear-gradient(190.01deg, rgba(81, 106, 255, 0.6) -17.89%, rgba(130, 8, 252, 0.6) 90.41%);
-    width: ${(props) => (props.showFourTabs ? 26 : 22)}%;
-    z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
-    transition: 0.5s;
-    transition-property: color;
-    height: 44px;
-    border-radius: 10px 10px 0 0;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    letter-spacing: 0.25px;
-    text-align: center;
-    color: #748bc6;
-    padding-top: 1px;
-    padding-left: 1px;
-    padding-right: 1px;
-    user-select: none;
-    &.selected:not(.disabled) {
-        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-        transition: 0.2s;
-        color: #f6f6fe;
-        transform: scale(1.1) translateY(-1px) translateX(${(props) => (props.showFourTabs ? -1 : 0)}px);
-        div {
-            background: #04045a;
-        }
-    }
-    &:hover:not(.selected):not(.disabled) {
-        cursor: pointer;
-        color: #00f9ff;
-    }
-    img {
-        margin-left: 10px;
-        margin-bottom: 5px;
-    }
-    &.disabled {
-        color: rgb(116, 139, 198, 0.4);
-        background: linear-gradient(90deg, #141874, #10126c);
-    }
-`;
-
-const InnerOptionsTab = styled(FlexDivCentered)<{ paddingLeft: number }>`
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-    border-radius: 10px 10px 0 0;
-    width: 100%;
-    height: 100%;
-    padding-left: ${(props) => props.paddingLeft}px;
-`;
-
-const WidgetsContainer = styled(FlexDivCentered)`
-    position: relative;
-    padding: 1px;
-    border-radius: 10px;
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-    z-index: 0;
-    @media (max-width: 767px) {
-        background: transparent;
-        border: none;
-        padding: 0;
-    }
-`;
-
-const InnerWidgetsContainer = styled.div`
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: auto min-content;
-    grid-gap: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    background: #04045a;
-    z-index: 0;
-    width: 100%;
-    @media (max-width: 767px) {
-        background: transparent;
-        border: none;
-        padding: 1px;
-    }
 `;
 
 export default TokenPage;

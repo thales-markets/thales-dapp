@@ -1,4 +1,4 @@
-export const ROUTES = {
+const ROUTES = {
     Home: '/',
     Article: {
         Token: '/article/token',
@@ -7,23 +7,27 @@ export const ROUTES = {
     },
     Options: {
         Home: '/markets',
+        RangeMarkets: '/ranged-markets',
         HotMarkets: '/markets?anchor=hot-markets',
         CustomMarkets: '/markets?userFilter2=custom',
         CompetitionMarkets: '/markets?userFilter2=competition',
         Overview: '/markets?anchor=overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',
+        RangeMarketMatch: '/ranged-markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',
-        QuickTrading: '/markets/quick-trading',
-        QuickTradingCompetition: '/markets/competition-orders',
         TradeHistory: '/markets/trade-history',
-        AmmMining: '/markets/amm-rewards',
-        AmmReporting: '/markets/amm-reporting',
         Token: '/token',
         Royal: '/royale',
         Game: '/tale-of-thales',
         TokenMigration: '/token?tab=migration&action=migrate',
         Profile: '/profile',
+        Referral: '/referral',
+        Wizard: '/wizard',
+        OPRewards: '/op-rewards',
+        Vaults: '/vaults',
+        Vault: '/vaults/:vaultId',
+        LiquidityPool: '/liquidity-pool',
     },
     Governance: {
         Home: '/governance',

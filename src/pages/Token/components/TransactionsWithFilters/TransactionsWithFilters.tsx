@@ -1,33 +1,42 @@
+import checkmark from 'assets/images/checkmark.svg';
+import Button from 'components/Button';
+import { TransactionFilterEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { orderBy } from 'lodash';
+import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import TransactionsTable from '../TransactionsTable';
-import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, Text } from 'theme/common';
-import { FilterButton } from 'pages/Options/Market/components';
-import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { EarnSection, SectionHeader } from '../../components';
-import checkmark from 'assets/images/checkmark.svg';
-import arrowDown from 'assets/images/filters/arrow-down.svg';
-import { orderBy } from 'lodash';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivColumn } from 'styles/common';
+import { TokenTransaction } from 'types/token';
+import { ThemeInterface } from 'types/ui';
+import { SectionHeader } from '../../styled-components';
+import TransactionsTable from '../TransactionsTable';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
+    gridColumns?: number;
+    gridColumnStart?: number;
 };
 
-const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filters }) => {
+const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filters, gridColumns, gridColumnStart }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
-    const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
-    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
+    const [showFilters, setShowFilters] = useState<boolean>(false);
+
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, undefined, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -49,130 +58,142 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
         () =>
             filter === TransactionFilterEnum.ALL
                 ? userTokenTransactions
-                : userTokenTransactions.filter((tx: TokenTransaction) => tx.type === filter),
+                : userTokenTransactions.filter((tx: TokenTransaction) => tx.type.startsWith(filter)),
         [userTokenTransactions, filter]
     );
 
-    const noResults = filteredTransactions.length === 0;
-
-    const isMobile = window.innerWidth < 768;
-
     return (
-        <SectionContainer>
-            <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
+        <SectionContainer
+            txCount={filteredTransactions.length}
+            gridColumns={gridColumns}
+            gridColumnStart={gridColumnStart}
+        >
+            <SectionHeader>{t('thales-token.table.title')}</SectionHeader>
+            <FilterWrapper>
+                <FilterContainer
+                    onMouseEnter={() => (isMobile ? '' : setShowFilters(true))}
+                    onMouseLeave={() => setShowFilters(false)}
+                >
+                    <Button
+                        height="30px"
+                        padding="5px 40px"
+                        fontSize="15px"
+                        textColor={theme.button.textColor.secondary}
+                        backgroundColor={theme.button.background.tertiary}
+                        borderColor={theme.button.borderColor.tertiary}
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
+                        {t(`thales-token.table.filter.button`)}
+                    </Button>
+                    <DropDownWrapper hidden={!showFilters}>
+                        <DropDown>
+                            {filters.map((filterItem) => {
+                                if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND) return null;
+                                return (
+                                    <FilterText
+                                        onClick={() => {
+                                            setFilter(filterItem);
+                                            setShowFilters(false);
+                                        }}
+                                        className={filter === filterItem ? 'selected' : ''}
+                                        key={filterItem}
+                                    >
+                                        {t(`thales-token.table.filter.${filterItem}`)}
+                                    </FilterText>
+                                );
+                            })}
+                        </DropDown>
+                    </DropDownWrapper>
+                </FilterContainer>
+            </FilterWrapper>
             <SectionContent>
-                {isMobile ? (
-                    <FiltersWrapper onClick={() => setShowFiltersMobile(!showFiltersMobile)}>
-                        {`${t(`options.market.transactions-card.filter.filter`)}: ${t(
-                            `options.earn.table.filter.${filter}`
-                        )}`}
-                        <DropDownWrapper hidden={!showFiltersMobile}>
-                            <DropDown>
-                                {filters.map((filterItem) => {
-                                    return (
-                                        <FilterText
-                                            onClick={() => setFilter(filterItem)}
-                                            className={filter === filterItem ? 'selected' : ''}
-                                            key={filterItem}
-                                        >
-                                            {t(`options.earn.table.filter.${filterItem}`)}
-                                        </FilterText>
-                                    );
-                                })}
-                            </DropDown>
-                        </DropDownWrapper>
-                    </FiltersWrapper>
-                ) : (
-                    <FilterContainer>
-                        {filters.map((filterItem) => {
-                            return (
-                                <FilterButton
-                                    className={filter === filterItem ? 'selected' : ''}
-                                    onClick={() => setFilter(filterItem)}
-                                    key={filterItem}
-                                >
-                                    {t(`options.earn.table.filter.${filterItem}`)}
-                                </FilterButton>
-                            );
-                        })}
-                    </FilterContainer>
-                )}
                 <TransactionsTable
                     transactions={filteredTransactions}
                     isLoading={userTokenTransactionsQuery.isLoading}
-                    noResultsMessage={
-                        noResults ? <span>{t(`options.earn.table.no-results.${filter}`)}</span> : undefined
-                    }
+                    noResultsMessage={t(`thales-token.table.no-results.${filter}`)}
                 />
             </SectionContent>
         </SectionContainer>
     );
 };
 
-const SectionContainer = styled(EarnSection)`
-    grid-column: span 10;
-    grid-row: span 3;
-    height: 400px;
+const SectionContainer = styled.section<{
+    txCount: number;
+    gridColumns?: number;
+    gridColumnStart?: number;
+}>`
+    grid-column: ${(props) => (props.gridColumnStart ? `${props.gridColumnStart} /` : '')} span
+        ${(props) => (props.gridColumns ? props.gridColumns : '8')};
+    grid-row: span 1;
+    height: ${(props) => (props.txCount > 10 ? '390px' : '100%')};
+    min-height: 200px;
     margin-bottom: 0;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
+        order: 12;
+        height: 100%;
+    }
 `;
 
 const SectionContent = styled(FlexDivColumn)`
-    height: calc(100% - 50px);
+    margin-top: 15px;
+    height: 100%;
+`;
+
+const FilterWrapper = styled.div`
+    position: relative;
 `;
 
 const FilterContainer = styled.div`
-    &:first-child {
-        margin-left: 10px;
+    position: absolute;
+    top: -30px;
+    right: 40px;
+    width: 136px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100px;
     }
-    margin: 14px 0px;
 `;
 
 const DropDownWrapper = styled.div`
-    position: absolute;
-    top: 25px;
-    background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
-    width: 250px;
-    max-width: 100%;
-    right: 0;
+    position: relative;
+    top: 5px;
+    background: ${(props) => props.theme.background.secondary};
+    width: 220px;
+    right: 83px;
     padding: 2px;
     z-index: 100;
     border-radius: 15px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        right: 100px;
+    }
 `;
 const DropDown = styled.div`
-    background: #04045a;
     width: 100%;
     height: 100%;
-    border-radius: 15px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 5px;
     .selected {
-        color: #00f9ff !important;
+        color: ${(props) => props.theme.button.textColor.secondary} !important;
         &:before {
             content: url(${checkmark});
             position: absolute;
-            right: 40px;
+            right: 15px;
             transform: scale(0.9);
         }
     }
 `;
 
-const FiltersWrapper = styled(FlexDiv)`
-    width: 100%;
-    align-items: center;
-    position: relative;
-    border-radius: 23px;
-    justify-content: flex-end;
-    padding-right: 60px;
-    margin: 0 0 10px 14px;
-    &:before {
-        content: url(${arrowDown});
-        position: absolute;
-        right: 16px;
-        transform: scale(0.9);
+const FilterText = styled.p`
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: ${(props) => props.theme.textColor.primary};
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
     }
-`;
-
-const FilterText = styled(Text)`
-    padding: 10px 0;
 `;
 
 export default TransactionsWithFilters;

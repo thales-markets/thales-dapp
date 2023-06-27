@@ -1,20 +1,17 @@
-import React, { useMemo } from 'react';
-import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
-import { Proposal } from 'types/governance';
+import { VOTING_COUNCIL_PROPOSAL_ID, VOTING_ORACLE_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import { SpaceKey } from 'enums/governance';
+import { SidebarContent, SidebarContentWrapper, SidebarTitle, VotesCount } from 'pages/Governance/styled-components';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import { SidebarContent, SidebarTitle, SidebarContentWrapper, VotesCount } from 'pages/Governance/components';
-import Results from '../Results';
-import History from '../History';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { Proposal } from 'types/governance';
+import History from '../History';
+import Results from '../Results';
 import TipsApprovalBox from '../TipsApprovalBox';
-import {
-    SpaceKey,
-    VOTING_COUNCIL_PROPOSAL_ID,
-    VOTING_ORACLE_COUNCIL_PROPOSAL_ID,
-} from '../../../../constants/governance';
 
 type SidebarType = 'results' | 'history' | 'approval-box';
 

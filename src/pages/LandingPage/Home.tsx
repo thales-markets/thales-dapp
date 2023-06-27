@@ -1,37 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import ElectionsBanner from 'components/ElectionsBanner';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import SPAAnchor from 'components/SPAAnchor';
+import ROUTES from 'constants/routes';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import GridLayout from './components/GridLayout';
-import { useTranslation } from 'react-i18next';
-import Cookies from 'universal-cookie';
+import { buildHref, navigateTo } from 'utils/routes';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
-import ROUTES from 'constants/routes';
-import { buildHref } from 'utils/routes';
-import SPAAnchor from 'components/SPAAnchor';
+import GridLayout from './components/GridLayout';
 
-export enum Theme {
-    Light,
-    Dark,
-}
-
-const cookies = new Cookies();
+const INFORMATION_BANNER_ACTIVE = false;
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
-
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
 
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <GridLayout theme={theme} setTheme={setTheme} />
+        <Background>
+            <OpRewardsBanner isLandingPage={true} />
+            <ElectionsBanner isLandingPage={true} />
+            {INFORMATION_BANNER_ACTIVE && (
+                <Info>
+                    <Trans
+                        i18nKey="landing-page.polygon-trading-competition-1"
+                        components={{
+                            bold: (
+                                <strong
+                                    onClick={() => {
+                                        SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork(137, () => {
+                                            navigateTo(buildHref(ROUTES.Options.Home));
+                                        });
+                                    }}
+                                />
+                            ),
+                        }}
+                    />
+                    ,
+                    <Trans
+                        i18nKey="landing-page.polygon-trading-competition-2"
+                        components={{
+                            bold: (
+                                <a
+                                    href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    <strong />
+                                </a>
+                            ),
+                        }}
+                    />
+                </Info>
+            )}
+            <GridLayout />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
                 <FlexDiv className="initiatives">
@@ -62,6 +84,51 @@ const Home: React.FC = () => {
                         <OPTIMISM className="icon-home icon-home--optimism" />
                     </a>
                 </FlexDiv>
+                <FlexDiv>
+                    <a target="_blank" rel="noreferrer" href="https://polygon.technology/">
+                        <OPTIMISM className="icon-home icon-home--polygon" />
+                    </a>
+                </FlexDiv>
+                <Title style={{ marginBottom: '1em' }}> {t('landing-page.featured-in')}</Title>
+                <FlexDiv>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://finance.yahoo.com/news/thales-announces-launch-referral-program-121249063.html"
+                    >
+                        <FeatureLogo className="icon-home logo--yahoo" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.bloomberg.com/press-releases/2022-06-07/thales-announces-the-launch-of-its-new-referral-program"
+                    >
+                        <FeatureLogo className="icon-home logo--bloomberg" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.nasdaq.com/press-release/thales-announces-the-launch-of-its-new-referral-program-2022-06-07"
+                    >
+                        <FeatureLogo className="icon-home logo--nasdaq" />
+                    </a>
+                </FlexDiv>
+                <FlexDiv>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.benzinga.com/content/27585212/thales-announces-the-launch-of-its-new-referral-program"
+                    >
+                        <FeatureLogo className="icon-home logo--benzinga" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://newsletter.banklesshq.com/p/your-guide-to-the-synthetix-ecosystem?s=r"
+                    >
+                        <FeatureLogo className="icon-home logo--bankless" />
+                    </a>
+                </FlexDiv>
                 <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
                 <Title id="faq-section" style={{ marginTop: 50 }}>
@@ -75,7 +142,7 @@ const Home: React.FC = () => {
                     <FaqQuestion>{t('landing-page.faq.thirdQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.thirdA')}</FaqAnswer>
                 </Faq>
-                <Footer theme={theme} setTheme={setTheme} />
+                <Footer />
             </FlexWrapper>
         </Background>
     );
@@ -91,18 +158,7 @@ export const Background = styled.div`
         font-size: 14px;
     }
 
-    &.light {
-        background: #f7f7f7;
-        --main-background: #f7f7f7;
-        --color: #052040;
-        --background: #ffffff;
-    }
-    &.dark {
-        background: #052040;
-        --main-background: #052040;
-        --color: #f7f7f7;
-        --background: #1b314f;
-    }
+    background: ${(props) => props.theme.landingPage.background.primary};
 `;
 
 const FlexWrapper = styled.div`
@@ -124,7 +180,7 @@ const Title = styled.p`
     }
     line-height: 91.91%;
     text-align: center;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 const FlexDiv = styled.div`
@@ -132,7 +188,7 @@ const FlexDiv = styled.div`
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     flex-wrap: wrap;
     &.initiatives {
         & > a > i {
@@ -190,6 +246,14 @@ const ThalesGame = styled(IconAbs)`
     }
 `;
 
+const FeatureLogo = styled(IconAbs)`
+    font-size: 16em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
+`;
+
 const SNX = styled(IconAbs)`
     font-size: 16em;
     line-height: 0.5em;
@@ -220,7 +284,7 @@ const INCH = styled(IconAbs)`
 `;
 
 const Faq = styled.div`
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
     border-radius: 7px;
     margin: 3em 4em;
@@ -238,7 +302,7 @@ const FaqQuestion = styled.p`
     font-weight: bold;
     font-size: 1.5em;
     line-height: 91.91%;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-bottom: 1em;
     @media (max-width: 600px) {
         margin-bottom: 24px;
@@ -251,14 +315,38 @@ const FaqAnswer = styled.p`
     font-weight: 300;
     font-size: 1em;
     line-height: 1.2em;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     &:not(:last-child) {
-        border-bottom: 1px solid var(--color);
+        border-bottom: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
         padding-bottom: 2em;
         margin-bottom: 2em;
         @media (max-width: 600px) {
             margin-bottom: 30px;
             padding-bottom: 24px;
         }
+    }
+`;
+
+const Info = styled.div`
+    width: 100%;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    background-color: ${(props) => props.theme.landingPage.background.secondary};
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
+    z-index: 2;
+    position: absolute;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.2em;
+        color: ${(props) => props.theme.landingPage.textColor.secondary};
+    }
+    a {
+        display: contents;
+        font-weight: bold;
+        cursor: pointer;
+        color: ${(props) => props.theme.landingPage.textColor.secondary};
     }
 `;

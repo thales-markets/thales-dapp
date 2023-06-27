@@ -1,22 +1,36 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import Parser from 'rss-parser';
+import { LINKS } from 'constants/links';
 
 type Blog = {
     title: string;
-    description: string;
+    'content:encoded': string;
     link: string;
     pubDate: Date;
     thumbnail: string;
 };
 
-const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
+type postsParserType = {
+    description?: string;
+    feedUrl?: string;
+    generator?: string;
+    image?: any;
+    lastBuildDate?: string;
+    link: string;
+    paginationLinks?: any;
+    title: string;
+    webMaster?: string;
+    items?: Blog[];
+};
+
+const useMediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
     return useQuery<Blog[]>(
         QUERY_KEYS.Medium.Posts,
         async () => {
-            const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@thalesmarket';
-            const response = await fetch(url);
-            const result = JSON.parse(await response.text());
-            return result.items;
+            const parser: Parser<postsParserType> = new Parser();
+            const feed = await parser.parseURL(LINKS.ThalesAPI.medium);
+            return feed?.items;
         },
         {
             ...options,
@@ -24,4 +38,4 @@ const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
     );
 };
 
-export default mediumPostsQuery;
+export default useMediumPostsQuery;

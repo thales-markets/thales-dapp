@@ -19,7 +19,7 @@ The trading UI is available on [thalesmarket.io](https://thalesmarket.io).
 ## Ethereum stack
 
 -   ethers.js v5 - Ethereum wallet implementation.
--   Blocknative Onboard - for ethereum wallet connectivity.
+-   RainbowKit - for ethereum wallet connectivity.
 -   [@synthetixio/contracts-interface](https://github.com/Synthetixio/js-monorepo/tree/master/packages/contracts-interface) - for interactions with the Synthetix protocol.
 -   [0x](https://github.com/0xProject/protocol) - for interactions with the 0x protocol.
 -   [thales-data](https://github.com/thales-markets/thales-data) - for historical data (powered by [TheGraph](https://thegraph.com/))
@@ -40,9 +40,10 @@ Then, open `.env.local` and add the missing environment variables:
 -   `REACT_APP_INFURA_PROJECT_ID` - Infura project id (get it from [infura.io](https://infura.io/)).
 -   `REACT_APP_PORTIS_APP_ID` - Portis app id (get it from [portis.io](https://www.portis.io/)).
 -   `REACT_APP_MAINTENANCE_MODE` - Is dApp in maintenance mode. Set to `false`.
--   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thales.market`.
+-   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thalesmarket.io`.
 -   `REACT_APP_TOKEN_STAKING_DISABLED` - Enable/disable THALES token staking. Set to `false`.
 -   `REACT_APP_IPFS_DEPLOYMENT` - Is dApp in the mode for deployment on IPFS. Set to `false`.
+-   `REACT_APP_SNAPSHOT_API_KEY` - The Snapshot API KEY.
 
 ### Set up Google Translate API
 

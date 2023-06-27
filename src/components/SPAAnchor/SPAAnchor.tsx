@@ -1,17 +1,30 @@
+import ROUTES from 'constants/routes';
 import React, { CSSProperties, MouseEventHandler } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { navigateTo } from '../../utils/routes';
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 type FieldValidationMessageProps = {
     className?: string;
     onClick?: MouseEventHandler<HTMLAnchorElement> | undefined;
     style?: CSSProperties;
     href: string;
+    simpleOnClick?: boolean;
 };
 
 const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
 
-const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, href, style, className }) => {
+const SPAAnchor: React.FC<FieldValidationMessageProps> = ({
+    onClick,
+    children,
+    href,
+    style,
+    className,
+    simpleOnClick,
+}) => {
+    const location = useLocation();
     return (
         <>
             {ifIpfsDeployment ? (
@@ -23,11 +36,24 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
                     className={className}
                     style={style}
                     href={href}
-                    onClick={(event) => {
-                        event.preventDefault();
-                        onClick && onClick(event);
-                        navigateTo(href);
-                    }}
+                    onClick={
+                        simpleOnClick
+                            ? onClick
+                            : async (event) => {
+                                  event.preventDefault();
+                                  onClick && onClick(event);
+                                  if (!href.includes('http')) {
+                                      if (location.pathname === ROUTES.Options.Game && href !== ROUTES.Options.Game) {
+                                          // @ts-ignore
+                                          window?.webSocket?.close();
+                                          await delay(100);
+                                      }
+                                      navigateTo(href);
+                                  } else {
+                                      window.open(href);
+                                  }
+                              }
+                    }
                 >
                     {children}
                 </Anchor>
@@ -37,7 +63,7 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
 };
 
 const Anchor = styled.a`
-    color: var(--primary-color);
+    color: ${(props) => props.theme.link.textColor.secondary};
     display: contents;
 `;
 

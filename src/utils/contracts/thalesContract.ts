@@ -1,15 +1,20 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'enums/network';
 
 export const thalesContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x03E173Ad8d1581A4802d3B532AcE27a62c5B81dc',
-        [NetworkId.Ropsten]: '0x39Ed4A44C5a390415F1b1dDE2C77a61168aAdFbf',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x9e7769409E3e5A6821eeDcF33371FCA929fE6A48',
+        [Network.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: '0x8e801fb67436dae72af6eeb50e3f70d50019530f',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',
-        [NetworkId['Kovan-Ovm']]: '0xf584fF99F97B5ABB1872af1AA7924Fedf3e1b53d',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',
+        [Network['Kovan-Ovm']]: '0xf584fF99F97B5ABB1872af1AA7924Fedf3e1b53d',
+        [Network['Goerli-Ovm']]: '0xe2aD7187B3b079183a2D16C1d34A255592aC276b',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: '0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30',
     },
     abi: [
         {

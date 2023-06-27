@@ -26,6 +26,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 const { phase, timeRemaining } = getPhaseAndEndDate(maturityDate, expiryDate);
 
                 const currencyKey = parseBytes32String(oracleDetails.key);
+
                 return {
                     isResolved: resolution.resolved,
                     address: marketAddress,
@@ -39,8 +40,8 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                     expiryDate,
                     result: SIDE[marketData.result],
                     totalSupplies: {
-                        long: bigNumberFormatter(totalSupplies.long),
-                        short: bigNumberFormatter(totalSupplies.short),
+                        long: bigNumberFormatter(totalSupplies.up),
+                        short: bigNumberFormatter(totalSupplies.down),
                     },
                     deposited: bigNumberFormatter(deposits.deposited),
                     phase,
@@ -48,31 +49,19 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                     oracleAdress: oracleDetails.iOracleInstanceAddress,
                     timeRemaining,
                     creator,
-                    // options: {
-                    //     long: bigNumberFormatter(options.long),
-                    //     short: bigNumberFormatter(options.short),
-                    // },
                     fees: {
                         creator: bigNumberFormatter(fees.creatorFee),
                         pool: bigNumberFormatter(fees.poolFee),
                     },
-                    // creatorLimits: {
-                    //     capitalRequirement: bigNumberFormatter(creatorLimits.capitalRequirement),
-                    //     skewLimit: bigNumberFormatter(creatorLimits.skewLimit),
-                    // },
-                    // BN: {
-                    //     depositedBN: deposits.deposited,
-                    //     feeBN: fees.creatorFee.add(fees.poolFee),
-                    // },
-                    longAddress: options.long,
-                    shortAddress: options.short,
+                    longAddress: options.up,
+                    shortAddress: options.down,
                 } as OptionsMarketInfo;
             } catch (e) {
+                console.log(e);
                 return null;
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

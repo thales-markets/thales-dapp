@@ -1,10 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import dotenv from 'dotenv';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { BigNumber } from '@ethersproject/bignumber';
-
-dotenv.config();
 
 interface Preview {
     toToken: Token;
@@ -15,7 +12,7 @@ interface Preview {
     protocols: [];
 }
 
-export interface Token {
+interface Token {
     address: string;
     decimals: number;
     logoURI: string;
@@ -31,6 +28,7 @@ const useQuoteTokensQuery = (
     fromToken: Token,
     toToken: Token,
     amount: BigNumber,
+    protocols?: string[], // if empty string all liquidity protocols will be used
     options?: UseQueryOptions<Preview>
 ) => {
     return useQuery<Preview>(
@@ -40,7 +38,8 @@ const useQuoteTokensQuery = (
             const fromUrl = 'fromTokenAddress=' + fromToken.address;
             const toUrl = '&toTokenAddress=' + toToken.address;
             const amountUrl = '&amount=' + amount;
-            url = url + fromUrl + toUrl + amountUrl;
+            const protocolsUrl = protocols?.length ? '&protocols=' + protocols?.toString() : '';
+            url = url + fromUrl + toUrl + amountUrl + protocolsUrl;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;

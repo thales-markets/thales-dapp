@@ -1,97 +1,79 @@
-import React from 'react';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import ReactTooltip from 'rc-tooltip';
+import React, { CSSProperties } from 'react';
+import styled from 'styled-components';
+import 'styles/tooltip.css';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import { Container, Icon, Text, IconContainer } from './styled-components/components';
-import { UI_COLORS } from 'constants/ui';
-import { withStyles } from '@material-ui/styles';
-import Fade from '@material-ui/core/Fade';
-
-type Tooltips = 'info' | 'warning' | 'success';
-
-type CustomTooltipProps = {
-    message: string;
-    type: Tooltips;
+type TooltipProps = {
+    component?: any;
+    overlay: any;
+    iconFontSize?: number;
+    customIconStyling?: CSSProperties;
+    overlayInnerStyle?: CSSProperties;
+    marginLeft?: number;
+    top?: number;
+    overlayClassName?: string;
     iconColor?: string;
-    placement?: string;
-    container?: {
-        alignItems?: string;
-    };
+    mobileIconFontSize?: number;
 };
 
-type TooltipContentProps = {
-    message: string;
-    type: Tooltips;
-};
-
-type PlacementType =
-    | 'bottom-end'
-    | 'bottom-start'
-    | 'bottom'
-    | 'left-end'
-    | 'left-start'
-    | 'left'
-    | 'right-end'
-    | 'right-start'
-    | 'right'
-    | 'top-end'
-    | 'top-start'
-    | 'top';
-
-const icons = {
-    info: {
-        className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
-    },
-    warning: {
-        className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
-    },
-    success: {
-        className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
-    },
-};
-
-const ModifiedTooltip = withStyles(() => ({
-    arrow: {
-        color: '#04045a',
-        fontSize: 10,
-        '&:before': {
-            border: `1px solid ${UI_COLORS.GREEN}`,
-        },
-    },
-    tooltip: {
-        backgroundColor: '#04045a',
-        maxWidth: 220,
-        border: `1px solid ${UI_COLORS.GREEN}`,
-        borderRadius: '5px',
-    },
-}))(Tooltip);
-
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ message, type, iconColor, placement, container }) => {
+const Tooltip: React.FC<TooltipProps> = ({
+    overlay,
+    iconFontSize,
+    customIconStyling,
+    overlayInnerStyle,
+    marginLeft,
+    top,
+    overlayClassName,
+    iconColor,
+    children,
+    mobileIconFontSize,
+}) => {
     return (
-        <>
-            <ModifiedTooltip
-                TransitionComponent={Fade}
-                title={<TooltipContent message={message} type={type} />}
-                placement={placement ? (placement as PlacementType) : 'top'}
-                arrow
-            >
-                <IconContainer alignItems={container?.alignItems}>
-                    <Icon className={icons[type].className} color={iconColor} fontSize={'11px'} />
-                </IconContainer>
-            </ModifiedTooltip>
-        </>
+        <ReactTooltip
+            overlay={overlay}
+            placement="top"
+            overlayClassName={overlayClassName || ''}
+            overlayInnerStyle={overlayInnerStyle}
+        >
+            {children ? (
+                (children as any)
+            ) : (
+                <InfoIcon
+                    color={iconColor}
+                    iconFontSize={iconFontSize}
+                    marginLeft={marginLeft}
+                    top={top}
+                    style={customIconStyling}
+                    mobileIconFontSize={mobileIconFontSize}
+                />
+            )}
+        </ReactTooltip>
     );
 };
 
-const TooltipContent: React.FC<TooltipContentProps> = ({ message, type }) => {
-    return (
-        <Container>
-            <Icon className={icons[type].className} color={icons[type].color} fontSize={'11px'} margin={'7px 0'} />
-            <Text margin={'0 0 10px 0'}>{message}</Text>
-        </Container>
-    );
-};
+const InfoIcon = styled.i<{
+    iconFontSize?: number;
+    marginLeft?: number;
+    top?: number;
+    color?: string;
+    mobileIconFontSize?: number;
+}>`
+    font-size: ${(props) => props.iconFontSize || 15}px;
+    font-weight: normal;
+    cursor: pointer;
+    position: relative;
+    margin-left: ${(props) => props.marginLeft || 4}px;
+    top: ${(props) => props.top || 0}px;
+    color: ${(props) => props.color || 'white'};
+    &:before {
+        font-family: ThalesIcons !important;
+        content: '\\0043';
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: ${(props) =>
+            props.mobileIconFontSize ? props.mobileIconFontSize : props.iconFontSize ? props.iconFontSize : 15}px;
+    }
+`;
 
-export default CustomTooltip;
+export default Tooltip;

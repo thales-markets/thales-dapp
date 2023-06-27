@@ -1,4 +1,4 @@
-export const erc20Contract = {
+const erc20Contract = {
     abi: [
         {
             constant: true,

@@ -21,7 +21,7 @@ const useMigratedInvestorsRetroRewardsQuery = (
             );
 
             const migratedRewards: MigratedRetroReward = {
-                isClaimPaused: paused,
+                isPaused: paused,
                 hasClaimRights:
                     unclaimedInvestorsRetroRewardsHash !== undefined &&
                     unclaimedInvestorsRetroRewardsHash.balance !== '0',
@@ -42,7 +42,6 @@ const useMigratedInvestorsRetroRewardsQuery = (
             return migratedRewards;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector/V2';
 import styled from 'styled-components';
-import { Theme } from '../../Home';
-import Cookies from 'universal-cookie';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import BurgerContainer from './BurgerContainer';
 import { HashLink } from 'react-router-hash-link';
 
-type HeaderInput = {
-    theme: Theme;
-    setTheme: (data: any) => void;
-};
-
-const cookies = new Cookies();
-
-const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
+const Header: React.FC = () => {
     const { t } = useTranslation();
     const [openBurger, setBurgerState] = useState(false);
 
@@ -29,54 +19,42 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
             <Links>
                 <PositionedContainer>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                        {t('header.links.learn.title')}
+                        {t('landing-page.header.links.learn.title')}
                     </Link>
                     <DropDownContainer>
                         <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                            {t('header.links.learn.docs')}
+                            {t('landing-page.header.links.learn.docs')}
                         </Link>
                         <Link
                             target="_blank"
                             rel="noreferrer"
                             href="https://docs.thalesmarket.io/using-thales/why-use-thales"
                         >
-                            {t('header.links.learn.guides')}
+                            {t('landing-page.header.links.learn.guides')}
                         </Link>
                         <Link
                             rel="noreferrer"
                             onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
                         >
-                            {t('header.links.learn.whitepaper')}
+                            {t('landing-page.header.links.learn.whitepaper')}
                         </Link>
 
-                        <HashLink to="/#faq-section">{t('header.links.faq')}</HashLink>
+                        <HashLink to="/#faq-section">{t('landing-page.header.links.faq')}</HashLink>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                    {t('header.links.community')}
+                    {t('landing-page.header.links.community')}
                 </Link>
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                    {t('header.links.blog')}
+                    {t('landing-page.header.links.blog')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
-                    {t('header.links.governance')}
+                    {t('landing-page.header.links.governance')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
-                    {t('header.links.token')}
+                    {t('landing-page.header.links.token')}
                 </Link>
             </Links>
-            <ToggleContainer
-                onClick={() => {
-                    cookies.set('home-theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
-                    setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
-                }}
-            >
-                <ToggleIcon
-                    className={`icon-home ${
-                        theme === Theme.Light ? 'icon-home--toggle-white' : 'icon-home--toggle-dark'
-                    }`}
-                />
-            </ToggleContainer>
             <DotsContainer
                 onClick={() => {
                     setBurgerState(!openBurger);
@@ -84,9 +62,6 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
             >
                 <DotsIcon className="icon icon--three-dots" />
             </DotsContainer>
-            <LanguageContainer>
-                <LanguageSelector />
-            </LanguageContainer>
             <ButtonContainer>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
                     {t('landing-page.use-app')}
@@ -109,6 +84,7 @@ const Wrapper = styled.div`
         width: 100vw;
         padding: 0 40px;
         z-index: 10;
+        margin-top: 50px;
     }
 `;
 
@@ -128,7 +104,7 @@ const DropDownContainer = styled.div`
     position: absolute;
     top: 2em;
     left: 0;
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     display: none;
@@ -160,7 +136,7 @@ const DropDownContainer = styled.div`
         line-height: 1.6em;
         text-align: left;
         text-transform: uppercase;
-        color: var(--color);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         padding: 10px;
         border-radius: 7px;
         &:hover {
@@ -176,7 +152,7 @@ const Logo = styled.i`
     grid-row-end: 4;
     font-size: 8.3em;
     line-height: 34px;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     flex: 1;
     cursor: pointer;
@@ -201,15 +177,6 @@ const Links = styled(CenteredDiv)`
     }
 `;
 
-const ToggleContainer = styled(CenteredDiv)`
-    grid-column-start: 40;
-    grid-column-end: 43;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    z-index: 2;
-    cursor: pointer;
-`;
-
 const DotsContainer = styled(CenteredDiv)`
     display: none;
     grid-column-start: 45;
@@ -224,23 +191,12 @@ const DotsContainer = styled(CenteredDiv)`
     }
 `;
 
-const LanguageContainer = styled(CenteredDiv)`
-    grid-column-start: 44;
-    grid-column-end: 46;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    z-index: 1000;
-    @media (max-width: 1024px) {
-        display: none;
-    }
-`;
-
 const ButtonContainer = styled(CenteredDiv)`
     grid-column-start: 47;
     grid-column-end: 50;
     grid-row-start: 3;
     grid-row-end: 4;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     @media (max-width: 1024px) {
         display: none;
@@ -258,7 +214,7 @@ const Link = styled.a`
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     @media (max-width: 1024px) {
         margin-bottom: 60px;
     }
@@ -271,8 +227,8 @@ const Link = styled.a`
             right: -32px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid var(--color);
-            border-right: 2px solid var(--color);
+            border-top: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
+            border-right: 2px solid ${(props) => props.theme.landingPage.textColor.primary};
             transform: rotate(135deg);
         }
         &.open:after {
@@ -282,18 +238,11 @@ const Link = styled.a`
     }
 `;
 
-const ToggleIcon = styled.i`
-    font-size: 3.4em;
-    line-height: 26px;
-    z-index: 2;
-    color: var(--color);
-`;
-
 const DotsIcon = styled.i`
     font-size: 3em;
     line-height: 24px;
     z-index: 2;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default Header;

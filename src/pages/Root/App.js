@@ -1,323 +1,375 @@
-import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import { loadProvider } from '@synthetixio/providers';
 import Loader from 'components/Loader';
-import { initOnboard } from 'config/onboard';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import useLocalStorage from 'hooks/useLocalStorage';
-import TokenPage from 'pages/Token/Token.tsx';
-import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-import Profile from 'pages/Profile/Profile.tsx';
-import QuickTradingPage from 'pages/Options/QuickTrading';
-import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
-import ThalesRoyal from 'pages/Royale/ThalesRoyal';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
-import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
-import { setTheme } from 'redux/modules/ui';
-import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
+import { setAppReady } from 'redux/modules/app';
+import { setIsMobile } from 'redux/modules/ui';
+import {
+    getNetworkId,
+    getSwitchToNetworkId,
+    getWalletAddress,
+    updateNetworkSettings,
+    switchToNetworkId,
+    updateWallet,
+} from 'redux/modules/wallet';
+import { isMobile } from 'utils/device';
+import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
+import ROUTES from 'constants/routes';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
-import MainLayout from '../../components/MainLayout';
-import ROUTES from '../../constants/routes';
-import GovernancePage from 'pages/Governance';
-import Leaderboard from 'pages/Leaderboard';
-import TradeHistory from 'pages/Options/TradeHistory';
-import AmmReporting from '../Options/AmmReporting';
-import Cookies from 'universal-cookie';
-import Token from '../LandingPage/articles/Token';
-import Governance from '../LandingPage/articles/Governance';
-import Whitepaper from '../LandingPage/articles/Whitepaper';
-import DappLayout from 'layouts/DappLayout';
+import { createGlobalStyle } from 'styled-components';
+import ThemeProvider from 'layouts/Theme';
+import { getDefaultTheme } from 'utils/style';
 
-const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../LandingPage/Home'));
-const Markets = lazy(() => import('../Markets'));
-const AMMTrading = lazy(() => import('../AMMTrading'));
-// const OptionsMarket = lazy(() => import('../Options/Market'));
+const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
+const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
+
+const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
+const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
+const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
+const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
+
+const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
+
+const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
+const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
+const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
+
+const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
+const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
+
+const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
+const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
+const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
+
+const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
+const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
+
 const App = () => {
     const dispatch = useDispatch();
-    const isAppReady = useSelector((state) => getIsAppReady(state));
-    const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
+    const walletAddress = useSelector((state) => getWalletAddress(state));
     const networkId = useSelector((state) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
+    const isMainnet = getIsMainnet(networkId);
+    const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
+
+    const isLedgerLive = isLedgerDappBrowserProvider();
+
+    const { address } = useAccount();
+    const provider = useProvider(!address && { chainId: switchedToNetworkId }); // when wallet not connected force chain
+    const { data: signer } = useSigner();
+    const { disconnect } = useDisconnect();
+    const { chain } = useNetwork();
+
+    const { trackPageView } = useMatomo();
 
     queryConnector.setQueryClient();
 
-    const cookies = new Cookies();
+    useEffect(() => {
+        const theme = getDefaultTheme();
+
+        trackPageView({
+            customDimensions: [
+                {
+                    id: 3,
+                    value: theme,
+                },
+                {
+                    id: 4,
+                    value: walletAddress ? true : false,
+                },
+            ],
+        });
+    }, [walletAddress, trackPageView]);
 
     useEffect(() => {
         const init = async () => {
-            const { networkId, name } = await getEthereumNetwork();
+            let ledgerProvider = null;
+            if (isLedgerLive) {
+                ledgerProvider = new IFrameEthereumProvider();
+                const accounts = await ledgerProvider.enable();
+                const account = accounts[0];
+                dispatch(updateWallet({ walletAddress: account }));
+                ledgerProvider.on('accountsChanged', (accounts) => {
+                    if (accounts.length > 0) {
+                        dispatch(updateWallet({ walletAddress: accounts[0] }));
+                    }
+                });
+            }
+
             try {
-                dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-                if (!snxJSConnector.initialized) {
-                    const provider = loadProvider({
-                        networkId,
-                        infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-                        provider: window.ethereum,
-                    });
+                const chainIdFromProvider = (await provider.getNetwork()).chainId;
+                const providerNetworkId = isLedgerLive
+                    ? ledgerProvider
+                    : !!address
+                    ? chainIdFromProvider
+                    : switchedToNetworkId;
 
-                    const useOvm = getIsOVM(networkId);
+                snxJSConnector.setContractSettings({
+                    networkId: providerNetworkId,
+                    provider,
+                    signer: isLedgerLive ? ledgerProvider.getSigner() : signer,
+                });
 
-                    snxJSConnector.setContractSettings({ networkId, provider, useOvm });
-                }
+                dispatch(
+                    updateNetworkSettings({
+                        networkId: providerNetworkId,
+                        networkName: SUPPORTED_NETWORKS_NAMES[providerNetworkId]?.toLowerCase(),
+                    })
+                );
                 dispatch(setAppReady());
             } catch (e) {
-                dispatch(setAppReady());
-                console.log(e);
+                if (!e.toString().includes('Error: underlying network changed')) {
+                    dispatch(setAppReady());
+                    console.log(e);
+                }
             }
         };
-
         init();
-    }, []);
+    }, [dispatch, provider, signer, switchedToNetworkId, address, isLedgerLive]);
 
     useEffect(() => {
-        // Init value of theme selected from the cookie
-        if (isAppReady) {
-            dispatch(setTheme(Number(cookies.get('home-theme')) == 0 ? 0 : 1));
-        }
+        dispatch(updateWallet({ walletAddress: address }));
+    }, [address, dispatch]);
 
-        if (isAppReady && networkId && isNetworkSupported(networkId)) {
-            const onboard = initOnboard(networkId, {
-                address: (walletAddress) => {
-                    dispatch(updateWallet({ walletAddress: walletAddress }));
-                },
-                network: (networkId) => {
-                    if (networkId) {
-                        if (isNetworkSupported(networkId)) {
-                            if (onboardConnector.onboard.getState().wallet.provider) {
-                                const provider = loadProvider({
-                                    provider: onboardConnector.onboard.getState().wallet.provider,
-                                });
-                                const signer = provider.getSigner();
-                                const useOvm = getIsOVM(networkId);
+    useEffect(() => {
+        if (window.ethereum) {
+            window.ethereum.on('chainChanged', (chainIdParam) => {
+                const chainId = Number.isInteger(chainIdParam) ? chainIdParam : parseInt(chainIdParam, 16);
 
-                                snxJSConnector.setContractSettings({
-                                    networkId,
-                                    provider,
-                                    signer,
-                                    useOvm,
-                                });
-                            } else {
-                                const useOvm = getIsOVM(networkId);
-                                snxJSConnector.setContractSettings({ networkId, useOvm });
-                            }
-
-                            onboardConnector.onboard.config({ networkId });
-                        }
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                            })
-                        );
-                    }
-                },
-                wallet: async (wallet) => {
-                    if (wallet.provider) {
-                        const provider = loadProvider({
-                            provider: wallet.provider,
-                        });
-                        const signer = provider.getSigner();
-                        const network = await provider.getNetwork();
-                        const networkId = network.chainId;
-                        const useOvm = getIsOVM(networkId);
-                        if (networkId && isNetworkSupported(networkId)) {
-                            snxJSConnector.setContractSettings({
-                                networkId,
-                                provider,
-                                signer,
-                                useOvm,
-                            });
-                            setSelectedWallet(wallet.name);
-                        }
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId,
-                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                            })
-                        );
-                    } else {
-                        setSelectedWallet(null);
-                    }
-                },
+                if (!address && isNetworkSupported(chainId)) {
+                    // when wallet disconnected reflect network change from browser wallet to dApp
+                    dispatch(switchToNetworkId({ networkId: chainId }));
+                }
             });
-            onboardConnector.setOnBoard(onboard);
         }
-    }, [isAppReady]);
-
-    // load previously saved wallet
-    useEffect(() => {
-        if (onboardConnector.onboard && selectedWallet) {
-            // backward compatible for old wallet selection logic;
-            const sWallet = selectedWallet === 'MetaMask' ? 'Browser Wallet' : selectedWallet;
-            onboardConnector.onboard.walletSelect(sWallet);
-        }
-    }, [isAppReady, onboardConnector.onboard, selectedWallet]);
-
-    const onSnackbarClosed = (e) => {
-        if (e) {
-            return;
-        }
-        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
-    };
+    }, [dispatch, address]);
 
     useEffect(() => {
-        const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
+        if (chain?.unsupported) {
+            disconnect();
+        }
+    }, [disconnect, chain]);
+
+    useEffect(() => {
+        const handlePageResized = () => {
+            dispatch(setIsMobile(isMobile()));
         };
-        document.addEventListener('market-notification', handler);
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handlePageResized);
+            window.addEventListener('orientationchange', handlePageResized);
+            window.addEventListener('load', handlePageResized);
+            window.addEventListener('reload', handlePageResized);
+        }
+
         return () => {
-            document.removeEventListener('market-notification', handler);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('resize', handlePageResized);
+                window.removeEventListener('orientationchange', handlePageResized);
+                window.removeEventListener('load', handlePageResized);
+                window.removeEventListener('reload', handlePageResized);
+            }
         };
-    }, []);
+    }, [dispatch]);
 
     return (
-        <QueryClientProvider client={queryConnector.queryClient}>
-            <Suspense fallback={<Loader />}>
-                <Router history={history}>
-                    <Switch>
-                        <Route exact path={ROUTES.Options.Royal}>
-                            <MainLayout>
-                                <ThalesRoyal />
-                            </MainLayout>
-                        </Route>
+        <ThemeProvider>
+            <QueryClientProvider client={queryConnector.queryClient}>
+                <Suspense fallback={<Loader />}>
+                    <Router history={history}>
+                        <Switch>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.CreateMarket}>
+                                    <DappLayout>
+                                        <CreateMarket />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Options.CreateMarket}>
-                            <DappLayout>
-                                <OptionsCreateMarket />
-                            </DappLayout>
-                        </Route>
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <GovernancePage {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
-                        <Route exact path={ROUTES.Options.QuickTrading}>
-                            <MainLayout>
-                                <QuickTradingPage />
-                            </MainLayout>
-                        </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Game}>
+                                    <DappLayout>
+                                        <TaleOfThales />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Options.TradeHistory}>
-                            <MainLayout>
-                                <TradeHistory />
-                            </MainLayout>
-                        </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Profile}>
+                                    <DappLayout>
+                                        <Profile />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Options.AmmReporting}>
-                            <MainLayout>
-                                <AmmReporting />
-                            </MainLayout>
-                        </Route>
+                            {!isPolygon && !isBSC && (
+                                <Route exact path={ROUTES.Options.Token}>
+                                    <DappLayout>
+                                        <TokenPage />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Referral}>
+                                    <DappLayout>
+                                        <Referral />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
+                            {!isPolygon && !isMainnet && (
+                                <Route exact path={ROUTES.Options.Vaults}>
+                                    <DappLayout>
+                                        <Vaults />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
+                            {!isPolygon && !isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.Vault}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <Vault {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+
+                            {!isPolygon && !isMainnet && (
+                                <Route exact path={ROUTES.Options.LiquidityPool}>
+                                    <DappLayout>
+                                        <LiquidityPool />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.MarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.RangeMarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+
+                            <Route exact path={ROUTES.Options.Home}>
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarkets}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Markets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            ></Route>
+
+                            <Route exact path={ROUTES.Options.Wizard}>
+                                <DappLayout>
+                                    <Wizard />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Home}>
                                 <MainLayout>
-                                    <QuickTradingCompetitionPage />
+                                    <Home />
                                 </MainLayout>
                             </Route>
-                        )}
-                        <Route
-                            exact
-                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                            render={(routeProps) => (
+
+                            <Route exact path={ROUTES.Article.Token}>
+                                <MainLayout>
+                                    <Token />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Governance}>
+                                <MainLayout>
+                                    <Governance />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Whitepaper}>
+                                <MainLayout>
+                                    <Whitepaper />
+                                </MainLayout>
+                            </Route>
+
+                            <Route>
+                                <Redirect to={ROUTES.Options.Home} />
                                 <DappLayout>
-                                    <GovernancePage {...routeProps} />
-                                </DappLayout>
-                            )}
-                        />
-                        <Route exact path={ROUTES.Options.Game}>
-                            <DappLayout>
-                                <TaleOfThales />
-                            </DappLayout>
-                        </Route>
-                        {selectedWallet && (
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
+                                    <Markets />
                                 </DappLayout>
                             </Route>
-                        )}
-                        <Route exact path={ROUTES.Options.Token}>
-                            <DappLayout>
-                                <TokenPage />
-                            </DappLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <DappLayout>
-                                <Leaderboard />
-                            </DappLayout>
-                        </Route>
-
-                        <Route
-                            exact
-                            path={ROUTES.Options.MarketMatch}
-                            render={(routeProps) => (
-                                <DappLayout>
-                                    <AMMTrading {...routeProps} />
-                                </DappLayout>
-                            )}
-                        />
-
-                        <Route exact path={ROUTES.Options.Home}>
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Home}>
-                            <MainLayout>
-                                <Home />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Article.Token}>
-                            <MainLayout>
-                                <Token />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Governance}>
-                            <MainLayout>
-                                <Governance />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Whitepaper}>
-                            <MainLayout>
-                                <Whitepaper />
-                            </MainLayout>
-                        </Route>
-                        <Route>
-                            <Redirect to={ROUTES.Options.Home} />
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
-                    </Switch>
-                </Router>
-                <ReactQueryDevtools initialIsOpen={false} />
-                <Snackbar
-                    open={snackbarDetails.isOpen}
-                    onClose={onSnackbarClosed}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    autoHideDuration={5000}
-                >
-                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
-                        {snackbarDetails.message}
-                    </Alert>
-                </Snackbar>
-            </Suspense>
-        </QueryClientProvider>
+                        </Switch>
+                    </Router>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </Suspense>
+            </QueryClientProvider>
+            <GlobalStyle />
+        </ThemeProvider>
     );
 };
+
+const GlobalStyle = createGlobalStyle`
+    * {
+        font-family: ${(props) => props.theme.fontFamily.primary};
+        font-style: normal !important;
+    }
+    *::-webkit-scrollbar-track {
+        background: ${(props) => props.theme.background.secondary};
+    }
+    *::-webkit-scrollbar-thumb {
+        background: ${(props) => props.theme.background.tertiary};
+    }
+    body {
+        background: ${(props) => props.theme.landingPage.background.primary};
+    }
+    body #root {
+        background: ${(props) => props.theme.background.primary};
+    }
+`;
 
 export default App;

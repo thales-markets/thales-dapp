@@ -1,18 +1,17 @@
+import { SpaceKey } from 'enums/governance';
+import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
-import { SpaceKey } from './governance';
 
-export const QUERY_KEYS = {
+const QUERY_KEYS = {
     WalletBalances: {
-        RetroAirdrop: (walletAddress: string, networkId: NetworkId) => [
+        StableCoinBalance: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
-            'retroAirdrop',
+            'stableCoin',
             walletAddress,
             networkId,
         ],
-        Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
-        ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
-        Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+        Eth: (walletAddress: string) => ['walletBalances', 'eth', walletAddress],
         Thales: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'thales', walletAddress, networkId],
         OpThales: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
@@ -20,9 +19,9 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Vesting: (walletAddress: string, networkId: NetworkId) => [
-            'walletBalances',
-            'vesting',
+        MultipleCollateral: (walletAddress: string, networkId: NetworkId) => [
+            'multipleCollateral',
+            'balance',
             walletAddress,
             networkId,
         ],
@@ -31,117 +30,129 @@ export const QUERY_KEYS = {
         ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: NetworkId) => ['rates', 'exchangeRatesMarketData', networkId],
     },
-    Synths: {
-        FrozenSynths: ['synths', 'frozenSynths'],
-    },
     Medium: {
         Posts: ['medium', 'posts'],
     },
     PriceData: {
         Currency: (currencyKey: string) => ['pricedata', currencyKey],
-        Latest: (currencyKey: string) => ['latest', 'price', currencyKey],
-    },
-    Network: {
-        EthGasPrice: ['network', 'ethGasPrice'],
-        EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],
     },
     BinaryOptions: {
-        Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
-        SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
-        Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
-        MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
-        ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
-        EthBurnedCount: () => ['binaryOptions', 'ethBurnedCount'],
-        AccountMarketInfo: (marketAddress: string, accountAddress: string) => [
-            'binaryOptions',
-            'markets',
+        Markets: (networkId: NetworkId) => ['markets', networkId],
+        RangedMarkets: (networkId: NetworkId, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
+        SynthsMap: (networkId: NetworkId) => ['synthsMap', networkId],
+        Market: (marketAddress: string) => ['market', marketAddress],
+        RangedMarket: (marketAddress: string) => ['rangedMarket', marketAddress],
+        UserMarketPositions: (marketAddress: string, accountAddress: string) => [
+            'market',
+            'positions',
             marketAddress,
             accountAddress,
         ],
-        RecentTransactions: (marketAddress: string) => ['binaryOptions', 'transactions', marketAddress],
-        UserTransactions: (marketAddress: string, walletAddress: string) => [
-            'binaryOptions',
+        UserRangedMarketPositions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
+            'rangedMarket',
+            'positions',
+            walletAddress,
+            marketAddress,
+            networkId,
+        ],
+        MarketTransactions: (marketAddress: string) => ['market', 'transactions', marketAddress],
+        UserMarketTransactions: (marketAddress: string, walletAddress: string) => [
+            'market',
             'transactions',
             marketAddress,
             walletAddress,
         ],
-        UserMarkets: (walletAddress: string, networkId: NetworkId) => [
-            'binaryOptions',
-            'userMarkets',
-            walletAddress,
-            networkId,
-        ],
-        OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
-        MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
-        AllTrades: (networkId: NetworkId) => ['binaryOptions', 'allTrades', networkId],
-        Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
-        UserTrades: (marketAddress: string, walletAddress: string) => [
-            'binaryOptions',
+        MarketTrades: (marketAddress: string) => ['market', 'trades', marketAddress],
+        UserMarketTrades: (marketAddress: string, walletAddress: string) => [
+            'market',
             'trades',
             marketAddress,
             walletAddress,
         ],
-        Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
-        Profiles: (networkId: NetworkId) => ['binaryOptions', 'profiles', networkId],
-        Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
-        Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
-        OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
-        AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
+        AmmMaxLimits: (marketAddress: string) => ['amm', marketAddress],
+        RangedAmmMaxLimits: (marketAddress: string) => ['rangedAmm', marketAddress],
+        AvailableAssets: (networkId: NetworkId) => ['availableAssets', networkId],
+        MaturityDatesByAsset: (asset: string, networkId: NetworkId) => ['maturityDatesByAsset', asset, networkId],
+        MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: NetworkId) => [
+            'marketsByAssetAndDate',
+            asset,
+            date,
+            position,
+            networkId,
+        ],
     },
     User: {
-        Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
-        Orders: (walletAddress: string, networkId: NetworkId) => ['user', 'orders', walletAddress, networkId],
-        Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
-        Data: (walletAddress: string, networkId: NetworkId) => ['user', 'transactions', walletAddress, networkId],
-        AllPositions: (walletAddress: string, networkId: NetworkId) => [
+        OpenPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
-            'allPositions',
+            'userOpenPositions',
             walletAddress,
             networkId,
         ],
-        EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
-        DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
-        DisplayNames: () => ['user', 'displayNames'],
-        TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],
-        TwitterAccounts: () => ['user', 'twitterAccounts'],
-        VerifiedTwitterAccounts: () => ['user', 'verifiedTwitterAccounts'],
+        Notifications: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'notifications',
+            walletAddress,
+            networkId,
+        ],
+        VaultsAndLpTransactions: (networkId: NetworkId, walletAddress: string) => [
+            'user',
+            'vaultsAndLpTransactions',
+            networkId,
+            walletAddress,
+        ],
+        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['user', 'ammBuyVolume', networkId, period],
     },
-    Staking: {
-        Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
-        Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
+    Profile: {
+        Data: (walletAddress: string, networkId: NetworkId) => ['profile', 'data', walletAddress, networkId],
+        OpenPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'openPositions',
+            walletAddress,
+            networkId,
+        ],
+        ClaimablePositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'claimablePositions',
+            walletAddress,
+            networkId,
+        ],
+        ClosedPositions: (walletAddress: string, networkId: NetworkId) => [
+            'profile',
+            'closedPositions',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (walletAddress: string, networkId: NetworkId) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
-        Transactions: (walletAddress: string, networkId: NetworkId) => [
+        StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],
+        UserStakingData: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'staking',
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        UserVestingData: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'vesting',
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        ClaimOnBehalf: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'staking',
+            'claimOnBehalf',
+            walletAddress,
+            networkId,
+        ],
+        Transactions: (walletAddress: string | undefined, networkId: NetworkId, type_in: string | undefined) => [
             'token',
             'transactions',
             walletAddress,
             networkId,
-        ],
-        VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'vesting',
-            'schedule',
-            walletAddress,
-            networkId,
-        ],
-        Info: (networkId: NetworkId) => ['token', 'info', networkId],
-        StakingMigrationOptout: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'stakingMigrationOptout',
-            walletAddress,
-            networkId,
-        ],
-        StakingRewards: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'stakingRewards',
-            walletAddress,
-            networkId,
-        ],
-        MigratedRetroRewards: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'migratedRetroRewards',
-            walletAddress,
-            networkId,
+            type_in,
         ],
         MigratedInvestorsRetroRewards: (walletAddress: string, networkId: NetworkId) => [
             'token',
@@ -149,14 +160,35 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'LPStaking', walletAddress, networkId],
-        GelatoBalance: (walletAddress: string, networkId: NetworkId) => [
+        VestingEscrow: (walletAddress: string, networkId: NetworkId) => [
             'token',
-            'GelatoBalance',
+            'vestingEscrow',
             walletAddress,
             networkId,
         ],
-        Gelato: () => ['token', 'Gelato'],
+        LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'lpStaking', walletAddress, networkId],
+        GelatoBalance: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'gelatoBalance',
+            walletAddress,
+            networkId,
+        ],
+        Gelato: () => ['token', 'gelato'],
+        Info: (networkId: NetworkId) => ['token', 'info', networkId],
+    },
+    TaleOfThales: {
+        NFTCollections: (walletAddress: string, networkId: NetworkId) => [
+            'taleOfThales',
+            'NFTCollections',
+            walletAddress,
+            networkId,
+        ],
+        NFTBalances: (walletAddress: string, networkId: NetworkId) => [
+            'taleOfThales',
+            'NFTBalances',
+            walletAddress,
+            networkId,
+        ],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
@@ -164,41 +196,27 @@ export const QUERY_KEYS = {
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },
-    Royale: {
-        Data: (walletAddress: string) => ['royale', 'data', walletAddress],
-        User: (walletAddress: string) => ['royale', 'user', walletAddress],
-        Players: () => ['royale', 'players'],
-        Rounds: (networkId: NetworkId, season?: number) => ['royale', 'rounds', networkId, season],
-        Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
-        RoyalePass: (walletAddress: string) => ['royale', 'royalePassData', walletAddress],
-        RoyalePassId: (walletAddress: string, networkId: NetworkId) => [
-            'royale',
-            'royalePassIdData',
-            walletAddress,
+    Referral: {
+        Referrer: (networkId: NetworkId, address?: string) => [
+            'referral',
+            'referrer',
             networkId,
+            address ? address : undefined,
         ],
-        Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
-        PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
-            'royale',
-            'positions',
+        ReferredTrader: (networkId: NetworkId, referrer?: string) => [
+            'referral',
+            'ReferredTrader',
             networkId,
-            season,
-            address,
+            referrer ? referrer : undefined,
         ],
-        EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
-        EthPrice: () => ['royale', 'ethPrice'],
-        SnxPrice: () => ['royale', 'snxPrice'],
-        LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
-        LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
-        LatestSeason: () => ['royale', 'latestSeason'],
-        RoyaleArenaContract: (season: number, walletAddress: string) => [
-            'royale',
-            'royaleArenaContract',
-            season,
-            walletAddress,
+        ReferralTransacations: (networkId: NetworkId, trader?: string, refferer?: string) => [
+            'referral',
+            'referralTransacations',
+            networkId,
+            trader ? trader : undefined,
+            refferer ? refferer : undefined,
         ],
-        RoyaleDataForScoreboard: (season: number) => ['royale', 'royaleDataForScoreboad', season],
-        FooterData: (season: number) => ['royale', 'footerData', season],
+        ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],
@@ -209,8 +227,7 @@ export const QUERY_KEYS = {
             hash,
             walletAddress,
         ],
-        CouncilMembers: () => ['governance', 'councilMembers'],
-        ThalesStakers: () => ['governance', 'thalesStakers'],
+        ThalesStakers: (filter: string) => ['governance', 'thalesStakers', filter],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',
             'votingPower',
@@ -218,6 +235,28 @@ export const QUERY_KEYS = {
             snapshot,
             walletAddress,
         ],
+    },
+    Bungee: {
+        Tokens: () => ['bungee', 'tokens'],
+    },
+    Vault: {
+        Data: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'data', networkId],
+        UserData: (vaultAddress: string, walletAddress: string, networkId: NetworkId) => [
+            vaultAddress,
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'trades', networkId],
+        PnL: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'pnl', networkId],
+        UserTransactions: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'userTransactions', networkId],
+    },
+    Banners: (networkId: NetworkId) => ['banners', networkId],
+    LiquidityPool: {
+        Data: (networkId: NetworkId) => ['liquidityPool', 'data', networkId],
+        UserData: (walletAddress: string, networkId: NetworkId) => ['liquidityPool', 'data', walletAddress, networkId],
+        PnL: (networkId: NetworkId) => ['liquidityPool', 'pnl', networkId],
+        UserTransactions: (networkId: NetworkId) => ['liquidityPool', 'userTransactions', networkId],
     },
 };
 

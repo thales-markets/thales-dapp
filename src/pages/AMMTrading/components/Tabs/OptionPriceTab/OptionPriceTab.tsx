@@ -1,50 +1,33 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-
 import OptionPriceChart from '../../OptionPriceChart';
-import ChartContainer from './styled-components/ChartContainer';
-import Container from './styled-components/Container';
 import { useMarketContext } from '../../../contexts/MarketContext';
-
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
-
-import { mean, maxBy, orderBy } from 'lodash';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { EMPTY_VALUE } from 'constants/placeholder';
-import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { USD_SIGN } from 'constants/currency';
-
-import { OptionsTransactions, Orders } from 'types/options';
-
-import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
-import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
+import { maxBy, orderBy } from 'lodash';
+import { OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
-import { useTranslation } from 'react-i18next';
+import { ChartContainer, Container } from './styled-components';
 
-const OptionPriceTab: React.FC = () => {
-    const optionsMarket = useMarketContext();
-    const { t } = useTranslation();
+type OptionPriceTabProps = {
+    isRangedMarket: boolean;
+};
+
+const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.longAddress, {
-        enabled: isAppReady && !!optionsMarket,
-    });
-    const shortOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.shortAddress, {
-        enabled: isAppReady && !!optionsMarket,
-    });
-
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, {
-        enabled: isAppReady && !!optionsMarket,
-    });
 
     const tradesQuery = useBinaryOptionsTradesQuery(
-        optionsMarket?.address,
-        optionsMarket?.longAddress,
-        optionsMarket?.shortAddress,
+        market.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
-        { enabled: isAppReady && !!optionsMarket }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const getLastPrice = (data: OptionsTransactions, side: string, timestamp: number) => {
@@ -55,102 +38,75 @@ const OptionPriceTab: React.FC = () => {
         return lastTrade ? lastTrade.price : 0;
     };
 
+    const removeTimePart = (timestamp: number) => {
+        return new Date(new Date(timestamp).toDateString()).getTime();
+    };
+
     const chartData = useMemo(() => {
-        const data = orderBy(
-            tradesQuery.data
-                ? tradesQuery.data.map((trade) => ({
-                      timestamp: trade.timestamp,
-                      longPrice:
-                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp),
-                      shortPrice:
-                          trade.side === 'short'
-                              ? trade.price
-                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp),
-                  }))
-                : [],
-            'timestamp',
-            'desc'
-        );
+        let trades: any = [];
+
+        if (!isRangedMarket && tradesQuery?.data) {
+            trades = tradesQuery.data.map((trade) => {
+                const longPrice =
+                    trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
+                const shortPrice =
+                    trade.side === 'short' ? trade.price : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
+                return {
+                    timestamp: removeTimePart(trade.timestamp),
+                    firstPositionPrice: longPrice,
+                    secondPositionPrice: shortPrice,
+                };
+            });
+        }
+
+        if (isRangedMarket && tradesQuery?.data) {
+            trades = tradesQuery.data.map((trade) => {
+                const inPrice =
+                    trade.side === 'in' ? trade.price : getLastPrice(tradesQuery.data, 'in', trade.timestamp);
+                const outPrice =
+                    trade.side === 'out' ? trade.price : getLastPrice(tradesQuery.data, 'out', trade.timestamp);
+                return {
+                    timestamp: removeTimePart(trade.timestamp),
+                    firstPositionPrice: inPrice,
+                    secondPositionPrice: outPrice,
+                };
+            });
+        }
+
+        // Calculate the price sums and group data by date (while tracking count)
+        const groupedTradesByDate = trades.reduce((grouped: any, trade: any) => {
+            if (!grouped[trade.timestamp]) {
+                grouped[trade.timestamp] = { ...trade, count: 1 };
+                return grouped;
+            }
+            grouped[trade.timestamp].firstPositionPrice += trade.firstPositionPrice;
+            grouped[trade.timestamp].secondPositionPrice += trade.secondPositionPrice;
+            grouped[trade.timestamp].count += 1;
+            return grouped;
+        }, {});
+
+        // Create new array from grouped data and compute the average prices
+        const avgPriceForGroupedTrades = Object.keys(groupedTradesByDate).map((timestamp) => {
+            const groupedTrade = groupedTradesByDate[timestamp];
+            return {
+                timestamp: groupedTrade.timestamp,
+                firstPositionPrice: groupedTrade.firstPositionPrice / groupedTrade.count,
+                secondPositionPrice: groupedTrade.secondPositionPrice / groupedTrade.count,
+            };
+        });
+
+        const data = orderBy(avgPriceForGroupedTrades ? avgPriceForGroupedTrades : [], 'timestamp', 'asc');
         if (data.length) {
-            return [...data].reverse().slice(0, 8);
+            return [...data].slice(0, 8);
         }
         return [];
     }, [tradesQuery.data]);
 
-    const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
-        if (sellOrders.length > 0 && buyOrders.length > 0) {
-            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
-            return marketPrice;
-        }
-        if (sellOrders.length > 0) {
-            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            return lowestSellOrderPrice;
-        }
-        if (buyOrders.length > 0) {
-            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            return highestBuyOrderPrice;
-        }
-
-        return EMPTY_VALUE;
-    };
-
-    const longMarketPrice = useMemo(() => {
-        const sellOrders =
-            shortOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.sellOrders : [];
-        const buyOrders =
-            longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
-        const ammMaxLimits =
-            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
-                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
-                : undefined;
-
-        const marketPrice =
-            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
-                ? mean([ammMaxLimits.buyLongPrice, ammMaxLimits.sellLongPrice])
-                : getMarketPrice(sellOrders, buyOrders);
-        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
-    }, [longOrderbookQuery.data, ammMaxLimitsQuery.data]);
-
-    const shortMarketPrice = useMemo(() => {
-        const sellOrders =
-            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.sellOrders : [];
-        const buyOrders =
-            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
-        const ammMaxLimits =
-            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
-                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
-                : undefined;
-
-        const marketPrice =
-            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
-                ? mean([ammMaxLimits.buyShortPrice, ammMaxLimits.sellShortPrice])
-                : getMarketPrice(sellOrders, buyOrders);
-        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
-    }, [shortOrderbookQuery.data, ammMaxLimitsQuery.data]);
-
     return (
         <Container>
             <ChartContainer>
-                <OptionPriceChart data={chartData} />
+                <OptionPriceChart data={chartData} isRangedMarket={isRangedMarket} />
             </ChartContainer>
-            <Container.Footer>
-                <Container.Footer.PriceContainer>
-                    <Container.Footer.PriceContainer.Price>{shortMarketPrice}</Container.Footer.PriceContainer.Price>
-                    {' | '}
-                    <Container.Footer.PriceContainer.Position>
-                        {t('common.short')}
-                    </Container.Footer.PriceContainer.Position>
-                </Container.Footer.PriceContainer>
-                <Container.Footer.PriceContainer long={true}>
-                    <Container.Footer.PriceContainer.Price>{longMarketPrice}</Container.Footer.PriceContainer.Price>
-                    {' | '}
-                    <Container.Footer.PriceContainer.Position>
-                        {t('common.long')}
-                    </Container.Footer.PriceContainer.Position>
-                </Container.Footer.PriceContainer>
-            </Container.Footer>
         </Container>
     );
 };

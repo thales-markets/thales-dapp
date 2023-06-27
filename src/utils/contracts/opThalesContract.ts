@@ -1,15 +1,20 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'enums/network';
 
-export const opThalesContract = {
+const opThalesContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
-        [NetworkId.Ropsten]: 'TBD',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x8e801fb67436dae72af6eeb50e3f70d50019530f',
+        [Network.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: '0x8e801fb67436dae72af6eeb50e3f70d50019530f',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: 'TBD',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: 'TBD',
+        [Network['Kovan-Ovm']]: 'TBD',
+        [Network['Goerli-Ovm']]: 'TBD',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import Cookies from 'universal-cookie';
-import Header from '../../components/Header/Header';
-import pic from 'assets/images/landing-page/articles/token-white.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
-import { Background, Theme } from '../../Home';
-import Footer from '../../components/Footer';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
-
-const cookies = new Cookies();
+import styled from 'styled-components';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header/Header';
+import { Background } from '../../Home';
 
 const Token: React.FC = () => {
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
     const { t } = useTranslation();
 
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
-
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+        <Background className={'dark'}>
             <Wrapper>
-                <Header theme={theme} setTheme={setTheme} />
+                <Header />
                 <Content>
                     <H1>{t('articles.token.title')}</H1>
                     <ListWrapper>
@@ -63,7 +49,7 @@ const Token: React.FC = () => {
                         <Trans i18nKey="articles.token.paragraphs.2" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <PieChart>
-                        <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? pic : picBlack}></AnimationSvg>
+                        <AnimationSvg type="image/svg+xml" data={picBlack}></AnimationSvg>
                     </PieChart>
 
                     <Paragraph>
@@ -109,7 +95,7 @@ const Token: React.FC = () => {
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.6" components={{ bold: <strong /> }} />
                     </Paragraph>
-                    <Footer className="article" theme={theme} setTheme={setTheme} />
+                    <Footer className="article" />
                 </Content>
             </Wrapper>
         </Background>
@@ -160,7 +146,7 @@ const H1 = styled.h1`
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 1em;
     margin-bottom: 1.3em;
 `;
@@ -172,7 +158,7 @@ const H2 = styled.h2`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -181,7 +167,7 @@ const Paragraph = styled.p`
     line-height: 1em;
     &,
     & * {
-        color: var(--color);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
@@ -201,7 +187,7 @@ const Paragraph = styled.p`
 const AnimationSvg = styled.object``;
 
 const ListWrapper = styled.div`
-    border: 1px solid var(--color);
+    border: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
     border-radius: 7px;
     width: 38em;
     margin-bottom: 4em;
@@ -213,7 +199,7 @@ const ListWrapper = styled.div`
 
 const List = styled.ul`
     list-style: disc;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-left: 2em;
     padding: 1.5em;
     & > li {
@@ -231,7 +217,7 @@ const List = styled.ul`
 
 const NestedList = styled.ul`
     list-style: none;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     & li {
         &:before {
             content: '\\25BA \\0020';
@@ -244,7 +230,7 @@ const NestedList = styled.ul`
             font-size: 1.4em;
             font-weight: 300;
             line-height: 170%;
-            color: var(--color);
+            color: ${(props) => props.theme.landingPage.textColor.primary};
             &:hover {
                 font-size: 1.6em;
                 transition: 0.2s;
@@ -262,7 +248,7 @@ const NestedList = styled.ul`
 
 const ListItem = styled.li`
     height: 3em;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default Token;

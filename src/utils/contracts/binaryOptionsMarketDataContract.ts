@@ -1,22 +1,117 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'enums/network';
 
-export const binaryOptionsMarketDataContract = {
+const binaryOptionsMarketDataContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
-        [NetworkId.Ropsten]: '0x87e3C6e879d08F362dCfC5Bad6d9bec0923F2884',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x42Af0890d254387110555A46d261B9e4f6E327Ac',
+        [Network.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
+        [Network.Ropsten]: '0x87e3C6e879d08F362dCfC5Bad6d9bec0923F2884',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: '0x42Af0890d254387110555A46d261B9e4f6E327Ac',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0xE2881cAd27db4C27fB3814AD97ccA694B80c0fA0',
-        [NetworkId['Kovan-Ovm']]: '0xdBDAB336Cd97DB0F361DbD8C47EB4731674B62d7',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0x21382a033E581a2D685826449d6c9b3d6507e23C',
+        [Network['Kovan-Ovm']]: '0xdBDAB336Cd97DB0F361DbD8C47EB4731674B62d7',
+        [Network['Goerli-Ovm']]: '0x21C7684d27113E06e8B4Fe0114b0c74DEDFCC328',
+        [Network['POLYGON-MUMBAI']]: '0xd6BEd7D753DCbbbb8937Dd009788d6c815aE3094',
+        [Network['POLYGON-MAINNET']]: '0x3198ab211cdf3e4d13a698e1fb819507bca2e579',
+        [Network.BSC]: '0x28D2e5e76b2E99e7e6fe4F43ebf669aAC16b89Ba',
+        [Network.Arbitrum]: '0x036adEA6bc1fD0247c2796f8D201B28C0dC2a67d',
     },
     abi: [
         {
-            constant: true,
+            anonymous: false,
             inputs: [
                 {
-                    internalType: 'contract BinaryOptionMarket',
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'oldOwner',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
+            ],
+            name: 'OwnerChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
+            ],
+            name: 'OwnerNominated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'isPaused',
+                    type: 'bool',
+                },
+            ],
+            name: 'PauseChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_manager',
+                    type: 'address',
+                },
+            ],
+            name: 'PositionalMarketManagerChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_rangedMarketsAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'SetRangedMarketsAMM',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_thalesAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'SetThalesAMM',
+            type: 'event',
+        },
+        {
+            inputs: [],
+            name: 'acceptOwnership',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'contract PositionalMarket',
                     name: 'market',
                     type: 'address',
                 },
@@ -34,34 +129,269 @@ export const binaryOptionsMarketDataContract = {
                             components: [
                                 {
                                     internalType: 'uint256',
-                                    name: 'long',
+                                    name: 'up',
                                     type: 'uint256',
                                 },
                                 {
                                     internalType: 'uint256',
-                                    name: 'short',
+                                    name: 'down',
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
+                            internalType: 'struct PositionalMarketData.OptionValues',
                             name: 'balances',
                             type: 'tuple',
                         },
                     ],
-                    internalType: 'struct BinaryOptionMarketData.AccountData',
+                    internalType: 'struct PositionalMarketData.AccountData',
                     name: '',
                     type: 'tuple',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [
                 {
-                    internalType: 'contract BinaryOptionMarket',
+                    internalType: 'address[]',
+                    name: 'markets',
+                    type: 'address[]',
+                },
+                {
+                    internalType: 'enum IThalesAMM.Position',
+                    name: 'position',
+                    type: 'uint8',
+                },
+            ],
+            name: 'getActiveMarketsInfoPerPosition',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'address',
+                            name: 'market',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'price',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'liquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'priceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'strikePrice',
+                            type: 'uint256',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.ActiveMarketsInfoPerPosition[]',
+                    name: '',
+                    type: 'tuple[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
+            name: 'getAmmMarketData',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'uint256',
+                            name: 'upBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'upBuyPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'downBuyPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'upSellPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'downSellPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'iv',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'bool',
+                            name: 'isMarketInAMMTrading',
+                            type: 'bool',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.AmmMarketData',
+                    name: '',
+                    type: 'tuple',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'getAvailableAssets',
+            outputs: [
+                {
+                    internalType: 'bytes32[]',
+                    name: '',
+                    type: 'bytes32[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'start',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'end',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getBatchBasePricesForAllActiveMarkets',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'address',
+                            name: 'market',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'upPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'downPrice',
+                            type: 'uint256',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.ActiveMarketsPrices[]',
+                    name: '',
+                    type: 'tuple[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'start',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'end',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getBatchPriceImpactForAllActiveMarkets',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'address',
+                            name: 'market',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'upPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'downPriceImpact',
+                            type: 'int256',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.ActiveMarketsPriceImpact[]',
+                    name: '',
+                    type: 'tuple[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'contract PositionalMarket',
                     name: 'market',
                     type: 'address',
                 },
@@ -83,7 +413,7 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketData.OraclePriceAndTimestamp',
+                            internalType: 'struct PositionalMarketData.OraclePriceAndTimestamp',
                             name: 'oraclePriceAndTimestamp',
                             type: 'tuple',
                         },
@@ -95,7 +425,7 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketData.Deposits',
+                            internalType: 'struct PositionalMarketData.Deposits',
                             name: 'deposits',
                             type: 'tuple',
                         },
@@ -112,17 +442,17 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'bool',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketData.Resolution',
+                            internalType: 'struct PositionalMarketData.Resolution',
                             name: 'resolution',
                             type: 'tuple',
                         },
                         {
-                            internalType: 'enum IBinaryOptionMarket.Phase',
+                            internalType: 'enum IPositionalMarket.Phase',
                             name: 'phase',
                             type: 'uint8',
                         },
                         {
-                            internalType: 'enum IBinaryOptionMarket.Side',
+                            internalType: 'enum IPositionalMarket.Side',
                             name: 'result',
                             type: 'uint8',
                         },
@@ -130,34 +460,32 @@ export const binaryOptionsMarketDataContract = {
                             components: [
                                 {
                                     internalType: 'uint256',
-                                    name: 'long',
+                                    name: 'up',
                                     type: 'uint256',
                                 },
                                 {
                                     internalType: 'uint256',
-                                    name: 'short',
+                                    name: 'down',
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
+                            internalType: 'struct PositionalMarketData.OptionValues',
                             name: 'totalSupplies',
                             type: 'tuple',
                         },
                     ],
-                    internalType: 'struct BinaryOptionMarketData.MarketData',
+                    internalType: 'struct PositionalMarketData.MarketData',
                     name: '',
                     type: 'tuple',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [
                 {
-                    internalType: 'contract BinaryOptionMarket',
+                    internalType: 'contract PositionalMarket',
                     name: 'market',
                     type: 'address',
                 },
@@ -174,17 +502,17 @@ export const binaryOptionsMarketDataContract = {
                         {
                             components: [
                                 {
-                                    internalType: 'contract BinaryOption',
-                                    name: 'long',
+                                    internalType: 'contract Position',
+                                    name: 'up',
                                     type: 'address',
                                 },
                                 {
-                                    internalType: 'contract BinaryOption',
-                                    name: 'short',
+                                    internalType: 'contract Position',
+                                    name: 'down',
                                     type: 'address',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarket.Options',
+                            internalType: 'struct PositionalMarket.Options',
                             name: 'options',
                             type: 'tuple',
                         },
@@ -201,7 +529,7 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarket.Times',
+                            internalType: 'struct PositionalMarket.Times',
                             name: 'times',
                             type: 'tuple',
                         },
@@ -233,7 +561,7 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'address',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarket.OracleDetails',
+                            internalType: 'struct PositionalMarket.OracleDetails',
                             name: 'oracleDetails',
                             type: 'tuple',
                         },
@@ -250,18 +578,382 @@ export const binaryOptionsMarketDataContract = {
                                     type: 'uint256',
                                 },
                             ],
-                            internalType: 'struct BinaryOptionMarketManager.Fees',
+                            internalType: 'struct PositionalMarketManager.Fees',
                             name: 'fees',
                             type: 'tuple',
                         },
                     ],
-                    internalType: 'struct BinaryOptionMarketData.MarketParameters',
+                    internalType: 'struct PositionalMarketData.MarketParameters',
                     name: '',
                     type: 'tuple',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'asset',
+                    type: 'bytes32',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'strikeDateParam',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getMarketsForAssetAndStrikeDate',
+            outputs: [
+                {
+                    internalType: 'address[]',
+                    name: '',
+                    type: 'address[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'asset',
+                    type: 'bytes32',
+                },
+            ],
+            name: 'getMaturityDates',
+            outputs: [
+                {
+                    internalType: 'uint256[]',
+                    name: '',
+                    type: 'uint256[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address[]',
+                    name: 'markets',
+                    type: 'address[]',
+                },
+                {
+                    internalType: 'enum RangedMarket.Position',
+                    name: 'position',
+                    type: 'uint8',
+                },
+            ],
+            name: 'getRangedActiveMarketsInfoPerPosition',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'address',
+                            name: 'market',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'price',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'liquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'priceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'leftPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'rightPrice',
+                            type: 'uint256',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.RangedMarketsInfoPerPosition[]',
+                    name: '',
+                    type: 'tuple[]',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'contract RangedMarket',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
+            name: 'getRangedAmmMarketData',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'uint256',
+                            name: 'inBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outBuyLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'inSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outSellLiquidity',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'inBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outBuyPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'inSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'outSellPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'inPriceImpact',
+                            type: 'int256',
+                        },
+                        {
+                            internalType: 'int256',
+                            name: 'outPriceImpact',
+                            type: 'int256',
+                        },
+                    ],
+                    internalType: 'struct PositionalMarketData.RangedAmmMarketData',
+                    name: '',
+                    type: 'tuple',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
+            name: 'initialize',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'lastPauseTime',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'manager',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
+            name: 'nominateNewOwner',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'nominatedOwner',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'owner',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'paused',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'rangedMarketsAMM',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
+            name: 'setOwner',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: '_paused',
+                    type: 'bool',
+                },
+            ],
+            name: 'setPaused',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_manager',
+                    type: 'address',
+                },
+            ],
+            name: 'setPositionalMarketManager',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_rangedMarketsAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'setRangedMarketsAMM',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_thalesAMM',
+                    type: 'address',
+                },
+            ],
+            name: 'setThalesAMM',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'thalesAMM',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'proxyAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'transferOwnershipAtInit',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
     ],

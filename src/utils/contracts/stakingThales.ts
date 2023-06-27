@@ -1,45 +1,28 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'enums/network';
 
-export const stakingThales = {
+const stakingThales = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: 'TBD',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: 'TBD',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
-        [NetworkId['Kovan-Ovm']]: '0x09F9FBA4C2A2f51182e90888df6B954C68288200',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
+        [Network['Kovan-Ovm']]: '0x8417D248274439360CC38Be84CfFDc01226600F8',
+        [Network['Goerli-Ovm']]: '0x28D25990f7Dec7c606551c28A7A82B9D116dcb67',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: '0x160Ca569999601bca06109D42d561D85D6Bb4b57',
     },
     abi: [
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'ammVolumeRewardsMultiplier',
-                    type: 'uint256',
-                },
-            ],
-            name: 'AMMVolumeRewardsMultiplierChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { indexed: false, internalType: 'address', name: 'source', type: 'address' },
             ],
             name: 'AMMVolumeUpdated',
             type: 'event',
@@ -47,115 +30,70 @@ export const stakingThales = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'srcAccount', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'destAccount', type: 'address' },
             ],
+            name: 'AccountMerged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'address', name: 'SNXRewards', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'thalesRoyale', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'thalesAMM', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'thalesRangedAMM', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'exoticBonds', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'sportsAMM', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'priceFeed', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'ThalesStakingRewardsPool', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'addressResolver', type: 'address' },
+            ],
+            name: 'AddressesChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'address', name: 'sender', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'bool', name: 'canClaimOnBehalf', type: 'bool' },
+            ],
+            name: 'CanClaimOnBehalfChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'address', name: 'account', type: 'address' }],
             name: 'CancelUnstake',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'ClaimEnabled',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'PeriodOfStaking',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'lastPeriodTimeStamp',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: 'PeriodOfStaking', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'lastPeriodTimeStamp', type: 'uint256' },
             ],
             name: 'ClosedPeriod',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'DistributeFeesEnabled',
+            inputs: [{ indexed: false, internalType: 'address', name: 'destAccount', type: 'address' }],
+            name: 'DelegatedVolume',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'value',
-                    type: 'uint256',
-                },
-            ],
-            name: 'DurationPeriodChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newEscrow',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'address', name: 'newEscrow', type: 'address' }],
             name: 'EscrowChanged',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'extrarewardsactive',
-                    type: 'bool',
-                },
-            ],
-            name: 'ExtraRewardsChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'unclaimedFees',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'unclaimedFees', type: 'uint256' },
             ],
             name: 'FeeRewardsClaimed',
             type: 'event',
@@ -163,154 +101,38 @@ export const stakingThales = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'value',
-                    type: 'uint256',
-                },
-            ],
-            name: 'FixedPeriodRewardChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'maxAmmVolumeRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'MaxAMMVolumeRewardsPercentageChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'maxSnxRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'MaxSNXRewardsPercentageChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'maxThalesRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'MaxThalesRoyaleRewardsPercentageChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'oldOwner',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'oldOwner', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'newOwner', type: 'address' },
             ],
             name: 'OwnerChanged',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }],
             name: 'OwnerNominated',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'isPaused',
-                    type: 'bool',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'bool', name: 'isPaused', type: 'bool' }],
             name: 'PauseChanged',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'value',
-                    type: 'uint256',
-                },
-            ],
-            name: 'PeriodExtraRewardChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'pricefeed',
-                    type: 'address',
-                },
-            ],
-            name: 'PriceFeedAddressChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'reward',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }],
             name: 'RewardAdded',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'unclaimedReward',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'unclaimedReward', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'baseRewards', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'snxBonus', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'protocolBonus', type: 'uint256' },
             ],
             name: 'RewardsClaimed',
             type: 'event',
@@ -318,44 +140,8 @@ export const stakingThales = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'snxRewards',
-                    type: 'address',
-                },
-            ],
-            name: 'SNXRewardsAddressChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'ammVolumeRewardsMultiplier',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SNXVolumeRewardsMultiplierChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'user', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'Staked',
             type: 'event',
@@ -363,94 +149,65 @@ export const stakingThales = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'staker',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'user', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'staker', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'StakedOnBehalf',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [],
-            name: 'StakingPeriodStarted',
-            type: 'event',
-        },
-        {
-            anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'amm',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'bool', name: 'claimEnabled', type: 'bool' },
+                { indexed: false, internalType: 'bool', name: 'distributeFeesEnabled', type: 'bool' },
+                { indexed: false, internalType: 'uint256', name: 'durationPeriod', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'unstakeDurationPeriod', type: 'uint256' },
+                { indexed: false, internalType: 'bool', name: 'mergeAccountEnabled', type: 'bool' },
             ],
-            name: 'ThalesAMMAddressChanged',
+            name: 'StakingParametersChanged',
             type: 'event',
         },
+        { anonymous: false, inputs: [], name: 'StakingPeriodStarted', type: 'event' },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'royale',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'uint256', name: 'fixedPeriodReward', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'periodExtraReward', type: 'uint256' },
+                { indexed: false, internalType: 'bool', name: 'extraRewardsActive', type: 'bool' },
+                { indexed: false, internalType: 'uint256', name: 'maxSNXRewardsPercentage', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'maxAMMVolumeRewardsPercentage', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'maxThalesRoyaleRewardsPercentage', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'SNXVolumeRewardsMultiplier', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'AMMVolumeRewardsMultiplier', type: 'uint256' },
             ],
-            name: 'ThalesRoyaleAddressChanged',
+            name: 'StakingRewardsParametersChanged',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'thalesStakingRewardsPool',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'vault', type: 'address' },
+                { indexed: false, internalType: 'bool', name: 'value', type: 'bool' },
             ],
-            name: 'ThalesStakingRewardsPoolChanged',
+            name: 'SupportedAMMVaultSet',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'cooldownTime',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'vault', type: 'address' },
+                { indexed: false, internalType: 'bool', name: 'value', type: 'bool' },
+            ],
+            name: 'SupportedSportVaultSet',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'cooldownTime', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'UnstakeCooldown',
             type: 'event',
@@ -458,31 +215,8 @@ export const stakingThales = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'value',
-                    type: 'uint256',
-                },
-            ],
-            name: 'UnstakeDurationPeriodChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'unstakeAmount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'unstakeAmount', type: 'uint256' },
             ],
             name: 'Unstaked',
             type: 'event',
@@ -491,13 +225,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'AMMVolumeRewardsMultiplier',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -506,13 +234,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'SNXRewards',
-            outputs: [
-                {
-                    internalType: 'contract ISNXRewards',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract ISNXRewards', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -521,13 +243,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'SNXVolumeRewardsMultiplier',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -536,13 +252,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'ThalesStakingRewardsPool',
-            outputs: [
-                {
-                    internalType: 'contract IThalesStakingRewardsPool',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IThalesStakingRewardsPool', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -559,14 +269,29 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
-            name: 'canClosePeriod',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
+            name: 'addressResolver',
+            outputs: [{ internalType: 'contract IAddressResolver', name: '', type: 'address' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                { internalType: 'address', name: '', type: 'address' },
+                { internalType: 'address', name: '', type: 'address' },
             ],
+            name: 'canClaimOnBehalf',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'canClosePeriod',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -584,13 +309,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'claimEnabled',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -599,6 +318,15 @@ export const stakingThales = {
             constant: false,
             inputs: [],
             name: 'claimReward',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'claimRewardOnBehalf',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -617,13 +345,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'currentPeriodFees',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -632,13 +354,25 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'currentPeriodRewards',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'delegateVolume',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'delegatedVolume',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -647,13 +381,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'distributeFeesEnabled',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -662,13 +390,16 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'durationPeriod',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'exoticBonds',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -677,13 +408,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'extraRewardsActive',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -692,13 +417,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'feeToken',
-            outputs: [
-                {
-                    internalType: 'contract IERC20',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IERC20', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -707,160 +426,61 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'fixedPeriodReward',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getAMMBonus',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getAMMBonusPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getAMMVolume',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
-            name: 'getAlreadyClaimedFees',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getAlreadyClaimedRewards',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getBaseReward',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '_baseRewards', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getCRatio',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -869,13 +489,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'getContractFeeFunds',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -884,139 +498,70 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'getContractRewardFunds',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'getExoticMarketsVolume',
+            outputs: [{ internalType: 'uint256', name: 'volumeforAccount', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getLastPeriodOfClaimedRewards',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getRewardFeesAvailable',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getRewardsAvailable',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getSNXBonus',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getSNXBonusPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getSNXDebt',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1025,34 +570,25 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'getSNXRateForCurrency',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [],
+            name: 'getSNXRewardsAddress',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getSNXStaked',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1061,97 +597,52 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'getSNXTargetRatio',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
-            name: 'getThalesRoyaleBonus',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'getSportsAMMVolume',
+            outputs: [{ internalType: 'uint256', name: 'volumeforAccount', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
-            name: 'getThalesRoyaleBonusPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'getThalesAMMVolume',
+            outputs: [{ internalType: 'uint256', name: 'volumeforAccount', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+            name: 'getThalesRangedAMMVolume',
+            outputs: [{ internalType: 'uint256', name: 'volumeforAccount', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getTotalBonus',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'getTotalBonusPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1160,13 +651,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'iEscrowThales',
-            outputs: [
-                {
-                    internalType: 'contract IEscrowThales',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IEscrowThales', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1183,41 +668,13 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_iEscrowThales',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_stakingToken',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_feeToken',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_durationPeriod',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_unstakeDurationPeriod',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: '_ISNXRewards',
-                    type: 'address',
-                },
+                { internalType: 'address', name: '_owner', type: 'address' },
+                { internalType: 'address', name: '_iEscrowThales', type: 'address' },
+                { internalType: 'address', name: '_stakingToken', type: 'address' },
+                { internalType: 'address', name: '_feeToken', type: 'address' },
+                { internalType: 'uint256', name: '_durationPeriod', type: 'uint256' },
+                { internalType: 'uint256', name: '_unstakeDurationPeriod', type: 'uint256' },
+                { internalType: 'address', name: '_ISNXRewards', type: 'address' },
             ],
             name: 'initialize',
             outputs: [],
@@ -1229,13 +686,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'lastPauseTime',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1244,34 +695,16 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'lastPeriodTimeStamp',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'lastUnstakeTime',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1280,13 +713,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'maxAMMVolumeRewardsPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1295,13 +722,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'maxSNXRewardsPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1310,26 +731,32 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'maxThalesRoyaleRewardsPercentage',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'destAccount', type: 'address' }],
+            name: 'mergeAccount',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'mergeAccountEnabled',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'nominateNewOwner',
             outputs: [],
             payable: false,
@@ -1340,13 +767,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'nominatedOwner',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1355,13 +776,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'owner',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1370,13 +785,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'paused',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1385,13 +794,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'periodExtraReward',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1400,13 +803,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'periodsOfStaking',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1415,13 +812,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'priceFeed',
-            outputs: [
-                {
-                    internalType: 'contract IPriceFeed',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IPriceFeed', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1429,13 +820,17 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_AMMVolumeRewardsMultiplier',
-                    type: 'uint256',
-                },
+                { internalType: 'address', name: '_snxRewards', type: 'address' },
+                { internalType: 'address', name: '_royale', type: 'address' },
+                { internalType: 'address', name: '_thalesAMM', type: 'address' },
+                { internalType: 'address', name: '_thalesRangedAMM', type: 'address' },
+                { internalType: 'address', name: '_exoticBonds', type: 'address' },
+                { internalType: 'address', name: '_sportsAMM', type: 'address' },
+                { internalType: 'address', name: '_priceFeed', type: 'address' },
+                { internalType: 'address', name: '_thalesStakingRewardsPool', type: 'address' },
+                { internalType: 'address', name: '_addressResolver', type: 'address' },
             ],
-            name: 'setAMMVolumeRewardsMultiplier',
+            name: 'setAddresses',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1444,13 +839,10 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_claimEnabled',
-                    type: 'bool',
-                },
+                { internalType: 'address', name: 'account', type: 'address' },
+                { internalType: 'bool', name: '_canClaimOnBehalf', type: 'bool' },
             ],
-            name: 'setClaimEnabled',
+            name: 'setCanClaimOnBehalf',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1458,43 +850,7 @@ export const stakingThales = {
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_distributeFeesEnabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'setDistributeFeesEnabled',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_durationPeriod',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setDurationPeriod',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_escrowThalesContract',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '_escrowThalesContract', type: 'address' }],
             name: 'setEscrow',
             outputs: [],
             payable: false,
@@ -1503,88 +859,7 @@ export const stakingThales = {
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_extraRewardsActive',
-                    type: 'bool',
-                },
-            ],
-            name: 'setExtraRewards',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_fixedReward',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setFixedPeriodReward',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxAMMVolumeRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxAMMVolumeRewardsPercentage',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxSNXRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxSNXRewardsPercentage',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxThalesRoyaleRewardsPercentage',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxThalesRoyaleRewardsPercentage',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'setOwner',
             outputs: [],
             payable: false,
@@ -1593,13 +868,7 @@ export const stakingThales = {
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_paused',
-                    type: 'bool',
-                },
-            ],
+            inputs: [{ internalType: 'bool', name: '_paused', type: 'bool' }],
             name: 'setPaused',
             outputs: [],
             payable: false,
@@ -1609,13 +878,13 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_extraReward',
-                    type: 'uint256',
-                },
+                { internalType: 'bool', name: '_claimEnabled', type: 'bool' },
+                { internalType: 'bool', name: '_distributeFeesEnabled', type: 'bool' },
+                { internalType: 'uint256', name: '_durationPeriod', type: 'uint256' },
+                { internalType: 'uint256', name: '_unstakeDurationPeriod', type: 'uint256' },
+                { internalType: 'bool', name: '_mergeAccountEnabled', type: 'bool' },
             ],
-            name: 'setPeriodExtraReward',
+            name: 'setStakingParameters',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1624,13 +893,16 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_priceFeed',
-                    type: 'address',
-                },
+                { internalType: 'uint256', name: '_fixedReward', type: 'uint256' },
+                { internalType: 'uint256', name: '_extraReward', type: 'uint256' },
+                { internalType: 'bool', name: '_extraRewardsActive', type: 'bool' },
+                { internalType: 'uint256', name: '_maxSNXRewardsPercentage', type: 'uint256' },
+                { internalType: 'uint256', name: '_maxAMMVolumeRewardsPercentage', type: 'uint256' },
+                { internalType: 'uint256', name: '_maxThalesRoyaleRewardsPercentage', type: 'uint256' },
+                { internalType: 'uint256', name: '_SNXVolumeRewardsMultiplier', type: 'uint256' },
+                { internalType: 'uint256', name: '_AMMVolumeRewardsMultiplier', type: 'uint256' },
             ],
-            name: 'setPriceFeed',
+            name: 'setStakingRewardsParameters',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1639,13 +911,10 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_snxRewards',
-                    type: 'address',
-                },
+                { internalType: 'address', name: '_ammVault', type: 'address' },
+                { internalType: 'bool', name: 'value', type: 'bool' },
             ],
-            name: 'setSNXRewards',
+            name: 'setSupportedAMMVault',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1654,87 +923,27 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_SNXVolumeRewardsMultiplier',
-                    type: 'uint256',
-                },
+                { internalType: 'address', name: '_sportVault', type: 'address' },
+                { internalType: 'bool', name: 'value', type: 'bool' },
             ],
-            name: 'setSNXVolumeRewardsMultiplier',
+            name: 'setSupportedSportVault',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_thalesAMM',
-                    type: 'address',
-                },
-            ],
-            name: 'setThalesAMM',
-            outputs: [],
+            constant: true,
+            inputs: [],
+            name: 'sportsAMM',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
-            stateMutability: 'nonpayable',
+            stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_royale',
-                    type: 'address',
-                },
-            ],
-            name: 'setThalesRoyale',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_thalesStakingRewardsPool',
-                    type: 'address',
-                },
-            ],
-            name: 'setThalesStakingRewardsPool',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_unstakeDurationPeriod',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setUnstakeDurationPeriod',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
             name: 'stake',
             outputs: [],
             payable: false,
@@ -1742,84 +951,28 @@ export const stakingThales = {
             type: 'function',
         },
         {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: 'staker',
-                    type: 'address',
-                },
-            ],
-            name: 'stakeOnBehalf',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
             name: 'stakedBalanceOf',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'stakerFeesClaimed',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'stakerLifetimeRewardsClaimed',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1828,13 +981,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'stakingToken',
-            outputs: [
-                {
-                    internalType: 'contract IERC20',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IERC20', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1852,26 +999,14 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'startTimeStamp',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
             name: 'startUnstake',
             outputs: [],
             payable: false,
@@ -1880,15 +1015,36 @@ export const stakingThales = {
         },
         {
             constant: true,
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'supportedAMMVault',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'supportedSportVault',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
             inputs: [],
             name: 'thalesAMM',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'thalesRangedAMM',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1897,13 +1053,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'thalesRoyale',
-            outputs: [
-                {
-                    internalType: 'contract IThalesRoyale',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IThalesRoyale', name: '', type: 'address' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1912,13 +1062,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalEscrowedLastPeriodEnd',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1927,13 +1071,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalSNXFeesInPeriod',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1942,13 +1080,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalSNXRewardsInPeriod',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1957,13 +1089,7 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalStakedAmount',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -1972,26 +1098,14 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalStakedLastPeriodEnd',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'proxyAddress',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'proxyAddress', type: 'address' }],
             name: 'transferOwnershipAtInit',
             outputs: [],
             payable: false,
@@ -2011,55 +1125,25 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'unstakeDurationPeriod',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'unstaking',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'unstakingAmount',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -2067,16 +1151,8 @@ export const stakingThales = {
         {
             constant: false,
             inputs: [
-                {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
+                { internalType: 'address', name: 'account', type: 'address' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
             name: 'updateVolume',
             outputs: [],

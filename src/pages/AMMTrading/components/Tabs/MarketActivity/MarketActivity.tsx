@@ -1,45 +1,52 @@
 import React, { useMemo } from 'react';
-
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
-
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
-
 import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-
-import { COLORS_NEW } from 'constants/ui';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { getStableCoinForNetwork } from '../../../../../utils/currency';
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { FlexDivColumn } from 'styles/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
-const MarketActivity: React.FC = () => {
+type MarketActivityProps = {
+    isRangedMarket: boolean;
+};
+
+const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
-    const optionsMarket = useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && !!optionsMarket?.address,
+    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(market.address, networkId, {
+        enabled: isAppReady,
     });
 
     const marketTransactions = uniqBy(marketTransactionsQuery.data || [], (transaction) => transaction.hash);
 
     const tradesQuery = useBinaryOptionsTradesQuery(
-        optionsMarket?.address,
-        optionsMarket?.longAddress,
-        optionsMarket?.shortAddress,
+        market.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
-        { enabled: isAppReady && !!optionsMarket?.address }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const transactions = useMemo(
@@ -55,27 +62,57 @@ const MarketActivity: React.FC = () => {
     const getCellColor = (type: string) => {
         switch (type) {
             case 'buy':
-                return COLORS_NEW.LONG;
+                return theme.tradeTypeColor.buy;
+            case 'long':
+                return theme.positionColor.up;
+            case 'up':
+                return theme.positionColor.up;
             case 'sell':
-                return COLORS_NEW.SHORT;
+                return theme.tradeTypeColor.sell;
+            case 'short':
+                return theme.positionColor.down;
+            case 'down':
+                return theme.positionColor.down;
+            case 'in':
+                return theme.positionColor.in;
+            case 'out':
+                return theme.positionColor.out;
             default:
-                return 'var(--primary-color)';
+                return theme.textColor.primary;
         }
     };
 
+    const priceSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: any, desc: any) => {
+            let a = Number.parseFloat(rowA.values[columnId]);
+            let b = Number.parseFloat(rowB.values[columnId]);
+            if (Number.isNaN(a)) {
+                // Blanks and non-numeric to bottom
+                a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            if (Number.isNaN(b)) {
+                b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            return a > b ? 1 : a < b ? -1 : 0;
+        },
+        []
+    );
+
     return (
-        <>
+        <Container>
             <Table
                 data={transactions}
+                isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
+                defaultPageSize={10}
                 columns={[
                     {
-                        Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.type-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: any) => (
                             <p
@@ -84,46 +121,49 @@ const MarketActivity: React.FC = () => {
                                     textTransform: 'uppercase',
                                 }}
                             >
-                                {t(`options.market.transactions-card.table.types.${cellProps.cell.value}`)}
+                                {t(`markets.market.transactions-card.table.types.${cellProps.cell.value}`)}
                             </p>
                         ),
                         sortable: true,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.amount-col')}</>,
-                        sortType: 'basic',
+                        Header: <>{t('markets.market.transactions-card.table.amount-col')}</>,
                         accessor: 'amount',
                         Cell: (cellProps: any) => (
                             <p style={{ color: getCellColor(cellProps.cell.row.original.type), fontWeight: 'bold' }}>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
                                     ? formatCurrencyWithKey(
-                                          (OPTIONS_CURRENCY_MAP as any)[cellProps.cell.row.original.side],
+                                          (OPTIONS_POSITIONS_MAP as any)[cellProps.cell.row.original.side],
                                           cellProps.cell.value
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
                                     ? formatCurrency(cellProps.cell.value)
-                                    : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
+                                    : formatCurrencyWithKey(getStableCoinForNetwork(networkId), cellProps.cell.value)}
                             </p>
                         ),
                         sortable: true,
+                        sortType: 'basic',
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.price-col')}</>,
-                        sortType: 'basic',
+                        Header: <>{t('markets.market.transactions-card.table.price-col')}</>,
                         accessor: 'price',
                         Cell: (cellProps: any) => (
                             <p>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
-                                    ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value ?? 0)
+                                    ? formatCurrencyWithKey(
+                                          getStableCoinForNetwork(networkId),
+                                          cellProps.cell.value ?? 0
+                                      )
                                     : EMPTY_VALUE}
                             </p>
                         ),
                         sortable: true,
+                        sortType: priceSort,
                     },
                     {
-                        Header: <>{t('options.market.transactions-card.table.tx-status-col')}</>,
+                        Header: <>{t('markets.market.transactions-card.table.tx-status-col')}</>,
                         id: 'tx-status',
                         Cell: (cellProps: any) =>
                             cellProps.cell.row.original.status && cellProps.cell.row.original.status === 'pending' ? (
@@ -134,8 +174,12 @@ const MarketActivity: React.FC = () => {
                     },
                 ]}
             />
-        </>
+        </Container>
     );
 };
+
+const Container = styled(FlexDivColumn)`
+    width: 100%;
+`;
 
 export default MarketActivity;

@@ -1,38 +1,29 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../rootReducer';
-
-import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
 
 const sliceName = 'ui';
 
-export enum Theme {
-    Light,
-    Dark,
-}
-
 type UISliceState = {
-    theme: number;
+    isMobile: boolean;
 };
 
 const initialState: UISliceState = {
-    theme: 1,
+    isMobile: false,
 };
 
-export const uiSlice = createSlice({
+const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        setTheme: (state, action: PayloadAction<number>) => {
-            state.theme = action.payload;
-            cookies.set('home-theme', action.payload);
+        setIsMobile: (state, action: PayloadAction<boolean>) => {
+            state.isMobile = action.payload;
         },
     },
 });
 
-export const { setTheme } = uiSlice.actions;
+const getUIState = (state: RootState) => state[sliceName];
+export const getIsMobile = (state: RootState) => getUIState(state).isMobile;
 
-export const getUIState = (state: RootState) => state[sliceName];
-export const getTheme = (state: RootState) => getUIState(state).theme;
+export const { setIsMobile } = uiSlice.actions;
+
 export default uiSlice.reducer;

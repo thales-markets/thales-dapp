@@ -40,23 +40,38 @@ import { ReactComponent as sAMZNIcon } from 'assets/synths/sAMZN.svg';
 import { ReactComponent as sCEXIcon } from 'assets/synths/sCEX.svg';
 import { ReactComponent as sXAGIcon } from 'assets/synths/sXAG.svg';
 import { ReactComponent as sJPYIcon } from 'assets/synths/sJPY.svg';
-import { ReactComponent as sUSDIcon } from 'assets/synths/sUSD.svg';
+import { ReactComponent as sUSDIcon } from 'assets/currencies/crypto/sUSD.svg';
 import { ReactComponent as sFTSEIcon } from 'assets/synths/sFTSE.svg';
 import { ReactComponent as BCHIcon } from 'assets/currencies/crypto/BCH.svg';
 import { ReactComponent as SNXIcon } from 'assets/currencies/crypto/SNX.svg';
 import { ReactComponent as KNCIcon } from 'assets/currencies/crypto/KNC.svg';
 import { ReactComponent as sSOLIcon } from 'assets/synths/sSOL.svg';
+import { ReactComponent as LYRAIcon } from 'assets/currencies/crypto/LYRA.svg';
+import { ReactComponent as LUNAIcon } from 'assets/currencies/crypto/LUNA.svg';
+import { ReactComponent as MATICIcon } from 'assets/currencies/crypto/MATIC.svg';
+import { ReactComponent as PERPIcon } from 'assets/currencies/crypto/PERP.svg';
+import { ReactComponent as APEIcon } from 'assets/currencies/crypto/APE.svg';
+import { ReactComponent as CVXIcon } from 'assets/currencies/crypto/CVX.svg';
+import { ReactComponent as OHMIcon } from 'assets/currencies/crypto/OHM.svg';
+import { ReactComponent as OPIcon } from 'assets/currencies/crypto/OP.svg';
+import { ReactComponent as DAIIcon } from 'assets/currencies/crypto/DAI.svg';
+import { ReactComponent as USDCIcon } from 'assets/currencies/crypto/USDC.svg';
+import { ReactComponent as USDTIcon } from 'assets/currencies/crypto/USDT.svg';
+import { ReactComponent as LOOKSIcon } from 'assets/currencies/crypto/LOOKS.svg';
+import { ReactComponent as DYDXIcon } from 'assets/currencies/crypto/DYDX.svg';
+import { ReactComponent as ETCIcon } from 'assets/currencies/crypto/ETC.svg';
+import { ReactComponent as BUSDIcon } from 'assets/currencies/crypto/BUSD.svg';
+import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg';
+import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
+import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
+import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
+import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
+import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
+import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 
-export type CurrencyKey = string;
-export type CurrencyKeys = string[];
+export type CurrencyKeyOptionType = { value: string; label: string };
 
-// TODO: standardize this
-export type Category = 'crypto' | 'forex' | 'equities' | 'index' | 'commodity' | 'inverse';
-
-export const CATEGORY: Category[] = ['crypto', 'forex', 'equities', 'index', 'commodity', 'inverse'];
-export const CATEGORY_MAP = keyBy(CATEGORY);
-
-export const SYNTHS = [
+const SYNTHS = [
     'sBTC',
     'sBCH',
     'sETH',
@@ -106,14 +121,22 @@ export const SYNTHS = [
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
+// Order is important, used for sorting
 export const CRYPTO_CURRENCY = [
+    'BTC',
+    'ETH',
+    'SNX',
+    'ARB',
+    'OP',
+    'GMX',
+    'LINK',
+    'MAGIC',
+    'DPX',
+    'MATIC',
     'KNC',
     'COMP',
     'REN',
     'LEND',
-    'SNX',
-    'BTC',
-    'ETH',
     'XRP',
     'BCH',
     'LTC',
@@ -122,7 +145,6 @@ export const CRYPTO_CURRENCY = [
     'XTZ',
     'XMR',
     'ADA',
-    'LINK',
     'TRX',
     'DASH',
     'ETC',
@@ -132,6 +154,7 @@ export const CRYPTO_CURRENCY = [
     'REP',
     'USDC',
     'USDT',
+    'DAI',
     'VELO',
     'ZRX',
     'THALES',
@@ -139,30 +162,31 @@ export const CRYPTO_CURRENCY = [
     'UNI',
     'CRV',
     'AAVE',
+    'LYRA',
+    'LUNA',
+    'PERP',
+    'APE',
+    'CVX',
+    'OHM',
+    'LOOKS',
+    'DYDX',
+    'ETC',
+    'BUSD',
+    'CAKE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
-export const FIAT_CURRENCY = ['USD'];
-export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
-export const FIAT_CURRENCY_SIGN = {
+export const COMMODITY = ['XAU', 'XAG'];
+export const COMMODITY_MAP = keyBy(COMMODITY);
+
+const FIAT_CURRENCY = ['USD'];
+const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
+const FIAT_CURRENCY_SIGN = {
     [FIAT_CURRENCY_MAP.USD]: '$',
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
-export const OPTIONS_CURRENCY_MAP = {
-    long: 'UP',
-    short: 'DOWN',
-};
-
-export const CURRENCY_TO_OPTION = new Map([
-    [SYNTHS_MAP.sLONG, 'UP'],
-    [SYNTHS_MAP.sSHORT, 'DOWN'],
-]);
-
-export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
 export const THALES_CURRENCY = 'THALES';
-export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';
 
 export const currencyKeyToAssetIconMap = {
@@ -213,11 +237,33 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.KNC]: KNCIcon,
     [CRYPTO_CURRENCY_MAP.LEND]: sAAVEIcon,
     [SYNTHS_MAP.sSOL]: sSOLIcon,
+    [CRYPTO_CURRENCY_MAP.LYRA]: LYRAIcon,
+    [CRYPTO_CURRENCY_MAP.LUNA]: LUNAIcon,
+    [CRYPTO_CURRENCY_MAP.MATIC]: MATICIcon,
+    [CRYPTO_CURRENCY_MAP.PERP]: PERPIcon,
+    [CRYPTO_CURRENCY_MAP.APE]: APEIcon,
+    [CRYPTO_CURRENCY_MAP.CVX]: CVXIcon,
+    [CRYPTO_CURRENCY_MAP.OHM]: OHMIcon,
+    [CRYPTO_CURRENCY_MAP.DAI]: DAIIcon,
+    [CRYPTO_CURRENCY_MAP.USDC]: USDCIcon,
+    [CRYPTO_CURRENCY_MAP.USDT]: USDTIcon,
+    [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
+    [CRYPTO_CURRENCY_MAP.ARB]: ARBIcon,
+    [CRYPTO_CURRENCY_MAP.LOOKS]: LOOKSIcon,
+    [CRYPTO_CURRENCY_MAP.DYDX]: DYDXIcon,
+    [CRYPTO_CURRENCY_MAP.ETC]: ETCIcon,
+    [CRYPTO_CURRENCY_MAP.BUSD]: BUSDIcon,
+    [CRYPTO_CURRENCY_MAP.MAGIC]: MAGICIcon,
+    [CRYPTO_CURRENCY_MAP.DPX]: DPXIcon,
+    [CRYPTO_CURRENCY_MAP.GMX]: GMXIcon,
+    [CRYPTO_CURRENCY_MAP.CAKE]: CAKEIcon,
+    [COMMODITY_MAP.XAU]: XAUIcon,
+    [COMMODITY_MAP.XAG]: XAGIcon,
 };
 
 export const currencyKeyToNameMap = {
     [SYNTHS_MAP.sBTC]: 'Bitcoin',
-    [SYNTHS_MAP.sETH]: 'Ether',
+    [SYNTHS_MAP.sETH]: 'Ethereum',
     [SYNTHS_MAP.sEUR]: 'Euros',
     [SYNTHS_MAP.sDEFI]: 'DeFi Index',
     [SYNTHS_MAP.sAAPL]: 'Apple',
@@ -270,7 +316,25 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.USDT]: 'Tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'Velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+    [CRYPTO_CURRENCY_MAP.LYRA]: 'Lyra',
+    [CRYPTO_CURRENCY_MAP.LUNA]: 'Luna',
     [SYNTHS_MAP.sSOL]: 'Solana',
+    [CRYPTO_CURRENCY_MAP.PERP]: 'Perpetual Protocol',
+    [CRYPTO_CURRENCY_MAP.APE]: 'Apecoin',
+    [CRYPTO_CURRENCY_MAP.ARB]: 'Arbitrum',
+    [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
+    [CRYPTO_CURRENCY_MAP.OP]: 'Optimism',
+    [CRYPTO_CURRENCY_MAP.LOOKS]: 'LooksRare',
+    [CRYPTO_CURRENCY_MAP.DYDX]: 'dYdX',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'Ethereum Classic',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'Binance Coin',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'Magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
+    [COMMODITY_MAP.XAU]: 'Gold',
+    [COMMODITY_MAP.XAG]: 'Silver',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -285,7 +349,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
     [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
     [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
-    [CRYPTO_CURRENCY_MAP.BNB]: 'oec-binance-coin',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'binancecoin',
     [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
     [CRYPTO_CURRENCY_MAP.XMR]: 'monero',
     [CRYPTO_CURRENCY_MAP.ADA]: 'binance-peg-cardano',
@@ -305,6 +369,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.CRV]: 'curve-dao-token',
     [CRYPTO_CURRENCY_MAP.UNI]: 'uniswap',
     [CRYPTO_CURRENCY_MAP.AAVE]: 'aave',
+    [CRYPTO_CURRENCY_MAP.LYRA]: 'lyra-finance',
+    [CRYPTO_CURRENCY_MAP.LUNA]: 'terra-luna',
     [SYNTHS_MAP.sBTC]: 'bitcoin',
     [SYNTHS_MAP.sETH]: 'ethereum',
     [SYNTHS_MAP.sCOMP]: 'compound-coin',
@@ -335,7 +401,20 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sDOT]: 'polkadot',
     [SYNTHS_MAP.sRUNE]: 'thorchain',
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
+    [CRYPTO_CURRENCY_MAP.MATIC]: 'matic-network',
+    [CRYPTO_CURRENCY_MAP.PERP]: 'perpetual-protocol',
+    [CRYPTO_CURRENCY_MAP.APE]: 'apecoin',
+    [CRYPTO_CURRENCY_MAP.CVX]: 'convex-finance',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
+    [CRYPTO_CURRENCY_MAP.OP]: 'optimism',
+    [CRYPTO_CURRENCY_MAP.ARB]: 'arbitrum',
+    [CRYPTO_CURRENCY_MAP.LOOKS]: 'lookscoin',
+    [CRYPTO_CURRENCY_MAP.DYDX]: 'dydx',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
+    [COMMODITY_MAP.XAU]: 'tether-gold',
+    [COMMODITY_MAP.XAG]: 'kinesis-silver',
 };
-
-export const sUSD_EXCHANGE_RATE = 1;
-export const SYNTH_DECIMALS = 18;

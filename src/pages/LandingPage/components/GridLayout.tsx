@@ -1,36 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
-import thalesI from 'assets/images/landing-page/thales1.png';
-import thalesII from 'assets/images/landing-page/thales2.png';
-import thalesIII from 'assets/images/landing-page/thales3.png';
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
-import starsWhite from 'assets/images/landing-page/stars-white.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
-import systemWhite from 'assets/images/landing-page/system-white.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.png';
 import thalesIIW from 'assets/images/landing-page/thales2-white.png';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
-import Header from './Header/Header';
-import { Trans, useTranslation } from 'react-i18next';
-import { Theme } from '../Home';
 import ROUTES from 'constants/routes';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
+import Header from './Header/Header';
 
-type GridLayoutProps = {
-    theme: Theme;
-    setTheme: (data: any) => void;
-};
-
-const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
+const GridLayout: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Wrapper>
-            <Header theme={theme} setTheme={setTheme} />
+            <Header />
             <SystemImage>
-                <AnimationSvg
-                    type="image/svg+xml"
-                    data={theme !== Theme.Dark ? systemWhite : systemBlack}
-                ></AnimationSvg>
+                <AnimationSvg type="image/svg+xml" data={systemBlack}></AnimationSvg>
             </SystemImage>
             <TitleContainer>
                 <Title> {t('landing-page.title')}</Title>
@@ -73,16 +59,16 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={theme !== Theme.Dark ? thalesI : thalesIW}></Image>
+                <Image src={thalesIW}></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={theme !== Theme.Dark ? thalesII : thalesIIW}></Image>
+                <Image src={thalesIIW}></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={theme !== Theme.Dark ? thalesIII : thalesIIIW}></Image>
+                <Image src={thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
-                <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? starsWhite : starsBlack}></AnimationSvg>
+                <AnimationSvg type="image/svg+xml" data={starsBlack}></AnimationSvg>
             </StarsImage>
         </Wrapper>
     );
@@ -95,6 +81,7 @@ const Wrapper = styled.div`
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(77, 2em);
+    z-index: 1;
     @media (max-width: 600px) {
         grid-template-rows: repeat(104, 2em);
     }
@@ -128,7 +115,7 @@ const Title = styled.p`
     font-size: 5.5em;
     line-height: 92.3%;
     text-align: center;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     @media (max-width: 600px) {
         font-size: 38px;
     }
@@ -140,7 +127,7 @@ const Subtitle = styled.p`
     font-size: 2.5em;
     line-height: 95%;
     text-align: center;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 20px;
     @media (max-width: 600px) {
         font-size: 20px;
@@ -149,8 +136,8 @@ const Subtitle = styled.p`
 `;
 
 const Button = styled.div`
-    background: #1b314f;
-    color: #f7f7f7;
+    background: ${(props) => props.theme.landingPage.background.secondary};
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -205,7 +192,7 @@ const LearnButton = styled(Button)`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: #ffffff;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     transition: 0.2s;
     z-index: 4;
@@ -226,7 +213,7 @@ const LearnButton = styled(Button)`
 `;
 
 const ContWrapper = styled.div`
-    background: var(--background);
+    background: ${(props) => props.theme.landingPage.background.secondary};
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
     border-radius: 7px;
     padding: 2em;
@@ -431,7 +418,7 @@ const ContTitle = styled.p`
     font-weight: bold;
     font-size: 3.5em;
     line-height: 95%;
-    color: var(--color);
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 10px;
     margin-bottom: 0.75em;
     @media (max-width: 800px) {
@@ -453,7 +440,7 @@ const ContSubTitle = styled.p`
 
         text-align: justify;
         white-space: pre-line;
-        color: var(--color);
+        color: ${(props) => props.theme.landingPage.textColor.primary};
         @media (max-width: 600px) {
             padding-top: 20px;
         }
@@ -468,7 +455,7 @@ const Link = styled.a`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: #ffffff;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     display: flex;
     align-items: inherit;
@@ -482,7 +469,7 @@ const Logo = styled.i`
     margin-top: 4px;
     font-size: 5.2em;
     line-height: 1.75em;
-    color: #ffffff !important;
+    color: ${(props) => props.theme.landingPage.textColor.primary} !important;
     position: absolute;
 `;
 

@@ -1,8 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import request, { gql } from 'graphql-request';
-import { EXCLUDED_PROPOSALS, SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
-import { Proposal } from 'types/governance';
+import { EXCLUDED_PROPOSALS, SNAPSHOT_GRAPHQL_URL } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
+import { SpaceKey } from 'enums/governance';
+import request, { gql } from 'graphql-request';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { Proposal } from 'types/governance';
 
 const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposal[]>) => {
     return useQuery<Proposal[]>(

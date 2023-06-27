@@ -21,7 +21,6 @@ const useOpThalesBalanceQuery = (
             return { balance: '0' };
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
