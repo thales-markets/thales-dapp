@@ -376,7 +376,7 @@ const LiquidityPool: React.FC = () => {
                             await delay(1000 * 2);
                         }
 
-                        while (usersProcessedInRound.toString() < getUsersCountInCurrentRound.toString()) {
+                        while (usersProcessedInRound < getUsersCountInCurrentRound) {
                             const tx = await lpContractWithSigner.processRoundClosingBatch(100, {
                                 type: 2,
                             });
