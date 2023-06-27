@@ -127,7 +127,7 @@ const Referral: React.FC = () => {
 
     const transactionData: ReferralTransactions[] | [] = useMemo(() => {
         if (transactionsQuery.isSuccess && transactionsQuery.data && walletAddress) {
-            return orderBy(transactionsQuery.data, ['timestamp'], ['desc']);
+            return transactionsQuery.data;
         }
 
         return [];
@@ -403,6 +403,14 @@ const Referral: React.FC = () => {
                                     Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
                                 },
                             ]}
+                            initialState={{
+                                sortBy: [
+                                    {
+                                        id: 'timestamp',
+                                        desc: true,
+                                    },
+                                ],
+                            }}
                         />
                     </TableWrapper>
                 )}
