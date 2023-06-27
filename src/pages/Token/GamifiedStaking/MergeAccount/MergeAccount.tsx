@@ -256,19 +256,29 @@ const MergeAccount: React.FC = () => {
                 <div>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
                 <ul>
                     {isUserLPing && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.user-lping')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.user-lping')}
+                        </ValidationMessage>
                     )}
                     {hasSrcAccountSomethingToClaim && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}
+                        </ValidationMessage>
                     )}
                     {isSrcAccountUnstaking && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}
+                        </ValidationMessage>
                     )}
                     {hasDestAccountSomethingToClaim && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-claim')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-claim')}
+                        </ValidationMessage>
                     )}
                     {isDestAccountUnstaking && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}
+                        </ValidationMessage>
                     )}
                 </ul>
             </>
@@ -351,7 +361,7 @@ const MergeAccount: React.FC = () => {
                             <TextInput
                                 value={destAddress}
                                 onChange={(e: any) => setDestAddress(e.target.value)}
-                                disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
+                                disabled={isMerging || !isAccountMergingEnabled || isMergeBlocked || !isWalletConnected}
                                 label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
                                 placeholder={t('common.enter-address')}
                                 showValidation={!isDestAddressValid}
@@ -498,6 +508,10 @@ const AddressesDelegatingToYouTitle = styled.div`
     text-align: justify;
     text-transform: uppercase;
     margin-bottom: 30px;
+`;
+
+const ValidationMessage = styled.li`
+    color: ${(props) => props.theme.warning.textColor.primary};
 `;
 
 const DelegationAddress = styled.div`
