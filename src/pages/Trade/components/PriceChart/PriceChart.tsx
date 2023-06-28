@@ -18,7 +18,7 @@ import {
     YAxis,
 } from 'recharts';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivSpaceBetween } from 'styles/common';
+import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,
@@ -30,6 +30,8 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 
 type PriceChartProps = {
     asset: string;
@@ -67,8 +69,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
-
     const [ticks, setTicks] = useState<number[]>();
+    const [iv, setIV] = useState(0);
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
@@ -140,6 +142,20 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange, currentPrice]);
 
+    useEffect(() => {
+        const { ammContract } = snxJSConnector;
+        const getImpliedVolatility = async () => {
+            try {
+                const impliedVolatility = await ammContract?.impliedVolatilityPerAsset(bytesFormatter(asset));
+                setIV(bigNumberFormatter(impliedVolatility));
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        getImpliedVolatility();
+    }, [asset]);
+
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
             if (selectedPrice) {
@@ -192,10 +208,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
-                <IconPriceWrapper>
-                    <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
-                </IconPriceWrapper>
+                <FlexDivRowCentered>
+                    <IconPriceWrapper>
+                        <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
+                        <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
+                    </IconPriceWrapper>
+                    <Value>{`IV ${iv}%`}</Value>
+                </FlexDivRowCentered>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
             {data && (
@@ -436,6 +455,14 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-size: 22px;
     line-height: 100%;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+`;
+
+const Value = styled.span`
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-left: 20px;
 `;
 
 export default PriceChart;

@@ -21,11 +21,11 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper>
-                <Container onClick={() => setOpen(!open)}>
-                    {date && <Date onClick={() => setDate(date)}>{formatShortDateWithTime(date)}</Date>}
-                    <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                <Container onClick={() => setOpen(!open)} isClickable={!!allDates.length}>
+                    <Date onClick={() => date && setDate(date)}>{date ? formatShortDateWithTime(date) : 'N/A'}</Date>
+                    {!!allDates.length && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                 </Container>
-                {open && (
+                {open && !!allDates.length && (
                     <Dropdown onClick={() => setOpen(!open)}>
                         {allDates.map((_date, index) => (
                             <DateContainer key={index}>
@@ -51,7 +51,7 @@ const Icon = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ isClickable?: boolean }>`
     width: 100%;
     max-height: 23px;
     padding: 5px 15px;
@@ -61,7 +61,7 @@ const Container = styled.div`
     align-items: center;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
-    cursor: pointer;
+    cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
 `;
 
 const Dropdown = styled.div`

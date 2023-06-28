@@ -88,7 +88,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                                 {props.row.original.price}
                             </TableText>
                             <Tooltip overlay={t('common.tooltip.open-market')}>
-                                <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                                <Icon selected={rowIndex === props.row.index} className="icon icon--caret-down" />
                             </Tooltip>
                         </>
                     );
@@ -127,7 +127,8 @@ const Icon = styled.i<{ selected: boolean }>`
     transform: rotate(-90deg);
     font-size: 14px;
     margin-left: 10px;
-    visibility: ${(props) => (props.selected ? 'visible' : 'hidden')}; ;
+    margin-bottom: 1px;
+    visibility: ${(props) => (props.selected ? 'visible' : 'hidden')};
 `;
 
 const getTableHeaderStyle = (color: string): React.CSSProperties => {
