@@ -13,7 +13,7 @@ import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { UserLivePositions } from 'types/options';
 import { Positions } from 'enums/options';
-import { isOptionClaimable } from 'utils/options';
+import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
 const useUserLivePositionsQuery = (
     networkId: NetworkId,
@@ -41,12 +41,19 @@ const useUserLivePositionsQuery = (
             const claimablePositions: any = [];
             const rangedClaimablePositions: any = [];
 
+            const minMaturityDateForClaim = getMinMaturityDateForClaim();
+
             positionBalances.map((positionBalance: any) => {
                 if (bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD) {
                     if (positionBalance.position.market.result === null) {
                         openPositions.push(positionBalance);
                     } else {
-                        if (isOptionClaimable(positionBalance)) claimablePositions.push(positionBalance);
+                        if (
+                            isOptionClaimable(positionBalance) &&
+                            positionBalance.position.market.maturityDate >= minMaturityDateForClaim
+                        ) {
+                            claimablePositions.push(positionBalance);
+                        }
                     }
                 }
             });
@@ -56,7 +63,12 @@ const useUserLivePositionsQuery = (
                     if (positionBalance.position.market.result === null) {
                         openRangedPositions.push(positionBalance);
                     } else {
-                        if (isOptionClaimable(positionBalance)) rangedClaimablePositions.push(positionBalance);
+                        if (
+                            isOptionClaimable(positionBalance) &&
+                            positionBalance.position.market.maturityDate >= minMaturityDateForClaim
+                        ) {
+                            rangedClaimablePositions.push(positionBalance);
+                        }
                     }
                 }
             });
