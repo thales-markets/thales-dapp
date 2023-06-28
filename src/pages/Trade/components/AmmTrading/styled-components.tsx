@@ -36,7 +36,7 @@ export const DetailsIcon = styled.i<{ disabled: boolean }>`
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 16px;
+    font-size: 20px;
     color: ${(props) => props.theme.textColor.secondary};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
