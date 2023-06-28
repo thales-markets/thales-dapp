@@ -1,17 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { FlexDivColumn } from 'styles/common';
 
 type ProfileSectionProps = {
     title: string;
+    subtitle?: string;
     maxHeight?: string;
     mobileMaxHeight?: string;
 };
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ title, children, maxHeight, mobileMaxHeight }) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({ title, subtitle, children, maxHeight, mobileMaxHeight }) => {
     return (
         <Section>
-            <SectionHeader>{title}</SectionHeader>
+            <SectionHeader>
+                <Title>{title}</Title>
+                <Subtitle>{subtitle}</Subtitle>
+            </SectionHeader>
             <SectionContent maxHeight={maxHeight} mobileMaxHeight={mobileMaxHeight}>
                 {children}
             </SectionContent>
@@ -27,19 +32,29 @@ const Section = styled.div`
     margin-bottom: 15px;
 `;
 
-const SectionHeader = styled.p`
+const SectionHeader = styled(FlexDivColumn)`
     font-weight: 700;
     font-size: 21px;
     line-height: 16px;
     color: ${(props) => props.theme.textColor.primary};
     padding: 10px 0px 20px 0px;
-    span {
-        text-transform: lowercase;
-    }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 0px 10px 0px;
         font-size: 18px;
-        line-height: 22px;
+        line-height: 18px;
+    }
+`;
+
+const Title = styled.p``;
+
+const Subtitle = styled.p`
+    padding-top: 5px;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 16px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
+        line-height: 15px;
     }
 `;
 
