@@ -4,7 +4,7 @@ import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
-import { isOptionClaimable } from 'utils/options';
+import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
 const useUserNotificationsQuery = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<number>) => {
     return useQuery<number>(
@@ -26,11 +26,14 @@ const useUserNotificationsQuery = (networkId: NetworkId, walletAddress: string, 
             const claimablePositions: any = [];
             const rangedClaimablePositions: any = [];
 
+            const minMaturityDateForClaim = getMinMaturityDateForClaim();
+
             positionBalances.map((positionBalance: any) => {
                 if (
                     bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
                     positionBalance.position.market.result !== null &&
-                    isOptionClaimable(positionBalance)
+                    isOptionClaimable(positionBalance) &&
+                    positionBalance.position.market.maturityDate >= minMaturityDateForClaim
                 ) {
                     claimablePositions.push(positionBalance);
                 }
@@ -40,7 +43,8 @@ const useUserNotificationsQuery = (networkId: NetworkId, walletAddress: string, 
                 if (
                     bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
                     positionBalance.position.market.result !== null &&
-                    isOptionClaimable(positionBalance)
+                    isOptionClaimable(positionBalance) &&
+                    positionBalance.position.market.maturityDate >= minMaturityDateForClaim
                 ) {
                     rangedClaimablePositions.push(positionBalance);
                 }

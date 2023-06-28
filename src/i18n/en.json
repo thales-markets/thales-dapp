@@ -1308,6 +1308,7 @@
             "in-wallet": "in wallet",
             "claimable": "Claimable"
         },
+        "winnings-are-forfeit": "* Winnings not claimed within {{days}} days of a market being resolved are forfeit.",
         "tabs": {
             "my-positions": "My Positions",
             "history": "History",
