@@ -210,7 +210,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                 </>
             ) : (
                 <Value color={ammData ? theme.warning.textColor.primary : theme.textColor.primary}>
-                    {ammData ? t('markets.market..out-of-liquidity') : '-'}
+                    {ammData ? t('markets.market.out-of-liquidity') : '-'}
                 </Value>
             )}
         </Value>
