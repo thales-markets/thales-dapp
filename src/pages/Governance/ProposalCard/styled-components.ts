@@ -61,6 +61,7 @@ export const Body = styled(FlexDivRow)<{ status: string }>`
     line-height: 24px;
     color: ${(props) =>
         props.status === StatusEnum.Closed ? props.theme.textColor.secondary : props.theme.textColor.primary};
+    overflow-wrap: anywhere;
 `;
 
 export const ResultContainer = styled.div`
