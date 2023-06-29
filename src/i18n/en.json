@@ -297,6 +297,7 @@
             "size": "Size",
             "paid": "Paid",
             "cash-out": "Cash out",
+            "tooltip-cash-out": "Sell your Open Position back to the AMM for current price per Position minus the Skew Impact premium.",
             "cash-out-progress": "Cashing out...",
             "claim-win": "Claim win",
             "claim-win-progress": "Claiming win...",
@@ -305,9 +306,16 @@
         },
         "table": {
             "strike-price-col": "Strike price",
+            "strike-range-col": "Strike range",
             "roi": "ROI/BONUS",
             "price": "Price",
-            "no-markets": "No markets for selected parameters"
+            "no-markets": "No markets for selected parameters",
+            "tooltip": {
+                "strike-price": "Price level a trader thinks the asset will be above or below.",
+                "strike-range": "Price range a trader thinks the asset will be inside or outside of.",
+                "roi": "Current potential return of investment if the position is winning on the chosen maturity date.",
+                "price": "Current price per 1 Position / Implied Probability of the Position with Skew Impact premium included."
+            }
         },
         "market": {
             "current-price": "Current price",

@@ -304,20 +304,24 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         const today = new Date();
         if (position.maturityDate > today.getTime() / 1000 && position.value > 0) {
             return (
-                <Button
-                    {...getDefaultButtonProps(isMobile)}
-                    disabled={isAllowing || isSubmitting}
-                    additionalStyles={additionalButtonStyle}
-                    onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
-                >
-                    {isAllowing
-                        ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
-                        : `${
-                              isSubmitting
-                                  ? t(`markets.user-positions.cash-out-progress`)
-                                  : t('markets.user-positions.cash-out')
-                          } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
-                </Button>
+                <Tooltip overlay={t('markets.user-positions.tooltip-cash-out')}>
+                    <div>
+                        <Button
+                            {...getDefaultButtonProps(isMobile)}
+                            disabled={isAllowing || isSubmitting}
+                            additionalStyles={additionalButtonStyle}
+                            onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
+                        >
+                            {isAllowing
+                                ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
+                                : `${
+                                      isSubmitting
+                                          ? t('markets.user-positions.cash-out-progress')
+                                          : t('markets.user-positions.cash-out')
+                                  } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
+                        </Button>
+                    </div>
+                </Tooltip>
             );
         }
         if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {
