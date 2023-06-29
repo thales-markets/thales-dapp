@@ -274,7 +274,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             strokeWidth={2}
                             fill="transparent"
                             animationEasing="ease-in"
-                            animationDuration={200}
+                            animationDuration={150}
                             xHeight={2}
                         />
 
