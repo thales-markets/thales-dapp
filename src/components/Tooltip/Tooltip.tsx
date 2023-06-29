@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import 'styles/tooltip.css';
 
 type TooltipProps = {
-    component?: any;
     overlay: any;
     iconFontSize?: number;
     customIconStyling?: CSSProperties;

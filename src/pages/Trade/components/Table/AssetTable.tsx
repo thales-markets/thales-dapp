@@ -40,19 +40,26 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
     }, [markets, setMarket, firstPositionMarketAddress]);
 
     const noMarkets = markets.length === 0;
+    const isRangedMarkets = position === Positions.IN || position === Positions.OUT;
 
     const columns: Array<any> = useMemo(() => {
         return [
             {
                 id: 'strikePrice',
-                Header: t(`markets.table.strike-price-col`),
+                Header: isRangedMarkets ? (
+                    <Tooltip overlay={t('markets.table.tooltip.strike-range')}>
+                        <div>{t(`markets.table.strike-range-col`)}</div>
+                    </Tooltip>
+                ) : (
+                    <Tooltip overlay={t('markets.table.tooltip.strike-price')}>
+                        <div>{t(`markets.table.strike-price-col`)}</div>
+                    </Tooltip>
+                ),
                 accessor: (row: any, index: number) => {
                     return (
                         <TableText selected={rowIndex === index} price={false}>
                             {formatStrikePrice(
-                                position === Positions.UP || position === Positions.DOWN
-                                    ? row.strikePrice
-                                    : row.leftPrice,
+                                isRangedMarkets ? row.leftPrice : row.strikePrice,
                                 position,
                                 row.rightPrice
                             )}
@@ -62,7 +69,12 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 width: '180px',
             },
             {
-                Header: t(`markets.table.roi`),
+                id: 'roi',
+                Header: (
+                    <Tooltip overlay={t('markets.table.tooltip.roi')}>
+                        <div>{t(`markets.table.roi`)}</div>
+                    </Tooltip>
+                ),
                 accessor: (row: any, index: number) => (
                     <PriceContainer>
                         <TableText selected={rowIndex === index} price={true}>
@@ -79,7 +91,11 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             },
             {
                 id: 'price',
-                Header: t(`markets.table.price`),
+                Header: (
+                    <Tooltip overlay={t('markets.table.tooltip.price')}>
+                        <div>{t(`markets.table.price`)}</div>
+                    </Tooltip>
+                ),
                 accessor: 'price',
                 Cell: (props: any) => {
                     return (
@@ -115,7 +131,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                     data={markets}
                     columns={columns}
                     selectedRowIndex={rowIndex}
-                    showCurrentPrice={position === Positions.UP || position === Positions.DOWN}
+                    showCurrentPrice={!isRangedMarkets}
                 />
             )}
         </Wrapper>
