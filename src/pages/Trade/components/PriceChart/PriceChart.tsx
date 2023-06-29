@@ -235,7 +235,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
+                        <CartesianGrid stroke={theme.borderColor.primary} strokeDasharray="1" />
                         <XAxis
                             tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
                             tickLine={false}
@@ -270,17 +270,17 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <Area
                             type="monotone"
                             dataKey="price"
-                            stroke="#F7B91A"
+                            stroke={theme.borderColor.tertiary}
                             strokeWidth={2}
                             fill="transparent"
                             animationEasing="ease-in"
-                            animationDuration={400}
+                            animationDuration={200}
                             xHeight={2}
                         />
 
                         <ReferenceLine
                             y={data[data?.length - 1].price}
-                            stroke="#F7B91A"
+                            stroke={theme.borderColor.tertiary}
                             strokeDasharray="3 3"
                             xHeight={2}
                             label={<CustomLabel price={data[data?.length - 1].price} />}
@@ -289,7 +289,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="#03DAC6"
+                                stroke={theme.borderColor.quaternary}
                                 label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
@@ -297,7 +297,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedRightPrice && (
                             <ReferenceLine
                                 y={selectedRightPrice}
-                                stroke="#03DAC6"
+                                stroke={theme.borderColor.quaternary}
                                 label={<CustomLabel2 price={selectedRightPrice} />}
                             />
                         )}
