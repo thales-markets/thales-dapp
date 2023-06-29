@@ -18,6 +18,8 @@ type TableProps = {
     isLoading: boolean;
 };
 
+const TOOLTIP_DELAY_SEC = 0.3;
+
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoading }) => {
     // selectors
     const { t } = useTranslation();
@@ -47,11 +49,11 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             {
                 id: 'strikePrice',
                 Header: isRangedMarkets ? (
-                    <Tooltip overlay={t('markets.table.tooltip.strike-range')}>
+                    <Tooltip overlay={t('markets.table.tooltip.strike-range')} mouseEnterDelay={TOOLTIP_DELAY_SEC}>
                         <div>{t(`markets.table.strike-range-col`)}</div>
                     </Tooltip>
                 ) : (
-                    <Tooltip overlay={t('markets.table.tooltip.strike-price')}>
+                    <Tooltip overlay={t('markets.table.tooltip.strike-price')} mouseEnterDelay={TOOLTIP_DELAY_SEC}>
                         <div>{t(`markets.table.strike-price-col`)}</div>
                     </Tooltip>
                 ),
@@ -71,7 +73,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             {
                 id: 'roi',
                 Header: (
-                    <Tooltip overlay={t('markets.table.tooltip.roi')}>
+                    <Tooltip overlay={t('markets.table.tooltip.roi')} mouseEnterDelay={TOOLTIP_DELAY_SEC}>
                         <div>{t(`markets.table.roi`)}</div>
                     </Tooltip>
                 ),
@@ -92,7 +94,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             {
                 id: 'price',
                 Header: (
-                    <Tooltip overlay={t('markets.table.tooltip.price')}>
+                    <Tooltip overlay={t('markets.table.tooltip.price')} mouseEnterDelay={TOOLTIP_DELAY_SEC}>
                         <div>{t(`markets.table.price`)}</div>
                     </Tooltip>
                 ),

@@ -14,6 +14,7 @@ type TooltipProps = {
     overlayClassName?: string;
     iconColor?: string;
     mobileIconFontSize?: number;
+    mouseEnterDelay?: number;
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
@@ -27,6 +28,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     iconColor,
     children,
     mobileIconFontSize,
+    mouseEnterDelay,
 }) => {
     return (
         <ReactTooltip
@@ -34,6 +36,7 @@ const Tooltip: React.FC<TooltipProps> = ({
             placement="top"
             overlayClassName={overlayClassName || ''}
             overlayInnerStyle={overlayInnerStyle}
+            mouseEnterDelay={mouseEnterDelay}
         >
             {children ? (
                 (children as any)
