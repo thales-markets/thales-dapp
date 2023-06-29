@@ -63,7 +63,7 @@ const Token: React.FC = () => {
                                     <a
                                         target="_blank"
                                         rel="noreferrer"
-                                        href="https://optimistic.etherscan.io/address/0x217d47011b23bb961eb6d93ca9945b7501a5bb11"
+                                        href="https://optimistic.etherscan.io/token/0x217d47011b23bb961eb6d93ca9945b7501a5bb11"
                                     />
                                 ),
                                 bold5: <a target="_blank" rel="noreferrer" href="https://thalesmarket.io/governance" />,
@@ -140,6 +140,20 @@ const Token: React.FC = () => {
                                         target="_blank"
                                         rel="noreferrer"
                                         href="https://thalesmarket.io/token?tab=gamified-staking"
+                                    />
+                                ),
+                                bold3: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://docs.thalesmarket.io/thales-token/staking-thales-on-arbitrum-guide"
+                                    />
+                                ),
+                                bold4: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide"
                                     />
                                 ),
                             }}
