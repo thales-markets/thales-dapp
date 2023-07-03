@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { BigNumber } from '@ethersproject/bignumber';
+import { Network } from 'enums/network';
 
 interface Preview {
     toToken: Token;
@@ -24,7 +24,7 @@ const baseUrl = 'https://api.1inch.exchange/v4.0/';
 const suffix = '/quote?';
 
 const useQuoteTokensQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     fromToken: Token,
     toToken: Token,
     amount: BigNumber,

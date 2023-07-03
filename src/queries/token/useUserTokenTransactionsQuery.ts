@@ -2,11 +2,11 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { TokenTransactions } from 'types/token';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 
 const useUserTokenTransactionsQuery = (
     walletAddress: string | undefined,
-    networkId: NetworkId,
+    networkId: Network,
     type_in?: string,
     options?: UseQueryOptions<TokenTransactions>
 ) => {

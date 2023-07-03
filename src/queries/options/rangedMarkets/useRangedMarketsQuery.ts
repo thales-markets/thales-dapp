@@ -1,14 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { RangedMarket } from 'types/options';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 
-const useRangedMarketsQuery = (
-    networkId: NetworkId,
-    marketIds?: string[],
-    options?: UseQueryOptions<RangedMarket[]>
-) => {
+const useRangedMarketsQuery = (networkId: Network, marketIds?: string[], options?: UseQueryOptions<RangedMarket[]>) => {
     return useQuery<RangedMarket[]>(
         QUERY_KEYS.BinaryOptions.RangedMarkets(networkId, marketIds),
         async () => {

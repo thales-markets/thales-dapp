@@ -2,18 +2,18 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
-import { getStableCoinForNetwork } from 'utils/currency';
-import { STABLE_DECIMALS } from 'constants/options';
+import { Network } from 'enums/network';
 import { StableCoins } from 'types/options';
+import { STABLE_DECIMALS } from 'constants/currency';
+import { getDefaultCollateral } from 'utils/currency';
 
-const useStableBalanceQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
+const useStableBalanceQuery = (walletAddress: string, networkId: Network, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
         QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress ?? '', networkId),
         async () => {
             try {
                 const collateral = snxJSConnector.collateral;
-                const collateralKey = getStableCoinForNetwork(networkId);
+                const collateralKey = getDefaultCollateral(networkId);
 
                 let usdBalance = await collateral?.balanceOf(walletAddress);
                 usdBalance = usdBalance

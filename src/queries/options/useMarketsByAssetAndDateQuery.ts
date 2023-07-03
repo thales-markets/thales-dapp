@@ -4,7 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { uniq } from 'lodash';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { truncToDecimals } from 'utils/formatters/number';
@@ -16,7 +16,7 @@ const useMarketsByAssetAndDateQuery = (
     asset: string,
     date: number,
     position: Positions,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<MarketInfo[] | RangedMarketPerPosition[]>
 ) => {
     return useQuery<MarketInfo[] | RangedMarketPerPosition[]>(

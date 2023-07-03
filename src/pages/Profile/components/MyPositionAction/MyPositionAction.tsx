@@ -2,7 +2,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import {
     getDefaultToastContent,
     getLoadingToastOptions,
@@ -34,7 +34,7 @@ import {
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance } from 'utils/network';
+import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
 import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
 import { getIsMobile } from 'redux/modules/ui';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -161,7 +161,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
+                    const ammPrice = stableCoinFormatter(ammQuotes, networkId) / position.amount;
                     // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
                         ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||

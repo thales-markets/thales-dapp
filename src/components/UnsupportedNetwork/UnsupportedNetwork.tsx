@@ -13,14 +13,14 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { NetworkId, getIsMainnet } from 'utils/network';
+import { getIsMainnet } from 'utils/network';
 
 const UnsupportedNetwork: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMainnet = getIsMainnet(networkId);
 
-    const getButton = (network: NetworkId) => {
+    const getButton = (network: Network) => {
         let logo;
         let text;
         switch (network) {

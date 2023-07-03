@@ -1,13 +1,13 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
+import { Network } from 'enums/network';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const useThalesBalanceQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<{ balance: number }>
 ) => {
     return useQuery<{ balance: number }>(

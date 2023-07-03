@@ -2,13 +2,9 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 
-const useMaturityDatesByAssetQueryQuery = (
-    asset: string,
-    networkId: NetworkId,
-    options?: UseQueryOptions<number[]>
-) => {
+const useMaturityDatesByAssetQueryQuery = (asset: string, networkId: Network, options?: UseQueryOptions<number[]>) => {
     return useQuery<number[]>(
         QUERY_KEYS.BinaryOptions.MaturityDatesByAsset(asset, networkId),
         async () => {

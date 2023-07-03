@@ -4,7 +4,6 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { ZERO_ADDRESS } from 'constants/network';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { TransactionFilterEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getAddress, isAddress } from 'ethers/lib/utils';
@@ -30,6 +29,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();

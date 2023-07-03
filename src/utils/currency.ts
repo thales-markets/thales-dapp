@@ -1,14 +1,14 @@
 import {
     currencyKeyToAssetIconMap,
-    CRYPTO_CURRENCY_MAP,
     SYNTHS_MAP,
     currencyKeyToNameMap,
     CRYPTO_CURRENCY,
     COMMODITY,
+    COLLATERALS,
 } from 'constants/currency';
-import { COLLATERALS_INDEX } from 'enums/options';
 import { StableCoins } from 'types/options';
-import { getIsArbitrum, getIsBSC, getIsPolygon } from './network';
+import { Network } from 'enums/network';
+import { defaultNetwork } from 'constants/network';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
 const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
@@ -22,25 +22,14 @@ export const getSynthName = (currencyKey: string) =>
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
-export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
-    if (customStable) {
-        return customStable as StableCoins;
-    }
+export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0];
 
-    if (getIsArbitrum(networkId)) {
-        return CRYPTO_CURRENCY_MAP.USDC;
-    }
+export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index];
 
-    if (getIsBSC(networkId)) {
-        return CRYPTO_CURRENCY_MAP.BUSD;
-    }
+export const getCollaterals = (networkId: Network) => COLLATERALS[networkId];
 
-    if (getIsPolygon(networkId)) {
-        return CRYPTO_CURRENCY_MAP.USDC;
-    }
-
-    return SYNTHS_MAP.sUSD;
-};
+export const getCollateralIndexForNetwork = (networkId: Network, currencyKey: StableCoins) =>
+    COLLATERALS[networkId].indexOf(currencyKey);
 
 type StableBalances = {
     sUSD: number | null;
@@ -50,11 +39,11 @@ type StableBalances = {
 };
 
 export const getDefaultStableIndexByBalance = (balancesObject: any) => {
-    let index = COLLATERALS_INDEX['sUSD'];
+    let index = COLLATERALS[defaultNetwork.networkId].indexOf(SYNTHS_MAP.sUSD as StableCoins);
     if (balancesObject?.sUSD < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
             if (value && value > 1) {
-                index = COLLATERALS_INDEX[key as StableCoins];
+                index = COLLATERALS[defaultNetwork.networkId].indexOf(key as StableCoins);
                 break;
             }
         }

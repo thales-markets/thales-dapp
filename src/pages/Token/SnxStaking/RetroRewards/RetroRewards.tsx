@@ -42,7 +42,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'constants/options';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const initialVestingInfo = {
     unlocked: 0,

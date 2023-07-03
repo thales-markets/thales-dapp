@@ -6,7 +6,6 @@ import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import ROUTES from 'constants/routes';
 import { TokenTabEnum } from 'enums/token';
@@ -36,9 +35,8 @@ import styled, { useTheme } from 'styled-components';
 import { Colors, FlexDivEnd } from 'styles/common';
 import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getMaxGasLimitForNetwork } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
@@ -49,6 +47,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getDefaultCollateral } from 'utils/currency';
 
 enum SectionType {
     INFO,
@@ -203,16 +202,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const bonusRewardsFormatted = formatCurrencyWithKey(THALES_CURRENCY, 0.5 * baseRewardsPool, 0, true);
 
     // Market volume
-    const ammVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), thalesAmmVolume, 0, true);
-    const rangedVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), rangedAmmVolume, 0, true);
-    const sportsVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), sportsAmmVolume, 0, true);
+    const ammVolumeFormatted = formatCurrencyWithKey(getDefaultCollateral(networkId), thalesAmmVolume, 0, true);
+    const rangedVolumeFormatted = formatCurrencyWithKey(getDefaultCollateral(networkId), rangedAmmVolume, 0, true);
+    const sportsVolumeFormatted = formatCurrencyWithKey(getDefaultCollateral(networkId), sportsAmmVolume, 0, true);
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
-    const protocolVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolume);
+    const protocolVolumeFormatted = formatCurrencyWithKey(getDefaultCollateral(networkId), ammVolume);
     const protocolVolumeNeededForBonusFormatted =
         ammVolumeNeededForMaxBonus > 0
-            ? formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolumeNeededForMaxBonus)
+            ? formatCurrencyWithKey(getDefaultCollateral(networkId), ammVolumeNeededForMaxBonus)
             : '';
 
     const protocolMaxRewardFormatted = isClaimAvailable
