@@ -6,17 +6,48 @@ import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-lo
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
+import { Network } from 'enums/network';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 
-type NetworkMapper = Record<number, number>;
-type DropdownNetwork = {
-    name: string;
-    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+export const SUPPORTED_NETWORKS: Record<Network, string> = {
+    [Network.Mainnet]: 'MAINNET',
+    [Network.Ropsten]: 'ROPSTEN',
+    [Network.Rinkeby]: 'RINKEBY',
+    [Network.Goerli]: 'GOERLI',
+    [Network['Mainnet-Ovm']]: 'OPTIMISTIC',
+    [Network.Kovan]: 'KOVAN',
+    [Network.BSC]: 'BSC-MAINNET',
+    [Network['Kovan-Ovm']]: 'KOVAN-OPTIMISTIC',
+    [Network['POLYGON-MAINNET']]: 'POLYGON-MAINNET',
+    [Network['Goerli-Ovm']]: 'GOERLI-OPTIMISM',
+    [Network.Arbitrum]: 'ARBITRUM-ONE',
+    [Network['POLYGON-MUMBAI']]: 'POLYGON-MUMBAI',
 };
+
+export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
+    [Network.Mainnet]: 'MAINNET',
+    [Network.Ropsten]: 'ROPSTEN',
+    [Network.Rinkeby]: 'RINKEBY',
+    [Network.Goerli]: 'GOERLI',
+    [Network['Mainnet-Ovm']]: 'OPTIMISM MAINNET',
+    [Network.Kovan]: 'KOVAN',
+    [Network.BSC]: 'BINANCE SMART CHAIN MAINNET',
+    [Network['Kovan-Ovm']]: 'OPTIMISM KOVAN',
+    [Network['POLYGON-MAINNET']]: 'POLYGON',
+    [Network['Goerli-Ovm']]: 'OPTIMISM GOERLI',
+    [Network.Arbitrum]: 'ARBITRUM ONE',
+    [Network['POLYGON-MUMBAI']]: 'POLYGON MUMBAI',
+};
+
+export const defaultNetwork: { name: string; networkId: Network } = {
+    name: SUPPORTED_NETWORKS_NAMES[Network['Mainnet-Ovm']],
+    networkId: Network['Mainnet-Ovm'],
+};
+
+type NetworkMapper = Record<number, number>;
 
 export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     1: 10,
@@ -112,6 +143,12 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
+};
+
+type DropdownNetwork = {
+    name: string;
+    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
 };
 
 export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> = {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
-import { setSelectedCollateral } from 'redux/modules/wallet';
+import { setSelectedCollateralIndex } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
 
@@ -39,7 +39,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                                     key={index}
                                     onClick={() => {
                                         onChangeCollateral(index);
-                                        dispatch(setSelectedCollateral(index));
+                                        dispatch(setSelectedCollateralIndex(index));
                                     }}
                                 >
                                     <TextCollateral>{collateral}</TextCollateral>

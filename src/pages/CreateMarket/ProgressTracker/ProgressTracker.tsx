@@ -9,7 +9,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
-import { getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultCollateral } from 'utils/currency';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -29,7 +29,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label style={{ left: -36 }}>
                     {t('create-market.progress-tracker.approving', {
-                        currencyKey: getStableCoinForNetwork(networkId),
+                        currencyKey: getDefaultCollateral(networkId),
                     })}
                 </Label>
             </ProgressTrackerStep>

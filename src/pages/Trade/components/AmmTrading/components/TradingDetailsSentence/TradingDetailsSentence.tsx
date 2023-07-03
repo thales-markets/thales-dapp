@@ -7,11 +7,11 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
 import { Positions } from 'enums/options';
+import { getDefaultCollateral } from 'utils/currency';
 
 type TradingDetailsSentenceProps = {
     currencyKey: string;
@@ -40,7 +40,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     const potentialWinFormatted = isFetchingQuote
         ? '...'
         : `${formatCurrencyWithKey(
-              getStableCoinForNetwork(networkId),
+              getDefaultCollateral(networkId),
               Number(priceProfit) * Number(paidAmount) + Number(paidAmount)
           )}`;
 

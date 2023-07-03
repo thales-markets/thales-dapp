@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
@@ -16,7 +16,7 @@ import { Positions } from 'enums/options';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
 const useUserLivePositionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<UserLivePositions[]>
 ) => {

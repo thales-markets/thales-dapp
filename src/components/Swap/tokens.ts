@@ -1,5 +1,6 @@
 import { CRYPTO_CURRENCY_MAP, currencyKeyToNameMap } from 'constants/currency';
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 
 export enum TokenSymbol {
     SUSD = 'sUSD',
@@ -182,7 +183,7 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
     return mappedToken;
 };
 
-export const getTokenForSwap = (networkId: NetworkId, initialToToken: any) => {
+export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isOP = getIsOVM(networkId);
@@ -229,7 +230,7 @@ export const getTokenForSwap = (networkId: NetworkId, initialToToken: any) => {
     };
 };
 
-export const getFromTokenSwap = (networkId: NetworkId) => {
+export const getFromTokenSwap = (networkId: Network) => {
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isOP = getIsOVM(networkId);

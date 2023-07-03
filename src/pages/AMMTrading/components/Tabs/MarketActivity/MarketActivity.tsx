@@ -14,13 +14,13 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { getStableCoinForNetwork } from '../../../../../utils/currency';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { FlexDivColumn } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
+import { getDefaultCollateral } from 'utils/currency';
 
 type MarketActivityProps = {
     isRangedMarket: boolean;
@@ -139,7 +139,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
                                     ? formatCurrency(cellProps.cell.value)
-                                    : formatCurrencyWithKey(getStableCoinForNetwork(networkId), cellProps.cell.value)}
+                                    : formatCurrencyWithKey(getDefaultCollateral(networkId), cellProps.cell.value)}
                             </p>
                         ),
                         sortable: true,
@@ -152,10 +152,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                             <p>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
-                                    ? formatCurrencyWithKey(
-                                          getStableCoinForNetwork(networkId),
-                                          cellProps.cell.value ?? 0
-                                      )
+                                    ? formatCurrencyWithKey(getDefaultCollateral(networkId), cellProps.cell.value ?? 0)
                                     : EMPTY_VALUE}
                             </p>
                         ),

@@ -11,7 +11,6 @@ import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnect
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -23,6 +22,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 type Properties = {
     staked: number;

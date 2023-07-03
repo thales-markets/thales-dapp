@@ -20,7 +20,7 @@ import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { NetworkId, getIsOVM } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 
 const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -136,7 +136,7 @@ const TokentOverview: React.FC = () => {
     );
 };
 
-const getUrlForSwap = (networkId: NetworkId) => {
+const getUrlForSwap = (networkId: Network) => {
     switch (networkId) {
         case Network['Mainnet-Ovm']:
             return 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11';
@@ -148,7 +148,7 @@ const getUrlForSwap = (networkId: NetworkId) => {
     }
 };
 
-const getTitleForPrice = (networkId: NetworkId) => {
+const getTitleForPrice = (networkId: Network) => {
     switch (networkId) {
         case Network['Mainnet-Ovm']:
             return 'thales-token.overview.price-tooltip-l2';

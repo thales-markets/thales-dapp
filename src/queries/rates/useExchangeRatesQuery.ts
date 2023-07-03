@@ -2,10 +2,10 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 export type Rates = Record<string, number>;
 
-const useExchangeRatesQuery = (networkId: NetworkId, options?: UseQueryOptions<Rates>) => {
+const useExchangeRatesQuery = (networkId: Network, options?: UseQueryOptions<Rates>) => {
     return useQuery<Rates>(
         QUERY_KEYS.Rates.ExchangeRates(networkId),
         async () => {

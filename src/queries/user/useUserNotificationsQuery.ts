@@ -1,12 +1,12 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
-const useUserNotificationsQuery = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<number>) => {
+const useUserNotificationsQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<number>) => {
     return useQuery<number>(
         QUERY_KEYS.User.Notifications(walletAddress, networkId),
         async () => {

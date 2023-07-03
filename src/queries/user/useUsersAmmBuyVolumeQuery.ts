@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { generalConfig } from 'config/general';
 
 type UsersAmmBuyVolume = {
@@ -15,7 +15,7 @@ type UsersAmmBuyVolume = {
 };
 
 const useUsersAmmBuyVolumeQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     period: number,
     options?: UseQueryOptions<UsersAmmBuyVolume>
 ) => {

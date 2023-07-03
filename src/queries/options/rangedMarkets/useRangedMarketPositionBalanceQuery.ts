@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { RangedMarketBalanceInfo } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { ethers } from 'ethers';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import erc20Contract from 'utils/contracts/collateralContract';
@@ -12,7 +12,7 @@ import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 const useRangedMarketPositionBalanceQuery = (
     marketAddress: string,
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<RangedMarketBalanceInfo>
 ) => {
     return useQuery<RangedMarketBalanceInfo>(

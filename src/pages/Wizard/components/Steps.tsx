@@ -22,7 +22,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Colors } from 'styles/common';
-import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import Swap from 'components/Swap';
 
 enum NavItems {

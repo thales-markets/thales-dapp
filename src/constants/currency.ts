@@ -68,8 +68,8 @@ import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
 import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
-
-export type CurrencyKeyOptionType = { value: string; label: string };
+import { Network } from 'enums/network';
+import { StableCoins } from 'types/options';
 
 const SYNTHS = [
     'sBTC',
@@ -154,7 +154,6 @@ export const CRYPTO_CURRENCY = [
     'REP',
     'USDC',
     'USDT',
-    'DAI',
     'VELO',
     'ZRX',
     'THALES',
@@ -417,4 +416,42 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
     [COMMODITY_MAP.XAU]: 'tether-gold',
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
+};
+
+export const COLLATERALS: Record<Network, StableCoins[]> = {
+    [Network.Mainnet]: [],
+    [Network.Ropsten]: [],
+    [Network.Rinkeby]: [],
+    [Network.Goerli]: [],
+    [Network.Kovan]: [],
+    [Network['Mainnet-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['Kovan-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['Goerli-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['POLYGON-MUMBAI']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network['POLYGON-MAINNET']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as StableCoins],
+    [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+};
+
+export const STABLE_DECIMALS = {
+    sUSD: 18,
+    DAI: 18,
+    USDC: 6,
+    USDT: 6,
+    BUSD: 18,
 };
