@@ -8,7 +8,6 @@ import {
 } from 'constants/currency';
 import { StableCoins } from 'types/options';
 import { Network } from 'enums/network';
-import { defaultNetwork } from 'constants/network';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
 const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
@@ -38,12 +37,12 @@ type StableBalances = {
     USDT: number | null;
 };
 
-export const getDefaultStableIndexByBalance = (balancesObject: any) => {
-    let index = COLLATERALS[defaultNetwork.networkId].indexOf(SYNTHS_MAP.sUSD as StableCoins);
-    if (balancesObject?.sUSD < 1) {
+export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: Network, currencyKey: StableCoins) => {
+    let index = COLLATERALS[networkId].indexOf(currencyKey);
+    if (balancesObject && balancesObject[currencyKey] < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
             if (value && value > 1) {
-                index = COLLATERALS[defaultNetwork.networkId].indexOf(key as StableCoins);
+                index = COLLATERALS[networkId].indexOf(key as StableCoins);
                 break;
             }
         }

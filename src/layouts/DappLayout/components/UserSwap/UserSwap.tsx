@@ -83,7 +83,16 @@ const UserSwap: React.FC = () => {
 
     const defaultCollateral = isMultiCollateralSupported
         ? userCollaterals.find(
-              (el) => el.type === getCollateral(networkId, getDefaultStableIndexByBalance(multipleStableBalances?.data))
+              (el) =>
+                  el.type ===
+                  getCollateral(
+                      networkId,
+                      getDefaultStableIndexByBalance(
+                          multipleStableBalances?.data,
+                          networkId,
+                          getCollateral(networkId, userSelectedCollateralIndex)
+                      )
+                  )
           ) || userCollaterals[0]
         : userCollaterals[0];
 
@@ -95,7 +104,15 @@ const UserSwap: React.FC = () => {
         const positiveCollateral = isMultiCollateralSupported
             ? userCollaterals.find(
                   (el) =>
-                      el.type === getCollateral(networkId, getDefaultStableIndexByBalance(multipleStableBalances?.data))
+                      el.type ===
+                      getCollateral(
+                          networkId,
+                          getDefaultStableIndexByBalance(
+                              multipleStableBalances?.data,
+                              networkId,
+                              getCollateral(networkId, userSelectedCollateralIndex)
+                          )
+                      )
               ) || userCollaterals[0]
             : userCollaterals[0];
         setCollateral(positiveCollateral);
