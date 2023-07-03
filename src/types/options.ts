@@ -1,6 +1,8 @@
 import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 
+export type CurrencyKeyOptionType = { value: string; label: string };
+
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';

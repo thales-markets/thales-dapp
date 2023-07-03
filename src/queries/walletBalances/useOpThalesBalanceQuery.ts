@@ -1,12 +1,12 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
+import { Network } from 'enums/network';
 import { ethers } from 'ethers';
 
 const useOpThalesBalanceQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<{ balance: string }>
 ) => {
     return useQuery<{ balance: string }>(

@@ -3,20 +3,19 @@ import { OptionSide, RangedMarketPositionType } from 'types/options';
 import { ZERO_ADDRESS } from '../constants/network';
 
 export const getQuoteFromAMM = (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     parsedAmount: BigNumber,
     marketAddress: string,
     side: number | OptionSide,
-    sellToken?: string,
-    excludeImpact?: boolean
+    collateral?: string
 ) => {
     const promises = [];
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
         promises.push(
-            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, sellToken)
+            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, collateral)
         );
         promises.push(ammContractWithSigner.buyPriceImpact(marketAddress, side, parsedAmount));
     } else {
@@ -32,28 +31,23 @@ export const getQuoteFromAMM = (
         );
     }
 
-    if (excludeImpact) {
-        return promises[0];
-    }
-
     return promises;
 };
 
 export const getQuoteFromRangedAMM = (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     parsedAmount: BigNumber,
     marketAddress: string,
     side: number | RangedMarketPositionType,
-    sellToken?: string,
-    excludeImpact?: boolean
+    collateral?: string
 ) => {
     const promises = [];
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
         promises.push(
-            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, sellToken)
+            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, collateral)
         );
         promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     } else {
@@ -65,15 +59,11 @@ export const getQuoteFromRangedAMM = (
         promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     }
 
-    if (excludeImpact) {
-        return promises[0];
-    }
-
     return promises;
 };
 
 export const prepareTransactionForAMM = async (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     marketAddress: string,
@@ -81,7 +71,7 @@ export const prepareTransactionForAMM = async (
     parsedAmount: BigNumber,
     parsedTotal: BigNumber,
     parsedSlippage: BigNumber,
-    sellToken: string | undefined,
+    collateral: string | undefined,
     referral: string | null,
     providerOptions:
         | {
@@ -95,14 +85,14 @@ export const prepareTransactionForAMM = async (
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
         tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
             marketAddress,
             side,
             parsedAmount,
             parsedTotal,
             parsedSlippage,
-            sellToken,
+            collateral,
             referral ? referral : ZERO_ADDRESS,
             providerOptions
         )) as ethers.ContractTransaction;

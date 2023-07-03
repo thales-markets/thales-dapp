@@ -6,10 +6,10 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { CRYPTO_CURRENCY_MAP, CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { checkAllowance, getIsPolygon, isNetworkSupported, getMaxGasLimitForNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
@@ -42,10 +42,9 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
-import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
+import { getDefaultCollateral, getSynthName } from 'utils/currency';
 import ApprovalModal from 'components/ApprovalModal';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import Button from 'components/Button/Button';
 import { toast } from 'react-toastify';
 import {
@@ -53,6 +52,7 @@ import {
     getErrorToastOptions,
     getLoadingToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { CurrencyKeyOptionType } from 'types/options';
 
 const MIN_FUNDING_AMOUNT = 0;
 
@@ -238,10 +238,10 @@ const CreateMarket: React.FC = () => {
                     <FlexDivColumn style={{ flex: 1 }}>
                         <div>
                             <Description>
-                                {t('create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
+                                {t('create-market.subtitle', { token: getDefaultCollateral(networkId) })}
                             </Description>
                             <Description>
-                                {t('create-market.note', { token: getStableCoinForNetwork(networkId) })}
+                                {t('create-market.note', { token: getDefaultCollateral(networkId) })}
                             </Description>
                         </div>
                         <InputsWrapper>
@@ -436,7 +436,7 @@ const CreateMarket: React.FC = () => {
                                         }}
                                         disabled={isCreatingMarket || isMarketCreated}
                                         label={t('create-market.details.funding-amount.label')}
-                                        currencyLabel={getStableCoinForNetwork(networkId)}
+                                        currencyLabel={getDefaultCollateral(networkId)}
                                         showValidation={!isAmountValid}
                                         validationMessage={t('create-market.min-amount', {
                                             minimum: MIN_FUNDING_AMOUNT,
@@ -444,7 +444,7 @@ const CreateMarket: React.FC = () => {
                                     />
                                     <NoteText>
                                         {t('create-market.details.funding-amount.desc', {
-                                            token: getStableCoinForNetwork(networkId),
+                                            token: getDefaultCollateral(networkId),
                                         })}
                                     </NoteText>
                                 </ShortInputContainer>
@@ -477,7 +477,7 @@ const CreateMarket: React.FC = () => {
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={initialFundingAmount}
-                        tokenSymbol={getStableCoinForNetwork(networkId)}
+                        tokenSymbol={getDefaultCollateral(networkId)}
                         isAllowing={isAllowing}
                         onSubmit={handleAllowance}
                         onClose={() => setOpenApprovalModal(false)}

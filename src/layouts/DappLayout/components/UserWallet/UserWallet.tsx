@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP, defaultNetwork } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { NetworkId, defaultNetwork, hasEthereumInjected } from 'utils/network';
+import { hasEthereumInjected } from 'utils/network';
 import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
+import { Network } from 'enums/network';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -106,7 +107,7 @@ const UserWallet: React.FC = () => {
                                                 }
                                                 // Trigger App.js init
                                                 // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
-                                                dispatch(switchToNetworkId({ networkId: Number(id) as NetworkId }));
+                                                dispatch(switchToNetworkId({ networkId: Number(id) as Network }));
                                             }}
                                         >
                                             {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {

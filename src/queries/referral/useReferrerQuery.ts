@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 
 type Referrer = {
@@ -11,7 +11,7 @@ type Referrer = {
     timestamp: number;
 };
 
-const useReferrerQuery = (networkId: NetworkId, address?: string, options?: UseQueryOptions<Referrer[]>) => {
+const useReferrerQuery = (networkId: Network, address?: string, options?: UseQueryOptions<Referrer[]>) => {
     return useQuery<Referrer[]>(
         QUERY_KEYS.Referral.Referrer(networkId, address),
         async () => {

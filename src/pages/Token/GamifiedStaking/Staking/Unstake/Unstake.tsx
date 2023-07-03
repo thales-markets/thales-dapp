@@ -4,7 +4,6 @@ import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
@@ -32,6 +31,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 

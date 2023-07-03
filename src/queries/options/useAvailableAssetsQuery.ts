@@ -3,10 +3,10 @@ import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { uniq } from 'lodash';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { getCurrencyPriority } from 'utils/currency';
 
-const useAvailableAssetsQuery = (networkId: NetworkId, options?: UseQueryOptions<string[]>) => {
+const useAvailableAssetsQuery = (networkId: Network, options?: UseQueryOptions<string[]>) => {
     return useQuery<string[]>(
         QUERY_KEYS.BinaryOptions.AvailableAssets(networkId),
         async () => {

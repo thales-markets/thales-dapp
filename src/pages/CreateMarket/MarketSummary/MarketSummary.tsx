@@ -1,7 +1,7 @@
 import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
 import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
 import Tooltip from 'components/Tooltip/Tooltip';
-import { CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import {
     FlexDivRowCentered,
     FlexDivSpaceBetween,
 } from 'styles/common';
+import { CurrencyKeyOptionType } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 

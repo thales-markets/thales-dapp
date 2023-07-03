@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { UserPosition } from 'types/profile';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { Positions } from 'enums/options';
@@ -12,7 +12,7 @@ import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 import { orderBy } from 'lodash';
 
 const useClaimablePositionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<UserPosition[]>
 ) => {

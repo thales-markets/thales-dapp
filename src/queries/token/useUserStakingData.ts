@@ -1,15 +1,15 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
 import { UserStakingData } from 'types/token';
+import { Network } from 'enums/network';
 
 const useUserStakingDataQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<UserStakingData | undefined>
 ) => {
     return useQuery<UserStakingData | undefined>(

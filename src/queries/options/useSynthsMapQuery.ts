@@ -2,11 +2,11 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { SynthsMap } from 'types/synthetix';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
-const useSynthsMapQuery = (networkId: NetworkId, options?: UseQueryOptions<SynthsMap>) => {
+const useSynthsMapQuery = (networkId: Network, options?: UseQueryOptions<SynthsMap>) => {
     return useQuery<SynthsMap>(
         QUERY_KEYS.BinaryOptions.SynthsMap(networkId),
         async () => {

@@ -9,7 +9,7 @@ import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import bridgeContract from './contracts/bridgeContract';
-import usdcContract from './contracts/collateralContract';
+import collateralContract from './contracts/collateralContract';
 import escrowThales from './contracts/escrowThales';
 import { gelatoContract } from './contracts/gelatoContract';
 import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
@@ -70,7 +70,7 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketManagerContract,
             contractSettings
         );
-        this.collateral = conditionalInitializeContract(usdcContract, contractSettings);
+        this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
 
         this.multipleCollateral = [
             conditionalInitializeContract(multipleCollateral['sUSD'], contractSettings),

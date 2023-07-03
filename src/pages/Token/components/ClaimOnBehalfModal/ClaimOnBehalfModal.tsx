@@ -11,7 +11,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
 import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput';
@@ -24,6 +23,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;

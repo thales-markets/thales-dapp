@@ -1,14 +1,14 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { MigratedRetroReward } from 'types/token';
 import unclaimedInvestorsRetroRewardsHashes from 'utils/json/airdrop-hashes-unclaimed-retro-investors.json';
+import { Network } from 'enums/network';
 
 const useMigratedInvestorsRetroRewardsQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<MigratedRetroReward>
 ) => {
     return useQuery<MigratedRetroReward>(
