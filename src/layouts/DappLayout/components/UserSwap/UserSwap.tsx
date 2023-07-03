@@ -137,8 +137,8 @@ const UserSwap: React.FC = () => {
     };
 
     const assetIcon = (type: string) => {
-        const AssetIcon = getAssetIcon(type as StableCoins);
-        return <AssetIcon style={AssetIconStyle} />;
+        const AssetIconElement = getAssetIcon(type as StableCoins);
+        return <AssetIconElement style={AssetIconStyle} />;
     };
 
     return (

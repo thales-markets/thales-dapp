@@ -419,7 +419,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
 };
 
 export const COLLATERALS: Record<Network, StableCoins[]> = {
-    [Network.Mainnet]: [],
+    [Network.Mainnet]: [SYNTHS_MAP.sUSD as StableCoins],
     [Network.Ropsten]: [],
     [Network.Rinkeby]: [],
     [Network.Goerli]: [],
