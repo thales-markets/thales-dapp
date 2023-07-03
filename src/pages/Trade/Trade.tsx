@@ -25,6 +25,7 @@ import AssetTable from './components/Table';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { RouteComponentProps } from 'react-router-dom';
 import ROUTES from 'constants/routes';
+import Tooltip from 'components/Tooltip/Tooltip';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -116,7 +117,9 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                         <LeftSide>
                             <DropdownsWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('markets.steps.choose-asset')}</Info>
+                                    <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
+                                        <Info>{t('markets.steps.choose-asset')}</Info>
+                                    </Tooltip>
                                     {allAssets && (
                                         <AssetDropdown
                                             asset={currencyKey}
@@ -126,7 +129,9 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                     )}
                                 </PositionedWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('markets.steps.choose-date')}</Info>
+                                    <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
+                                        <Info>{t('markets.steps.choose-date')}</Info>
+                                    </Tooltip>
                                     <DatesDropdown
                                         date={maturityDate}
                                         setDate={setMaturityDate}
