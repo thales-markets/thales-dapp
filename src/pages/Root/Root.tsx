@@ -8,6 +8,7 @@ import {
     injectedWallet,
     ledgerWallet,
     metaMaskWallet,
+    rabbyWallet,
     rainbowWallet,
     trustWallet,
     walletConnectWallet,
@@ -84,14 +85,15 @@ const { chains, provider } = configureChains(
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
 );
-const projectId = 'c7a9a069cacf4cab5d8941ce24f185d6';
 
+const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || '';
 const connectors = connectorsForWallets([
     {
         groupName: 'Recommended',
         wallets: [
             metaMaskWallet({ projectId, chains }),
             walletConnectWallet({ projectId, chains }), // ensure all WalletConnect-based wallets are supported
+            rabbyWallet({ chains }),
             braveWallet({ chains }),
             ledgerWallet({ projectId, chains }),
             trustWallet({ projectId, chains }),
