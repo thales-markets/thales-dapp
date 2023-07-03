@@ -84,20 +84,21 @@ const { chains, provider } = configureChains(
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
 );
+const projectId = 'c7a9a069cacf4cab5d8941ce24f185d6';
 
 const connectors = connectorsForWallets([
     {
         groupName: 'Recommended',
         wallets: [
-            metaMaskWallet({ chains }),
-            walletConnectWallet({ chains }), // ensure all WalletConnect-based wallets are supported
+            metaMaskWallet({ projectId, chains }),
+            walletConnectWallet({ projectId, chains }), // ensure all WalletConnect-based wallets are supported
             braveWallet({ chains }),
-            ledgerWallet({ chains }),
-            trustWallet({ chains }),
+            ledgerWallet({ projectId, chains }),
+            trustWallet({ projectId, chains }),
             injectedWallet({ chains }), //  ensure all injected wallets are supported
-            coinbaseWallet({ appName: 'Overtime', chains }),
-            rainbowWallet({ chains }),
-            imTokenWallet({ chains }),
+            coinbaseWallet({ appName: 'Thales', chains }),
+            rainbowWallet({ projectId, chains }),
+            imTokenWallet({ projectId, chains }),
         ],
     },
 ]);
