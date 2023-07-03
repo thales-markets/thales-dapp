@@ -288,7 +288,11 @@
         "steps": {
             "choose-asset": "Choose Asset",
             "choose-date": "Choose Date",
-            "choose-direction": "Choose Direction"
+            "choose-direction": "Choose Direction",
+            "tooltip": {
+                "choose-asset": "Pick an Asset for which you want to buy a position.",
+                "choose-date": "Pick a Maturity Date at which your chosen Asset's price will determine the outcome of your position."
+            }
         },
         "user-positions": {
             "your-positions": "Your open positions",
