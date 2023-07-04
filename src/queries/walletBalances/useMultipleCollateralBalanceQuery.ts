@@ -2,13 +2,14 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
-import { STABLE_DECIMALS } from 'constants/options';
-import { COLLATERALS_INDEX } from 'enums/options';
+import { Network } from 'enums/network';
+import { CRYPTO_CURRENCY_MAP, STABLE_DECIMALS, SYNTHS_MAP } from 'constants/currency';
+import { StableCoins } from 'types/options';
+import { getCollateralIndexForNetwork } from 'utils/currency';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<any>
 ) => {
     return useQuery<any>(
@@ -28,16 +29,24 @@ const useMultipleCollateralBalanceQuery = (
 
                 const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
                     multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.sUSD]?.balanceOf(walletAddress)
+                        ? multipleCollateral[
+                              getCollateralIndexForNetwork(networkId, SYNTHS_MAP.sUSD as StableCoins)
+                          ]?.balanceOf(walletAddress)
                         : undefined,
                     multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.DAI]?.balanceOf(walletAddress)
+                        ? multipleCollateral[
+                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.DAI as StableCoins)
+                          ]?.balanceOf(walletAddress)
                         : undefined,
                     multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.USDC]?.balanceOf(walletAddress)
+                        ? multipleCollateral[
+                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.USDC as StableCoins)
+                          ]?.balanceOf(walletAddress)
                         : undefined,
                     multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.USDT]?.balanceOf(walletAddress)
+                        ? multipleCollateral[
+                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.USDT as StableCoins)
+                          ]?.balanceOf(walletAddress)
                         : undefined,
                 ]);
                 return {

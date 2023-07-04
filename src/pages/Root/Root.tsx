@@ -8,6 +8,7 @@ import {
     injectedWallet,
     ledgerWallet,
     metaMaskWallet,
+    rabbyWallet,
     rainbowWallet,
     trustWallet,
     walletConnectWallet,
@@ -85,19 +86,21 @@ const { chains, provider } = configureChains(
     ]
 );
 
+const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || '';
 const connectors = connectorsForWallets([
     {
         groupName: 'Recommended',
         wallets: [
-            metaMaskWallet({ chains }),
-            walletConnectWallet({ chains }), // ensure all WalletConnect-based wallets are supported
+            metaMaskWallet({ projectId, chains }),
+            walletConnectWallet({ projectId, chains }), // ensure all WalletConnect-based wallets are supported
+            rabbyWallet({ chains }),
             braveWallet({ chains }),
-            ledgerWallet({ chains }),
-            trustWallet({ chains }),
+            ledgerWallet({ projectId, chains }),
+            trustWallet({ projectId, chains }),
             injectedWallet({ chains }), //  ensure all injected wallets are supported
-            coinbaseWallet({ appName: 'Overtime', chains }),
-            rainbowWallet({ chains }),
-            imTokenWallet({ chains }),
+            coinbaseWallet({ appName: 'Thales', chains }),
+            rainbowWallet({ projectId, chains }),
+            imTokenWallet({ projectId, chains }),
         ],
     },
 ]);

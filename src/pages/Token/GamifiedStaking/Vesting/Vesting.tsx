@@ -2,7 +2,6 @@ import Button from 'components/Button/Button';
 import TileTable from 'components/TileTable';
 import { TileRow } from 'components/TileTable/TileTable';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import { ButtonContainer } from 'pages/Token/styled-components';
@@ -29,6 +28,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();

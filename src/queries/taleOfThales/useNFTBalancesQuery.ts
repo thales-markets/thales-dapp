@@ -1,11 +1,11 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 
 const useNFTBalancesQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<Record<number, boolean>>
 ) => {
     return useQuery<Record<number, boolean>>(

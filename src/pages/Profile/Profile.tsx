@@ -36,6 +36,7 @@ import ProfileSection from './components/ProfileSection';
 import UserVaultsLp from './components/UserVaultsLp';
 import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
+import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -188,6 +189,7 @@ const Profile: React.FC = () => {
                             <>
                                 <ProfileSection
                                     title={t('profile.accordions.claimable-positions')}
+                                    subtitle={t('profile.winnings-are-forfeit', { days: MARKET_DURATION_IN_DAYS })}
                                     mobileMaxHeight="360px"
                                 >
                                     <ClaimablePositions

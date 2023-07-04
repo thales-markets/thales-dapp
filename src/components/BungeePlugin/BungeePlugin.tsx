@@ -7,10 +7,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { NetworkId, getDefaultCollateral } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { hexToRGB } from 'utils/style';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
+import { getDefaultCollateral } from 'utils/currency';
 
 const SUPPORTED_DESTINATION_NETWORKS = [
     Network['Mainnet-Ovm'],
@@ -41,7 +41,7 @@ const BungeePlugin: React.FC = () => {
     const defaultDestinationToken = allTokens.filter(
         (token) =>
             token.chainId === defaultDestNetwork &&
-            token.symbol === getDefaultCollateral(defaultDestNetwork as NetworkId).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
+            token.symbol === getDefaultCollateral(defaultDestNetwork as Network).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
     )[0]?.address;
 
     // All colors should stricktly be in RGB format

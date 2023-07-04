@@ -3,11 +3,11 @@ import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
 import { VAULT_MAP } from 'constants/vault';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 
 const useUserVaultsAndLpTransactionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<VaultsAndLiquidityPoolUserTransactions>
 ) => {

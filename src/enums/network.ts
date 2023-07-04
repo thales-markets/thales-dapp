@@ -3,14 +3,14 @@ export enum Network {
     Ropsten = 3,
     Rinkeby = 4,
     Goerli = 5,
-    Kovan = 42,
     'Mainnet-Ovm' = 10,
-    'Kovan-Ovm' = 69,
-    'Goerli-Ovm' = 420,
-    'POLYGON-MUMBAI' = 80001,
-    'POLYGON-MAINNET' = 137,
+    Kovan = 42,
     BSC = 56,
+    'Kovan-Ovm' = 69,
+    'POLYGON-MAINNET' = 137,
+    'Goerli-Ovm' = 420,
     Arbitrum = 42161,
+    'POLYGON-MUMBAI' = 80001,
 }
 
 export enum OneInchLiquidityProtocol {

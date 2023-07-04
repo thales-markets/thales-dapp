@@ -3,7 +3,6 @@ import Button from 'components/Button';
 import Checkbox from 'components/fields/Checkbox';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import Modal from 'components/Modal';
-import { COLLATERALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +11,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { getCollateral } from 'utils/currency';
 import { bigNumberFormatter, stableCoinParser } from 'utils/formatters/ethers';
 
 type ApprovalModalProps = {
@@ -48,7 +48,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     const amountConverted = isNonStable
         ? ethers.utils.parseEther(Number(amount).toString())
-        : stableCoinParser(Number(amount).toString(), networkId, COLLATERALS[collateralIndex || 0]);
+        : stableCoinParser(Number(amount).toString(), networkId, getCollateral(networkId, collateralIndex || 0));
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {

@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { checkAllowance, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';
-import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
+import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
@@ -29,7 +29,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'constants/options';
+import { Network } from 'enums/network';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -216,7 +216,7 @@ const Bridge: React.FC = () => {
                     disabled={true}
                     currencyLabel={THALES_CURRENCY}
                     label={`${t('migration.to-label')}: ${
-                        SUPPORTED_NETWORKS_NAMES[L1_TO_L2_NETWORK_MAPPER[networkId] as NetworkId]
+                        SUPPORTED_NETWORKS_NAMES[L1_TO_L2_NETWORK_MAPPER[networkId] as Network]
                     }`}
                 />
             </InputContainer>

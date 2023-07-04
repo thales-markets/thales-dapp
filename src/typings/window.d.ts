@@ -1,4 +1,4 @@
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 
 interface RequestArguments {
     method: string;
@@ -10,17 +10,17 @@ declare global {
         web3?: {
             eth?: {
                 net: {
-                    getId: () => NetworkId;
+                    getId: () => Network;
                 };
             };
             version: {
                 getNetwork(cb: (err: Error | undefined, networkId: string) => void): void;
-                network: NetworkId;
+                network: Network;
             };
         };
         ethereum?: {
             on: (event: string, cb: () => void) => void;
-            networkVersion: NetworkId;
+            networkVersion: Network;
             request: (args: RequestArguments) => Promise<unknown>;
             isMetaMask: boolean;
         };

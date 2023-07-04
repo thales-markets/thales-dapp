@@ -264,8 +264,7 @@ const ButtonWrapper = styled.div`
 
 const FooterIconLogo = styled.i`
     font-size: 12em;
-    margin-top: -50px;
-    margin-bottom: -40px;
+    line-height: 80px;
     color: ${(props) => props.theme.landingPage.textColor.primary};
     text-align: center;
 `;

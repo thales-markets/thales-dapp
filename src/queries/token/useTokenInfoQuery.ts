@@ -7,9 +7,8 @@ import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { TokenInfo } from 'types/token';
 import thalesContract from 'utils/contracts/thalesContract';
-import { NetworkId } from 'utils/network';
 
-const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<TokenInfo | undefined>) => {
+const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenInfo | undefined>) => {
     return useQuery<TokenInfo | undefined>(
         QUERY_KEYS.Token.Info(networkId),
         async () => {

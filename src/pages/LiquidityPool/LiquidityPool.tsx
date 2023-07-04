@@ -11,7 +11,6 @@ import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import {
     getDefaultToastContent,
     getLoadingToastOptions,
@@ -36,9 +35,9 @@ import { FlexDivRow } from 'styles/common';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultCollateral } from 'utils/currency';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
-import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork, getMaxGasLimitForNetwork } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import PnL from './PnL';
@@ -117,7 +116,7 @@ const LiquidityPool: React.FC = () => {
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
             setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getStableCoinForNetwork(networkId))
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);

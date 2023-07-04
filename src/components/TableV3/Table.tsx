@@ -285,6 +285,8 @@ const Table: React.FC<TableProps> = ({
                                                             2
                                                         )}
                                                     </Price>
+                                                    <DirectedArrowIcon className="icon icon--caret-up" top="-12px" />
+                                                    <DirectedArrowIcon className="icon icon--caret-down" top="0" />
                                                 </PriceWrapper>
                                             )}
                                         </>
@@ -303,7 +305,7 @@ const PriceWrapper = styled.div`
     width: 100%;
     height: 0;
     border-top: 1px dashed ${(props) => props.theme.borderColor.tertiary};
-    margin: 8px 0;
+    margin: 9px 0 10px 0;
     position: relative;
 `;
 
@@ -327,7 +329,6 @@ const Price = styled.div`
 
     font-weight: 700;
     font-size: 10px;
-    line-height: 90%;
 
     text-align: center;
     color: ${(props) => props.theme.borderColor.tertiary};
@@ -485,13 +486,6 @@ const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
     }
 `;
 
-// const CellAlignment: Record<string, string> = {
-//     wallet: 'center',
-//     points: 'center',
-//     rewards: 'center',
-//     finishTime: 'center',
-// };
-
 const ExpandableRow = styled.div`
     display: block;
 `;
@@ -501,6 +495,14 @@ const ArrowIcon = styled.i`
     display: flex;
     align-items: center;
     margin-right: 6px;
+`;
+
+const DirectedArrowIcon = styled.i<{ top: string }>`
+    position: absolute;
+    top: ${(props) => props.top};
+    right: 0;
+    color: ${(props) => props.theme.borderColor.tertiary};
+    font-size: 11px;
 `;
 
 export default Table;

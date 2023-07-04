@@ -1,8 +1,8 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
 import thalesData from 'thales-data';
+import { Network } from 'enums/network';
 
 type StakingClaimOnBehalfResponse = {
     enabledAddresses: string[];
@@ -10,7 +10,7 @@ type StakingClaimOnBehalfResponse = {
 
 const useStakingClaimOnBehalfQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<StakingClaimOnBehalfResponse>
 ) => {
     return useQuery<StakingClaimOnBehalfResponse>(

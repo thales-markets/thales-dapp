@@ -2,17 +2,17 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { UserPosition } from 'types/profile';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
-import { isOptionClaimable } from 'utils/options';
+import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 import { orderBy } from 'lodash';
 
 const useClaimablePositionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<UserPosition[]>
 ) => {
@@ -35,11 +35,14 @@ const useClaimablePositionsQuery = (
             const claimablePositions: UserPosition[] = [];
             const rangedClaimablePositions: UserPosition[] = [];
 
+            const minMaturityDateForClaim = getMinMaturityDateForClaim();
+
             positionBalances.map((positionBalance: any) => {
                 if (
                     bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
                     positionBalance.position.market.result !== null &&
-                    isOptionClaimable(positionBalance)
+                    isOptionClaimable(positionBalance) &&
+                    positionBalance.position.market.maturityDate >= minMaturityDateForClaim
                 ) {
                     claimablePositions.push(positionBalance);
                 }
@@ -49,7 +52,8 @@ const useClaimablePositionsQuery = (
                 if (
                     bigNumberFormatter(positionBalance.amount) >= POSITION_BALANCE_THRESHOLD &&
                     positionBalance.position.market.result !== null &&
-                    isOptionClaimable(positionBalance)
+                    isOptionClaimable(positionBalance) &&
+                    positionBalance.position.market.maturityDate >= minMaturityDateForClaim
                 ) {
                     rangedClaimablePositions.push(positionBalance);
                 }

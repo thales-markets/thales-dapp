@@ -3,9 +3,10 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { LiquidityPoolData } from 'types/liquidityPool';
-import { NetworkId, getDefaultDecimalsForNetwork } from 'utils/network';
+import { getDefaultDecimalsForNetwork } from 'utils/network';
+import { Network } from 'enums/network';
 
-const useLiquidityPoolDataQuery = (networkId: NetworkId, options?: UseQueryOptions<LiquidityPoolData | undefined>) => {
+const useLiquidityPoolDataQuery = (networkId: Network, options?: UseQueryOptions<LiquidityPoolData | undefined>) => {
     return useQuery<LiquidityPoolData | undefined>(
         QUERY_KEYS.LiquidityPool.Data(networkId),
         async () => {

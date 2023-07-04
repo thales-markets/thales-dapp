@@ -10,6 +10,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
+import { getIsMainnet } from 'utils/network';
 import { buildHref } from 'utils/routes';
 
 const Notifications: React.FC = () => {
@@ -19,8 +20,10 @@ const Notifications: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const isMainnet = getIsMainnet(networkId);
+
     const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isMainnet,
     });
 
     const notifications = useMemo(() => {
