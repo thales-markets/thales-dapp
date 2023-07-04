@@ -68,7 +68,7 @@ type OptimismNetwork = {
 };
 
 export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
-    10: {
+    [Network['Mainnet-Ovm']]: {
         chainId: '0xA',
         chainName: 'Optimism',
         rpcUrls: ['https://mainnet.optimism.io'],
@@ -79,7 +79,7 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    69: {
+    [Network['Kovan-Ovm']]: {
         chainId: '0x45',
         chainName: 'Optimism Kovan',
         rpcUrls: ['https://kovan.optimism.io'],
@@ -93,7 +93,7 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
 };
 
 const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
-    137: {
+    [Network['POLYGON-MAINNET']]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
         rpcUrls: ['https://polygon-rpc.com'],
@@ -104,7 +104,7 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    80001: {
+    [Network['POLYGON-MUMBAI']]: {
         chainId: '0x13881',
         chainName: 'Polygon Mumbai',
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
@@ -118,7 +118,7 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
 };
 
 const BSC_NETWORK: Record<number, OptimismNetwork> = {
-    56: {
+    [Network.BSC]: {
         chainId: '0x38',
         chainName: 'BSC',
         rpcUrls: ['https://bsc-dataseed.binance.org/'],
@@ -132,7 +132,7 @@ const BSC_NETWORK: Record<number, OptimismNetwork> = {
 };
 
 const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
-    42161: {
+    [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
         rpcUrls: ['https://arb1.arbitrum.io/rpc'],
@@ -149,10 +149,11 @@ type DropdownNetwork = {
     name: string;
     icon: FunctionComponent<SVGProps<SVGSVGElement>>;
     changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+    order: number;
 };
 
-export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> = {
-    10: {
+export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
+    [Network['Mainnet-Ovm']]: {
         name: 'Optimism',
         icon: OpLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -186,8 +187,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 1,
     },
-    137: {
+    [Network['POLYGON-MAINNET']]: {
         name: 'Polygon',
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -221,8 +223,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 3,
     },
-    1: {
+    [Network.Mainnet]: {
         name: 'Mainnet',
         icon: EthereumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -240,8 +243,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 5,
     },
-    56: {
+    [Network.BSC]: {
         name: 'BNBChain',
         icon: BSCLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -274,8 +278,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 4,
     },
-    42161: {
+    [Network.Arbitrum]: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -308,5 +313,6 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 2,
     },
 };

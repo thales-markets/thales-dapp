@@ -219,7 +219,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId));
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedCollateralIndex, isMultiCollateralSupported]);
 
-    // If sUSD balance is zero, select first stable with nonzero value as default
+    // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {
         if (
             multipleStableBalances?.data &&
@@ -227,7 +227,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             selectedCollateralIndex === 0 &&
             isMultiCollateralSupported
         ) {
-            const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
+            const defaultStableBalance = getDefaultStableIndexByBalance(
+                multipleStableBalances?.data,
+                networkId,
+                getCollateral(networkId, selectedCollateralIndex)
+            );
             dispatch(setSelectedCollateralIndex(defaultStableBalance));
         }
     }, [
@@ -731,7 +735,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 <CollateralSelector
                                     collateralArray={getCollaterals(networkId)}
                                     selectedItem={selectedCollateralIndex}
-                                    onChangeCollateral={(index) => dispatch(setSelectedCollateralIndex(index))}
+                                    onChangeCollateral={() => {}}
                                     disabled={isFormDisabled}
                                 />
                             ) : undefined

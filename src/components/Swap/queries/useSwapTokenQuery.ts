@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Network } from 'enums/network';
+import { generalConfig } from 'config/general';
 
 interface Swap {
     toToken: Token;
@@ -21,7 +22,6 @@ interface Token {
     symbol: string;
 }
 
-const baseUrl = 'https://api.1inch.exchange/v4.0/';
 const suffix = '/swap?';
 
 const useSwapTokenQuery = (
@@ -36,7 +36,7 @@ const useSwapTokenQuery = (
     return useQuery<Swap>(
         QUERY_KEYS.Swap.Swap(networkId),
         async () => {
-            let url = baseUrl + networkId + suffix;
+            let url = generalConfig.ONE_INCH_API_URL + networkId + suffix;
             const fromUrl = 'fromTokenAddress=' + fromToken.address;
             const toUrl = '&toTokenAddress=' + toToken.address;
             const fromAddUrl = '&fromAddress=' + fromAddress;

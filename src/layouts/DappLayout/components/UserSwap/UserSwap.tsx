@@ -83,7 +83,16 @@ const UserSwap: React.FC = () => {
 
     const defaultCollateral = isMultiCollateralSupported
         ? userCollaterals.find(
-              (el) => el.type === getCollateral(networkId, getDefaultStableIndexByBalance(multipleStableBalances?.data))
+              (el) =>
+                  el.type ===
+                  getCollateral(
+                      networkId,
+                      getDefaultStableIndexByBalance(
+                          multipleStableBalances?.data,
+                          networkId,
+                          getCollateral(networkId, userSelectedCollateralIndex)
+                      )
+                  )
           ) || userCollaterals[0]
         : userCollaterals[0];
 
@@ -95,7 +104,15 @@ const UserSwap: React.FC = () => {
         const positiveCollateral = isMultiCollateralSupported
             ? userCollaterals.find(
                   (el) =>
-                      el.type === getCollateral(networkId, getDefaultStableIndexByBalance(multipleStableBalances?.data))
+                      el.type ===
+                      getCollateral(
+                          networkId,
+                          getDefaultStableIndexByBalance(
+                              multipleStableBalances?.data,
+                              networkId,
+                              getCollateral(networkId, userSelectedCollateralIndex)
+                          )
+                      )
               ) || userCollaterals[0]
             : userCollaterals[0];
         setCollateral(positiveCollateral);
@@ -142,76 +159,82 @@ const UserSwap: React.FC = () => {
     };
 
     return (
-        <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
-            <Container>
-                <SwapWrapper
-                    clickable={isWalletConnected && !showSwap}
-                    onClick={() =>
-                        isWalletConnected &&
-                        (isMultiCollateralSupported
-                            ? setIsDropdownOpen(!isDropdownOpen)
-                            : onStableClickHandler(collateral.type))
-                    }
-                    onMouseOver={() => !isMultiCollateralSupported && onStableHoverHandler(0, collateral.type)}
-                    onMouseLeave={() => setSwapText('')}
-                >
-                    {assetIcon(collateral.type)}
-                    <BalanceTextWrapper>
-                        <BalanceText>
-                            {!isMultiCollateralSupported && swapText && swapTextIndex === 0
-                                ? swapText
-                                : formatCurrencyWithKey(collateral.type, collateral.balance, 2)}
-                        </BalanceText>
-                    </BalanceTextWrapper>
-                    {isWalletConnected && isMultiCollateralSupported && (
-                        <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
-                    )}
-                </SwapWrapper>
-                {isDropdownOpen && (
-                    <Dropdown>
-                        {userCollaterals.map((coin, index) => (
-                            <BalanceWrapper
-                                key={index}
-                                clickable={isWalletConnected && !showSwap}
-                                onClick={() => onStableClickHandler(coin.type)}
-                                onMouseOver={() => onStableHoverHandler(index, coin.type)}
-                                onMouseLeave={() => setSwapText('')}
-                            >
-                                {assetIcon(coin.type)}
-                                <BalanceTextWrapper>
-                                    <BalanceText>
-                                        {swapText && swapTextIndex === index
-                                            ? swapText
-                                            : formatCurrencyWithKey(coin.type as StableCoins, coin.balance, 2)}
-                                    </BalanceText>
-                                </BalanceTextWrapper>
-                            </BalanceWrapper>
-                        ))}
-                    </Dropdown>
-                )}
-            </Container>
-            {showSwap && (
-                <Suspense fallback={<></>}>
-                    <Modal
-                        title={t('common.swap.title', { token: swapToStableCoin })}
-                        onClose={() => setShowSwap(false)}
-                        shouldCloseOnOverlayClick={false}
-                        customStyle={{ overlay: { zIndex: 2000 } }}
+        <Container>
+            <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
+                <Wrapper>
+                    <SwapWrapper
+                        clickable={isWalletConnected && !showSwap}
+                        onClick={() =>
+                            isWalletConnected &&
+                            (isMultiCollateralSupported
+                                ? setIsDropdownOpen(!isDropdownOpen)
+                                : onStableClickHandler(collateral.type))
+                        }
+                        onMouseOver={() => !isMultiCollateralSupported && onStableHoverHandler(0, collateral.type)}
+                        onMouseLeave={() => setSwapText('')}
                     >
-                        <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
-                    </Modal>
-                </Suspense>
-            )}
-        </OutsideClickHandler>
+                        {assetIcon(collateral.type)}
+                        <BalanceTextWrapper>
+                            <BalanceText>
+                                {!isMultiCollateralSupported && swapText && swapTextIndex === 0
+                                    ? swapText
+                                    : formatCurrencyWithKey(collateral.type, collateral.balance, 2)}
+                            </BalanceText>
+                        </BalanceTextWrapper>
+                        {isWalletConnected && isMultiCollateralSupported && (
+                            <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                        )}
+                    </SwapWrapper>
+                    {isDropdownOpen && (
+                        <Dropdown>
+                            {userCollaterals.map((coin, index) => (
+                                <BalanceWrapper
+                                    key={index}
+                                    clickable={isWalletConnected && !showSwap}
+                                    onClick={() => onStableClickHandler(coin.type)}
+                                    onMouseOver={() => onStableHoverHandler(index, coin.type)}
+                                    onMouseLeave={() => setSwapText('')}
+                                >
+                                    {assetIcon(coin.type)}
+                                    <BalanceTextWrapper>
+                                        <BalanceText>
+                                            {swapText && swapTextIndex === index
+                                                ? swapText
+                                                : formatCurrencyWithKey(coin.type as StableCoins, coin.balance, 2)}
+                                        </BalanceText>
+                                    </BalanceTextWrapper>
+                                </BalanceWrapper>
+                            ))}
+                        </Dropdown>
+                    )}
+                </Wrapper>
+                {showSwap && (
+                    <Suspense fallback={<></>}>
+                        <Modal
+                            title={t('common.swap.title', { token: swapToStableCoin })}
+                            onClose={() => setShowSwap(false)}
+                            shouldCloseOnOverlayClick={false}
+                            customStyle={{ overlay: { zIndex: 2000 } }}
+                        >
+                            <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
+                        </Modal>
+                    </Suspense>
+                )}
+            </OutsideClickHandler>
+        </Container>
     );
 };
 
-const Container = styled(FlexDivRow)`
+const Container = styled.div`
+    width: 100%;
+`;
+
+const Wrapper = styled(FlexDivRow)`
     position: relative;
     display: flex;
     width: 150px;
     @media (max-width: 500px) {
-        min-width: 138px;
+        min-width: 124px;
         width: 100%;
     }
 `;
@@ -241,7 +264,7 @@ const Dropdown = styled.div`
     z-index: 101;
     gap: 5px;
     @media (max-width: 500px) {
-        min-width: 138px;
+        min-width: 124px;
         width: 100%;
     }
 `;
