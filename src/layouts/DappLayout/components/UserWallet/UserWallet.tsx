@@ -46,8 +46,7 @@ const UserWallet: React.FC = () => {
         !window.ethereum?.isMetaMask &&
         !window.ethereum?.isBraveWallet &&
         !window.ethereum?.isCoinbaseWallet &&
-        !window.ethereum?.isTrust &&
-        !window.ethereum?.isCoinbaseWallet;
+        !window.ethereum?.isTrust;
 
     return (
         <Container isWalletConnected={isWalletConnected}>
