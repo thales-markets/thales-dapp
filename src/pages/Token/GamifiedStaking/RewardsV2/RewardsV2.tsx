@@ -8,7 +8,6 @@ import {
     getErrorToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
@@ -31,6 +30,7 @@ import StakingSteps from './components/StakingSteps/StakingSteps';
 import StakingOverview from './components/StakingOverview/StakingOverview';
 import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 import BaseRewards from './components/BaseRewards/BaseRewards';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const RewardsV2: React.FC = () => {
     const { t } = useTranslation();
