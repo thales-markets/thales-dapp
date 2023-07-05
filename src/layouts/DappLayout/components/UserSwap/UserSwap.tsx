@@ -124,7 +124,7 @@ const UserSwap: React.FC = () => {
             userCollaterals.find((el) => el.type === getCollateral(networkId, userSelectedCollateralIndex)) ||
             userCollaterals[0];
         setCollateral(selectedCollateral);
-    }, [userSelectedCollateralIndex]);
+    }, [userSelectedCollateralIndex, networkId]);
 
     const onStableHoverHandler = (index: number, stableCoin: StableCoins) => {
         if (isWalletConnected) {
