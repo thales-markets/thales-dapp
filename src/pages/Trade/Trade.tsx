@@ -23,8 +23,11 @@ import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import { RouteComponentProps } from 'react-router-dom';
+import ROUTES from 'constants/routes';
+import Tooltip from 'components/Tooltip/Tooltip';
 
-const TradePage: React.FC = () => {
+const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
 
     // selectors
@@ -33,11 +36,12 @@ const TradePage: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const isMainnet = getIsMainnet(networkId);
+    const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
     // states
     const [currencyKey, setCurrencyKey] = useState(CRYPTO_CURRENCY_MAP.BTC);
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
-    const [positionType, setPositionType] = useState(Positions.UP);
+    const [positionType, setPositionType] = useState(isRangedMarkets ? Positions.IN : Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
     // queries
@@ -113,7 +117,9 @@ const TradePage: React.FC = () => {
                         <LeftSide>
                             <DropdownsWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('markets.steps.choose-asset')}</Info>
+                                    <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
+                                        <Info>{t('markets.steps.choose-asset')}</Info>
+                                    </Tooltip>
                                     {allAssets && (
                                         <AssetDropdown
                                             asset={currencyKey}
@@ -123,7 +129,9 @@ const TradePage: React.FC = () => {
                                     )}
                                 </PositionedWrapper>
                                 <PositionedWrapper>
-                                    <Info>{t('markets.steps.choose-date')}</Info>
+                                    <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
+                                        <Info>{t('markets.steps.choose-date')}</Info>
+                                    </Tooltip>
                                     <DatesDropdown
                                         date={maturityDate}
                                         setDate={setMaturityDate}

@@ -4,7 +4,6 @@ import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
@@ -18,7 +17,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
@@ -32,6 +31,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -431,7 +431,7 @@ const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
     }
 `;
 
-const ButtonWrapperTooltip = styled.div`
+const ButtonWrapperTooltip = styled(FlexDivCentered)`
     width: 100%;
 `;
 

@@ -41,59 +41,138 @@ const Token: React.FC = () => {
 
                     <H2 id="section1">{t('articles.token.list.1')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.token.paragraphs.1" components={{ bold: <strong /> }} />
-                    </Paragraph>
-
-                    <H2 id="section2">{t('articles.token.list.2')}</H2>
-                    <Paragraph>
-                        <Trans i18nKey="articles.token.paragraphs.2" components={{ bold: <strong /> }} />
-                    </Paragraph>
-                    <PieChart>
-                        <AnimationSvg type="image/svg+xml" data={picBlack}></AnimationSvg>
-                    </PieChart>
-
-                    <Paragraph>
                         <Trans
-                            i18nKey="articles.token.paragraphs.3"
+                            i18nKey="articles.token.paragraphs.1"
                             components={{
                                 bold: <strong />,
                                 bold2: (
                                     <a
                                         target="_blank"
                                         rel="noreferrer"
-                                        href="https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-18.md"
+                                        href="https://etherscan.io/token/0x8947da500Eb47F82df21143D0C01A29862a8C3c5"
+                                    />
+                                ),
+                                bold3: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://arbiscan.io/token/0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30"
+                                    />
+                                ),
+                                bold4: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://optimistic.etherscan.io/token/0x217d47011b23bb961eb6d93ca9945b7501a5bb11"
+                                    />
+                                ),
+                                bold5: <a target="_blank" rel="noreferrer" href="https://thalesmarket.io/governance" />,
+                                bold6: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://thalesmarket.io/governance/thalescouncil.eth/"
                                     />
                                 ),
                             }}
                         />
                     </Paragraph>
+
+                    <H2 id="section2">{t('articles.token.list.2')}</H2>
+                    <Paragraph>
+                        <Trans
+                            i18nKey="articles.token.paragraphs.2"
+                            components={{
+                                bold: <strong />,
+                                bold2: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://docs.thalesmarket.io/thales-token/thales-tokenomics"
+                                    />
+                                ),
+                            }}
+                        />
+                    </Paragraph>
+                    {/* TODO: PieChart needs to be updated */}
+                    {false && (
+                        <>
+                            <PieChart>
+                                <AnimationSvg type="image/svg+xml" data={picBlack}></AnimationSvg>
+                            </PieChart>
+
+                            <Paragraph>
+                                <Trans
+                                    i18nKey="articles.token.paragraphs.3"
+                                    components={{
+                                        bold: <strong />,
+                                        bold2: (
+                                            <a
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                href="https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-18.md"
+                                            />
+                                        ),
+                                    }}
+                                />
+                            </Paragraph>
+                        </>
+                    )}
 
                     <H2 id="section3">{t('articles.token.list.3')}</H2>
                     <Paragraph>
                         <Trans
                             i18nKey="articles.token.paragraphs.4"
                             components={{
-                                bold: <a target="_blank" rel="noreferrer" href="https://app.dodoex.io/" />,
-                                bold2: <a target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap" />,
-                                bold3: (
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-17.md"
-                                    />
-                                ),
+                                bold: <strong />,
                             }}
                         />
                     </Paragraph>
 
                     <H2 id="section4">{t('articles.token.list.4')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.token.paragraphs.5" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.token.paragraphs.5"
+                            components={{
+                                bold: <strong />,
+                                bold2: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://thalesmarket.io/token?tab=gamified-staking"
+                                    />
+                                ),
+                                bold3: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://docs.thalesmarket.io/thales-token/staking-thales-on-arbitrum-guide"
+                                    />
+                                ),
+                                bold4: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide"
+                                    />
+                                ),
+                            }}
+                        />
                     </Paragraph>
 
                     <H2 id="section5">{t('articles.token.list.5')}</H2>
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.6" components={{ bold: <strong /> }} />
+                    </Paragraph>
+
+                    <H2 id="section6">{t('articles.token.list.6')}</H2>
+                    <Paragraph>
+                        <Trans
+                            i18nKey="articles.token.paragraphs.7"
+                            components={{
+                                bold: <a target="_blank" rel="noreferrer" href="https://discord.gg/thales" />,
+                            }}
+                        />
                     </Paragraph>
                     <Footer className="article" />
                 </Content>

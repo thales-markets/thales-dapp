@@ -9,7 +9,6 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import { getStableCoinForNetwork } from 'utils/currency';
 import {
     calculateAndFormatPercentage,
     formatCurrencyWithKey,
@@ -18,6 +17,7 @@ import {
 } from 'utils/formatters/number';
 import { getFormattedBonus } from 'utils/options';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';
+import { getDefaultCollateral } from 'utils/currency';
 
 type TradingDetailsProps = {
     positionType: Positions;
@@ -68,7 +68,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
                     {t(`markets.amm-trading.details-modal.${isBuy ? 'amount-buy' : 'total-receive'}`)}
                 </TextLabel>
                 {getTextValue(
-                    formatCurrencyWithKey(isBuy ? positionType : getStableCoinForNetwork(networkId), positionAmount),
+                    formatCurrencyWithKey(isBuy ? positionType : getDefaultCollateral(networkId), positionAmount),
                     positionAmount > 0,
                     isLoading
                 )}
@@ -85,7 +85,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
                 <DetailsRow>
                     <TextLabel>{t('markets.amm-trading.details-modal.potential-profit')}</TextLabel>
                     {getTextValue(
-                        `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), profit)} (${formatPercentage(
+                        `${formatCurrencyWithKey(getDefaultCollateral(networkId), profit)} (${formatPercentage(
                             calculateAndFormatPercentage(paidAmount, positionAmount)
                         )})`,
                         profit > 0 && positionAmount > 0,

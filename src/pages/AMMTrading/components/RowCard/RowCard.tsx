@@ -40,6 +40,7 @@ import {
     Value,
 } from './styled-components';
 import { getColorPerPosition } from 'utils/options';
+import { getIsMobile } from 'redux/modules/ui';
 
 type RowCardProps = {
     isRangedMarket: boolean;
@@ -55,6 +56,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !isRangedMarket,
@@ -210,7 +212,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                 </>
             ) : (
                 <Value color={ammData ? theme.warning.textColor.primary : theme.textColor.primary}>
-                    {ammData ? t('markets.market..out-of-liquidity') : '-'}
+                    {ammData ? t('markets.market.out-of-liquidity') : '-'}
                 </Value>
             )}
         </Value>
@@ -248,7 +250,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         <>
             {market && (
                 <Container>
-                    <ColumnContainer alignItems="center">
+                    <ColumnContainer alignItems={isMobile ? 'baseline' : 'center'}>
                         <ColumnAnchorSubContainer
                             href={getEtherscanAddressLink(networkId, market.address)}
                             target="_blank"

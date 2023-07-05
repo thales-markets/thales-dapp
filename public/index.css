@@ -14,11 +14,6 @@
 }
 
 @font-face {
-    font-family: 'RoyaleAvatars';
-    src: local('RoyaleAvatars'), url(/fonts/royale-avatars.ttf) format('truetype');
-}
-
-@font-face {
     font-family: 'SidebarIcons';
     src: local('SidebarIcons'), url(/fonts/sidebar.ttf) format('truetype');
 }

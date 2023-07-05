@@ -6,17 +6,48 @@ import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-lo
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
+import { Network } from 'enums/network';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 
-type NetworkMapper = Record<number, number>;
-type DropdownNetwork = {
-    name: string;
-    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+export const SUPPORTED_NETWORKS: Record<Network, string> = {
+    [Network.Mainnet]: 'MAINNET',
+    [Network.Ropsten]: 'ROPSTEN',
+    [Network.Rinkeby]: 'RINKEBY',
+    [Network.Goerli]: 'GOERLI',
+    [Network['Mainnet-Ovm']]: 'OPTIMISTIC',
+    [Network.Kovan]: 'KOVAN',
+    [Network.BSC]: 'BSC-MAINNET',
+    [Network['Kovan-Ovm']]: 'KOVAN-OPTIMISTIC',
+    [Network['POLYGON-MAINNET']]: 'POLYGON-MAINNET',
+    [Network['Goerli-Ovm']]: 'GOERLI-OPTIMISM',
+    [Network.Arbitrum]: 'ARBITRUM-ONE',
+    [Network['POLYGON-MUMBAI']]: 'POLYGON-MUMBAI',
 };
+
+export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
+    [Network.Mainnet]: 'MAINNET',
+    [Network.Ropsten]: 'ROPSTEN',
+    [Network.Rinkeby]: 'RINKEBY',
+    [Network.Goerli]: 'GOERLI',
+    [Network['Mainnet-Ovm']]: 'OPTIMISM MAINNET',
+    [Network.Kovan]: 'KOVAN',
+    [Network.BSC]: 'BINANCE SMART CHAIN MAINNET',
+    [Network['Kovan-Ovm']]: 'OPTIMISM KOVAN',
+    [Network['POLYGON-MAINNET']]: 'POLYGON',
+    [Network['Goerli-Ovm']]: 'OPTIMISM GOERLI',
+    [Network.Arbitrum]: 'ARBITRUM ONE',
+    [Network['POLYGON-MUMBAI']]: 'POLYGON MUMBAI',
+};
+
+export const defaultNetwork: { name: string; networkId: Network } = {
+    name: SUPPORTED_NETWORKS_NAMES[Network['Mainnet-Ovm']],
+    networkId: Network['Mainnet-Ovm'],
+};
+
+type NetworkMapper = Record<number, number>;
 
 export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     1: 10,
@@ -37,7 +68,7 @@ type OptimismNetwork = {
 };
 
 export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
-    10: {
+    [Network['Mainnet-Ovm']]: {
         chainId: '0xA',
         chainName: 'Optimism',
         rpcUrls: ['https://mainnet.optimism.io'],
@@ -48,7 +79,7 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    69: {
+    [Network['Kovan-Ovm']]: {
         chainId: '0x45',
         chainName: 'Optimism Kovan',
         rpcUrls: ['https://kovan.optimism.io'],
@@ -62,7 +93,7 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
 };
 
 const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
-    137: {
+    [Network['POLYGON-MAINNET']]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
         rpcUrls: ['https://polygon-rpc.com'],
@@ -73,7 +104,7 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    80001: {
+    [Network['POLYGON-MUMBAI']]: {
         chainId: '0x13881',
         chainName: 'Polygon Mumbai',
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
@@ -87,10 +118,10 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
 };
 
 const BSC_NETWORK: Record<number, OptimismNetwork> = {
-    56: {
+    [Network.BSC]: {
         chainId: '0x38',
         chainName: 'BSC',
-        rpcUrls: ['https://polygon-rpc.com'],
+        rpcUrls: ['https://bsc-dataseed.binance.org/'],
         blockExplorerUrls: ['https://bscscan.com/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
@@ -101,10 +132,10 @@ const BSC_NETWORK: Record<number, OptimismNetwork> = {
 };
 
 const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
-    42161: {
+    [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
-        rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
+        rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
@@ -114,8 +145,15 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     },
 };
 
-export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> = {
-    10: {
+type DropdownNetwork = {
+    name: string;
+    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+    order: number;
+};
+
+export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
+    [Network['Mainnet-Ovm']]: {
         name: 'Optimism',
         icon: OpLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -149,12 +187,12 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 1,
     },
-    137: {
+    [Network['POLYGON-MAINNET']]: {
         name: 'Polygon',
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            // const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -185,8 +223,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 3,
     },
-    1: {
+    [Network.Mainnet]: {
         name: 'Mainnet',
         icon: EthereumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -204,8 +243,9 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                 }
             }
         },
+        order: 5,
     },
-    56: {
+    [Network.BSC]: {
         name: 'BNBChain',
         icon: BSCLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -219,12 +259,28 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     });
                     callback && callback();
                 } catch (switchError: any) {
-                    console.log(switchError);
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [bscNetworkParams],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: bscNetworkParams.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
                 }
             }
         },
+        order: 4,
     },
-    42161: {
+    [Network.Arbitrum]: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -238,9 +294,25 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     });
                     callback && callback();
                 } catch (switchError: any) {
-                    console.log(switchError);
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [arbNetworkParams],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: arbNetworkParams.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
                 }
             }
         },
+        order: 2,
     },
 };

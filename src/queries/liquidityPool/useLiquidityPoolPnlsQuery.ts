@@ -3,9 +3,9 @@ import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { LiquidityPoolPnls } from 'types/liquidityPool';
 import { orderBy } from 'lodash';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 
-const useLiquidityPoolPnlsQuery = (networkId: NetworkId, options?: UseQueryOptions<LiquidityPoolPnls>) => {
+const useLiquidityPoolPnlsQuery = (networkId: Network, options?: UseQueryOptions<LiquidityPoolPnls>) => {
     return useQuery<LiquidityPoolPnls>(
         QUERY_KEYS.LiquidityPool.PnL(networkId),
         async () => {

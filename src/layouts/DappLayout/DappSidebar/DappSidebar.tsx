@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { getIsMobile } from 'redux/modules/ui';
 import DappHeaderItem from '../components/DappHeaderItem';
 import { ScreenSizeBreakpoint } from '../../../enums/ui';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
@@ -27,8 +28,6 @@ const DappSidebar: React.FC = () => {
     const isBSC = getIsBSC(networkId);
     const isMainnet = getIsMainnet(networkId);
 
-    const [collapse, setCollapse] = useState(false);
-
     const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
     const showLP = !isMainnet && !isPolygon && !isBSC;
     const showWizardPage = !isMobile;
@@ -40,189 +39,155 @@ const DappSidebar: React.FC = () => {
     const showProfileDivider = showGamePage || showProfilePage;
 
     return (
-        <SidebarHtml id="sidebar">
-            <ItemsContainer
-                onClick={() => {
-                    const content = document.getElementById('main-content');
-                    const sidebar = document.getElementById('sidebar');
-                    const root = document.getElementById('root');
-                    if (collapse) {
-                        content?.classList.remove('collapse');
-                        sidebar?.classList.remove('collapse');
-                        root?.classList.remove('collapse');
-                        setCollapse(false);
-                    }
-                }}
-            >
-                <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
-                    <LogoIcon width="38" height="42" src={logoSmallIcon} />
-                </SPAAnchor>
-                <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
-                    <LogoIcon height="42" src={logoIcon} />
-                </SPAAnchor>
+        <OutsideClickHandler
+            onOutsideClick={(e) => {
+                isMobile && e.target instanceof HTMLElement && !e.target.className.includes('icon--nav-menu')
+                    ? removeCollapse()
+                    : {};
+            }}
+        >
+            <SidebarHtml id="sidebar">
+                <ItemsContainer onClick={removeCollapse}>
+                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
+                        <LogoIcon width="38" height="42" src={logoSmallIcon} />
+                    </SPAAnchor>
+                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
+                        <LogoIcon height="42" src={logoIcon} />
+                    </SPAAnchor>
 
-                <DappHeaderItem
-                    className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
-                    href={buildHref(ROUTES.Options.Home)}
-                    iconName="markets"
-                    label={t('common.sidebar.markets')}
-                />
-
-                {showVaultsPage && (
                     <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Vaults)}
-                        iconName="vaults"
-                        label={t('common.sidebar.vaults-label')}
+                        className={`${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.Home)}
+                        iconName="markets"
+                        label={t('common.sidebar.markets')}
                     />
-                )}
 
-                {showLP && (
+                    {showVaultsPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Vaults)}
+                            iconName="vaults"
+                            label={t('common.sidebar.vaults-label')}
+                        />
+                    )}
+
+                    {showLP && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.LiquidityPool)}
+                            iconName="liquidity-pool"
+                            label={t('common.sidebar.liquidity-pool-label')}
+                        />
+                    )}
+
+                    {showWizardPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Wizard)}
+                            iconName="wizard"
+                            label={t('common.sidebar.wizard')}
+                        />
+                    )}
+
+                    {showReferralPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Referral ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Referral)}
+                            iconName="referral-page"
+                            label={t('referral-page.title')}
+                        />
+                    )}
+
+                    <Divider />
+
+                    {showTokenPage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Token)}
+                            iconName="token"
+                            label={t('common.sidebar.earn-label')}
+                        />
+                    )}
+
+                    {showGovernancePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Governance.Home)}
+                            iconName="governance"
+                            label={t('common.sidebar.governance-label')}
+                        />
+                    )}
+
+                    {showProfileDivider && <Divider />}
+
+                    {showGamePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Game ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Game)}
+                            iconName="game"
+                            label={t('common.sidebar.game-label')}
+                        />
+                    )}
+
+                    {showProfilePage && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Profile)}
+                            iconName="profile"
+                            label={t('common.sidebar.profile-label')}
+                        />
+                    )}
+
+                    <Divider />
                     <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.LiquidityPool)}
-                        iconName="liquidity-pool"
-                        label={t('common.sidebar.liquidity-pool-label')}
+                        href={LINKS.SportMarkets}
+                        iconName="overtime-markets"
+                        label={t('common.sidebar.sport-markets-label')}
+                        onClick={(event: any) => {
+                            event.preventDefault();
+                            if (isMobile) {
+                                window.location.replace(LINKS.SportMarkets);
+                            } else {
+                                window.open(LINKS.SportMarkets);
+                            }
+                        }}
+                        simpleOnClick={true}
                     />
-                )}
-
-                {/* {isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Leaderboard)}
-                        iconName="leaderboard"
-                        label={t('common.sidebar.leaderboard-label')}
-                    />
-                )} */}
-
-                {showWizardPage && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Wizard)}
-                        iconName="wizard"
-                        label={t('common.sidebar.wizard')}
-                    />
-                )}
-
-                {showReferralPage && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Referral)}
-                        iconName="referral-page"
-                        label={t('referral-page.title')}
-                    />
-                )}
-
-                <Divider />
-
-                {showTokenPage && (
-                    <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Token)}
-                        iconName="token"
-                        label={t('common.sidebar.earn-label')}
-                    />
-                )}
-
-                {showGovernancePage && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Governance.Home ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Governance.Home)}
-                        iconName="governance"
-                        label={t('common.sidebar.governance-label')}
-                    />
-                )}
-
-                {showProfileDivider && <Divider />}
-
-                {showGamePage && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Game ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Game)}
-                        iconName="game"
-                        label={t('common.sidebar.game-label')}
-                    />
-                )}
-
-                {showProfilePage && (
-                    <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Profile)}
-                        iconName="profile"
-                        label={t('common.sidebar.profile-label')}
-                    />
-                )}
-
-                <Divider />
-                <DappHeaderItem
-                    className={collapse ? 'show' : ''}
-                    href={LINKS.SportMarkets}
-                    iconName="overtime-markets"
-                    label={t('common.sidebar.sport-markets-label')}
-                    onClick={(event: any) => {
-                        event.preventDefault();
-                        if (isMobile) {
-                            window.location.replace(LINKS.SportMarkets);
-                        } else {
-                            window.open(LINKS.SportMarkets);
-                        }
-                    }}
-                    simpleOnClick={true}
-                />
-
-                <ThreeDotsContainer
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        const content = document.getElementById('main-content');
-                        content?.classList.add('collapse');
-                        const sidebar = document.getElementById('sidebar');
-                        sidebar?.classList.add('collapse');
-                        const root = document.getElementById('root');
-                        root?.classList.add('collapse');
-                        setCollapse(true);
-                    }}
-                >
-                    <i className="icon icon--three-dots"></i>
-                </ThreeDotsContainer>
-            </ItemsContainer>
-        </SidebarHtml>
+                </ItemsContainer>
+            </SidebarHtml>
+        </OutsideClickHandler>
     );
 };
 
-const ThreeDotsContainer = styled.div`
-    display: none;
-    align-items: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: flex;
+const removeCollapse = () => {
+    const root = document.getElementById('root');
+    const content = document.getElementById('main-content');
+    const sidebar = document.getElementById('sidebar');
+    if (root?.classList.contains('collapse')) {
+        sidebar?.classList.remove('collapse');
+        content?.classList.remove('collapse');
+        root?.classList.remove('collapse');
     }
-`;
+};
 
 const ItemsContainer = styled.div`
     transition: all 0.5s ease;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
     overflow-y: auto;
     margin-right: -10px;
     height: 100%;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0;
-        flex-direction: row;
-        justify-content: space-around;
+        gap: 20px;
+        justify-content: center;
     }
 `;
 
 const SidebarHtml = styled.nav`
     transition: all 0.5s ease;
+    transition: width 0.3s ease;
     position: fixed;
     top: 0;
     left: 0;
@@ -231,7 +196,6 @@ const SidebarHtml = styled.nav`
     z-index: 101;
     background: ${(props) => props.theme.background.secondary};
     padding: 35px 0;
-    transition: width 0.3s ease;
     overflow: hidden;
 
     .sidebar-logoBig {
@@ -257,45 +221,21 @@ const SidebarHtml = styled.nav`
     }
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        padding: 0;
-        background: ${(props) => props.theme.background.secondary};
-        box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
-        border-radius: 8px;
-        width: calc(100% - 20px);
-        left: 10px;
-        top: unset;
-        bottom: 10px;
-        height: 55px;
-
+        width: 0;
+        transition: width 0.3s ease-out;
         .sidebar-logoSmall {
             display: none;
-        }
-        .sidebar-logoBig {
-            display: none;
-        }
-        .game {
-            display: none !important;
         }
     }
 
     &.collapse {
-        transition: all 0.5s ease;
-        height: 100vh;
+        display: block;
         width: 275px;
+        transition: width 0.5s ease-in;
+        height: 100vh;
         left: 0;
         bottom: 0;
         padding-left: 20px;
-        ${ItemsContainer} {
-            transition: all 0.5s ease;
-            flex-direction: column;
-            gap: 20px;
-            justify-content: center;
-        }
-        ${ThreeDotsContainer} {
-            display: none;
-        }
-        border-radius: 0;
-        box-shadow: none;
         span {
             display: block;
         }

@@ -11,7 +11,7 @@ import {
 import { ProposalTypeEnum } from 'enums/governance';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { VoteConfirmation, VoteContainer } from 'pages/Governance/styled-components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -33,6 +33,12 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number | undefined>(undefined);
     const [isVoting, setIsVoting] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (selectedChoices !== undefined) {
+            setSelectedChoices(undefined);
+        }
+    }, [walletAddress]);
 
     const handleVote = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
@@ -76,7 +82,8 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
                         <SingleChoice
                             key={choice}
                             className={selectedChoices === i + 1 ? 'selected' : ''}
-                            onClick={() => setSelectedChoices(i + 1)}
+                            isDisabled={!hasVotingRights}
+                            onClick={() => hasVotingRights && setSelectedChoices(i + 1)}
                         >
                             {choice}
                         </SingleChoice>
@@ -103,7 +110,7 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
     );
 };
 
-const SingleChoice = styled(FlexDivColumnCentered)`
+const SingleChoice = styled(FlexDivColumnCentered)<{ isDisabled?: boolean }>`
     box-sizing: content-box;
     height: 48px;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
@@ -114,16 +121,17 @@ const SingleChoice = styled(FlexDivColumnCentered)`
     font-size: 20px;
     line-height: 48px;
     text-align: center;
+    opacity: ${(props) => (props.isDisabled ? '0.5' : '1')};
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover {
-        margin: -1px;
-        margin-bottom: 19px;
-        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
-        cursor: pointer;
+        ${(props) => (props.isDisabled ? '' : 'margin: -1px;')}
+        ${(props) => (props.isDisabled ? '' : 'margin-bottom: 19px;')}
+        ${(props) => (props.isDisabled ? '' : `border: 2px solid ${props.theme.borderColor.quaternary};`)}        
+        ${(props) => (props.isDisabled ? '' : 'cursor: pointer;')}
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;

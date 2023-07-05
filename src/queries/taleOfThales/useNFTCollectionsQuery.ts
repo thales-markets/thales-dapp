@@ -1,12 +1,12 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { NFT_COLLECTIONS } from 'pages/TaleOfThales/components/Mint/constants';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useNFTCollectionsQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<Record<number, boolean>>
 ) => {
     return useQuery<Record<number, boolean>>(

@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { UserPosition } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
 import { Positions } from 'enums/options';
@@ -14,7 +14,7 @@ import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPosit
 import { orderBy } from 'lodash';
 
 const useOpenPositionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<UserPosition[]>
 ) => {

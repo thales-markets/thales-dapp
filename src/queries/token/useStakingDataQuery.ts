@@ -1,11 +1,11 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { StakingData } from 'types/token';
+import { Network } from 'enums/network';
 
-const useStakingDataQuery = (networkId: NetworkId, options?: UseQueryOptions<StakingData | undefined>) => {
+const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<StakingData | undefined>) => {
     return useQuery<StakingData | undefined>(
         QUERY_KEYS.Token.StakingData(networkId),
         async () => {
