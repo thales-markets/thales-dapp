@@ -10,10 +10,10 @@ import { SUPPORTED_NETWORK_IDS_MAP, defaultNetwork } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { hasEthereumInjected } from 'utils/network';
 import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
+import { useSwitchNetwork } from 'wagmi';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -21,6 +21,7 @@ const UserWallet: React.FC = () => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
     const { openAccountModal } = useAccountModal();
+    const { switchNetwork } = useSwitchNetwork();
     const dispatch = useDispatch();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -103,18 +104,19 @@ const UserWallet: React.FC = () => {
                                         .map((network, index) => (
                                             <NetworkItem
                                                 key={index}
-                                                onClick={() => {
-                                                    if (hasEthereumInjected()) {
-                                                        setIsDropdownOpen(!isDropdownOpen);
-                                                        SUPPORTED_NETWORK_IDS_MAP[network.id].changeNetwork(
-                                                            +network.id,
-                                                            undefined
-                                                        );
-                                                    }
+                                                onClick={async () => {
+                                                    setIsDropdownOpen(!isDropdownOpen);
+                                                    await SUPPORTED_NETWORK_IDS_MAP[network.id].changeNetwork(
+                                                        network.id,
+                                                        undefined
+                                                    );
+                                                    switchNetwork?.(network.id);
                                                     // Trigger App.js init
                                                     // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
                                                     dispatch(
-                                                        switchToNetworkId({ networkId: Number(network.id) as Network })
+                                                        switchToNetworkId({
+                                                            networkId: Number(network.id) as Network,
+                                                        })
                                                     );
                                                 }}
                                             >

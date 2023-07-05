@@ -7,6 +7,7 @@ import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
 import { Network } from 'enums/network';
+import { hasEthereumInjected } from 'utils/network';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
@@ -148,8 +149,38 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
 type DropdownNetwork = {
     name: string;
     icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+    changeNetwork: (networkId: number, callback?: VoidFunction) => Promise<void>;
     order: number;
+};
+
+const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction, chainId?: string): Promise<void> => {
+    if (hasEthereumInjected()) {
+        try {
+            await (window.ethereum as any).request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: network?.chainId || chainId }],
+            });
+            callback && callback();
+        } catch (switchError: any) {
+            if (network && switchError.code === 4902) {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_addEthereumChain',
+                        params: [network],
+                    });
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: network.chainId }],
+                    });
+                    callback && callback();
+                } catch (addError) {
+                    console.log(addError);
+                }
+            } else {
+                console.log(switchError);
+            }
+        }
+    }
 };
 
 export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
@@ -159,33 +190,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? 10;
             const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: optimismNetworkParms.chainId }],
-                    });
-                    callback && callback();
-                } catch (switchError: any) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await (window.ethereum as any).request({
-                                method: 'wallet_addEthereumChain',
-                                params: [optimismNetworkParms],
-                            });
-                            await (window.ethereum as any).request({
-                                method: 'wallet_switchEthereumChain',
-                                params: [{ chainId: optimismNetworkParms.chainId }],
-                            });
-                        } catch (addError) {
-                            console.log(addError);
-                        }
-                    } else {
-                        console.log(switchError);
-                    }
-                }
-            }
+            await changeNetwork(optimismNetworkParms, callback);
         },
         order: 1,
     },
@@ -194,34 +199,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: polygonNetworkParams.chainId }],
-                    });
-                    callback && callback();
-                } catch (switchError: any) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await (window.ethereum as any).request({
-                                method: 'wallet_addEthereumChain',
-                                params: [polygonNetworkParams],
-                            });
-                            await (window.ethereum as any).request({
-                                method: 'wallet_switchEthereumChain',
-                                params: [{ chainId: polygonNetworkParams.chainId }],
-                            });
-                            callback && callback();
-                        } catch (addError) {
-                            console.log(addError);
-                        }
-                    } else {
-                        console.log(switchError);
-                    }
-                }
-            }
+            await changeNetwork(polygonNetworkParams, callback);
         },
         order: 3,
     },
@@ -230,18 +208,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         icon: EthereumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: formattedChainId }],
-                    });
-                    callback && callback();
-                } catch (switchError: any) {
-                    console.log(switchError);
-                }
-            }
+            await changeNetwork(undefined, callback, formattedChainId);
         },
         order: 5,
     },
@@ -250,33 +217,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         icon: BSCLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const bscNetworkParams = BSC_NETWORK[networkId];
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: bscNetworkParams.chainId }],
-                    });
-                    callback && callback();
-                } catch (switchError: any) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await (window.ethereum as any).request({
-                                method: 'wallet_addEthereumChain',
-                                params: [bscNetworkParams],
-                            });
-                            await (window.ethereum as any).request({
-                                method: 'wallet_switchEthereumChain',
-                                params: [{ chainId: bscNetworkParams.chainId }],
-                            });
-                        } catch (addError) {
-                            console.log(addError);
-                        }
-                    } else {
-                        console.log(switchError);
-                    }
-                }
-            }
+            await changeNetwork(bscNetworkParams, callback);
         },
         order: 4,
     },
@@ -285,33 +226,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         icon: ArbitrumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const arbNetworkParams = ARBITRUM_NETWORK[networkId];
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: arbNetworkParams.chainId }],
-                    });
-                    callback && callback();
-                } catch (switchError: any) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await (window.ethereum as any).request({
-                                method: 'wallet_addEthereumChain',
-                                params: [arbNetworkParams],
-                            });
-                            await (window.ethereum as any).request({
-                                method: 'wallet_switchEthereumChain',
-                                params: [{ chainId: arbNetworkParams.chainId }],
-                            });
-                        } catch (addError) {
-                            console.log(addError);
-                        }
-                    } else {
-                        console.log(switchError);
-                    }
-                }
-            }
+            await changeNetwork(arbNetworkParams, callback);
         },
         order: 2,
     },
