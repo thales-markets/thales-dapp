@@ -18,6 +18,7 @@ const ROUTES = {
         Leaderboard: '/markets/leaderboard',
         TradeHistory: '/markets/trade-history',
         Token: '/token',
+        StakingLeaderboard: '/token/leaderboard',
         Royal: '/royale',
         Game: '/tale-of-thales',
         TokenMigration: '/token?tab=migration&action=migrate',
