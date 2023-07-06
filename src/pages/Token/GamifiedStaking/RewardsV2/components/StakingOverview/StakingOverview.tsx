@@ -1,3 +1,5 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import ROUTES from 'constants/routes';
 import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,6 +74,11 @@ const StakingOverview: React.FC = () => {
                 <Column>
                     <Label>{t('thales-token.gamified-staking.rewards.overview.leaderboard-rank')}</Label>
                     <Value>{stakingData?.bonusRewards}</Value>
+                    <SPAAnchor href={ROUTES.Options.StakingLeaderboard}>
+                        <LinkToLeaderboard>
+                            {t('thales-token.gamified-staking.rewards.overview.go-to')}
+                        </LinkToLeaderboard>
+                    </SPAAnchor>
                 </Column>
             </Wrapper>
         </Container>
@@ -184,6 +191,17 @@ const HexagonNumber = styled.p`
     line-height: 36px;
     color: ${(props) => props.theme.background.primary};
     z-index: 5;
+`;
+
+const LinkToLeaderboard = styled.p`
+    color: ${(props) => props.theme.borderColor.tertiary};
+    font-size: 18px;
+    font-family: Fira Sans;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    text-transform: capitalize;
+    align-self: flex-end;
 `;
 
 export default StakingOverview;

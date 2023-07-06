@@ -580,7 +580,8 @@
                     "bonus-rewards": "Your bonus rewards",
                     "leaderboard-rank": "Your leaderboard rank",
                     "of-total-points": "Of total points",
-                    "of-total-rewards": "Of total rewards"
+                    "of-total-rewards": "Of total rewards",
+                    "go-to": "Go to leaderboard ->"
                 },
                 "points": {
                     "your-points": "Your points breakdown",
