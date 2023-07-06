@@ -1,5 +1,6 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
+import { orderBy } from 'lodash';
 import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
 import { Stakers, StakersWithLeaderboardData } from 'types/governance';
@@ -51,7 +52,7 @@ const useStakersDataLeaderboardQuery = (
 
                 const stakersDataFromContract = await Promise.all(calls);
 
-                const finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
+                let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
                     return {
                         ...stakersOnlyWithSomeStakingAmount[index],
                         share: item?.share ? bigNumberFormatter(item.share) : 0,
@@ -73,6 +74,8 @@ const useStakersDataLeaderboardQuery = (
                             bigNumberFormatter(item.userRoundBonusPoints),
                     };
                 });
+
+                finalData = orderBy(finalData, 'totalPoints', 'desc');
 
                 return finalData;
             } catch (e) {
