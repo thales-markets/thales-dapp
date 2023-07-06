@@ -78,7 +78,7 @@ export type Staker = {
     ensName: string | null;
 };
 
-export type StakerWithLeaderboardData = Staker & {
+export type StakerContractLeaderboardData = {
     share: number;
     stakingMultiplier: number;
     userLPBasePointsPerRound: number;
@@ -86,6 +86,8 @@ export type StakerWithLeaderboardData = Staker & {
     userTradingBasePointsPerRound: number;
     userVaultBasePointsPerRound: number;
 };
+
+export type StakerWithLeaderboardData = Staker & StakerContractLeaderboardData;
 
 export type Stakers = Staker[];
 export type StakersWithLeaderboardData = StakerWithLeaderboardData[];
