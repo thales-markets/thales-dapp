@@ -55,7 +55,7 @@ const useStakersDataLeaderboardQuery = (
                     return {
                         ...stakersOnlyWithSomeStakingAmount[index],
                         share: item?.share ? bigNumberFormatter(item.share) : 0,
-                        stakingMultiplier: item?.stakingMultiplier ? bigNumberFormatter(item.stakingMultiplier) : 0,
+                        stakingMultiplier: item?.stakingMultiplier ? bigNumberFormatter(item.stakingMultiplier) + 1 : 0,
                         userLPBasePointsPerRound: item?.userLPBasePointsPerRound
                             ? bigNumberFormatter(item.userLPBasePointsPerRound)
                             : 0,
@@ -68,6 +68,9 @@ const useStakersDataLeaderboardQuery = (
                         userVaultBasePointsPerRound: item?.userVaultBasePointsPerRound
                             ? bigNumberFormatter(item.userVaultBasePointsPerRound)
                             : 0,
+                        totalPoints:
+                            (bigNumberFormatter(item.stakingMultiplier) + 1) *
+                            bigNumberFormatter(item.userRoundBonusPoints),
                     };
                 });
 

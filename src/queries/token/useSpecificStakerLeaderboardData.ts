@@ -23,7 +23,7 @@ const useSpecificStakerLeaderboardData = (
                 return {
                     share: contractData[0]?.share ? bigNumberFormatter(contractData[0].share) : 0,
                     stakingMultiplier: contractData[0]?.stakingMultiplier
-                        ? bigNumberFormatter(contractData[0].stakingMultiplier)
+                        ? bigNumberFormatter(contractData[0].stakingMultiplier) + 1
                         : 0,
                     userLPBasePointsPerRound: contractData[0]?.userLPBasePointsPerRound
                         ? bigNumberFormatter(contractData[0].userLPBasePointsPerRound)
@@ -37,6 +37,9 @@ const useSpecificStakerLeaderboardData = (
                     userVaultBasePointsPerRound: contractData[0]?.userVaultBasePointsPerRound
                         ? bigNumberFormatter(contractData[0].userVaultBasePointsPerRound)
                         : 0,
+                    totalPoints:
+                        (bigNumberFormatter(contractData[0].stakingMultiplier) + 1) *
+                        bigNumberFormatter(contractData[0].userRoundBonusPoints),
                 };
             } catch (e) {
                 console.log('Error ', e);
