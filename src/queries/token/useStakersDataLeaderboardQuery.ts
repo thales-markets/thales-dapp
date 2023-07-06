@@ -17,7 +17,7 @@ const useStakersDataLeaderboardQuery = (
         QUERY_KEYS.Token.StakersLeaderboardData(network),
         async () => {
             try {
-                const BATCH_SIZE = 300;
+                const BATCH_SIZE = 800;
                 const MIN_STAKING_AMOUNT = 0.01;
 
                 const stakers: Stakers = await thalesData.binaryOptions.stakers({
@@ -70,8 +70,6 @@ const useStakersDataLeaderboardQuery = (
                             : 0,
                     };
                 });
-
-                console.log('finalData ', finalData);
 
                 return finalData;
             } catch (e) {
