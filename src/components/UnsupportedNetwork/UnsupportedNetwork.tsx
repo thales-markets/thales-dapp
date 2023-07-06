@@ -20,10 +20,10 @@ const UnsupportedNetwork: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMainnet = getIsMainnet(networkId);
 
-    const getButton = (network: Network) => {
+    const getButton = (networkId: Network) => {
         let logo;
         let text;
-        switch (network) {
+        switch (networkId) {
             case Network.Mainnet:
                 logo = <EthereumLogo />;
                 text = t(`common.unsupported-network.button.mainnet`);
@@ -50,7 +50,7 @@ const UnsupportedNetwork: React.FC = () => {
             <Button
                 width="250px"
                 additionalStyles={{ textTransform: 'none' }}
-                onClick={() => SUPPORTED_NETWORK_IDS_MAP[network].changeNetwork(network)}
+                onClick={() => SUPPORTED_NETWORK_IDS_MAP[networkId].changeNetwork(networkId)}
             >
                 {logo}
                 <ButtonText>{text}</ButtonText>

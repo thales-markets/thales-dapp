@@ -180,6 +180,8 @@ const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction,
                 console.log(switchError);
             }
         }
+    } else {
+        callback && callback();
     }
 };
 

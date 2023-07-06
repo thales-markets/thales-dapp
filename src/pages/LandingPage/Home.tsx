@@ -10,6 +10,7 @@ import { SUPPORTED_NETWORK_IDS_MAP } from '../../constants/network';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
 import GridLayout from './components/GridLayout';
+import { Network } from 'enums/network';
 
 const INFORMATION_BANNER_ACTIVE = false;
 
@@ -28,9 +29,12 @@ const Home: React.FC = () => {
                             bold: (
                                 <strong
                                     onClick={() => {
-                                        SUPPORTED_NETWORK_IDS_MAP[137].changeNetwork(137, () => {
-                                            navigateTo(buildHref(ROUTES.Options.Home));
-                                        });
+                                        SUPPORTED_NETWORK_IDS_MAP[Network['POLYGON-MAINNET']].changeNetwork(
+                                            Network['POLYGON-MAINNET'],
+                                            () => {
+                                                navigateTo(buildHref(ROUTES.Options.Home));
+                                            }
+                                        );
                                     }}
                                 />
                             ),
