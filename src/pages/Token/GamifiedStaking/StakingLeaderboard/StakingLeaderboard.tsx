@@ -59,7 +59,7 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <FirstCell>
-                                <TableText>{truncateAddress(row.id, 5, 3)}</TableText>
+                                <TableText>{truncateAddress(row.id, 5, 5)}</TableText>
                             </FirstCell>
                         );
                     },
