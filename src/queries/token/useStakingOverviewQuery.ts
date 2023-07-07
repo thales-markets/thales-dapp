@@ -21,7 +21,7 @@ const useStakingOverviewQuery = (walletAddress: string, options?: UseQueryOption
             const { stakingThalesContract } = snxJSConnector;
             const { stakingBonusRewardsManager } = snxJSConnector;
             try {
-                const period = await stakingThalesContract?.periodsOfStaking();
+                const period = (await stakingThalesContract?.periodsOfStaking()) - 1;
                 const [userPoints, totalPoints, bonusRewards, share] = await Promise.all([
                     stakingBonusRewardsManager?.userRoundBonusPoints(walletAddress, period),
                     stakingBonusRewardsManager?.totalRoundBonusPoints(period),

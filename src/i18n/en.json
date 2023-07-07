@@ -607,6 +607,14 @@
                     "stake-more": "Stake more"
                 },
 
+                "leaderboard": {
+                    "rank": "Rank",
+                    "address": "Address",
+                    "points": "Total Points",
+                    "multiplier": "Thales Multiplier",
+                    "rewards": "Total Rewards"
+                },
+
                 "base-label": "Thales staking base rewards"
             },
             "vesting": {
