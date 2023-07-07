@@ -5,6 +5,7 @@ import GoldBadge from 'assets/images/token/leaderboard/gold_badge.svg';
 import BronzeBadge from 'assets/images/token/leaderboard/bronze_badge.svg';
 import SilverBadge from 'assets/images/token/leaderboard/silver_badge.svg';
 import { truncateAddress } from 'utils/formatters/string';
+import { useTranslation } from 'react-i18next';
 
 type HighlightCardProps = {
     rank: number;
@@ -14,6 +15,7 @@ type HighlightCardProps = {
 };
 
 const HighlightCard: React.FC<HighlightCardProps> = ({ rank, walletAddress, totalPoints, totalRewards }) => {
+    const { t } = useTranslation();
     const badge = rank == 1 ? GoldBadge : rank == 2 ? SilverBadge : rank == 3 ? BronzeBadge : '';
 
     return (
@@ -24,11 +26,11 @@ const HighlightCard: React.FC<HighlightCardProps> = ({ rank, walletAddress, tota
             <WalletAddress>{truncateAddress(walletAddress)}</WalletAddress>
             <RewardsDataContainer>
                 <DataContainer>
-                    <Heading>{'Total Points'}</Heading>
+                    <Heading>{t('profile.leaderboard.highlight-card.total-points')}</Heading>
                     <Amount>{totalPoints}</Amount>
                 </DataContainer>
                 <DataContainer>
-                    <Heading>{'Total Rewards'}</Heading>
+                    <Heading>{t('profile.leaderboard.highlight-card.total-rewards')}</Heading>
                     <Amount>{totalRewards}</Amount>
                 </DataContainer>
             </RewardsDataContainer>
