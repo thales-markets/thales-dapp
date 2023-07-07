@@ -10,8 +10,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 const useStakersDataLeaderboardQuery = (
     network: Network,
     round: number,
-    startFromUserNumber?: number,
-    endOnUserNumber?: number,
     options?: UseQueryOptions<StakersWithLeaderboardData>
 ) => {
     return useQuery<StakersWithLeaderboardData>(
@@ -25,23 +23,12 @@ const useStakersDataLeaderboardQuery = (
                     network,
                 });
 
-                let stakersOnlyWithSomeStakingAmount =
+                const stakersOnlyWithSomeStakingAmount =
                     stakers && stakers.filter((staker) => staker.stakedAmount > MIN_STAKING_AMOUNT);
 
                 const { stakingBonusRewardsManager } = snxJSConnector as any;
 
                 const calls = [];
-
-                if (startFromUserNumber || endOnUserNumber) {
-                    if (startFromUserNumber && endOnUserNumber) {
-                        stakersOnlyWithSomeStakingAmount = stakersOnlyWithSomeStakingAmount.slice(
-                            startFromUserNumber,
-                            endOnUserNumber
-                        );
-                    } else if (startFromUserNumber && !endOnUserNumber) {
-                        stakersOnlyWithSomeStakingAmount.splice(0, startFromUserNumber);
-                    }
-                }
 
                 for (let i = 0; i < stakersOnlyWithSomeStakingAmount.length; i += BATCH_SIZE) {
                     const stakersAddresses = stakersOnlyWithSomeStakingAmount
@@ -77,7 +64,14 @@ const useStakersDataLeaderboardQuery = (
 
                 finalData = orderBy(finalData, 'totalPoints', 'desc');
 
-                return finalData;
+                const finalDataWithRank = finalData.map((item, index) => {
+                    return {
+                        ...item,
+                        rank: index + 1,
+                    };
+                });
+
+                return finalDataWithRank;
             } catch (e) {
                 console.log('Error ', e);
                 return [];
