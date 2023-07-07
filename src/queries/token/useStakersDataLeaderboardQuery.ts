@@ -1,3 +1,4 @@
+import { THALES_CURRENCY } from 'constants/currency';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
@@ -5,6 +6,7 @@ import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
 import { Stakers, StakersWithLeaderboardData } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useStakersDataLeaderboardQuery = (
@@ -27,6 +29,7 @@ const useStakersDataLeaderboardQuery = (
                     stakers && stakers.filter((staker) => staker.stakedAmount > MIN_STAKING_AMOUNT);
 
                 const { stakingBonusRewardsManager } = snxJSConnector as any;
+                const { stakingThalesContract } = snxJSConnector;
 
                 const calls = [];
 
@@ -36,6 +39,8 @@ const useStakersDataLeaderboardQuery = (
                         .map((staker) => staker.id);
                     calls.push(stakingBonusRewardsManager?.getStakersLeaderboardData(stakersAddresses, round));
                 }
+
+                const bonusRewards = await stakingThalesContract?.periodExtraReward();
 
                 const stakersDataFromContract = await Promise.all(calls);
 
@@ -56,13 +61,15 @@ const useStakersDataLeaderboardQuery = (
                         userVaultBasePointsPerRound: item?.userVaultBasePointsPerRound
                             ? bigNumberFormatter(item.userVaultBasePointsPerRound)
                             : 0,
-                        totalPoints:
-                            (bigNumberFormatter(item.stakingMultiplier) + 1) *
-                            bigNumberFormatter(item.userRoundBonusPoints),
+                        estimatedRewards: formatCurrencyWithKey(
+                            THALES_CURRENCY,
+                            bigNumberFormatter(item.share) * bigNumberFormatter(bonusRewards),
+                            2
+                        ),
                     };
                 });
 
-                finalData = orderBy(finalData, 'totalPoints', 'desc');
+                finalData = orderBy(finalData, 'userRoundBonusPoints', 'desc');
 
                 const finalDataWithRank = finalData.map((item, index) => {
                     return {

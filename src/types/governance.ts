@@ -86,7 +86,7 @@ export type StakerContractLeaderboardData = {
     userRoundBonusPoints: number;
     userTradingBasePointsPerRound: number;
     userVaultBasePointsPerRound: number;
-    totalPoints: number;
+    estimatedRewards?: string;
 };
 
 export type StakerWithLeaderboardData = Staker & StakerContractLeaderboardData;

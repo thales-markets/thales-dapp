@@ -7,7 +7,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
-import { formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import { truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -71,7 +71,7 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <Cell>
-                                <TableText>{truncToDecimals(row.totalPoints, 2)}</TableText>
+                                <TableText>{truncToDecimals(row.userRoundBonusPoints, 2)}</TableText>
                             </Cell>
                         );
                     },
@@ -95,7 +95,7 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <LastCell>
-                                <TableText>{formatPercentage(row.share, 2)}</TableText>
+                                <TableText>{row.estimatedRewards}</TableText>
                             </LastCell>
                         );
                     },
