@@ -1427,6 +1427,10 @@
                 "table": {
                     "amount-col": "Amount"
                 }
+            },
+            "highlight-card": {
+                "total-points": "Total Points",
+                "total-rewards": "Total Rewards"
             }
         }
     }
