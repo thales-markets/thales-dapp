@@ -1,3 +1,4 @@
+import { TablePagination } from '@material-ui/core';
 import Table from 'components/TableV3/Table';
 import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,13 +16,17 @@ const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [period, setPeriod] = useState(0);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    useEffect(() => setPage(0), [period]);
 
     useEffect(() => {
         const { stakingThalesContract } = snxJSConnector;
 
         stakingThalesContract?.periodsOfStaking().then((period: number) => {
             console.log(Number(period));
-            setPeriod(period - 1);
+            setPeriod(period);
         });
     }, []);
 
@@ -106,6 +111,14 @@ const StakingLeaderboard: React.FC = () => {
         }
     }, [stakingData]);
 
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(Number(event.target.value));
+        setPage(0);
+    };
+
     return (
         <Wrapper>
             <Table
@@ -132,17 +145,60 @@ const StakingLeaderboard: React.FC = () => {
                         </ExpandedRow>
                     );
                 }}
+                currentPage={page}
+                rowsPerPage={rowsPerPage}
+                isLoading={leaderboardQuery.isLoading}
             ></Table>
+            <PaginationWrapper
+                rowsPerPageOptions={[10, 20, 50, 100]}
+                count={stakingData.length ? stakingData.length : 0}
+                labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </Wrapper>
     );
 };
 
 export default StakingLeaderboard;
 
+const PaginationWrapper = styled(TablePagination)`
+    border: none !important;
+    display: flex;
+    width: 100%;
+    height: auto;
+    color: ${(props) => props.theme.textColor.primary} !important;
+    .MuiToolbar-root {
+        padding: 0;
+        display: flex;
+        .MuiSelect-icon {
+            color: ${(props) => props.theme.textColor.primary} !important;
+        }
+    }
+    .MuiIconButton-root.Mui-disabled {
+        color: ${(props) => props.theme.textColor.secondary};
+    }
+    .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
+        display: block;
+    }
+    .MuiTablePagination-input {
+        margin-top: 2px;
+    }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    }
+`;
+
 const RowStyle: CSSProperties = {
     height: 60,
     justifyContent: 'center',
     width: '100%',
+    borderRadius: 0,
 };
 
 const Wrapper = styled.div`
