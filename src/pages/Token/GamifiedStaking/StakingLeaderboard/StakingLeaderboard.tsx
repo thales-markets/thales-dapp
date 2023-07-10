@@ -11,6 +11,7 @@ import { FlexDivColumn } from 'styles/common';
 import { truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
+import HighlightCard from './components/HighlightCard/HighlightCard';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -40,6 +41,14 @@ const StakingLeaderboard: React.FC = () => {
         }
         return [];
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+
+    const highlightCardData = useMemo(() => {
+        if (stakingData) {
+            return stakingData.filter((staker) => staker.rank == 1 || staker.rank == 2 || staker.rank == 3);
+        }
+
+        return null;
+    }, [stakingData]);
 
     const columns = useMemo(() => {
         console.log('stakingData: ', stakingData);
@@ -121,6 +130,32 @@ const StakingLeaderboard: React.FC = () => {
 
     return (
         <Wrapper>
+            <BadgeContainer>
+                {highlightCardData && highlightCardData[1] && (
+                    <HighlightCard
+                        rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
+                        walletAddress={highlightCardData[1].id}
+                        totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
+                        totalRewards={highlightCardData[1].estimatedRewards}
+                    />
+                )}
+                {highlightCardData && highlightCardData[0] && (
+                    <HighlightCard
+                        rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
+                        walletAddress={highlightCardData[0].id}
+                        totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
+                        totalRewards={highlightCardData[0].estimatedRewards}
+                    />
+                )}
+                {highlightCardData && highlightCardData[2] && (
+                    <HighlightCard
+                        rank={highlightCardData[2].rank ? highlightCardData[2].rank : 0}
+                        walletAddress={highlightCardData[2].id}
+                        totalPoints={truncToDecimals(highlightCardData[2].userRoundBonusPoints, 2)}
+                        totalRewards={highlightCardData[2].estimatedRewards}
+                    />
+                )}
+            </BadgeContainer>
             <Table
                 columns={columns}
                 data={stakingData}
@@ -212,6 +247,15 @@ const ExpandedRow = styled.div`
     justify-content: center;
     align-items: center;
     gap: 20px;
+`;
+
+const BadgeContainer = styled.div`
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `;
 
 const TableText = styled.p`
