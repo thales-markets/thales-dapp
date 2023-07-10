@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
-import { FlexDivColumn } from 'styles/common';
-import { truncToDecimals } from 'utils/formatters/number';
+import { FlexDivCentered } from 'styles/common';
+import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
 import HighlightCard from './components/HighlightCard/HighlightCard';
@@ -85,7 +85,7 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <Cell>
-                                <TableText>{truncToDecimals(row.userRoundBonusPoints, 2)}</TableText>
+                                <TableText>{formatCurrencyWithKey('', row.userRoundBonusPoints, 2)}</TableText>
                             </Cell>
                         );
                     },
@@ -97,7 +97,7 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <Cell>
-                                <TableText>{truncToDecimals(row.stakingMultiplier, 2)}</TableText>
+                                <TableText>{formatCurrencyWithKey('', row.stakingMultiplier, 2)}</TableText>
                             </Cell>
                         );
                     },
@@ -163,20 +163,44 @@ const StakingLeaderboard: React.FC = () => {
                 expandedRow={(row) => {
                     return (
                         <ExpandedRow>
-                            <FlexDivColumn>
-                                <TableText>Trading Volume</TableText>
-                                <TableText>{row.original.userTradingBasePointsPerRound}</TableText>
-                            </FlexDivColumn>
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon className="sidebar-icon icon--markets" />
+                                    <TableText>Trading</TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label>Points</Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', row.original.userTradingBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
 
-                            <FlexDivColumn>
-                                <TableText>LP Volume</TableText>
-                                <TableText>{row.original.userLPBasePointsPerRound}</TableText>
-                            </FlexDivColumn>
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon className="sidebar-icon icon--liquidity-pool" />
+                                    <TableText>LP</TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label>Points</Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', row.original.userLPBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
 
-                            <FlexDivColumn>
-                                <TableText>VAULTS Volume</TableText>
-                                <TableText>{row.original.userVaultBasePointsPerRound}</TableText>
-                            </FlexDivColumn>
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon className="sidebar-icon icon--vaults" />
+                                    <TableText>VAULTS</TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label>Points</Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', row.original.userVaultBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
                         </ExpandedRow>
                     );
                 }}
@@ -244,9 +268,10 @@ const Wrapper = styled.div`
 const ExpandedRow = styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    gap: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 `;
 
 const BadgeContainer = styled.div`
@@ -300,40 +325,24 @@ const LastCell = styled(Cell)`
     border-bottom-right-radius: 8px;
 `;
 
-// const DummyData = [
-//     {
-//         rank: 1,
-//         address: '0x1654da196a494r9a165a1g6aer16ae4rg94196165',
-//         points: '5000',
-//         multiplier: '1.5',
-//         rewards: '500',
-//     },
-//     {
-//         rank: 2,
-//         address: '0x1654da196a494r9a165a1g6aer16ae4rg94196165',
-//         points: '5000',
-//         multiplier: '1.5',
-//         rewards: '500',
-//     },
-//     {
-//         rank: 3,
-//         address: '0x1654da196a494r9a165a1g6aer16ae4rg94196165',
-//         points: '5000',
-//         multiplier: '1.5',
-//         rewards: '500',
-//     },
-//     {
-//         rank: 4,
-//         address: '0x1654da196a494r9a165a1g6aer16ae4rg94196165',
-//         points: '5000',
-//         multiplier: '1.5',
-//         rewards: '500',
-//     },
-//     {
-//         rank: 5,
-//         address: '0x1654da196a494r9a165a1g6aer16ae4rg94196165',
-//         points: '5000',
-//         multiplier: '1.5',
-//         rewards: '500',
-//     },
-// ];
+const Icon = styled.i`
+    font-size: 32px;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-right: 6px;
+`;
+
+const FlexWrapper = styled(FlexDivCentered)`
+    flex-direction: column;
+`;
+
+const Label = styled.span`
+    color: ${(props) => props.theme.textColor.secondary};
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.455px;
+    text-transform: capitalize;
+    margin-top: 10px;
+    margin-bottom: 5px;
+`;
