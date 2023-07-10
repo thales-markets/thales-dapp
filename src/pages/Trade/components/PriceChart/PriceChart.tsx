@@ -18,7 +18,7 @@ import {
     YAxis,
 } from 'recharts';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,
@@ -32,6 +32,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
+import TooltipInfo from 'components/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 type PriceChartProps = {
     asset: string;
@@ -64,6 +66,7 @@ const ToggleButtons = [
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
     const theme: ThemeInterface = useTheme();
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
@@ -213,7 +216,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
                         <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                     </IconPriceWrapper>
-                    <Value>{`IV ${iv}%`}</Value>
+                    <FlexDiv>
+                        <Value>{`IV ${iv}%`}</Value>
+                        <TooltipInfo
+                            overlay={t('markets.amm-trading.iv-tooltip')}
+                            customIconStyling={{ marginTop: '1px' }}
+                        />
+                    </FlexDiv>
                 </FlexDivRowCentered>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
