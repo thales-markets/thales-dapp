@@ -283,7 +283,8 @@
                 "label": "Slippage tolerance",
                 "enter-value": "Enter value",
                 "invalid-value": "Invalid value"
-            }
+            },
+            "iv-tooltip": "Current derived Implied Volatility Index for this Asset"
         },
         "steps": {
             "choose-asset": "Choose Asset",
