@@ -10,6 +10,7 @@ import { getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type HighlightCardProps = {
     rank: number;
@@ -36,7 +37,7 @@ const HighlightCard: React.FC<HighlightCardProps> = ({ rank, walletAddress, tota
                     <Heading highlightCard={highlightCard}>
                         {t('profile.leaderboard.highlight-card.total-points')}
                     </Heading>
-                    <Amount highlightCard={highlightCard}>{totalPoints}</Amount>
+                    <Amount highlightCard={highlightCard}>{formatCurrencyWithKey('', totalPoints, 2)}</Amount>
                 </DataContainer>
                 <DataContainer>
                     <Heading highlightCard={highlightCard}>
