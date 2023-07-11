@@ -12,6 +12,7 @@ import { truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
 import HighlightCard from './components/HighlightCard/HighlightCard';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -256,6 +257,9 @@ const BadgeContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-direction: column;
+    }
 `;
 
 const TableText = styled.p`
