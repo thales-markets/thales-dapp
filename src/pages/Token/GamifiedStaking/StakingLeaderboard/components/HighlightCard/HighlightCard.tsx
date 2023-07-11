@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type HighlightCardProps = {
     rank: number;
@@ -56,6 +57,9 @@ const Container = styled(FlexDiv)<{ highlightCard: boolean }>`
     background-color: ${(_props) => `${_props.highlightCard ? _props.theme.borderColor.tertiary : ''}`};
     border: ${(_props) => `1px solid ${_props.theme.borderColor.tertiary}`};
     border-radius: 8px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin: 5px 0px 30px 0px;
+    }
 `;
 
 const WalletAddress = styled.span<{ highlightCard: boolean }>`
@@ -98,6 +102,12 @@ const Badge = styled.img`
     left: 50px;
     width: 100px;
     height: 100px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 70px;
+        height: 70px;
+        top: -35px;
+        left: 70px;
+    }
 `;
 
 export default HighlightCard;
