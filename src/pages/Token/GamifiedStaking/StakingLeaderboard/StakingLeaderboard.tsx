@@ -4,7 +4,7 @@ import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderbo
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
@@ -18,6 +18,7 @@ import Loader from 'components/Loader/Loader';
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [period, setPeriod] = useState(0);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -50,6 +51,14 @@ const StakingLeaderboard: React.FC = () => {
         }
 
         return null;
+    }, [stakingData]);
+
+    const stickyRowInfo = useMemo(() => {
+        if (stakingData) {
+            return stakingData.filter((staker) => staker.id.toLowerCase() === walletAddress.toLowerCase());
+        }
+
+        return [];
     }, [stakingData]);
 
     const columns = useMemo(() => {
@@ -215,6 +224,33 @@ const StakingLeaderboard: React.FC = () => {
                         currentPage={page}
                         rowsPerPage={rowsPerPage}
                         isLoading={leaderboardQuery.isLoading}
+                        stickyRow={
+                            stickyRowInfo.length > 0 ? (
+                                <StickyRow>
+                                    <Rank>
+                                        <TableText>{stickyRowInfo[0].rank}</TableText>
+                                    </Rank>
+                                    <FirstCell>
+                                        <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
+                                    </FirstCell>
+                                    <Cell>
+                                        <TableText>
+                                            {formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}
+                                        </TableText>
+                                    </Cell>
+                                    <Cell>
+                                        <TableText>
+                                            {formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}
+                                        </TableText>
+                                    </Cell>
+                                    <LastCell>
+                                        <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
+                                    </LastCell>
+                                </StickyRow>
+                            ) : (
+                                <></>
+                            )
+                        }
                     ></Table>
                     <PaginationWrapper
                         rowsPerPageOptions={[10, 20, 50, 100]}
@@ -298,7 +334,7 @@ const BadgeContainer = styled.div`
 `;
 
 const TableText = styled.p`
-    color: #fff;
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
@@ -313,6 +349,7 @@ const Rank = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    color: ${(props) => props.theme.button.textColor.primary};
 `;
 
 const Cell = styled.div`
@@ -324,6 +361,25 @@ const Cell = styled.div`
     align-items: center;
     padding: 0 50px;
     min-width: 250px;
+`;
+
+const StickyRow = styled.div`
+    display: flex;
+    height: 60px;
+    justify-content: center;
+
+    ${TableText} {
+        color: ${(props) => props.theme.button.textColor.primary};
+    }
+    ${Cell} {
+        color: ${(props) => props.theme.button.textColor.primary};
+        background: ${(props) => props.theme.borderColor.tertiary};
+    }
+
+    ${Rank} {
+        color: ${(props) => props.theme.button.textColor.primary};
+        background: ${(props) => props.theme.borderColor.tertiary};
+    }
 `;
 
 const FirstCell = styled(Cell)`
