@@ -13,6 +13,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
 import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import Loader from 'components/Loader/Loader';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -130,95 +131,104 @@ const StakingLeaderboard: React.FC = () => {
     };
 
     return (
-        <Wrapper>
-            <BadgeContainer>
-                {highlightCardData && highlightCardData[1] && (
-                    <HighlightCard
-                        rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
-                        walletAddress={highlightCardData[1].id}
-                        totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
-                        totalRewards={highlightCardData[1].estimatedRewards}
-                    />
-                )}
-                {highlightCardData && highlightCardData[0] && (
-                    <HighlightCard
-                        rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
-                        walletAddress={highlightCardData[0].id}
-                        totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
-                        totalRewards={highlightCardData[0].estimatedRewards}
-                    />
-                )}
-                {highlightCardData && highlightCardData[2] && (
-                    <HighlightCard
-                        rank={highlightCardData[2].rank ? highlightCardData[2].rank : 0}
-                        walletAddress={highlightCardData[2].id}
-                        totalPoints={truncToDecimals(highlightCardData[2].userRoundBonusPoints, 2)}
-                        totalRewards={highlightCardData[2].estimatedRewards}
-                    />
-                )}
-            </BadgeContainer>
-            <Table
-                columns={columns}
-                data={stakingData}
-                tableRowStyles={RowStyle}
-                expandedRow={(row) => {
-                    return (
-                        <ExpandedRow>
-                            <FlexWrapper>
-                                <FlexDivCentered>
-                                    <Icon className="sidebar-icon icon--markets" />
-                                    <TableText>Trading</TableText>
-                                </FlexDivCentered>
-                                <FlexWrapper>
-                                    <Label>Points</Label>
-                                    <TableText>
-                                        {formatCurrencyWithKey('', row.original.userTradingBasePointsPerRound, 2)}
-                                    </TableText>
-                                </FlexWrapper>
-                            </FlexWrapper>
+        <>
+            {leaderboardQuery.isSuccess && (
+                <Wrapper>
+                    <BadgeContainer>
+                        {highlightCardData && highlightCardData[1] && (
+                            <HighlightCard
+                                rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
+                                walletAddress={highlightCardData[1].id}
+                                totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
+                                totalRewards={highlightCardData[1].estimatedRewards}
+                            />
+                        )}
+                        {highlightCardData && highlightCardData[0] && (
+                            <HighlightCard
+                                rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
+                                walletAddress={highlightCardData[0].id}
+                                totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
+                                totalRewards={highlightCardData[0].estimatedRewards}
+                            />
+                        )}
+                        {highlightCardData && highlightCardData[2] && (
+                            <HighlightCard
+                                rank={highlightCardData[2].rank ? highlightCardData[2].rank : 0}
+                                walletAddress={highlightCardData[2].id}
+                                totalPoints={truncToDecimals(highlightCardData[2].userRoundBonusPoints, 2)}
+                                totalRewards={highlightCardData[2].estimatedRewards}
+                            />
+                        )}
+                    </BadgeContainer>
+                    <Table
+                        columns={columns}
+                        data={stakingData}
+                        tableRowStyles={RowStyle}
+                        expandedRow={(row) => {
+                            return (
+                                <ExpandedRow>
+                                    <FlexWrapper>
+                                        <FlexDivCentered>
+                                            <Icon className="sidebar-icon icon--markets" />
+                                            <TableText>Trading</TableText>
+                                        </FlexDivCentered>
+                                        <FlexWrapper>
+                                            <Label>Points</Label>
+                                            <TableText>
+                                                {formatCurrencyWithKey(
+                                                    '',
+                                                    row.original.userTradingBasePointsPerRound,
+                                                    2
+                                                )}
+                                            </TableText>
+                                        </FlexWrapper>
+                                    </FlexWrapper>
 
-                            <FlexWrapper>
-                                <FlexDivCentered>
-                                    <Icon className="sidebar-icon icon--liquidity-pool" />
-                                    <TableText>LP</TableText>
-                                </FlexDivCentered>
-                                <FlexWrapper>
-                                    <Label>Points</Label>
-                                    <TableText>
-                                        {formatCurrencyWithKey('', row.original.userLPBasePointsPerRound, 2)}
-                                    </TableText>
-                                </FlexWrapper>
-                            </FlexWrapper>
+                                    <FlexWrapper>
+                                        <FlexDivCentered>
+                                            <Icon className="sidebar-icon icon--liquidity-pool" />
+                                            <TableText>LP</TableText>
+                                        </FlexDivCentered>
+                                        <FlexWrapper>
+                                            <Label>Points</Label>
+                                            <TableText>
+                                                {formatCurrencyWithKey('', row.original.userLPBasePointsPerRound, 2)}
+                                            </TableText>
+                                        </FlexWrapper>
+                                    </FlexWrapper>
 
-                            <FlexWrapper>
-                                <FlexDivCentered>
-                                    <Icon className="sidebar-icon icon--vaults" />
-                                    <TableText>VAULTS</TableText>
-                                </FlexDivCentered>
-                                <FlexWrapper>
-                                    <Label>Points</Label>
-                                    <TableText>
-                                        {formatCurrencyWithKey('', row.original.userVaultBasePointsPerRound, 2)}
-                                    </TableText>
-                                </FlexWrapper>
-                            </FlexWrapper>
-                        </ExpandedRow>
-                    );
-                }}
-                currentPage={page}
-                rowsPerPage={rowsPerPage}
-                isLoading={leaderboardQuery.isLoading}
-            ></Table>
-            <PaginationWrapper
-                rowsPerPageOptions={[10, 20, 50, 100]}
-                count={stakingData.length ? stakingData.length : 0}
-                labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </Wrapper>
+                                    <FlexWrapper>
+                                        <FlexDivCentered>
+                                            <Icon className="sidebar-icon icon--vaults" />
+                                            <TableText>VAULTS</TableText>
+                                        </FlexDivCentered>
+                                        <FlexWrapper>
+                                            <Label>Points</Label>
+                                            <TableText>
+                                                {formatCurrencyWithKey('', row.original.userVaultBasePointsPerRound, 2)}
+                                            </TableText>
+                                        </FlexWrapper>
+                                    </FlexWrapper>
+                                </ExpandedRow>
+                            );
+                        }}
+                        currentPage={page}
+                        rowsPerPage={rowsPerPage}
+                        isLoading={leaderboardQuery.isLoading}
+                    ></Table>
+                    <PaginationWrapper
+                        rowsPerPageOptions={[10, 20, 50, 100]}
+                        count={stakingData.length ? stakingData.length : 0}
+                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Wrapper>
+            )}
+            {leaderboardQuery.isLoading && <Loader />}
+        </>
     );
 };
 
