@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ClaimRewards from '../ClaimRewards/ClaimRewards';
+import StakingOverview from '../StakingOverview';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();
@@ -13,7 +14,8 @@ const MobileRewardsView: React.FC = () => {
                 <LearnMoreLabel>{t('landing-page.learn-more')}</LearnMoreLabel>
             </Container>
             <ClaimRewards />
-            <SecondaryHeader>{'Test'}</SecondaryHeader>
+            <SecondaryHeader>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</SecondaryHeader>
+            <StakingOverview />
         </Wrapper>
     );
 };
@@ -51,6 +53,7 @@ const LearnMoreLabel = styled.span`
 
 const SecondaryHeader = styled(Header)`
     font-weight: 400;
+    margin: 20px 0 10px 0;
 `;
 
 export default MobileRewardsView;
