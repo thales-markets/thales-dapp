@@ -3,9 +3,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { CRYPTO_CURRENCY_MAP, STABLE_DECIMALS, SYNTHS_MAP } from 'constants/currency';
-import { StableCoins } from 'types/options';
-import { getCollateralIndexForNetwork } from 'utils/currency';
+import { STABLE_DECIMALS } from 'constants/currency';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
@@ -28,26 +26,10 @@ const useMultipleCollateralBalanceQuery = (
                 }
 
                 const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
-                    multipleCollateral?.length
-                        ? multipleCollateral[
-                              getCollateralIndexForNetwork(networkId, SYNTHS_MAP.sUSD as StableCoins)
-                          ]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[
-                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.DAI as StableCoins)
-                          ]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[
-                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.USDC as StableCoins)
-                          ]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[
-                              getCollateralIndexForNetwork(networkId, CRYPTO_CURRENCY_MAP.USDT as StableCoins)
-                          ]?.balanceOf(walletAddress)
-                        : undefined,
+                    multipleCollateral?.length ? multipleCollateral[0]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[1]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[2]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[3]?.balanceOf(walletAddress) : undefined,
                 ]);
                 return {
                     sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
