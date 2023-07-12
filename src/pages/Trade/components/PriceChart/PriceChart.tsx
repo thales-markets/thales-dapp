@@ -129,7 +129,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 if (result) {
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), 'dd/MM'),
-                        price: Number(price[1].toFixed(2)),
+                        price: Number(price[1]),
                     }));
 
                     priceData.push({ date: format(new Date(), 'dd/MM'), price: currentPrice });
@@ -261,6 +261,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 fill: theme.textColor.secondary,
                                 width: 100,
                             }}
+                            width={70}
                             tickCount={10}
                             tickLine={false}
                             axisLine={false}
@@ -319,6 +320,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 };
 
 const formatYAxisTick = (value: number) => {
+    if (value < 0.01) {
+        return formatCurrencyWithSign(USD_SIGN, value);
+    }
     return formatCurrencyWithSign(USD_SIGN, value, 2);
 };
 
@@ -382,7 +386,9 @@ const CustomLabel = (props: any) => {
         <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
             <Rectangle rx={10} y={3}></Rectangle>
             <Text x={8} y={14}>
-                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+                {props.price < 0.01
+                    ? formatCurrencyWithSign(USD_SIGN, props.price)
+                    : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text>
         </SVGBorder>
     );
@@ -411,7 +417,9 @@ const CustomLabel2 = (props: any) => {
         <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
             <Rectangle2 rx={10} y={3}></Rectangle2>
             <Text2 x={8} y={14}>
-                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+                {props.price < 0.01
+                    ? formatCurrencyWithSign(USD_SIGN, props.price)
+                    : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text2>
         </SVGBorder>
     );
