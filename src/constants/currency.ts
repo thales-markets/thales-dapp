@@ -172,6 +172,7 @@ export const CRYPTO_CURRENCY = [
     'ETC',
     'BUSD',
     'CAKE',
+    'PEPE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -332,6 +333,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
+    [CRYPTO_CURRENCY_MAP.PEPE]: 'PEPE',
     [COMMODITY_MAP.XAU]: 'Gold',
     [COMMODITY_MAP.XAG]: 'Silver',
 };
@@ -345,8 +347,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.BTC]: 'bitcoin',
     [CRYPTO_CURRENCY_MAP.ETH]: 'ethereum',
     [CRYPTO_CURRENCY_MAP.XRP]: 'ripple',
-    [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
-    [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
+    [CRYPTO_CURRENCY_MAP.BCH]: 'bitcoin-cash',
+    [CRYPTO_CURRENCY_MAP.LTC]: 'litecoin',
     [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
     [CRYPTO_CURRENCY_MAP.BNB]: 'binancecoin',
     [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
@@ -374,8 +376,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sETH]: 'ethereum',
     [SYNTHS_MAP.sCOMP]: 'compound-coin',
     [SYNTHS_MAP.sXRP]: 'ripple',
-    [SYNTHS_MAP.sBCH]: 'binance-peg-bitcoin-cash',
-    [SYNTHS_MAP.sXRP]: 'binance-peg-litecoin',
+    [SYNTHS_MAP.sBCH]: 'bitcoin-cash',
+    [SYNTHS_MAP.sLTC]: 'litecoin',
     [SYNTHS_MAP.sEOS]: 'eos',
     [SYNTHS_MAP.sBNB]: 'oec-binance-coin',
     [SYNTHS_MAP.sXTZ]: 'tezos',
@@ -414,6 +416,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
+    [CRYPTO_CURRENCY_MAP.PEPE]: 'pepe',
     [COMMODITY_MAP.XAU]: 'tether-gold',
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
 };

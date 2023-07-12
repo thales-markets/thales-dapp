@@ -108,15 +108,16 @@ const UserWallet: React.FC = () => {
                                                     setIsDropdownOpen(!isDropdownOpen);
                                                     await SUPPORTED_NETWORK_IDS_MAP[network.id].changeNetwork(
                                                         network.id,
-                                                        undefined
-                                                    );
-                                                    switchNetwork?.(network.id);
-                                                    // Trigger App.js init
-                                                    // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
-                                                    dispatch(
-                                                        switchToNetworkId({
-                                                            networkId: Number(network.id) as Network,
-                                                        })
+                                                        () => {
+                                                            switchNetwork?.(network.id);
+                                                            // Trigger App.js init
+                                                            // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
+                                                            dispatch(
+                                                                switchToNetworkId({
+                                                                    networkId: Number(network.id) as Network,
+                                                                })
+                                                            );
+                                                        }
                                                     );
                                                 }}
                                             >
