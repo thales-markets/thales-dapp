@@ -21,7 +21,7 @@ import { ThemeInterface } from 'types/ui';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
-import RewardsV2 from 'pages/Token/GamifiedStaking/RewardsV2/RewardsV2';
+import Rewards from 'pages/Token/GamifiedStaking/RewardsV2/Rewards';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -96,7 +96,7 @@ const Tab: React.FC<{
                         </SectionRow>
                     )}
                     {activeButtonId === TokenTabSectionIdEnum.REWARDS ? (
-                        <RewardsV2 />
+                        <Rewards />
                     ) : (
                         <SectionContent>
                             {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}

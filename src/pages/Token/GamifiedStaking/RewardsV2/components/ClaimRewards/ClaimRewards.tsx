@@ -256,10 +256,12 @@ const WrapperBorder = styled.div`
 const ClaimSection = styled.div`
     border: 1px solid ${(props) => props.theme.tokenPage.border.primary};
     border-radius: 8px;
-    min-height: 162px;
     padding: 0 20px;
     padding-top: 14px;
     padding-bottom: 20px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 12px 10px;
+    }
 `;
 
 const ColumnDiv = styled.div`
@@ -289,12 +291,16 @@ const Value = styled.span`
     font-weight: 700;
     font-size: 22px;
     color: ${(props) => props.theme.textColor.quaternary};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
 `;
 
 const FlexDiv = styled.div<{ marginBottom?: string }>`
     display: flex;
     justify-content: space-between;
-    padding: 0 10px;
+    align-items: center;
+    padding: 0 8px;
     margin-bottom: ${(props) => props.marginBottom ?? 0};
 `;
 
@@ -304,12 +310,12 @@ const ButtonWrapperTooltip = styled.div`
     justify-content: flex-end;
     align-items: center;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        width: 100%;
+        width: 50%;
     }
 `;
 
 const ButtonStyle: CSSProperties = {
-    fontSize: 13,
+    fontSize: '13px',
     fontWeight: 700,
     height: 32,
 };
