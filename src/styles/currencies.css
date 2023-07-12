@@ -65,3 +65,23 @@
 .currency-icon--magic::before {
     content: '\0069';
 }
+
+.currency-icon--sol::before {
+    content: '\006A';
+}
+
+.currency-icon--bch::before {
+    content: '\006B';
+}
+
+.currency-icon--ltc::before {
+    content: '\006C';
+}
+
+.currency-icon--xrp::before {
+    content: '\006D';
+}
+
+.currency-icon--pepe::before {
+    content: '\006E';
+}
