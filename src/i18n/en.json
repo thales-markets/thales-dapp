@@ -599,6 +599,23 @@
                     "divider": "Staking divider",
                     "your-current-points": "YOUR CURRENT POINTS"
                 },
+                "breakdown-section": {
+                    "your-volume-from": "Your volume gathered from",
+                    "volume-gathered": {
+                        "trading": "Thales Markets Trading",
+                        "overtime-trading": "Overtime Trading",
+                        "lp-thales": "Thales Liquidity Providing",
+                        "lp-overtime": "Overtime Liquidity Providing",
+                        "thales-vaults": "Thales Vaults",
+                        "sport-vaults": "Sport Vaults",
+                        "discount-vault": "Discount Vault",
+                        "degen-discount-vault": "Degen Discount Vault",
+                        "safu-vault": "Safu Vault",
+                        "degen-vault": "Degen Vault",
+                        "upsettoor-vault": "Upsettoor Vault",
+                        "parlay-vault": "Parlay Vault"
+                    }
+                },
                 "base-rewards": {
                     "title": "Base staking Rewards",
                     "balance": "Your staked balance",
