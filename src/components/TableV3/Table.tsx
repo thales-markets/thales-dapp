@@ -284,11 +284,16 @@ const Table: React.FC<TableProps> = ({
                                             {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
                                                 <PriceWrapper ref={elementRef as any}>
                                                     <Price>
-                                                        {formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            indexForDrawingAndPrice?.price ?? 0,
-                                                            2
-                                                        )}
+                                                        {(indexForDrawingAndPrice?.price as any) < 0.01
+                                                            ? formatCurrencyWithSign(
+                                                                  USD_SIGN,
+                                                                  indexForDrawingAndPrice?.price ?? 0
+                                                              )
+                                                            : formatCurrencyWithSign(
+                                                                  USD_SIGN,
+                                                                  indexForDrawingAndPrice?.price ?? 0,
+                                                                  2
+                                                              )}
                                                     </Price>
                                                     <DirectedArrowIcon className="icon icon--caret-up" top="-12px" />
                                                     <DirectedArrowIcon className="icon icon--caret-down" top="0" />
