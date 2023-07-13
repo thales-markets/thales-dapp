@@ -6,6 +6,25 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { FlexDivRow } from 'styles/common';
+
+type TabType = 'trading' | 'amm-lp' | 'vaults';
+type TabItem = { active: boolean; type: TabType };
+
+const DefaultTabState: TabItem[] = [
+    {
+        active: false,
+        type: 'trading',
+    },
+    {
+        active: false,
+        type: 'amm-lp',
+    },
+    {
+        active: false,
+        type: 'vaults',
+    },
+];
 
 const PointsBreakdown: React.FC = () => {
     const { t } = useTranslation();
@@ -13,6 +32,7 @@ const PointsBreakdown: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
+    const [tabs, setTabsState] = useState<TabItem[]>(DefaultTabState);
     const [lastValidStakingData, setLastValidStakingData] = useState<PointsData | undefined>(undefined);
 
     const query = usePointsBreakdownQuery(walletAddress, { enabled: isAppReady });
@@ -30,6 +50,21 @@ const PointsBreakdown: React.FC = () => {
         return lastValidStakingData;
     }, [query.isSuccess, query.data, lastValidStakingData]);
 
+    const onTabClick = (type: TabType) => {
+        const _tabs = tabs.map((item) => {
+            if (item.type == type) {
+                return { ...item, active: !item.active };
+            }
+            return item;
+        });
+        setTabsState(_tabs);
+    };
+
+    const getClassNameForTab = (type: TabType) => {
+        if (tabs.find((item) => item.type == type && item.active == true)) return `icon icon--caret-up`;
+        return `icon icon--caret-down`;
+    };
+
     return (
         <Container>
             <FlexDiv>
@@ -38,87 +73,242 @@ const PointsBreakdown: React.FC = () => {
             </FlexDiv>
             <FlexDiv>
                 <ColumnFlex>
-                    <Row>
-                        <Cell row={true}>
-                            <Icon className="sidebar-icon icon--markets" />
-                            <CellValue highlight={true}>
-                                {t('thales-token.gamified-staking.rewards.points.trading')}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-volume')}</CellLabel>
-                            <CellValue>{stakingData?.tradingVolume}</CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>
-                                {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
-                            </CellLabel>
-                            <CellValue highlight={true} addBefore={true}>
-                                <Span>x</Span> {stakingData?.tradingMultiplier}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
-                            <CellValue highlight={true}>{stakingData?.tradingPoints}</CellValue>
-                        </Cell>
-                    </Row>
-                    <Row>
-                        <Cell row={true}>
-                            <Icon className="sidebar-icon icon--liquidity-pool" />
-                            <CellValue highlight={true}>
-                                {t('thales-token.gamified-staking.rewards.points.amm-lp')}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-amm')}</CellLabel>
-                            <CellValue>{stakingData?.lpVolume}</CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>
-                                {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
-                            </CellLabel>
-                            <CellValue highlight={true} addBefore={true}>
-                                <Span>x</Span> {stakingData?.lpMultiplier}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
-                            <CellValue highlight={true}>{stakingData?.lpPoints}</CellValue>
-                        </Cell>
-                    </Row>
-                    <Row>
-                        <Cell row={true}>
-                            <Icon className="sidebar-icon icon--vaults" />
-                            <CellValue highlight={true}>
-                                {t('thales-token.gamified-staking.rewards.points.vaults')}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-vaults')}</CellLabel>
-                            <CellValue>{stakingData?.vaultsVolume}</CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>
-                                {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
-                            </CellLabel>
-                            <CellValue highlight={true} addBefore={true}>
-                                <Span>x</Span> {stakingData?.vaultsMultiplier}
-                            </CellValue>
-                        </Cell>
-                        <VLine />
-                        <Cell>
-                            <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
-                            <CellValue highlight={true}>{stakingData?.vaultsPoints}</CellValue>
-                        </Cell>
-                    </Row>
+                    <BrakedownWrapper active={tabs[0].active}>
+                        <Row>
+                            <Cell row={true}>
+                                <Icon className="sidebar-icon icon--markets" />
+                                <CellValue highlight={true}>
+                                    {t('thales-token.gamified-staking.rewards.points.trading')}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-volume')}</CellLabel>
+                                <CellValue>{stakingData?.tradingVolume}</CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>
+                                    {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
+                                </CellLabel>
+                                <CellValue highlight={true} addBefore={true}>
+                                    <Span>x</Span> {stakingData?.tradingMultiplier}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
+                                <CellValue highlight={true}>{stakingData?.tradingPoints}</CellValue>
+                            </Cell>
+                        </Row>
+                        {tabs[0].active && (
+                            <DropdownWrapper>
+                                <DropdownHLine />
+                                <DropdownLabel>
+                                    {t('thales-token.gamified-staking.rewards.breakdown-section.your-volume-from')}
+                                </DropdownLabel>
+                                <LinksContainer>
+                                    <LinkWrapper>
+                                        <LinkIcon className="icon icon--thales" />
+                                        <LinkLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.trading'
+                                            )}
+                                        </LinkLabel>
+                                    </LinkWrapper>
+                                    <LinkWrapper>
+                                        <LinkIcon className="icon icon--overtime" />
+                                        <LinkLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.overtime-trading'
+                                            )}
+                                        </LinkLabel>
+                                    </LinkWrapper>
+                                </LinksContainer>
+                            </DropdownWrapper>
+                        )}
+                        <Arrow className={getClassNameForTab('trading')} onClick={() => onTabClick('trading')} />
+                    </BrakedownWrapper>
+                    <BrakedownWrapper active={tabs[1].active}>
+                        <Row>
+                            <Cell row={true}>
+                                <Icon className="sidebar-icon icon--liquidity-pool" />
+                                <CellValue highlight={true}>
+                                    {t('thales-token.gamified-staking.rewards.points.amm-lp')}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-amm')}</CellLabel>
+                                <CellValue>{stakingData?.lpVolume}</CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>
+                                    {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
+                                </CellLabel>
+                                <CellValue highlight={true} addBefore={true}>
+                                    <Span>x</Span> {stakingData?.lpMultiplier}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
+                                <CellValue highlight={true}>{stakingData?.lpPoints}</CellValue>
+                            </Cell>
+                        </Row>
+                        {tabs[1].active && (
+                            <DropdownWrapper>
+                                <DropdownHLine />
+                                <DropdownLabel>
+                                    {t('thales-token.gamified-staking.rewards.breakdown-section.your-volume-from')}
+                                </DropdownLabel>
+                                <LinksContainer>
+                                    <LinkWrapper>
+                                        <LinkIcon className="icon icon--lp-thales" />
+                                        <LinkLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.lp-thales'
+                                            )}
+                                        </LinkLabel>
+                                    </LinkWrapper>
+                                    <LinkWrapper>
+                                        <LinkIcon className="icon icon--lp-overtime" />
+                                        <LinkLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.lp-overtime'
+                                            )}
+                                        </LinkLabel>
+                                    </LinkWrapper>
+                                </LinksContainer>
+                            </DropdownWrapper>
+                        )}
+                        <Arrow className={getClassNameForTab('amm-lp')} onClick={() => onTabClick('amm-lp')} />
+                    </BrakedownWrapper>
+                    <BrakedownWrapper active={tabs[2].active}>
+                        <Row>
+                            <Cell row={true}>
+                                <Icon className="sidebar-icon icon--vaults" />
+                                <CellValue highlight={true}>
+                                    {t('thales-token.gamified-staking.rewards.points.vaults')}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-vaults')}</CellLabel>
+                                <CellValue>{stakingData?.vaultsVolume}</CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>
+                                    {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
+                                </CellLabel>
+                                <CellValue highlight={true} addBefore={true}>
+                                    <Span>x</Span> {stakingData?.vaultsMultiplier}
+                                </CellValue>
+                            </Cell>
+                            <VLine />
+                            <Cell>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
+                                <CellValue highlight={true}>{stakingData?.vaultsPoints}</CellValue>
+                            </Cell>
+                        </Row>
+                        {tabs[2].active && (
+                            <DropdownWrapper>
+                                <DropdownHLine />
+                                <DropdownLabel>
+                                    {t('thales-token.gamified-staking.rewards.breakdown-section.your-volume-from')}
+                                </DropdownLabel>
+                                <>
+                                    <VaultsWrapper>
+                                        <VaultsLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.thales-vaults'
+                                            )}
+                                        </VaultsLabel>
+                                        <VLine active={tabs[2].active} />
+                                        <LinksContainer>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--discount-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--degen-discount-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-discount-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.safu-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                        </LinksContainer>
+                                    </VaultsWrapper>
+                                    <VaultsWrapper>
+                                        <VaultsLabel>
+                                            {t(
+                                                'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.sport-vaults'
+                                            )}
+                                        </VaultsLabel>
+                                        <VLine active={tabs[2].active} />
+                                        <LinksContainer>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--discount-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--degen-discount-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.safu-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.upsettoor-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                            <LinkWrapper>
+                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkLabel>
+                                                    {t(
+                                                        'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.parlay-vault'
+                                                    )}
+                                                </LinkLabel>
+                                            </LinkWrapper>
+                                        </LinksContainer>
+                                    </VaultsWrapper>
+                                </>
+                            </DropdownWrapper>
+                        )}
+                        <Arrow className={getClassNameForTab('vaults')} onClick={() => onTabClick('vaults')} />
+                    </BrakedownWrapper>
                 </ColumnFlex>
                 <ThalesMultiplier>
                     <CellValue highlight={true}>
@@ -165,13 +355,24 @@ const ColumnFlex = styled.div`
 `;
 
 const Row = styled.div`
+    position: relative;
+    /* border: 1px solid ${(props) => props.theme.borderColor.primary}; */
+    /* border-radius: 8px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+`;
+
+const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean }>`
+    position: relative;
+    background-color: ${(_props) => (_props?.active ? _props.theme.background.secondary : '')};
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     display: flex;
     align-items: center;
-    justify-content: center;
-
     width: 100%;
+    padding-top: 10px;
 `;
 
 const Cell = styled.div<{ row?: boolean }>`
@@ -225,9 +426,10 @@ const ThalesMultiplier = styled.div`
     padding: 20px;
 `;
 
-const VLine = styled.div`
-    width: 1px;
-    background-color: ${(props) => props.theme.borderColor.primary};
+const VLine = styled.div<{ active?: boolean }>`
+    width: 2px;
+    background-color: ${(props) =>
+        props.active ? props.theme.borderColor.secondary : props.theme.borderColor.primary};
     height: 50px;
     padding: 6px 0;
 `;
@@ -264,6 +466,14 @@ const TotalPoints = styled.div`
     margin-top: 8px;
 `;
 
+const Arrow = styled.i`
+    font-size: 16px;
+    color: ${(_props) => _props.theme.textColor.quaternary};
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+`;
+
 const Title = styled.p`
     font-weight: 400;
     font-size: 18px;
@@ -271,6 +481,71 @@ const Title = styled.p`
     margin-bottom: 10px;
     margin-top: 20px;
     text-transform: capitalize;
+`;
+
+const DropdownWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+`;
+
+const DropdownLabel = styled.span`
+    font-size: 13px;
+    font-style: normal;
+    align-self: flex-start;
+    color: ${(_props) => _props.theme.textColor.primary};
+`;
+
+const DropdownHLine = styled.div`
+    background-color: ${(props) => props.theme.borderColor.secondary};
+    height: 1px;
+    width: 100%;
+    padding: 0 10px;
+    margin: 10px 0;
+`;
+
+const LinksContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    padding: 20px 0;
+`;
+
+const LinkWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 100px;
+`;
+
+const LinkIcon = styled.i`
+    font-size: 30px !important;
+    color: ${(_props) => _props.theme.textColor.primary};
+    padding: 10px 0px;
+`;
+
+const LinkLabel = styled.span`
+    text-transform: uppercase;
+    font-size: 13px;
+    color: ${(_props) => _props.theme.textColor.primary};
+`;
+
+const VaultsWrapper = styled(FlexDivRow)`
+    width: 100%;
+    align-items: center;
+`;
+
+const VaultsLabel = styled.div`
+    font-size: 22px;
+    color: ${(_props) => _props.theme.textColor.primary};
+    font-style: normal;
+    font-weight: 700;
+    text-transform: uppercase;
+    min-width: 180px;
 `;
 
 export default PointsBreakdown;
