@@ -88,6 +88,8 @@ export const formatNumberShort = (value: number, trim = true) => {
         : // Three Zeroes for Thousands
         value >= 1.0e3
         ? formatCurrency(value / 1.0e3, 2, trim) + 'k'
+        : value < 0.01
+        ? value
         : formatCurrency(value, 2, trim);
 };
 
