@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ClaimRewards from '../ClaimRewards/ClaimRewards';
 import StakingOverview from '../StakingOverview';
+import PointsBreakdown from '../PointsBreakdown/PointsBreakdown';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();
@@ -16,6 +17,7 @@ const MobileRewardsView: React.FC = () => {
             <ClaimRewards />
             <SecondaryHeader>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</SecondaryHeader>
             <StakingOverview />
+            <PointsBreakdown />
         </Wrapper>
     );
 };
