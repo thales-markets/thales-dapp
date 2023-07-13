@@ -1,8 +1,10 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import usePointsBreakdownQuery, { PointsData } from 'queries/token/usePointsBreakdownQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -31,6 +33,7 @@ const PointsBreakdown: React.FC = () => {
 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [tabs, setTabsState] = useState<TabItem[]>(DefaultTabState);
     const [lastValidStakingData, setLastValidStakingData] = useState<PointsData | undefined>(undefined);
@@ -81,12 +84,12 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.trading')}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-volume')}</CellLabel>
                                 <CellValue>{stakingData?.tradingVolume}</CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
@@ -95,7 +98,7 @@ const PointsBreakdown: React.FC = () => {
                                     <Span>x</Span> {stakingData?.tradingMultiplier}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
                                 <CellValue highlight={true}>{stakingData?.tradingPoints}</CellValue>
@@ -137,12 +140,12 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.amm-lp')}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-amm')}</CellLabel>
                                 <CellValue>{stakingData?.lpVolume}</CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
@@ -151,7 +154,7 @@ const PointsBreakdown: React.FC = () => {
                                     <Span>x</Span> {stakingData?.lpMultiplier}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
                                 <CellValue highlight={true}>{stakingData?.lpPoints}</CellValue>
@@ -193,12 +196,12 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.vaults')}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.total-vaults')}</CellLabel>
                                 <CellValue>{stakingData?.vaultsVolume}</CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
@@ -207,7 +210,7 @@ const PointsBreakdown: React.FC = () => {
                                     <Span>x</Span> {stakingData?.vaultsMultiplier}
                                 </CellValue>
                             </Cell>
-                            <VLine />
+                            {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>{t('thales-token.gamified-staking.rewards.points.points')}</CellLabel>
                                 <CellValue highlight={true}>{stakingData?.vaultsPoints}</CellValue>
@@ -226,7 +229,7 @@ const PointsBreakdown: React.FC = () => {
                                                 'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.thales-vaults'
                                             )}
                                         </VaultsLabel>
-                                        <VLine active={tabs[2].active} />
+                                        {!isMobile && <VLine active={tabs[2].active} />}
                                         <LinksContainer>
                                             <LinkWrapper>
                                                 <LinkIcon className="icon icon--discount-vault" />
@@ -260,7 +263,7 @@ const PointsBreakdown: React.FC = () => {
                                                 'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.sport-vaults'
                                             )}
                                         </VaultsLabel>
-                                        <VLine active={tabs[2].active} />
+                                        {!isMobile && <VLine active={tabs[2].active} />}
                                         <LinksContainer>
                                             <LinkWrapper>
                                                 <LinkIcon className="icon icon--discount-vault" />
@@ -344,6 +347,9 @@ const FlexDiv = styled.div`
     align-items: center;
     gap: 20px;
     justify-content: space-between;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-wrap: wrap;
+    }
 `;
 
 const ColumnFlex = styled.div`
@@ -362,6 +368,9 @@ const Row = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-wrap: wrap;
+    }
 `;
 
 const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean }>`
@@ -495,6 +504,9 @@ const DropdownLabel = styled.span`
     font-style: normal;
     align-self: flex-start;
     color: ${(_props) => _props.theme.textColor.primary};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-bottom: 20px;
+    }
 `;
 
 const DropdownHLine = styled.div`
@@ -512,6 +524,11 @@ const LinksContainer = styled.div`
     justify-content: space-around;
     width: 80%;
     padding: 20px 0;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
 `;
 
 const LinkWrapper = styled.div`
@@ -520,6 +537,9 @@ const LinkWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     min-width: 100px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        min-width: 120px;
+    }
 `;
 
 const LinkIcon = styled.i`
@@ -537,6 +557,9 @@ const LinkLabel = styled.span`
 const VaultsWrapper = styled(FlexDivRow)`
     width: 100%;
     align-items: center;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-direction: column;
+    }
 `;
 
 const VaultsLabel = styled.div`
@@ -546,6 +569,10 @@ const VaultsLabel = styled.div`
     font-weight: 700;
     text-transform: uppercase;
     min-width: 180px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        text-align: left;
+        align-self: flex-start;
+    }
 `;
 
 export default PointsBreakdown;
