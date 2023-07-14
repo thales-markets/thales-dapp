@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ClaimRewards from '../ClaimRewards/ClaimRewards';
 import StakingOverview from '../StakingOverview';
 import PointsBreakdown from '../PointsBreakdown/PointsBreakdown';
+import StakingStepsMobile from '../StakingSteps/StakingStepsMobile';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();
+
+    const [learnMoreActive, setLearnMoreActive] = useState<boolean>(false);
 
     return (
         <Wrapper>
             <Container>
                 <Header>{'Thales Staking Rewards'}</Header>
-                <LearnMoreLabel>{t('landing-page.learn-more')}</LearnMoreLabel>
+                <LearnMoreLabel onClick={() => setLearnMoreActive(!learnMoreActive)}>
+                    {t('landing-page.learn-more')}
+                </LearnMoreLabel>
             </Container>
             <ClaimRewards />
             <SecondaryHeader>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</SecondaryHeader>
             <StakingOverview />
             <PointsBreakdown />
+            {learnMoreActive && <StakingStepsMobile onClose={() => setLearnMoreActive(false)} />}
         </Wrapper>
     );
 };
