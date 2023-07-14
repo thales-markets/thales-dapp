@@ -433,6 +433,9 @@ const ThalesMultiplier = styled.div`
     justify-content: space-between;
     gap: 8px;
     padding: 20px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        max-width: initial;
+    }
 `;
 
 const VLine = styled.div<{ active?: boolean }>`
@@ -552,6 +555,7 @@ const LinkLabel = styled.span`
     text-transform: uppercase;
     font-size: 13px;
     color: ${(_props) => _props.theme.textColor.primary};
+    word-wrap: normal;
 `;
 
 const VaultsWrapper = styled(FlexDivRow)`
