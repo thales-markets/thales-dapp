@@ -494,10 +494,14 @@
                 }
             },
             "rewards": {
+                "titles": {
+                    "gamified-staking": "Gamified Staking Bonus Rewards"
+                },
                 "section-title": "Rewards",
-                "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You have to claim staking rewards weekly before they expire on next weeks snapshot.",
+                "section-title-staking": "Thales Staking Rewards",
+                "section-description": "<bold>Staking rewards</bold> are main inflationary rewards of the THALES tokens, allocated to THALES token stakers once a week. Your <bold>base staking rewards</bold> amount depend on your My Staked Share percentage value at the time of the weekly snapshot. <highlight>Staking rewards have to be claimed weekly or they expire on next week's snapshot time.</highlight>",
                 "section-base-rewards": "Base inflationary rewards of 60,000 THALES per week are shared among all THALES tokens staked proportionally.",
-                "section-bonus-rewards": "Additionally,  there are 30,000 THALES as bonus weekly rewards for all THALES stakers that for this week have driven Trading Volume, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime.",
+                "section-bonus-rewards": "Additionally, there are 30,000 THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
@@ -563,16 +567,16 @@
                 "gamified-rewards": "Gamified staking rewards",
                 "gamified-rewards-how": "How gamified staking rewards work?",
                 "card": {
-                    "title-1": "THALES staked multipler",
-                    "content-1": "The more Thales you stake, you have better chance to increase your Thales Multiplier score that can influence your final points as it multiplies your total user volume.",
-                    "title-2": "Trading Volume points",
-                    "content-2": "Use varity of our AMM markets to trade and to increase your user volume. All trading volume is multiplied with 1.",
-                    "title-3": "AMM LP points",
-                    "content-3": "If you are not Pro Trader you can always make deposit in our Liquidity Providing Pool. All your volume from LP pools is multiplied with 0.5.",
-                    "title-4": "Vaults points",
-                    "content-4": "Or you can make deposit to various vaults we offer. All your volume from vaults is multiplied with 0.25.",
-                    "title-5": "Total score",
-                    "content-5": "Finally, your total user volume (Trading, AMM and Vaults volume) is multiplied with Thales multiplier. Thales multiplier can be value from 1 till 5, where more you stake the higher Thales multiplier is. It is calculated like 1 + 4 x User Thales Staked / Biggest Thales Staker"
+                    "title-1": "Trading Volume Points",
+                    "content-1": "Trading Volume points are accrued by driving trading volume through Thales Markets and Overtime Markets. For every 1 USD of volume driven across Thales products, you get 1 point. This means that your total points from Trading Volume are equal to the <highlight>sum of your total USD Trading Volume from Thales Markets and Overtime Markets (multiplied by 1).</highlight>",
+                    "title-2": "AMM LP Points",
+                    "content-2": "AMM LP points are accrued by depositing USD into various AMM Liquidity Pools across Thales products (ThalesAMM pool, SportsAMM pool, ParlayAMM pool etc.). For each 1 USD deposited into a LP pool you get 0.5 points. This means that your total points from AMM LP-ing are equal by <highlight>multiplying the sum of your total USD deposits from Thales Markets and Overtime Markets LP pools with 0.5.</highlight>",
+                    "title-3": "Vaults points",
+                    "content-3": "Vaults Points are accrued by depositing USD into various Vaults across Thales products (Thales Markets Vaults and Overtime Markets Vaults). For each 1 USD deposited into a Vault, you get 0.25 points. This means that your total points from Vaults deposits are equal by <highlight>multiplying the sum of your total Vaults USD deposits with 0.25.</highlight>",
+                    "title-4": "THALES Staked Multiplier",
+                    "content-4": "The amount of THALES you have staked determines the multiplier for your total points. The more THALES you stake, the higher the final multiplier of your total points.<br><br><highlight>ThalesMultiplier = 1 + UserThalesStaked /{StakingDivider}</highlight><br><br>Thales multiplier minimum value is 1 and maximum value is 5.",
+                    "title-5": "Total Score",
+                    "content-5": "Your final score that determines your share of 30,000 THALES Gamified Staking Bonus rewards is equal to the sum of all your accrued points multiplied by the THALES Staked Multiplier. <br><br><highlight>Total Score = (Trading Volume points + AMM LP points + Vaults Points) x THALES Staked Multiplier</highlight>"
                 },
                 "overview": {
                     "title": "Overview for this round",

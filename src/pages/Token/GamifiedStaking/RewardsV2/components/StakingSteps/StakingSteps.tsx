@@ -1,6 +1,7 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { BoldedText, HighlightTextSecondary } from './styled-components';
 
 const StakingSteps: React.FC = () => {
     const { t } = useTranslation();
@@ -14,37 +15,77 @@ const StakingSteps: React.FC = () => {
                     <Number>1</Number>
                     <CardContent>
                         <CardTitle>{t('thales-token.gamified-staking.rewards.card.title-1')}</CardTitle>
-                        <CardText>{t('thales-token.gamified-staking.rewards.card.content-1')}</CardText>
+                        <CardText>
+                            <Trans
+                                i18nKey="thales-token.gamified-staking.rewards.card.content-1"
+                                components={{
+                                    bold: <BoldedText />,
+                                    highlight: <HighlightTextSecondary />,
+                                }}
+                            />
+                        </CardText>
                     </CardContent>
                 </Card>
                 <Card>
                     <Number>2</Number>
                     <CardContent>
                         <CardTitle>{t('thales-token.gamified-staking.rewards.card.title-2')}</CardTitle>
-                        <CardText>{t('thales-token.gamified-staking.rewards.card.content-2')}</CardText>
+                        <CardText>
+                            <Trans
+                                i18nKey="thales-token.gamified-staking.rewards.card.content-2"
+                                components={{
+                                    bold: <BoldedText />,
+                                    highlight: <HighlightTextSecondary />,
+                                }}
+                            />
+                        </CardText>
                     </CardContent>
                 </Card>
                 <Card>
                     <Number>3</Number>
                     <CardContent>
                         <CardTitle>{t('thales-token.gamified-staking.rewards.card.title-3')}</CardTitle>
-                        <CardText>{t('thales-token.gamified-staking.rewards.card.content-3')}</CardText>
+                        <CardText>
+                            <Trans
+                                i18nKey="thales-token.gamified-staking.rewards.card.content-3"
+                                components={{
+                                    bold: <BoldedText />,
+                                    highlight: <HighlightTextSecondary />,
+                                }}
+                            />
+                        </CardText>
                     </CardContent>
                 </Card>
                 <Card>
                     <Number>4</Number>
                     <CardContent>
                         <CardTitle>{t('thales-token.gamified-staking.rewards.card.title-4')}</CardTitle>
-                        <CardText>{t('thales-token.gamified-staking.rewards.card.content-4')}</CardText>
+                        <CardText>
+                            <Trans
+                                i18nKey="thales-token.gamified-staking.rewards.card.content-4"
+                                components={{
+                                    bold: <BoldedText />,
+                                    highlight: <HighlightTextSecondary />,
+                                    br: <br />,
+                                }}
+                            />
+                        </CardText>
                     </CardContent>
                 </Card>
             </FlexDiv>
             <FlexDiv>
                 <RowCard>
-                    <Number>5</Number>
+                    <TotalScoreLabel>{t('thales-token.gamified-staking.rewards.card.title-5')}</TotalScoreLabel>
                     <CardContent>
-                        <CardTitle>{t('thales-token.gamified-staking.rewards.card.title-5')}</CardTitle>
-                        <CardText>{t('thales-token.gamified-staking.rewards.card.content-5')}</CardText>
+                        <CardText>
+                            <Trans
+                                i18nKey="thales-token.gamified-staking.rewards.card.content-5"
+                                components={{
+                                    highlight: <HighlightTextSecondary />,
+                                    br: <br />,
+                                }}
+                            />
+                        </CardText>
                     </CardContent>
                 </RowCard>
             </FlexDiv>
@@ -82,7 +123,7 @@ const Card = styled.div`
     padding-left: 22px;
     padding-bottom: 8px;
     padding-right: 8px;
-    height: 135px;
+    height: 230px;
 `;
 
 const RowCard = styled(Card)`
@@ -108,9 +149,23 @@ const Number = styled.div`
     z-index: 2;
 `;
 
+const TotalScoreLabel = styled.div`
+    position: absolute;
+    font-size: 28px;
+    top: -14px;
+    font-weight: 700;
+    width: 230px;
+    text-align: center;
+    left: calc(50% - 125px);
+    text-transform: uppercase;
+    color: ${(props) => props.theme.tokenPage.border.secondary};
+    background-color: ${(props) => props.theme.background.primary};
+    z-index: 2;
+`;
+
 const CardContent = styled.div`
     position: relative;
-    z-index: 3;
+    z-index: 2;
 `;
 
 const CardTitle = styled.p`
