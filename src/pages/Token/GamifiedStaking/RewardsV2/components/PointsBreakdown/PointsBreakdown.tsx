@@ -72,7 +72,7 @@ const PointsBreakdown: React.FC = () => {
         <Container>
             <FlexDiv>
                 <Title>{t('thales-token.gamified-staking.rewards.points.your-points')}</Title>
-                <Title>{t('thales-token.gamified-staking.rewards.points.your-multiplier')}</Title>
+                {!isMobile && <Title>{t('thales-token.gamified-staking.rewards.points.your-multiplier')}</Title>}
             </FlexDiv>
             <FlexDiv>
                 <ColumnFlex>
@@ -313,6 +313,7 @@ const PointsBreakdown: React.FC = () => {
                         <Arrow className={getClassNameForTab('vaults')} onClick={() => onTabClick('vaults')} />
                     </BrakedownWrapper>
                 </ColumnFlex>
+                {isMobile && <Title>{t('thales-token.gamified-staking.rewards.points.your-multiplier')}</Title>}
                 <ThalesMultiplier>
                     <CellValue highlight={true}>
                         x<Multiplier>{stakingData?.stakingMultiplier}</Multiplier>
