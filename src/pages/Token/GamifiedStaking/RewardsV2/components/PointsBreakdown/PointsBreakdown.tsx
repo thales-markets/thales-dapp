@@ -345,7 +345,7 @@ const Container = styled.div`
 
 const FlexDiv = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
     justify-content: space-between;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
