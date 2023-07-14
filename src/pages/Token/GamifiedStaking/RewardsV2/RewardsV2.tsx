@@ -1,22 +1,45 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import StakingSteps from './components/StakingSteps/StakingSteps';
 import StakingOverview from './components/StakingOverview/StakingOverview';
 import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 import BaseRewards from './components/BaseRewards/BaseRewards';
 import ClaimRewards from './components/ClaimRewards/ClaimRewards';
+import { BoldedText, HighlightText } from './components/StakingSteps/styled-components';
 
 const RewardsV2: React.FC = () => {
-    const { t } = useTranslation();
-
     return (
         <Wrapper>
             <Header>
                 <Div>
-                    <Text>{t('thales-token.gamified-staking.rewards.section-description')}</Text>
-                    <Text>{t('thales-token.gamified-staking.rewards.section-base-rewards')}</Text>
-                    <Text>{t('thales-token.gamified-staking.rewards.section-bonus-rewards')}</Text>
+                    <Text>
+                        <Trans
+                            i18nKey="thales-token.gamified-staking.rewards.section-description"
+                            components={{
+                                bold: <BoldedText />,
+                                highlight: <HighlightText />,
+                            }}
+                        />
+                    </Text>
+                    <Text>
+                        <Trans
+                            i18nKey="thales-token.gamified-staking.rewards.section-base-rewards"
+                            components={{
+                                bold: <BoldedText />,
+                                highlight: <HighlightText />,
+                            }}
+                        />
+                    </Text>
+                    <Text>
+                        <Trans
+                            i18nKey="thales-token.gamified-staking.rewards.section-bonus-rewards"
+                            components={{
+                                bold: <BoldedText />,
+                                highlight: <HighlightText />,
+                            }}
+                        />
+                    </Text>
                 </Div>
                 <Div>
                     <ClaimRewards />
@@ -46,7 +69,7 @@ const Div = styled.div`
 
 const Text = styled.p`
     color: ${(props) => props.theme.textColor.primary};
-    font-size: 13;
+    font-size: 13px;
     font-weight: 400;
     line-height: 110%;
     margin-top: 16px;
