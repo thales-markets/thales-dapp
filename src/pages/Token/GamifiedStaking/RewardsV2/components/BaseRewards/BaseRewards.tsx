@@ -1,8 +1,10 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useUserBaseRewardsQuery, { UserStakingData } from 'queries/token/useUserBaseRewards';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -12,6 +14,7 @@ const BaseRewards: React.FC = () => {
 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<UserStakingData | undefined>(undefined);
 
@@ -38,17 +41,17 @@ const BaseRewards: React.FC = () => {
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.balance')}</CellLabel>
                     <CellValue>{stakingData?.thalesStaked}</CellValue>
                 </Cell>
-                <VLine />
+                {!isMobile && <VLine />}
                 <Cell>
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.total')}</CellLabel>
                     <CellValue>{stakingData?.totalStaked}</CellValue>
                 </Cell>
-                <VLine />
+                {!isMobile && <VLine />}
                 <Cell>
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.share')}</CellLabel>
                     <CellValue>{stakingData?.share}</CellValue>
                 </Cell>
-                <VLine />
+                {!isMobile && <VLine />}
                 <Cell>
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.rewards')}</CellLabel>
                     <CellValue>{stakingData?.baseRewards}</CellValue>
@@ -68,6 +71,11 @@ const Title = styled.p`
     font-size: 22px;
     color: ${(props) => props.theme.textColor.primary};
     margin: 30px 0;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        height: auto;
+        font-size: 18px;
+        flex-wrap: wrap;
+    }
 `;
 const FlexDiv = styled.div`
     display: flex;
@@ -76,6 +84,10 @@ const FlexDiv = styled.div`
     border-radius: 8px;
     width: 100%;
     height: 100px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        height: auto;
+        flex-wrap: wrap;
+    }
 `;
 const Cell = styled.div`
     display: flex;
@@ -86,6 +98,12 @@ const Cell = styled.div`
     height: 100%;
     padding: 10px;
     gap: 10px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex: none;
+        justify-content: center;
+        align-items: flex-start;
+        width: 50%;
+    }
 `;
 
 const CellLabel = styled.p`
@@ -97,6 +115,9 @@ const CellValue = styled.p`
     font-weight: 700;
     font-size: 22px;
     color: ${(props) => props.theme.textColor.quaternary};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
 `;
 
 const VLine = styled.div`
@@ -111,6 +132,9 @@ const StakeMore = styled.p`
     font-size: 18px;
     color: ${(props) => props.theme.textColor.quaternary};
     text-transform: capitalize;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
+    }
 `;
 
 const ArrowRight = styled.i`
