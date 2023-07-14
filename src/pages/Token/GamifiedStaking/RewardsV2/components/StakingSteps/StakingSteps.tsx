@@ -93,7 +93,10 @@ const StakingSteps: React.FC = () => {
     );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+    margin-top: 28px;
+`;
+
 const Title = styled.p`
     font-weight: 700;
     font-size: 22px;
