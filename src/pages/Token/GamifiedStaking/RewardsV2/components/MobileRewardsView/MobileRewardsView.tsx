@@ -5,6 +5,7 @@ import ClaimRewards from '../ClaimRewards/ClaimRewards';
 import StakingOverview from '../StakingOverview';
 import PointsBreakdown from '../PointsBreakdown/PointsBreakdown';
 import StakingStepsMobile from '../StakingSteps/StakingStepsMobile';
+import BaseRewards from '../BaseRewards';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();
@@ -24,6 +25,7 @@ const MobileRewardsView: React.FC = () => {
             <StakingOverview />
             <PointsBreakdown />
             {learnMoreActive && <StakingStepsMobile onClose={() => setLearnMoreActive(false)} />}
+            <BaseRewards />
         </Wrapper>
     );
 };
