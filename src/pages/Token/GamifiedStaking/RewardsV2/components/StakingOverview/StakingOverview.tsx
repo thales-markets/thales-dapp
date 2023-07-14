@@ -153,6 +153,9 @@ const VerticalLine = styled.div`
     width: 2;
     border-right: 1px solid ${(props) => props.theme.borderColor.tertiary};
     padding: 0px 10px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        padding: 0;
+    }
 `;
 
 const Label = styled.span`
