@@ -79,7 +79,7 @@ const PointsBreakdown: React.FC = () => {
                     <BrakedownWrapper active={tabs[0].active}>
                         <Row>
                             <Cell row={true}>
-                                <Icon className="sidebar-icon icon--markets" />
+                                <Icon className="sidebar-icon icon--trading" />
                                 <CellValue highlight={true}>
                                     {t('thales-token.gamified-staking.rewards.points.trading')}
                                 </CellValue>
@@ -112,7 +112,7 @@ const PointsBreakdown: React.FC = () => {
                                 </DropdownLabel>
                                 <LinksContainer>
                                     <LinkWrapper>
-                                        <LinkIcon className="icon icon--thales" />
+                                        <LinkIcon className="icon icon--thales-logo" />
                                         <LinkLabel>
                                             {t(
                                                 'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.trading'
@@ -232,7 +232,7 @@ const PointsBreakdown: React.FC = () => {
                                         {!isMobile && <VLine active={tabs[2].active} />}
                                         <LinksContainer>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--discount-vault" />
+                                                <LinkIcon className="icon icon__discount-vault" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
@@ -240,7 +240,7 @@ const PointsBreakdown: React.FC = () => {
                                                 </LinkLabel>
                                             </LinkWrapper>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--degen-discount-vault" />
+                                                <LinkIcon className="icon icon__degen-discount-vault" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-discount-vault'
@@ -266,7 +266,7 @@ const PointsBreakdown: React.FC = () => {
                                         {!isMobile && <VLine active={tabs[2].active} />}
                                         <LinksContainer>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--discount-vault" />
+                                                <LinkIcon className="icon icon--discount-sport-vault" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
@@ -274,7 +274,7 @@ const PointsBreakdown: React.FC = () => {
                                                 </LinkLabel>
                                             </LinkWrapper>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--degen-discount-vault" />
+                                                <LinkIcon className="icon icon__degen-vault" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-vault'
@@ -282,7 +282,7 @@ const PointsBreakdown: React.FC = () => {
                                                 </LinkLabel>
                                             </LinkWrapper>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkIcon className="icon icon__safu-overtime" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.safu-vault'
@@ -290,7 +290,7 @@ const PointsBreakdown: React.FC = () => {
                                                 </LinkLabel>
                                             </LinkWrapper>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkIcon className="icon icon__safu-overtime" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.upsettoor-vault'
@@ -298,7 +298,7 @@ const PointsBreakdown: React.FC = () => {
                                                 </LinkLabel>
                                             </LinkWrapper>
                                             <LinkWrapper>
-                                                <LinkIcon className="icon icon--safu-thales-vault" />
+                                                <LinkIcon className="icon icon__parlay-vault" />
                                                 <LinkLabel>
                                                     {t(
                                                         'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.parlay-vault'
@@ -547,7 +547,7 @@ const LinkWrapper = styled.div`
 `;
 
 const LinkIcon = styled.i`
-    font-size: 30px !important;
+    font-size: 40px !important;
     color: ${(_props) => _props.theme.textColor.primary};
     padding: 10px 0px;
 `;
