@@ -298,6 +298,50 @@
     content: '\0048';
 }
 
+.icon--lp-thales:before {
+    content: '\0051';
+}
+
+.icon--lp-overtime:before {
+    content: '\004B';
+}
+
+.icon--thales:before {
+    content: '\0059';
+}
+
+.icon--overtime:before {
+    content: '\005E';
+}
+
+.icon__discount-vault:before {
+    content: '\0053';
+}
+
+.icon__degen-discount-vault:before {
+    content: '\0052';
+}
+
+.icon--safu-thales-vault:before {
+    content: '\0056';
+}
+
+.icon--discount-sport-vault:before {
+    content: '\0050';
+}
+
+.icon__degen-vault:before {
+    content: '\004E';
+}
+
+.icon__safu-overtime:before {
+    content: '\004D';
+}
+
+.icon__parlay-vault:before {
+    content: '\004F';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);
