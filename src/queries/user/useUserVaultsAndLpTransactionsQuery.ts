@@ -50,7 +50,7 @@ const useUserVaultsAndLpTransactionsQuery = (
                 return orderBy(
                     [...vaultsUserTransactionsWithName, ...liquidityPoolUserTransactionsWithName],
                     ['timestamp'],
-                    ['asc']
+                    ['desc']
                 );
             } catch (e) {
                 console.log(e);
