@@ -1,12 +1,12 @@
 import { TablePagination } from '@material-ui/core';
-import Table from 'components/TableV3/Table';
+import Table from 'components/Table/Table';
 import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
@@ -22,6 +22,7 @@ const StakingLeaderboard: React.FC = () => {
     const [period, setPeriod] = useState(0);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const theme = useTheme();
 
     useEffect(() => setPage(0), [period]);
 
@@ -62,36 +63,27 @@ const StakingLeaderboard: React.FC = () => {
     }, [stakingData]);
 
     const columns = useMemo(() => {
-        console.log('stakingData: ', stakingData);
         if (stakingData) {
             return [
                 {
                     id: 'rank',
-                    Header: <TableText> {t('thales-token.gamified-staking.rewards.leaderboard.rank')}</TableText>,
-
-                    accessor: (row: any) => {
-                        return (
-                            <Rank>
-                                <TableText>{row.rank}</TableText>
-                            </Rank>
-                        );
-                    },
+                    Header: <HeaderText> {t('thales-token.gamified-staking.rewards.leaderboard.rank')}</HeaderText>,
                 },
                 {
                     id: 'address',
-                    Header: <TableText> {t('thales-token.gamified-staking.rewards.leaderboard.address')}</TableText>,
+                    Header: <HeaderText> {t('thales-token.gamified-staking.rewards.leaderboard.address')}</HeaderText>,
 
                     accessor: (row: any) => {
                         return (
-                            <FirstCell>
+                            <Cell>
                                 <TableText>{truncateAddress(row.id, 5, 5)}</TableText>
-                            </FirstCell>
+                            </Cell>
                         );
                     },
                 },
                 {
                     id: 'points',
-                    Header: <TableText> {t('thales-token.gamified-staking.rewards.leaderboard.points')}</TableText>,
+                    Header: <HeaderText> {t('thales-token.gamified-staking.rewards.leaderboard.points')}</HeaderText>,
 
                     accessor: (row: any) => {
                         return (
@@ -103,11 +95,15 @@ const StakingLeaderboard: React.FC = () => {
                 },
                 {
                     id: 'multiplier',
-                    Header: <TableText> {t('thales-token.gamified-staking.rewards.leaderboard.multiplier')}</TableText>,
+                    Header: (
+                        <Cell hide={true}>
+                            <HeaderText>{t('thales-token.gamified-staking.rewards.leaderboard.multiplier')}</HeaderText>
+                        </Cell>
+                    ),
 
                     accessor: (row: any) => {
                         return (
-                            <Cell>
+                            <Cell hide={true}>
                                 <TableText>{formatCurrencyWithKey('', row.stakingMultiplier, 2)}</TableText>
                             </Cell>
                         );
@@ -115,13 +111,13 @@ const StakingLeaderboard: React.FC = () => {
                 },
                 {
                     id: 'rewards',
-                    Header: <TableText> {t('thales-token.gamified-staking.rewards.leaderboard.rewards')}</TableText>,
+                    Header: <HeaderText> {t('thales-token.gamified-staking.rewards.leaderboard.rewards')}</HeaderText>,
 
                     accessor: (row: any) => {
                         return (
-                            <LastCell>
+                            <Cell>
                                 <TableText>{row.estimatedRewards}</TableText>
-                            </LastCell>
+                            </Cell>
                         );
                     },
                 },
@@ -172,7 +168,10 @@ const StakingLeaderboard: React.FC = () => {
                     <Table
                         columns={columns}
                         data={stakingData}
-                        tableRowStyles={RowStyle}
+                        tableRowWrapperStyles={{ ...RowStyle, border: `1px solid ${theme.borderColor.tertiary}` }}
+                        tableRowHeadStyles={{ justifyContent: 'space-between', padding: '4px 10px' }}
+                        tableHeadCellStyles={{ whiteSpace: 'nowrap' }}
+                        tableRowCellStyles={{ ...CellStyle }}
                         expandedRow={(row) => {
                             return (
                                 <ExpandedRow>
@@ -230,22 +229,22 @@ const StakingLeaderboard: React.FC = () => {
                                     <Rank>
                                         <TableText>{stickyRowInfo[0].rank}</TableText>
                                     </Rank>
-                                    <FirstCell>
+                                    <StickyCell first={true}>
                                         <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
-                                    </FirstCell>
-                                    <Cell>
+                                    </StickyCell>
+                                    <StickyCell>
                                         <TableText>
                                             {formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}
                                         </TableText>
-                                    </Cell>
-                                    <Cell>
+                                    </StickyCell>
+                                    <StickyCell hide={true}>
                                         <TableText>
                                             {formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}
                                         </TableText>
-                                    </Cell>
-                                    <LastCell>
+                                    </StickyCell>
+                                    <StickyCell last={true}>
                                         <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
-                                    </LastCell>
+                                    </StickyCell>
                                 </StickyRow>
                             ) : (
                                 <></>
@@ -301,10 +300,14 @@ const PaginationWrapper = styled(TablePagination)`
 `;
 
 const RowStyle: CSSProperties = {
-    height: 60,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
-    borderRadius: 0,
+    borderRadius: '8px',
+};
+
+const CellStyle: CSSProperties = {
+    width: '100%',
+    flex: '1',
 };
 
 const Wrapper = styled.div`
@@ -317,8 +320,10 @@ const ExpandedRow = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    padding: 20px;
+    margin: auto;
+    width: calc(100% - 30px);
 `;
 
 const BadgeContainer = styled.div`
@@ -339,60 +344,76 @@ const TableText = styled.p`
     font-style: normal;
     font-weight: 700;
     line-height: 110%;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
+    }
+`;
+
+const HeaderText = styled(TableText)`
+    font-size: 13px;
 `;
 
 const Rank = styled.div`
     width: 50px;
     height: 50px;
+    min-width: 50px;
     border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: ${(props) => props.theme.button.textColor.primary};
+    ${TableText} {
+        font-size: 18px;
+    }
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+    }
 `;
 
-const Cell = styled.div`
-    height: 50px;
-    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
+const Cell = styled.div<{ hide?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50px;
-    min-width: 250px;
+    flex: 1;
+    width: 100%;
+`;
+
+const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolean }>`
+    color: ${(props) => props.theme.button.textColor.primary};
+    background: ${(props) => props.theme.borderColor.tertiary};
+    width: 100%;
+
+    margin-left: ${(props) => (props.first ? '4px' : '0')};
+
+    border-top-left-radius: ${(props) => (props.first ? '8px' : '0')};
+    border-bottom-left-radius: ${(props) => (props.first ? '8px' : '0')};
+
+    border-top-right-radius: ${(props) => (props.last ? '8px' : '0')};
+    border-bottom-right-radius: ${(props) => (props.last ? '8px' : '0')};
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: ${(props) => (props.hide ? 'none' : 'flex')};
+    }
 `;
 
 const StickyRow = styled.div`
     display: flex;
-    height: 60px;
-    justify-content: center;
+    height: 50px;
+    margin-bottom: 10px;
 
     ${TableText} {
         color: ${(props) => props.theme.button.textColor.primary};
-    }
-    ${Cell} {
-        color: ${(props) => props.theme.button.textColor.primary};
-        background: ${(props) => props.theme.borderColor.tertiary};
     }
 
     ${Rank} {
         color: ${(props) => props.theme.button.textColor.primary};
         background: ${(props) => props.theme.borderColor.tertiary};
     }
-`;
-
-const FirstCell = styled(Cell)`
-    border-left: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    margin-left: 10px;
-`;
-
-const LastCell = styled(Cell)`
-    border-right: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        height: 30px;
+    }
 `;
 
 const Icon = styled.i`
