@@ -1,23 +1,27 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
 import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatPercentage } from 'utils/formatters/number';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const StakingOverview: React.FC = () => {
     const { t } = useTranslation();
 
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const [period, setPeriod] = useState(0);
 
     const [lastValidStakingData, setLastValidStakingData] = useState<OverviewData | undefined>(undefined);
 
@@ -36,6 +40,32 @@ const StakingOverview: React.FC = () => {
         return lastValidStakingData;
     }, [query.isSuccess, query.data, lastValidStakingData]);
 
+    useEffect(() => {
+        const { stakingThalesContract } = snxJSConnector;
+
+        stakingThalesContract?.periodsOfStaking().then((period: number) => {
+            setPeriod(period);
+        });
+    }, []);
+
+    const leaderboardQuery = useStakersDataLeaderboardQuery(networkId, period, {
+        enabled: period > 0,
+    });
+
+    const userData = useMemo(() => {
+        if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
+            const user = leaderboardQuery.data.filter((user) => user.id.toLowerCase() === walletAddress.toLowerCase());
+            const length = leaderboardQuery.data.length;
+            if (user.length > 0) {
+                return {
+                    rank: user[0].rank,
+                    users: length,
+                };
+            }
+        }
+        return undefined;
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+
     return (
         <Container>
             {!isMobile && <Title>{t('thales-token.gamified-staking.rewards.overview.title')}</Title>}
@@ -43,7 +73,7 @@ const StakingOverview: React.FC = () => {
                 <HexagonDiv>
                     <Hexagon className="icon icon--hexagon" />
                     <HexagonLabel top={true}>Your</HexagonLabel>
-                    <HexagonNumber>35</HexagonNumber>
+                    <HexagonNumber>{userData ? userData.rank : '---'}</HexagonNumber>
                     <HexagonLabel top={false}>Rank</HexagonLabel>
                 </HexagonDiv>
 
@@ -79,7 +109,7 @@ const StakingOverview: React.FC = () => {
                     {!isMobile && <VerticalLine />}
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.leaderboard-rank')}</Label>
-                        <Value>{stakingData?.bonusRewards}</Value>
+                        <Value>{userData ? `${userData.rank} / ${userData.users}` : ''}</Value>
                         <SPAAnchor href={ROUTES.Options.StakingLeaderboard}>
                             <LinkToLeaderboard>
                                 {t('thales-token.gamified-staking.rewards.overview.go-to')}

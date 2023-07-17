@@ -342,7 +342,7 @@ const ExpandedRow = styled.div`
     justify-content: space-around;
     align-items: center;
     border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    padding: 20px;
+    padding: 20px 0;
     margin: auto;
     width: calc(100% - 30px);
 `;
