@@ -178,10 +178,18 @@ const StakingLeaderboard: React.FC = () => {
                                     <FlexWrapper>
                                         <FlexDivCentered>
                                             <Icon className="sidebar-icon icon--markets" />
-                                            <TableText>Trading</TableText>
+                                            <TableText>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading'
+                                                )}
+                                            </TableText>
                                         </FlexDivCentered>
                                         <FlexWrapper>
-                                            <Label>Points</Label>
+                                            <Label>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.leaderboard.expanded-row.points'
+                                                )}
+                                            </Label>
                                             <TableText>
                                                 {formatCurrencyWithKey(
                                                     '',
@@ -195,10 +203,16 @@ const StakingLeaderboard: React.FC = () => {
                                     <FlexWrapper>
                                         <FlexDivCentered>
                                             <Icon className="sidebar-icon icon--liquidity-pool" />
-                                            <TableText>LP</TableText>
+                                            <TableText>
+                                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
+                                            </TableText>
                                         </FlexDivCentered>
                                         <FlexWrapper>
-                                            <Label>Points</Label>
+                                            <Label>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.leaderboard.expanded-row.points'
+                                                )}
+                                            </Label>
                                             <TableText>
                                                 {formatCurrencyWithKey('', row.original.userLPBasePointsPerRound, 2)}
                                             </TableText>
@@ -208,10 +222,18 @@ const StakingLeaderboard: React.FC = () => {
                                     <FlexWrapper>
                                         <FlexDivCentered>
                                             <Icon className="sidebar-icon icon--vaults" />
-                                            <TableText>VAULTS</TableText>
+                                            <TableText>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults'
+                                                )}
+                                            </TableText>
                                         </FlexDivCentered>
                                         <FlexWrapper>
-                                            <Label>Points</Label>
+                                            <Label>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.leaderboard.expanded-row.points'
+                                                )}
+                                            </Label>
                                             <TableText>
                                                 {formatCurrencyWithKey('', row.original.userVaultBasePointsPerRound, 2)}
                                             </TableText>
@@ -274,12 +296,12 @@ const PaginationWrapper = styled(TablePagination)`
     display: flex;
     width: 100%;
     height: auto;
-    color: ${(props) => props.theme.textColor.primary} !important;
+    color: ${(props) => props.theme.borderColor.tertiary} !important;
     .MuiToolbar-root {
         padding: 0;
         display: flex;
         .MuiSelect-icon {
-            color: ${(props) => props.theme.textColor.primary} !important;
+            color: ${(props) => props.theme.borderColor.tertiary} !important;
         }
     }
     .MuiIconButton-root.Mui-disabled {
