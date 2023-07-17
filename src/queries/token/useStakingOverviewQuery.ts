@@ -29,7 +29,6 @@ const useStakingOverviewQuery = (walletAddress: string, options?: UseQueryOption
                     stakingBonusRewardsManager?.getUserRoundBonusShare(walletAddress, period),
                 ]);
 
-                console.log('share: ', bigNumberFormatter(share));
                 return {
                     period: Number(period),
                     userPoints: formatCurrencyWithKey('', bigNumberFormatter(userPoints)),

@@ -73,7 +73,7 @@ const StakingOverview: React.FC = () => {
                 <HexagonDiv>
                     <Hexagon className="icon icon--hexagon" />
                     <HexagonLabel top={true}>Your</HexagonLabel>
-                    <HexagonNumber>{userData ? userData.rank : '---'}</HexagonNumber>
+                    <HexagonNumber>{userData ? userData.rank : '-'}</HexagonNumber>
                     <HexagonLabel top={false}>Rank</HexagonLabel>
                 </HexagonDiv>
 
@@ -84,7 +84,7 @@ const StakingOverview: React.FC = () => {
                             <Remote className="icon icon--controller" /> {stakingData?.userPoints}
                         </Value>
                         <SecondaryLabel>
-                            ({formatPercentage(Number(stakingData?.share))}{' '}
+                            ({formatPercentage(Number(stakingData?.share))}
                             {t('thales-token.gamified-staking.rewards.overview.of-total-points')})
                         </SecondaryLabel>
                     </Column>
