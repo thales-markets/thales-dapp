@@ -109,7 +109,7 @@ const StakingOverview: React.FC = () => {
                     {!isMobile && <VerticalLine />}
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.leaderboard-rank')}</Label>
-                        <Value>{userData ? `${userData.rank} / ${userData.users}` : ''}</Value>
+                        <Value>{userData ? `${userData.rank} / ${userData.users}` : '---/---'}</Value>
                         <SPAAnchor href={ROUTES.Options.StakingLeaderboard}>
                             <LinkToLeaderboard>
                                 {t('thales-token.gamified-staking.rewards.overview.go-to')}
