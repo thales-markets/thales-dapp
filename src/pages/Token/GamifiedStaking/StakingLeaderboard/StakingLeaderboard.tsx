@@ -169,8 +169,6 @@ const StakingLeaderboard: React.FC = () => {
                         columns={columns}
                         data={stakingData}
                         tableRowWrapperStyles={{ ...RowStyle, border: `1px solid ${theme.borderColor.tertiary}` }}
-                        tableRowHeadStyles={{ justifyContent: 'space-between', padding: '4px 10px' }}
-                        tableHeadCellStyles={{ whiteSpace: 'nowrap' }}
                         tableRowCellStyles={{ ...CellStyle }}
                         expandedRow={(row) => {
                             return (
@@ -293,8 +291,9 @@ export default StakingLeaderboard;
 
 const PaginationWrapper = styled(TablePagination)`
     border: none !important;
-    display: flex;
+    display: flex !important;
     width: 100%;
+    justify-content: flex-end;
     height: auto;
     color: ${(props) => props.theme.borderColor.tertiary} !important;
     .MuiToolbar-root {

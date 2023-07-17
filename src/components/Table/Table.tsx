@@ -443,7 +443,7 @@ const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string;
             props.selected ? props.theme.background.quaternary : props.hover ?? 'transparent'};
     }
 
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     height: 100%;
     height: 48px;
@@ -476,13 +476,10 @@ const TableCellHead = styled(FlexDivCentered)<{
     cssProp?: CSSPropertiesWithMedia;
 }>`
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    min-width: 0px;
     width: ${(props) => (props.width ? props.width : 'initial')};
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: 0.5px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
         &#multiplier {
@@ -492,10 +489,13 @@ const TableCellHead = styled(FlexDivCentered)<{
     @media (max-width: ${(props) => (props.cssProp ? props.cssProp.mediaMaxWidth : '600px')}) {
         ${(props) => (props.cssProp ? { ...props.cssProp.cssProperties } : '')}
     }
-    @media (max-width: 512px) {
-        font-size: 10px;
-    }
     user-select: none;
+    &#rank {
+        max-width: 50px;
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+            max-width: 30px;
+        }
+    }
 `;
 
 const HeaderTitle = styled.span<{ cssProp?: CSSPropertiesWithMedia }>`
