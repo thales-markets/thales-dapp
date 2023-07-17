@@ -23,7 +23,7 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
 import SearchInput from 'components/SearchInput';
 import { StakersFilterEnum } from 'enums/governance';
-import Dropdown from '../components/Dropdown/Dropdown';
+// import Dropdown from '../components/Dropdown/Dropdown';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -31,7 +31,7 @@ const ThalesStakers: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
-    const [filter, setFilter] = useState<StakersFilterEnum>(StakersFilterEnum.All);
+    const [filter /*, setFilter*/] = useState<StakersFilterEnum>(StakersFilterEnum.All);
 
     const stakersQuery = useThalesStakersQuery(filter, {
         enabled: isAppReady,
@@ -78,12 +78,12 @@ const ThalesStakers: React.FC = () => {
     return (
         <Container>
             <HeaderContainer>
-                <Dropdown
+                {/* <Dropdown
                     options={Object.values(StakersFilterEnum)}
                     activeOption={filter}
                     onSelect={setFilter}
                     translationKey="stakers-filter"
-                />
+                /> */}
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
