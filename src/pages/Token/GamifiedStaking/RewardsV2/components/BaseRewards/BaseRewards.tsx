@@ -1,3 +1,4 @@
+import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useUserBaseRewardsQuery, { DEFAULT_USER_STAKING_DATA, UserStakingData } from 'queries/token/useUserBaseRewards';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -8,6 +9,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { buildHref } from 'utils/routes';
 
 const BaseRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -57,8 +59,10 @@ const BaseRewards: React.FC = () => {
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.rewards')}</CellLabel>
                     <CellValue>{stakingData?.baseRewards}</CellValue>
                     <Wrapper>
-                        <StakeMore>{t('thales-token.gamified-staking.rewards.base-rewards.stake-more')} </StakeMore>
-                        <ArrowRight className="icon icon__arrow" />
+                        <StakeMore href={buildHref(ROUTES.Options.Token)}>
+                            {t('thales-token.gamified-staking.rewards.base-rewards.stake-more')}
+                            <ArrowRight className="icon icon__arrow" />
+                        </StakeMore>
                     </Wrapper>
                 </Cell>
             </FlexDiv>
@@ -128,9 +132,11 @@ const VLine = styled.div`
     align-self: center;
 `;
 
-const StakeMore = styled.p`
+const StakeMore = styled.a`
     font-weight: 400;
     font-size: 18px;
+    display: flex;
+    align-items: center;
     color: ${(props) => props.theme.textColor.quaternary};
     text-transform: capitalize;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
