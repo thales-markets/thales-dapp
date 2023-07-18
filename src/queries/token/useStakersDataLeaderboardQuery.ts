@@ -4,7 +4,7 @@ import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
-import { Stakers, StakersWithLeaderboardData } from 'types/governance';
+import { Stakers, StakersWithLeaderboardData, StakersWithLeaderboardDataAndGlobalPoints } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -12,9 +12,9 @@ import snxJSConnector from 'utils/snxJSConnector';
 const useStakersDataLeaderboardQuery = (
     network: Network,
     round: number,
-    options?: UseQueryOptions<StakersWithLeaderboardData>
+    options?: UseQueryOptions<StakersWithLeaderboardDataAndGlobalPoints>
 ) => {
-    return useQuery<StakersWithLeaderboardData>(
+    return useQuery<StakersWithLeaderboardDataAndGlobalPoints>(
         QUERY_KEYS.Token.StakersLeaderboardData(network),
         async () => {
             try {
@@ -82,6 +82,7 @@ const useStakersDataLeaderboardQuery = (
                     return {
                         ...item,
                         rank: index + 1,
+                        share: item.userRoundBonusPoints / globalPoints,
                         estimatedRewards: formatCurrencyWithKey(
                             THALES_CURRENCY,
                             (item.userRoundBonusPoints / globalPoints) * bigNumberFormatter(bonusRewards),
@@ -90,10 +91,10 @@ const useStakersDataLeaderboardQuery = (
                     };
                 });
 
-                return finalDataWithRank;
+                return { leaderboard: finalDataWithRank, globalPoints, bonusRewards: bigNumberFormatter(bonusRewards) };
             } catch (e) {
                 console.log('Error ', e);
-                return [];
+                return { leaderboard: [], globalPoints: 0, bonusRewards: 0 };
             }
         },
         {

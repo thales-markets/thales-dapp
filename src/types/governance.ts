@@ -80,6 +80,7 @@ export type Staker = {
 
 export type StakerContractLeaderboardData = {
     rank?: number;
+    share?: number;
     stakingMultiplier: number;
     userLPBasePointsPerRound: number;
     userRoundBonusPoints: number;
@@ -92,5 +93,11 @@ export type StakerWithLeaderboardData = Staker & StakerContractLeaderboardData;
 
 export type Stakers = Staker[];
 export type StakersWithLeaderboardData = StakerWithLeaderboardData[];
+
+export type StakersWithLeaderboardDataAndGlobalPoints = {
+    leaderboard: StakerWithLeaderboardData[];
+    globalPoints: number;
+    bonusRewards: number;
+};
 
 export type EnsNames = Record<string, string | null>;

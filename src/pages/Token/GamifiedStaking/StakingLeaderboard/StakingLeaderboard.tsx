@@ -41,7 +41,7 @@ const StakingLeaderboard: React.FC = () => {
 
     const stakingData = useMemo(() => {
         if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
-            return leaderboardQuery.data;
+            return leaderboardQuery.data.leaderboard;
         }
         return [];
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);

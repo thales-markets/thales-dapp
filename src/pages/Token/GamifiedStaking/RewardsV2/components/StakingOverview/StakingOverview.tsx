@@ -1,17 +1,16 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { THALES_CURRENCY } from 'constants/currency';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
-import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const StakingOverview: React.FC = () => {
@@ -19,26 +18,8 @@ const StakingOverview: React.FC = () => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const [period, setPeriod] = useState(0);
-
-    const [lastValidStakingData, setLastValidStakingData] = useState<OverviewData | undefined>(undefined);
-
-    const query = useStakingOverviewQuery(walletAddress, networkId, { enabled: isAppReady });
-
-    useEffect(() => {
-        if (query.isSuccess && query.data) {
-            setLastValidStakingData(query.data);
-        }
-    }, [query.isSuccess, query.data]);
-
-    const stakingData: OverviewData | undefined = useMemo(() => {
-        if (stakingData) {
-            return query.data;
-        }
-        return lastValidStakingData;
-    }, [query.isSuccess, query.data, lastValidStakingData]);
 
     useEffect(() => {
         const { stakingThalesContract } = snxJSConnector;
@@ -54,12 +35,18 @@ const StakingOverview: React.FC = () => {
 
     const userData = useMemo(() => {
         if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
-            const user = leaderboardQuery.data.filter((user) => user.id.toLowerCase() === walletAddress.toLowerCase());
-            const length = leaderboardQuery.data.length;
+            const user = leaderboardQuery.data.leaderboard.filter(
+                (user) => user.id.toLowerCase() === walletAddress.toLowerCase()
+            );
+            const length = leaderboardQuery.data.leaderboard.length;
             if (user.length > 0) {
                 return {
                     rank: user[0].rank,
                     users: length,
+                    share: user[0].share,
+                    points: user[0].userRoundBonusPoints,
+                    globalPoints: leaderboardQuery.data.globalPoints,
+                    bonusRewards: leaderboardQuery.data.bonusRewards,
                 };
             }
         }
@@ -81,10 +68,11 @@ const StakingOverview: React.FC = () => {
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.your-points')}</Label>
                         <Value>
-                            <Remote className="icon icon--controller" /> {stakingData?.userPoints}
+                            <Remote className="icon icon--controller" />{' '}
+                            {userData ? formatCurrencyWithKey('', userData.points, 2) : '-'}
                         </Value>
                         <SecondaryLabel>
-                            ({formatPercentage(Number(stakingData?.share))}
+                            ({formatPercentage(Number(userData?.share))}
                             {t('thales-token.gamified-staking.rewards.overview.of-total-points')})
                         </SecondaryLabel>
                     </Column>
@@ -92,7 +80,8 @@ const StakingOverview: React.FC = () => {
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.total-points')}</Label>
                         <Value>
-                            <Remote className="icon icon--controller" /> {stakingData?.totalPoints}
+                            <Remote className="icon icon--controller" />{' '}
+                            {userData ? formatCurrencyWithKey('', userData.globalPoints, 2) : '-'}
                         </Value>
                     </Column>
                 </SecondaryContainer>
@@ -100,9 +89,15 @@ const StakingOverview: React.FC = () => {
                 <SecondaryContainer>
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.bonus-rewards')}</Label>
-                        <Value>{stakingData?.estimatedRewards}</Value>
+                        <Value>
+                            {userData
+                                ? formatCurrencyWithKey('', (userData.share as any) * userData.bonusRewards, 2) +
+                                  '/' +
+                                  formatCurrencyWithKey(THALES_CURRENCY, userData.bonusRewards, 2)
+                                : '-'}
+                        </Value>
                         <SecondaryLabel>
-                            ({formatPercentage(Number(stakingData?.share))}{' '}
+                            ({formatPercentage(Number(userData?.share))}{' '}
                             {t('thales-token.gamified-staking.rewards.overview.of-total-rewards')})
                         </SecondaryLabel>
                     </Column>

@@ -60,19 +60,18 @@ const usePointsBreakdownQuery = (
             try {
                 const period = await stakingThalesContract?.periodsOfStaking();
                 const [
-                    vaultsVolume,
-                    lpVolume,
-                    tradingVolume,
+                    vaultsPoints,
+                    lpPoints,
+                    tradingPoints,
                     vaultsMultiplier,
                     lpMultiplier,
                     tradingMultiplier,
                     stakingMultiplier,
                     stakedBalance,
                     thalesDivider,
-                    totalPoints,
                 ] = await Promise.all([
-                    stakingBonusRewardsManager?.userVaultBasePointsPerRound(walletAddress, period),
-                    stakingBonusRewardsManager?.userLPBasePointsPerRound(walletAddress, period),
+                    stakingBonusRewardsManager?.getEstimatedCurrentVaultPoints(walletAddress),
+                    stakingBonusRewardsManager?.getEstimatedCurrentLPsPoints(walletAddress),
                     stakingBonusRewardsManager?.userTradingBasePointsPerRound(walletAddress, period),
                     stakingBonusRewardsManager?.vaultsMultiplier(),
                     stakingBonusRewardsManager?.lpMultiplier(),
@@ -80,29 +79,35 @@ const usePointsBreakdownQuery = (
                     stakingBonusRewardsManager?.getStakingMultiplier(walletAddress),
                     stakingThalesContract?.stakedBalanceOf(walletAddress),
                     stakingBonusRewardsManager?.stakingBaseDivider(),
-                    stakingBonusRewardsManager?.userRoundBonusPoints(walletAddress, period),
                 ]);
 
                 return {
-                    vaultsVolume: formatCurrencyWithKey(USD_SIGN, bigNumberFormatter(vaultsVolume)),
-                    lpVolume: formatCurrencyWithKey(USD_SIGN, bigNumberFormatter(lpVolume)),
-                    tradingVolume: formatCurrencyWithKey(USD_SIGN, bigNumberFormatter(tradingVolume)),
+                    vaultsVolume: formatCurrencyWithKey(
+                        USD_SIGN,
+                        bigNumberFormatter(vaultsPoints) / bigNumberFormatter(vaultsMultiplier)
+                    ),
+                    lpVolume: formatCurrencyWithKey(
+                        USD_SIGN,
+                        bigNumberFormatter(lpPoints) / bigNumberFormatter(lpMultiplier)
+                    ),
+                    tradingVolume: formatCurrencyWithKey(
+                        USD_SIGN,
+                        bigNumberFormatter(tradingPoints) / bigNumberFormatter(tradingMultiplier)
+                    ),
                     vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
                     lpMultiplier: bigNumberFormatter(lpMultiplier),
                     tradingMultiplier: bigNumberFormatter(tradingMultiplier),
                     stakingMultiplier: truncToDecimals(bigNumberFormatter(stakingMultiplier) + 1, 2),
-                    vaultsPoints: truncToDecimals(
-                        bigNumberFormatter(vaultsMultiplier) * bigNumberFormatter(vaultsVolume),
-                        2
-                    ),
-                    lpPoints: truncToDecimals(bigNumberFormatter(lpMultiplier) * bigNumberFormatter(lpVolume), 2),
-                    tradingPoints: truncToDecimals(
-                        bigNumberFormatter(tradingMultiplier) * bigNumberFormatter(tradingVolume),
-                        2
-                    ),
+                    vaultsPoints: truncToDecimals(bigNumberFormatter(vaultsPoints), 2),
+                    lpPoints: truncToDecimals(bigNumberFormatter(lpPoints), 2),
+                    tradingPoints: truncToDecimals(bigNumberFormatter(tradingPoints), 2),
                     thalesStaked: formatCurrencyWithKey(THALES_CURRENCY, bigNumberFormatter(stakedBalance)),
                     thalesDivider: formatCurrencyWithKey(THALES_CURRENCY, Number(thalesDivider)),
-                    totalPoints: truncToDecimals(bigNumberFormatter(totalPoints)),
+                    totalPoints: truncToDecimals(
+                        bigNumberFormatter(vaultsPoints) +
+                            bigNumberFormatter(lpPoints) +
+                            bigNumberFormatter(tradingPoints)
+                    ),
                 };
             } catch (e) {
                 console.log(e);
