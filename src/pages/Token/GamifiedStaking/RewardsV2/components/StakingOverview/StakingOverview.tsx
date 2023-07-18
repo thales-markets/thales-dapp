@@ -113,6 +113,7 @@ const StakingOverview: React.FC = () => {
                         <SPAAnchor href={ROUTES.Options.StakingLeaderboard}>
                             <LinkToLeaderboard>
                                 {t('thales-token.gamified-staking.rewards.overview.go-to')}
+                                <ArrowIcon className="icon icon__arrow" />
                             </LinkToLeaderboard>
                         </SPAAnchor>
                     </Column>
@@ -283,6 +284,8 @@ const HexagonNumber = styled.p`
 
 const LinkToLeaderboard = styled.p`
     color: ${(props) => props.theme.borderColor.tertiary};
+    display: flex;
+    align-items: center;
     font-size: 18px;
     font-family: Fira Sans;
     font-style: normal;
@@ -295,6 +298,12 @@ const LinkToLeaderboard = styled.p`
         bottom: 10px;
         left: 10px;
     }
+`;
+
+const ArrowIcon = styled.i`
+    margin-left: 7px;
+    color: ${(props) => props.theme.borderColor.tertiary};
+    font-size: 15px;
 `;
 
 export default StakingOverview;
