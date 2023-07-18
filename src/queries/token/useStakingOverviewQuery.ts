@@ -4,6 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
+import { Network } from 'enums/network';
 
 export type OverviewData = {
     period: number;
@@ -14,9 +15,13 @@ export type OverviewData = {
     estimatedRewards: string;
 };
 
-const useStakingOverviewQuery = (walletAddress: string, options?: UseQueryOptions<OverviewData | undefined>) => {
+const useStakingOverviewQuery = (
+    walletAddress: string,
+    networkId: Network,
+    options?: UseQueryOptions<OverviewData | undefined>
+) => {
     return useQuery<OverviewData | undefined>(
-        QUERY_KEYS.Token.StakingOverview(walletAddress),
+        QUERY_KEYS.Token.StakingOverview(walletAddress, networkId),
         async () => {
             const { stakingThalesContract } = snxJSConnector;
             const { stakingBonusRewardsManager } = snxJSConnector;

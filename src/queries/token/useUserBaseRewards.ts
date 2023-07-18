@@ -5,6 +5,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
+import { Network } from 'enums/network';
 
 export type UserStakingData = {
     thalesStaked: string;
@@ -20,9 +21,13 @@ export const DEFAULT_USER_STAKING_DATA = {
     baseRewards: '-',
 };
 
-const useUserBaseRewardsQuery = (walletAddress: string, options?: UseQueryOptions<UserStakingData | undefined>) => {
+const useUserBaseRewardsQuery = (
+    walletAddress: string,
+    networkId: Network,
+    options?: UseQueryOptions<UserStakingData | undefined>
+) => {
     return useQuery<UserStakingData | undefined>(
-        QUERY_KEYS.Token.UserBaseRewards(walletAddress),
+        QUERY_KEYS.Token.UserBaseRewards(walletAddress, networkId),
         async () => {
             try {
                 const { stakingDataContract } = snxJSConnector;

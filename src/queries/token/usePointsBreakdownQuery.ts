@@ -4,6 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { Network } from 'enums/network';
 
 export type PointsData = {
     vaultsVolume: string;
@@ -41,9 +42,13 @@ export const DEFAULT_POINTS_BREAKDOWN_DATA = {
     totalPoints: '-',
 };
 
-const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOptions<PointsData | undefined>) => {
+const usePointsBreakdownQuery = (
+    walletAddress: string,
+    networkId: Network,
+    options?: UseQueryOptions<PointsData | undefined>
+) => {
     return useQuery<PointsData | undefined>(
-        QUERY_KEYS.Token.PointsBreakdown(walletAddress),
+        QUERY_KEYS.Token.PointsBreakdown(walletAddress, networkId),
         async () => {
             const { stakingThalesContract } = snxJSConnector;
             const { stakingBonusRewardsManager } = snxJSConnector;

@@ -125,9 +125,27 @@ const QUERY_KEYS = {
         Trades: (walletAddress: string, networkId: Network) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
-        StakingOverview: (walletAddress: string) => ['token', 'staking', 'overview', walletAddress],
-        PointsBreakdown: (walletAddress: string) => ['token', 'staking', 'breakdown', walletAddress],
-        UserBaseRewards: (walletAddress: string) => ['token', 'staking', 'baserewards', walletAddress],
+        StakingOverview: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'overview',
+            walletAddress,
+            networkId,
+        ],
+        PointsBreakdown: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'breakdown',
+            walletAddress,
+            networkId,
+        ],
+        UserBaseRewards: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'baserewards',
+            walletAddress,
+            networkId,
+        ],
         StakingData: (networkId: Network) => ['token', 'staking', 'data', networkId],
         UserStakingData: (walletAddress: string, networkId: Network) => [
             'token',

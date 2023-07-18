@@ -5,20 +5,21 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 
 const BaseRewards: React.FC = () => {
     const { t } = useTranslation();
 
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<UserStakingData>(DEFAULT_USER_STAKING_DATA);
 
-    const query = useUserBaseRewardsQuery(walletAddress, { enabled: isAppReady });
+    const query = useUserBaseRewardsQuery(walletAddress, networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (query.isSuccess && query.data) {
