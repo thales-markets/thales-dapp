@@ -283,7 +283,7 @@ const Line = styled.div`
 const Label = styled.span`
     font-weight: 700;
     font-size: 13px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: ${(props) => props.theme.textColor.primary};
     white-space: nowrap;
 `;
