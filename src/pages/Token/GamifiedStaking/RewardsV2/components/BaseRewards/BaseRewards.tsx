@@ -58,7 +58,7 @@ const BaseRewards: React.FC = () => {
                     <CellValue>{stakingData?.baseRewards}</CellValue>
                     <Wrapper>
                         <StakeMore>{t('thales-token.gamified-staking.rewards.base-rewards.stake-more')} </StakeMore>
-                        <ArrowRight className="icon icon--right" />
+                        <ArrowRight className="icon icon__arrow" />
                     </Wrapper>
                 </Cell>
             </FlexDiv>
@@ -140,6 +140,7 @@ const StakeMore = styled.p`
 
 const ArrowRight = styled.i`
     font-size: 14px;
+    margin-left: 6px;
     color: ${(props) => props.theme.textColor.quaternary};
 `;
 
