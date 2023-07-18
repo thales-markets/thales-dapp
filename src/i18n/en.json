@@ -630,6 +630,7 @@
                 },
 
                 "leaderboard": {
+                    "section-title": "Leaderboard",
                     "rank": "Rank",
                     "address": "Address",
                     "points": "Total Points",

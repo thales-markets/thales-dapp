@@ -22,6 +22,7 @@ import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
 import Rewards from 'pages/Token/GamifiedStaking/RewardsV2/Rewards';
+import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard/StakingLeaderboard';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -95,6 +96,7 @@ const Tab: React.FC<{
                             <SectionWarning>{sections.find((el) => el.id === activeButtonId)?.warning}</SectionWarning>
                         </SectionRow>
                     )}
+                    {activeButtonId == TokenTabSectionIdEnum.LEADERBOARD && <StakingLeaderboard />}
                     {activeButtonId === TokenTabSectionIdEnum.REWARDS ? (
                         <Rewards />
                     ) : (

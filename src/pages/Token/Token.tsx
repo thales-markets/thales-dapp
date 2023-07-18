@@ -34,17 +34,24 @@ const TokenPage: React.FC = () => {
     const tabSections = [
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.STAKING,
-            title: t('thales-token.gamified-staking.staking.section-title'),
-            description: t('thales-token.gamified-staking.staking.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.REWARDS,
             title: t('thales-token.gamified-staking.rewards.section-title'),
             warning: t('thales-token.gamified-staking.rewards.section-warning'),
             description: '',
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.LEADERBOARD,
+            title: t('thales-token.gamified-staking.rewards.leaderboard.section-title'),
+            description: '',
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.STAKING,
+            title: t('thales-token.gamified-staking.staking.section-title'),
+            description: t('thales-token.gamified-staking.staking.section-description'),
             isButton: true,
         },
         {
