@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
@@ -36,7 +36,7 @@ const DefaultTabState: TabItem[] = [
 
 const PointsBreakdown: React.FC = () => {
     const { t } = useTranslation();
-
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
@@ -45,7 +45,7 @@ const PointsBreakdown: React.FC = () => {
     const [tabs, setTabsState] = useState<TabItem[]>(DefaultTabState);
     const [lastValidStakingData, setLastValidStakingData] = useState<PointsData>(DEFAULT_POINTS_BREAKDOWN_DATA);
 
-    const query = usePointsBreakdownQuery(walletAddress, { enabled: isAppReady });
+    const query = usePointsBreakdownQuery(walletAddress, networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (query.isSuccess && query.data) {

@@ -25,7 +25,7 @@ const StakingOverview: React.FC = () => {
 
     const [lastValidStakingData, setLastValidStakingData] = useState<OverviewData | undefined>(undefined);
 
-    const query = useStakingOverviewQuery(walletAddress, { enabled: isAppReady });
+    const query = useStakingOverviewQuery(walletAddress, networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (query.isSuccess && query.data) {
