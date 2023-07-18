@@ -23,12 +23,34 @@ export type PointsData = {
     totalPoints: string;
 };
 
+export const DEFAULT_POINTS_BREAKDOWN_DATA = {
+    vaultsVolume: '-',
+    lpVolume: '-',
+    tradingVolume: '-',
+    vaultsMultiplier: 0,
+    tradingMultiplier: 0,
+    lpMultiplier: 0,
+    stakingMultiplier: '-',
+
+    vaultsPoints: '-',
+    lpPoints: '-',
+    tradingPoints: '-',
+
+    thalesStaked: '-',
+    thalesDivider: '-',
+    totalPoints: '-',
+};
+
 const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOptions<PointsData | undefined>) => {
     return useQuery<PointsData | undefined>(
         QUERY_KEYS.Token.PointsBreakdown(walletAddress),
         async () => {
             const { stakingThalesContract } = snxJSConnector;
             const { stakingBonusRewardsManager } = snxJSConnector;
+
+            if (!walletAddress) {
+                return DEFAULT_POINTS_BREAKDOWN_DATA;
+            }
 
             try {
                 const period = await stakingThalesContract?.periodsOfStaking();
@@ -79,9 +101,8 @@ const usePointsBreakdownQuery = (walletAddress: string, options?: UseQueryOption
                 };
             } catch (e) {
                 console.log(e);
+                return DEFAULT_POINTS_BREAKDOWN_DATA;
             }
-
-            return undefined;
         },
         {
             ...options,

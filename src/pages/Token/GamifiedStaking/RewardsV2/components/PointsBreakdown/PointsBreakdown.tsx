@@ -1,13 +1,16 @@
 import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import usePointsBreakdownQuery, { PointsData } from 'queries/token/usePointsBreakdownQuery';
+import usePointsBreakdownQuery, {
+    DEFAULT_POINTS_BREAKDOWN_DATA,
+    PointsData,
+} from 'queries/token/usePointsBreakdownQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
@@ -37,9 +40,10 @@ const PointsBreakdown: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [tabs, setTabsState] = useState<TabItem[]>(DefaultTabState);
-    const [lastValidStakingData, setLastValidStakingData] = useState<PointsData | undefined>(undefined);
+    const [lastValidStakingData, setLastValidStakingData] = useState<PointsData>(DEFAULT_POINTS_BREAKDOWN_DATA);
 
     const query = usePointsBreakdownQuery(walletAddress, { enabled: isAppReady });
 
@@ -98,7 +102,13 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
                                 </CellLabel>
                                 <CellValue highlight={true} addBefore={true}>
-                                    <Span>x</Span> {stakingData?.tradingMultiplier}
+                                    {stakingData?.tradingMultiplier == 0 ? (
+                                        <Span>-</Span>
+                                    ) : (
+                                        <>
+                                            <Span>x</Span> {stakingData?.tradingMultiplier}
+                                        </>
+                                    )}
                                 </CellValue>
                             </Cell>
                             {!isMobile && <VLine />}
@@ -168,7 +178,13 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
                                 </CellLabel>
                                 <CellValue highlight={true} addBefore={true}>
-                                    <Span>x</Span> {stakingData?.lpMultiplier}
+                                    {stakingData?.lpMultiplier == 0 ? (
+                                        <Span>-</Span>
+                                    ) : (
+                                        <>
+                                            <Span>x</Span> {stakingData?.lpMultiplier}
+                                        </>
+                                    )}
                                 </CellValue>
                             </Cell>
                             {!isMobile && <VLine />}
@@ -238,7 +254,15 @@ const PointsBreakdown: React.FC = () => {
                                     {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
                                 </CellLabel>
                                 <CellValue highlight={true} addBefore={true}>
-                                    <Span>x</Span> {stakingData?.vaultsMultiplier}
+                                    <CellValue highlight={true} addBefore={true}>
+                                        {stakingData?.vaultsMultiplier == 0 ? (
+                                            <Span>-</Span>
+                                        ) : (
+                                            <>
+                                                <Span>x</Span> {stakingData?.vaultsMultiplier}
+                                            </>
+                                        )}
+                                    </CellValue>
                                 </CellValue>
                             </Cell>
                             {!isMobile && <VLine />}
@@ -413,15 +437,17 @@ const PointsBreakdown: React.FC = () => {
                     <CellValue>{stakingData?.thalesDivider}</CellValue>
                 </ThalesMultiplier>
             </FlexDiv>
-            <FlexDiv>
-                <TotalPoints>
-                    <CellValue highlight={true}>
-                        {`${t('thales-token.gamified-staking.rewards.points.your-current-points')} = ${
-                            stakingData?.totalPoints
-                        }`}
-                    </CellValue>
-                </TotalPoints>
-            </FlexDiv>
+            {isWalletConnected && (
+                <FlexDiv>
+                    <TotalPoints>
+                        <CellValue highlight={true}>
+                            {`${t('thales-token.gamified-staking.rewards.points.your-current-points')} = ${
+                                stakingData?.totalPoints
+                            }`}
+                        </CellValue>
+                    </TotalPoints>
+                </FlexDiv>
+            )}
         </Container>
     );
 };
