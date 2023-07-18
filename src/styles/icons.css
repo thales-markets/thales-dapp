@@ -342,6 +342,10 @@
     content: '\004F';
 }
 
+.icon__external:before {
+    content: '\0061';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);

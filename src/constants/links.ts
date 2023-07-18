@@ -51,6 +51,10 @@ export const LINKS = {
         UsingAmm: 'https://docs.thalesmarket.io/using-thales/using-the-thales-amm',
     },
     SportMarkets: 'https://overtimemarkets.xyz/',
+    Overtime: {
+        Markets: 'https://overtimemarkets.xyz/#/markets',
+        LiquidityPool: 'https://overtimemarkets.xyz/#/liquidity-pool',
+    },
     ThalesAPI: {
         medium: `${generalConfig.API_URL}/medium`,
     },
