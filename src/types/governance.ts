@@ -80,7 +80,6 @@ export type Staker = {
 
 export type StakerContractLeaderboardData = {
     rank?: number;
-    share: number;
     stakingMultiplier: number;
     userLPBasePointsPerRound: number;
     userRoundBonusPoints: number;

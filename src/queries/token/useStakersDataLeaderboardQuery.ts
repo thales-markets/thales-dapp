@@ -37,35 +37,42 @@ const useStakersDataLeaderboardQuery = (
                     const stakersAddresses = stakersOnlyWithSomeStakingAmount
                         .slice(i, i + BATCH_SIZE)
                         .map((staker) => staker.id);
-                    calls.push(stakingBonusRewardsManager?.getStakersLeaderboardData(stakersAddresses, round));
+                    calls.push(
+                        stakingBonusRewardsManager?.getEstimatedCurrentStakersLeaderboardData(stakersAddresses, round)
+                    );
                 }
 
                 const bonusRewards = await stakingThalesContract?.periodExtraReward();
 
                 const stakersDataFromContract = await Promise.all(calls);
+                let globalPoints = 0;
 
                 let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
+                    const vaultPoints = item?.userVaultPointsPerRound
+                        ? bigNumberFormatter(item.userVaultPointsPerRound)
+                        : 0;
+
+                    const lpPoints = item?.userLPPointsPerRound ? bigNumberFormatter(item.userLPPointsPerRound) : 0;
+                    const tradingPoints = item?.userTradingBasePointsPerRound
+                        ? bigNumberFormatter(item.userTradingBasePointsPerRound)
+                        : 0;
+                    const userTotalPoints = vaultPoints + lpPoints + tradingPoints;
+                    globalPoints = globalPoints + userTotalPoints;
+
                     return {
                         ...stakersOnlyWithSomeStakingAmount[index],
-                        share: item?.share ? bigNumberFormatter(item.share) : 0,
                         stakingMultiplier: item?.stakingMultiplier ? bigNumberFormatter(item.stakingMultiplier) + 1 : 0,
-                        userLPBasePointsPerRound: item?.userLPBasePointsPerRound
-                            ? bigNumberFormatter(item.userLPBasePointsPerRound)
-                            : 0,
-                        userRoundBonusPoints: item?.userRoundBonusPoints
-                            ? bigNumberFormatter(item.userRoundBonusPoints)
+                        userLPBasePointsPerRound: item?.userLPPointsPerRound
+                            ? bigNumberFormatter(item.userLPPointsPerRound)
                             : 0,
                         userTradingBasePointsPerRound: item?.userTradingBasePointsPerRound
                             ? bigNumberFormatter(item.userTradingBasePointsPerRound)
                             : 0,
-                        userVaultBasePointsPerRound: item?.userVaultBasePointsPerRound
-                            ? bigNumberFormatter(item.userVaultBasePointsPerRound)
+                        userVaultBasePointsPerRound: item?.userVaultPointsPerRound
+                            ? bigNumberFormatter(item.userVaultPointsPerRound)
                             : 0,
-                        estimatedRewards: formatCurrencyWithKey(
-                            THALES_CURRENCY,
-                            bigNumberFormatter(item.share) * bigNumberFormatter(bonusRewards),
-                            2
-                        ),
+                        userRoundBonusPoints: userTotalPoints,
+                        estimatedRewards: '',
                     };
                 });
 
@@ -75,6 +82,11 @@ const useStakersDataLeaderboardQuery = (
                     return {
                         ...item,
                         rank: index + 1,
+                        estimatedRewards: formatCurrencyWithKey(
+                            THALES_CURRENCY,
+                            (item.userRoundBonusPoints / globalPoints) * bigNumberFormatter(bonusRewards),
+                            2
+                        ),
                     };
                 });
 
