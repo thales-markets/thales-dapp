@@ -82,6 +82,9 @@ const ClaimRewards: React.FC = () => {
 
     const { stakingThalesContract } = snxJSConnector as any;
 
+    const isClaimed = stakingData && userStakingData && !stakingData.isPaused && userStakingData.claimed;
+    const isPaused = stakingData && stakingData.isPaused;
+
     const isClaimAvailable =
         stakingData &&
         userStakingData &&
@@ -161,6 +164,30 @@ const ClaimRewards: React.FC = () => {
                         {t('common.wallet.connect-your-wallet')}
                     </Button>
                 </ButtonWrapperTooltip>
+            );
+        }
+
+        if (isClaimed) {
+            return (
+                <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.claimed-message')}>
+                    <ButtonWrapperTooltip>
+                        <Button additionalStyles={ButtonStyle} disabled={true}>
+                            {t('thales-token.gamified-staking.rewards.claim.claim')}
+                        </Button>
+                    </ButtonWrapperTooltip>
+                </Tooltip>
+            );
+        }
+
+        if (isPaused) {
+            return (
+                <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.paused-message')}>
+                    <ButtonWrapperTooltip>
+                        <Button additionalStyles={ButtonStyle} disabled={true}>
+                            {t('thales-token.gamified-staking.rewards.claim.claim')}
+                        </Button>
+                    </ButtonWrapperTooltip>
+                </Tooltip>
             );
         }
 
@@ -305,7 +332,6 @@ const FlexDiv = styled.div<{ marginBottom?: string }>`
 `;
 
 const ButtonWrapperTooltip = styled.div`
-    width: 70%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
