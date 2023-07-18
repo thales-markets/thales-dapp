@@ -13,12 +13,23 @@ export type UserStakingData = {
     baseRewards: string;
 };
 
+export const DEFAULT_USER_STAKING_DATA = {
+    thalesStaked: '-',
+    totalStaked: '-',
+    share: '-',
+    baseRewards: '-',
+};
+
 const useUserBaseRewardsQuery = (walletAddress: string, options?: UseQueryOptions<UserStakingData | undefined>) => {
     return useQuery<UserStakingData | undefined>(
         QUERY_KEYS.Token.UserBaseRewards(walletAddress),
         async () => {
             try {
                 const { stakingDataContract } = snxJSConnector;
+
+                if (!walletAddress) {
+                    return DEFAULT_USER_STAKING_DATA;
+                }
 
                 const [contractStakingData, contractUserStakingData] = await Promise.all([
                     stakingDataContract?.getStakingData(),
@@ -54,6 +65,7 @@ const useUserBaseRewardsQuery = (walletAddress: string, options?: UseQueryOption
                 };
             } catch (e) {
                 console.log(e);
+                return DEFAULT_USER_STAKING_DATA;
             }
         },
         {

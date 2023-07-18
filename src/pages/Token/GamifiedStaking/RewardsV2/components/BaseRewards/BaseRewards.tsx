@@ -1,5 +1,5 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import useUserBaseRewardsQuery, { UserStakingData } from 'queries/token/useUserBaseRewards';
+import useUserBaseRewardsQuery, { DEFAULT_USER_STAKING_DATA, UserStakingData } from 'queries/token/useUserBaseRewards';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ const BaseRewards: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [lastValidStakingData, setLastValidStakingData] = useState<UserStakingData | undefined>(undefined);
+    const [lastValidStakingData, setLastValidStakingData] = useState<UserStakingData>(DEFAULT_USER_STAKING_DATA);
 
     const query = useUserBaseRewardsQuery(walletAddress, { enabled: isAppReady });
 
