@@ -140,20 +140,20 @@ const StakingLeaderboard: React.FC = () => {
             {leaderboardQuery.isSuccess && (
                 <Wrapper>
                     <BadgeContainer>
-                        {highlightCardData && highlightCardData[1] && (
-                            <HighlightCard
-                                rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
-                                walletAddress={highlightCardData[1].id}
-                                totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[1].estimatedRewards}
-                            />
-                        )}
                         {highlightCardData && highlightCardData[0] && (
                             <HighlightCard
                                 rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
                                 walletAddress={highlightCardData[0].id}
                                 totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
                                 totalRewards={highlightCardData[0].estimatedRewards}
+                            />
+                        )}
+                        {highlightCardData && highlightCardData[1] && (
+                            <HighlightCard
+                                rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
+                                walletAddress={highlightCardData[1].id}
+                                totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
+                                totalRewards={highlightCardData[1].estimatedRewards}
                             />
                         )}
                         {highlightCardData && highlightCardData[2] && (
