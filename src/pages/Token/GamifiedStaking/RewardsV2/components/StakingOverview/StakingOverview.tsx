@@ -29,7 +29,7 @@ const StakingOverview: React.FC = () => {
         });
     }, []);
 
-    const leaderboardQuery = useStakersDataLeaderboardQuery(networkId, period, {
+    const leaderboardQuery = useStakersDataLeaderboardQuery(walletAddress, networkId, period, {
         enabled: period > 0,
     });
 

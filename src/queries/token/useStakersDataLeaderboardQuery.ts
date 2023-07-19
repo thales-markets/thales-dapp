@@ -10,12 +10,13 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useStakersDataLeaderboardQuery = (
+    walletAddress: string,
     network: Network,
     round: number,
     options?: UseQueryOptions<StakersWithLeaderboardDataAndGlobalPoints>
 ) => {
     return useQuery<StakersWithLeaderboardDataAndGlobalPoints>(
-        QUERY_KEYS.Token.StakersLeaderboardData(network),
+        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, network),
         async () => {
             try {
                 const BATCH_SIZE = 800;
