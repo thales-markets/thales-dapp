@@ -5,6 +5,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { Network } from 'enums/network';
+import { getDefaultDecimalsForNetwork } from 'utils/network';
 
 export type PointsData = {
     vaultsVolume: string;
@@ -57,6 +58,8 @@ const usePointsBreakdownQuery = (
                 return DEFAULT_POINTS_BREAKDOWN_DATA;
             }
 
+            const DECIMALS = getDefaultDecimalsForNetwork(networkId);
+
             try {
                 const period = await stakingThalesContract?.periodsOfStaking();
                 const [
@@ -88,7 +91,7 @@ const usePointsBreakdownQuery = (
                     ),
                     lpVolume: formatCurrencyWithKey(
                         USD_SIGN,
-                        bigNumberFormatter(lpPoints) / bigNumberFormatter(lpMultiplier)
+                        bigNumberFormatter(lpPoints, DECIMALS) / bigNumberFormatter(lpMultiplier)
                     ),
                     tradingVolume: formatCurrencyWithKey(
                         USD_SIGN,
