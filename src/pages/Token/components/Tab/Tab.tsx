@@ -62,11 +62,11 @@ const Tab: React.FC<{
                                                     : theme.button.background.secondary
                                             }
                                             borderColor={theme.button.borderColor.tertiary}
-                                            width="210px"
-                                            margin={'0 20px 0 0'}
-                                            padding={'5px 20px'}
+                                            width=""
+                                            margin={'0 10px 0 0'}
+                                            padding={'7px 17px'}
                                             fontSize="15px"
-                                            additionalStyles={{ whiteSpace: 'nowrap' }}
+                                            additionalStyles={{ whiteSpace: 'nowrap', borderRadius: '8px' }}
                                             onClick={() => {
                                                 const paramTab = queryString.parse(location.search).tab;
                                                 history.push({
