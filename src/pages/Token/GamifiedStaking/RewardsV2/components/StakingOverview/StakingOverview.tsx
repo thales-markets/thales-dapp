@@ -92,7 +92,7 @@ const StakingOverview: React.FC = () => {
                         <Value>
                             {userData
                                 ? formatCurrencyWithKey('', (userData.share as any) * userData.bonusRewards, 2) +
-                                  '/' +
+                                  '/ ' +
                                   formatCurrencyWithKey(THALES_CURRENCY, userData.bonusRewards, 2)
                                 : '-'}
                         </Value>
