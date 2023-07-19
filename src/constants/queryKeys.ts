@@ -38,6 +38,7 @@ const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: Network) => ['markets', networkId],
+        SpeedMarkets: (networkId: Network) => ['speedMarkets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
         Market: (marketAddress: string) => ['market', marketAddress],

@@ -20,7 +20,7 @@ import { getCurrentPrice, getPriceId, getPriceServiceEndpoint } from 'utils/pyth
 import SelectBuyin from './components/SelectBuyin/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime/SelectTime';
-import SpeedAMMTrading from './components/SpeedAMMTrading/SpeedAMMTrading';
+import AmmSpeedTrading from './components/AmmSpeedTrading/AmmSpeedTrading';
 
 const SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
@@ -106,12 +106,12 @@ const SpeedMarkets: React.FC = () => {
                                 onDeltaChange={setDeltaTimeSec}
                                 onTimeChange={setStrikeTime}
                             />
-                            {getStepLabel(4, t('common.enter-buyin'))}
+                            {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
                             <SelectBuyin value={buyinAmount} onChange={setBuyinAmount} />
                         </RightSide>
                     </ContentWrapper>
 
-                    <SpeedAMMTrading
+                    <AmmSpeedTrading
                         currencyKey={currencyKey}
                         positionType={positionType}
                         strikeTime={strikeTime}

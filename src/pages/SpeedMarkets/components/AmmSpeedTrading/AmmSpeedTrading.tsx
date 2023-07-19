@@ -15,6 +15,7 @@ import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
+import useAmmSpeedMarketsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -34,7 +35,7 @@ import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 
-type SpeedAMMTradingProps = {
+type AmmSpeedTradingProps = {
     currencyKey: string;
     positionType: Positions.UP | Positions.DOWN | undefined;
     strikeTime: number;
@@ -45,7 +46,7 @@ type SpeedAMMTradingProps = {
     autoFocus?: boolean;
 };
 
-const SpeedAMMTrading: React.FC<SpeedAMMTradingProps> = ({
+const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     currencyKey,
     positionType,
     strikeTime,
@@ -94,6 +95,14 @@ const SpeedAMMTrading: React.FC<SpeedAMMTradingProps> = ({
             : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId));
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedCollateralIndex, isMultiCollateralSupported]);
 
+    const ammSpeedMarketsQuery = useAmmSpeedMarketsQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const ammSpeedMarketsData = useMemo(() => {
+        return ammSpeedMarketsQuery.isSuccess ? ammSpeedMarketsQuery.data : null;
+    }, [ammSpeedMarketsQuery]);
+
     useEffect(() => {
         if (buyinAmount > 0) {
             setPaidAmount(buyinAmount);
@@ -111,7 +120,9 @@ const SpeedAMMTrading: React.FC<SpeedAMMTradingProps> = ({
     useEffect(() => {
         let messageKey = '';
 
-        if (
+        if (ammSpeedMarketsData && Number(paidAmount) > 0 && Number(paidAmount) < ammSpeedMarketsData?.minBuyinAmount) {
+            messageKey = 'common.errors.min-buyin';
+        } else if (
             (isWalletConnected && Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) ||
             stableBalance === 0
         ) {
@@ -194,7 +205,11 @@ const SpeedAMMTrading: React.FC<SpeedAMMTradingProps> = ({
         );
     };
 
-    const onMaxClick = async () => {};
+    const onMaxClick = () => {
+        if (ammSpeedMarketsData && stableBalance > 0) {
+            setPaidAmount(Math.min(ammSpeedMarketsData.maxBuyinAmount, stableBalance));
+        }
+    };
 
     return (
         <Container>
@@ -224,6 +239,7 @@ const SpeedAMMTrading: React.FC<SpeedAMMTradingProps> = ({
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
                             currencyKey: getCollateral(networkId, selectedCollateralIndex),
+                            amount: ammSpeedMarketsData?.minBuyinAmount,
                         })}
                         balance={
                             showWalletBalance && isWalletConnected
@@ -285,4 +301,4 @@ const ColumnSpaceBetween = styled(FlexDivColumn)`
     justify-content: space-between;
 `;
 
-export default SpeedAMMTrading;
+export default AmmSpeedTrading;
