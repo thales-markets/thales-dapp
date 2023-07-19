@@ -295,7 +295,7 @@
 }
 
 .icon--hexagon:before {
-    content: '\0043';
+    content: '\002F';
 }
 
 .icon--lp-thales:before {
