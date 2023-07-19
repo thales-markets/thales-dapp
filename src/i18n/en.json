@@ -6,8 +6,16 @@
         "save": "Save",
         "close": "Close",
         "no-data": "Do not have any data to show",
-        "buy": "buy",
-        "sell": "sell",
+        "buy": {
+            "label": "Buy",
+            "progress-label": "Buying in progress...",
+            "confirmation-message": "Successfully bought"
+        },
+        "sell": {
+            "label": "Sell",
+            "progress-label": "Selling in progress...",
+            "confirmation-message": "Successfully sold"
+        },
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "or": "or",
@@ -15,6 +23,7 @@
         "switch-to-l2": "Switch to L2",
         "no-data-available": "No data available",
         "enter-amount": "Enter amount",
+        "enter-buyin": "Enter buy in",
         "enter-percentage": "Enter percentage",
         "enter-address": "Enter address",
         "search-placeholder": "Search...",
@@ -71,6 +80,7 @@
         "errors": {
             "try-again": "Try again. AMM data is changed.",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
+            "wallet-not-connected": "Wallet not connected!",
             "insufficient-balance": "Insufficient balance",
             "insufficient-staking-balance": "Insufficient staking balance",
             "out-of-liquidity": "Out of liquidity",
@@ -107,6 +117,7 @@
         },
         "sidebar": {
             "markets": "Markets",
+            "speed-markets": "Speed markets",
             "leaderboard-label": "Leaderboard",
             "earn-label": "Thales Token",
             "governance-label": "Governance",
@@ -136,7 +147,6 @@
             "title": "Get {{token}}",
             "button-text": "Get {{token}}",
             "select-token": "Select a token",
-            "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
@@ -256,13 +266,11 @@
         "go-to-market": "Go to market"
     },
     "markets": {
-        "title": "Markets",
         "amm-trading": {
             "asset-price": "If {{asset}} price is",
             "pick-price": "pick a price",
             "based-amount": "based on amount",
             "you-win": "you win",
-            "enter-amount": "Enter amount",
             "select-price": "Select price",
             "amm-disabled": "AMM trading disabled",
             "max-buy": "Max buy",
@@ -392,23 +400,14 @@
                         "confirmation-message": "Positions successfully exercised"
                     }
                 }
-            },
-            "trade-options": {
-                "place-order": {
-                    "swap-confirm-button": {
-                        "buy": {
-                            "label": "Buy",
-                            "progress-label": "Buying in progress...",
-                            "confirmation-message": "Successfully bought"
-                        },
-                        "sell": {
-                            "label": "Sell",
-                            "progress-label": "Selling in progress...",
-                            "confirmation-message": "Successfully sold"
-                        }
-                    }
-                }
             }
+        }
+    },
+    "speed-markets": {
+        "steps": {
+            "choose-asset": "Choose asset",
+            "choose-direction": "Choose direction",
+            "choose-time": "Choose time"
         }
     },
     "thales-token": {

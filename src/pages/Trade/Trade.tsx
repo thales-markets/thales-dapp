@@ -1,4 +1,8 @@
+import Tooltip from 'components/Tooltip/Tooltip';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
@@ -7,6 +11,7 @@ import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesB
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -22,10 +27,14 @@ import OpenPositions from './components/OpenPositions';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
-import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { RouteComponentProps } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import Tooltip from 'components/Tooltip/Tooltip';
+
+const SUPPORTED_NETWORKS = [
+    Network.OptimismMainnet,
+    Network.BSC,
+    Network.PolygonMainnet,
+    Network.OptimismGoerli,
+    Network.Arbitrum,
+];
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -108,7 +117,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         <>
             {isMainnet ? (
                 <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork />
+                    <UnsupportedNetwork supportedNetworks={SUPPORTED_NETWORKS} />
                 </UnsupportedNetworkWrapper>
             ) : (
                 <Wrapper>

@@ -29,8 +29,8 @@ const Home: React.FC = () => {
                             bold: (
                                 <strong
                                     onClick={() => {
-                                        SUPPORTED_NETWORK_IDS_MAP[Network['POLYGON-MAINNET']].changeNetwork(
-                                            Network['POLYGON-MAINNET'],
+                                        SUPPORTED_NETWORK_IDS_MAP[Network.PolygonMainnet].changeNetwork(
+                                            Network.PolygonMainnet,
                                             () => {
                                                 navigateTo(buildHref(ROUTES.Options.Home));
                                             }

@@ -62,6 +62,13 @@ const DappSidebar: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    <DappHeaderItem
+                        className={`${location.pathname === ROUTES.Options.SpeedMarkets ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.SpeedMarkets)}
+                        iconName="markets"
+                        label={t('common.sidebar.speed-markets')}
+                    />
+
                     {showVaultsPage && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}

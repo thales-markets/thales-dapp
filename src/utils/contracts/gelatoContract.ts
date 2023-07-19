@@ -119,17 +119,9 @@ export const gelatoContract = {
     abi: GELATO_POOL_ABI,
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: GELATO_POOL_ADDRESS,
-        // sUSD address as LP token address for testing on OP Kovan
-        [Network['Kovan-Ovm']]: '0xaa5068dc2b3aade533d3e52c6eeaadc6a8154c57',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: GELATO_POOL_ADDRESS,
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
     },

@@ -9,16 +9,20 @@ import { Network } from 'enums/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { getIsMainnet } from 'utils/network';
 
-const UnsupportedNetwork: React.FC = () => {
+type UnsupportedNetworkProps = {
+    supportedNetworks?: Network[];
+};
+
+const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetworks }) => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isMainnet = getIsMainnet(networkId);
+
+    const isOptimismSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.OptimismMainnet);
+    const isPolygonSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.PolygonMainnet);
+    const isArbitrumSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Arbitrum);
+    const isBSCSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.BSC);
+    const isMainnetSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Mainnet);
 
     const getButton = (networkId: Network) => {
         let logo;
@@ -28,7 +32,7 @@ const UnsupportedNetwork: React.FC = () => {
                 logo = <EthereumLogo />;
                 text = t(`common.unsupported-network.button.mainnet`);
                 break;
-            case Network['Mainnet-Ovm']:
+            case Network.OptimismMainnet:
                 logo = <OpLogo />;
                 text = t(`common.unsupported-network.button.optimism`);
                 break;
@@ -36,7 +40,7 @@ const UnsupportedNetwork: React.FC = () => {
                 logo = <BSCLogo />;
                 text = t(`common.unsupported-network.button.bsc`);
                 break;
-            case Network['POLYGON-MAINNET']:
+            case Network.PolygonMainnet:
                 logo = <PolygonLogo />;
                 text = t(`common.unsupported-network.button.polygon`);
                 break;
@@ -62,15 +66,19 @@ const UnsupportedNetwork: React.FC = () => {
         <Wrapper>
             <Title>{t(`common.unsupported-network.title`)}</Title>
             <ExplanationText>{t(`common.unsupported-network.description`)}</ExplanationText>
-            <ButtonWrapper>
-                {getButton(Network['Mainnet-Ovm'])}
-                {getButton(Network['POLYGON-MAINNET'])}
-            </ButtonWrapper>
-            <ButtonWrapper>
-                {getButton(Network.Arbitrum)}
-                {getButton(Network.BSC)}
-            </ButtonWrapper>
-            {!isMainnet && <ButtonWrapper>{getButton(Network.Mainnet)}</ButtonWrapper>}
+            {(isOptimismSupported || isPolygonSupported) && (
+                <ButtonWrapper>
+                    {isOptimismSupported && getButton(Network.OptimismMainnet)}
+                    {isPolygonSupported && getButton(Network.PolygonMainnet)}
+                </ButtonWrapper>
+            )}
+            {(isArbitrumSupported || isBSCSupported) && (
+                <ButtonWrapper>
+                    {isArbitrumSupported && getButton(Network.Arbitrum)}
+                    {isBSCSupported && getButton(Network.BSC)}
+                </ButtonWrapper>
+            )}
+            {isMainnetSupported && <ButtonWrapper>{getButton(Network.Mainnet)}</ButtonWrapper>}
         </Wrapper>
     );
 };

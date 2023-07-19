@@ -1,16 +1,10 @@
 export enum Network {
     Mainnet = 1,
-    Ropsten = 3,
-    Rinkeby = 4,
-    Goerli = 5,
-    'Mainnet-Ovm' = 10,
-    Kovan = 42,
+    OptimismMainnet = 10,
     BSC = 56,
-    'Kovan-Ovm' = 69,
-    'POLYGON-MAINNET' = 137,
-    'Goerli-Ovm' = 420,
+    PolygonMainnet = 137,
+    OptimismGoerli = 420,
     Arbitrum = 42161,
-    'POLYGON-MUMBAI' = 80001,
 }
 
 export enum OneInchLiquidityProtocol {

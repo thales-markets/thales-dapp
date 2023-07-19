@@ -42,7 +42,7 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         chainnode: 'mainnet',
         blast: 'eth-mainnet',
     },
-    [Network['Mainnet-Ovm']]: {
+    [Network.OptimismMainnet]: {
         ankr: 'optimism',
         chainnode: 'optimism-mainnet',
         blast: 'optimism-mainnet',
@@ -52,12 +52,12 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         chainnode: 'bsc-mainnet',
         blast: 'bsc-mainnet',
     },
-    [Network['POLYGON-MAINNET']]: {
+    [Network.PolygonMainnet]: {
         ankr: '',
         chainnode: 'polygon-mainnet',
         blast: 'polygon-mainnet',
     },
-    [Network['Goerli-Ovm']]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
+    [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
     [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
 };
 

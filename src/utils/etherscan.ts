@@ -12,7 +12,7 @@ const getEtherScanBaseURL = (networkId: Network) => {
         return 'https://bscscan.com';
     } else if (getIsArbitrum(networkId)) {
         return 'https://arbiscan.io';
-    } else if (networkId === Network['POLYGON-MAINNET']) {
+    } else if (networkId === Network.PolygonMainnet) {
         return 'https://polygonscan.com';
     }
 

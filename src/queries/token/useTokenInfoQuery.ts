@@ -31,11 +31,11 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                 const mainThalesBurnedBalance = await mainThalesBurned.balanceOf(DEAD_ADDRESS);
 
                 const opInfuraProvider = new ethers.providers.InfuraProvider(
-                    Network['Mainnet-Ovm'],
+                    Network.OptimismMainnet,
                     process.env.REACT_APP_INFURA_PROJECT_ID
                 );
                 const opThalesBurned = new ethers.Contract(
-                    thalesContract.addresses[Network['Mainnet-Ovm']],
+                    thalesContract.addresses[Network.OptimismMainnet],
                     thalesContract.abi,
                     opInfuraProvider
                 );

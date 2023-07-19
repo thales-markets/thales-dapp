@@ -13,9 +13,9 @@ import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSou
 import { getDefaultCollateral } from 'utils/currency';
 
 const SUPPORTED_DESTINATION_NETWORKS = [
-    Network['Mainnet-Ovm'],
+    Network.OptimismMainnet,
     Network.Arbitrum,
-    Network['POLYGON-MAINNET'],
+    Network.PolygonMainnet,
     Network.BSC,
 ];
 

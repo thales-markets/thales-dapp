@@ -12,7 +12,7 @@ const useThalesStakersQuery = (filter: StakersFilterEnum, options?: UseQueryOpti
         async () => {
             const [stakers, stakersArb] = await Promise.all([
                 thalesData.binaryOptions.stakers({
-                    network: Network['Mainnet-Ovm'],
+                    network: Network.OptimismMainnet,
                 }),
                 thalesData.binaryOptions.stakers({
                     network: Network.Arbitrum,

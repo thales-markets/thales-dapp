@@ -127,8 +127,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         dotSize="10px"
                                         circlePosition="2px"
                                         label={{
-                                            firstLabel: t(`common.buy`),
-                                            secondLabel: t(`common.sell`),
+                                            firstLabel: t(`common.buy.label`),
+                                            secondLabel: t(`common.sell.label`),
                                             fontSize: '13px',
                                         }}
                                         handleClick={() => {

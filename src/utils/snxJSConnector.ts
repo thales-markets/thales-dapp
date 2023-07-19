@@ -22,6 +22,7 @@ import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
+import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -51,6 +52,7 @@ type SnxJSConnector = {
     taleOfThalesNFTContract?: ethers.Contract;
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
+    speedMarketsAMMContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -101,6 +103,7 @@ const snxJSConnector: SnxJSConnector = {
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
+        this.speedMarketsAMMContract = conditionalInitializeContract(speedMarketsAMMContract, contractSettings);
     },
 };
 

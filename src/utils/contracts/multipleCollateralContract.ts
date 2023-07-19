@@ -1106,16 +1106,9 @@ const multipleCollateral = {
     sUSD: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            // added to resolve error with typings
-            [Network.Goerli]: 'TBD', // TODO: goerli network remove or implement
-            [Network['Mainnet-Ovm']]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
-            [Network['Kovan-Ovm']]: '0xaA5068dC2B3AADE533d3e52C6eeaadC6a8154c57', // sUSD
-            [Network['Goerli-Ovm']]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
-            [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
-            [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC TODO: why defined in sUSD, shouldn't be in USDC object?
+            [Network.OptimismMainnet]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
+            [Network.OptimismGoerli]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
+            [Network.PolygonMainnet]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC TODO: why defined in sUSD, shouldn't be in USDC object?
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
         },
@@ -1124,15 +1117,9 @@ const multipleCollateral = {
     DAI: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_DAI.address,
+            [Network.OptimismMainnet]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_DAI.address,
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
         },
@@ -1141,15 +1128,9 @@ const multipleCollateral = {
     USDC: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_USDC.address,
+            [Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_USDC.address,
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
         },
@@ -1158,15 +1139,9 @@ const multipleCollateral = {
     USDT: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_USDT.address,
+            [Network.OptimismMainnet]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_USDT.address,
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
         },

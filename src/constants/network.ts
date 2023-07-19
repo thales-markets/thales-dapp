@@ -15,37 +15,25 @@ export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 
 export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
-    [Network.Ropsten]: 'ROPSTEN',
-    [Network.Rinkeby]: 'RINKEBY',
-    [Network.Goerli]: 'GOERLI',
-    [Network['Mainnet-Ovm']]: 'OPTIMISTIC',
-    [Network.Kovan]: 'KOVAN',
+    [Network.OptimismMainnet]: 'OPTIMISTIC',
     [Network.BSC]: 'BSC-MAINNET',
-    [Network['Kovan-Ovm']]: 'KOVAN-OPTIMISTIC',
-    [Network['POLYGON-MAINNET']]: 'POLYGON-MAINNET',
-    [Network['Goerli-Ovm']]: 'GOERLI-OPTIMISM',
+    [Network.PolygonMainnet]: 'POLYGON-MAINNET',
+    [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
-    [Network['POLYGON-MUMBAI']]: 'POLYGON-MUMBAI',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
-    [Network.Ropsten]: 'ROPSTEN',
-    [Network.Rinkeby]: 'RINKEBY',
-    [Network.Goerli]: 'GOERLI',
-    [Network['Mainnet-Ovm']]: 'OPTIMISM MAINNET',
-    [Network.Kovan]: 'KOVAN',
+    [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
     [Network.BSC]: 'BINANCE SMART CHAIN MAINNET',
-    [Network['Kovan-Ovm']]: 'OPTIMISM KOVAN',
-    [Network['POLYGON-MAINNET']]: 'POLYGON',
-    [Network['Goerli-Ovm']]: 'OPTIMISM GOERLI',
+    [Network.PolygonMainnet]: 'POLYGON',
+    [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
-    [Network['POLYGON-MUMBAI']]: 'POLYGON MUMBAI',
 };
 
 export const defaultNetwork: { name: string; networkId: Network } = {
-    name: SUPPORTED_NETWORKS_NAMES[Network['Mainnet-Ovm']],
-    networkId: Network['Mainnet-Ovm'],
+    name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
+    networkId: Network.OptimismMainnet,
 };
 
 type NetworkMapper = Record<number, number>;
@@ -69,7 +57,7 @@ type OptimismNetwork = {
 };
 
 export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
-    [Network['Mainnet-Ovm']]: {
+    [Network.OptimismMainnet]: {
         chainId: '0xA',
         chainName: 'Optimism',
         rpcUrls: ['https://mainnet.optimism.io'],
@@ -80,36 +68,14 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    [Network['Kovan-Ovm']]: {
-        chainId: '0x45',
-        chainName: 'Optimism Kovan',
-        rpcUrls: ['https://kovan.optimism.io'],
-        blockExplorerUrls: ['https://kovan-optimistic.etherscan.io/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'ETH',
-            decimals: 18,
-        },
-    },
 };
 
 const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
-    [Network['POLYGON-MAINNET']]: {
+    [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://explorer.matic.network/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'MATIC',
-            decimals: 18,
-        },
-    },
-    [Network['POLYGON-MUMBAI']]: {
-        chainId: '0x13881',
-        chainName: 'Polygon Mumbai',
-        rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
-        blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
             symbol: 'MATIC',
@@ -186,7 +152,7 @@ const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction,
 };
 
 export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
-    [Network['Mainnet-Ovm']]: {
+    [Network.OptimismMainnet]: {
         name: 'Optimism',
         icon: OpLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
@@ -196,7 +162,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 1,
     },
-    [Network['POLYGON-MAINNET']]: {
+    [Network.PolygonMainnet]: {
         name: 'Polygon',
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {

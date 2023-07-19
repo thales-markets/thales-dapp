@@ -3,16 +3,9 @@ import { Network } from 'enums/network';
 const taleOfThalesNFT = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0xA9218C6d51b87EB3ee74E14Cb5D50BDE00Be7021',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: '0x48a2984D7BDdBF7Af6c3822CcD26A583a70C0A65',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: '0xA9218C6d51b87EB3ee74E14Cb5D50BDE00Be7021',
+        [Network.OptimismGoerli]: '0x48a2984D7BDdBF7Af6c3822CcD26A583a70C0A65',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0xe42517a1Bf3E6Bd088Bf26ead8d8754e0e2BeBA3',
     },

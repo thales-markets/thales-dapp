@@ -80,6 +80,7 @@ import {
     Wrapper,
     defaultButtonProps,
 } from './styled-components';
+import { delay } from 'utils/timer';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -1099,10 +1100,6 @@ const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: num
         nextRoundBalancePercenatage,
         maxAllowancePercenatage,
     };
-};
-
-const delay = (interval: number) => {
-    return new Promise((resolve) => setTimeout(resolve, interval));
 };
 
 export default LiquidityPool;

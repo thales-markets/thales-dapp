@@ -213,13 +213,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(
-                    id,
-                    getSuccessToastOptions(
-                        t(`markets.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`),
-                        id
-                    )
-                );
+                toast.update(id, getSuccessToastOptions(t(`common.sell.confirmation-message`), id));
 
                 refetchBalances(walletAddress, networkId);
                 refetchUserNotifications(walletAddress, networkId);

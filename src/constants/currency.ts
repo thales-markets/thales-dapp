@@ -423,30 +423,19 @@ export const currencyKeyToCoinGeckoIndexMap = {
 
 export const COLLATERALS: Record<Network, StableCoins[]> = {
     [Network.Mainnet]: [SYNTHS_MAP.sUSD as StableCoins],
-    [Network.Ropsten]: [],
-    [Network.Rinkeby]: [],
-    [Network.Goerli]: [],
-    [Network.Kovan]: [],
-    [Network['Mainnet-Ovm']]: [
+    [Network.OptimismMainnet]: [
         SYNTHS_MAP.sUSD as StableCoins,
         CRYPTO_CURRENCY_MAP.DAI as StableCoins,
         CRYPTO_CURRENCY_MAP.USDC as StableCoins,
         CRYPTO_CURRENCY_MAP.USDT as StableCoins,
     ],
-    [Network['Kovan-Ovm']]: [
+    [Network.OptimismGoerli]: [
         SYNTHS_MAP.sUSD as StableCoins,
         CRYPTO_CURRENCY_MAP.DAI as StableCoins,
         CRYPTO_CURRENCY_MAP.USDC as StableCoins,
         CRYPTO_CURRENCY_MAP.USDT as StableCoins,
     ],
-    [Network['Goerli-Ovm']]: [
-        SYNTHS_MAP.sUSD as StableCoins,
-        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
-    ],
-    [Network['POLYGON-MUMBAI']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
-    [Network['POLYGON-MAINNET']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
     [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as StableCoins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
 };

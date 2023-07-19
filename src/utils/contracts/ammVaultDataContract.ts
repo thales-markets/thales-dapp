@@ -3,15 +3,9 @@ import { Network } from 'enums/network';
 const sportVaultDataContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: '0x70164a1ec9D21c4dBA2b4f9B23750F9C7D03286b',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: '0x70164a1ec9D21c4dBA2b4f9B23750F9C7D03286b',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x4A096E1d719A2087F5CAfB0839aa25B6dd6dB324',
     },

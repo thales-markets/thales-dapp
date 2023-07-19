@@ -41,6 +41,7 @@ const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/
 const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
+const SpeedMarkets = lazy(() => import(/* webpackChunkName: "SpeedMarkets" */ '../SpeedMarkets'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
@@ -297,6 +298,12 @@ const App = () => {
                             <Route exact path={ROUTES.Options.Home}>
                                 <DappLayout>
                                     <Markets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Options.SpeedMarkets}>
+                                <DappLayout>
+                                    <SpeedMarkets />
                                 </DappLayout>
                             </Route>
 

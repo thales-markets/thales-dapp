@@ -249,7 +249,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         if (fromToken && allowance && Number(amount) <= 0)
             return (
                 <Button disabled={true} {...defaultButtonProps}>
-                    {t('common.swap.enter-amount')}
+                    {t('common.enter-amount')}
                 </Button>
             );
 
@@ -270,9 +270,9 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
 
     const unsupportedNetwork = ![
         Network.Mainnet,
-        Network['Mainnet-Ovm'],
+        Network.OptimismMainnet,
         Network.BSC,
-        Network['POLYGON-MAINNET'],
+        Network.PolygonMainnet,
         Network.Arbitrum,
     ].includes(networkId);
 

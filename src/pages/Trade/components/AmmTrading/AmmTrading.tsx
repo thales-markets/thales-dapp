@@ -529,14 +529,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             if (txResult && txResult.transactionHash) {
                 toast.update(
                     id,
-                    getSuccessToastOptions(
-                        t(
-                            `markets.market.trade-options.place-order.swap-confirm-button.${
-                                isBuy ? 'buy' : 'sell'
-                            }.confirmation-message`
-                        ),
-                        id
-                    )
+                    getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
                 );
 
                 refetchBalances(walletAddress, networkId);
@@ -663,12 +656,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         return (
             <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
-                    ? t(
-                          `markets.market.trade-options.place-order.swap-confirm-button.${
-                              isBuy ? 'buy' : 'sell'
-                          }.progress-label`
-                      )
-                    : t(`markets.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'buy' : 'sell'}.label`)}
+                    ? t(`common.${isBuy ? 'buy' : 'sell'}.progress-label`)
+                    : t(`common.${isBuy ? 'buy' : 'sell'}.label`)}
             </Button>
         );
     };
@@ -707,7 +696,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     <NumericInput
                         value={paidAmount}
                         disabled={isFormDisabled}
-                        placeholder={t('markets.amm-trading.enter-amount')}
+                        placeholder={t('common.enter-amount')}
                         onChange={(_, value) => setPaidAmount(value)}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
