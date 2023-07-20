@@ -596,6 +596,7 @@ const Arrow = styled.i`
     position: absolute;
     bottom: 10px;
     right: 10px;
+    cursor: pointer;
 `;
 
 const Title = styled.p`
