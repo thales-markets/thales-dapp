@@ -14,6 +14,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import Loader from 'components/Loader/Loader';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -76,7 +77,9 @@ const StakingLeaderboard: React.FC = () => {
                     accessor: (row: any) => {
                         return (
                             <Cell>
-                                <TableText>{truncateAddress(row.id, 5, 5)}</TableText>
+                                <WalletAddress href={getEtherscanAddressLink(networkId, row.id)} target="_blank">
+                                    {truncateAddress(row.id, 5, 5)}
+                                </WalletAddress>
                             </Cell>
                         );
                     },
@@ -371,6 +374,18 @@ const TableText = styled.p`
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
+`;
+
+const WalletAddress = styled.a`
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 110%;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
+    }
+    cursor: pointer;
 `;
 
 const HeaderText = styled(TableText)`
