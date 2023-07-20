@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import StakingSteps from './components/StakingSteps/StakingSteps';
@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrency } from 'utils/formatters/number';
 
 const RewardsV2: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -24,8 +23,6 @@ const RewardsV2: React.FC = () => {
     const query = useStakingOverviewQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
-
-    console.log('Query data ', query.data);
 
     useEffect(() => {
         if (query.data && query.isSuccess) {

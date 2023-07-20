@@ -576,7 +576,7 @@
                     "title-4": "THALES Staked Multiplier",
                     "content-4": "The amount of THALES you have staked determines the multiplier for your total points. The more THALES you stake, the higher the final multiplier of your total points.<br><br><highlight>ThalesMultiplier = 1 + UserThalesStaked /{StakingDivider}</highlight><br><br>Thales multiplier minimum value is 1 and maximum value is 5.",
                     "title-5": "Total Score",
-                    "content-5": "Your final score that determines your share of 30,000 THALES Gamified Staking Bonus rewards is equal to the sum of all your accrued points multiplied by the THALES Staked Multiplier. <br><br><highlight>Total Score = (Trading Volume points + AMM LP points + Vaults Points) x THALES Staked Multiplier</highlight>"
+                    "content-5": "Your final score that determines your share of {{bonusRewards}} THALES Gamified Staking Bonus rewards is equal to the sum of all your accrued points multiplied by the THALES Staked Multiplier. <br><br><highlight>Total Score = (Trading Volume points + AMM LP points + Vaults Points) x THALES Staked Multiplier</highlight>"
                 },
                 "overview": {
                     "title": "Overview for this round",

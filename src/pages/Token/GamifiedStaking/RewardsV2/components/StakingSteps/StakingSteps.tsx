@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { BoldedText, HighlightTextBigger, HighlightTextSecondary } from './styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 const StakingSteps: React.FC = () => {
     const { t } = useTranslation();
+
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const [stakingData, setStakingData] = useState<OverviewData | null>(null);
+
+    const query = useStakingOverviewQuery(walletAddress, networkId, {
+        enabled: isAppReady,
+    });
+
+    useEffect(() => {
+        if (query.data && query.isSuccess) {
+            setStakingData(query.data);
+        }
+    }, [query.data]);
 
     return (
         <Container>
@@ -83,6 +104,9 @@ const StakingSteps: React.FC = () => {
                                 components={{
                                     highlight: <HighlightTextBigger />,
                                     br: <br />,
+                                }}
+                                values={{
+                                    bonusRewards: stakingData?.bonusRewards,
                                 }}
                             />
                         </CardText>
