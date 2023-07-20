@@ -10,7 +10,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { buildHref, navigateTo } from 'utils/routes';
+import { navigateTo } from 'utils/routes';
 
 const BaseRewards: React.FC = () => {
     const { t } = useTranslation();
