@@ -174,9 +174,7 @@ const PointsBreakdown: React.FC = () => {
                             </Cell>
                             {!isMobile && <VLine />}
                             <Cell>
-                                <CellLabel>
-                                    {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
-                                </CellLabel>
+                                <CellLabel>{t('thales-token.gamified-staking.rewards.points.lp-multiplier')}</CellLabel>
                                 <CellValue highlight={true} addBefore={true}>
                                     {stakingData?.lpMultiplier == 0 ? (
                                         <Span>-</Span>
@@ -251,7 +249,7 @@ const PointsBreakdown: React.FC = () => {
                             {!isMobile && <VLine />}
                             <Cell>
                                 <CellLabel>
-                                    {t('thales-token.gamified-staking.rewards.points.trading-multiplier')}
+                                    {t('thales-token.gamified-staking.rewards.points.vaults-multiplier')}
                                 </CellLabel>
                                 <CellValue highlight={true} addBefore={true}>
                                     <CellValue highlight={true} addBefore={true}>

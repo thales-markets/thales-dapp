@@ -598,6 +598,8 @@
                     "total-amm": "Total AMM LP balances",
                     "total-vaults": "Total vaults balances",
                     "trading-multiplier": "Trading multiplier",
+                    "lp-multiplier": "LP multiplier",
+                    "vaults-multiplier": "Vaults multiplier",
                     "points": "Points",
                     "your-thales": "Your Thales staked",
                     "divider": "Staking divider",
