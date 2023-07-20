@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { Network } from 'enums/network';
 import { getDefaultDecimalsForNetwork } from 'utils/network';
@@ -100,13 +100,13 @@ const usePointsBreakdownQuery = (
                     vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
                     lpMultiplier: bigNumberFormatter(lpMultiplier),
                     tradingMultiplier: bigNumberFormatter(tradingMultiplier),
-                    stakingMultiplier: truncToDecimals(bigNumberFormatter(stakingMultiplier) + 1, 2),
-                    vaultsPoints: truncToDecimals(bigNumberFormatter(vaultsPoints), 2),
-                    lpPoints: truncToDecimals(bigNumberFormatter(lpPoints), 2),
-                    tradingPoints: truncToDecimals(bigNumberFormatter(tradingPoints), 2),
+                    stakingMultiplier: formatCurrency(bigNumberFormatter(stakingMultiplier) + 1),
+                    vaultsPoints: formatCurrency(bigNumberFormatter(vaultsPoints)),
+                    lpPoints: formatCurrency(bigNumberFormatter(lpPoints)),
+                    tradingPoints: formatCurrency(bigNumberFormatter(tradingPoints)),
                     thalesStaked: formatCurrencyWithKey(THALES_CURRENCY, bigNumberFormatter(stakedBalance)),
                     thalesDivider: formatCurrencyWithKey(THALES_CURRENCY, Number(thalesDivider)),
-                    totalPoints: truncToDecimals(
+                    totalPoints: formatCurrency(
                         bigNumberFormatter(vaultsPoints) +
                             bigNumberFormatter(lpPoints) +
                             bigNumberFormatter(tradingPoints)
