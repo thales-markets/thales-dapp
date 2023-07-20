@@ -14,15 +14,15 @@ export type PointsData = {
     vaultsMultiplier: number;
     tradingMultiplier: number;
     lpMultiplier: number;
-    stakingMultiplier: string;
+    stakingMultiplier: string | number;
 
-    vaultsPoints: string;
-    lpPoints: string;
-    tradingPoints: string;
+    vaultsPoints: string | number;
+    lpPoints: string | number;
+    tradingPoints: string | number;
 
     thalesStaked: string;
     thalesDivider: string;
-    totalPoints: string;
+    totalPoints: string | number;
 };
 
 export const DEFAULT_POINTS_BREAKDOWN_DATA = {
