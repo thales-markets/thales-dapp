@@ -590,7 +590,7 @@
                 },
                 "points": {
                     "your-points": "Your points breakdown",
-                    "your-multiplier": "Your staked Thales multiplier",
+                    "your-multiplier": "THALES Staked Multiplier",
                     "trading": "Trading",
                     "amm-lp": "AMM LP",
                     "vaults": "Vaults",
@@ -603,7 +603,7 @@
                     "points": "Points",
                     "your-thales": "Your Thales staked",
                     "divider": "Staking divider",
-                    "your-current-points": "YOUR CURRENT POINTS"
+                    "your-current-points": "YOUR CURRENT TOTAL POINTS"
                 },
                 "breakdown-section": {
                     "your-volume-from": "Your volume gathered from",
