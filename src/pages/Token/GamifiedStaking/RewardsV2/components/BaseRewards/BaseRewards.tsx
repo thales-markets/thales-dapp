@@ -1,4 +1,5 @@
 import ROUTES from 'constants/routes';
+import { TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useUserBaseRewardsQuery, { DEFAULT_USER_STAKING_DATA, UserStakingData } from 'queries/token/useUserBaseRewards';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -9,7 +10,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { buildHref } from 'utils/routes';
+import { buildHref, navigateTo } from 'utils/routes';
 
 const BaseRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -59,7 +60,15 @@ const BaseRewards: React.FC = () => {
                     <CellLabel>{t('thales-token.gamified-staking.rewards.base-rewards.rewards')}</CellLabel>
                     <CellValue>{stakingData?.baseRewards}</CellValue>
                     <Wrapper>
-                        <StakeMore href={buildHref(ROUTES.Options.Token)}>
+                        <StakeMore
+                            onClick={() =>
+                                navigateTo(
+                                    `${ROUTES.Options.Token}?activeButtonId=${TokenTabSectionIdEnum.STAKING}`,
+                                    false,
+                                    true
+                                )
+                            }
+                        >
                             {t('thales-token.gamified-staking.rewards.base-rewards.stake-more')}
                             <ArrowRight className="icon icon__arrow" />
                         </StakeMore>
@@ -132,13 +141,14 @@ const VLine = styled.div`
     align-self: center;
 `;
 
-const StakeMore = styled.a`
+const StakeMore = styled.span`
     font-weight: 400;
     font-size: 18px;
     display: flex;
     align-items: center;
     color: ${(props) => props.theme.textColor.quaternary};
     text-transform: capitalize;
+    cursor: pointer;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
