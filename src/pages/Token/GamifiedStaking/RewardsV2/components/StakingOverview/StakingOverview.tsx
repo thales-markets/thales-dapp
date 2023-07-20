@@ -66,7 +66,7 @@ const StakingOverview: React.FC = () => {
 
                 <SecondaryContainer>
                     <Column>
-                        <Label>{t('thales-token.gamified-staking.rewards.overview.your-points')}</Label>
+                        <Label first={true}>{t('thales-token.gamified-staking.rewards.overview.your-points')}</Label>
                         <Value>
                             <Remote className="icon icon--controller" />{' '}
                             {userData ? formatCurrencyWithKey('', userData.points, 2) : '-'}
@@ -126,6 +126,18 @@ const Container = styled.div`
     }
 `;
 
+const SecondaryContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+    width: 50%;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex-direction: column;
+        align-items: center;
+    }
+`;
 const Wrapper = styled.div`
     position: relative;
     display: flex;
@@ -139,18 +151,8 @@ const Wrapper = styled.div`
         height: 350px;
         margin-top: 0px;
     }
-`;
-
-const SecondaryContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 100%;
-    justify-content: space-between;
-    width: 50%;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: column;
-        align-items: center;
+    ${SecondaryContainer}:first-child {
+        background-color: red;
     }
 `;
 
@@ -184,7 +186,7 @@ const VerticalLine = styled.div`
     }
 `;
 
-const Label = styled.span`
+const Label = styled.span<{ first?: boolean }>`
     font-weight: 700;
     font-size: 13px;
     color: ${(props) => props.theme.textColor.primary};
@@ -192,9 +194,11 @@ const Label = styled.span`
     text-transform: uppercase;
     line-height: 100%;
     margin-top: 0px;
+    margin-left: ${(_props) => (_props.first ? '45px' : '')};
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         align-self: center;
         text-align: center;
+        margin-left: 0px;
     }
 `;
 
