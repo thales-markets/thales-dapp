@@ -54,6 +54,7 @@ export const LINKS = {
     Overtime: {
         Markets: 'https://overtimemarkets.xyz/#/markets',
         LiquidityPool: 'https://overtimemarkets.xyz/#/liquidity-pool',
+        ParlayLiquidityPool: 'https://overtimemarkets.xyz/#/liquidity-pool?pool-type=parlay',
     },
     ThalesAPI: {
         medium: `${generalConfig.API_URL}/medium`,

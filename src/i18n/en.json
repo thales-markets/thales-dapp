@@ -612,6 +612,7 @@
                         "overtime-trading": "Overtime Trading",
                         "lp-thales": "Thales Liquidity Providing",
                         "lp-overtime": "Overtime Liquidity Providing",
+                        "parlay-lp-overtime": "Overtime Parlay Liquidity Providing",
                         "thales-vaults": "Thales Vaults",
                         "sport-vaults": "Sport Vaults",
                         "discount-vault": "Discount Vault",

@@ -212,6 +212,21 @@ const PointsBreakdown: React.FC = () => {
                                             <ExternalIcon className="icon icon__external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
+                                    <LinkWrapper
+                                        href={LINKS.Overtime.ParlayLiquidityPool}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <LinkIcon className="icon icon--lp-overtime" />
+                                        <LinkLabelContainer>
+                                            <LinkLabel>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.parlay-lp-overtime'
+                                                )}
+                                            </LinkLabel>
+                                            <ExternalIcon className="icon icon__external" />
+                                        </LinkLabelContainer>
+                                    </LinkWrapper>
                                 </LinksContainer>
                             </DropdownWrapper>
                         )}
