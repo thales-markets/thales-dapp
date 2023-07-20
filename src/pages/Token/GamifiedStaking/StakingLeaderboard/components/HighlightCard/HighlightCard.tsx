@@ -53,13 +53,14 @@ const HighlightCard: React.FC<HighlightCardProps> = ({ rank, walletAddress, tota
 const Container = styled(FlexDiv)<{ highlightCard: boolean }>`
     flex-direction: column;
     align-items: center;
-    width: 350px;
+    width: 32%;
     height: 167px;
     background-color: ${(_props) => `${_props.highlightCard ? _props.theme.borderColor.tertiary : ''}`};
     border: ${(_props) => `1px solid ${_props.theme.borderColor.tertiary}`};
     border-radius: 8px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 5px 0px 30px 0px;
+        width: 100%;
     }
 `;
 

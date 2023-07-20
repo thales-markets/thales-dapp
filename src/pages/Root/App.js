@@ -48,9 +48,7 @@ const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
 const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
-const StakingLeaderboard = lazy(() =>
-    import(/* webpackChunkName: "StakingLeaderboard" */ '../Token/GamifiedStaking/StakingLeaderboard')
-);
+
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
@@ -233,14 +231,6 @@ const App = () => {
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
                                         <TokenPage />
-                                    </DappLayout>
-                                </Route>
-                            )}
-
-                            {!isPolygon && !isBSC && (
-                                <Route exact path={ROUTES.Options.StakingLeaderboard}>
-                                    <DappLayout>
-                                        <StakingLeaderboard />
                                     </DappLayout>
                                 </Route>
                             )}

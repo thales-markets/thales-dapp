@@ -21,7 +21,7 @@ const StakingLeaderboard: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [period, setPeriod] = useState(0);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(50);
     const theme = useTheme();
 
     useEffect(() => setPage(0), [period]);
@@ -333,7 +333,10 @@ const CellStyle: CSSProperties = {
 
 const Wrapper = styled.div`
     width: 100%;
-    max-width: 1080px;
+    margin-top: 50px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-top: 20px;
+    }
 `;
 
 const ExpandedRow = styled.div`
