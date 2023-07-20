@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { BoldedText, HighlightTextSecondary } from './styled-components';
+import { BoldedText, HighlightTextBigger, HighlightTextSecondary } from './styled-components';
 
 const StakingSteps: React.FC = () => {
     const { t } = useTranslation();
@@ -81,7 +81,7 @@ const StakingSteps: React.FC = () => {
                             <Trans
                                 i18nKey="thales-token.gamified-staking.rewards.card.content-5"
                                 components={{
-                                    highlight: <HighlightTextSecondary />,
+                                    highlight: <HighlightTextBigger />,
                                     br: <br />,
                                 }}
                             />
@@ -182,6 +182,7 @@ const CardText = styled.p`
     font-size: 13px;
     line-height: 110%;
     color: ${(props) => props.theme.textColor.primary};
+    margin-bottom: 10px;
 `;
 
 export default StakingSteps;
