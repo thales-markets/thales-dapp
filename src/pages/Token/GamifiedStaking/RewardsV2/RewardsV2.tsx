@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import StakingSteps from './components/StakingSteps/StakingSteps';
@@ -7,8 +7,32 @@ import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 import BaseRewards from './components/BaseRewards/BaseRewards';
 import ClaimRewards from './components/ClaimRewards/ClaimRewards';
 import { BoldedText, HighlightText } from './components/StakingSteps/styled-components';
+import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { formatCurrency } from 'utils/formatters/number';
 
 const RewardsV2: React.FC = () => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const [stakingData, setStakingData] = useState<OverviewData | null>(null);
+
+    const query = useStakingOverviewQuery(walletAddress, networkId, {
+        enabled: isAppReady,
+    });
+
+    console.log('Query data ', query.data);
+
+    useEffect(() => {
+        if (query.data && query.isSuccess) {
+            setStakingData(query.data);
+        }
+    }, [query.data]);
+
     return (
         <Wrapper>
             <Header>
@@ -29,6 +53,9 @@ const RewardsV2: React.FC = () => {
                                 bold: <BoldedText />,
                                 highlight: <HighlightText />,
                             }}
+                            values={{
+                                fixedPeriodReward: stakingData?.fixedPeriodReward,
+                            }}
                         />
                     </Text>
                     <Text>
@@ -37,6 +64,9 @@ const RewardsV2: React.FC = () => {
                             components={{
                                 bold: <BoldedText />,
                                 highlight: <HighlightText />,
+                            }}
+                            values={{
+                                bonusRewards: stakingData?.bonusRewards,
                             }}
                         />
                     </Text>

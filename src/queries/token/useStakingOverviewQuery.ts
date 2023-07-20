@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { Network } from 'enums/network';
 
@@ -11,6 +11,7 @@ export type OverviewData = {
     userPoints: string;
     totalPoints: string;
     bonusRewards: string;
+    fixedPeriodReward: string | number;
     share: number;
     estimatedRewards: string;
 };
@@ -27,10 +28,11 @@ const useStakingOverviewQuery = (
             const { stakingBonusRewardsManager } = snxJSConnector;
             try {
                 const period = await stakingThalesContract?.periodsOfStaking();
-                const [userPoints, totalPoints, bonusRewards, share] = await Promise.all([
+                const [userPoints, totalPoints, bonusRewards, fixedPeriodReward, share] = await Promise.all([
                     stakingBonusRewardsManager?.userRoundBonusPoints(walletAddress, period),
                     stakingBonusRewardsManager?.totalRoundBonusPoints(period),
                     stakingThalesContract?.periodExtraReward(),
+                    stakingThalesContract?.fixedPeriodReward(),
                     stakingBonusRewardsManager?.getUserRoundBonusShare(walletAddress, period),
                 ]);
 
@@ -39,6 +41,7 @@ const useStakingOverviewQuery = (
                     userPoints: formatCurrencyWithKey('', bigNumberFormatter(userPoints)),
                     totalPoints: formatCurrencyWithKey('', bigNumberFormatter(totalPoints)),
                     bonusRewards: formatCurrencyWithKey('', bigNumberFormatter(bonusRewards)),
+                    fixedPeriodReward: formatCurrency(bigNumberFormatter(fixedPeriodReward)),
                     share: bigNumberFormatter(share),
                     estimatedRewards:
                         truncToDecimals(bigNumberFormatter(share) * bigNumberFormatter(bonusRewards)) +

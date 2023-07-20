@@ -500,8 +500,8 @@
                 "section-title": "Rewards",
                 "section-title-staking": "Thales Staking Rewards",
                 "section-description": "<bold>Staking rewards</bold> are main inflationary rewards of the THALES tokens, allocated to THALES token stakers once a week. Your <bold>base staking rewards</bold> amount depend on your My Staked Share percentage value at the time of the weekly snapshot. <highlight>Staking rewards have to be claimed weekly or they expire on next week's snapshot time.</highlight>",
-                "section-base-rewards": "Base inflationary rewards of 60,000 THALES per week are shared among all THALES tokens staked proportionally.",
-                "section-bonus-rewards": "Additionally, there are 30,000 THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
+                "section-base-rewards": "Base inflationary rewards of {{fixedPeriodReward}} THALES per week are shared among all THALES tokens staked proportionally.",
+                "section-bonus-rewards": "Additionally, there are {{ bonusRewards }} THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
