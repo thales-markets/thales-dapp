@@ -1,6 +1,6 @@
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { THALES_CURRENCY } from 'constants/currency';
 import ROUTES from 'constants/routes';
+import { TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -11,6 +11,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
+import { navigateTo } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const StakingOverview: React.FC = () => {
@@ -105,12 +106,18 @@ const StakingOverview: React.FC = () => {
                     <Column>
                         <Label>{t('thales-token.gamified-staking.rewards.overview.leaderboard-rank')}</Label>
                         <Value>{userData ? `${userData.rank} / ${userData.users}` : '---/---'}</Value>
-                        <SPAAnchor href={ROUTES.Options.StakingLeaderboard}>
-                            <LinkToLeaderboard>
-                                {t('thales-token.gamified-staking.rewards.overview.go-to')}
-                                <ArrowIcon className="icon icon__arrow" />
-                            </LinkToLeaderboard>
-                        </SPAAnchor>
+                        <LinkToLeaderboard
+                            onClick={() =>
+                                navigateTo(
+                                    `${ROUTES.Options.Token}?activeButtonId=${TokenTabSectionIdEnum.LEADERBOARD}`,
+                                    false,
+                                    true
+                                )
+                            }
+                        >
+                            {t('thales-token.gamified-staking.rewards.overview.go-to')}
+                            <ArrowIcon className="icon icon__arrow" />
+                        </LinkToLeaderboard>
                     </Column>
                 </SecondaryContainer>
             </Wrapper>
@@ -292,6 +299,7 @@ const LinkToLeaderboard = styled.p`
     line-height: 100%;
     text-transform: capitalize;
     align-self: flex-end;
+    cursor: pointer;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         position: absolute;
         bottom: 10px;

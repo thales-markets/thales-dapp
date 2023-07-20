@@ -126,7 +126,7 @@ const TokenPage: React.FC = () => {
         const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
         const section = tabSections.find((section) => section.id === paramActiveButtonId);
         setSelectedSection(section?.id);
-    }, [selectedTab]);
+    }, [selectedTab, location]);
 
     return (
         <>
