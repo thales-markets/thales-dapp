@@ -87,7 +87,7 @@ const usePointsBreakdownQuery = (
                 return {
                     vaultsVolume: formatCurrencyWithKey(
                         USD_SIGN,
-                        bigNumberFormatter(vaultsPoints) / bigNumberFormatter(vaultsMultiplier)
+                        bigNumberFormatter(vaultsPoints, DECIMALS) / bigNumberFormatter(vaultsMultiplier)
                     ),
                     lpVolume: formatCurrencyWithKey(
                         USD_SIGN,
