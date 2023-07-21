@@ -18,6 +18,7 @@ import DappHeader from './DappHeader';
 import DappFooter from './DappFooter';
 import DappSidebar from './DappSidebar';
 import { ScreenSizeBreakpoint } from '../../enums/ui';
+import StickyBanner from 'components/StickyBanner';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -82,6 +83,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     return (
         <Background id="main-content">
+            <StickyBanner />
             <Wrapper>
                 <DappSidebar />
                 <DappHeader />
@@ -116,6 +118,7 @@ const Wrapper = styled.div`
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     padding: 30px 20px 0px 92px;

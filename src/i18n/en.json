@@ -1473,5 +1473,8 @@
                 "total-rewards": "Total Rewards"
             }
         }
+    },
+    "banner": {
+        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!"
     }
 }
