@@ -68,7 +68,12 @@ const StakingLeaderboard: React.FC = () => {
             return [
                 {
                     id: 'rank',
-                    Header: <HeaderText> {t('thales-token.gamified-staking.rewards.leaderboard.rank')}</HeaderText>,
+                    Header: (
+                        <HeaderText isRank={true}>
+                            {' '}
+                            {t('thales-token.gamified-staking.rewards.leaderboard.rank')}
+                        </HeaderText>
+                    ),
                 },
                 {
                     id: 'address',
@@ -388,8 +393,8 @@ const WalletAddress = styled.a`
     cursor: pointer;
 `;
 
-const HeaderText = styled(TableText)`
-    font-size: 13px;
+const HeaderText = styled(TableText)<{ isRank?: boolean }>`
+    font-size: ${(_props) => (_props?.isRank ? '11px' : '13px')};
 `;
 
 const Rank = styled.div`
