@@ -57,7 +57,8 @@ const useStakersDataLeaderboardQuery = (
                     const tradingPoints = item?.userTradingBasePointsPerRound
                         ? bigNumberFormatter(item.userTradingBasePointsPerRound)
                         : 0;
-                    const userTotalPoints = vaultPoints + lpPoints + tradingPoints;
+                    const userTotalPoints =
+                        (vaultPoints + lpPoints + tradingPoints) * (bigNumberFormatter(item.stakingMultiplier) + 1);
                     globalPoints = globalPoints + userTotalPoints;
 
                     return {

@@ -107,9 +107,10 @@ const usePointsBreakdownQuery = (
                     thalesStaked: formatCurrencyWithKey(THALES_CURRENCY, bigNumberFormatter(stakedBalance)),
                     thalesDivider: formatCurrencyWithKey(THALES_CURRENCY, Number(thalesDivider)),
                     totalPoints: formatCurrency(
-                        bigNumberFormatter(vaultsPoints) +
+                        (bigNumberFormatter(vaultsPoints) +
                             bigNumberFormatter(lpPoints) +
-                            bigNumberFormatter(tradingPoints)
+                            bigNumberFormatter(tradingPoints)) *
+                            (bigNumberFormatter(stakingMultiplier) + 1)
                     ),
                 };
             } catch (e) {
