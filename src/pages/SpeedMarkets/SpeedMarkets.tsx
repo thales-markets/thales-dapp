@@ -21,6 +21,8 @@ import SelectBuyin from './components/SelectBuyin/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime/SelectTime';
 import AmmSpeedTrading from './components/AmmSpeedTrading/AmmSpeedTrading';
+import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import { getIsAppReady } from 'redux/modules/app';
 
 const SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
@@ -30,6 +32,7 @@ const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
 const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
 
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
@@ -37,8 +40,16 @@ const SpeedMarkets: React.FC = () => {
     const [currencyKey, setCurrencyKey] = useState(supportedAssets[0]);
     const [positionType, setPositionType] = useState<Positions.UP | Positions.DOWN | undefined>(undefined);
     const [deltaTimeSec, setDeltaTimeSec] = useState(0);
-    const [strikeTime, setStrikeTime] = useState(0);
+    const [strikeTimeSec, setStrikeTimeSec] = useState(0);
     const [buyinAmount, setBuyinAmount] = useState(0);
+
+    const ammSpeedMarketsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const ammSpeedMarketsData = useMemo(() => {
+        return ammSpeedMarketsQuery.isSuccess ? ammSpeedMarketsQuery.data : null;
+    }, [ammSpeedMarketsQuery]);
 
     const priceConnection = useMemo(() => {
         return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
@@ -66,7 +77,7 @@ const SpeedMarkets: React.FC = () => {
             setCurrencyKey(supportedAssets[0]);
             setPositionType(undefined);
             setDeltaTimeSec(0);
-            setStrikeTime(0);
+            setStrikeTimeSec(0);
             setBuyinAmount(0);
         }
     }, [isWalletConnected]);
@@ -102,9 +113,10 @@ const SpeedMarkets: React.FC = () => {
                             {getStepLabel(3, t('speed-markets.steps.choose-time'))}
                             <SelectTime
                                 selectedDeltaSec={deltaTimeSec}
-                                selectedTime={strikeTime}
+                                selectedExactTime={strikeTimeSec}
                                 onDeltaChange={setDeltaTimeSec}
-                                onTimeChange={setStrikeTime}
+                                onExactTimeChange={setStrikeTimeSec}
+                                ammSpeedMarketsLimits={ammSpeedMarketsData}
                             />
                             {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
                             <SelectBuyin value={buyinAmount} onChange={setBuyinAmount} />
@@ -114,10 +126,11 @@ const SpeedMarkets: React.FC = () => {
                     <AmmSpeedTrading
                         currencyKey={currencyKey}
                         positionType={positionType}
-                        strikeTime={strikeTime}
+                        strikeTimeSec={strikeTimeSec}
                         deltaTimeSec={deltaTimeSec}
                         buyinAmount={buyinAmount}
                         setBuyinAmount={setBuyinAmount}
+                        ammSpeedMarketsLimits={ammSpeedMarketsData}
                     />
                 </Container>
             ) : (
@@ -139,8 +152,8 @@ const ContentWrapper = styled.div`
     display: flex;
     gap: 20px;
     margin-top: 20px;
+    margin-bottom: 15px;
     justify-content: space-between;
-    height: 400px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;

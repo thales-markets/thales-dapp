@@ -10,7 +10,13 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
-import { MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import {
+    MINIMUM_AMM_LIQUIDITY,
+    MIN_SCEW_IMPACT,
+    ONE_HUNDRED_AND_THREE_PERCENT,
+    POSITIONS_TO_SIDE_MAP,
+    SLIPPAGE_PERCENTAGE,
+} from 'constants/options';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
@@ -90,8 +96,6 @@ type AmmTradingProps = {
     showBuyLiquidity?: boolean;
     showWalletBalance?: boolean;
 };
-
-const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
 const AmmTrading: React.FC<AmmTradingProps> = ({
     currencyKey,
@@ -597,7 +601,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         }
 
         setErrorMessageKey(messageKey);
-    }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
+    }, [paidAmount, stableBalance, insufficientLiquidity, isWalletConnected]);
 
     useEffect(() => {
         if (market.address && liquidity > 0) {

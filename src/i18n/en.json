@@ -25,6 +25,8 @@
         "enter-amount": "Enter amount",
         "enter-percentage": "Enter percentage",
         "enter-address": "Enter address",
+        "enter-minutes": "Enter minutes",
+        "enter-hours": "Enter hours",
         "search-placeholder": "Search...",
         "progress": "Please wait...",
         "market": "Market",
@@ -96,8 +98,7 @@
             "max-limit-exceeded": "Amount exceeded the amount available on AMM",
             "user-rejected-tx": "User rejected transaction",
             "enter-percentage": "Enter percentage",
-            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}",
-            "min-buyin": "The minimum buy-in is {{amount}}"
+            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}"
         },
         "enable-wallet-access": {
             "approve": "Approve",
@@ -409,6 +410,13 @@
             "choose-direction": "Choose direction",
             "choose-time": "Choose time",
             "enter-buyin": "Enter buy-in"
+        },
+        "errors": {
+            "min-buyin": "The minimum buy-in is {{minAmount}}",
+            "max-buyin": "The maximum buy-in is {{maxAmount}}",
+            "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
+            "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
+            "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future"
         }
     },
     "thales-token": {
