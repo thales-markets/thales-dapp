@@ -27,9 +27,6 @@ const useStakersDataLeaderboardQuery = (
                     network,
                 });
 
-                console.log('round: ', Number(round));
-                console.log('lastPeriod: ', lastPeriod);
-
                 const stakersOnlyWithSomeStakingAmount =
                     stakers && stakers.filter((staker) => staker.stakedAmount > MIN_STAKING_AMOUNT);
 
