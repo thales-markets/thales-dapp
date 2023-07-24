@@ -13,10 +13,11 @@ const useStakersDataLeaderboardQuery = (
     walletAddress: string,
     network: Network,
     round: number,
+    lastPeriod: boolean,
     options?: UseQueryOptions<StakersWithLeaderboardDataAndGlobalPoints>
 ) => {
     return useQuery<StakersWithLeaderboardDataAndGlobalPoints>(
-        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, network),
+        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, network, round),
         async () => {
             try {
                 const BATCH_SIZE = 800;
@@ -39,7 +40,12 @@ const useStakersDataLeaderboardQuery = (
                         .slice(i, i + BATCH_SIZE)
                         .map((staker) => staker.id);
                     calls.push(
-                        stakingBonusRewardsManager?.getEstimatedCurrentStakersLeaderboardData(stakersAddresses, round)
+                        lastPeriod
+                            ? stakingBonusRewardsManager?.getEstimatedCurrentStakersLeaderboardData(
+                                  stakersAddresses,
+                                  round
+                              )
+                            : stakingBonusRewardsManager?.getStakersLeaderboardData(stakersAddresses, round)
                     );
                 }
 

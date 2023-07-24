@@ -15,12 +15,15 @@ import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import Loader from 'components/Loader/Loader';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
+import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [period, setPeriod] = useState(0);
+    const [currentPeriod, setCurrentPeriod] = useState(0);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(50);
     const theme = useTheme();
@@ -31,14 +34,20 @@ const StakingLeaderboard: React.FC = () => {
         const { stakingThalesContract } = snxJSConnector;
 
         stakingThalesContract?.periodsOfStaking().then((period: number) => {
-            console.log(Number(period));
             setPeriod(period);
+            setCurrentPeriod(period);
         });
     }, []);
 
-    const leaderboardQuery = useStakersDataLeaderboardQuery(walletAddress, networkId, period, {
-        enabled: period > 0,
-    });
+    const leaderboardQuery = useStakersDataLeaderboardQuery(
+        walletAddress,
+        networkId,
+        period,
+        period === currentPeriod,
+        {
+            enabled: period > 0,
+        }
+    );
 
     const stakingData = useMemo(() => {
         if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
@@ -135,6 +144,13 @@ const StakingLeaderboard: React.FC = () => {
         }
     }, [stakingData]);
 
+    useMemo(() => {
+        if (Number(period) > 0 && Number(currentPeriod) > 0) {
+            console.log('refetch');
+            refetchStakingLeaderboardData(walletAddress, networkId, period);
+        }
+    }, [period, currentPeriod]);
+
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -147,6 +163,11 @@ const StakingLeaderboard: React.FC = () => {
         <>
             {leaderboardQuery.isSuccess && (
                 <Wrapper>
+                    <PeriodDropdown
+                        period={Number(period)}
+                        setPeriod={setPeriod}
+                        allPeriods={[Number(currentPeriod), currentPeriod - 1, currentPeriod - 2, currentPeriod - 3]}
+                    ></PeriodDropdown>
                     <BadgeContainer>
                         {highlightCardData && highlightCardData[0] && (
                             <HighlightCard
