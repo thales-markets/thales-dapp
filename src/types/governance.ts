@@ -98,6 +98,7 @@ export type StakersWithLeaderboardDataAndGlobalPoints = {
     leaderboard: StakerWithLeaderboardData[];
     globalPoints: number;
     bonusRewards: number;
+    closingDate: number;
 };
 
 export type EnsNames = Record<string, string | null>;

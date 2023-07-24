@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -45,8 +46,11 @@ const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allP
 const Wrapper = styled.div`
     border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 8px;
-    margin-bottom: 50px;
-    max-width: 350px;
+    min-width: 420px;
+    width: 100%;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        min-width: 350px;
+    }
 `;
 
 const Text = styled.p`

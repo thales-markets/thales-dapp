@@ -639,6 +639,8 @@
                     "points": "Total Points",
                     "multiplier": "Thales Multiplier",
                     "rewards": "Total Rewards",
+                    "text": "Leaderbord for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
+                    "time-left": "Time left in round: ",
                     "expanded-row": {
                         "trading": "Trading",
                         "lp": "LP",

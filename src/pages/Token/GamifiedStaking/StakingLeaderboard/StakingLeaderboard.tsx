@@ -17,6 +17,7 @@ import Loader from 'components/Loader/Loader';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
+import TimeRemaining from 'components/TimeRemaining';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -54,6 +55,13 @@ const StakingLeaderboard: React.FC = () => {
             return leaderboardQuery.data.leaderboard;
         }
         return [];
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+
+    const closingDate = useMemo(() => {
+        if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
+            return leaderboardQuery.data.closingDate;
+        }
+        return Date.now();
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
     const highlightCardData = useMemo(() => {
@@ -162,11 +170,30 @@ const StakingLeaderboard: React.FC = () => {
         <>
             {leaderboardQuery.isSuccess && (
                 <Wrapper>
-                    <PeriodDropdown
-                        period={Number(period)}
-                        setPeriod={setPeriod}
-                        allPeriods={[Number(currentPeriod), currentPeriod - 1, currentPeriod - 2, currentPeriod - 3]}
-                    ></PeriodDropdown>
+                    <HeaderWrapper>
+                        <FlexDivCentered>
+                            <TimeLeft>{t('thales-token.gamified-staking.rewards.leaderboard.time-left')}</TimeLeft>
+                            <TimeRemaining
+                                end={period === currentPeriod ? closingDate : Date.now()}
+                                textColor={theme.textColor.quaternary}
+                                fontSize={22}
+                                showFullCounter
+                                fontWeight={700}
+                            />
+                        </FlexDivCentered>
+                        <LeaderboardText>{t('thales-token.gamified-staking.rewards.leaderboard.text')}</LeaderboardText>
+                        <PeriodDropdown
+                            period={Number(period)}
+                            setPeriod={setPeriod}
+                            allPeriods={[
+                                Number(currentPeriod),
+                                currentPeriod - 1,
+                                currentPeriod - 2,
+                                currentPeriod - 3,
+                            ]}
+                        ></PeriodDropdown>
+                    </HeaderWrapper>
+
                     <BadgeContainer>
                         {highlightCardData && highlightCardData[0] && (
                             <HighlightCard
@@ -361,7 +388,6 @@ const CellStyle: CSSProperties = {
 
 const Wrapper = styled.div`
     width: 100%;
-    margin-top: 50px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
     }
@@ -500,4 +526,33 @@ const Label = styled.span`
     text-transform: capitalize;
     margin-top: 10px;
     margin-bottom: 5px;
+`;
+
+const HeaderWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    margin-top: 16px;
+    gap: 16px;
+`;
+
+const LeaderboardText = styled.p`
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: ${(props) => props.theme.textColor.primary};
+    max-width: 420px;
+    text-align: center;
+`;
+
+const TimeLeft = styled.p`
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 110%;
+    color: ${(props) => props.theme.textColor.quaternary};
+    margin-right: 10px;
 `;

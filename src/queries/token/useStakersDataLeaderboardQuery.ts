@@ -49,7 +49,13 @@ const useStakersDataLeaderboardQuery = (
                     );
                 }
 
-                const bonusRewards = await stakingThalesContract?.periodExtraReward();
+                const [bonusRewards, lastPeriodTimestamp, durationPeriod] = await Promise.all([
+                    stakingThalesContract?.periodExtraReward(),
+                    stakingThalesContract?.lastPeriodTimeStamp(),
+                    stakingThalesContract?.durationPeriod(),
+                ]);
+
+                const closingDate = Number(lastPeriodTimestamp) * 1000 + Number(durationPeriod) * 1000;
 
                 const stakersDataFromContract = await Promise.all(calls);
                 let globalPoints = 0;
@@ -93,10 +99,15 @@ const useStakersDataLeaderboardQuery = (
                     };
                 });
 
-                return { leaderboard: finalDataWithRank, globalPoints, bonusRewards: bigNumberFormatter(bonusRewards) };
+                return {
+                    leaderboard: finalDataWithRank,
+                    globalPoints,
+                    bonusRewards: bigNumberFormatter(bonusRewards),
+                    closingDate,
+                };
             } catch (e) {
                 console.log('Error ', e);
-                return { leaderboard: [], globalPoints: 0, bonusRewards: 0 };
+                return { leaderboard: [], globalPoints: 0, bonusRewards: 0, closingDate: Date.now() };
             }
         },
         {
