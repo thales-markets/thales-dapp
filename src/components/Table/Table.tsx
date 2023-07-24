@@ -396,7 +396,6 @@ const ExpandableRowReact: React.FC<{
                 hover={hoverColor}
             >
                 {row.cells.map((cell, cellIndex: any) => {
-                    console.log(cell);
                     if (cell.column.id === 'rank') return;
                     return (
                         <TableCell
