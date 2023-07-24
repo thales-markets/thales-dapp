@@ -146,7 +146,6 @@ const StakingLeaderboard: React.FC = () => {
 
     useMemo(() => {
         if (Number(period) > 0 && Number(currentPeriod) > 0) {
-            console.log('refetch');
             refetchStakingLeaderboardData(walletAddress, networkId, period);
         }
     }, [period, currentPeriod]);
