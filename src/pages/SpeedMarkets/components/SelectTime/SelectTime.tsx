@@ -204,7 +204,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                 <Time
                     isSelected={!isDeltaSelected}
                     onClick={() => {
-                        setIsDeltaSelected(false);
+                        setIsDeltaSelected(!isDeltaSelected);
+                        setCustomDeltaTime('');
                         onDeltaChange(0);
                     }}
                 >
@@ -214,18 +215,21 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
             {isDeltaSelected ? (
                 <Row>
-                    <NumericInput
-                        value={customDeltaTime}
-                        placeholder={isDeltaMinutesSelected ? t('common.enter-minutes') : t('common.enter-hours')}
-                        onChange={(_, value) => onDeltaTimeInputChange(value)}
-                        showValidation={!!errorMessage}
-                        validationMessage={errorMessage}
-                        margin="0"
-                        inputPadding="5px 40px 5px 10px"
-                    />
+                    <InputWrapper>
+                        <NumericInput
+                            value={customDeltaTime}
+                            placeholder={isDeltaMinutesSelected ? t('common.enter-minutes') : t('common.enter-hours')}
+                            onChange={(_, value) => onDeltaTimeInputChange(value)}
+                            showValidation={!!errorMessage}
+                            validationMessage={errorMessage}
+                            margin="0"
+                            inputPadding="5px 40px 5px 10px"
+                        />
+                    </InputWrapper>
                     <Column>
                         <Button
                             height="13px"
+                            width="50px"
                             fontSize="13px"
                             backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -236,6 +240,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         </Button>
                         <Button
                             height="13px"
+                            width="50px"
                             fontSize="13px"
                             backgroundColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             borderColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -272,23 +277,23 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                     <Column>
                         <Button
                             height="13px"
+                            width="50px"
                             fontSize="13px"
                             backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
                             borderColor={!isAM ? theme.button.background.tertiary : undefined}
                             textColor={!isAM ? theme.button.textColor.tertiary : undefined}
                             onClick={() => setIsAM(true)}
-                            width="50px"
                         >
                             {'AM'}
                         </Button>
                         <Button
                             height="13px"
+                            width="50px"
                             fontSize="13px"
                             backgroundColor={isAM ? theme.button.background.tertiary : undefined}
                             borderColor={isAM ? theme.button.background.tertiary : undefined}
                             textColor={isAM ? theme.button.textColor.tertiary : undefined}
                             onClick={() => setIsAM(false)}
-                            width="50px"
                         >
                             {'PM'}
                         </Button>
@@ -310,6 +315,10 @@ const Row = styled(FlexDivRow)`
 const Column = styled(FlexDivColumnCentered)`
     justify-content: space-between;
     margin-left: 10px;
+`;
+
+const InputWrapper = styled.div`
+    width: 100%;
 `;
 
 const Time = styled(FlexDivCentered)<{ isSelected: boolean }>`

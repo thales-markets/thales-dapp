@@ -47,7 +47,9 @@ const PositionSymbol = styled(FlexDivCentered)`
 const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean }>`
     border: 3px solid
         ${(props) =>
-            props.isSelected === undefined || props.isSelected
+            props.isSelected === undefined
+                ? props.theme.borderColor.primary
+                : props.isSelected
                 ? props.theme.positionColor.up
                 : props.theme.borderColor.primary};
     color: ${(props) =>
@@ -59,7 +61,9 @@ const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean }>`
 const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean }>`
     border: 3px solid
         ${(props) =>
-            props.isSelected === undefined || props.isSelected
+            props.isSelected === undefined
+                ? props.theme.borderColor.primary
+                : props.isSelected
                 ? props.theme.positionColor.down
                 : props.theme.borderColor.primary};
     color: ${(props) =>
