@@ -43,9 +43,9 @@ const StakingLeaderboard: React.FC = () => {
         walletAddress,
         networkId,
         period,
-        period === currentPeriod,
+        Number(period) === Number(currentPeriod),
         {
-            enabled: period > 0,
+            enabled: Number(period) > 0 && Number(currentPeriod) > 0,
         }
     );
 
