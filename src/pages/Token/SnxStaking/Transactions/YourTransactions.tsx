@@ -3,7 +3,11 @@ import React from 'react';
 
 import { TransactionFilterEnum } from 'enums/token';
 
-const filters = [TransactionFilterEnum.ALL, TransactionFilterEnum.CLAIM_RETRO_UNLOCKED];
+const filters = [
+    TransactionFilterEnum.ALL,
+    TransactionFilterEnum.CLAIM_RETRO_UNLOCKED,
+    TransactionFilterEnum.CLAIM_MIGRATED_REWARDS,
+];
 
 const YourTransactions: React.FC<{ gridColumns?: number; gridColumnStart?: number }> = ({
     gridColumns,
