@@ -1,4 +1,3 @@
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -15,42 +14,49 @@ const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allP
     const [open, setOpen] = useState(false);
 
     return (
-        <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
-            <Wrapper onClick={() => setOpen(!open)}>
-                <Container>
-                    <Text>
-                        {t('thales-token.gamified-staking.rewards.leaderboard.round')} {period}
-                    </Text>
-                    <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
-                </Container>
+        <OutsideWrapper>
+            <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
+                <Wrapper onClick={() => setOpen(!open)}>
+                    <Container>
+                        <Text>
+                            {t('thales-token.gamified-staking.rewards.leaderboard.round')} {period}
+                        </Text>
+                        <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                    </Container>
 
-                {open ? (
-                    allPeriods.map((periodLocal, index) => {
-                        if (periodLocal === period) return <></>;
-                        return (
-                            <Container onClick={setPeriod.bind(this, periodLocal)} key={index}>
-                                <Text>
-                                    {t('thales-token.gamified-staking.rewards.leaderboard.round')} {periodLocal}
-                                </Text>
-                            </Container>
-                        );
-                    })
-                ) : (
-                    <></>
-                )}
-            </Wrapper>
-        </OutsideClickHandler>
+                    {open ? (
+                        allPeriods.map((periodLocal, index) => {
+                            if (periodLocal === period) return <></>;
+                            return (
+                                <Container onClick={setPeriod.bind(this, periodLocal)} key={index}>
+                                    <Text>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.round')} {periodLocal}
+                                    </Text>
+                                </Container>
+                            );
+                        })
+                    ) : (
+                        <></>
+                    )}
+                </Wrapper>
+            </OutsideClickHandler>
+        </OutsideWrapper>
     );
 };
 
+const OutsideWrapper = styled.div`
+    position: relative;
+    width: 100%;
+`;
+
 const Wrapper = styled.div`
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    background: ${(props) => props.theme.background.primary};
     border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 8px;
-    min-width: 420px;
     width: 100%;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        min-width: 350px;
-    }
 `;
 
 const Text = styled.p`

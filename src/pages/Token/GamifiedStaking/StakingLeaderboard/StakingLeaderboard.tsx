@@ -533,9 +533,14 @@ const HeaderWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 50px;
-    margin-top: 16px;
     gap: 16px;
+    width: 425px;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100%;
+    }
+    margin: auto;
+    margin-top: 16px;
+    margin-bottom: 90px;
 `;
 
 const LeaderboardText = styled.p`
