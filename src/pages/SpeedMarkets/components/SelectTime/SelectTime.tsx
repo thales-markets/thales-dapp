@@ -25,7 +25,8 @@ type SelectTimeProps = {
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
 };
 
-const deltaTimesHours = [1, 4, 12, 24]; // TODO: check if this could be calculated from the contract
+const deltaTimesMinutes = [5];
+const deltaTimesHours = [1, 12, 24]; // TODO: check if this could be calculated from the contract
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
@@ -155,11 +156,11 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         setErrorMessage('');
     }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t]);
 
-    const onDeltaTimeClickHandler = (deltaHours: number) => {
+    const onDeltaTimeClickHandler = (deltaHours: number, deltaMinutes: number) => {
         setIsDeltaSelected(true);
-        setCustomDeltaTime(deltaHours);
-        setIsDeltaMinutesSelected(false);
-        onDeltaChange(hoursToSeconds(deltaHours));
+        setCustomDeltaTime(deltaHours ? deltaHours : deltaMinutes);
+        setIsDeltaMinutesSelected(deltaHours ? false : true);
+        onDeltaChange(deltaHours ? hoursToSeconds(deltaHours) : minutesToSeconds(deltaMinutes));
         onExactTimeChange(0);
     };
 
@@ -186,11 +187,18 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     return (
         <Container>
             <Row>
+                {deltaTimesMinutes.map((deltaMinutes, index) => (
+                    <DeltaTime
+                        key={'minutes' + index}
+                        isSelected={isDeltaSelected && selectedDeltaSec === minutesToSeconds(deltaMinutes)}
+                        onClick={() => onDeltaTimeClickHandler(0, deltaMinutes)}
+                    >{`${deltaMinutes}m`}</DeltaTime>
+                ))}
                 {deltaTimesHours.map((deltaHours, index) => (
                     <DeltaTime
-                        key={index}
+                        key={'hours' + index}
                         isSelected={isDeltaSelected && selectedDeltaSec === hoursToSeconds(deltaHours)}
-                        onClick={() => onDeltaTimeClickHandler(deltaHours)}
+                        onClick={() => onDeltaTimeClickHandler(deltaHours, 0)}
                     >{`${deltaHours}h`}</DeltaTime>
                 ))}
                 <Time
