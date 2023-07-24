@@ -16,6 +16,7 @@ type TimeRemainingProps = {
     showFullCounter?: boolean;
     zIndex?: number;
     textColor?: string;
+    fontWeight?: number;
 };
 
 const ONE_SECOND_IN_MS = 1000;
@@ -28,6 +29,7 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
     showFullCounter,
     zIndex,
     textColor,
+    fontWeight,
 }) => {
     const now = Date.now();
     const [timeElapsed, setTimeElapsed] = useState(now >= Number(end));
@@ -86,7 +88,14 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
     }, timeInterval);
 
     return (
-        <Container fontSize={fontSize} duration={duration} showBorder={showBorder} zIndex={zIndex} color={textColor}>
+        <Container
+            fontSize={fontSize}
+            duration={duration}
+            showBorder={showBorder}
+            zIndex={zIndex}
+            color={textColor}
+            fontWeight={fontWeight}
+        >
             {timeElapsed
                 ? t('common.time-remaining.ended')
                 : showRemainingInWeeks
@@ -119,8 +128,10 @@ const Container = styled.span<{
     showBorder?: boolean;
     zIndex?: number;
     color?: string;
+    fontWeight?: number;
 }>`
     font-size: ${(props) => props.fontSize || 12}px;
+    font-weight: ${(props) => props.fontWeight || 400};
     @media (max-width: 512px) {
         font-size: ${(props) => props.fontSize || 10}px;
     }
