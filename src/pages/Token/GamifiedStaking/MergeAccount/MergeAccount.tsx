@@ -30,6 +30,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { getMaxGasLimitForNetwork } from 'utils/network';
+import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -43,6 +44,7 @@ const MergeAccount: React.FC = () => {
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
+    const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
@@ -397,6 +399,16 @@ const MergeAccount: React.FC = () => {
                     {t('thales-token.gamified-staking.merge-account.merge-account-description-2')}
                 </SectionDescriptionParagraph>
             </SectionDescription>
+            <SectionWrapper>
+                <SectionContentWrapper>
+                    <SectionTitle>{t('thales-token.gamified-staking.rewards.claim-on-behalf.label-1')}</SectionTitle>
+                    <Info>{t('thales-token.gamified-staking.rewards.claim-on-behalf.label-2')}</Info>
+                    <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.enable')}
+                    </Button>
+                </SectionContentWrapper>
+            </SectionWrapper>
+            {showClaimOnBehalfModal && <ClaimOnBehalfModal onClose={() => setShowClaimOnBehalfModal(false)} />}
             <YourTransactions gridColumns={12} gridColumnStart={1} />
         </>
     );
@@ -491,6 +503,10 @@ const MergeInfo = styled.div`
     line-height: 15px;
     text-align: justify;
     padding: 3px;
+`;
+
+const Info = styled(MergeInfo)`
+    margin-bottom: 20px;
 `;
 
 const AddressesDelegatingToYouContainer = styled.div`
