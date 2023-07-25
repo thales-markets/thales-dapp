@@ -574,7 +574,7 @@
                     "title-3": "Vaults points",
                     "content-3": "Vaults Points are accrued by depositing USD into various Vaults across Thales products (Thales Markets Vaults and Overtime Markets Vaults). For each 1 USD deposited into a Vault, you get 0.25 points. This means that your total points from Vaults deposits are equal by <highlight>multiplying the sum of your total Vaults USD deposits with 0.25.</highlight>",
                     "title-4": "THALES Staked Multiplier",
-                    "content-4": "The amount of THALES you have staked determines the multiplier for your total points. The more THALES you stake, the higher the final multiplier of your total points.<br><br><highlight>ThalesMultiplier = 1 + UserThalesStaked /{StakingDivider}</highlight><br><br>Thales multiplier minimum value is 1 and maximum value is 5.",
+                    "content-4": "The amount of THALES you have staked determines the multiplier for your total points. The more THALES you stake, the higher the final multiplier of your total points.<br><br><highlight>THALESStakedMultiplier = 1 + UserThalesStaked /{StakingDivider}</highlight><br><br>THALES Staked Multiplier minimum value is 1 and maximum value is 5.",
                     "title-5": "Total Points",
                     "content-5": "Your final points that determines your share of {{bonusRewards}} THALES Gamified Staking Bonus rewards is equal to the sum of all your accrued points multiplied by the THALES Staked Multiplier. <br><br><highlight>Total Points = (Trading Volume points + AMM LP points + Vaults Points) x THALES Staked Multiplier</highlight>"
                 },
@@ -626,7 +626,7 @@
                 "base-rewards": {
                     "title": "Base staking Rewards",
                     "balance": "Your staked balance",
-                    "total": "Total Thales staked",
+                    "total": "Total THALES staked",
                     "share": "Your staked share",
                     "rewards": "Your base rewards",
                     "stake-more": "Stake more"
@@ -637,7 +637,7 @@
                     "rank": "Rank",
                     "address": "Address",
                     "points": "Total Points",
-                    "multiplier": "Thales Multiplier",
+                    "multiplier": "THALES Multiplier",
                     "rewards": "Total Rewards",
                     "text": "Leaderbord for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
                     "time-left": "Time left in round: ",
@@ -650,7 +650,7 @@
                     "round": "Round"
                 },
 
-                "base-label": "Thales staking base rewards"
+                "base-label": "THALES staking base rewards"
             },
             "vesting": {
                 "section-title": "Vesting",

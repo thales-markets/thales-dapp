@@ -74,9 +74,9 @@ const Container = styled.div<{ selected?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 8px;
     &:hover {
         background: ${(props) => props.theme.background.secondary};
-        border-radius: 8px;
     }
     background: ${(props) => (props.selected ? props.theme.background.secondary : '')};
     cursor: pointer;

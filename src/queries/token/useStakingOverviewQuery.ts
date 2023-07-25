@@ -2,12 +2,12 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { Network } from 'enums/network';
 
 export type OverviewData = {
-    bonusRewards: string;
-    fixedPeriodReward: string | number;
+    period: number;
+    bonusRewards: number;
+    fixedPeriodReward: number;
 };
 
 const useStakingOverviewQuery = (
@@ -28,8 +28,8 @@ const useStakingOverviewQuery = (
 
                 return {
                     period: Number(period),
-                    bonusRewards: formatCurrencyWithKey('', bigNumberFormatter(bonusRewards)),
-                    fixedPeriodReward: formatCurrency(bigNumberFormatter(fixedPeriodReward)),
+                    bonusRewards: bigNumberFormatter(bonusRewards),
+                    fixedPeriodReward: bigNumberFormatter(fixedPeriodReward),
                 };
             } catch (e) {
                 console.log(e);

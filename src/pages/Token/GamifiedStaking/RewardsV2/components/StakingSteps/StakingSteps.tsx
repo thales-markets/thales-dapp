@@ -7,6 +7,7 @@ import { RootState } from 'redux/rootReducer';
 import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { formatCurrency } from 'utils/formatters/number';
 
 const StakingSteps: React.FC = () => {
     const { t } = useTranslation();
@@ -106,7 +107,7 @@ const StakingSteps: React.FC = () => {
                                     br: <br />,
                                 }}
                                 values={{
-                                    bonusRewards: stakingData?.bonusRewards,
+                                    bonusRewards: formatCurrency(stakingData?.bonusRewards ?? 0),
                                 }}
                             />
                         </CardText>
