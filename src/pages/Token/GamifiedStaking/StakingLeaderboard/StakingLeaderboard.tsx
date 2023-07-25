@@ -18,6 +18,7 @@ import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import { StakersWithLeaderboardData } from 'types/governance';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -299,31 +300,7 @@ const StakingLeaderboard: React.FC = () => {
                         rowsPerPage={rowsPerPage}
                         isLoading={leaderboardQuery.isLoading}
                         stickyRow={
-                            stickyRowInfo.length > 0 ? (
-                                <StickyRow>
-                                    <Rank>
-                                        <TableText>{stickyRowInfo[0].rank}</TableText>
-                                    </Rank>
-                                    <StickyCell first={true}>
-                                        <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
-                                    </StickyCell>
-                                    <StickyCell>
-                                        <TableText>
-                                            {formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}
-                                        </TableText>
-                                    </StickyCell>
-                                    <StickyCell hide={true}>
-                                        <TableText>
-                                            {formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}
-                                        </TableText>
-                                    </StickyCell>
-                                    <StickyCell last={true}>
-                                        <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
-                                    </StickyCell>
-                                </StickyRow>
-                            ) : (
-                                <></>
-                            )
+                            stickyRowInfo.length > 0 ? <StickyRowComponent stickyRowInfo={stickyRowInfo} /> : <></>
                         }
                     ></Table>
                     <PaginationWrapper
@@ -343,6 +320,81 @@ const StakingLeaderboard: React.FC = () => {
                 </LoaderContainer>
             )}
         </Wrapper>
+    );
+};
+
+const StickyRowComponent: React.FC<{ stickyRowInfo: StakersWithLeaderboardData }> = ({ stickyRowInfo }) => {
+    const { t } = useTranslation();
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <StickyRow onClick={setOpen.bind(this, !open)}>
+                <Rank>
+                    <TableText>{stickyRowInfo[0].rank}</TableText>
+                </Rank>
+                <StickyCell first={true}>
+                    <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
+                </StickyCell>
+                <StickyCell>
+                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}</TableText>
+                </StickyCell>
+                <StickyCell hide={true}>
+                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}</TableText>
+                </StickyCell>
+                <StickyCell last={true}>
+                    <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
+                </StickyCell>
+            </StickyRow>
+            {open && (
+                <StickyExpandedRow>
+                    <FlexWrapper>
+                        <FlexDivCentered>
+                            <Icon className="sidebar-icon icon--markets" />
+                            <TableText>
+                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading')}
+                            </TableText>
+                        </FlexDivCentered>
+                        <FlexWrapper>
+                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
+                            <TableText>
+                                {formatCurrencyWithKey('', stickyRowInfo[0].userTradingBasePointsPerRound, 2)}
+                            </TableText>
+                        </FlexWrapper>
+                    </FlexWrapper>
+
+                    <FlexWrapper>
+                        <FlexDivCentered>
+                            <Icon className="sidebar-icon icon--liquidity-pool" />
+                            <TableText>
+                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
+                            </TableText>
+                        </FlexDivCentered>
+                        <FlexWrapper>
+                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
+                            <TableText>
+                                {formatCurrencyWithKey('', stickyRowInfo[0].userLPBasePointsPerRound, 2)}
+                            </TableText>
+                        </FlexWrapper>
+                    </FlexWrapper>
+
+                    <FlexWrapper>
+                        <FlexDivCentered>
+                            <Icon className="sidebar-icon icon--vaults" />
+                            <TableText>
+                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults')}
+                            </TableText>
+                        </FlexDivCentered>
+                        <FlexWrapper>
+                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
+                            <TableText>
+                                {formatCurrencyWithKey('', stickyRowInfo[0].userVaultBasePointsPerRound, 2)}
+                            </TableText>
+                        </FlexWrapper>
+                    </FlexWrapper>
+                </StickyExpandedRow>
+            )}
+        </>
     );
 };
 
@@ -404,7 +456,6 @@ const Wrapper = styled.div`
 `;
 
 const ExpandedRow = styled.div`
-    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -412,6 +463,15 @@ const ExpandedRow = styled.div`
     padding: 20px 0;
     margin: auto;
     width: calc(100% - 30px);
+`;
+
+const StickyExpandedRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    margin-left: auto;
+    width: calc(100% - 55px);
 `;
 
 const BadgeContainer = styled.div`
@@ -502,6 +562,7 @@ const StickyRow = styled.div`
     display: flex;
     height: 50px;
     margin-bottom: 10px;
+    cursor: pointer;
 
     ${TableText} {
         color: ${(props) => props.theme.button.textColor.primary};
