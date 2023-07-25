@@ -202,7 +202,6 @@ const QUERY_KEYS = {
             networkId,
             period,
         ],
-        SpecificStakerLeaderboardData: (walletAddress: string) => ['specific', 'leaderboard-data', walletAddress],
     },
     TaleOfThales: {
         NFTCollections: (walletAddress: string, networkId: Network) => [
