@@ -149,7 +149,7 @@ const TokenPage: React.FC = () => {
                 </FlexDivColumn>
             </Container>
             <TokenNavFooter
-                selectedTab={selectedTab}
+                tabSections={tabSections}
                 setSelectedTab={setSelectedTab}
                 selectedSection={selectedSection}
                 setSelectedSection={setSelectedSection}
