@@ -45,7 +45,6 @@ import { useTheme } from 'styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 import { getDefaultCollateral } from 'utils/currency';
 
 type MaturityProps = {
@@ -107,13 +106,9 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx = (isRangedMarket
-                ? await BOMContractWithSigner.exercisePositions(providerOptions)
-                : await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
+                ? await BOMContractWithSigner.exercisePositions()
+                : await BOMContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {

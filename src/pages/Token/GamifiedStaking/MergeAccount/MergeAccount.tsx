@@ -29,7 +29,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -151,9 +150,7 @@ const MergeAccount: React.FC = () => {
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
-            const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress), {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress));
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -178,10 +175,7 @@ const MergeAccount: React.FC = () => {
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
             const tx = await stakingThalesContractWithSigner.delegateVolume(
-                getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress),
-                {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                }
+                getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress)
             );
             const txResult = await tx.wait();
 

@@ -61,9 +61,3 @@ export const getDefaultDecimalsForNetwork = (networkId: Network) => {
     if (networkId == Network.Arbitrum || networkId == Network['POLYGON-MAINNET']) return 6;
     return 18;
 };
-
-const MAX_L2_GAS_LIMIT = 29000000;
-export const getMaxGasLimitForNetwork = (networkId: Network) => {
-    if (networkId == Network['Mainnet-Ovm']) return MAX_L2_GAS_LIMIT;
-    return null;
-};
