@@ -58,11 +58,11 @@ const StakingLeaderboard: React.FC = () => {
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
     const closingDate = useMemo(() => {
-        if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
+        if (Number(period) === Number(currentPeriod) && leaderboardQuery.isSuccess && leaderboardQuery.data) {
             return leaderboardQuery.data.closingDate;
         }
         return Date.now();
-    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data, period, currentPeriod]);
 
     const highlightCardData = useMemo(() => {
         if (stakingData) {
@@ -174,7 +174,7 @@ const StakingLeaderboard: React.FC = () => {
                         <FlexDivCentered>
                             <TimeLeft>{t('thales-token.gamified-staking.rewards.leaderboard.time-left')}</TimeLeft>
                             <TimeRemaining
-                                end={period === currentPeriod ? closingDate : Date.now()}
+                                end={closingDate}
                                 textColor={theme.textColor.quaternary}
                                 fontSize={22}
                                 showFullCounter
