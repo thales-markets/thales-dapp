@@ -23,6 +23,7 @@ import SelectTime from './components/SelectTime/SelectTime';
 import AmmSpeedTrading from './components/AmmSpeedTrading/AmmSpeedTrading';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import { getIsAppReady } from 'redux/modules/app';
+import OpenPositions from 'pages/Trade/components/OpenPositions';
 
 const SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
@@ -132,6 +133,7 @@ const SpeedMarkets: React.FC = () => {
                         setBuyinAmount={setBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsData}
                     />
+                    {isWalletConnected && <OpenPositions isSpeedMarkets />}
                 </Container>
             ) : (
                 <UnsupportedNetworkWrapper>

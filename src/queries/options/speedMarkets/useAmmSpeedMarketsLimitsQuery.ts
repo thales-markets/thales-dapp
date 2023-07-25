@@ -9,6 +9,8 @@ export type AmmSpeedMarketsLimits = {
     minBuyinAmount: number;
     minimalTimeToMaturity: number;
     maximalTimeToMaturity: number;
+    lpFee: number;
+    safeBoxImpact: number;
 };
 
 const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOptions<AmmSpeedMarketsLimits>) => {
@@ -20,6 +22,8 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                 maxBuyinAmount: 0,
                 minimalTimeToMaturity: 0,
                 maximalTimeToMaturity: 0,
+                lpFee: 0,
+                safeBoxImpact: 0,
             };
             const { speedMarketsAMMContract } = snxJSConnector;
             if (speedMarketsAMMContract) {
@@ -28,17 +32,23 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                     maxBuyinAmount,
                     minimalTimeToMaturity,
                     maximalTimeToMaturity,
+                    lpFee,
+                    safeBoxImpact,
                 ] = await Promise.all([
                     speedMarketsAMMContract.minBuyinAmount(),
                     speedMarketsAMMContract.maxBuyinAmount(),
                     speedMarketsAMMContract.minimalTimeToMaturity(),
                     speedMarketsAMMContract.maximalTimeToMaturity(),
+                    speedMarketsAMMContract.lpFee(),
+                    speedMarketsAMMContract.safeBoxImpact(),
                 ]);
 
                 ammSpeedMarkets.minBuyinAmount = bigNumberFormatter(minBuyinAmount);
                 ammSpeedMarkets.maxBuyinAmount = bigNumberFormatter(maxBuyinAmount);
-                ammSpeedMarkets.minimalTimeToMaturity = bigNumberFormatter(minimalTimeToMaturity, 0);
-                ammSpeedMarkets.maximalTimeToMaturity = bigNumberFormatter(maximalTimeToMaturity, 0);
+                ammSpeedMarkets.minimalTimeToMaturity = Number(minimalTimeToMaturity);
+                ammSpeedMarkets.maximalTimeToMaturity = Number(maximalTimeToMaturity);
+                ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
+                ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
             }
 
             return ammSpeedMarkets;

@@ -29,3 +29,5 @@ export const PYTH_CONTRACT_ADDRESS = {
     [Network.OptimismGoerli]: '0xff1a0f4744e8582DF1aE09D5611b887B6a12925C',
     [Network.Arbitrum]: '0xff1a0f4744e8582DF1aE09D5611b887B6a12925C',
 };
+
+export const PYTH_CURRENCY_DECIMALS = 8;

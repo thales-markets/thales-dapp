@@ -14,8 +14,13 @@ import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
+import useUserSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserSpeedMarketsDataQuery';
 
-const OpenPositions: React.FC = () => {
+type OpenPositionsProps = {
+    isSpeedMarkets?: boolean;
+};
+
+const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -24,15 +29,25 @@ const OpenPositions: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isSpeedMarkets,
     });
 
     const livePositions = useMemo(() => (positionsQuery.isSuccess && positionsQuery.data ? positionsQuery.data : []), [
         positionsQuery,
     ]);
 
-    const noPositions = livePositions.length === 0;
-    const positions = noPositions ? dummyPositions : livePositions;
+    const userSpeedMarketsDataQuery = useUserSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+    });
+
+    const userSpeedMarketsData = useMemo(
+        () =>
+            userSpeedMarketsDataQuery.isSuccess && userSpeedMarketsDataQuery.data ? userSpeedMarketsDataQuery.data : [],
+        [userSpeedMarketsDataQuery]
+    );
+
+    const noPositions = isSpeedMarkets ? userSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userSpeedMarketsData : livePositions;
 
     return (
         <Wrapper>
@@ -45,7 +60,11 @@ const OpenPositions: React.FC = () => {
                 <>
                     <PositionsWrapper noPositions={noPositions}>
                         {positions.map((position, index) => (
-                            <OpenPosition position={position} key={`position${index}`} />
+                            <OpenPosition
+                                position={position}
+                                isSpeedMarkets={isSpeedMarkets}
+                                key={`position${index}`}
+                            />
                         ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}

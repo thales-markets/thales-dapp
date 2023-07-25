@@ -417,6 +417,10 @@
             "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
             "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
             "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future"
+        },
+        "user-positions": {
+            "resolve": "Resolve",
+            "resolve-progress": "Resolving..."
         }
     },
     "thales-token": {

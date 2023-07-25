@@ -48,9 +48,10 @@ const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
+    isSpeedMarkets?: boolean;
 };
 
-const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction }) => {
+const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction, isSpeedMarkets }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
@@ -277,7 +278,28 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         }
     };
 
+    const handleResolve = async () => {};
+
     const getButton = () => {
+        if (isSpeedMarkets) {
+            if (position.maturityDate > Date.now()) {
+                return;
+            } else {
+                return (
+                    <Button
+                        {...getDefaultButtonProps(isMobile)}
+                        disabled={isSubmitting}
+                        additionalStyles={additionalButtonStyle}
+                        backgroundColor={theme.button.textColor.quaternary}
+                        onClick={() => handleResolve()}
+                    >
+                        {isSubmitting
+                            ? t(`speed-markets.user-positions.resolve-progress`)
+                            : t('speed-markets.user-positions.resolve')}
+                    </Button>
+                );
+            }
+        }
         if (position.claimable && position.amount > 0) {
             return (
                 <Button

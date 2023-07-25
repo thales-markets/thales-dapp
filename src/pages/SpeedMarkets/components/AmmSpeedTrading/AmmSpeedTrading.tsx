@@ -11,7 +11,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
-import { ONE_HUNDRED_AND_THREE_PERCENT, POSITIONS_TO_SIDE_MAP } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -35,6 +35,7 @@ import { stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrency, roundNumberToDecimals } from 'utils/formatters/number';
 import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 
@@ -70,6 +71,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const selectedCollateralIndex = 0; // useSelector((state: RootState) => getSelectedCollateralIndex(state)); TODO: currently not supported
 
     const [paidAmount, setPaidAmount] = useState<number | string>(buyinAmount ? buyinAmount : '');
+    const [totalPaidAmount, setTotalPaidAmount] = useState(0);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessageKey, setErrorMessageKey] = useState('');
@@ -120,6 +122,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             setPaidAmount(buyinAmount);
         }
     }, [buyinAmount]);
+
+    useEffect(() => {
+        if (ammSpeedMarketsLimits) {
+            setTotalPaidAmount(
+                (1 + ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact) * Number(paidAmount)
+            );
+        }
+    }, [paidAmount]);
 
     // Reset inputs
     useEffect(() => {
@@ -265,6 +275,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
+                    refetchUserSpeedMarkets(networkId, walletAddress);
                 }
             } else {
                 await delay(800);
@@ -360,8 +371,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
             {openApprovalModal && (
                 <ApprovalModal
-                    // add three percent to approval amount to take into account price changes
-                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(paidAmount))}
+                    defaultAmount={roundNumberToDecimals(totalPaidAmount)}
                     tokenSymbol={approvalCurrency}
                     isNonStable={false}
                     isAllowing={isAllowing}

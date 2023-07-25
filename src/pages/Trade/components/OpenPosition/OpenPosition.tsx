@@ -20,9 +20,10 @@ import Tooltip from 'components/Tooltip';
 
 type OpenPositionProps = {
     position: UserLivePositions;
+    isSpeedMarkets?: boolean;
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
@@ -55,30 +56,32 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <MyPositionAction position={position} />
-            <SPAAnchor
-                href={
-                    isRanged
-                        ? buildRangeMarketLink(position.market, position.side)
-                        : buildOptionsMarketLink(position.market, position.side)
-                }
-            >
-                {isMobile ? (
-                    <TextLink>
-                        {t('profile.go-to-market')}{' '}
-                        <IconLink
-                            className="icon icon--right"
-                            fontSize="10px"
-                            marginTop="-2px"
-                            color={theme.link.textColor.primary}
-                        />
-                    </TextLink>
-                ) : (
-                    <Tooltip overlay={t('common.tooltip.open-market')}>
-                        <IconLink className="icon icon--right" />
-                    </Tooltip>
-                )}
-            </SPAAnchor>
+            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} />
+            {!isSpeedMarkets && (
+                <SPAAnchor
+                    href={
+                        isRanged
+                            ? buildRangeMarketLink(position.market, position.side)
+                            : buildOptionsMarketLink(position.market, position.side)
+                    }
+                >
+                    {isMobile ? (
+                        <TextLink>
+                            {t('profile.go-to-market')}{' '}
+                            <IconLink
+                                className="icon icon--right"
+                                fontSize="10px"
+                                marginTop="-2px"
+                                color={theme.link.textColor.primary}
+                            />
+                        </TextLink>
+                    ) : (
+                        <Tooltip overlay={t('common.tooltip.open-market')}>
+                            <IconLink className="icon icon--right" />
+                        </Tooltip>
+                    )}
+                </SPAAnchor>
+            )}
         </Position>
     );
 };

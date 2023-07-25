@@ -41,3 +41,5 @@ export const POSITION_BALANCE_THRESHOLD = 0.01;
 export const MARKET_DURATION_IN_DAYS = 90;
 
 export const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
+
+export const SPEED_MARKETS_QUOTE = 2;
