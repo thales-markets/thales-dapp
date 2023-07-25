@@ -19,7 +19,7 @@ const StakingStepsMobile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             }}
             mobileStyle={{
                 container: {
-                    maxHeight: 'auto',
+                    height: '100vh',
                     paddingTop: '40px',
                     overflow: 'scroll',
                 },
