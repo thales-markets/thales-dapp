@@ -13,11 +13,11 @@ import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
 import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import Loader from 'components/Loader/Loader';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -167,9 +167,9 @@ const StakingLeaderboard: React.FC = () => {
     };
 
     return (
-        <>
+        <Wrapper>
             {leaderboardQuery.isSuccess && (
-                <Wrapper>
+                <>
                     <HeaderWrapper>
                         <FlexDivCentered>
                             <TimeLeft>{t('thales-token.gamified-staking.rewards.leaderboard.time-left')}</TimeLeft>
@@ -335,14 +335,24 @@ const StakingLeaderboard: React.FC = () => {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Wrapper>
+                </>
             )}
-            {leaderboardQuery.isLoading && <Loader />}
-        </>
+            {leaderboardQuery.isLoading && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
+        </Wrapper>
     );
 };
 
 export default StakingLeaderboard;
+
+const LoaderContainer = styled.div`
+    width: 100%;
+    height: 600px;
+    position: relative;
+`;
 
 const PaginationWrapper = styled(TablePagination)`
     border: none !important;
