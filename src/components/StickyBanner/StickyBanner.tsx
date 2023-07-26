@@ -1,4 +1,5 @@
 import ROUTES from 'constants/routes';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -26,6 +27,9 @@ const Container = styled(FlexDiv)`
     z-index: 102;
     cursor: pointer;
     text-align: center;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
 `;
 
 const Label = styled.span`
