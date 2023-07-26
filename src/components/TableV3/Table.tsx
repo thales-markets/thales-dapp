@@ -49,6 +49,7 @@ type TableProps = {
     stickyRow?: JSX.Element;
     showCurrentPrice?: boolean;
     selectedRowIndex?: number;
+    hoverColor?: string;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -70,6 +71,7 @@ const Table: React.FC<TableProps> = ({
     stickyRow,
     showCurrentPrice,
     selectedRowIndex,
+    hoverColor,
 }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -221,6 +223,7 @@ const Table: React.FC<TableProps> = ({
                                             tableRowCellStyles={tableRowCellStyles}
                                             isVisible={false}
                                             tableRowStyles={tableRowStyles}
+                                            hoverColor={hoverColor}
                                         >
                                             {expandedRow(row)}
                                         </ExpandableRowReact>
@@ -236,6 +239,7 @@ const Table: React.FC<TableProps> = ({
                                                         onClick={
                                                             onTableRowClick ? () => onTableRowClick(row) : undefined
                                                         }
+                                                        hover={hoverColor}
                                                     >
                                                         {row.cells.map((cell, cellIndex: any) => {
                                                             return (
@@ -259,6 +263,7 @@ const Table: React.FC<TableProps> = ({
                                                     {...row.getRowProps()}
                                                     cursorPointer={!!onTableRowClick}
                                                     onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
+                                                    hover={hoverColor}
                                                 >
                                                     {row.cells.map((cell, cellIndex: any) => {
                                                         return (
@@ -344,7 +349,8 @@ const ExpandableRowReact: React.FC<{
     tableRowStyles: React.CSSProperties;
     row: Row<any>;
     tableRowCellStyles: React.CSSProperties;
-}> = ({ isVisible, tableRowStyles, row, tableRowCellStyles, children }) => {
+    hoverColor?: string;
+}> = ({ isVisible, tableRowStyles, row, tableRowCellStyles, children, hoverColor }) => {
     const [hidden, setHidden] = useState<boolean>(!isVisible);
 
     return (
@@ -354,6 +360,7 @@ const ExpandableRowReact: React.FC<{
                 {...row.getRowProps()}
                 cursorPointer={true}
                 onClick={setHidden.bind(this, !hidden)}
+                hover={hoverColor}
             >
                 {row.cells.map((cell, cellIndex: any) => (
                     <TableCell
@@ -366,7 +373,6 @@ const ExpandableRowReact: React.FC<{
                         {cell.render('Cell')}
                     </TableCell>
                 ))}
-                <ArrowIcon className={hidden ? 'icon icon--arrow-down' : 'icon icon--arrow-up'} />
             </TableRow>
             <ExpandableRow style={{ display: hidden ? 'none' : 'block' }}>{children}</ExpandableRow>
         </>
@@ -388,7 +394,7 @@ const TableBody = styled.div`
     width: 100%;
 `;
 
-const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string; selected?: boolean }>`
+const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string; selected?: boolean; hover?: string }>`
     cursor: ${(props) => (props.cursorPointer ? 'pointer' : 'default')};
     min-height: 24px;
     height: 35px;
@@ -400,7 +406,7 @@ const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string;
     background-color: ${(props) => (props.selected ? props.theme.background.quaternary : 'transparent')};
     &:hover {
         background-color: ${(props) =>
-            props.selected ? props.theme.background.quaternary : props.theme.background.secondary};
+            props.selected ? props.theme.background.quaternary : props.hover ?? 'transparent'};
     }
 
     justify-content: space-around;
@@ -493,13 +499,6 @@ const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
 
 const ExpandableRow = styled.div`
     display: block;
-`;
-
-const ArrowIcon = styled.i`
-    font-size: 9px;
-    display: flex;
-    align-items: center;
-    margin-right: 6px;
 `;
 
 const DirectedArrowIcon = styled.i<{ top: string }>`

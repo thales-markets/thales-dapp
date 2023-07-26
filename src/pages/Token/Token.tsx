@@ -34,17 +34,24 @@ const TokenPage: React.FC = () => {
     const tabSections = [
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.STAKING,
-            title: t('thales-token.gamified-staking.staking.section-title'),
-            description: t('thales-token.gamified-staking.staking.section-description'),
+            id: TokenTabSectionIdEnum.REWARDS,
+            title: t('thales-token.gamified-staking.rewards.section-title'),
+            warning: t('thales-token.gamified-staking.rewards.section-warning'),
+            description: '',
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.REWARDS,
-            title: t('thales-token.gamified-staking.rewards.section-title'),
-            description: t('thales-token.gamified-staking.rewards.section-description'),
-            warning: t('thales-token.gamified-staking.rewards.section-warning'),
+            id: TokenTabSectionIdEnum.LEADERBOARD,
+            title: t('thales-token.gamified-staking.rewards.leaderboard.section-title'),
+            description: '',
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.STAKING,
+            title: t('thales-token.gamified-staking.staking.section-title'),
+            description: t('thales-token.gamified-staking.staking.section-description'),
             isButton: true,
         },
         {
@@ -119,7 +126,7 @@ const TokenPage: React.FC = () => {
         const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
         const section = tabSections.find((section) => section.id === paramActiveButtonId);
         setSelectedSection(section?.id);
-    }, [selectedTab]);
+    }, [selectedTab, location]);
 
     return (
         <>
@@ -142,7 +149,7 @@ const TokenPage: React.FC = () => {
                 </FlexDivColumn>
             </Container>
             <TokenNavFooter
-                selectedTab={selectedTab}
+                tabSections={tabSections}
                 setSelectedTab={setSelectedTab}
                 selectedSection={selectedSection}
                 setSelectedSection={setSelectedSection}
@@ -166,7 +173,6 @@ const Container = styled.div`
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
-    overflow: hidden;
 `;
 
 export default TokenPage;

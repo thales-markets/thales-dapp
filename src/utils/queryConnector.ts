@@ -130,4 +130,10 @@ export const refetchLiquidityPoolData = (walletAddress: string, networkId: Netwo
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId));
 };
 
+export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, networkId, period)
+    );
+};
+
 export default queryConnector;

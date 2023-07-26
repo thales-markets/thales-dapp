@@ -134,6 +134,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                     columns={columns}
                     selectedRowIndex={rowIndex}
                     showCurrentPrice={!isRangedMarkets}
+                    hoverColor={theme.background.secondary}
                 />
             )}
         </Wrapper>
