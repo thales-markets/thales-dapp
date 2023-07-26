@@ -31,6 +31,8 @@ export const LINKS = {
             'https://thalesmarket.io/governance/thalesgov.eth/0xa925cddfe73b58911c3a9308a0e9d70dff21e31e4d428247ac084e8cffa4eb4f',
         TIP125:
             'https://thalesmarket.io/governance/thalesgov.eth/0xd37a8547ae32607f4f7eba2624bfc9ac2fb223408dd12e4e51158e45a3b52e0e',
+        TIP135:
+            'https://thalesmarket.io/governance/thalesgov.eth/0xa325f4a86ec37dd81b29e7dd1b509a27317cb0c67f814ec989e3671717ee1777',
         ClaimOnBehalfGuide:
             'https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide/automate-staking-rewards-claiming-using-gelato-guide',
         OpRewardsPage: 'https://thalesmarket.io/op-rewards',
