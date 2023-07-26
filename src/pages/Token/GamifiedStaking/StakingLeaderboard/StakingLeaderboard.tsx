@@ -1,5 +1,5 @@
 import { TablePagination } from '@material-ui/core';
-import Table from 'components/Table/Table';
+import Table from 'components/Table';
 import useStakersDataLeaderboardQuery, {
     StakersWithLeaderboardData,
 } from 'queries/token/useStakersDataLeaderboardQuery';
@@ -13,10 +13,10 @@ import { FlexDivCentered } from 'styles/common';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
-import HighlightCard from './components/HighlightCard/HighlightCard';
+import HighlightCard from './components/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
+import PeriodDropdown from './components/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';

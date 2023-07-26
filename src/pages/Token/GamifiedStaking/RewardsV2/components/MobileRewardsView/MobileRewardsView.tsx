@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import ClaimRewards from '../ClaimRewards/ClaimRewards';
+import ClaimRewards from '../ClaimRewards';
 import StakingOverview from '../StakingOverview';
-import PointsBreakdown from '../PointsBreakdown/PointsBreakdown';
+import PointsBreakdown from '../PointsBreakdown';
 import StakingStepsMobile from '../StakingSteps/StakingStepsMobile';
 import BaseRewards from '../BaseRewards';
 

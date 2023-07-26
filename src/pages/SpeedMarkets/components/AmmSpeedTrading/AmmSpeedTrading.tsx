@@ -408,7 +408,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     );
 };
 
-export const Container = styled(FlexDivRow)`
+const Container = styled(FlexDivRow)`
     height: 78px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;

@@ -1,13 +1,5 @@
-import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
-import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
-import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
-import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-import { FunctionComponent, SVGProps } from 'react';
-import { hexStripZeros } from '@ethersproject/bytes';
-import { BigNumber } from 'ethers';
 import { Network } from 'enums/network';
-import { hasEthereumInjected } from 'utils/network';
+import { OptimismNetwork } from 'types/network';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
@@ -43,19 +35,6 @@ export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     42: 69,
 };
 
-type OptimismNetwork = {
-    chainId: string;
-    chainName: string;
-    rpcUrls: string[];
-    blockExplorerUrls: string[];
-    iconUrls: string[];
-    fraudProofWindow?: number;
-    nativeCurrency: {
-        symbol: string;
-        decimals: number;
-    };
-};
-
 export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
     [Network.OptimismMainnet]: {
         chainId: '0xA',
@@ -70,7 +49,7 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
-const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
+export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
@@ -84,7 +63,7 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
-const BSC_NETWORK: Record<number, OptimismNetwork> = {
+export const BSC_NETWORK: Record<number, OptimismNetwork> = {
     [Network.BSC]: {
         chainId: '0x38',
         chainName: 'BSC',
@@ -98,7 +77,7 @@ const BSC_NETWORK: Record<number, OptimismNetwork> = {
     },
 };
 
-const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
+export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
@@ -109,93 +88,5 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
             symbol: 'ETH',
             decimals: 18,
         },
-    },
-};
-
-type DropdownNetwork = {
-    name: string;
-    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => Promise<void>;
-    order: number;
-};
-
-const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction, chainId?: string): Promise<void> => {
-    if (hasEthereumInjected()) {
-        try {
-            await (window.ethereum as any).request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: network?.chainId || chainId }],
-            });
-            callback && callback();
-        } catch (switchError: any) {
-            if (network && switchError.code === 4902) {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_addEthereumChain',
-                        params: [network],
-                    });
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: network.chainId }],
-                    });
-                    callback && callback();
-                } catch (addError) {
-                    console.log(addError);
-                }
-            } else {
-                console.log(switchError);
-            }
-        }
-    } else {
-        callback && callback();
-    }
-};
-
-export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
-    [Network.OptimismMainnet]: {
-        name: 'Optimism',
-        icon: OpLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? 10;
-            const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
-            await changeNetwork(optimismNetworkParms, callback);
-        },
-        order: 1,
-    },
-    [Network.PolygonMainnet]: {
-        name: 'Polygon',
-        icon: PolygonLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const polygonNetworkParams = POLYGON_NETWORKS[networkId];
-            await changeNetwork(polygonNetworkParams, callback);
-        },
-        order: 3,
-    },
-    [Network.Mainnet]: {
-        name: 'Mainnet',
-        icon: EthereumLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
-            await changeNetwork(undefined, callback, formattedChainId);
-        },
-        order: 5,
-    },
-    [Network.BSC]: {
-        name: 'BNBChain',
-        icon: BSCLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const bscNetworkParams = BSC_NETWORK[networkId];
-            await changeNetwork(bscNetworkParams, callback);
-        },
-        order: 4,
-    },
-    [Network.Arbitrum]: {
-        name: 'Arbitrum',
-        icon: ArbitrumLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const arbNetworkParams = ARBITRUM_NETWORK[networkId];
-            await changeNetwork(arbNetworkParams, callback);
-        },
-        order: 2,
     },
 };

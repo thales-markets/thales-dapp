@@ -6,7 +6,7 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { buildHref, navigateTo } from 'utils/routes';
-import { SUPPORTED_NETWORK_IDS_MAP } from '../../constants/network';
+import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
 import GridLayout from './components/GridLayout';
