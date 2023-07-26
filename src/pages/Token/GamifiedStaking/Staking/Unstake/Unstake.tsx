@@ -31,7 +31,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -116,9 +115,7 @@ const Unstake: React.FC = () => {
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
-            const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.startUnstake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -148,7 +145,7 @@ const Unstake: React.FC = () => {
         try {
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.unstake({ gasLimit: getMaxGasLimitForNetwork(networkId) });
+            const tx = await stakingThalesContractWithSigner.unstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -176,9 +173,7 @@ const Unstake: React.FC = () => {
         try {
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.cancelUnstake({
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.cancelUnstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

@@ -26,7 +26,6 @@ import {
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 import { refetchTokenQueries } from 'utils/queryConnector';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const ClaimRewards: React.FC = () => {
@@ -131,9 +130,7 @@ const ClaimRewards: React.FC = () => {
             try {
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = (await stakingThalesContractWithSigner.claimReward({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await stakingThalesContractWithSigner.claimReward()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
