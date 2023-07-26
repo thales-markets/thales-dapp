@@ -34,7 +34,7 @@ import {
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
 import { getIsMobile } from 'redux/modules/ui';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -108,15 +108,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
 
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -192,10 +185,6 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const parsedTotal = stableCoinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 false,
                 false,
@@ -206,8 +195,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 parsedTotal,
                 parsedSlippage,
                 undefined,
-                '',
-                providerOptions
+                ''
             );
 
             const txResult = await tx.wait();
@@ -253,12 +241,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
             try {
-                const providerOptions = {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                };
                 const tx = (isRangedMarket
-                    ? await marketContractWithSigner.exercisePositions(providerOptions)
-                    : await marketContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
+                    ? await marketContractWithSigner.exercisePositions()
+                    : await marketContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
 
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {

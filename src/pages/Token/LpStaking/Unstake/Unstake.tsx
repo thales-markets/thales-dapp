@@ -22,7 +22,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 type Properties = {
     staked: number;
@@ -51,9 +50,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             setIsUnstaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
-            const tx = await lpStakingRewardsContractWithSigner.withdraw(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await lpStakingRewardsContractWithSigner.withdraw(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

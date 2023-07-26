@@ -28,7 +28,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -88,9 +87,7 @@ const Vesting: React.FC = () => {
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
 
-            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            })) as ethers.ContractTransaction;
+            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable)) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
