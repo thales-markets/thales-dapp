@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, getIsPolygon, isNetworkSupported, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance, getIsPolygon, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
@@ -156,9 +156,12 @@ const CreateMarket: React.FC = () => {
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await BOMMContractWithSigner.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint
+                )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - (isPolygon ? 2 : 1)];
@@ -185,13 +188,10 @@ const CreateMarket: React.FC = () => {
 
             try {
                 setIsAllowing(true);
-                const providerOptions = {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                };
+
                 const tx = (await collateralContract?.approve(
                     binaryOptionsMarketManagerContract?.address as any,
-                    approveAmount,
-                    providerOptions
+                    approveAmount
                 )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 await tx.wait();

@@ -72,16 +72,7 @@ export const prepareTransactionForAMM = async (
     parsedTotal: BigNumber,
     parsedSlippage: BigNumber,
     collateral: string | undefined,
-    referral: string | null,
-    providerOptions:
-        | {
-              gasLimit: number | null;
-              gasPrice: BigNumber;
-          }
-        | {
-              gasLimit: number | null;
-              gasPrice?: undefined;
-          }
+    referral: string | null
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
 
@@ -93,36 +84,26 @@ export const prepareTransactionForAMM = async (
             parsedTotal,
             parsedSlippage,
             collateral,
-            referral ? referral : ZERO_ADDRESS,
-            providerOptions
+            referral ? referral : ZERO_ADDRESS
         )) as ethers.ContractTransaction;
     } else {
         tx = (isBuy
             ? !referral
-                ? await ammContractWithSigner.buyFromAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage,
-                      providerOptions
-                  )
+                ? await ammContractWithSigner.buyFromAMM(marketAddress, side, parsedAmount, parsedTotal, parsedSlippage)
                 : await ammContractWithSigner.buyFromAMMWithReferrer(
                       marketAddress,
                       side,
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      referral,
-                      providerOptions
+                      referral
                   )
             : await ammContractWithSigner.sellToAMM(
                   marketAddress,
                   side,
                   parsedAmount,
                   parsedTotal,
-                  parsedSlippage,
-                  providerOptions
+                  parsedSlippage
               )) as ethers.ContractTransaction;
     }
 

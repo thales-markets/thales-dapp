@@ -55,7 +55,7 @@ import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
 import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance, getMaxGasLimitForNetwork, getDefaultDecimalsForNetwork } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
 import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
@@ -242,9 +242,10 @@ const Vault: React.FC<VaultProps> = (props) => {
             try {
                 const collateralWithSigner = collateral.connect(signer);
 
-                const tx = (await collateralWithSigner.approve(vaultAddress, approveAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await collateralWithSigner.approve(
+                    vaultAddress,
+                    approveAmount
+                )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
 
@@ -283,9 +284,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     getDefaultDecimalsForNetwork(networkId)
                 );
 
-                const tx = await ammVaultContractWithSigner.deposit(parsedAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await ammVaultContractWithSigner.deposit(parsedAmount);
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
@@ -313,9 +312,7 @@ const Vault: React.FC<VaultProps> = (props) => {
             try {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
-                const tx = await ammVaultContractWithSigner.withdrawalRequest({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await ammVaultContractWithSigner.withdrawalRequest();
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
