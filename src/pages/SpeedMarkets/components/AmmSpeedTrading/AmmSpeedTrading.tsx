@@ -39,7 +39,7 @@ import {
     formatPercentage,
     roundNumberToDecimals,
 } from 'utils/formatters/number';
-import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -224,15 +224,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
 
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {

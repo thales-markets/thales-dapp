@@ -132,6 +132,7 @@ export const refetchLiquidityPoolData = (walletAddress: string, networkId: Netwo
 
 export const refetchUserSpeedMarkets = (networkId: Network, walletAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress));
+};
 
 export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
     queryConnector.queryClient.invalidateQueries(
