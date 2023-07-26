@@ -28,7 +28,6 @@ import { ethers } from 'ethers';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import { getMaxGasLimitForNetwork } from 'utils/network';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Tooltip from 'rc-tooltip';
 
 const ClaimRewards: React.FC = () => {
     const { t } = useTranslation();
