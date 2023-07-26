@@ -3,7 +3,7 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
 import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
+import { Tip135Link } from 'pages/Token/styled-components';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -16,8 +16,8 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { getIsOVM } from 'utils/network';
+import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
+
 import { Line } from '../../styled-components';
 import Stake from './Stake';
 import YourTransactions from './Transactions';
@@ -64,8 +64,6 @@ const Staking: React.FC = () => {
     const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
-
-    const isL2 = getIsOVM(networkId);
 
     useEffect(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
@@ -118,11 +116,7 @@ const Staking: React.FC = () => {
         [baseRewardsPool, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
-    const bonusAPR = useMemo(() => (APR * maxBonusRewardsPercentage) / 100, [APR]);
-    const APY = useMemo(() => aprToApy(APR), [APR]);
     const formattedAPY = useMemo(() => getNumberLabel(aprToApy(APR)), [APR]);
-    const apyWithBonus = useMemo(() => aprToApy(APR + bonusAPR), [APR, bonusAPR]);
-    const formattedBonusAPY = useMemo(() => getNumberLabel(apyWithBonus - APY), [APY, apyWithBonus]);
 
     const totalThalesStaked = useMemo(
         () => totalStakedAmount + totalEscrowedRewards - totalEscrowBalanceNotIncludedInStaking,
@@ -144,9 +138,6 @@ const Staking: React.FC = () => {
     };
 
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
-    const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
-        estimatedRewards,
-    ]);
 
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
@@ -160,19 +151,13 @@ const Staking: React.FC = () => {
                         <SectionValueContent>
                             {formattedAPY}%
                             <BonusInfo>
-                                {' + ' + formattedBonusAPY}%
                                 <Tooltip
                                     overlay={
                                         <Trans
                                             i18nKey={
-                                                isL2
-                                                    ? 'thales-token.gamified-staking.staking.bonus-apy-tooltip'
-                                                    : 'thales-token.gamified-staking.staking.bonus-apy-tooltip-arb'
+                                                'thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip'
                                             }
-                                            components={[
-                                                <span key="1" />,
-                                                isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,
-                                            ]}
+                                            components={[<span key="1" />, <Tip135Link key="2" />]}
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
@@ -256,15 +241,11 @@ const Staking: React.FC = () => {
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
                             <BonusInfo>
-                                {' + ' + formatCurrency(bonusEstimatedRewards)}
                                 <Tooltip
                                     overlay={
                                         <Trans
                                             i18nKey="thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip"
-                                            components={[
-                                                <span key="1" />,
-                                                isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,
-                                            ]}
+                                            components={[<span key="1" />, <Tip135Link key="2" />]}
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }

@@ -233,6 +233,14 @@ export const Tip125Link: React.FC = () => {
     );
 };
 
+export const Tip135Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP135}>
+            TIP-135
+        </TooltipLink>
+    );
+};
+
 export const ClaimOnBehalfGuideLink: React.FC = () => {
     const { t } = useTranslation();
     return (
