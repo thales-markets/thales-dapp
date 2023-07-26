@@ -538,7 +538,7 @@
                     "total-label": "Total claimable",
                     "your-rewards": "Your current claimable rewards",
                     "gamified-rewards": "Gamified staking rewards",
-                    "base-rewards": "Base rewards as Thales Staker",
+                    "base-rewards": "Base rewards as THALES Staker",
                     "claim": "Claim rewards",
                     "claiming": "Claiming",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
@@ -601,7 +601,7 @@
                     "lp-multiplier": "LP multiplier",
                     "vaults-multiplier": "Vaults multiplier",
                     "points": "Points",
-                    "your-thales": "Your Thales staked",
+                    "your-thales": "Your THALES staked",
                     "divider": "Staking divider",
                     "your-current-points": "YOUR CURRENT TOTAL POINTS"
                 },
@@ -639,7 +639,7 @@
                     "points": "Total Points",
                     "multiplier": "THALES Multiplier",
                     "rewards": "Total Rewards",
-                    "text": "Leaderbord for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
+                    "text": "Leaderboard for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
                     "time-left": "Time left in round: ",
                     "expanded-row": {
                         "trading": "Trading",
