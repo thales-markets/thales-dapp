@@ -44,13 +44,13 @@ const SpeedMarkets: React.FC = () => {
     const [strikeTimeSec, setStrikeTimeSec] = useState(0);
     const [buyinAmount, setBuyinAmount] = useState(0);
 
-    const ammSpeedMarketsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
+    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
         enabled: isAppReady,
     });
 
-    const ammSpeedMarketsData = useMemo(() => {
-        return ammSpeedMarketsQuery.isSuccess ? ammSpeedMarketsQuery.data : null;
-    }, [ammSpeedMarketsQuery]);
+    const ammSpeedMarketsLimitsData = useMemo(() => {
+        return ammSpeedMarketsLimitsQuery.isSuccess ? ammSpeedMarketsLimitsQuery.data : null;
+    }, [ammSpeedMarketsLimitsQuery]);
 
     const priceConnection = useMemo(() => {
         return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
@@ -108,6 +108,7 @@ const SpeedMarkets: React.FC = () => {
                                 setAsset={setCurrencyKey}
                                 allAssets={supportedAssets}
                                 showAssetIcon={true}
+                                type="center"
                             />
                             {getStepLabel(2, t('speed-markets.steps.choose-direction'))}
                             <SelectPosition selected={positionType} onChange={setPositionType} />
@@ -117,7 +118,7 @@ const SpeedMarkets: React.FC = () => {
                                 selectedExactTime={strikeTimeSec}
                                 onDeltaChange={setDeltaTimeSec}
                                 onExactTimeChange={setStrikeTimeSec}
-                                ammSpeedMarketsLimits={ammSpeedMarketsData}
+                                ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                             />
                             {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
                             <SelectBuyin value={buyinAmount} onChange={setBuyinAmount} />
@@ -131,9 +132,11 @@ const SpeedMarkets: React.FC = () => {
                         deltaTimeSec={deltaTimeSec}
                         buyinAmount={buyinAmount}
                         setBuyinAmount={setBuyinAmount}
-                        ammSpeedMarketsLimits={ammSpeedMarketsData}
+                        ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                     />
-                    {isWalletConnected && <OpenPositions isSpeedMarkets />}
+                    {isWalletConnected && (
+                        <OpenPositions isSpeedMarkets maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec} />
+                    )}
                 </Container>
             ) : (
                 <UnsupportedNetworkWrapper>

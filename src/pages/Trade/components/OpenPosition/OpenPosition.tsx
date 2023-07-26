@@ -21,9 +21,10 @@ import Tooltip from 'components/Tooltip';
 type OpenPositionProps = {
     position: UserLivePositions;
     isSpeedMarkets?: boolean;
+    maxPriceDelaySec?: number;
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
@@ -56,7 +57,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets })
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} />
+            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
             {!isSpeedMarkets && (
                 <SPAAnchor
                     href={

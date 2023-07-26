@@ -11,6 +11,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
+import { USD_SIGN } from 'constants/currency';
 import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { Positions } from 'enums/options';
@@ -32,7 +33,12 @@ import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCollateral, getCollaterals, getDefaultCollateral, getStableCoinBalance } from 'utils/currency';
 import { stableCoinParser } from 'utils/formatters/ethers';
-import { formatCurrency, roundNumberToDecimals } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatPercentage,
+    roundNumberToDecimals,
+} from 'utils/formatters/number';
 import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchUserSpeedMarkets } from 'utils/queryConnector';
@@ -75,6 +81,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessageKey, setErrorMessageKey] = useState('');
+    const [isCapBreached, setIsCapBreached] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
@@ -85,7 +92,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         !paidAmount ||
         isSubmitting ||
         !hasAllowance ||
-        !!errorMessageKey;
+        !!errorMessageKey ||
+        isCapBreached;
 
     const approvalCurrency = getCollateral(networkId, selectedCollateralIndex);
     const collateralAddress = useMemo(() => {
@@ -113,23 +121,23 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId));
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedCollateralIndex, isMultiCollateralSupported]);
 
-    const priceConnection = useMemo(() => {
-        return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
-    }, [networkId]);
+    const totalFee = useMemo(() => {
+        if (ammSpeedMarketsLimits) {
+            return ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact;
+        }
+    }, [ammSpeedMarketsLimits]);
+
+    useEffect(() => {
+        if (totalFee) {
+            setTotalPaidAmount((1 + totalFee) * Number(paidAmount));
+        }
+    }, [paidAmount, totalFee]);
 
     useEffect(() => {
         if (buyinAmount > 0) {
             setPaidAmount(buyinAmount);
         }
     }, [buyinAmount]);
-
-    useEffect(() => {
-        if (ammSpeedMarketsLimits) {
-            setTotalPaidAmount(
-                (1 + ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact) * Number(paidAmount)
-            );
-        }
-    }, [paidAmount]);
 
     // Reset inputs
     useEffect(() => {
@@ -139,6 +147,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     }, [isWalletConnected]);
 
+    // Input field validations
     useEffect(() => {
         let messageKey = '';
 
@@ -157,6 +166,16 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
         setErrorMessageKey(messageKey);
     }, [ammSpeedMarketsLimits, paidAmount, stableBalance, isWalletConnected]);
+
+    // Submit validations
+    useEffect(() => {
+        if (Number(paidAmount) > 0) {
+            const riskData = ammSpeedMarketsLimits?.risksPerAsset.filter((data) => data.currency === currencyKey)[0];
+            if (riskData) {
+                setIsCapBreached(riskData?.current + Number(paidAmount) >= riskData?.max);
+            }
+        }
+    }, [ammSpeedMarketsLimits, currencyKey, paidAmount]);
 
     // Check allowance
     useEffect(() => {
@@ -234,6 +253,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         setIsSubmitting(true);
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
+        const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
+            timeout: CONNECTION_TIMEOUT_MS,
+        });
+
         try {
             const { speedMarketsAMMContract, signer } = snxJSConnector as any;
             if (speedMarketsAMMContract) {
@@ -293,6 +316,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+        }
+        if (isCapBreached) {
+            return <Button disabled={true}>{t('speed-markets.errors.cap-breach')}</Button>;
         }
         if (!hasAllowance) {
             return (
@@ -366,6 +392,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         currencyLabel={!isMultiCollateralSupported ? getDefaultCollateral(networkId) : undefined}
                     />
                     {getSubmitButton()}
+                    <PaymentInfo>
+                        {t('speed-markets.total-pay', {
+                            buyinAmount: formatCurrencyWithSign(USD_SIGN, buyinAmount),
+                            fee: totalFee ? formatPercentage(totalFee, 0) : '...',
+                        })}
+                    </PaymentInfo>
                 </ColumnSpaceBetween>
             </FinalizeTrade>
 
@@ -417,6 +449,15 @@ const ColumnSpaceBetween = styled(FlexDivColumn)`
     width: 100%;
     height: 100%;
     justify-content: space-between;
+`;
+
+const PaymentInfo = styled.span`
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 90%;
+    text-align: center;
+    color: ${(props) => props.theme.textColor.secondary};
+    margin-top: 6px;
 `;
 
 export default AmmSpeedTrading;

@@ -14,13 +14,14 @@ import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
-import useUserSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserSpeedMarketsDataQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
+    maxPriceDelaySec?: number;
 };
 
-const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets }) => {
+const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceDelaySec }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -36,36 +37,43 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets }) => {
         positionsQuery,
     ]);
 
-    const userSpeedMarketsDataQuery = useUserSpeedMarketsDataQuery(networkId, walletAddress, {
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected && isSpeedMarkets,
     });
 
-    const userSpeedMarketsData = useMemo(
+    const userActiveSpeedMarketsData = useMemo(
         () =>
-            userSpeedMarketsDataQuery.isSuccess && userSpeedMarketsDataQuery.data ? userSpeedMarketsDataQuery.data : [],
-        [userSpeedMarketsDataQuery]
+            userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
+                ? userActiveSpeedMarketsDataQuery.data.filter(
+                      (marketData) => marketData.maturityDate > Date.now() || marketData.claimable
+                  )
+                : [],
+        [userActiveSpeedMarketsDataQuery]
     );
 
-    const noPositions = isSpeedMarkets ? userSpeedMarketsData.length === 0 : livePositions.length === 0;
-    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userSpeedMarketsData : livePositions;
+    const noPositions = isSpeedMarkets ? userActiveSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userActiveSpeedMarketsData : livePositions;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-positions')}</Title>
-            {positionsQuery.isLoading ? (
+            {userActiveSpeedMarketsDataQuery.isLoading || positionsQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {positions.map((position, index) => (
-                            <OpenPosition
-                                position={position}
-                                isSpeedMarkets={isSpeedMarkets}
-                                key={`position${index}`}
-                            />
-                        ))}
+                        {positions
+                            .sort((a, b) => a.maturityDate - b.maturityDate)
+                            .map((position, index) => (
+                                <OpenPosition
+                                    position={position}
+                                    isSpeedMarkets={isSpeedMarkets}
+                                    key={`position${index}`}
+                                    maxPriceDelaySec={maxPriceDelaySec}
+                                />
+                            ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>

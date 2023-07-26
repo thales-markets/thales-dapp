@@ -47,30 +47,32 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     const isValidExactTime = useCallback(
         (exactTime: Date | undefined) => {
-            if (
-                exactTime &&
-                !isDeltaSelected &&
-                ammSpeedMarketsLimits &&
-                exactTime.getTime() - Date.now() < secondsToMilliseconds(ammSpeedMarketsLimits?.minimalTimeToMaturity)
-            ) {
-                const minimalTimeHours = secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0);
-                setErrorMessage(
-                    t('speed-markets.errors.min-maturity-date', {
-                        minTime:
-                            minimalTimeHours === 0
-                                ? secondsToMinutes(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0)
-                                : minimalTimeHours,
-                        timeUnit:
-                            minimalTimeHours === 0
-                                ? t('common.time-remaining.minutes')
-                                : t('common.time-remaining.hours'),
-                    })
-                );
-                return false;
-            }
+            if (!isDeltaSelected) {
+                if (
+                    exactTime &&
+                    ammSpeedMarketsLimits &&
+                    exactTime.getTime() - Date.now() <
+                        secondsToMilliseconds(ammSpeedMarketsLimits?.minimalTimeToMaturity)
+                ) {
+                    const minimalTimeHours = secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0);
+                    setErrorMessage(
+                        t('speed-markets.errors.min-maturity-date', {
+                            minTime:
+                                minimalTimeHours === 0
+                                    ? secondsToMinutes(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0)
+                                    : minimalTimeHours,
+                            timeUnit:
+                                minimalTimeHours === 0
+                                    ? t('common.time-remaining.minutes')
+                                    : t('common.time-remaining.hours'),
+                        })
+                    );
+                    return false;
+                }
 
-            setErrorMessage('');
-            return true;
+                setErrorMessage('');
+                return true;
+            }
         },
         [ammSpeedMarketsLimits, isDeltaSelected, t]
     );

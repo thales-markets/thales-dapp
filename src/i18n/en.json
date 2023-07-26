@@ -416,12 +416,16 @@
             "max-buyin": "The maximum buy-in is {{maxAmount}}",
             "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
             "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
-            "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future"
+            "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future",
+            "cap-breach": "OI cap breached"
         },
         "user-positions": {
-            "resolve": "Resolve",
-            "resolve-progress": "Resolving..."
-        }
+            "confirmation-message": "Positions successfully claimed",
+            "errors": {
+                "price-stale": "Can't resolve market with stale price"
+            }
+        },
+        "total-pay": "Total to pay {{buyinAmount}} + {{fee}} fee"
     },
     "thales-token": {
         "title": "Thales Token",
