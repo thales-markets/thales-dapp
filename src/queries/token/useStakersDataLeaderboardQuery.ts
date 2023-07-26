@@ -4,10 +4,32 @@ import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
-import { Stakers, StakersWithLeaderboardData, StakersWithLeaderboardDataAndGlobalPoints } from 'types/governance';
+import { Staker, Stakers } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
+
+type StakerContractLeaderboardData = {
+    rank?: number;
+    share?: number;
+    stakingMultiplier: number;
+    userLPBasePointsPerRound: number;
+    userRoundBonusPoints: number;
+    userTradingBasePointsPerRound: number;
+    userVaultBasePointsPerRound: number;
+    estimatedRewards?: string;
+};
+
+type StakerWithLeaderboardData = Staker & StakerContractLeaderboardData;
+
+type StakersWithLeaderboardDataAndGlobalPoints = {
+    leaderboard: StakerWithLeaderboardData[];
+    globalPoints: number;
+    bonusRewards: number;
+    closingDate: number;
+};
+
+export type StakersWithLeaderboardData = StakerWithLeaderboardData[];
 
 const useStakersDataLeaderboardQuery = (
     walletAddress: string,

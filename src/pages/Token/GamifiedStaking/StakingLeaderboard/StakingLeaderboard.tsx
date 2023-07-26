@@ -1,6 +1,8 @@
 import { TablePagination } from '@material-ui/core';
 import Table from 'components/Table/Table';
-import useStakersDataLeaderboardQuery from 'queries/token/useStakersDataLeaderboardQuery';
+import useStakersDataLeaderboardQuery, {
+    StakersWithLeaderboardData,
+} from 'queries/token/useStakersDataLeaderboardQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -18,7 +20,6 @@ import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import { StakersWithLeaderboardData } from 'types/governance';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
