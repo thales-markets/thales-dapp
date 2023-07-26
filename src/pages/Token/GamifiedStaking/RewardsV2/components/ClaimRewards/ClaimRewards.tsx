@@ -159,53 +159,42 @@ const ClaimRewards: React.FC = () => {
     const getClaimButton = () => {
         if (!isWalletConnected) {
             return (
-                <ButtonWrapperTooltip>
-                    <Button additionalStyles={ButtonStyle} onClick={openConnectModal}>
-                        {t('common.wallet.connect-your-wallet')}
-                    </Button>
-                </ButtonWrapperTooltip>
+                <Button additionalStyles={ButtonStyle} onClick={openConnectModal}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
             );
         }
 
         if (isClaimed) {
             return (
-                <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.claimed-message')}>
-                    <ButtonWrapperTooltip>
-                        <Button additionalStyles={ButtonStyle} disabled={true}>
-                            {t('thales-token.gamified-staking.rewards.claim.claim')}
-                        </Button>
-                    </ButtonWrapperTooltip>
-                </Tooltip>
+                <Button additionalStyles={ButtonStyle} disabled={true}>
+                    {t('thales-token.gamified-staking.rewards.claim.claim')}
+                </Button>
             );
         }
 
         if (isPaused) {
             return (
-                <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.paused-message')}>
-                    <ButtonWrapperTooltip>
-                        <Button additionalStyles={ButtonStyle} disabled={true}>
-                            {t('thales-token.gamified-staking.rewards.claim.claim')}
-                        </Button>
-                    </ButtonWrapperTooltip>
-                </Tooltip>
+                <Button additionalStyles={ButtonStyle} disabled={true}>
+                    {t('thales-token.gamified-staking.rewards.claim.claim')}
+                </Button>
             );
         }
 
         return (
-            <Tooltip overlay={t('thales-token.gamified-staking.rewards.claim.button-tooltip')}>
-                <ButtonWrapperTooltip>
-                    <Button
-                        additionalStyles={ButtonStyle}
-                        disabled={!isClaimAvailable}
-                        onClick={handleClaimStakingRewards}
-                    >
-                        {isClaiming
-                            ? t('thales-token.gamified-staking.rewards.claim.claiming')
-                            : t('thales-token.gamified-staking.rewards.claim.claim')}
-                    </Button>
-                </ButtonWrapperTooltip>
-            </Tooltip>
+            <Button additionalStyles={ButtonStyle} disabled={!isClaimAvailable} onClick={handleClaimStakingRewards}>
+                {isClaiming
+                    ? t('thales-token.gamified-staking.rewards.claim.claiming')
+                    : t('thales-token.gamified-staking.rewards.claim.claim')}
+            </Button>
         );
+    };
+
+    const getClaimMessage = () => {
+        if (isClaimed)
+            return <ClaimMessage>{t('thales-token.gamified-staking.rewards.claim.claimed-message')}</ClaimMessage>;
+        if (isPaused)
+            return <ClaimMessage>{t('thales-token.gamified-staking.rewards.claim.paused-message')}</ClaimMessage>;
     };
 
     return (
@@ -226,6 +215,7 @@ const ClaimRewards: React.FC = () => {
                 </Value>
             </WrapperBorder>
             <ClaimSection>
+                {getClaimMessage()}
                 <FlexDiv>
                     <ColumnDiv>
                         <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
@@ -345,5 +335,16 @@ const ButtonStyle: CSSProperties = {
     fontWeight: 700,
     height: 32,
 };
+
+const ClaimMessage = styled.span`
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: ${(props) => props.theme.warning.textColor.primary};
+    width: 100%;
+    text-align: center;
+`;
 
 export default ClaimRewards;
