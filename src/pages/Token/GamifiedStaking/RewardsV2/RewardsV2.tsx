@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
+import { formatCurrency } from 'utils/formatters/number';
 
 const RewardsV2: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -51,7 +52,7 @@ const RewardsV2: React.FC = () => {
                                 highlight: <HighlightText />,
                             }}
                             values={{
-                                fixedPeriodReward: stakingData?.fixedPeriodReward,
+                                fixedPeriodReward: formatCurrency(stakingData?.fixedPeriodReward ?? 0),
                             }}
                         />
                     </Text>
@@ -63,7 +64,7 @@ const RewardsV2: React.FC = () => {
                                 highlight: <HighlightText />,
                             }}
                             values={{
-                                bonusRewards: stakingData?.bonusRewards,
+                                bonusRewards: formatCurrency(stakingData?.bonusRewards ?? 0),
                             }}
                         />
                     </Text>

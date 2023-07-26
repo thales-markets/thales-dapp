@@ -543,7 +543,7 @@ const ThalesMultiplier = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding: 20px;
+    padding: 32px 20px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }

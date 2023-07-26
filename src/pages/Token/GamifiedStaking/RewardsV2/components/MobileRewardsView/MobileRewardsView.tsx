@@ -15,7 +15,7 @@ const MobileRewardsView: React.FC = () => {
     return (
         <Wrapper>
             <Container>
-                <Header>{'Thales Staking Rewards'}</Header>
+                <Header>{t('thales-token.gamified-staking.rewards.section-title-staking')}</Header>
                 <LearnMoreLabel onClick={() => setLearnMoreActive(!learnMoreActive)}>
                     {t('landing-page.learn-more')}
                 </LearnMoreLabel>

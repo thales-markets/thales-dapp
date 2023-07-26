@@ -17,18 +17,14 @@ const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allP
         <OutsideWrapper>
             <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
                 <Wrapper onClick={() => setOpen(!open)}>
-                    <Container>
-                        <Text>
-                            {t('thales-token.gamified-staking.rewards.leaderboard.round')} {period}
-                        </Text>
-                        <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
-                    </Container>
-
                     {open ? (
                         allPeriods.map((periodLocal, index) => {
-                            if (periodLocal === period) return <></>;
                             return (
-                                <Container onClick={setPeriod.bind(this, periodLocal)} key={index}>
+                                <Container
+                                    selected={periodLocal === period}
+                                    onClick={setPeriod.bind(this, periodLocal)}
+                                    key={index}
+                                >
                                     <Text>
                                         {t('thales-token.gamified-staking.rewards.leaderboard.round')} {periodLocal}
                                     </Text>
@@ -36,7 +32,12 @@ const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allP
                             );
                         })
                     ) : (
-                        <></>
+                        <Container>
+                            <Text>
+                                {t('thales-token.gamified-staking.rewards.leaderboard.round')} {period}
+                            </Text>
+                            <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                        </Container>
                     )}
                 </Wrapper>
             </OutsideClickHandler>
@@ -67,16 +68,17 @@ const Text = styled.p`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ selected?: boolean }>`
     height: 36px;
     padding: 16px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 8px;
     &:hover {
         background: ${(props) => props.theme.background.secondary};
-        border-radius: 8px;
     }
+    background: ${(props) => (props.selected ? props.theme.background.secondary : '')};
     cursor: pointer;
 `;
 
