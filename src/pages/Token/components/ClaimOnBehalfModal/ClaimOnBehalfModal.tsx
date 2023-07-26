@@ -23,7 +23,6 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -73,10 +72,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 
             const tx = await stakingThalesContractWithSigner.setCanClaimOnBehalf(
                 getAddress(account),
-                !canClaimOnBehalf,
-                {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                }
+                !canClaimOnBehalf
             );
             const txResult = await tx.wait();
 

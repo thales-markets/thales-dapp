@@ -7,6 +7,7 @@ export enum TokenTabEnum {
 
 export enum TokenTabSectionIdEnum {
     STAKING = 'staking',
+    LEADERBOARD = 'leaderboard',
     REWARDS = 'rewards',
     VESTING = 'vesting',
     MERGE_ACCOUNT = 'account-preferences',

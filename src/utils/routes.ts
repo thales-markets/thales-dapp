@@ -1,3 +1,4 @@
+import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
 import { SpaceKey } from 'enums/governance';
 import { createBrowserHistory, createHashHistory } from 'history';
@@ -38,4 +39,5 @@ export const buildVaultLink = (vaultId: string, excludeSlash = false) =>
 export const buildLiquidityPoolLink = (excludeSlash = false) =>
     `${ifIpfsDeployment && !excludeSlash ? '#' : ''}${ROUTES.Options.LiquidityPool}`;
 
+export const buildOvertimeVaultsLink = (vaultId: string) => `${LINKS.SportMarkets}#/vaults/${vaultId}`;
 export { history };

@@ -68,7 +68,7 @@ import {
     roundNumberToDecimals,
     truncToDecimals,
 } from 'utils/formatters/number';
-import { checkAllowance, getIsMultiCollateralSupported, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { convertPriceImpactToBonus } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
@@ -373,15 +373,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
 
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -510,10 +503,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 isBuyWithNonDefaultCollateral,
                 isBuy,
@@ -524,8 +513,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 parsedTotal,
                 parsedSlippage,
                 collateralAddress,
-                referral,
-                providerOptions
+                referral
             );
 
             const txResult = await tx.wait();

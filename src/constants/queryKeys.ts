@@ -132,6 +132,27 @@ const QUERY_KEYS = {
         Trades: (walletAddress: string, networkId: Network) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
+        StakingOverview: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'overview',
+            walletAddress,
+            networkId,
+        ],
+        PointsBreakdown: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'breakdown',
+            walletAddress,
+            networkId,
+        ],
+        UserBaseRewards: (walletAddress: string, networkId: Network) => [
+            'token',
+            'staking',
+            'baserewards',
+            walletAddress,
+            networkId,
+        ],
         StakingData: (networkId: Network) => ['token', 'staking', 'data', networkId],
         UserStakingData: (walletAddress: string, networkId: Network) => [
             'token',
@@ -182,6 +203,13 @@ const QUERY_KEYS = {
         ],
         Gelato: () => ['token', 'gelato'],
         Info: (networkId: Network) => ['token', 'info', networkId],
+        StakersLeaderboardData: (walletAddress: string, networkId: Network, period: number) => [
+            'token',
+            'stakersLeaderboard',
+            walletAddress,
+            networkId,
+            period,
+        ],
     },
     TaleOfThales: {
         NFTCollections: (walletAddress: string, networkId: Network) => [

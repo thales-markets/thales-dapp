@@ -10,7 +10,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
@@ -93,9 +93,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await lpStakingRewardsContractWithSigner.stake(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await lpStakingRewardsContractWithSigner.stake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -122,9 +120,10 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         const addressToApprove = lpStakingRewardsContract.address;
         try {
             setIsAllowingStake(true);
-            const tx = (await gelatoContractWithSigner.approve(addressToApprove, approveAmount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            })) as ethers.ContractTransaction;
+            const tx = (await gelatoContractWithSigner.approve(
+                addressToApprove,
+                approveAmount
+            )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {

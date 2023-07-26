@@ -15,6 +15,7 @@ import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -36,7 +37,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,
@@ -46,9 +47,8 @@ import {
     refetchUserSpeedMarkets,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { UsingAmmLink } from '../styled-components';
-import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { delay } from 'utils/timer';
+import { UsingAmmLink } from '../styled-components';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
@@ -122,15 +122,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
 
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -206,10 +199,6 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             const parsedTotal = stableCoinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 false,
                 false,
@@ -220,8 +209,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 parsedTotal,
                 parsedSlippage,
                 undefined,
-                '',
-                providerOptions
+                ''
             );
 
             const txResult = await tx.wait();
@@ -261,12 +249,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
             try {
-                const providerOptions = {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                };
                 const tx = (isRangedMarket
-                    ? await marketContractWithSigner.exercisePositions(providerOptions)
-                    : await marketContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
+                    ? await marketContractWithSigner.exercisePositions()
+                    : await marketContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
 
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {

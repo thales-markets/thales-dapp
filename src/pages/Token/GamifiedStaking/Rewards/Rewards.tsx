@@ -36,7 +36,7 @@ import { Colors, FlexDivEnd } from 'styles/common';
 import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getIsOVM, getMaxGasLimitForNetwork } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
@@ -329,9 +329,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             try {
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = (await stakingThalesContractWithSigner.claimReward({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await stakingThalesContractWithSigner.claimReward()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
