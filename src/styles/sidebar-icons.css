@@ -150,3 +150,7 @@
 .icon--nav-menu:before {
     content: '\0064';
 }
+
+.icon--trading:before {
+    content: '\0058';
+}

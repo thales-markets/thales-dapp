@@ -494,8 +494,14 @@
                 }
             },
             "rewards": {
+                "titles": {
+                    "gamified-staking": "Gamified Staking Bonus Rewards"
+                },
                 "section-title": "Rewards",
-                "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You can claim staking rewards weekly.",
+                "section-title-staking": "Thales Staking Rewards",
+                "section-description": "<bold>Staking rewards</bold> are main inflationary rewards of the THALES tokens, allocated to THALES token stakers once a week. Your <bold>base staking rewards</bold> amount depend on your My Staked Share percentage value at the time of the weekly snapshot. <highlight>Staking rewards have to be claimed weekly or they expire on next week's snapshot time.</highlight>",
+                "section-base-rewards": "Base inflationary rewards of {{fixedPeriodReward}} THALES per week are shared among all THALES tokens staked proportionally.",
+                "section-bonus-rewards": "Additionally, there are {{ bonusRewards }} THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
@@ -530,11 +536,14 @@
                 },
                 "claim": {
                     "total-label": "Total claimable",
-                    "claim": "Claim Thales rewards",
+                    "your-rewards": "Your current claimable rewards",
+                    "gamified-rewards": "Gamified staking rewards",
+                    "base-rewards": "Base rewards as THALES Staker",
+                    "claim": "Claim rewards",
                     "claiming": "Claiming",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
                     "confirmation-message": "Tokens successfully claimed",
-                    "period": "Time left:",
+                    "period": "Time left to claim:",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "paused-message": "Claiming is paused.",
                     "not-eligible-message": "You are not eligible for these rewards.",
@@ -555,7 +564,93 @@
                     "label-2": "LP Staking",
                     "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
                 },
-                "base-label": "Thales staking base rewards"
+                "gamified-rewards": "Gamified staking rewards",
+                "gamified-rewards-how": "How gamified staking rewards work?",
+                "card": {
+                    "title-1": "Trading Volume Points",
+                    "content-1": "Trading Volume points are accrued by driving trading volume through Thales Markets and Overtime Markets. For every 1 USD of volume driven across Thales products, you get 1 point. This means that your total points from Trading Volume are equal to the <highlight>sum of your total USD Trading Volume from Thales Markets and Overtime Markets (multiplied by 1).</highlight>",
+                    "title-2": "AMM LP Points",
+                    "content-2": "AMM LP points are accrued by depositing USD into various AMM Liquidity Pools across Thales products (ThalesAMM pool, SportsAMM pool, ParlayAMM pool etc.). For each 1 USD deposited into a LP pool you get 0.5 points. This means that your total points from AMM LP-ing are <highlight>equal to the sum of your total USD deposits from Thales Markets and Overtime Markets LP pools, multiplied by 0.5.</highlight>",
+                    "title-3": "Vaults points",
+                    "content-3": "Vaults Points are accrued by depositing USD into various Vaults across Thales products (Thales Markets Vaults and Overtime Markets Vaults). For each 1 USD deposited into a Vault, you get 0.25 points. This means that your total points from Vaults deposits are <highlight>equal to the sum of your total Vaults USD deposits, multiplied by 0.25.</highlight>",
+                    "title-4": "THALES Staked Multiplier",
+                    "content-4": "The amount of THALES you have staked determines the multiplier for your total points. The more THALES you stake, the higher the final multiplier of your total points.<br><br><highlight>THALESStakedMultiplier = 1 + UserThalesStaked /{StakingDivider}</highlight><br><br>THALES Staked Multiplier minimum value is 1 and maximum value is 5.",
+                    "title-5": "Total Points",
+                    "content-5": "Your final points that determines your share of {{bonusRewards}} THALES Gamified Staking Bonus rewards is equal to the sum of all your accrued points multiplied by the THALES Staked Multiplier. <br><br><highlight>Total Points = (Trading Volume points + AMM LP points + Vaults Points) x THALES Staked Multiplier</highlight>"
+                },
+                "overview": {
+                    "title": "Overview for this round",
+                    "your-points": "Your current total points",
+                    "total-points": "Total global points",
+                    "bonus-rewards": "Your estimated bonus rewards",
+                    "leaderboard-rank": "Your leaderboard rank",
+                    "of-total-points": "Of total points",
+                    "of-total-rewards": "Of total rewards",
+                    "go-to": "Go to leaderboard"
+                },
+                "points": {
+                    "your-points": "Your points breakdown",
+                    "your-multiplier": "THALES Staked Multiplier",
+                    "trading": "Trading",
+                    "amm-lp": "AMM LP",
+                    "vaults": "Vaults",
+                    "total-volume": "Total volume",
+                    "total-amm": "Total AMM LP balances",
+                    "total-vaults": "Total vaults balances",
+                    "trading-multiplier": "Trading multiplier",
+                    "lp-multiplier": "LP multiplier",
+                    "vaults-multiplier": "Vaults multiplier",
+                    "points": "Points",
+                    "your-thales": "Your THALES staked",
+                    "divider": "Staking divider",
+                    "your-current-points": "YOUR CURRENT TOTAL POINTS"
+                },
+                "breakdown-section": {
+                    "your-volume-from": "Your volume gathered from",
+                    "volume-gathered": {
+                        "trading": "Thales Markets Trading",
+                        "overtime-trading": "Overtime Trading",
+                        "lp-thales": "Thales Liquidity Providing",
+                        "lp-overtime": "Overtime Liquidity Providing",
+                        "parlay-lp-overtime": "Overtime Parlay Liquidity Providing",
+                        "thales-vaults": "Thales Vaults",
+                        "sport-vaults": "Sport Vaults",
+                        "discount-vault": "Discount Vault",
+                        "degen-discount-vault": "Degen Discount Vault",
+                        "safu-vault": "Safu Vault",
+                        "degen-vault": "Degen Vault",
+                        "upsettoor-vault": "Upsettoor Vault",
+                        "parlay-vault": "Parlay Vault"
+                    }
+                },
+                "base-rewards": {
+                    "title": "Base staking Rewards",
+                    "balance": "Your staked balance",
+                    "total": "Total THALES staked",
+                    "share": "Your staked share",
+                    "rewards": "Your base rewards",
+                    "stake-more": "Stake more"
+                },
+
+                "leaderboard": {
+                    "section-title": "Leaderboard",
+                    "rank": "Rank",
+                    "address": "Address",
+                    "points": "Total Points",
+                    "multiplier": "THALES Multiplier",
+                    "rewards": "Total Rewards",
+                    "text": "Leaderboard for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
+                    "time-left": "Time left in round: ",
+                    "expanded-row": {
+                        "trading": "Trading",
+                        "lp": "LP",
+                        "vaults": "Vaults",
+                        "points": "Points"
+                    },
+                    "round": "Round"
+                },
+
+                "base-label": "THALES staking base rewards"
             },
             "vesting": {
                 "section-title": "Vesting",
@@ -1375,7 +1470,14 @@
                 "table": {
                     "amount-col": "Amount"
                 }
+            },
+            "highlight-card": {
+                "total-points": "Total Points",
+                "total-rewards": "Total Rewards"
             }
         }
+    },
+    "banner": {
+        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!"
     }
 }

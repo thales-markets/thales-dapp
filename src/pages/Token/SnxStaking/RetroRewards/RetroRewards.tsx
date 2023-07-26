@@ -42,7 +42,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -87,9 +86,7 @@ const RetroRewards: React.FC = () => {
             try {
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
-                const tx = await vestingContractWithSigner.claim({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await vestingContractWithSigner.claim();
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {

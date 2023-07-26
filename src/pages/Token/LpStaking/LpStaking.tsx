@@ -30,7 +30,6 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { getMaxGasLimitForNetwork } from 'utils/network';
 
 enum SectionType {
     INFO,
@@ -126,9 +125,7 @@ const LpStaking: React.FC = () => {
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await lpStakingRewardsContractWithSigner.getReward({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await lpStakingRewardsContractWithSigner.getReward()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {

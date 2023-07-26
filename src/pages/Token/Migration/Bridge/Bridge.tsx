@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { checkAllowance, getMaxGasLimitForNetwork } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';
 import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
@@ -100,9 +100,10 @@ const Bridge: React.FC = () => {
 
             try {
                 setIsAllowing(true);
-                const tx = (await opThalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await opThalesTokenContractWithSigner.approve(
+                    addressToApprove,
+                    approveAmount
+                )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
