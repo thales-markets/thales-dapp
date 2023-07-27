@@ -22,6 +22,7 @@ import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common'
 import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,
+    formatCurrencyWithPrecision,
     formatCurrencyWithSign,
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
@@ -39,7 +40,8 @@ type PriceChartProps = {
     asset: string;
     selectedPrice: number | undefined;
     selectedRightPrice?: number;
-    position: Positions;
+    position: Positions | undefined;
+    explicitCurrentPrice?: number;
 };
 
 const coinGeckoClientPublic = new CoinGeckoClient({
@@ -64,7 +66,13 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
-const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
+const PriceChart: React.FC<PriceChartProps> = ({
+    asset,
+    selectedPrice,
+    selectedRightPrice,
+    position,
+    explicitCurrentPrice,
+}) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -77,13 +85,17 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
+        enabled: isAppReady && !explicitCurrentPrice,
+    });
 
     const currentPrice = useMemo(() => {
-        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+        if (explicitCurrentPrice) {
+            return explicitCurrentPrice;
+        } else if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
             return exchangeRatesMarketDataQuery.data[asset];
         }
-    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset]);
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
     const processedPriceData = useMemo(() => {
         if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
@@ -127,12 +139,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                     }
                 }
                 if (result) {
+                    const dateFormat = explicitCurrentPrice ? 'dd/MM HH:mm' : 'dd/MM';
                     const priceData = result.prices.map((price) => ({
-                        date: format(new Date(price[0]), 'dd/MM'),
+                        date: format(new Date(price[0]), dateFormat),
                         price: Number(price[1]),
                     }));
 
-                    priceData.push({ date: format(new Date(), 'dd/MM'), price: currentPrice });
+                    priceData.push({ date: format(new Date(), dateFormat), price: currentPrice });
 
                     setData(priceData);
 
@@ -143,7 +156,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             }
         };
         fetchData();
-    }, [asset, dateRange, currentPrice]);
+    }, [asset, dateRange, currentPrice, explicitCurrentPrice]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -216,13 +229,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
                         <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                     </IconPriceWrapper>
-                    <FlexDiv>
-                        <Value>{`IV ${iv}%`}</Value>
-                        <TooltipInfo
-                            overlay={t('markets.amm-trading.iv-tooltip')}
-                            customIconStyling={{ marginTop: '1px' }}
-                        />
-                    </FlexDiv>
+                    {!explicitCurrentPrice && (
+                        <FlexDiv>
+                            <Value>{`IV ${iv}%`}</Value>
+                            <TooltipInfo
+                                overlay={t('markets.amm-trading.iv-tooltip')}
+                                customIconStyling={{ marginTop: '1px' }}
+                            />
+                        </FlexDiv>
+                    )}
                 </FlexDivRowCentered>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
@@ -269,6 +284,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             tickFormatter={(value) => formatYAxisTick(value)}
                         />
                         <Tooltip
+                            formatter={(value) => formatCurrencyWithPrecision(Number(value))}
                             contentStyle={{
                                 backgroundColor: theme.background.secondary,
                                 color: theme.textColor.primary,

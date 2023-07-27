@@ -9,12 +9,12 @@ import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivStart } from 'styles/common';
+import { BoldText, FlexDivCentered, FlexDivStart } from 'styles/common';
 import { getCurrencyPriority } from 'utils/currency';
 import { getCurrentPrice, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import SelectBuyin from './components/SelectBuyin';
@@ -24,6 +24,7 @@ import AmmSpeedTrading from './components/AmmSpeedTrading';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
+import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 
 const SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
@@ -97,9 +98,23 @@ const SpeedMarkets: React.FC = () => {
             {SUPPORTED_NETWORKS.includes(networkId) ? (
                 <Container>
                     <BannerCarousel />
+                    <Info>
+                        <Trans
+                            i18nKey="speed-markets.info"
+                            components={{
+                                bold: <BoldText />,
+                            }}
+                        />
+                    </Info>
                     <ContentWrapper>
                         <LeftSide>
-                            <span style={{ color: 'white' }}>{`Current ${currencyKey} price: ${currentPrice}`}</span>
+                            <PriceChart
+                                position={positionType}
+                                asset={currencyKey}
+                                selectedPrice={positionType !== undefined ? currentPrice : undefined}
+                                selectedRightPrice={undefined}
+                                explicitCurrentPrice={currentPrice}
+                            ></PriceChart>
                         </LeftSide>
                         <RightSide>
                             {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
@@ -212,6 +227,14 @@ const StepName = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     margin-left: 8px;
     text-transform: capitalize;
+`;
+
+const Info = styled.span`
+    text-align: justify;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 110%;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const UnsupportedNetworkWrapper = styled.div`

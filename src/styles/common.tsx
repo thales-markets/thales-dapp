@@ -40,6 +40,10 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
     justify-content: center;
 `;
 
+export const BoldText = styled.span`
+    font-weight: 700;
+`;
+
 // TODO: Update color names
 export const Colors = {
     GRAY: '#2B3139',
