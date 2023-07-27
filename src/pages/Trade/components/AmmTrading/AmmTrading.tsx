@@ -106,7 +106,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     showWalletBalance,
 }) => {
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
-    const contextMarket = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const contextMarket = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();

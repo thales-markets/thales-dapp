@@ -16,7 +16,9 @@ type OptionPriceTabProps = {
 };
 
 const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
-    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const market = isRangedMarket ? rangedMarket : directMarket;
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));

@@ -47,7 +47,9 @@ type RowCardProps = {
 };
 
 const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
-    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const market = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isBuy = useSelector((state: RootState) => getIsBuy(state));

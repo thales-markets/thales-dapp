@@ -25,7 +25,9 @@ type TabContainerProps = {
 };
 
 const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
-    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const market = isRangedMarket ? rangedMarket : directMarket;
     const [currentTab, setCurrentTab] = useState<number>(1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);

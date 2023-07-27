@@ -24,7 +24,9 @@ type WalletBalanceProps = {
 };
 
 const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionType }) => {
-    const optionsMarket = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const optionsMarket = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));

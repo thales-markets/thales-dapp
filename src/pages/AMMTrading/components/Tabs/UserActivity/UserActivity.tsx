@@ -34,7 +34,9 @@ type UserActivityProps = {
 };
 
 const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
-    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const market = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
