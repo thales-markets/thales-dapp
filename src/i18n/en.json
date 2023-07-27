@@ -473,7 +473,7 @@
                 "apy-tooltip": "This is an estimation of the Annual Percentage Yield in THALES tokens from Staking THALES tokens to be distributed at the end of the current epoch.",
                 "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
                 "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
-                "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
+                "bonus-estimated-rewards-tooltip": "<0>Additional rewards are to be distributed per </0><1 />.",
                 "total-thales-staked": "Total THALES Staked",
                 "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
                 "staked-share": "My Staked Share",
