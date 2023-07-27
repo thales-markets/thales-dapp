@@ -137,6 +137,7 @@ const SpeedMarkets: React.FC = () => {
                         buyinAmount={buyinAmount}
                         setBuyinAmount={setBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                        currentPrice={currentPrice}
                     />
                     {isWalletConnected && (
                         <OpenPositions isSpeedMarkets maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec} />

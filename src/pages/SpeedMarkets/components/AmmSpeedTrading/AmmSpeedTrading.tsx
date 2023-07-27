@@ -12,11 +12,13 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
 import { USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
+import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
 import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -53,6 +55,7 @@ type AmmSpeedTradingProps = {
     buyinAmount: number;
     setBuyinAmount: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
+    currentPrice: number;
     showWalletBalance?: boolean;
     autoFocus?: boolean;
 };
@@ -65,6 +68,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     buyinAmount,
     setBuyinAmount,
     ammSpeedMarketsLimits,
+    currentPrice,
     showWalletBalance,
 }) => {
     const { t } = useTranslation();
@@ -339,16 +343,23 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     return (
         <Container>
             <TradingDetailsContainer>
-                {/* <TradingDetailsSentence
-                    currencyKey={currencyKey}
-                    maturityDate={maturityDate}
-                    market={market}
-                    isRangedMarket={isRangedMarket}
-                    isFetchingQuote={isFetchingQuote}
-                    priceProfit={priceProfit}
-                    paidAmount={paidAmount}
-                    breakFirstLine={false}
-                /> */}
+                {
+                    <TradingDetailsSentence
+                        currencyKey={currencyKey}
+                        maturityDate={secondsToMilliseconds(strikeTimeSec)}
+                        deltaTimeSec={deltaTimeSec}
+                        market={{
+                            address: 'Any',
+                            strikePrice: currentPrice,
+                            positionType,
+                        }}
+                        isRangedMarket={false}
+                        isFetchingQuote={false}
+                        priceProfit={SPEED_MARKETS_QUOTE - 1}
+                        paidAmount={paidAmount}
+                        breakFirstLine={false}
+                    />
+                }
             </TradingDetailsContainer>
             <FinalizeTrade>
                 <ColumnSpaceBetween>

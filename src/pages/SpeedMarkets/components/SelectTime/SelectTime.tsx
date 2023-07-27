@@ -238,6 +238,13 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         }
     };
 
+    const onSwitchTimeClickHandler = () => {
+        setIsDeltaSelected(!isDeltaSelected);
+        setCustomDeltaTime('');
+        onDeltaChange(0);
+        onExactTimeChange(0);
+    };
+
     return (
         <Container>
             <Row>
@@ -255,14 +262,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         onClick={() => onDeltaTimeClickHandler(deltaHours, 0)}
                     >{`${deltaHours}h`}</DeltaTime>
                 ))}
-                <Time
-                    isSelected={!isDeltaSelected}
-                    onClick={() => {
-                        setIsDeltaSelected(!isDeltaSelected);
-                        setCustomDeltaTime('');
-                        onDeltaChange(0);
-                    }}
-                >
+                <Time isSelected={!isDeltaSelected} onClick={onSwitchTimeClickHandler}>
                     <Icon className="icon icon--clock" />
                 </Time>
             </Row>
