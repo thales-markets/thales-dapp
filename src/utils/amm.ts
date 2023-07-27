@@ -80,7 +80,7 @@ export const prepareTransactionForAMM = async (
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
 
-    const gasLimit = networkId === Network['Mainnet-Ovm'] ? OP_GAS_LIMIT : null;
+    const gasLimit = networkId === Network.OptimismMainnet ? OP_GAS_LIMIT : null;
 
     if (isBuyWithNonDefaultCollateral) {
         tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
