@@ -21,7 +21,7 @@ import { ThemeInterface } from 'types/ui';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
-import Rewards from 'pages/Token/GamifiedStaking/RewardsV2/Rewards';
+import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard';
 
 const Tab: React.FC<{
