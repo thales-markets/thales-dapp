@@ -13,10 +13,10 @@ export type AmmSpeedMarketsLimits = {
     minBuyinAmount: number;
     minimalTimeToMaturity: number;
     maximalTimeToMaturity: number;
-    lpFee: number;
-    safeBoxImpact: number;
     maxPriceDelaySec: number;
     risksPerAsset: RiskPerAsset[];
+    lpFee: number;
+    safeBoxImpact: number;
 };
 
 const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOptions<AmmSpeedMarketsLimits>) => {
@@ -28,10 +28,10 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                 maxBuyinAmount: 0,
                 minimalTimeToMaturity: 0,
                 maximalTimeToMaturity: 0,
-                lpFee: 0,
-                safeBoxImpact: 0,
                 maxPriceDelaySec: 0,
                 risksPerAsset: [],
+                lpFee: 0,
+                safeBoxImpact: 0,
             };
             const { speedMarketsAMMContract } = snxJSConnector;
             if (speedMarketsAMMContract) {
@@ -40,20 +40,18 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                     maxBuyinAmount,
                     minTimeToMaturity,
                     maxTimeToMaturity,
-                    lpFee,
-                    safeBoxImpact,
                     maxPriceDelay,
                     currentRiskForETH,
                     maxRiskForETH,
                     currentRiskForBTC,
                     maxRiskForBTC,
+                    lpFee,
+                    safeBoxImpact,
                 ] = await Promise.all([
                     speedMarketsAMMContract.minBuyinAmount(),
                     speedMarketsAMMContract.maxBuyinAmount(),
                     speedMarketsAMMContract.minimalTimeToMaturity(),
                     speedMarketsAMMContract.maximalTimeToMaturity(),
-                    speedMarketsAMMContract.lpFee(),
-                    speedMarketsAMMContract.safeBoxImpact(),
                     speedMarketsAMMContract.maximumPriceDelay(),
                     speedMarketsAMMContract.currentRiskPerAsset(
                         ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)
@@ -63,14 +61,14 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                         ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
                     ),
                     speedMarketsAMMContract.maxRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)),
+                    speedMarketsAMMContract.lpFee(),
+                    speedMarketsAMMContract.safeBoxImpact(),
                 ]);
 
                 ammSpeedMarkets.minBuyinAmount = bigNumberFormatter(minBuyinAmount);
                 ammSpeedMarkets.maxBuyinAmount = bigNumberFormatter(maxBuyinAmount);
                 ammSpeedMarkets.minimalTimeToMaturity = Number(minTimeToMaturity);
                 ammSpeedMarkets.maximalTimeToMaturity = Number(maxTimeToMaturity);
-                ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
-                ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
                 ammSpeedMarkets.maxPriceDelaySec = Number(maxPriceDelay);
                 ammSpeedMarkets.risksPerAsset = [
                     {
@@ -84,6 +82,8 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                         max: bigNumberFormatter(maxRiskForBTC),
                     },
                 ];
+                ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
+                ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
             }
 
             return ammSpeedMarkets;

@@ -11,7 +11,7 @@ import {
 } from 'date-fns';
 import useInterval from 'hooks/useInterval';
 import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
@@ -27,9 +27,6 @@ type SelectTimeProps = {
     onExactTimeChange: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
 };
-
-const deltaTimesMinutes = [5];
-const deltaTimesHours = [1, 12, 24]; // TODO: check if this could be calculated from the contract
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
@@ -49,6 +46,38 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const [exactTimeHours, setExactTimeHours] = useState('12');
     const [exactTimeMinutes, setExactTimeMinutes] = useState('00');
     const [errorMessage, setErrorMessage] = useState('');
+
+    const deltaTimesMinutes: number[] = useMemo(() => {
+        const times = [];
+        if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
+            times.push(secondsToMinutes(ammSpeedMarketsLimits.minimalTimeToMaturity));
+        } else {
+            setIsDeltaMinutesSelected(false);
+        }
+
+        return times;
+    }, [ammSpeedMarketsLimits]);
+
+    const deltaTimesHours: number[] = useMemo(() => {
+        const times = [];
+        if (ammSpeedMarketsLimits) {
+            const minHours = secondsToHours(ammSpeedMarketsLimits.minimalTimeToMaturity);
+            const max = secondsToHours(ammSpeedMarketsLimits.maximalTimeToMaturity);
+
+            if (minHours !== 0) {
+                // no minutes
+                times.push(minHours);
+                times.push(minHours * 4);
+            } else {
+                times.push(1); // one hour
+            }
+
+            times.push(max / 2);
+            times.push(max);
+        }
+
+        return times;
+    }, [ammSpeedMarketsLimits]);
 
     const isValidExactTime = useCallback(
         (exactTime: Date | undefined) => {
@@ -252,17 +281,19 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         />
                     </InputWrapper>
                     <Column>
-                        <Button
-                            height="13px"
-                            width="50px"
-                            fontSize="13px"
-                            backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
-                            onClick={onMinutesButtonClikHandler}
-                        >
-                            {t('common.time-remaining.minutes')}
-                        </Button>
+                        {deltaTimesMinutes.length > 0 && (
+                            <Button
+                                height="13px"
+                                width="50px"
+                                fontSize="13px"
+                                backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                                borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                                textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                                onClick={onMinutesButtonClikHandler}
+                            >
+                                {t('common.time-remaining.minutes')}
+                            </Button>
+                        )}
                         <Button
                             height="13px"
                             width="50px"

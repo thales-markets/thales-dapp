@@ -1,17 +1,28 @@
 import { USD_SIGN } from 'constants/currency';
-import React, { useEffect, useState } from 'react';
+import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
 
 type SelectBuyinProps = {
     value: number;
     onChange: React.Dispatch<number>;
+    ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
 };
 
-const buyinAmounts = [5, 10, 20, 50, 100]; // TODO: calculate from contract
-
-const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange }) => {
+const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMarketsLimits }) => {
     const [buyinAmount, setBuyinAmount] = useState(0);
+
+    const buyinAmounts = useMemo(() => {
+        const first = ammSpeedMarketsLimits?.minBuyinAmount || 0;
+        const fifth = ammSpeedMarketsLimits?.maxBuyinAmount || 0;
+
+        const second = first * 2;
+        const third = fifth > 100 ? second * 5 : second * 2;
+        const fourth = fifth / 2;
+
+        return [first, second, third, fourth, fifth];
+    }, [ammSpeedMarketsLimits?.minBuyinAmount, ammSpeedMarketsLimits?.maxBuyinAmount]);
 
     useEffect(() => {
         setBuyinAmount(value);

@@ -121,7 +121,11 @@ const SpeedMarkets: React.FC = () => {
                                 ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                             />
                             {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
-                            <SelectBuyin value={buyinAmount} onChange={setBuyinAmount} />
+                            <SelectBuyin
+                                value={buyinAmount}
+                                onChange={setBuyinAmount}
+                                ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                            />
                         </RightSide>
                     </ContentWrapper>
 
