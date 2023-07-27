@@ -65,14 +65,14 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
 
     useEffect(() => {
         dispatch(setIsBuy(orderSide === 'buy'));
-    }, [orderSide]);
+    }, [orderSide, dispatch]);
 
     useEffect(() => {
         if (networkSwitched) {
             navigateTo(ROUTES.Options.Home);
         }
         setNetworkSwitched(true);
-    }, [networkId]);
+    }, [networkId, networkSwitched]);
 
     useEffect(() => {
         if (!isRangedMarket && marketQuery.isSuccess && marketQuery.data) {
@@ -80,7 +80,14 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         } else if (isRangedMarket && rangedMarketQuery.isSuccess && rangedMarketQuery.data) {
             setRangedMarket(rangedMarketQuery.data);
         }
-    }, [marketQuery.isSuccess, marketQuery.data, rangedMarketQuery.isSuccess, rangedMarketQuery.data, marketAddress]);
+    }, [
+        marketQuery.isSuccess,
+        marketQuery.data,
+        rangedMarketQuery.isSuccess,
+        rangedMarketQuery.data,
+        marketAddress,
+        isRangedMarket,
+    ]);
 
     useEffect(() => {
         if (!isRangedMarket && optionMarket?.phase == 'maturity') {
@@ -90,7 +97,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         } else {
             setMaturityPhase(false);
         }
-    }, [optionMarket?.phase, rangedMarket?.phase]);
+    }, [optionMarket?.phase, rangedMarket?.phase, isRangedMarket]);
 
     const market = isRangedMarket ? rangedMarket : optionMarket;
 

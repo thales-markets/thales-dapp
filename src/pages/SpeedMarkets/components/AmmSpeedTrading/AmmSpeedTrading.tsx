@@ -100,7 +100,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         return isMultiCollateralSupported
             ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
             : snxJSConnector.collateral?.address;
-    }, [selectedCollateralIndex, networkId, isMultiCollateralSupported]);
+    }, [selectedCollateralIndex, isMultiCollateralSupported]);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -145,7 +145,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             setBuyinAmount(0);
             setPaidAmount('');
         }
-    }, [isWalletConnected]);
+    }, [isWalletConnected, setBuyinAmount]);
 
     // Input field validations
     useEffect(() => {

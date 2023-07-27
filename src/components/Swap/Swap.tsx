@@ -37,6 +37,7 @@ import {
     getTokenForSwap,
     mapTokenByNetwork,
 } from './tokens';
+import { truncToDecimals } from 'utils/formatters/number';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
@@ -100,7 +101,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             Number(amount) !== 0 ? setAmount('') : '';
             setPreviewData(undefined);
         }
-    }, [fromToken, toToken, amount]);
+    }, [fromToken, toToken, amount, quoteQuery]);
 
     useEffect(() => {
         const swapTokenData = getTokenForSwap(networkId, initialToToken);
@@ -108,46 +109,51 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         setPreLoadTokens(swapTokenData.preloadTokens);
         setFromToken(swapTokenData.fromToken);
         setToToken(swapTokenData.toToken);
-    }, [networkId]);
+    }, [networkId, initialToToken]);
 
     useEffect(() => {
-        updateBalanceAndAllowance(fromToken);
-    }, [fromToken, amount, isAllowing]);
-
-    const updateBalanceAndAllowance = async (token: any) => {
-        if (token) {
-            if (
-                token === ETH_Eth ||
-                token === OP_Eth ||
-                token === POLYGON_MATIC ||
-                token == BSC_BNB ||
-                token == ARB_ETH
-            ) {
-                setAllowance(true);
-                (snxJSConnector as any).signer
-                    .getBalance()
-                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
-            } else {
-                const erc20Instance = new ethers.Contract(
-                    (token as any).address,
-                    erc20Contract.abi,
+        const updateBalanceAndAllowance = async (token: any) => {
+            if (token) {
+                if (
+                    token === ETH_Eth ||
+                    token === OP_Eth ||
+                    token === POLYGON_MATIC ||
+                    token == BSC_BNB ||
+                    token == ARB_ETH
+                ) {
+                    setAllowance(true);
                     (snxJSConnector as any).signer
-                );
+                        .getBalance()
+                        .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+                } else {
+                    const erc20Instance = new ethers.Contract(
+                        (token as any).address,
+                        erc20Contract.abi,
+                        (snxJSConnector as any).signer
+                    );
 
-                const spender = await approveSpenderQuery.refetch().then((resp: any) => {
-                    return resp.data.address;
-                });
+                    const spender = await approveSpenderQuery.refetch().then((resp: any) => {
+                        return resp.data.address;
+                    });
 
-                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
-                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, spender as string);
-                setAllowance(allowance);
+                    const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                    const allowance = await checkAllowance(
+                        parsedAmount,
+                        erc20Instance,
+                        walletAddress,
+                        spender as string
+                    );
+                    setAllowance(allowance);
 
-                erc20Instance
-                    .balanceOf(walletAddress)
-                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+                    erc20Instance
+                        .balanceOf(walletAddress)
+                        .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+                }
             }
-        }
-    };
+        };
+
+        updateBalanceAndAllowance(fromToken);
+    }, [fromToken, amount, isAllowing, approveSpenderQuery, walletAddress]);
 
     const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(
@@ -294,7 +300,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                             }}
                             currencyLabel={fromToken.symbol}
                             onMaxButton={() => {
-                                setAmount(Number(balance).toFixed(5));
+                                setAmount(truncToDecimals(balance, 5));
                             }}
                             balance={`${t('common.balance')}: ${Number(balance).toFixed(4)}`}
                         />

@@ -83,7 +83,7 @@ const MergeAccount: React.FC = () => {
             userTokenTransactionsQuery.isSuccess && userTokenTransactionsQuery.data
                 ? orderBy(userTokenTransactionsQuery.data, ['timestamp', 'blockNumber'], ['asc', 'asc'])
                 : [],
-        [userTokenTransactionsQuery.data]
+        [userTokenTransactionsQuery.isSuccess, userTokenTransactionsQuery.data]
     );
 
     const addressesThatDelegateToYou = useMemo(() => {

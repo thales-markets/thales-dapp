@@ -120,7 +120,7 @@ const LiquidityPool: React.FC = () => {
                 getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
-    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
+    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
 
     const liquidityPoolDataQuery = useLiquidityPoolDataQuery(networkId, {
         enabled: isAppReady,

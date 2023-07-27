@@ -113,7 +113,7 @@ const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
         if (networkId === Network.Mainnet) {
             fetchVoterEns();
         }
-    }, [address]);
+    }, [address, networkId]);
 
     const voter =
         address.toLowerCase() === walletAddress.toLowerCase()

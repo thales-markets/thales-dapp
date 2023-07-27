@@ -52,7 +52,7 @@ const StakingOverview: React.FC = () => {
             }
         }
         return undefined;
-    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data, walletAddress]);
 
     return (
         <Container>

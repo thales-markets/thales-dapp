@@ -40,7 +40,7 @@ const Tab: React.FC<{
 
     useEffect(() => {
         setActiveButtonId(selectedSection || sections[0].id);
-    }, [selectedSection]);
+    }, [selectedSection, sections]);
 
     return (
         <Container>

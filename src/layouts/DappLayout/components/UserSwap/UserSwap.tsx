@@ -2,7 +2,7 @@ import Modal from 'components/Modal';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,17 +69,21 @@ const UserSwap: React.FC = () => {
     const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;
     const balance = getCurrencyKeyStableBalance(stableBalance, getDefaultCollateral(networkId)) || 0;
 
-    const userCollaterals: SwapCollateral[] = [];
-    if (isMultiCollateralSupported) {
-        userCollaterals.push(
-            { type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance },
-            { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
-            { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance }, // default for Polygon
-            { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
-        );
-    } else {
-        userCollaterals.push({ type: getDefaultCollateral(networkId), balance: balance });
-    }
+    const userCollaterals: SwapCollateral[] = useMemo(() => {
+        const collaterals = [];
+        if (isMultiCollateralSupported) {
+            collaterals.push(
+                { type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance },
+                { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
+                { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance }, // default for Polygon
+                { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
+            );
+        } else {
+            collaterals.push({ type: getDefaultCollateral(networkId), balance: balance });
+        }
+
+        return collaterals;
+    }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCBalance, USDTBalance, balance, networkId]);
 
     const defaultCollateral = isMultiCollateralSupported
         ? userCollaterals.find(
@@ -117,14 +121,22 @@ const UserSwap: React.FC = () => {
             : userCollaterals[0];
         setCollateral(positiveCollateral);
         dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
-    }, [multipleStableBalances.data, stableBalanceQuery.data]);
+    }, [
+        multipleStableBalances.data,
+        stableBalanceQuery.data,
+        dispatch,
+        isMultiCollateralSupported,
+        networkId,
+        userCollaterals,
+        userSelectedCollateralIndex,
+    ]);
 
     useEffect(() => {
         const selectedCollateral =
             userCollaterals.find((el) => el.type === getCollateral(networkId, userSelectedCollateralIndex)) ||
             userCollaterals[0];
         setCollateral(selectedCollateral);
-    }, [userSelectedCollateralIndex, networkId]);
+    }, [userSelectedCollateralIndex, networkId, userCollaterals]);
 
     const onStableHoverHandler = (index: number, stableCoin: StableCoins) => {
         if (isWalletConnected) {

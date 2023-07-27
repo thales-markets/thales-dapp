@@ -246,13 +246,14 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         multipleStableBalances?.data,
         selectedCollateralIndex,
         isMultiCollateralSupported,
+        networkId,
     ]);
 
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
             ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
             : snxJSConnector.collateral?.address;
-    }, [selectedCollateralIndex, networkId, isMultiCollateralSupported]);
+    }, [selectedCollateralIndex, isMultiCollateralSupported]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
@@ -591,7 +592,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         }
 
         setErrorMessageKey(messageKey);
-    }, [paidAmount, stableBalance, insufficientLiquidity, isWalletConnected]);
+    }, [paidAmount, stableBalance, insufficientLiquidity, isWalletConnected, isBuy, market.address, tokenBalance]);
 
     useEffect(() => {
         if (market.address && liquidity > 0) {

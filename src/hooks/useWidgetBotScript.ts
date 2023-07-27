@@ -38,7 +38,7 @@ const useWidgetBotScript = (preventWidgetLoad: boolean, theme: ThemeInterface) =
             // clean up the script when the component in unmounted
             document.body.removeChild(script);
         };
-    }, [preventWidgetLoad]);
+    }, [preventWidgetLoad, theme]);
 };
 
 export default useWidgetBotScript;

@@ -61,13 +61,13 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
         } else {
             setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
         }
-    }, [myVote]);
+    }, [myVote, proposal.choices.length]);
 
     useEffect(() => {
         if (selectedChoices.some((value) => value > 0)) {
             setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
         }
-    }, [walletAddress]);
+    }, [walletAddress, proposal.choices.length, selectedChoices]);
 
     function addVote(i: number, selectedChoices: number[]) {
         selectedChoices[i] = selectedChoices[i] ? (selectedChoices[i] += 1) : 1;

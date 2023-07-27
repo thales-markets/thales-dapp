@@ -35,7 +35,7 @@ const BaseRewards: React.FC = () => {
             return query.data;
         }
         return lastValidStakingData;
-    }, [query.isSuccess, query.data, lastValidStakingData]);
+    }, [query.data, lastValidStakingData]);
 
     return (
         <Container>

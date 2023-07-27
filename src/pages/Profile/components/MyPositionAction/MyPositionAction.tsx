@@ -112,6 +112,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
         isWalletConnected,
         hasAllowance,
         isAllowing,
+        isRangedMarket,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {

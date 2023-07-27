@@ -33,7 +33,12 @@ const useUserActiveSpeedMarketsDataQuery = (
                 const fees =
                     bigNumberFormatter(await speedMarketsAMMContract.lpFee()) +
                     bigNumberFormatter(await speedMarketsAMMContract.safeBoxImpact());
-                const maturedMarkets = await speedMarketsAMMContract.activeMarketsPerUser(0, 10, walletAddress); // TODO: page size as param
+                const numActiveMarkets = await speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress);
+                const maturedMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
+                    0,
+                    numActiveMarkets,
+                    walletAddress
+                );
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(maturedMarkets);
 
                 for (let i = 0; i < marketsDataArray.length; i++) {

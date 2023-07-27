@@ -102,7 +102,7 @@ const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
             return [...data].slice(0, 8);
         }
         return [];
-    }, [tradesQuery.data]);
+    }, [tradesQuery.data, isRangedMarket]);
 
     return (
         <Container>

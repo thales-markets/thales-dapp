@@ -101,7 +101,10 @@ const CreateMarket: React.FC = () => {
         enabled: isAppReady,
     });
 
-    const synthsMap: SynthsMap = synthsMapQuery.isSuccess && synthsMapQuery.data ? synthsMapQuery.data : {};
+    const synthsMap: SynthsMap = useMemo(
+        () => (synthsMapQuery.isSuccess && synthsMapQuery.data ? synthsMapQuery.data : {}),
+        [synthsMapQuery.isSuccess, synthsMapQuery.data]
+    );
 
     const assetsOptions = useMemo(
         () =>

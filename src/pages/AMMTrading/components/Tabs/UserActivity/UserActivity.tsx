@@ -130,7 +130,14 @@ const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
         }
 
         return [];
-    }, [tradesQuery, marketTransactionsQuery, walletAddress, networkId]);
+    }, [
+        tradesQuery,
+        marketTransactionsQuery,
+        isRangedMarket,
+        market?.address,
+        market.currencyKey,
+        market.timeRemaining,
+    ]);
 
     return (
         <Container>

@@ -67,7 +67,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         enabled: isAppReady && isWalletConnected && isRangedMarket,
     });
 
-    let optBalances = { in: 0, out: 0, short: 0, long: 0 };
+    let optBalances = useMemo(() => ({ in: 0, out: 0, short: 0, long: 0 }), []);
     if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedMarket) {
         optBalances = { ...optBalances, ...(accountMarketInfoQuery.data as AccountMarketInfo) };
     }
@@ -146,7 +146,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                     : 0;
         }
         return positionCurrentValue;
-    }, [ammMaxLimitsQuery, rangedAmmMaxLimitsQuery, optBalances]);
+    }, [ammMaxLimitsQuery, rangedAmmMaxLimitsQuery, optBalances, isRangedMarket]);
 
     const priceDifference = useMemo(() => {
         return isRangedMarket
@@ -155,7 +155,7 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
                   (market as OptionsMarketInfo).strikePrice,
                   market?.phase == 'maturity' ? market.finalPrice : market.currentPrice
               );
-    }, [market.currentPrice, (market as OptionsMarketInfo).strikePrice, market.phase, isRangedMarket]);
+    }, [market, isRangedMarket]);
 
     const getMarketPriceSection = () => (
         <SubContainer>

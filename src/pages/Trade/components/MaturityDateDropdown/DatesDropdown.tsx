@@ -16,7 +16,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     // hooks
     useEffect(() => {
         if (allDates[0]) setDate(allDates[0]);
-    }, [allDates]);
+    }, [allDates, setDate]);
 
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>

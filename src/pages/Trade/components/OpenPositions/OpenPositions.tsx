@@ -41,7 +41,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
         enabled: isAppReady && isWalletConnected && isSpeedMarkets,
     });
 
-    const userActiveSpeedMarketsData = useMemo(
+    const userOpenSpeedMarketsData = useMemo(
         () =>
             userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
                 ? userActiveSpeedMarketsDataQuery.data.filter(
@@ -51,8 +51,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
         [userActiveSpeedMarketsDataQuery]
     );
 
-    const noPositions = isSpeedMarkets ? userActiveSpeedMarketsData.length === 0 : livePositions.length === 0;
-    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userActiveSpeedMarketsData : livePositions;
+    const noPositions = isSpeedMarkets ? userOpenSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
 
     return (
         <Wrapper>

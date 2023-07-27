@@ -59,7 +59,7 @@ const ClaimRewards: React.FC = () => {
             return stakingDataQuery.data;
         }
         return lastValidStakingData;
-    }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
+    }, [stakingDataQuery.data, lastValidStakingData]);
 
     const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,

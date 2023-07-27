@@ -80,7 +80,7 @@ const StakingLeaderboard: React.FC = () => {
         }
 
         return [];
-    }, [stakingData]);
+    }, [stakingData, walletAddress]);
 
     const columns = useMemo(() => {
         if (stakingData) {
@@ -152,13 +152,13 @@ const StakingLeaderboard: React.FC = () => {
         } else {
             return [];
         }
-    }, [stakingData]);
+    }, [stakingData, networkId, t]);
 
     useMemo(() => {
         if (Number(period) > 0 && Number(currentPeriod) > 0) {
             refetchStakingLeaderboardData(walletAddress, networkId, period);
         }
-    }, [period, currentPeriod]);
+    }, [period, currentPeriod, networkId, walletAddress]);
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);

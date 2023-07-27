@@ -13,6 +13,9 @@ import useInterval from 'hooks/useInterval';
 import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
@@ -36,6 +39,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [isDeltaSelected, setIsDeltaSelected] = useState(true); // false is when exact time is selected
     const [customDeltaTime, setCustomDeltaTime] = useState<string | number>('');
@@ -114,7 +119,16 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                 onExactTimeChange(exactTimeSec);
             }
         }
-    }, [ammSpeedMarketsLimits, isDeltaSelected, isAM, exactTimeHours, exactTimeMinutes]);
+    }, [
+        ammSpeedMarketsLimits,
+        isDeltaSelected,
+        isAM,
+        exactTimeHours,
+        exactTimeMinutes,
+        getExactTime,
+        isValidExactTime,
+        onExactTimeChange,
+    ]);
 
     useInterval(() => isValidExactTime(getExactTime()), 10 * 1000);
 
@@ -156,7 +170,16 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         }
 
         setErrorMessage('');
-    }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t]);
+    }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t, isDeltaSelected]);
+
+    // Reset inputs
+    useEffect(() => {
+        if (!isWalletConnected) {
+            setCustomDeltaTime('');
+            onDeltaChange(0);
+            onExactTimeChange(0);
+        }
+    }, [isWalletConnected, onDeltaChange, onExactTimeChange]);
 
     const onDeltaTimeClickHandler = (deltaHours: number, deltaMinutes: number) => {
         setIsDeltaSelected(true);

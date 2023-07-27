@@ -117,7 +117,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         if (!vaultAddress) {
             navigateTo(ROUTES.Options.Vaults);
         }
-    }, []);
+    }, [vaultAddress]);
 
     const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -129,7 +129,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
-    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
+    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
 
     const vaultDataQuery = useVaultDataQuery(vaultAddress, networkId, {
         enabled: isAppReady && !!vaultAddress,
@@ -228,7 +228,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 getAllowance();
             }
         }
-    }, [walletAddress, isWalletConnected, hasAllowance, amount, isAllowing, vaultAddress]);
+    }, [walletAddress, isWalletConnected, hasAllowance, amount, isAllowing, vaultAddress, networkId]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral } = snxJSConnector;

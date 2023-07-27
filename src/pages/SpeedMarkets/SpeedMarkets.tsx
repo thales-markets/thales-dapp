@@ -64,7 +64,7 @@ const SpeedMarkets: React.FC = () => {
         };
 
         fetchCurrentPrice();
-    }, [networkId, currencyKey]);
+    }, [networkId, currencyKey, priceConnection]);
 
     // Update current price latest on every minute
     useInterval(async () => {
