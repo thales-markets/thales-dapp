@@ -195,7 +195,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 parsedTotal,
                 parsedSlippage,
                 undefined,
-                ''
+                '',
+                networkId
             );
 
             const txResult = await tx.wait();
