@@ -63,6 +63,8 @@ export const getQuoteFromRangedAMM = (
     return promises;
 };
 
+const OP_GAS_LIMIT = 3000000; // Gas Limit set to 3M for amm txs on Optimism
+
 export const prepareTransactionForAMM = async (
     isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
@@ -78,7 +80,7 @@ export const prepareTransactionForAMM = async (
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
 
-    const gasLimit = networkId === 10 ? 3000000 : null; // set gasLimit to 3M on Optimism
+    const gasLimit = networkId === Network['Mainnet-Ovm'] ? OP_GAS_LIMIT : null;
 
     if (isBuyWithNonDefaultCollateral) {
         tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
