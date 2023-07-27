@@ -178,6 +178,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             if (riskData) {
                 setIsCapBreached(riskData?.current + Number(paidAmount) >= riskData?.max);
             }
+        } else {
+            setIsCapBreached(false);
         }
     }, [ammSpeedMarketsLimits, currencyKey, paidAmount]);
 
