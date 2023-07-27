@@ -509,7 +509,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 parsedTotal,
                 parsedSlippage,
                 collateralAddress,
-                referral
+                referral,
+                networkId
             );
 
             const txResult = await tx.wait();
