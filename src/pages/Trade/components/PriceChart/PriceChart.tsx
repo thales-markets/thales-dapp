@@ -169,8 +169,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
 
-        getImpliedVolatility();
-    }, [asset]);
+        if (!explicitCurrentPrice) {
+            getImpliedVolatility();
+        }
+    }, [asset, explicitCurrentPrice]);
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -229,7 +231,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
                         <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                     </IconPriceWrapper>
-                    {!explicitCurrentPrice && (
+                    {iv && (
                         <FlexDiv>
                             <Value>{`IV ${iv}%`}</Value>
                             <TooltipInfo
