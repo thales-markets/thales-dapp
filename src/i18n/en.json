@@ -270,6 +270,8 @@
     "markets": {
         "amm-trading": {
             "asset-price": "If {{asset}} price is",
+            "choose-direction": "choose direction",
+            "choose-time": "choose time",
             "pick-price": "pick a price",
             "based-amount": "based on amount",
             "you-win": "you win",
@@ -408,11 +410,12 @@
     "speed-markets": {
         "info": "Choose an <bold>asset</bold> and the <bold>time</bold> you think will be <bold>above or below</bold> the current price. If you are correct you will <bold>double your money</bold>!",
         "steps": {
-            "choose-asset": "Choose asset",
-            "choose-direction": "Choose direction",
-            "choose-time": "Choose time",
-            "enter-buyin": "Enter buy-in"
+            "choose-asset": "Asset",
+            "choose-direction": "Direction",
+            "choose-time": "Time",
+            "enter-buyin": "Amount"
         },
+        "amm-trading": {},
         "errors": {
             "min-buyin": "The minimum buy-in is {{minAmount}}",
             "max-buyin": "The maximum buy-in is {{maxAmount}}",

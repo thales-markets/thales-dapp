@@ -92,7 +92,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
         ? deltaTimeFormatted
         : maturityDate
         ? formatShortDateWithTime(maturityDate)
-        : `( ${t('speed-markets.steps.choose-time')} )`;
+        : `( ${t('markets.amm-trading.choose-time')} )`;
 
     return (
         <ColumnSpaceBetween>
@@ -104,7 +104,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                             <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
                                 {positionTypeFormatted
                                     ? positionTypeFormatted
-                                    : `( ${t('speed-markets.steps.choose-direction')} )`}
+                                    : `( ${t('markets.amm-trading.choose-direction')} )`}
                             </SentanceTextValue>
                             {isRangedMarket ? (
                                 !breakFirstLine && (

@@ -25,7 +25,7 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
                 <Button
                     key={value}
                     width="35px"
-                    height="31px"
+                    height="35px"
                     textColor={theme.button.textColor.tertiary}
                     backgroundColor={
                         value === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
@@ -33,7 +33,7 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
                     borderColor={theme.button.borderColor.tertiary}
                     fontSize="13px"
                     padding="0"
-                    additionalStyles={{ borderRadius: '8px', transition: 'all 0.2s ease-in-out' }}
+                    additionalStyles={{ borderRadius: '50%', transition: 'all 0.2s ease-in-out' }}
                     onClick={() => handleClick(value)}
                 >
                     {label}

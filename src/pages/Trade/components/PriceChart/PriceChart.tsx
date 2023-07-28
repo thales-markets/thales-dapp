@@ -233,7 +233,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
                         <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                     </IconPriceWrapper>
-                    {iv && (
+                    {!!iv && (
                         <FlexDiv>
                             <Value>{`IV ${iv}%`}</Value>
                             <TooltipInfo
