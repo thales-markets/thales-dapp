@@ -56,6 +56,7 @@ type AmmSpeedTradingProps = {
     setBuyinAmount: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
     currentPrice: number;
+    resetData: React.Dispatch<void>;
     showWalletBalance?: boolean;
     autoFocus?: boolean;
 };
@@ -69,6 +70,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     setBuyinAmount,
     ammSpeedMarketsLimits,
     currentPrice,
+    resetData,
     showWalletBalance,
 }) => {
     const { t } = useTranslation();
@@ -298,6 +300,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
                     refetchUserSpeedMarkets(networkId, walletAddress);
+
+                    resetData();
+                    setPaidAmount('');
                 }
             } else {
                 await delay(800);

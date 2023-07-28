@@ -93,6 +93,14 @@ const SpeedMarkets: React.FC = () => {
         );
     };
 
+    const resetData = () => {
+        setCurrencyKey(supportedAssets[0]);
+        setPositionType(undefined);
+        setDeltaTimeSec(0);
+        setStrikeTimeSec(0);
+        setBuyinAmount(0);
+    };
+
     return (
         <>
             {SUPPORTED_NETWORKS.includes(networkId) ? (
@@ -154,6 +162,7 @@ const SpeedMarkets: React.FC = () => {
                         setBuyinAmount={setBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                         currentPrice={currentPrice}
+                        resetData={resetData}
                     />
                     {isWalletConnected && (
                         <OpenPositions isSpeedMarkets maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec} />
