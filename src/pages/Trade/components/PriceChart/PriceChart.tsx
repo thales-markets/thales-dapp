@@ -41,6 +41,7 @@ type PriceChartProps = {
     selectedPrice: number | undefined;
     selectedRightPrice?: number;
     position: Positions | undefined;
+    isSpeedMarkets?: boolean;
     explicitCurrentPrice?: number;
 };
 
@@ -72,6 +73,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     selectedRightPrice,
     position,
     explicitCurrentPrice,
+    isSpeedMarkets,
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
@@ -139,7 +141,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     }
                 }
                 if (result) {
-                    const dateFormat = explicitCurrentPrice ? 'dd/MM HH:mm' : 'dd/MM';
+                    const dateFormat = isSpeedMarkets ? 'dd/MM HH:mm' : 'dd/MM';
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), dateFormat),
                         price: Number(price[1]),
@@ -156,7 +158,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
         fetchData();
-    }, [asset, dateRange, currentPrice, explicitCurrentPrice]);
+    }, [asset, dateRange, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -169,10 +171,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
 
-        if (!explicitCurrentPrice) {
+        if (!isSpeedMarkets) {
             getImpliedVolatility();
         }
-    }, [asset, explicitCurrentPrice]);
+    }, [asset, isSpeedMarkets]);
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {

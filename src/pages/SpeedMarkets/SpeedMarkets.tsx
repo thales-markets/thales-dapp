@@ -113,6 +113,7 @@ const SpeedMarkets: React.FC = () => {
                                 asset={currencyKey}
                                 selectedPrice={positionType !== undefined ? currentPrice : undefined}
                                 selectedRightPrice={undefined}
+                                isSpeedMarkets
                                 explicitCurrentPrice={currentPrice}
                             ></PriceChart>
                         </LeftSide>
