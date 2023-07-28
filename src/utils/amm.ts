@@ -63,7 +63,7 @@ export const getQuoteFromRangedAMM = (
     return promises;
 };
 
-const OP_GAS_LIMIT = 3000000; // Gas Limit set to 3M for amm txs on Optimism
+const OP_GAS_LIMIT = 4000000; // Gas Limit set to 4M for amm txs on Optimism
 
 export const prepareTransactionForAMM = async (
     isBuyWithNonDefaultCollateral: boolean,
