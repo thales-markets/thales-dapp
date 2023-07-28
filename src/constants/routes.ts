@@ -9,7 +9,7 @@ const ROUTES = {
         Home: '/markets',
         RangeMarkets: '/ranged-markets',
         SpeedMarkets: '/speed-markets',
-        SpeedMarketsAdmin: '/speed-markets/',
+        SpeedMarketsAdmin: '/speed-markets/admin',
         HotMarkets: '/markets?anchor=hot-markets',
         CustomMarkets: '/markets?userFilter2=custom',
         CompetitionMarkets: '/markets?userFilter2=competition',
