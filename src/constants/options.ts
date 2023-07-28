@@ -39,3 +39,9 @@ export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
 export const POSITION_BALANCE_THRESHOLD = 0.01;
 
 export const MARKET_DURATION_IN_DAYS = 90;
+
+export const TODAY = new Date();
+export const MIN_MATURITY = Math.round(
+    new Date(new Date().setDate(TODAY.getDate() - MARKET_DURATION_IN_DAYS)).getTime() / 1000
+); // show history for 90 days in the past
+export const MAX_MATURITY = Math.round(Number(TODAY.getTime() / 1000)); // show history until today
