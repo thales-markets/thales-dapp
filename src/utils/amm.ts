@@ -63,7 +63,7 @@ export const getQuoteFromRangedAMM = (
     return promises;
 };
 
-const GAS_ESTIMATION_BUFFER = 1.1; // Adding 10% on gas estimation as a buffer. Used only on Optimism
+const GAS_ESTIMATION_BUFFER = 1.2; // Adding 20% on gas estimation as a buffer. Used only on Optimism
 
 export const prepareTransactionForAMM = async (
     isBuyWithNonDefaultCollateral: boolean,
