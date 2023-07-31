@@ -19,9 +19,10 @@ import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/use
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
     maxPriceDelaySec?: number;
+    currentPrices?: { [key: string]: number };
 };
 
-const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceDelaySec }) => {
+const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -72,6 +73,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
                                     isSpeedMarkets={isSpeedMarkets}
                                     key={`position${index}`}
                                     maxPriceDelaySec={maxPriceDelaySec}
+                                    currentPrices={currentPrices}
                                 />
                             ))}
                     </PositionsWrapper>

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UserLivePositions } from 'types/options';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
+import { formatCurrencyWithPrecision, formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
 import MyPositionAction from 'pages/Profile/components/MyPositionAction/MyPositionAction';
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
@@ -22,9 +22,10 @@ type OpenPositionProps = {
     position: UserLivePositions;
     isSpeedMarkets?: boolean;
     maxPriceDelaySec?: number;
+    currentPrices?: { [key: string]: number };
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
@@ -34,10 +35,25 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
         <Position>
             <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
             <AlignedFlex>
-                <FlexContainer>
-                    <Label>{`${position.currencyKey}`}</Label>
+                <FlexContainer firstChildWidth={isSpeedMarkets ? '130px' : undefined}>
+                    <Label>{position.currencyKey}</Label>
                     <Value>{position.strikePrice}</Value>
                 </FlexContainer>
+                {isSpeedMarkets && (
+                    <>
+                        <Separator />
+                        <FlexContainer>
+                            <Label>{position.finalPrice ? 'Final price' : 'Current price'}</Label>
+                            <Value>
+                                {position.finalPrice
+                                    ? formatCurrencyWithPrecision(position.finalPrice || 0)
+                                    : formatCurrencyWithPrecision(
+                                          currentPrices ? currentPrices[position.currencyKey] : 0
+                                      )}
+                            </Value>
+                        </FlexContainer>
+                    </>
+                )}
                 <Separator />
                 <FlexContainer>
                     <Label>{t('markets.user-positions.end-date')}</Label>
@@ -125,13 +141,13 @@ const AlignedFlex = styled.div`
     }
 `;
 
-const FlexContainer = styled(AlignedFlex)`
+const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string }>`
     gap: 4px;
     flex: 1;
     justify-content: center;
     &:first-child {
-        min-width: 195px;
-        max-width: 195px;
+        min-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
+        max-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;

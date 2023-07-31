@@ -220,4 +220,5 @@ export type UserLivePositions = {
     paid: number;
     value: number;
     claimable?: boolean;
+    finalPrice?: number;
 };

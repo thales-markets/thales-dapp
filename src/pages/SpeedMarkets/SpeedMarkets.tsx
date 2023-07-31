@@ -8,7 +8,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
@@ -16,7 +16,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivStart } from 'styles/common';
 import { getCurrencyPriority } from 'utils/currency';
-import { getCurrentPrice, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime';
@@ -38,7 +38,10 @@ const SpeedMarkets: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const [currentPrice, setCurrentPrice] = useState(0);
+    const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
+        [CRYPTO_CURRENCY_MAP.BTC]: 0,
+        [CRYPTO_CURRENCY_MAP.ETH]: 0,
+    });
     const [currencyKey, setCurrencyKey] = useState(supportedAssets[0]);
     const [positionType, setPositionType] = useState<Positions.UP | Positions.DOWN | undefined>(undefined);
     const [deltaTimeSec, setDeltaTimeSec] = useState(0);
@@ -57,20 +60,20 @@ const SpeedMarkets: React.FC = () => {
         return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
     }, [networkId]);
 
+    const fetchCurrentPrice = useCallback(async () => {
+        const priceIds = supportedAssets.map((asset) => getPriceId(networkId, asset));
+        const prices = await getCurrentPrices(priceConnection, networkId, priceIds);
+        setCurrentPrices(prices);
+    }, [networkId, priceConnection]);
+
     // Set initial current price
     useEffect(() => {
-        const fetchCurrentPrice = async () => {
-            const price = await getCurrentPrice(priceConnection, getPriceId(networkId, currencyKey));
-            setCurrentPrice(price || 0);
-        };
-
         fetchCurrentPrice();
-    }, [networkId, currencyKey, priceConnection]);
+    }, [currencyKey, fetchCurrentPrice]);
 
     // Update current price latest on every minute
     useInterval(async () => {
-        const price = await getCurrentPrice(priceConnection, getPriceId(networkId, currencyKey));
-        setCurrentPrice(price || 0);
+        fetchCurrentPrice();
     }, 60 * 1000);
 
     // Reset inputs
@@ -119,10 +122,10 @@ const SpeedMarkets: React.FC = () => {
                             <PriceChart
                                 position={positionType}
                                 asset={currencyKey}
-                                selectedPrice={positionType !== undefined ? currentPrice : undefined}
+                                selectedPrice={positionType !== undefined ? currentPrices[currencyKey] : undefined}
                                 selectedRightPrice={undefined}
                                 isSpeedMarkets
-                                explicitCurrentPrice={currentPrice}
+                                explicitCurrentPrice={currentPrices[currencyKey]}
                             ></PriceChart>
                         </LeftSide>
                         <RightSide>
@@ -161,11 +164,15 @@ const SpeedMarkets: React.FC = () => {
                         buyinAmount={buyinAmount}
                         setBuyinAmount={setBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                        currentPrice={currentPrice}
+                        currentPrice={currentPrices[currencyKey]}
                         resetData={resetData}
                     />
                     {isWalletConnected && (
-                        <OpenPositions isSpeedMarkets maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec} />
+                        <OpenPositions
+                            isSpeedMarkets
+                            maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
+                            currentPrices={currentPrices}
+                        />
                     )}
                 </Container>
             ) : (

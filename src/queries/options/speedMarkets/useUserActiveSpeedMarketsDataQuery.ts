@@ -34,12 +34,12 @@ const useUserActiveSpeedMarketsDataQuery = (
                     bigNumberFormatter(await speedMarketsAMMContract.lpFee()) +
                     bigNumberFormatter(await speedMarketsAMMContract.safeBoxImpact());
                 const numActiveMarkets = await speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress);
-                const maturedMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
+                const activeMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
                     0,
                     numActiveMarkets,
                     walletAddress
                 );
-                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(maturedMarkets);
+                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
 
                 for (let i = 0; i < marketsDataArray.length; i++) {
                     const marketsData = marketsDataArray[i];
@@ -47,14 +47,15 @@ const useUserActiveSpeedMarketsDataQuery = (
                     const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     let isClaimable = false;
-                    // Check if claimable for matured, but not resolved markets
-                    if (secondsToMilliseconds(Number(marketsData.strikeTime)) < Date.now()) {
+                    let price = 0;
+                    const isMarketMatured = secondsToMilliseconds(Number(marketsData.strikeTime)) < Date.now();
+                    if (isMarketMatured) {
                         try {
                             const priceFeed = await priceConnection.getPriceFeed(
                                 getPriceId(networkId, parseBytes32String(marketsData.asset)),
                                 Number(marketsData.strikeTime)
                             );
-                            const price = priceFeed.getPriceUnchecked().getPriceAsNumberUnchecked();
+                            price = priceFeed.getPriceUnchecked().getPriceAsNumberUnchecked();
 
                             isClaimable =
                                 (side === Positions.UP &&
@@ -76,11 +77,12 @@ const useUserActiveSpeedMarketsDataQuery = (
                         amount: payout,
                         amountBigNumber: marketsData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: maturedMarkets[i],
+                        market: activeMarkets[i],
                         side: side,
                         paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: isClaimable,
+                        finalPrice: price,
                     };
 
                     userSpeedMarketsData.push(userData);
