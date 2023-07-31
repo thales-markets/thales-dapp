@@ -90,3 +90,5 @@ export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
         },
     },
 };
+
+export const SPEED_MARKETS_SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];

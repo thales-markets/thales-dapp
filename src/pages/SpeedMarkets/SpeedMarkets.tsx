@@ -2,7 +2,6 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS } from 'constants/pyth';
-import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
@@ -25,8 +24,8 @@ import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSp
 import { getIsAppReady } from 'redux/modules/app';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
 import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
+import { SPEED_MARKETS_SUPPORTED_NETWORKS } from 'constants/network';
 
-const SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.OptimismGoerli];
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
     (a, b) => getCurrencyPriority(a) - getCurrencyPriority(b)
 );
@@ -106,7 +105,7 @@ const SpeedMarkets: React.FC = () => {
 
     return (
         <>
-            {SUPPORTED_NETWORKS.includes(networkId) ? (
+            {SPEED_MARKETS_SUPPORTED_NETWORKS.includes(networkId) ? (
                 <Container>
                     <BannerCarousel />
                     <Info>
@@ -177,7 +176,7 @@ const SpeedMarkets: React.FC = () => {
                 </Container>
             ) : (
                 <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={SUPPORTED_NETWORKS} />
+                    <UnsupportedNetwork supportedNetworks={SPEED_MARKETS_SUPPORTED_NETWORKS} />
                 </UnsupportedNetworkWrapper>
             )}
         </>

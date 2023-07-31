@@ -82,7 +82,6 @@
         "errors": {
             "try-again": "Try again. AMM data is changed.",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
-            "wallet-not-connected": "Wallet not connected!",
             "insufficient-balance": "Insufficient balance",
             "insufficient-staking-balance": "Insufficient staking balance",
             "out-of-liquidity": "Out of liquidity",
@@ -430,7 +429,16 @@
                 "price-stale": "Can't resolve market with stale price"
             }
         },
-        "total-pay": "Total to pay {{buyinAmount}} + {{fee}} fee"
+        "total-pay": "Total to pay {{buyinAmount}} + {{fee}} fee",
+        "admin": {
+            "user-title": "Unresolved user winner positions",
+            "amm-title": "Unresolved AMM winner positions",
+            "unknown-price-title": "Unresolved positions without final price",
+            "resolve-progress": "Resolving...",
+            "resolve": "Resolve",
+            "user": "User",
+            "no-positions": "No positions for this section"
+        }
     },
     "thales-token": {
         "title": "Thales Token",

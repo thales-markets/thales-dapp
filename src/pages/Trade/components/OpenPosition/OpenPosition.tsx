@@ -43,7 +43,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                     <>
                         <Separator />
                         <FlexContainer>
-                            <Label>{position.finalPrice ? 'Final price' : 'Current price'}</Label>
+                            <Label>{position.finalPrice ? t('profile.final-price') : t('profile.current-price')}</Label>
                             <Value>
                                 {position.finalPrice
                                     ? formatCurrencyWithPrecision(position.finalPrice || 0)

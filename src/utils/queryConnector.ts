@@ -134,6 +134,10 @@ export const refetchUserSpeedMarkets = (networkId: Network, walletAddress: strin
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress));
 };
 
+export const refetchActiveSpeedMarkets = (networkId: Network) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId));
+};
+
 export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, networkId, period)

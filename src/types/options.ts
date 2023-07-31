@@ -221,4 +221,5 @@ export type UserLivePositions = {
     value: number;
     claimable?: boolean;
     finalPrice?: number;
+    user?: string;
 };

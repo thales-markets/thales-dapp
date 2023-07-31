@@ -251,18 +251,17 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const handleSubmit = async () => {
         if (isButtonDisabled) return;
 
-        setIsSubmitting(true);
-        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-
         const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
             timeout: CONNECTION_TIMEOUT_MS,
         });
 
-        try {
-            const { speedMarketsAMMContract, signer } = snxJSConnector as any;
-            if (speedMarketsAMMContract) {
-                const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
+        const { speedMarketsAMMContract, signer } = snxJSConnector as any;
+        if (speedMarketsAMMContract) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
+            const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
+            try {
                 const pythContract = new ethers.Contract(
                     PYTH_CONTRACT_ADDRESS[networkId],
                     PythInterfaceAbi as any,
@@ -304,15 +303,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     resetData();
                     setPaidAmount('');
                 }
-            } else {
+            } catch (e) {
+                console.log(e);
                 await delay(800);
-                toast.update(id, getErrorToastOptions(t('common.errors.wallet-not-connected'), id));
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             }
-            setIsSubmitting(false);
-        } catch (e) {
-            console.log(e);
-            await delay(800);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             setIsSubmitting(false);
         }
     };

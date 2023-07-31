@@ -7,7 +7,6 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
-import { reject } from 'lodash';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
 import { bigNumberFormatter, parseBytes32String, stableCoinFormatter } from 'utils/formatters/ethers';
@@ -15,15 +14,11 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 
-const useUserActiveSpeedMarketsDataQuery = (
-    networkId: Network,
-    walletAddress: string,
-    options?: UseQueryOptions<UserLivePositions[]>
-) => {
+const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOptions<UserLivePositions[]>) => {
     return useQuery<UserLivePositions[]>(
-        QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress),
+        QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId),
         async () => {
-            const userSpeedMarketsData: UserLivePositions[] = [];
+            const maturedSpeedMarketsData: UserLivePositions[] = [];
 
             const { speedMarketsAMMContract } = snxJSConnector;
             const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
@@ -34,32 +29,26 @@ const useUserActiveSpeedMarketsDataQuery = (
                 const fees =
                     bigNumberFormatter(await speedMarketsAMMContract.lpFee()) +
                     bigNumberFormatter(await speedMarketsAMMContract.safeBoxImpact());
-                const numActiveMarkets = await speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress);
-                const activeMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
-                    0,
-                    numActiveMarkets,
-                    walletAddress
-                );
+                const numActiveMarkets = await speedMarketsAMMContract.numActiveMarkets();
+                const activeMarkets = await speedMarketsAMMContract.activeMarkets(0, numActiveMarkets);
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
+                const maturedMarkets: any = marketsDataArray.filter(
+                    (market: any) => secondsToMilliseconds(Number(market.strikeTime)) < Date.now()
+                );
 
                 // Fetch prices for all matured markets
-                const pricePromises = marketsDataArray.map((market: any) => {
-                    const isMarketMatured = secondsToMilliseconds(Number(market.strikeTime)) < Date.now();
-                    if (isMarketMatured) {
-                        return priceConnection
-                            .getPriceFeed(
-                                getPriceId(networkId, parseBytes32String(market.asset)),
-                                Number(market.strikeTime)
-                            )
-                            .catch((e) => console.log('Pyth price feed error', e));
-                    } else {
-                        return reject(`Price still unknown as this is for future time: ${market.strikeTime}`);
-                    }
-                });
+                const pricePromises = maturedMarkets.map((market: any) =>
+                    priceConnection
+                        .getPriceFeed(
+                            getPriceId(networkId, parseBytes32String(market.asset)),
+                            Number(market.strikeTime)
+                        )
+                        .catch((e) => console.log('Pyth price feed error', e))
+                );
                 const priceFeeds = await Promise.allSettled(pricePromises);
 
-                for (let i = 0; i < marketsDataArray.length; i++) {
-                    const marketsData = marketsDataArray[i];
+                for (let i = 0; i < maturedMarkets.length; i++) {
+                    const marketsData = maturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
                     const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
@@ -78,31 +67,32 @@ const useUserActiveSpeedMarketsDataQuery = (
                                 price >= bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
                             (side === Positions.DOWN &&
                                 price < bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS));
+
+                        const userData: UserLivePositions = {
+                            positionAddress: ZERO_ADDRESS,
+                            currencyKey: parseBytes32String(marketsData.asset),
+                            strikePrice: formatCurrencyWithSign(
+                                USD_SIGN,
+                                bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)
+                            ),
+                            amount: payout,
+                            amountBigNumber: marketsData.buyinAmount,
+                            maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
+                            market: activeMarkets[i],
+                            side: side,
+                            paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                            value: payout,
+                            claimable: isClaimable,
+                            finalPrice: price,
+                            user: marketsData.user,
+                        };
+
+                        maturedSpeedMarketsData.push(userData);
                     }
-
-                    const userData: UserLivePositions = {
-                        positionAddress: ZERO_ADDRESS,
-                        currencyKey: parseBytes32String(marketsData.asset),
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)
-                        ),
-                        amount: payout,
-                        amountBigNumber: marketsData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: activeMarkets[i],
-                        side: side,
-                        paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
-                        value: payout,
-                        claimable: isClaimable,
-                        finalPrice: price,
-                    };
-
-                    userSpeedMarketsData.push(userData);
                 }
             }
 
-            return userSpeedMarketsData;
+            return maturedSpeedMarketsData;
         },
         {
             ...options,
@@ -110,4 +100,4 @@ const useUserActiveSpeedMarketsDataQuery = (
     );
 };
 
-export default useUserActiveSpeedMarketsDataQuery;
+export default useActiveSpeedMarketsDataQuery;
