@@ -47,7 +47,7 @@ const UnresolvedPositions: React.FC = () => {
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
-                <PositionsWrapper>
+                <PositionsWrapper hasPositions={userWinnerSpeedMarketsData.length > 0}>
                     {userWinnerSpeedMarketsData.length > 0 ? (
                         userWinnerSpeedMarketsData.map((position, index) => (
                             <UnresolvedPosition position={position} key={`userWinner${index}`} />
@@ -63,7 +63,7 @@ const UnresolvedPositions: React.FC = () => {
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
-                <PositionsWrapper>
+                <PositionsWrapper hasPositions={userWinnerSpeedMarketsData.length > 0}>
                     {ammWinnerSpeedMarketsData.length > 0 ? (
                         ammWinnerSpeedMarketsData.map((position, index) => (
                             <UnresolvedPosition position={position} key={`ammWinner${index}`} />
@@ -79,7 +79,7 @@ const UnresolvedPositions: React.FC = () => {
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
-                <PositionsWrapper>
+                <PositionsWrapper hasPositions={unknownPriceSpeedMarketsData.length > 0}>
                     {unknownPriceSpeedMarketsData.length > 0 ? (
                         unknownPriceSpeedMarketsData.map((position, index) => (
                             <UnresolvedPosition position={position} key={`unknownPrice${index}`} />
@@ -101,11 +101,11 @@ const Wrapper = styled.div`
     padding-bottom: 20px;
 `;
 
-const PositionsWrapper = styled.div`
+const PositionsWrapper = styled.div<{ hasPositions: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 6px;
-    overflow-y: auto;
+    ${(props) => (props.hasPositions ? 'overflow-y: auto;' : '')}
     max-height: 560px;
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
