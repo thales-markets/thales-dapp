@@ -74,7 +74,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
                                 <OpenPosition
                                     position={position}
                                     isSpeedMarkets={isSpeedMarkets}
-                                    key={`position${index}`}
+                                    key={`position${position.market}${position.positionAddress}${index}`}
                                     maxPriceDelaySec={maxPriceDelaySec}
                                     currentPrices={currentPrices}
                                 />

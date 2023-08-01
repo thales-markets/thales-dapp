@@ -70,7 +70,7 @@ const BaseRewards: React.FC = () => {
                             }
                         >
                             {t('thales-token.gamified-staking.rewards.base-rewards.stake-more')}
-                            <ArrowRight className="icon icon__arrow" />
+                            <ArrowRight className="icon icon--arrow" />
                         </StakeMore>
                     </Wrapper>
                 </Cell>

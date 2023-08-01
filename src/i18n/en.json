@@ -407,6 +407,7 @@
         }
     },
     "speed-markets": {
+        "title": "Speed Markets",
         "info": "Choose an <bold>asset</bold> and the <bold>time</bold> you think will be <bold>above or below</bold> the current price. If you are correct you will <bold>double your money</bold>!",
         "steps": {
             "choose-asset": "Asset",
@@ -425,7 +426,6 @@
         },
         "user-positions": {
             "confirmation-message": "Positions successfully claimed",
-            "wait-price": "Wait for final price",
             "errors": {
                 "price-stale": "Can't resolve market with stale price"
             }

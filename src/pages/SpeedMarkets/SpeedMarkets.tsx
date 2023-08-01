@@ -7,7 +7,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
@@ -63,19 +63,25 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
 
     const fetchCurrentPrice = useCallback(async () => {
         const priceIds = supportedAssets.map((asset) => getPriceId(networkId, asset));
-        const prices = await getCurrentPrices(priceConnection, networkId, priceIds);
-        setCurrentPrices(prices);
-    }, [networkId, priceConnection]);
+        const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
+        setCurrentPrices((prev) => {
+            if (prev[currencyKey] !== prices[currencyKey]) {
+                prevPrice.current = prev[currencyKey];
+            }
+            return prices;
+        });
+    }, [networkId, priceConnection, currencyKey]);
 
     // Set initial current price
     useEffect(() => {
         fetchCurrentPrice();
     }, [currencyKey, fetchCurrentPrice]);
 
+    const prevPrice = useRef(0);
     // Update current price latest on every minute
     useInterval(async () => {
         fetchCurrentPrice();
-    }, secondsToMilliseconds(30));
+    }, secondsToMilliseconds(5));
 
     // Reset inputs
     useEffect(() => {
@@ -112,6 +118,11 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
             {supportedNetworks.includes(networkId) ? (
                 <Container>
                     <BannerCarousel />
+                    <FlexDivCentered>
+                        <Icon className="icon icon--thunder" />
+                        <Title>{t('speed-markets.title')}</Title>
+                        <Icon className="icon icon--thunder" />
+                    </FlexDivCentered>
                     <Info>
                         <Trans
                             i18nKey="speed-markets.info"
@@ -129,6 +140,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                                 selectedRightPrice={undefined}
                                 isSpeedMarkets
                                 explicitCurrentPrice={currentPrices[currencyKey]}
+                                prevExplicitPrice={prevPrice.current}
                             ></PriceChart>
                         </LeftSide>
                         <RightSide>
@@ -145,8 +157,8 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             {getStepLabel(3, t('speed-markets.steps.choose-time'))}
                             <SelectTime
                                 selectedDeltaSec={deltaTimeSec}
-                                selectedExactTime={strikeTimeSec}
                                 onDeltaChange={setDeltaTimeSec}
+                                selectedExactTime={strikeTimeSec}
                                 onExactTimeChange={setStrikeTimeSec}
                                 ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                             />
@@ -249,6 +261,15 @@ const StepName = styled.span`
     text-transform: capitalize;
 `;
 
+const Title = styled.span`
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 200%;
+    color: ${(props) => props.theme.textColor.primary};
+    text-transform: uppercase;
+`;
+
 const Info = styled.span`
     text-align: justify;
     font-size: 18px;
@@ -262,6 +283,13 @@ const UnsupportedNetworkWrapper = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 0;
     }
+`;
+
+const Icon = styled.i`
+    font-size: 22px;
+    line-height: 200%;
+    color: ${(props) => props.theme.warning.textColor.primary};
+    padding: 0 5px;
 `;
 
 export default SpeedMarkets;

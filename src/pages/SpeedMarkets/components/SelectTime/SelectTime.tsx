@@ -31,6 +31,7 @@ type SelectTimeProps = {
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
     onDeltaChange,
+    selectedExactTime,
     onExactTimeChange,
     ammSpeedMarketsLimits,
 }) => {
@@ -42,15 +43,20 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const [isDeltaSelected, setIsDeltaSelected] = useState(true); // false is when exact time is selected
     const [customDeltaTime, setCustomDeltaTime] = useState<string | number>('');
     const [isDeltaMinutesSelected, setIsDeltaMinutesSelected] = useState(true); // false is when hours is selected
+
+    const DEFAULT_HOURS = '12';
+    const DEFAULT_MINUTES = '00';
+    const [exactTimeHours, setExactTimeHours] = useState(DEFAULT_HOURS);
+    const [exactTimeMinutes, setExactTimeMinutes] = useState(DEFAULT_MINUTES);
     const [isAM, setIsAM] = useState(true); // false is when it is PM
-    const [exactTimeHours, setExactTimeHours] = useState('12');
-    const [exactTimeMinutes, setExactTimeMinutes] = useState('00');
+
     const [errorMessage, setErrorMessage] = useState('');
 
     const deltaTimesMinutes: number[] = useMemo(() => {
         const times = [];
         if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
             times.push(secondsToMinutes(ammSpeedMarketsLimits.minimalTimeToMaturity));
+            setIsDeltaMinutesSelected(true);
         } else {
             setIsDeltaMinutesSelected(false);
         }
@@ -201,14 +207,33 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         setErrorMessage('');
     }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t, isDeltaSelected]);
 
+    const resetData = useCallback(() => {
+        setIsDeltaSelected(true);
+        setIsDeltaMinutesSelected(true);
+        setCustomDeltaTime('');
+        onDeltaChange(0);
+
+        setIsAM(true);
+        setExactTimeHours(DEFAULT_HOURS);
+        setExactTimeMinutes(DEFAULT_MINUTES);
+        onExactTimeChange(0);
+    }, [onDeltaChange, onExactTimeChange]);
+
     // Reset inputs
     useEffect(() => {
         if (!isWalletConnected) {
+            resetData();
+        } else if (isDeltaSelected && selectedDeltaSec === 0) {
+            setIsDeltaMinutesSelected(true);
             setCustomDeltaTime('');
-            onDeltaChange(0);
-            onExactTimeChange(0);
+        } else if (!isDeltaSelected && selectedExactTime === 0) {
+            setIsDeltaSelected(true);
+
+            setIsAM(true);
+            setExactTimeHours(DEFAULT_HOURS);
+            setExactTimeMinutes(DEFAULT_MINUTES);
         }
-    }, [isWalletConnected, onDeltaChange, onExactTimeChange]);
+    }, [isWalletConnected, resetData, selectedDeltaSec, selectedExactTime, isDeltaSelected]);
 
     const onDeltaTimeClickHandler = (deltaHours: number, deltaMinutes: number) => {
         setIsDeltaSelected(true);

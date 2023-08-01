@@ -1,6 +1,6 @@
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UserLivePositions } from 'types/options';
@@ -19,8 +19,6 @@ import { getColorPerPosition } from 'utils/options';
 import Tooltip from 'components/Tooltip';
 import useInterval from 'hooks/useInterval';
 import { secondsToMilliseconds } from 'date-fns';
-import { refetchUserSpeedMarkets } from 'utils/queryConnector';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -33,18 +31,18 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const [isSpeedMarketMatured, setIsSpeedMarketMatured] = useState(
+        isSpeedMarkets && Date.now() > position.maturityDate
+    );
+
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
 
-    const isSpeedMarketMatured = Date.now() > position.maturityDate;
-
     useInterval(() => {
-        if (isSpeedMarkets && !position.finalPrice && isSpeedMarketMatured) {
-            refetchUserSpeedMarkets(networkId, walletAddress);
+        if (isSpeedMarkets && !position.finalPrice && Date.now() > position.maturityDate && !isSpeedMarketMatured) {
+            setIsSpeedMarketMatured(true);
         }
-    }, secondsToMilliseconds(10));
+    }, secondsToMilliseconds(1));
 
     return (
         <Position>
@@ -63,7 +61,9 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                             </Label>
                             <Value>
                                 {isSpeedMarketMatured
-                                    ? formatCurrencyWithPrecision(position.finalPrice || 0)
+                                    ? position.finalPrice
+                                        ? formatCurrencyWithPrecision(position.finalPrice)
+                                        : '. . .'
                                     : formatCurrencyWithPrecision(
                                           currentPrices ? currentPrices[position.currencyKey] : 0
                                       )}

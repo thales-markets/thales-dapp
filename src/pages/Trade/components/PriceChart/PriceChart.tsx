@@ -43,6 +43,7 @@ type PriceChartProps = {
     position: Positions | undefined;
     isSpeedMarkets?: boolean;
     explicitCurrentPrice?: number;
+    prevExplicitPrice?: number;
 };
 
 const coinGeckoClientPublic = new CoinGeckoClient({
@@ -72,8 +73,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
     selectedPrice,
     selectedRightPrice,
     position,
-    explicitCurrentPrice,
     isSpeedMarkets,
+    explicitCurrentPrice,
+    prevExplicitPrice,
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
@@ -225,13 +227,18 @@ const PriceChart: React.FC<PriceChartProps> = ({
         }
     };
 
+    const isSpeedMarketPriceUp = isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined;
+
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
                 <FlexDivRowCentered>
                     <IconPriceWrapper>
                         <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                        <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
+                        <Price isUp={isSpeedMarketPriceUp} key={currentPrice}>
+                            {data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}
+                        </Price>
+                        {isSpeedMarkets && <Icon className="icon icon--arrow" isUp={isSpeedMarketPriceUp} />}
                     </IconPriceWrapper>
                     {!!iv && (
                         <FlexDiv>
@@ -243,7 +250,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         </FlexDiv>
                     )}
                 </FlexDivRowCentered>
-                <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
+                {!isSpeedMarkets && (
+                    <PriceChange up={processedPriceData > 0}>
+                        {formatPricePercentageGrowth(processedPriceData)}
+                    </PriceChange>
+                )}
             </FlexDivSpaceBetween>
             {data && (
                 <ResponsiveContainer width="100%" height={266}>
@@ -474,16 +485,43 @@ const IconPriceWrapper = styled.div`
     gap: 8px;
 `;
 
-const Icon = styled.i`
-    font-size: 28px;
+const Icon = styled.i<{ isUp?: boolean }>`
+    font-size: ${(props) => (props.isUp !== undefined ? '22' : '28')};
+    ${(props) =>
+        props.isUp !== undefined
+            ? `color: ${props.isUp ? props.theme.positionColor.up : props.theme.positionColor.down};`
+            : ''}
+    ${(props) =>
+        props.isUp !== undefined ? (props.isUp ? 'transform: rotate(-90deg);' : 'transform: rotate(90deg);') : ''}
 `;
 
-const Price = styled.span`
+const Price = styled.span<{ isUp?: boolean }>`
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) =>
+        props.isUp !== undefined
+            ? props.isUp
+                ? props.theme.positionColor.up
+                : props.theme.positionColor.down
+            : props.theme.textColor.primary};
+
+    animation: appear 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+    @keyframes appear {
+        0% {
+            letter-spacing: 1em;
+            -webkit-filter: blur(12px);
+            filter: blur(12px);
+            opacity: 0;
+        }
+        100% {
+            -webkit-filter: blur(0px);
+            filter: blur(0px);
+            opacity: 1;
+        }
+    }
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
