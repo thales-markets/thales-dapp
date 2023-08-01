@@ -345,7 +345,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     </AreaChart>
                 </ResponsiveContainer>
             )}
-            <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />
+            <Toggle
+                options={ToggleButtons}
+                defaultSelectedIndex={isSpeedMarkets ? 0 : 2}
+                onChange={handleDateRangeChange}
+            />
         </Wrapper>
     );
 };

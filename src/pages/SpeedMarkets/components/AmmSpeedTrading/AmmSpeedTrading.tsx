@@ -339,6 +339,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const onMaxClick = () => {
         if (ammSpeedMarketsLimits && stableBalance > 0) {
             setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, stableBalance));
+            setBuyinAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, stableBalance));
         }
     };
 

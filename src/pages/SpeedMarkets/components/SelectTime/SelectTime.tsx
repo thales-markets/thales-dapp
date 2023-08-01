@@ -226,7 +226,11 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         } else if (isDeltaSelected && selectedDeltaSec === 0) {
             setIsDeltaMinutesSelected(true);
             setCustomDeltaTime('');
-        } else if (!isDeltaSelected && selectedExactTime === 0) {
+        } else if (
+            !isDeltaSelected &&
+            selectedExactTime === 0 &&
+            (exactTimeHours !== DEFAULT_HOURS || exactTimeMinutes !== DEFAULT_MINUTES)
+        ) {
             setIsDeltaSelected(true);
 
             setIsAM(true);
