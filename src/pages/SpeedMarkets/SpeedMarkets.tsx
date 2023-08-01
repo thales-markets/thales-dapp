@@ -48,6 +48,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const [deltaTimeSec, setDeltaTimeSec] = useState(0);
     const [strikeTimeSec, setStrikeTimeSec] = useState(0);
     const [buyinAmount, setBuyinAmount] = useState(0);
+    const [isResetTriggered, setIsResetTriggered] = useState(false);
 
     const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
         enabled: isAppReady,
@@ -104,11 +105,13 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     };
 
     const resetData = () => {
+        setIsResetTriggered(true);
         setCurrencyKey(supportedAssets[0]);
         setPositionType(undefined);
         setDeltaTimeSec(0);
         setStrikeTimeSec(0);
         setBuyinAmount(0);
+        setIsResetTriggered(false);
     };
 
     const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
@@ -158,9 +161,9 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             <SelectTime
                                 selectedDeltaSec={deltaTimeSec}
                                 onDeltaChange={setDeltaTimeSec}
-                                selectedExactTime={strikeTimeSec}
                                 onExactTimeChange={setStrikeTimeSec}
                                 ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                                isResetTriggered={isResetTriggered}
                             />
                             {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
                             <SelectBuyin

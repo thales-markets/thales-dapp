@@ -23,17 +23,17 @@ import { ThemeInterface } from 'types/ui';
 type SelectTimeProps = {
     selectedDeltaSec: number;
     onDeltaChange: React.Dispatch<number>;
-    selectedExactTime: number;
     onExactTimeChange: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
+    isResetTriggered: boolean;
 };
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
     onDeltaChange,
-    selectedExactTime,
     onExactTimeChange,
     ammSpeedMarketsLimits,
+    isResetTriggered,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -221,23 +221,10 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     // Reset inputs
     useEffect(() => {
-        if (!isWalletConnected) {
+        if (!isWalletConnected || isResetTriggered) {
             resetData();
-        } else if (isDeltaSelected && selectedDeltaSec === 0) {
-            setIsDeltaMinutesSelected(true);
-            setCustomDeltaTime('');
-        } else if (
-            !isDeltaSelected &&
-            selectedExactTime === 0 &&
-            (exactTimeHours !== DEFAULT_HOURS || exactTimeMinutes !== DEFAULT_MINUTES)
-        ) {
-            setIsDeltaSelected(true);
-
-            setIsAM(true);
-            setExactTimeHours(DEFAULT_HOURS);
-            setExactTimeMinutes(DEFAULT_MINUTES);
         }
-    }, [isWalletConnected, resetData, selectedDeltaSec, selectedExactTime, isDeltaSelected]);
+    }, [isWalletConnected, resetData, isResetTriggered]);
 
     const onDeltaTimeClickHandler = (deltaHours: number, deltaMinutes: number) => {
         setIsDeltaSelected(true);
