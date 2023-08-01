@@ -46,7 +46,10 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
         () =>
             userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
                 ? userActiveSpeedMarketsDataQuery.data.filter(
-                      (marketData) => marketData.maturityDate > Date.now() || marketData.claimable
+                      (marketData) =>
+                          marketData.maturityDate > Date.now() || // not matured
+                          marketData.claimable || // matured and claimable
+                          (marketData.maturityDate < Date.now() && !marketData.finalPrice) // matured and missing price
                   )
                 : [],
         [userActiveSpeedMarketsDataQuery]

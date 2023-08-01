@@ -159,7 +159,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         onExactTimeChange,
     ]);
 
-    useInterval(() => isValidExactTime(getExactTime()), 10 * 1000);
+    useInterval(() => isValidExactTime(getExactTime()), secondsToMilliseconds(10));
 
     // Validations for delta time
     useEffect(() => {

@@ -17,6 +17,10 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import Tooltip from 'components/Tooltip';
+import useInterval from 'hooks/useInterval';
+import { secondsToMilliseconds } from 'date-fns';
+import { refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -28,8 +32,19 @@ type OpenPositionProps = {
 const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
+
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
+
+    const isSpeedMarketMatured = Date.now() > position.maturityDate;
+
+    useInterval(() => {
+        if (isSpeedMarkets && !position.finalPrice && isSpeedMarketMatured) {
+            refetchUserSpeedMarkets(networkId, walletAddress);
+        }
+    }, secondsToMilliseconds(10));
 
     return (
         <Position>
@@ -42,10 +57,12 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 {isSpeedMarkets && (
                     <>
                         <Separator />
-                        <FlexContainer>
-                            <Label>{position.finalPrice ? t('profile.final-price') : t('profile.current-price')}</Label>
+                        <FlexContainer secondChildWidth="140px">
+                            <Label>
+                                {isSpeedMarketMatured ? t('profile.final-price') : t('profile.current-price')}
+                            </Label>
                             <Value>
-                                {position.finalPrice
+                                {isSpeedMarketMatured
                                     ? formatCurrencyWithPrecision(position.finalPrice || 0)
                                     : formatCurrencyWithPrecision(
                                           currentPrices ? currentPrices[position.currencyKey] : 0
@@ -141,7 +158,7 @@ const AlignedFlex = styled.div`
     }
 `;
 
-const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string }>`
+const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string; secondChildWidth?: string }>`
     gap: 4px;
     flex: 1;
     justify-content: center;
@@ -149,6 +166,10 @@ const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string }>`
         min-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
         max-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
     }
+    &:nth-child(3) {
+        ${(props) => (props.secondChildWidth ? `min-width: ${props.secondChildWidth};` : '')};
+    }
+
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         gap: 4px;

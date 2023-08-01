@@ -297,22 +297,34 @@ const App = () => {
                                 />
                             )}
 
-                            <Route exact path={ROUTES.Options.Home}>
-                                <DappLayout>
-                                    <Markets />
-                                </DappLayout>
-                            </Route>
+                            <Route
+                                exact
+                                path={ROUTES.Options.Home}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Markets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
 
-                            <Route exact path={ROUTES.Options.SpeedMarkets}>
-                                <DappLayout>
-                                    <SpeedMarkets />
-                                </DappLayout>
-                            </Route>
-                            <Route exact path={ROUTES.Options.SpeedMarketsAdmin}>
-                                <DappLayout>
-                                    <SpeedMarketsAdmin />
-                                </DappLayout>
-                            </Route>
+                            <Route
+                                exact
+                                path={ROUTES.Options.SpeedMarkets}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <SpeedMarkets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={ROUTES.Options.SpeedMarketsAdmin}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <SpeedMarketsAdmin {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
 
                             <Route
                                 exact

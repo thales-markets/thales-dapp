@@ -61,7 +61,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                 setDeltaDate(Date.now() + secondsToMilliseconds(deltaTimeSec));
             }
         }
-    }, 5 * 1000);
+    }, secondsToMilliseconds(5));
 
     const potentialWinFormatted = isFetchingQuote
         ? '...'

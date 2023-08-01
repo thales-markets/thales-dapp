@@ -80,6 +80,7 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position }) =
                 ) {
                     await delay(800);
                     toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));
+                    setIsSubmitting(false);
                     return;
                 }
 

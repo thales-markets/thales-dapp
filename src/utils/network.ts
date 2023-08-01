@@ -20,6 +20,7 @@ import {
 } from 'constants/network';
 import { Network } from 'enums/network';
 import { OptimismNetwork } from 'types/network';
+import ROUTES from 'constants/routes';
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -165,4 +166,21 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 2,
     },
+};
+
+export const getSupportedNetworksByRoute = (route: string): Network[] => {
+    switch (route) {
+        case ROUTES.Options.Home:
+            return [
+                Network.OptimismMainnet,
+                Network.BSC,
+                Network.PolygonMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+            ];
+        case ROUTES.Options.SpeedMarkets:
+            return [Network.OptimismMainnet, Network.OptimismGoerli];
+        default:
+            return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
+    }
 };

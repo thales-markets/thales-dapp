@@ -5,21 +5,24 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import UnresolvedPositions from './components/UnresolvedPositions';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
-import { SPEED_MARKETS_SUPPORTED_NETWORKS } from 'constants/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { RouteComponentProps } from 'react-router-dom';
+import { getSupportedNetworksByRoute } from 'utils/network';
 
-const SpeedMarketsAdmin: React.FC = () => {
+const SpeedMarketsAdmin: React.FC<RouteComponentProps> = (props) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
 
     return (
         <>
-            {SPEED_MARKETS_SUPPORTED_NETWORKS.includes(networkId) ? (
+            {supportedNetworks.includes(networkId) ? (
                 <Container>
                     <UnresolvedPositions />
                 </Container>
             ) : (
                 <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={SPEED_MARKETS_SUPPORTED_NETWORKS} />
+                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
                 </UnsupportedNetworkWrapper>
             )}
         </>

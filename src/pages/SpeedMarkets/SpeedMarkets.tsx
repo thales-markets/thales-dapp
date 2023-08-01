@@ -24,13 +24,15 @@ import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSp
 import { getIsAppReady } from 'redux/modules/app';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
 import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
-import { SPEED_MARKETS_SUPPORTED_NETWORKS } from 'constants/network';
+import { getSupportedNetworksByRoute } from 'utils/network';
+import { RouteComponentProps } from 'react-router-dom';
+import { secondsToMilliseconds } from 'date-fns';
 
 const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
     (a, b) => getCurrencyPriority(a) - getCurrencyPriority(b)
 );
 
-const SpeedMarkets: React.FC = () => {
+const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -73,7 +75,7 @@ const SpeedMarkets: React.FC = () => {
     // Update current price latest on every minute
     useInterval(async () => {
         fetchCurrentPrice();
-    }, 60 * 1000);
+    }, secondsToMilliseconds(30));
 
     // Reset inputs
     useEffect(() => {
@@ -103,9 +105,11 @@ const SpeedMarkets: React.FC = () => {
         setBuyinAmount(0);
     };
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     return (
         <>
-            {SPEED_MARKETS_SUPPORTED_NETWORKS.includes(networkId) ? (
+            {supportedNetworks.includes(networkId) ? (
                 <Container>
                     <BannerCarousel />
                     <Info>
@@ -176,7 +180,7 @@ const SpeedMarkets: React.FC = () => {
                 </Container>
             ) : (
                 <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={SPEED_MARKETS_SUPPORTED_NETWORKS} />
+                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
                 </UnsupportedNetworkWrapper>
             )}
         </>

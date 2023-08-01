@@ -425,6 +425,7 @@
         },
         "user-positions": {
             "confirmation-message": "Positions successfully claimed",
+            "wait-price": "Wait for final price",
             "errors": {
                 "price-stale": "Can't resolve market with stale price"
             }

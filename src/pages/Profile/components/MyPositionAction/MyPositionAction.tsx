@@ -308,6 +308,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 ) {
                     await delay(800);
                     toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));
+                    setIsSubmitting(false);
                     return;
                 }
 
@@ -340,6 +341,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
 
     const getButton = () => {
         if (isSpeedMarkets) {
+            const isSpeedMarketMatured = Date.now() > position.maturityDate;
             if (position.claimable) {
                 return (
                     <Button
@@ -355,6 +357,15 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                                 : t('markets.user-positions.claim-win')
                         } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
                     </Button>
+                );
+            } else if (isSpeedMarketMatured && !position.finalPrice) {
+                return (
+                    <>
+                        <Separator />
+                        <ResultsContainer>
+                            <Label>{t('speed-markets.user-positions.wait-price')}</Label>
+                        </ResultsContainer>
+                    </>
                 );
             } else {
                 return (

@@ -63,7 +63,7 @@ const UnresolvedPositions: React.FC = () => {
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
-                <PositionsWrapper hasPositions={userWinnerSpeedMarketsData.length > 0}>
+                <PositionsWrapper hasPositions={ammWinnerSpeedMarketsData.length > 0}>
                     {ammWinnerSpeedMarketsData.length > 0 ? (
                         ammWinnerSpeedMarketsData.map((position, index) => (
                             <UnresolvedPosition position={position} key={`ammWinner${index}`} />

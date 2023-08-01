@@ -2,7 +2,6 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
-import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
@@ -18,7 +17,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { getIsMainnet } from 'utils/network';
+import { getIsMainnet, getSupportedNetworksByRoute } from 'utils/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -27,14 +26,6 @@ import OpenPositions from './components/OpenPositions';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
-
-const SUPPORTED_NETWORKS = [
-    Network.OptimismMainnet,
-    Network.BSC,
-    Network.PolygonMainnet,
-    Network.OptimismGoerli,
-    Network.Arbitrum,
-];
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -113,13 +104,11 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         }
     };
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     return (
         <>
-            {isMainnet ? (
-                <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={SUPPORTED_NETWORKS} />
-                </UnsupportedNetworkWrapper>
-            ) : (
+            {supportedNetworks.includes(networkId) ? (
                 <Wrapper>
                     <BannerCarousel />
                     <ContentWrapper>
@@ -191,6 +180,10 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     />
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
+            ) : (
+                <UnsupportedNetworkWrapper>
+                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
+                </UnsupportedNetworkWrapper>
             )}
         </>
     );
