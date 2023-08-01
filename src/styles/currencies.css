@@ -85,3 +85,7 @@
 .currency-icon--pepe::before {
     content: '\006E';
 }
+
+.currency-icon--wld::before {
+    content: '\006F';
+}
