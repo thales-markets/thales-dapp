@@ -419,7 +419,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
     [CRYPTO_CURRENCY_MAP.PEPE]: 'pepe',
-    [CRYPTO_CURRENCY_MAP.WLD]: 'worldcoin',
+    [CRYPTO_CURRENCY_MAP.WLD]: 'worldcoin-wld',
     [COMMODITY_MAP.XAU]: 'tether-gold',
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
 };
