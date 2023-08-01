@@ -173,6 +173,7 @@ export const CRYPTO_CURRENCY = [
     'BUSD',
     'CAKE',
     'PEPE',
+    'WLD',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -334,6 +335,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
     [CRYPTO_CURRENCY_MAP.PEPE]: 'PEPE',
+    [CRYPTO_CURRENCY_MAP.WLD]: 'Worldcoin',
     [COMMODITY_MAP.XAU]: 'Gold',
     [COMMODITY_MAP.XAG]: 'Silver',
 };
@@ -417,6 +419,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
     [CRYPTO_CURRENCY_MAP.PEPE]: 'pepe',
+    [CRYPTO_CURRENCY_MAP.WLD]: 'worldcoin',
     [COMMODITY_MAP.XAU]: 'tether-gold',
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
 };
