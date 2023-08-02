@@ -81,6 +81,7 @@ import {
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
+import { plausible } from 'pages/Root/Root';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -544,11 +545,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         action: `buy-with-${getCollateral(networkId, selectedCollateralIndex)}`,
                         value: Number(paidAmount),
                     });
+                    plausible.trackEvent(isRangedMarket ? 'range-buy' : 'amm buy');
                 } else {
                     trackEvent({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
                     });
+                    plausible.trackEvent(isRangedMarket ? 'range-sell' : 'sell');
                 }
             }
         } catch (e) {

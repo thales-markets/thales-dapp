@@ -27,6 +27,7 @@ import { arbitrum, bsc, mainnet, optimism, optimismGoerli, polygon } from 'wagmi
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
+import Plausible from 'plausible-tracker';
 import App from './App';
 dotenv.config();
 
@@ -136,10 +137,18 @@ interface RootProps {
     store: Store;
 }
 
+export const plausible = Plausible({
+    domain: 'https://thalesmarket.io',
+    hashMode: true,
+    trackLocalhost: true,
+    apiHost: 'http://3.124.117.191:8000',
+});
+
 const theme = getDefaultTheme();
 const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });
 
 const Root: React.FC<RootProps> = ({ store }) => {
+    plausible.enableAutoPageviews();
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>
