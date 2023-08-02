@@ -84,20 +84,24 @@ const useStakersDataLeaderboardQuery = (
 
                 let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
                     const vaultPoints = item?.userVaultPointsPerRound
-                        ? bigNumberFormatter(item.userVaultPointsPerRound)
+                        ? bigNumberFormatter(item.userVaultPointsPerRound) * 0.4
                         : 0;
 
-                    const lpPoints = item?.userLPPointsPerRound ? bigNumberFormatter(item.userLPPointsPerRound) : 0;
+                    const lpPoints = item?.userLPPointsPerRound
+                        ? bigNumberFormatter(item.userLPPointsPerRound) * 0.4
+                        : 0;
                     const tradingPoints = item?.userTradingBasePointsPerRound
                         ? bigNumberFormatter(item.userTradingBasePointsPerRound)
                         : 0;
                     const userTotalPoints =
-                        (vaultPoints + lpPoints + tradingPoints) * (bigNumberFormatter(item.stakingMultiplier) + 1);
+                        (vaultPoints + lpPoints + tradingPoints) * (bigNumberFormatter(item.stakingMultiplier) / 4 + 1);
                     globalPoints = globalPoints + userTotalPoints;
 
                     return {
                         ...stakersOnlyWithSomeStakingAmount[index],
-                        stakingMultiplier: item?.stakingMultiplier ? bigNumberFormatter(item.stakingMultiplier) + 1 : 0,
+                        stakingMultiplier: item?.stakingMultiplier
+                            ? bigNumberFormatter(item.stakingMultiplier) / 4 + 1
+                            : 0,
                         userLPBasePointsPerRound: lpPoints,
                         userTradingBasePointsPerRound: tradingPoints,
                         userVaultBasePointsPerRound: vaultPoints,
