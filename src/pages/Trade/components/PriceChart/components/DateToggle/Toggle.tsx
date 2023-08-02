@@ -46,7 +46,6 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
 const Wrapper = styled.div`
     display: flex;
     align-items: center;
-    margin-top: 5px;
     justify-content: center;
     gap: 6px;
 `;

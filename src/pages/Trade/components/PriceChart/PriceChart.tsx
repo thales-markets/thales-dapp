@@ -264,7 +264,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             {data && (
-                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 318 : 266}>
+                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 323 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
                         <defs xHeight={1}>
