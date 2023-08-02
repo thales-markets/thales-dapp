@@ -212,7 +212,7 @@ const ContentWrapper = styled.div`
     display: flex;
     gap: 20px;
     margin-top: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 11px;
     justify-content: space-between;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;

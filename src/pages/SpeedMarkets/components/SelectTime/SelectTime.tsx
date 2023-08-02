@@ -305,6 +305,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                                 backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                                 borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                                 textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                                additionalStyles={{ borderRadius: '4px' }}
                                 onClick={onMinutesButtonClikHandler}
                             >
                                 {t('common.time-remaining.minutes')}
@@ -317,6 +318,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                             backgroundColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             borderColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             textColor={isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                            additionalStyles={{ borderRadius: '4px' }}
                             onClick={onHoursButtonClikHandler}
                         >
                             {t('common.time-remaining.hours')}
@@ -354,6 +356,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                             backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
                             borderColor={!isAM ? theme.button.background.tertiary : undefined}
                             textColor={!isAM ? theme.button.textColor.tertiary : undefined}
+                            additionalStyles={{ borderRadius: '4px' }}
                             onClick={() => setIsAM(true)}
                         >
                             {'AM'}
@@ -365,6 +368,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                             backgroundColor={isAM ? theme.button.background.tertiary : undefined}
                             borderColor={isAM ? theme.button.background.tertiary : undefined}
                             textColor={isAM ? theme.button.textColor.tertiary : undefined}
+                            additionalStyles={{ borderRadius: '4px' }}
                             onClick={() => setIsAM(false)}
                         >
                             {'PM'}
@@ -394,9 +398,9 @@ const InputWrapper = styled.div`
 `;
 
 const Time = styled(FlexDivCentered)<{ isSelected: boolean }>`
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 60px;
+    height: 31px;
+    border-radius: 8px;
     background: ${(props) =>
         props.isSelected ? props.theme.button.background.primary : props.theme.button.background.tertiary};
     color: ${(props) =>

@@ -35,7 +35,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import TooltipInfo from 'components/Tooltip';
 import { useTranslation } from 'react-i18next';
-import CurrentPrice from './components/CurrentPrice/CurrentPrice';
+import CurrentPrice from './components/CurrentPrice';
 
 type PriceChartProps = {
     asset: string;

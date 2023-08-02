@@ -52,9 +52,9 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMark
 const Container = styled(FlexDivRow)``;
 
 const Amount = styled(FlexDivCentered)<{ isSelected: boolean }>`
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 60px;
+    height: 31px;
+    border-radius: 8px;
     background: ${(props) =>
         props.isSelected ? props.theme.button.background.primary : props.theme.button.background.tertiary};
     color: ${(props) =>
@@ -67,7 +67,7 @@ const Amount = styled(FlexDivCentered)<{ isSelected: boolean }>`
 `;
 
 const DollarSign = styled.span`
-    padding-left: 1px;
+    padding-left: 2px;
 `;
 
 export default SelectBuyin;
