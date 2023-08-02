@@ -150,14 +150,6 @@ export const Tip66Link: React.FC = () => {
     );
 };
 
-export const Tip17Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP17}>
-            TIP-17
-        </TooltipLink>
-    );
-};
-
 export const Tip20Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
@@ -178,14 +170,6 @@ export const Tip37Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP37}>
             TIP-37
-        </TooltipLink>
-    );
-};
-
-export const Tip125Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP125}>
-            TIP-125
         </TooltipLink>
     );
 };
