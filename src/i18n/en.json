@@ -425,6 +425,7 @@
             "cap-breach": "OI cap breached"
         },
         "user-positions": {
+            "end-time": "End time",
             "confirmation-message": "Positions successfully claimed",
             "errors": {
                 "price-stale": "Can't resolve market with stale price"

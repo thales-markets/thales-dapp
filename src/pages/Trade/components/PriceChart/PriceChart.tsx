@@ -35,6 +35,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import TooltipInfo from 'components/Tooltip';
 import { useTranslation } from 'react-i18next';
+import CurrentPrice from './components/CurrentPrice/CurrentPrice';
 
 type PriceChartProps = {
     asset: string;
@@ -227,19 +228,16 @@ const PriceChart: React.FC<PriceChartProps> = ({
         }
     };
 
-    const isSpeedMarketPriceUp = isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined;
-
     return (
         <Wrapper>
-            <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
+            <FlexDivSpaceBetween margin="15px 0px">
                 <FlexDivRowCentered>
-                    <IconPriceWrapper>
-                        <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                        <Price isUp={isSpeedMarketPriceUp} key={currentPrice}>
-                            {data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}
-                        </Price>
-                        {isSpeedMarkets && <Icon className="icon icon--arrow" isUp={isSpeedMarketPriceUp} />}
-                    </IconPriceWrapper>
+                    <CurrentPrice
+                        asset={asset}
+                        currentPrice={isSpeedMarkets ? currentPrice : data ? currentPrice : undefined}
+                        animatePrice={isSpeedMarkets}
+                        isPriceUp={isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined}
+                    />
                     {!!iv && (
                         <FlexDiv>
                             <Value>{`IV ${iv}%`}</Value>
@@ -479,52 +477,6 @@ const Wrapper = styled.div`
     max-height: 300px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
-    }
-`;
-
-const IconPriceWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-`;
-
-const Icon = styled.i<{ isUp?: boolean }>`
-    font-size: ${(props) => (props.isUp !== undefined ? '22' : '28')};
-    ${(props) =>
-        props.isUp !== undefined
-            ? `color: ${props.isUp ? props.theme.positionColor.up : props.theme.positionColor.down};`
-            : ''}
-    ${(props) =>
-        props.isUp !== undefined ? (props.isUp ? 'transform: rotate(-90deg);' : 'transform: rotate(90deg);') : ''}
-`;
-
-const Price = styled.span<{ isUp?: boolean }>`
-    font-style: normal;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 100%;
-    color: ${(props) =>
-        props.isUp !== undefined
-            ? props.isUp
-                ? props.theme.positionColor.up
-                : props.theme.positionColor.down
-            : props.theme.textColor.primary};
-
-    animation: appear 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-
-    @keyframes appear {
-        0% {
-            letter-spacing: 1em;
-            -webkit-filter: blur(12px);
-            filter: blur(12px);
-            opacity: 0;
-        }
-        100% {
-            -webkit-filter: blur(0px);
-            filter: blur(0px);
-            opacity: 1;
-        }
     }
 `;
 

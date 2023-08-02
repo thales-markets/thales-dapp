@@ -73,7 +73,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 )}
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('markets.user-positions.end-date')}</Label>
+                    <Label>
+                        {isSpeedMarkets
+                            ? t('speed-markets.user-positions.end-time')
+                            : t('markets.user-positions.end-date')}
+                    </Label>
                     <Value>{formatShortDateWithTime(position.maturityDate)}</Value>
                 </FlexContainer>
                 <Separator />
