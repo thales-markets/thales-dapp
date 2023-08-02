@@ -25,7 +25,7 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
                 <Button
                     key={value}
                     width="35px"
-                    height="35px"
+                    height="31px"
                     textColor={theme.button.textColor.tertiary}
                     backgroundColor={
                         value === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
@@ -47,7 +47,6 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     margin-top: 5px;
-    margin-bottom: 10px;
     justify-content: center;
     gap: 6px;
 `;

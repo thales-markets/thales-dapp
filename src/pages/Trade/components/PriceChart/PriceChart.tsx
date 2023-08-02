@@ -69,6 +69,15 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
+const SpeedMarketsToggleButtons = [
+    { label: '1H', value: 0.05 },
+    { label: '12H', value: 0.5 },
+    { label: '1D', value: 1 },
+    { label: '1W', value: 7 },
+    { label: '2W', value: 14 },
+    { label: '1M', value: 30 },
+];
+
 const PriceChart: React.FC<PriceChartProps> = ({
     asset,
     selectedPrice,
@@ -255,7 +264,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             {data && (
-                <ResponsiveContainer width="100%" height={266}>
+                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 318 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
                         <defs xHeight={1}>
@@ -344,8 +353,8 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 </ResponsiveContainer>
             )}
             <Toggle
-                options={ToggleButtons}
-                defaultSelectedIndex={isSpeedMarkets ? 0 : 2}
+                options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
+                defaultSelectedIndex={2}
                 onChange={handleDateRangeChange}
             />
         </Wrapper>

@@ -226,7 +226,6 @@ const LeftSide = styled.div`
     max-width: 600px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
-        height: 60px;
     }
 `;
 const RightSide = styled.div`

@@ -175,7 +175,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     text-align: center;
     @media (max-width: 500px) {
         min-width: fit-content;
-        max-width: 120px;
+        max-width: ${(props) => (props.connected ? '100px' : '120px')};
         padding: 4px 7px;
     }
 `;

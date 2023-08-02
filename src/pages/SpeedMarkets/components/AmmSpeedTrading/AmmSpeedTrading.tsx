@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -81,6 +82,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const selectedCollateralIndex = 0; // useSelector((state: RootState) => getSelectedCollateralIndex(state)); TODO: currently not supported
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [paidAmount, setPaidAmount] = useState<number | string>(buyinAmount ? buyinAmount : '');
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
@@ -343,8 +345,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     };
 
-    return (
-        <Container>
+    const getTradingDetails = () => {
+        return (
             <TradingDetailsContainer>
                 {
                     <TradingDetailsSentence
@@ -364,6 +366,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     />
                 }
             </TradingDetailsContainer>
+        );
+    };
+
+    return (
+        <Container>
+            {!isMobile && getTradingDetails()}
             <FinalizeTrade>
                 <ColumnSpaceBetween>
                     <NumericInput
@@ -398,6 +406,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         }
                         currencyLabel={!isMultiCollateralSupported ? getDefaultCollateral(networkId) : undefined}
                     />
+                    {isMobile && getTradingDetails()}
                     {getSubmitButton()}
                     <PaymentInfo>
                         {t('speed-markets.total-pay', {
