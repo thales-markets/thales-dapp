@@ -28,6 +28,7 @@ type StakersWithLeaderboardDataAndGlobalPoints = {
     globalVaults: number;
     globalLp: number;
     globalTrading: number;
+    estimationForOneThales: number;
     bonusRewards: number;
     closingDate: number;
 };
@@ -89,32 +90,29 @@ const useStakersDataLeaderboardQuery = (
                 let globalVaults = 0;
 
                 let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
+                    let stakingThalesMult =
+                        bigNumberFormatter(item.stakingMultiplier) > 2 ? 2 : bigNumberFormatter(item.stakingMultiplier);
+
+                    stakingThalesMult = stakingThalesMult + 1;
+                    globalVaults = globalVaults + bigNumberFormatter(item.userVaultPointsPerRound) * 4;
                     const vaultPoints = item?.userVaultPointsPerRound
-                        ? bigNumberFormatter(item.userVaultPointsPerRound) * 0.4
+                        ? bigNumberFormatter(item.userVaultPointsPerRound)
                         : 0;
 
-                    globalVaults = globalVaults + (vaultPoints * 4) / 0.4;
+                    globalLp = globalLp + bigNumberFormatter(item.userLPPointsPerRound) * 2;
+                    const lpPoints = item?.userLPPointsPerRound ? bigNumberFormatter(item.userLPPointsPerRound) / 2 : 0;
 
-                    const lpPoints = item?.userLPPointsPerRound
-                        ? bigNumberFormatter(item.userLPPointsPerRound) * 0.4
-                        : 0;
-                    globalLp = globalLp + (lpPoints * 2) / 0.4;
-
+                    globalTrading = globalTrading + bigNumberFormatter(item.userTradingBasePointsPerRound);
                     const tradingPoints = item?.userTradingBasePointsPerRound
                         ? bigNumberFormatter(item.userTradingBasePointsPerRound)
                         : 0;
 
-                    globalTrading = globalTrading + tradingPoints;
-
-                    const userTotalPoints =
-                        (vaultPoints + lpPoints + tradingPoints) * (bigNumberFormatter(item.stakingMultiplier) / 4 + 1);
+                    const userTotalPoints = (vaultPoints + lpPoints + tradingPoints) * stakingThalesMult;
                     globalPoints = globalPoints + userTotalPoints;
 
                     return {
                         ...stakersOnlyWithSomeStakingAmount[index],
-                        stakingMultiplier: item?.stakingMultiplier
-                            ? bigNumberFormatter(item.stakingMultiplier) / 4 + 1
-                            : 0,
+                        stakingMultiplier: item?.stakingMultiplier ? stakingThalesMult : 0,
                         userLPBasePointsPerRound: lpPoints,
                         userTradingBasePointsPerRound: tradingPoints,
                         userVaultBasePointsPerRound: vaultPoints,
@@ -124,6 +122,8 @@ const useStakersDataLeaderboardQuery = (
                 });
 
                 finalData = orderBy(finalData, 'userRoundBonusPoints', 'desc');
+
+                const estimationForOneThales = globalPoints / bigNumberFormatter(bonusRewards);
 
                 const finalDataWithRank = finalData.map((item, index) => {
                     return {
@@ -144,6 +144,7 @@ const useStakersDataLeaderboardQuery = (
                     globalLp,
                     globalTrading,
                     globalVaults,
+                    estimationForOneThales,
                     bonusRewards: bigNumberFormatter(bonusRewards),
                     closingDate,
                 };
@@ -156,6 +157,7 @@ const useStakersDataLeaderboardQuery = (
                     globalTrading: 0,
                     globalVaults: 0,
                     bonusRewards: 0,
+                    estimationForOneThales: 0,
                     closingDate: Date.now(),
                 };
             }

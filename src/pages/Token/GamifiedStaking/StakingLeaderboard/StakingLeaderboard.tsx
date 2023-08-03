@@ -65,9 +65,18 @@ const StakingLeaderboard: React.FC = () => {
                 globalTrading: leaderboardQuery.data.globalTrading,
                 globalLp: leaderboardQuery.data.globalLp,
                 globalVaults: leaderboardQuery.data.globalVaults,
+                estimationForOneThales: leaderboardQuery.data.estimationForOneThales,
             };
         }
-        return { globalTrading: 0, globalLp: 0, globalVaults: 0 };
+        return {
+            globalTrading: 0,
+            globalLp: 0,
+            globalVaults: 0,
+            globalLpWithMultiplier: 0,
+            globalVaultsWithMultiplier: 0,
+            globalTradingWithMultiplier: 0,
+            estimationForOneThales: 0,
+        };
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
     const closingDate = useMemo(() => {
@@ -146,6 +155,11 @@ const StakingLeaderboard: React.FC = () => {
                             </Cell>
                         );
                     },
+                    sortable: true,
+                    sortType: (rowA: any, rowB: any) => {
+                        return rowA.original.stakingMultiplier - rowB.original.stakingMultiplier;
+                    },
+                    sortDescFirst: true,
                 },
                 {
                     id: 'rewards',
@@ -245,6 +259,10 @@ const StakingLeaderboard: React.FC = () => {
                         <FlexWrapper>
                             <TableText>Global Vaults:</TableText>
                             <TableText>{formatCurrencyWithKey('$', globalData.globalVaults, 2)}</TableText>
+                        </FlexWrapper>
+                        <FlexWrapper>
+                            <TableText>Trading Needed for 1 $Thales:</TableText>
+                            <TableText>{formatCurrencyWithKey('$', globalData.estimationForOneThales, 2)}</TableText>
                         </FlexWrapper>
                     </ExpandedRow>
                     <Table
