@@ -71,16 +71,16 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                     <CellValue>Global Data</CellValue>
                 </AbsoluteContainer>
                 <TextContainer>
+                    <Label>Points for 1 Thales</Label>
+                    <Value>{formatCurrencyWithKey('', stakingData.estimationForOneThales, 2)}</Value>
+                </TextContainer>
+                <TextContainer>
                     <Label>THALES Multiplier</Label>
                     <Value>{3}x</Value>
                 </TextContainer>
                 <TextContainer>
                     <Label>Total Points</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.globalPoints, 2)}</Value>
-                </TextContainer>
-                <TextContainer>
-                    <Label>Trade for 1$Thales</Label>
-                    <Value>{formatCurrencyWithKey(USD_SIGN, stakingData.estimationForOneThales, 2)}</Value>
                 </TextContainer>
             </Container>
         </Wrapper>
