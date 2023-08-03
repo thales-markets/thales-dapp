@@ -59,6 +59,17 @@ const StakingLeaderboard: React.FC = () => {
         return [];
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
+    const globalData = useMemo(() => {
+        if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
+            return {
+                globalTrading: leaderboardQuery.data.globalTrading,
+                globalLp: leaderboardQuery.data.globalLp,
+                globalVaults: leaderboardQuery.data.globalVaults,
+            };
+        }
+        return { globalTrading: 0, globalLp: 0, globalVaults: 0 };
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+
     const closingDate = useMemo(() => {
         if (Number(period) === Number(currentPeriod) && leaderboardQuery.isSuccess && leaderboardQuery.data) {
             return leaderboardQuery.data.closingDate;
@@ -222,6 +233,20 @@ const StakingLeaderboard: React.FC = () => {
                             />
                         )}
                     </BadgeContainer>
+                    <ExpandedRow>
+                        <FlexWrapper>
+                            <TableText>Global Trading:</TableText>
+                            <TableText> {formatCurrencyWithKey('$', globalData.globalTrading, 2)}</TableText>
+                        </FlexWrapper>
+                        <FlexWrapper>
+                            <TableText>Global Lp:</TableText>
+                            <TableText>{formatCurrencyWithKey('$', globalData.globalLp, 2)}</TableText>
+                        </FlexWrapper>
+                        <FlexWrapper>
+                            <TableText>Global Vaults:</TableText>
+                            <TableText>{formatCurrencyWithKey('$', globalData.globalVaults, 2)}</TableText>
+                        </FlexWrapper>
+                    </ExpandedRow>
                     <Table
                         columns={columns}
                         data={stakingData}

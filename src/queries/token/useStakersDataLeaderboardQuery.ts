@@ -25,6 +25,9 @@ type StakerWithLeaderboardData = Staker & StakerContractLeaderboardData;
 type StakersWithLeaderboardDataAndGlobalPoints = {
     leaderboard: StakerWithLeaderboardData[];
     globalPoints: number;
+    globalVaults: number;
+    globalLp: number;
+    globalTrading: number;
     bonusRewards: number;
     closingDate: number;
 };
@@ -81,18 +84,28 @@ const useStakersDataLeaderboardQuery = (
 
                 const stakersDataFromContract = await Promise.all(calls);
                 let globalPoints = 0;
+                let globalTrading = 0;
+                let globalLp = 0;
+                let globalVaults = 0;
 
                 let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
                     const vaultPoints = item?.userVaultPointsPerRound
                         ? bigNumberFormatter(item.userVaultPointsPerRound) * 0.4
                         : 0;
 
+                    globalVaults = globalVaults + (vaultPoints * 4) / 0.4;
+
                     const lpPoints = item?.userLPPointsPerRound
                         ? bigNumberFormatter(item.userLPPointsPerRound) * 0.4
                         : 0;
+                    globalLp = globalLp + (lpPoints * 2) / 0.4;
+
                     const tradingPoints = item?.userTradingBasePointsPerRound
                         ? bigNumberFormatter(item.userTradingBasePointsPerRound)
                         : 0;
+
+                    globalTrading = globalTrading + tradingPoints;
+
                     const userTotalPoints =
                         (vaultPoints + lpPoints + tradingPoints) * (bigNumberFormatter(item.stakingMultiplier) / 4 + 1);
                     globalPoints = globalPoints + userTotalPoints;
@@ -128,12 +141,23 @@ const useStakersDataLeaderboardQuery = (
                 return {
                     leaderboard: finalDataWithRank,
                     globalPoints,
+                    globalLp,
+                    globalTrading,
+                    globalVaults,
                     bonusRewards: bigNumberFormatter(bonusRewards),
                     closingDate,
                 };
             } catch (e) {
                 console.log('Error ', e);
-                return { leaderboard: [], globalPoints: 0, bonusRewards: 0, closingDate: Date.now() };
+                return {
+                    leaderboard: [],
+                    globalPoints: 0,
+                    globalLp: 0,
+                    globalTrading: 0,
+                    globalVaults: 0,
+                    bonusRewards: 0,
+                    closingDate: Date.now(),
+                };
             }
         },
         {
