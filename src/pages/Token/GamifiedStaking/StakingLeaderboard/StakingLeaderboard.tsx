@@ -10,16 +10,17 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
-import HighlightCard from './components/HighlightCard/HighlightCard';
+// import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import GlobalStakingData from './components/GlobalStakingData/GlobalStakingData';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -61,20 +62,19 @@ const StakingLeaderboard: React.FC = () => {
 
     const globalData = useMemo(() => {
         if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
-            return {
-                globalTrading: leaderboardQuery.data.globalTrading,
-                globalLp: leaderboardQuery.data.globalLp,
-                globalVaults: leaderboardQuery.data.globalVaults,
-                estimationForOneThales: leaderboardQuery.data.estimationForOneThales,
-            };
+            return leaderboardQuery.data.data;
         }
         return {
-            globalTrading: 0,
-            globalLp: 0,
             globalVaults: 0,
-            globalLpWithMultiplier: 0,
-            globalVaultsWithMultiplier: 0,
-            globalTradingWithMultiplier: 0,
+            globalLp: 0,
+            globalTrading: 0,
+            tradingPoints: 0,
+            vaultPoints: 0,
+            lpPoints: 0,
+            globalPoints: 0,
+            tradingMultiplier: 0,
+            vaultMultiplier: 0,
+            lpMultiplier: 0,
             estimationForOneThales: 0,
         };
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
@@ -86,13 +86,13 @@ const StakingLeaderboard: React.FC = () => {
         return Date.now();
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data, period, currentPeriod]);
 
-    const highlightCardData = useMemo(() => {
-        if (stakingData) {
-            return stakingData.filter((staker) => staker.rank == 1 || staker.rank == 2 || staker.rank == 3);
-        }
+    // const highlightCardData = useMemo(() => {
+    //     if (stakingData) {
+    //         return stakingData.filter((staker) => staker.rank == 1 || staker.rank == 2 || staker.rank == 3);
+    //     }
 
-        return null;
-    }, [stakingData]);
+    //     return null;
+    // }, [stakingData]);
 
     const stickyRowInfo = useMemo(() => {
         if (stakingData) {
@@ -220,51 +220,7 @@ const StakingLeaderboard: React.FC = () => {
                             ]}
                         ></PeriodDropdown>
                     </HeaderWrapper>
-
-                    <BadgeContainer>
-                        {highlightCardData && highlightCardData[0] && (
-                            <HighlightCard
-                                rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
-                                walletAddress={highlightCardData[0].id}
-                                totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[0].estimatedRewards}
-                            />
-                        )}
-                        {highlightCardData && highlightCardData[1] && (
-                            <HighlightCard
-                                rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
-                                walletAddress={highlightCardData[1].id}
-                                totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[1].estimatedRewards}
-                            />
-                        )}
-                        {highlightCardData && highlightCardData[2] && (
-                            <HighlightCard
-                                rank={highlightCardData[2].rank ? highlightCardData[2].rank : 0}
-                                walletAddress={highlightCardData[2].id}
-                                totalPoints={truncToDecimals(highlightCardData[2].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[2].estimatedRewards}
-                            />
-                        )}
-                    </BadgeContainer>
-                    <ExpandedRow>
-                        <FlexWrapper>
-                            <TableText>Global Trading:</TableText>
-                            <TableText> {formatCurrencyWithKey('$', globalData.globalTrading, 2)}</TableText>
-                        </FlexWrapper>
-                        <FlexWrapper>
-                            <TableText>Global Lp:</TableText>
-                            <TableText>{formatCurrencyWithKey('$', globalData.globalLp, 2)}</TableText>
-                        </FlexWrapper>
-                        <FlexWrapper>
-                            <TableText>Global Vaults:</TableText>
-                            <TableText>{formatCurrencyWithKey('$', globalData.globalVaults, 2)}</TableText>
-                        </FlexWrapper>
-                        <FlexWrapper>
-                            <TableText>Trading Needed for 1 $Thales:</TableText>
-                            <TableText>{formatCurrencyWithKey('$', globalData.estimationForOneThales, 2)}</TableText>
-                        </FlexWrapper>
-                    </ExpandedRow>
+                    <GlobalStakingData stakingData={globalData} />
                     <Table
                         columns={columns}
                         data={stakingData}
@@ -518,17 +474,17 @@ const StickyExpandedRow = styled.div`
     width: calc(100% - 55px);
 `;
 
-const BadgeContainer = styled.div`
-    margin: 20px 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: column;
-    }
-`;
+// const BadgeContainer = styled.div`
+//     margin: 20px 0;
+//     width: 100%;
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     justify-content: space-between;
+//     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+//         flex-direction: column;
+//     }
+// `;
 
 const TableText = styled.p`
     color: ${(props) => props.theme.textColor.primary};
