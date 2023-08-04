@@ -287,6 +287,16 @@ const MergeAccount: React.FC = () => {
                 <SectionContentWrapper>
                     <SectionTitle>{t('thales-token.gamified-staking.merge-account.delegate-volume')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
+                        <TextInput
+                            value={walletAddress}
+                            disabled={true}
+                            label={t('thales-token.gamified-staking.merge-account.source-account-label')}
+                        />
+                    </InputContainer>
+                    <ArrowContainer>
+                        <ArrowDown />
+                    </ArrowContainer>
+                    <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
                             <TextInput
                                 value={
@@ -296,7 +306,7 @@ const MergeAccount: React.FC = () => {
                                 }
                                 onChange={(e: any) => setDelegateDestAddress(e.target.value)}
                                 disabled={delegatedVolumeAddress !== ZERO_ADDRESS || isDelegating || !isWalletConnected}
-                                label={t('thales-token.gamified-staking.merge-account.delegate-volume-address-label')}
+                                label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
                                 placeholder={t('common.enter-address')}
                                 showValidation={!isDelegateDestAddressValid}
                                 validationMessage={t(`common.errors.invalid-address`)}

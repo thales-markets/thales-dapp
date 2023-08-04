@@ -702,7 +702,6 @@
                 "section-description": "<0>Account merging has been implemented per </0><1 />.",
                 "source-account-label": "Source",
                 "destination-account-label": "Destination",
-                "delegate-volume-address-label": "Address",
                 "confirmation-message": "Account successfully merged",
                 "delegation-confirmation-message": "Successfully delegated volume",
                 "merge-account-disabled-message": "Account merging is disabled.",
