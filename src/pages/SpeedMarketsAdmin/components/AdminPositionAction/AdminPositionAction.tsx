@@ -11,7 +11,7 @@ import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { ethers } from 'ethers';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -19,9 +19,8 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { CSSProperties, useTheme } from 'styled-components';
+import { CSSProperties } from 'styled-components';
 import { UserLivePositions } from 'types/options';
-import { ThemeInterface } from 'types/ui';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -29,11 +28,11 @@ import { delay } from 'utils/timer';
 
 type AdminPositionActionProps = {
     position: UserLivePositions;
+    isSubmittingBatch: boolean;
 };
 
-const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position }) => {
+const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position, isSubmittingBatch }) => {
     const { t } = useTranslation();
-    const theme: ThemeInterface = useTheme();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -48,6 +47,10 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position }) =
     const ammSpeedMarketsLimitsData = useMemo(() => {
         return ammSpeedMarketsLimitsQuery.isSuccess ? ammSpeedMarketsLimitsQuery.data : null;
     }, [ammSpeedMarketsLimitsQuery]);
+
+    useEffect(() => {
+        setIsSubmitting(isSubmittingBatch);
+    }, [isSubmittingBatch]);
 
     const handleResolve = async () => {
         const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
@@ -111,21 +114,18 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position }) =
         }
     };
 
-    const getButton = () => {
-        return (
-            <Button
-                {...getDefaultButtonProps(isMobile)}
-                disabled={isSubmitting}
-                additionalStyles={additionalButtonStyle}
-                backgroundColor={theme.button.textColor.quaternary}
-                onClick={() => handleResolve()}
-            >
-                {isSubmitting ? t(`speed-markets.admin.resolve-progress`) : t('speed-markets.admin.resolve')}
-            </Button>
-        );
-    };
-
-    return <>{getButton()}</>;
+    return (
+        <Button
+            {...getDefaultButtonProps(isMobile)}
+            disabled={isSubmitting || !position.finalPrice}
+            additionalStyles={additionalButtonStyle}
+            onClick={() => handleResolve()}
+        >
+            {isSubmitting && !isSubmittingBatch
+                ? t(`speed-markets.admin.resolve-progress`)
+                : t('speed-markets.admin.resolve')}
+        </Button>
+    );
 };
 
 const getDefaultButtonProps = (isMobile: boolean) => ({

@@ -13,9 +13,10 @@ import AdminPositionAction from '../AdminPositionAction';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
+    isSubmittingBatch: boolean;
 };
 
-const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position }) => {
+const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position, isSubmittingBatch }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -56,7 +57,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position }) => 
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <AdminPositionAction position={position} />
+            <AdminPositionAction position={position} isSubmittingBatch={isSubmittingBatch} />
         </Position>
     );
 };

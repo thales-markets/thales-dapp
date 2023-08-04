@@ -438,6 +438,8 @@
             "unknown-price-title": "Unresolved positions without final price",
             "resolve-progress": "Resolving...",
             "resolve": "Resolve",
+            "resolve-all": "Resolve all",
+            "no-resolve-positions": "No positions for this section with price",
             "user": "User",
             "no-positions": "No positions for this section"
         }

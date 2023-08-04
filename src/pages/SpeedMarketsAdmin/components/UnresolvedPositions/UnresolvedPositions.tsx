@@ -1,21 +1,51 @@
+import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
+import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getInfoToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import React, { useMemo } from 'react';
+import { BigNumber, ethers } from 'ethers';
+import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
+import React, { CSSProperties, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivRow } from 'styles/common';
+import snxJSConnector from 'utils/snxJSConnector';
 import UnresolvedPosition from '../UnresolvedPosition';
-import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
+import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
+import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { millisecondsToSeconds } from 'date-fns';
+import { delay } from 'utils/timer';
+import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
+import { UserLivePositions } from 'types/options';
+
+const SECTIONS = {
+    userWinner: 'userWinner',
+    ammWinner: 'ammWinner',
+    openPositions: 'openPositions',
+};
 
 const UnresolvedPositions: React.FC = () => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmittingSection, setIsSubmittingSection] = useState('');
 
     const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
@@ -39,9 +69,105 @@ const UnresolvedPositions: React.FC = () => {
         .filter((marketData) => !marketData.claimable && !marketData.finalPrice)
         .sort((a, b) => a.maturityDate - b.maturityDate);
 
+    const handleResolveAll = async (positions: UserLivePositions[]) => {
+        if (!positions.length) {
+            return;
+        }
+
+        const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
+            timeout: CONNECTION_TIMEOUT_MS,
+        });
+
+        const { speedMarketsAMMContract, signer } = snxJSConnector as any;
+        if (speedMarketsAMMContract) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+
+            const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
+
+            const marketsToResolve: string[] = [];
+            const priceUpdateDataArray: string[] = [];
+            let totalUpdateFee = BigNumber.from(0);
+            for (const position of positions) {
+                try {
+                    const pythContract = new ethers.Contract(
+                        PYTH_CONTRACT_ADDRESS[networkId],
+                        PythInterfaceAbi as any,
+                        (snxJSConnector as any).provider
+                    );
+
+                    const [priceFeedUpdateVaa] = await priceConnection.getVaa(
+                        getPriceId(networkId, position.currencyKey),
+                        millisecondsToSeconds(position.maturityDate)
+                    );
+
+                    const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
+                    const updateFee = await pythContract.getUpdateFee(priceUpdateData);
+
+                    marketsToResolve.push(position.market);
+                    priceUpdateDataArray.push(priceUpdateData[0]);
+                    totalUpdateFee = totalUpdateFee.add(updateFee);
+                } catch (e) {
+                    console.log(`Can't fetch price for marekt ${position.market}`, e);
+                }
+            }
+
+            if (marketsToResolve.length > 0) {
+                try {
+                    const tx: ethers.ContractTransaction = await speedMarketsAMMContractWithSigner.resolveMarketsBatch(
+                        marketsToResolve,
+                        priceUpdateDataArray,
+                        { value: totalUpdateFee }
+                    );
+
+                    const txResult = await tx.wait();
+
+                    if (txResult && txResult.transactionHash) {
+                        toast.update(
+                            id,
+                            getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
+                        );
+                        refetchActiveSpeedMarkets(networkId);
+                    }
+                } catch (e) {
+                    console.log(e);
+                    await delay(800);
+                    toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+                }
+            } else {
+                toast.update(id, getInfoToastOptions(t('speed-markets.admin.no-resolve-positions'), id));
+            }
+            setIsSubmitting(false);
+            setIsSubmittingSection('');
+        }
+    };
+
+    const getButton = (positions: UserLivePositions[], sectionName: typeof SECTIONS[keyof typeof SECTIONS]) => {
+        return (
+            !!positions.length && (
+                <Button
+                    {...getDefaultButtonProps(isMobile)}
+                    disabled={isSubmitting || !positions.length}
+                    additionalStyles={additionalButtonStyle}
+                    onClick={() => {
+                        setIsSubmittingSection(sectionName);
+                        handleResolveAll(positions);
+                    }}
+                >
+                    {isSubmittingSection === sectionName
+                        ? t(`speed-markets.admin.resolve-progress`)
+                        : t('speed-markets.admin.resolve-all')}
+                </Button>
+            )
+        );
+    };
+
     return (
         <Wrapper>
-            <Title>{`${t('speed-markets.admin.user-title')} (${userWinnerSpeedMarketsData.length})`}</Title>
+            <Row>
+                <Title>{`${t('speed-markets.admin.user-title')} (${userWinnerSpeedMarketsData.length})`}</Title>
+                {getButton(userWinnerSpeedMarketsData, SECTIONS.userWinner)}
+            </Row>
             {activeSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -50,14 +176,21 @@ const UnresolvedPositions: React.FC = () => {
                 <PositionsWrapper hasPositions={userWinnerSpeedMarketsData.length > 0}>
                     {userWinnerSpeedMarketsData.length > 0 ? (
                         userWinnerSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition position={position} key={`userWinner${index}`} />
+                            <UnresolvedPosition
+                                position={position}
+                                key={`userWinner${index}`}
+                                isSubmittingBatch={isSubmitting}
+                            />
                         ))
                     ) : (
                         <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
                     )}
                 </PositionsWrapper>
             )}
-            <Title>{`${t('speed-markets.admin.amm-title')} (${ammWinnerSpeedMarketsData.length})`}</Title>
+            <Row>
+                <Title>{`${t('speed-markets.admin.amm-title')} (${ammWinnerSpeedMarketsData.length})`}</Title>
+                {getButton(ammWinnerSpeedMarketsData, SECTIONS.ammWinner)}
+            </Row>
             {activeSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -66,14 +199,22 @@ const UnresolvedPositions: React.FC = () => {
                 <PositionsWrapper hasPositions={ammWinnerSpeedMarketsData.length > 0}>
                     {ammWinnerSpeedMarketsData.length > 0 ? (
                         ammWinnerSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition position={position} key={`ammWinner${index}`} />
+                            <UnresolvedPosition
+                                position={position}
+                                key={`ammWinner${index}`}
+                                isSubmittingBatch={isSubmitting}
+                            />
                         ))
                     ) : (
                         <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
                     )}
                 </PositionsWrapper>
             )}
-            <Title>{`${t('speed-markets.admin.unknown-price-title')} (${unknownPriceSpeedMarketsData.length})`}</Title>
+            <Row>
+                <Title>{`${t('speed-markets.admin.unknown-price-title')} (${
+                    unknownPriceSpeedMarketsData.length
+                })`}</Title>
+            </Row>
             {activeSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -82,7 +223,11 @@ const UnresolvedPositions: React.FC = () => {
                 <PositionsWrapper hasPositions={unknownPriceSpeedMarketsData.length > 0}>
                     {unknownPriceSpeedMarketsData.length > 0 ? (
                         unknownPriceSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition position={position} key={`unknownPrice${index}`} />
+                            <UnresolvedPosition
+                                position={position}
+                                key={`unknownPrice${index}`}
+                                isSubmittingBatch={isSubmitting}
+                            />
                         ))
                     ) : (
                         <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
@@ -93,12 +238,32 @@ const UnresolvedPositions: React.FC = () => {
     );
 };
 
+const getDefaultButtonProps = (isMobile: boolean) => ({
+    height: isMobile ? '24px' : '27px',
+    fontSize: isMobile ? '12px' : '13px',
+    padding: '0px 5px',
+});
+
+const additionalButtonStyle: CSSProperties = {
+    minWidth: '180px',
+    lineHeight: '100%',
+    border: 'none',
+};
+
 const Wrapper = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     padding-bottom: 20px;
+`;
+
+const Row = styled(FlexDivRow)`
+    align-items: center;
+    margin-bottom: 10px;
+    :not(:first-child) {
+        margin-top: 40px;
+    }
 `;
 
 const PositionsWrapper = styled.div<{ hasPositions: boolean }>`
@@ -119,12 +284,8 @@ const Title = styled.span`
     font-size: 13px;
     line-height: 100%;
     margin-left: 20px;
-    margin-bottom: 10px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
-    :not(:first-child) {
-        margin-top: 20px;
-    }
 `;
 
 const LoaderContainer = styled(FlexDivCentered)`
