@@ -76,7 +76,7 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                 </TextContainer>
                 <TextContainer>
                     <Label>THALES Multiplier</Label>
-                    <Value>{3}x</Value>
+                    <Value>{stakingData.maxStakingMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
                     <Label>Total Points</Label>
@@ -90,7 +90,7 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
 const Wrapper = styled.div`
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 14px;
     margin-bottom: 40px;
     flex-wrap: wrap;
 `;
@@ -100,7 +100,7 @@ const Container = styled(FlexDiv)`
     flex-direction: column;
     align-items: center;
     flex: 1;
-    padding: 30px;
+    padding: 24px 30px;
     min-width: 300px;
     gap: 20px;
     border: ${(_props) => `1px solid ${_props.theme.borderColor.tertiary}`};

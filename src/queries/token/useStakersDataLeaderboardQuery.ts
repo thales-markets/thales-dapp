@@ -34,6 +34,7 @@ export type StakingData = {
     tradingMultiplier: number;
     vaultMultiplier: number;
     lpMultiplier: number;
+    maxStakingMultiplier: number;
 };
 
 type StakersWithLeaderboardDataAndGlobalPoints = {
@@ -85,17 +86,25 @@ const useStakersDataLeaderboardQuery = (
                     );
                 }
 
-                const [bonusRewards, lastPeriodTimestamp, durationPeriod] = await Promise.all([
+                const [
+                    bonusRewards,
+                    lastPeriodTimestamp,
+                    durationPeriod,
+                    tradingMultiplier,
+                    lpMultiplier,
+                    vaultMultiplier,
+                    maxStakingMultiplier,
+                ] = await Promise.all([
                     stakingThalesContract?.periodExtraReward(),
                     stakingThalesContract?.lastPeriodTimeStamp(),
                     stakingThalesContract?.durationPeriod(),
+                    bigNumberFormatter(await stakingBonusRewardsManager?.tradingMultiplier()),
+                    bigNumberFormatter(await stakingBonusRewardsManager?.lpMultiplier()),
+                    bigNumberFormatter(await stakingBonusRewardsManager?.vaultsMultiplier()),
+                    bigNumberFormatter(await stakingBonusRewardsManager?.maxStakingMultiplier()),
                 ]);
 
                 const closingDate = Number(lastPeriodTimestamp) * 1000 + Number(durationPeriod) * 1000;
-
-                const TRADING_MULT = 1;
-                const LP_MULT = 0.25;
-                const VAULT_MULT = 0.25;
 
                 const stakersDataFromContract = await Promise.all(calls);
                 let globalPoints = 0;
@@ -104,21 +113,19 @@ const useStakersDataLeaderboardQuery = (
                 let globalVaults = 0;
 
                 let finalData: StakersWithLeaderboardData = stakersDataFromContract.flat().map((item, index) => {
-                    let stakingThalesMult =
-                        bigNumberFormatter(item.stakingMultiplier) > 2 ? 2 : bigNumberFormatter(item.stakingMultiplier);
-
-                    stakingThalesMult = stakingThalesMult + 1;
-                    const userVaultsVolume = bigNumberFormatter(item.userVaultPointsPerRound) * 4;
+                    const stakingThalesMult = bigNumberFormatter(item.stakingMultiplier) + 1;
+                    const userVaultsVolume = bigNumberFormatter(item.userVaultPointsPerRound) / vaultMultiplier;
                     globalVaults = globalVaults + userVaultsVolume;
-                    const vaultPoints = userVaultsVolume * VAULT_MULT;
+                    const vaultPoints = userVaultsVolume * vaultMultiplier;
 
-                    const userLPVolume = bigNumberFormatter(item.userLPPointsPerRound) * 2;
+                    const userLPVolume = bigNumberFormatter(item.userLPPointsPerRound) / lpMultiplier;
                     globalLp = globalLp + userLPVolume;
-                    const lpPoints = userLPVolume * LP_MULT;
+                    const lpPoints = userLPVolume * lpMultiplier;
 
-                    const userTradingVolume = bigNumberFormatter(item.userTradingBasePointsPerRound);
+                    const userTradingVolume =
+                        bigNumberFormatter(item.userTradingBasePointsPerRound) / tradingMultiplier;
                     globalTrading = globalTrading + userTradingVolume;
-                    const tradingPoints = userTradingVolume * TRADING_MULT;
+                    const tradingPoints = userTradingVolume * tradingMultiplier;
 
                     const userTotalPoints = (vaultPoints + lpPoints + tradingPoints) * stakingThalesMult;
                     globalPoints = globalPoints + userTotalPoints;
@@ -159,12 +166,13 @@ const useStakersDataLeaderboardQuery = (
                         globalLp,
                         globalVaults,
                         globalTrading,
-                        lpMultiplier: LP_MULT,
-                        tradingMultiplier: TRADING_MULT,
-                        vaultMultiplier: VAULT_MULT,
-                        vaultPoints: globalVaults * VAULT_MULT,
-                        tradingPoints: globalTrading * TRADING_MULT,
-                        lpPoints: globalLp * LP_MULT,
+                        lpMultiplier: lpMultiplier,
+                        tradingMultiplier: tradingMultiplier,
+                        vaultMultiplier: vaultMultiplier,
+                        vaultPoints: globalVaults * vaultMultiplier,
+                        tradingPoints: globalTrading * tradingMultiplier,
+                        lpPoints: globalLp * lpMultiplier,
+                        maxStakingMultiplier: maxStakingMultiplier + 1,
                     },
 
                     bonusRewards: bigNumberFormatter(bonusRewards),
@@ -186,6 +194,7 @@ const useStakersDataLeaderboardQuery = (
                         vaultPoints: 0,
                         tradingPoints: 0,
                         lpPoints: 0,
+                        maxStakingMultiplier: 0,
                     },
                     bonusRewards: 0,
 
