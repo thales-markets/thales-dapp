@@ -333,67 +333,78 @@ const StickyRowComponent: React.FC<{ stickyRowInfo: StakersWithLeaderboardData }
                 <Rank>
                     <TableText>{stickyRowInfo[0].rank}</TableText>
                 </Rank>
-                <StickyCell first={true}>
-                    <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
-                </StickyCell>
-                <StickyCell>
-                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}</TableText>
-                </StickyCell>
-                <StickyCell hide={true}>
-                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}</TableText>
-                </StickyCell>
-                <StickyCell last={true}>
-                    <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
-                </StickyCell>
+                <StickyRowWrapper>
+                    <StickyRowFlex>
+                        <StickyCell first={true}>
+                            <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
+                        </StickyCell>
+                        <StickyCell>
+                            <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}</TableText>
+                        </StickyCell>
+                        <StickyCell hide={true}>
+                            <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}</TableText>
+                        </StickyCell>
+                        <StickyCell last={true}>
+                            <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
+                        </StickyCell>
+                    </StickyRowFlex>
+
+                    {open && (
+                        <StickyExpandedRow>
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--markets" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userTradingBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--liquidity-pool" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userLPBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--vaults" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userVaultBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+                        </StickyExpandedRow>
+                    )}
+                </StickyRowWrapper>
             </StickyRow>
-            {open && (
-                <StickyExpandedRow>
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--markets" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userTradingBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--liquidity-pool" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userLPBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--vaults" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userVaultBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-                </StickyExpandedRow>
-            )}
         </>
     );
 };
@@ -455,37 +466,6 @@ const Wrapper = styled.div`
     }
 `;
 
-const ExpandedRow = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    padding: 20px 0;
-    margin: auto;
-    width: calc(100% - 30px);
-`;
-
-const StickyExpandedRow = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px 0;
-    margin-left: auto;
-    width: calc(100% - 55px);
-`;
-
-// const BadgeContainer = styled.div`
-//     margin: 20px 0;
-//     width: 100%;
-//     display: flex;
-//     flex-direction: row;
-//     align-items: center;
-//     justify-content: space-between;
-//     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-//         flex-direction: column;
-//     }
-// `;
-
 const TableText = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
@@ -541,11 +521,43 @@ const Cell = styled.div<{ hide?: boolean }>`
     width: 100%;
 `;
 
-const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolean }>`
-    color: ${(props) => props.theme.button.textColor.primary};
+const ExpandedRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    padding: 20px 0;
+    margin: auto;
+    width: calc(100% - 30px);
+`;
+
+const StickyRowWrapper = styled.div`
     background: ${(props) => props.theme.borderColor.tertiary};
     width: 100%;
+    border-radius: 8px;
+`;
 
+const StickyRowFlex = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    border-radius: 8px;
+`;
+
+const StickyExpandedRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    margin: auto;
+    width: calc(100% - 55px);
+    border-top: 1px solid ${(props) => props.theme.background.primary};
+`;
+
+const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolean }>`
+    color: ${(props) => props.theme.button.textColor.primary};
+    width: 100%;
     margin-left: ${(props) => (props.first ? '4px' : '0')};
 
     border-top-left-radius: ${(props) => (props.first ? '8px' : '0')};
@@ -560,8 +572,8 @@ const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolea
 
 const StickyRow = styled.div`
     display: flex;
-    height: 50px;
     margin-bottom: 10px;
+    gap: 4px;
     cursor: pointer;
 
     ${TableText} {
@@ -577,9 +589,9 @@ const StickyRow = styled.div`
     }
 `;
 
-const Icon = styled.i`
+const Icon = styled.i<{ dark?: boolean }>`
     font-size: 32px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.dark ? props.theme.background.primary : props.theme.textColor.primary)};
     margin-right: 6px;
 `;
 
@@ -587,8 +599,8 @@ const FlexWrapper = styled(FlexDivCentered)`
     flex-direction: column;
 `;
 
-const Label = styled.span`
-    color: ${(props) => props.theme.textColor.secondary};
+const Label = styled.span<{ dark?: boolean }>`
+    color: ${(props) => (props.dark ? props.theme.background.primary : props.theme.textColor.secondary)};
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
