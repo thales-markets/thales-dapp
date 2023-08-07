@@ -79,16 +79,30 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         fetchCurrentPrice();
     }, secondsToMilliseconds(5));
 
-    // Reset inputs
+    const resetData = () => {
+        setIsResetTriggered(true);
+        setCurrencyKey(SUPPORTED_ASSETS[0]);
+        setPositionType(undefined);
+        setDeltaTimeSec(0);
+        setStrikeTimeSec(0);
+        setBuyinAmount(0);
+    };
+
     useEffect(() => {
         if (!isWalletConnected) {
-            setCurrencyKey(SUPPORTED_ASSETS[0]);
-            setPositionType(undefined);
-            setDeltaTimeSec(0);
-            setStrikeTimeSec(0);
-            setBuyinAmount(0);
+            resetData();
         }
     }, [isWalletConnected]);
+
+    useEffect(() => {
+        resetData();
+    }, [networkId]);
+
+    useEffect(() => {
+        if (isResetTriggered) {
+            setIsResetTriggered(false);
+        }
+    }, [isResetTriggered]);
 
     const getStepLabel = (sn: number, name: string) => {
         return (
@@ -97,16 +111,6 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                 <StepName>{name}</StepName>
             </Step>
         );
-    };
-
-    const resetData = () => {
-        setIsResetTriggered(true);
-        setCurrencyKey(SUPPORTED_ASSETS[0]);
-        setPositionType(undefined);
-        setDeltaTimeSec(0);
-        setStrikeTimeSec(0);
-        setBuyinAmount(0);
-        setIsResetTriggered(false);
     };
 
     const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);

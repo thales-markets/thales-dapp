@@ -104,11 +104,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         isCapBreached;
 
     const approvalCurrency = getCollateral(networkId, selectedCollateralIndex);
-    const collateralAddress = useMemo(() => {
-        return isMultiCollateralSupported
-            ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
-            : snxJSConnector.collateral?.address;
-    }, [selectedCollateralIndex, isMultiCollateralSupported]);
+    const collateralAddress = isMultiCollateralSupported
+        ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
+        : snxJSConnector.collateral?.address;
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -142,9 +140,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     }, [paidAmount, totalFee]);
 
     useEffect(() => {
-        if (buyinAmount > 0) {
-            setPaidAmount(buyinAmount);
-        }
+        setPaidAmount(buyinAmount > 0 ? buyinAmount : '');
     }, [buyinAmount]);
 
     // Reset inputs

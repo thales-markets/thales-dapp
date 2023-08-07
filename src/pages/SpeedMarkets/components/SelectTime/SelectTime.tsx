@@ -299,7 +299,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                     <Column>
                         <Button
                             height="13px"
-                            width="50px"
+                            width="60px"
+                            padding="0 29px"
                             fontSize="13px"
                             backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -312,7 +313,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         </Button>
                         <Button
                             height="13px"
-                            width="50px"
+                            width="60px"
+                            padding="0 29px"
                             fontSize="13px"
                             backgroundColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             borderColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -350,7 +352,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                     <Column>
                         <Button
                             height="13px"
-                            width="50px"
+                            width="60px"
+                            padding="0 29px"
                             fontSize="13px"
                             backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
                             borderColor={!isAM ? theme.button.background.tertiary : undefined}
@@ -362,7 +365,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         </Button>
                         <Button
                             height="13px"
-                            width="50px"
+                            width="60px"
+                            padding="0 29px"
                             fontSize="13px"
                             backgroundColor={isAM ? theme.button.background.tertiary : undefined}
                             borderColor={isAM ? theme.button.background.tertiary : undefined}
