@@ -76,6 +76,7 @@ const StakingLeaderboard: React.FC = () => {
             vaultMultiplier: 0,
             lpMultiplier: 0,
             estimationForOneThales: 0,
+            maxStakingMultiplier: 0,
         };
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
