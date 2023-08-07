@@ -1,7 +1,7 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { CONNECTION_TIMEOUT_MS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
@@ -14,7 +14,6 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivStart } from 'styles/common';
-import { getCurrencyPriority } from 'utils/currency';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
@@ -28,10 +27,6 @@ import { getSupportedNetworksByRoute } from 'utils/network';
 import { RouteComponentProps } from 'react-router-dom';
 import { secondsToMilliseconds } from 'date-fns';
 
-const supportedAssets = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
-    (a, b) => getCurrencyPriority(a) - getCurrencyPriority(b)
-);
-
 const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
 
@@ -43,7 +38,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         [CRYPTO_CURRENCY_MAP.BTC]: 0,
         [CRYPTO_CURRENCY_MAP.ETH]: 0,
     });
-    const [currencyKey, setCurrencyKey] = useState(supportedAssets[0]);
+    const [currencyKey, setCurrencyKey] = useState(SUPPORTED_ASSETS[0]);
     const [positionType, setPositionType] = useState<Positions.UP | Positions.DOWN | undefined>(undefined);
     const [deltaTimeSec, setDeltaTimeSec] = useState(0);
     const [strikeTimeSec, setStrikeTimeSec] = useState(0);
@@ -63,7 +58,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     }, [networkId]);
 
     const fetchCurrentPrice = useCallback(async () => {
-        const priceIds = supportedAssets.map((asset) => getPriceId(networkId, asset));
+        const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
         const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
         setCurrentPrices((prev) => {
             if (prev[currencyKey] !== prices[currencyKey]) {
@@ -87,7 +82,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     // Reset inputs
     useEffect(() => {
         if (!isWalletConnected) {
-            setCurrencyKey(supportedAssets[0]);
+            setCurrencyKey(SUPPORTED_ASSETS[0]);
             setPositionType(undefined);
             setDeltaTimeSec(0);
             setStrikeTimeSec(0);
@@ -106,7 +101,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
 
     const resetData = () => {
         setIsResetTriggered(true);
-        setCurrencyKey(supportedAssets[0]);
+        setCurrencyKey(SUPPORTED_ASSETS[0]);
         setPositionType(undefined);
         setDeltaTimeSec(0);
         setStrikeTimeSec(0);
@@ -151,7 +146,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             <AssetDropdown
                                 asset={currencyKey}
                                 setAsset={setCurrencyKey}
-                                allAssets={supportedAssets}
+                                allAssets={SUPPORTED_ASSETS}
                                 showAssetIcon={true}
                                 type="center"
                             />

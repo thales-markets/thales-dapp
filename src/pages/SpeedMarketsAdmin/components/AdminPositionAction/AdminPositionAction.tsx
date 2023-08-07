@@ -1,6 +1,7 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import Button from 'components/Button/Button';
+import TimeRemaining from 'components/TimeRemaining';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
@@ -19,12 +20,14 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { CSSProperties } from 'styled-components';
+import styled, { CSSProperties } from 'styled-components';
+import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
+import { Label, Separator } from '../UnresolvedPosition/UnresolvedPosition';
 
 type AdminPositionActionProps = {
     position: UserLivePositions;
@@ -115,16 +118,28 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position, isS
     };
 
     return (
-        <Button
-            {...getDefaultButtonProps(isMobile)}
-            disabled={isSubmitting || !position.finalPrice}
-            additionalStyles={additionalButtonStyle}
-            onClick={() => handleResolve()}
-        >
-            {isSubmitting && !isSubmittingBatch
-                ? t(`speed-markets.admin.resolve-progress`)
-                : t('speed-markets.admin.resolve')}
-        </Button>
+        <>
+            {position.maturityDate > Date.now() ? (
+                <>
+                    <Separator />
+                    <ResultsContainer>
+                        <Label>{t('markets.user-positions.results')}</Label>
+                        <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
+                    </ResultsContainer>
+                </>
+            ) : (
+                <Button
+                    {...getDefaultButtonProps(isMobile)}
+                    disabled={isSubmitting || !position.finalPrice}
+                    additionalStyles={additionalButtonStyle}
+                    onClick={() => handleResolve()}
+                >
+                    {isSubmitting && !isSubmittingBatch
+                        ? t(`speed-markets.admin.resolve-progress`)
+                        : t('speed-markets.admin.resolve')}
+                </Button>
+            )}
+        </>
     );
 };
 
@@ -139,5 +154,14 @@ const additionalButtonStyle: CSSProperties = {
     lineHeight: '100%',
     border: 'none',
 };
+
+const ResultsContainer = styled(FlexDivCentered)`
+    gap: 4px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 100%;
+    white-space: nowrap;
+    min-width: 174px;
+`;
 
 export default AdminPositionAction;

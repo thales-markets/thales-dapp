@@ -1,5 +1,6 @@
 import { Network } from 'enums/network';
 import { CRYPTO_CURRENCY_MAP } from './currency';
+import { getCurrencyPriority } from 'utils/currency';
 
 export const PRICE_SERVICE_ENDPOINTS = {
     testnet: 'https://xc-testnet.pyth.network',
@@ -31,3 +32,7 @@ export const PYTH_CONTRACT_ADDRESS = {
 };
 
 export const PYTH_CURRENCY_DECIMALS = 8;
+
+export const SUPPORTED_ASSETS = [CRYPTO_CURRENCY_MAP.BTC, CRYPTO_CURRENCY_MAP.ETH].sort(
+    (a, b) => getCurrencyPriority(a) - getCurrencyPriority(b)
+);

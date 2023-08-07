@@ -436,6 +436,7 @@
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
             "unknown-price-title": "Unresolved positions without final price",
+            "open-positions-title": "Active positions",
             "resolve-progress": "Resolving...",
             "resolve": "Resolve",
             "resolve-all": "Resolve all",

@@ -26,7 +26,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import UnresolvedPosition from '../UnresolvedPosition';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { millisecondsToSeconds } from 'date-fns';
+import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { delay } from 'utils/timer';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
@@ -34,6 +34,7 @@ import { UserLivePositions } from 'types/options';
 const SECTIONS = {
     userWinner: 'userWinner',
     ammWinner: 'ammWinner',
+    unknownPrice: 'unknownPrice',
     openPositions: 'openPositions',
 };
 
@@ -49,6 +50,7 @@ const UnresolvedPositions: React.FC = () => {
 
     const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
+        refetchInterval: secondsToMilliseconds(30),
     });
 
     const activeSpeedMarketsData = useMemo(
@@ -60,13 +62,18 @@ const UnresolvedPositions: React.FC = () => {
     );
 
     const userWinnerSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => marketData.claimable && !!marketData.finalPrice)
+        .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable && !!marketData.finalPrice)
         .sort((a, b) => a.maturityDate - b.maturityDate);
     const ammWinnerSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => !marketData.claimable && !!marketData.finalPrice)
+        .filter(
+            (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !!marketData.finalPrice
+        )
         .sort((a, b) => a.maturityDate - b.maturityDate);
     const unknownPriceSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => !marketData.claimable && !marketData.finalPrice)
+        .filter((marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice)
+        .sort((a, b) => a.maturityDate - b.maturityDate);
+    const openSpeedMarketsData = activeSpeedMarketsData
+        .filter((marketData) => marketData.maturityDate > Date.now())
         .sort((a, b) => a.maturityDate - b.maturityDate);
 
     const handleResolveAll = async (positions: UserLivePositions[]) => {
@@ -108,7 +115,7 @@ const UnresolvedPositions: React.FC = () => {
                     priceUpdateDataArray.push(priceUpdateData[0]);
                     totalUpdateFee = totalUpdateFee.add(updateFee);
                 } catch (e) {
-                    console.log(`Can't fetch price for marekt ${position.market}`, e);
+                    console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
                 }
             }
 
@@ -162,78 +169,59 @@ const UnresolvedPositions: React.FC = () => {
         );
     };
 
+    const getSection = (section: typeof SECTIONS[keyof typeof SECTIONS], positions: UserLivePositions[]) => {
+        let titleKey = '';
+        switch (section) {
+            case SECTIONS.userWinner:
+                titleKey = 'speed-markets.admin.user-title';
+                break;
+            case SECTIONS.ammWinner:
+                titleKey = 'speed-markets.admin.amm-title';
+                break;
+            case SECTIONS.unknownPrice:
+                titleKey = 'speed-markets.admin.unknown-price-title';
+                break;
+            case SECTIONS.openPositions:
+                titleKey = 'speed-markets.admin.open-positions-title';
+                break;
+            default:
+        }
+
+        return (
+            <>
+                <Row>
+                    <Title>{`${t(titleKey)} (${positions.length})`}</Title>
+                    {section !== SECTIONS.openPositions && getButton(positions, section)}
+                </Row>
+                {activeSpeedMarketsDataQuery.isLoading ? (
+                    <LoaderContainer>
+                        <SimpleLoader />
+                    </LoaderContainer>
+                ) : (
+                    <PositionsWrapper hasPositions={positions.length > 0}>
+                        {positions.length > 0 ? (
+                            positions.map((position, index) => (
+                                <UnresolvedPosition
+                                    position={position}
+                                    key={`${section}${index}`}
+                                    isSubmittingBatch={isSubmitting}
+                                />
+                            ))
+                        ) : (
+                            <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
+                        )}
+                    </PositionsWrapper>
+                )}
+            </>
+        );
+    };
+
     return (
         <Wrapper>
-            <Row>
-                <Title>{`${t('speed-markets.admin.user-title')} (${userWinnerSpeedMarketsData.length})`}</Title>
-                {getButton(userWinnerSpeedMarketsData, SECTIONS.userWinner)}
-            </Row>
-            {activeSpeedMarketsDataQuery.isLoading ? (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            ) : (
-                <PositionsWrapper hasPositions={userWinnerSpeedMarketsData.length > 0}>
-                    {userWinnerSpeedMarketsData.length > 0 ? (
-                        userWinnerSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition
-                                position={position}
-                                key={`userWinner${index}`}
-                                isSubmittingBatch={isSubmitting}
-                            />
-                        ))
-                    ) : (
-                        <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
-                    )}
-                </PositionsWrapper>
-            )}
-            <Row>
-                <Title>{`${t('speed-markets.admin.amm-title')} (${ammWinnerSpeedMarketsData.length})`}</Title>
-                {getButton(ammWinnerSpeedMarketsData, SECTIONS.ammWinner)}
-            </Row>
-            {activeSpeedMarketsDataQuery.isLoading ? (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            ) : (
-                <PositionsWrapper hasPositions={ammWinnerSpeedMarketsData.length > 0}>
-                    {ammWinnerSpeedMarketsData.length > 0 ? (
-                        ammWinnerSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition
-                                position={position}
-                                key={`ammWinner${index}`}
-                                isSubmittingBatch={isSubmitting}
-                            />
-                        ))
-                    ) : (
-                        <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
-                    )}
-                </PositionsWrapper>
-            )}
-            <Row>
-                <Title>{`${t('speed-markets.admin.unknown-price-title')} (${
-                    unknownPriceSpeedMarketsData.length
-                })`}</Title>
-            </Row>
-            {activeSpeedMarketsDataQuery.isLoading ? (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            ) : (
-                <PositionsWrapper hasPositions={unknownPriceSpeedMarketsData.length > 0}>
-                    {unknownPriceSpeedMarketsData.length > 0 ? (
-                        unknownPriceSpeedMarketsData.map((position, index) => (
-                            <UnresolvedPosition
-                                position={position}
-                                key={`unknownPrice${index}`}
-                                isSubmittingBatch={isSubmitting}
-                            />
-                        ))
-                    ) : (
-                        <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
-                    )}
-                </PositionsWrapper>
-            )}
+            {getSection(SECTIONS.userWinner, userWinnerSpeedMarketsData)}
+            {getSection(SECTIONS.ammWinner, ammWinnerSpeedMarketsData)}
+            {getSection(SECTIONS.unknownPrice, unknownPriceSpeedMarketsData)}
+            {getSection(SECTIONS.openPositions, openSpeedMarketsData)}
         </Wrapper>
     );
 };

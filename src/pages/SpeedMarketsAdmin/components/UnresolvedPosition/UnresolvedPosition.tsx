@@ -35,12 +35,14 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position, isSub
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('profile.final-price')}</Label>
+                    <Label>
+                        {position.maturityDate < Date.now() ? t('profile.final-price') : t('profile.current-price')}
+                    </Label>
                     <Value>{formatCurrencyWithPrecision(position.finalPrice || 0)}</Value>
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
-                    <Label>{t('markets.user-positions.end-date')}</Label>
+                    <Label>{t('speed-markets.user-positions.end-time')}</Label>
                     <Value>{formatShortDateWithTime(position.maturityDate)}</Value>
                 </FlexContainer>
                 <Separator />
@@ -111,7 +113,7 @@ const FlexContainer = styled(AlignedFlex)`
     }
 `;
 
-const Label = styled.span`
+export const Label = styled.span`
     font-style: normal;
     font-weight: 700;
     font-size: 13px;
@@ -125,7 +127,7 @@ const Value = styled(Label)<{ color?: string }>`
     white-space: nowrap;
 `;
 
-const Separator = styled.div`
+export const Separator = styled.div`
     min-width: 2px;
     width: 2px;
     height: 14px;
