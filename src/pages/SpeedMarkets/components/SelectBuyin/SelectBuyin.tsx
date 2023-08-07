@@ -17,7 +17,7 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMark
         const first = ammSpeedMarketsLimits?.minBuyinAmount || 0;
         const fifth = ammSpeedMarketsLimits?.maxBuyinAmount || 0;
 
-        const second = first * 2;
+        const second = first === 1 ? first * 5 : first * 2;
         const third = fifth > 100 ? second * 5 : second * 2;
         const fourth = fifth / 2;
 

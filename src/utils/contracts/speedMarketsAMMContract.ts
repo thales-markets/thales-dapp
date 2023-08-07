@@ -3,7 +3,7 @@ import { Network } from 'enums/network';
 const speedMarketsContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.OptimismMainnet]: 'TBD',
+        [Network.OptimismMainnet]: '0xE16B8a01490835EC1e76bAbbB3Cadd8921b32001',
         [Network.OptimismGoerli]: '0x05cD078cECB32d62b304e9028C147bBCdef5Ba24',
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
