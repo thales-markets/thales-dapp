@@ -359,6 +359,18 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                         } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
                     </Button>
                 );
+            } else if (position.finalPrice) {
+                return (
+                    <>
+                        <Separator />
+                        <ResultsContainer>
+                            <Label>{t('common.result')}</Label>
+                            <Value isUpperCase color={theme.error.borderColor.primary}>
+                                {t('common.loss')}
+                            </Value>
+                        </ResultsContainer>
+                    </>
+                );
             } else {
                 return (
                     <>
@@ -511,8 +523,9 @@ const Label = styled.span`
     color: ${(props) => props.theme.textColor.secondary};
 `;
 
-const Value = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
+const Value = styled.span<{ color?: string; isUpperCase?: boolean }>`
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    ${(props) => (props.isUpperCase ? 'text-transform: uppercase;' : '')}
     font-weight: bold;
     line-height: 100%;
 `;
