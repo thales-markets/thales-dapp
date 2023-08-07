@@ -315,6 +315,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
+        if (positionType === undefined) {
+            return <Button disabled={true}>{t('markets.amm-trading.choose-direction')}</Button>;
+        }
+        if (!(strikeTimeSec || deltaTimeSec)) {
+            return <Button disabled={true}>{t('markets.amm-trading.choose-time')}</Button>;
+        }
+        if (!paidAmount) {
+            return <Button disabled={true}>{t('common.enter-amount')}</Button>;
+        }
         if (isCapBreached) {
             return <Button disabled={true}>{t('speed-markets.errors.cap-breach')}</Button>;
         }

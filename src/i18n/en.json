@@ -415,7 +415,6 @@
             "choose-time": "Time",
             "enter-buyin": "Amount"
         },
-        "amm-trading": {},
         "errors": {
             "min-buyin": "The minimum buy-in is {{minAmount}}",
             "max-buyin": "The maximum buy-in is {{maxAmount}}",
