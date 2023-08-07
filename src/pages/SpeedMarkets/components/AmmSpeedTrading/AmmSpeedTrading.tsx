@@ -155,17 +155,18 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     useEffect(() => {
         let messageKey = '';
 
+        if (
+            (isWalletConnected && Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) ||
+            stableBalance === 0
+        ) {
+            messageKey = 'common.errors.insufficient-balance-wallet';
+        }
         if (ammSpeedMarketsLimits && Number(paidAmount) > 0) {
             if (Number(paidAmount) < ammSpeedMarketsLimits.minBuyinAmount) {
                 messageKey = 'speed-markets.errors.min-buyin';
             } else if (Number(paidAmount) > ammSpeedMarketsLimits.maxBuyinAmount) {
                 messageKey = 'speed-markets.errors.max-buyin';
             }
-        } else if (
-            (isWalletConnected && Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) ||
-            stableBalance === 0
-        ) {
-            messageKey = 'common.errors.insufficient-balance-wallet';
         }
 
         setErrorMessageKey(messageKey);
