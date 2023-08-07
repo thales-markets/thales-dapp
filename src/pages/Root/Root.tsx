@@ -138,7 +138,7 @@ interface RootProps {
 }
 
 export const plausible = Plausible({
-    domain: 'https://thalesmarket.io',
+    domain: 'https://thales-dapp-git-feature-plausible-tracking-thales-market.vercel.app',
     hashMode: true,
     trackLocalhost: true,
     apiHost: 'http://analytics-v2.thalesmarket.io',
