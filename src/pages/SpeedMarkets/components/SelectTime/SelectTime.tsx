@@ -297,20 +297,19 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         />
                     </InputWrapper>
                     <Column>
-                        {deltaTimesMinutes.length > 0 && (
-                            <Button
-                                height="13px"
-                                width="50px"
-                                fontSize="13px"
-                                backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                                borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                                textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
-                                additionalStyles={{ borderRadius: '4px' }}
-                                onClick={onMinutesButtonClikHandler}
-                            >
-                                {t('common.time-remaining.minutes')}
-                            </Button>
-                        )}
+                        <Button
+                            height="13px"
+                            width="50px"
+                            fontSize="13px"
+                            backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                            borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                            textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                            additionalStyles={{ borderRadius: '4px' }}
+                            disabled={!deltaTimesMinutes.length}
+                            onClick={onMinutesButtonClikHandler}
+                        >
+                            {t('common.time-remaining.minutes')}
+                        </Button>
                         <Button
                             height="13px"
                             width="50px"

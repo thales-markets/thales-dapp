@@ -7,7 +7,7 @@ const speedMarketsContract = {
         [Network.OptimismGoerli]: '0x05cD078cECB32d62b304e9028C147bBCdef5Ba24',
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: 'TBD',
+        [Network.Arbitrum]: '0x02D0123a89Ae6ef27419d5EBb158d1ED4Cf24FA3',
     },
     abi: [
         {

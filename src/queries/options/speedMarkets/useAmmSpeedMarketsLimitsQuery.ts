@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type RiskPerAsset = { currency: string; current: number; max: number };
@@ -65,21 +65,21 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                     speedMarketsAMMContract.safeBoxImpact(),
                 ]);
 
-                ammSpeedMarkets.minBuyinAmount = bigNumberFormatter(minBuyinAmount);
-                ammSpeedMarkets.maxBuyinAmount = bigNumberFormatter(maxBuyinAmount);
+                ammSpeedMarkets.minBuyinAmount = stableCoinFormatter(minBuyinAmount, networkId);
+                ammSpeedMarkets.maxBuyinAmount = stableCoinFormatter(maxBuyinAmount, networkId);
                 ammSpeedMarkets.minimalTimeToMaturity = Number(minTimeToMaturity);
                 ammSpeedMarkets.maximalTimeToMaturity = Number(maxTimeToMaturity);
                 ammSpeedMarkets.maxPriceDelaySec = Number(maxPriceDelay);
                 ammSpeedMarkets.risksPerAsset = [
                     {
                         currency: CRYPTO_CURRENCY_MAP.ETH,
-                        current: bigNumberFormatter(currentRiskForETH),
-                        max: bigNumberFormatter(maxRiskForETH),
+                        current: stableCoinFormatter(currentRiskForETH, networkId),
+                        max: stableCoinFormatter(maxRiskForETH, networkId),
                     },
                     {
                         currency: CRYPTO_CURRENCY_MAP.BTC,
-                        current: bigNumberFormatter(currentRiskForBTC),
-                        max: bigNumberFormatter(maxRiskForBTC),
+                        current: stableCoinFormatter(currentRiskForBTC, networkId),
+                        max: stableCoinFormatter(maxRiskForBTC, networkId),
                     },
                 ];
                 ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);

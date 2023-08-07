@@ -179,7 +179,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
             ];
         case ROUTES.Options.SpeedMarkets:
-            return [Network.OptimismMainnet, Network.OptimismGoerli];
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }
