@@ -31,10 +31,13 @@ const useUserActiveSpeedMarketsDataQuery = (
             });
 
             if (speedMarketsAMMContract) {
-                const fees =
-                    bigNumberFormatter(await speedMarketsAMMContract.lpFee()) +
-                    bigNumberFormatter(await speedMarketsAMMContract.safeBoxImpact());
-                const numActiveMarkets = await speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress);
+                const [lpFee, safeBoxImpact, numActiveMarkets] = await Promise.all([
+                    speedMarketsAMMContract.lpFee(),
+                    speedMarketsAMMContract.safeBoxImpact(),
+                    speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress),
+                ]);
+                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+
                 const activeMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
                     0,
                     numActiveMarkets,

@@ -26,10 +26,13 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
             });
 
             if (speedMarketsAMMContract) {
-                const fees =
-                    bigNumberFormatter(await speedMarketsAMMContract.lpFee()) +
-                    bigNumberFormatter(await speedMarketsAMMContract.safeBoxImpact());
-                const numActiveMarkets = await speedMarketsAMMContract.numActiveMarkets();
+                const [lpFee, safeBoxImpact, numActiveMarkets] = await Promise.all([
+                    speedMarketsAMMContract.lpFee(),
+                    speedMarketsAMMContract.safeBoxImpact(),
+                    speedMarketsAMMContract.numActiveMarkets(),
+                ]);
+                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+
                 const activeMarkets = await speedMarketsAMMContract.activeMarkets(0, numActiveMarkets);
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
                 const maturedMarkets: any = marketsDataArray.filter(

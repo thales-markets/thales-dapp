@@ -50,7 +50,7 @@ const UnresolvedPositions: React.FC = () => {
 
     const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
-        refetchInterval: secondsToMilliseconds(30),
+        refetchInterval: secondsToMilliseconds(5),
     });
 
     const activeSpeedMarketsData = useMemo(
