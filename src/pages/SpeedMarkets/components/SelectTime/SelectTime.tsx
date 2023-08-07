@@ -209,7 +209,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     const resetData = useCallback(() => {
         setIsDeltaSelected(true);
-        setIsDeltaMinutesSelected(true);
+        setIsDeltaMinutesSelected(!!deltaTimesMinutes.length);
         setCustomDeltaTime('');
         onDeltaChange(0);
 
@@ -217,7 +217,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
         setExactTimeHours(DEFAULT_HOURS);
         setExactTimeMinutes(DEFAULT_MINUTES);
         onExactTimeChange(0);
-    }, [onDeltaChange, onExactTimeChange]);
+    }, [onDeltaChange, onExactTimeChange, deltaTimesMinutes]);
 
     // Reset inputs
     useEffect(() => {
