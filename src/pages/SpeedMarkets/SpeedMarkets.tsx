@@ -26,6 +26,7 @@ import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import { RouteComponentProps } from 'react-router-dom';
 import { secondsToMilliseconds } from 'date-fns';
+import ClosedPositions from './components/ClosedPositions';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -185,11 +186,14 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                         resetData={resetData}
                     />
                     {isWalletConnected && (
-                        <OpenPositions
-                            isSpeedMarkets
-                            maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
-                            currentPrices={currentPrices}
-                        />
+                        <>
+                            <OpenPositions
+                                isSpeedMarkets
+                                maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
+                                currentPrices={currentPrices}
+                            />
+                            <ClosedPositions />
+                        </>
                     )}
                 </Container>
             ) : (

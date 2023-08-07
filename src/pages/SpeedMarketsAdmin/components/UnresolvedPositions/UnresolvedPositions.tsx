@@ -61,21 +61,16 @@ const UnresolvedPositions: React.FC = () => {
         [activeSpeedMarketsDataQuery]
     );
 
-    const userWinnerSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable && !!marketData.finalPrice)
-        .sort((a, b) => a.maturityDate - b.maturityDate);
-    const ammWinnerSpeedMarketsData = activeSpeedMarketsData
-        .filter(
-            (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !!marketData.finalPrice
-        )
-        .sort((a, b) => a.maturityDate - b.maturityDate);
-    const unknownPriceSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice)
-        .sort((a, b) => a.maturityDate - b.maturityDate);
-    const openSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate > Date.now())
-        .sort((a, b) => a.maturityDate - b.maturityDate);
-
+    const userWinnerSpeedMarketsData = activeSpeedMarketsData.filter(
+        (marketData) => marketData.maturityDate < Date.now() && marketData.claimable && !!marketData.finalPrice
+    );
+    const ammWinnerSpeedMarketsData = activeSpeedMarketsData.filter(
+        (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !!marketData.finalPrice
+    );
+    const unknownPriceSpeedMarketsData = activeSpeedMarketsData.filter(
+        (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice
+    );
+    const openSpeedMarketsData = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate > Date.now());
     const handleResolveAll = async (positions: UserLivePositions[]) => {
         if (!positions.length) {
             return;
@@ -200,13 +195,15 @@ const UnresolvedPositions: React.FC = () => {
                 ) : (
                     <PositionsWrapper hasPositions={positions.length > 0}>
                         {positions.length > 0 ? (
-                            positions.map((position, index) => (
-                                <UnresolvedPosition
-                                    position={position}
-                                    key={`${section}${index}`}
-                                    isSubmittingBatch={isSubmitting}
-                                />
-                            ))
+                            positions
+                                .sort((a, b) => a.maturityDate - b.maturityDate)
+                                .map((position, index) => (
+                                    <UnresolvedPosition
+                                        position={position}
+                                        key={`${section}${index}`}
+                                        isSubmittingBatch={isSubmitting}
+                                    />
+                                ))
                         ) : (
                             <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
                         )}

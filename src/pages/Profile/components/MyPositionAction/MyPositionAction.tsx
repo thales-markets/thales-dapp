@@ -44,6 +44,7 @@ import {
     refetchUserNotifications,
     refetchUserOpenPositions,
     refetchUserProfileQueries,
+    refetchUserResolvedSpeedMarkets,
     refetchUserSpeedMarkets,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -329,6 +330,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                         getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
                     );
                     refetchUserSpeedMarkets(networkId, walletAddress);
+                    refetchUserResolvedSpeedMarkets(networkId, walletAddress);
                 }
             } catch (e) {
                 console.log(e);

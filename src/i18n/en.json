@@ -44,6 +44,9 @@
         "strike-price": "Strike price",
         "end-date": "End date",
         "balance": "Balance",
+        "result": "Result",
+        "won": "Won",
+        "loss": "Loss",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -308,6 +311,7 @@
         },
         "user-positions": {
             "your-positions": "Your open positions",
+            "your-closed-positions": "Your closed positions (last 10)",
             "no-positions": "Your open positions will be visible here",
             "end-date": "End date",
             "size": "Size",

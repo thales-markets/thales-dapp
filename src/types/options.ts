@@ -223,3 +223,17 @@ export type UserLivePositions = {
     finalPrice?: number;
     user?: string;
 };
+
+export type UserClosedPositions = {
+    currencyKey: string;
+    strikePrice: string;
+    amount: number;
+    amountBigNumber: BigNumber;
+    maturityDate: number;
+    market: string;
+    side: Positions;
+    paid: number;
+    value: number;
+    finalPrice: number;
+    isUserWinner: boolean;
+};

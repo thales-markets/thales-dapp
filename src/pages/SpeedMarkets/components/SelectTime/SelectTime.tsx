@@ -306,7 +306,6 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                             borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
                             textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
                             additionalStyles={{ borderRadius: '4px' }}
-                            disabled={!deltaTimesMinutes.length}
                             onClick={onMinutesButtonClikHandler}
                         >
                             {t('common.time-remaining.minutes')}

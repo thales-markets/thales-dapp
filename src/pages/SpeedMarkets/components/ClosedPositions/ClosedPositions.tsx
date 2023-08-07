@@ -1,9 +1,7 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
-import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -12,17 +10,11 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { UserLivePositions } from 'types/options';
-import OpenPosition from '../OpenPosition';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import { UserClosedPositions } from 'types/options';
+import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
+import ClosedPosition from '../ClosedPosition';
 
-type OpenPositionsProps = {
-    isSpeedMarkets?: boolean;
-    maxPriceDelaySec?: number;
-    currentPrices?: { [key: string]: number };
-};
-
-const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
+const ClosedPositions: React.FC = () => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -30,50 +22,34 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
-        enabled: isAppReady && isWalletConnected && !isSpeedMarkets,
+    const userResolvedSpeedMarketsDataQuery = useUserResolvedSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
     });
 
-    const livePositions = useMemo(() => (positionsQuery.isSuccess && positionsQuery.data ? positionsQuery.data : []), [
-        positionsQuery,
-    ]);
-
-    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
-    });
-
-    const userOpenSpeedMarketsData = useMemo(
+    const userResolvedPositions = useMemo(
         () =>
-            userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
-                ? userActiveSpeedMarketsDataQuery.data
+            userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
+                ? userResolvedSpeedMarketsDataQuery.data
                 : [],
-        [userActiveSpeedMarketsDataQuery]
+        [userResolvedSpeedMarketsDataQuery]
     );
 
-    const noPositions = isSpeedMarkets ? userOpenSpeedMarketsData.length === 0 : livePositions.length === 0;
-    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
+    const noPositions = userResolvedPositions.length === 0;
+    const positions = noPositions ? dummyPositions : userResolvedPositions;
 
     return (
         <Wrapper>
-            <Title>{t('markets.user-positions.your-positions')}</Title>
-            {userActiveSpeedMarketsDataQuery.isLoading || positionsQuery.isLoading ? (
+            <Title>{t('markets.user-positions.your-closed-positions')}</Title>
+            {userResolvedSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {positions
-                            .sort((a, b) => a.maturityDate - b.maturityDate)
-                            .map((position, index) => (
-                                <OpenPosition
-                                    position={position}
-                                    isSpeedMarkets={isSpeedMarkets}
-                                    key={`position${position.market}${position.positionAddress}${index}`}
-                                    maxPriceDelaySec={maxPriceDelaySec}
-                                    currentPrices={currentPrices}
-                                />
-                            ))}
+                        {positions.map((position, index) => (
+                            <ClosedPosition position={position} key={`closedPosition${index}`} />
+                        ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>
@@ -82,9 +58,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
     );
 };
 
-const dummyPositions: UserLivePositions[] = [
+const dummyPositions: UserClosedPositions[] = [
     {
-        positionAddress: ZERO_ADDRESS,
         market: '0x1',
         currencyKey: 'BTC',
         amount: 15,
@@ -94,9 +69,10 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 25,000.00',
         side: Positions.UP,
         value: 0,
+        finalPrice: 30000,
+        isUserWinner: true,
     },
     {
-        positionAddress: ZERO_ADDRESS,
         market: '0x2',
         currencyKey: 'BTC',
         amount: 10,
@@ -106,6 +82,8 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 35,000.00',
         side: Positions.DOWN,
         value: 0,
+        finalPrice: 30000,
+        isUserWinner: true,
     },
 ];
 
@@ -158,4 +136,4 @@ const NoPositionsText = styled.span`
     min-width: max-content;
 `;
 
-export default OpenPositions;
+export default ClosedPositions;
