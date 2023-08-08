@@ -356,23 +356,22 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const getTradingDetails = () => {
         return (
             <TradingDetailsContainer>
-                {
-                    <TradingDetailsSentence
-                        currencyKey={currencyKey}
-                        maturityDate={secondsToMilliseconds(strikeTimeSec)}
-                        deltaTimeSec={deltaTimeSec}
-                        market={{
-                            address: 'Any',
-                            strikePrice: currentPrice,
-                            positionType,
-                        }}
-                        isRangedMarket={false}
-                        isFetchingQuote={false}
-                        priceProfit={SPEED_MARKETS_QUOTE - 1}
-                        paidAmount={paidAmount}
-                        breakFirstLine={false}
-                    />
-                }
+                <TradingDetailsSentence
+                    currencyKey={currencyKey}
+                    maturityDate={secondsToMilliseconds(strikeTimeSec)}
+                    deltaTimeSec={deltaTimeSec}
+                    market={{
+                        address: 'Any',
+                        strikePrice: currentPrice,
+                        positionType,
+                    }}
+                    isRangedMarket={false}
+                    isFetchingQuote={false}
+                    priceProfit={SPEED_MARKETS_QUOTE - 1}
+                    paidAmount={paidAmount}
+                    breakFirstLine={false}
+                />
+                <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
             </TradingDetailsContainer>
         );
     };
@@ -482,6 +481,16 @@ const PaymentInfo = styled.span`
     text-align: center;
     color: ${(props) => props.theme.textColor.secondary};
     margin-top: 6px;
+`;
+
+const ShareIcon = styled.i<{ disabled: boolean }>`
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 18px;
+    color: ${(props) => props.theme.textColor.primary};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
 `;
 
 export default AmmSpeedTrading;

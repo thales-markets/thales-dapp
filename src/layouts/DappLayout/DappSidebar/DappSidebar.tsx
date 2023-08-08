@@ -65,7 +65,7 @@ const DappSidebar: React.FC = () => {
                     <DappHeaderItem
                         className={`${location.pathname === ROUTES.Options.SpeedMarkets ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.SpeedMarkets)}
-                        iconName="markets"
+                        iconName="speed-markets"
                         label={t('common.sidebar.speed-markets')}
                     />
 
