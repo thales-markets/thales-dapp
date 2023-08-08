@@ -120,6 +120,13 @@ const FlexContainer = styled(AlignedFlex)`
     flex: 1;
     justify-content: center;
 
+    &:nth-child(1) {
+        min-width: 320px;
+    }
+    &:nth-child(3) {
+        min-width: 130px;
+    }
+
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         gap: 4px;
