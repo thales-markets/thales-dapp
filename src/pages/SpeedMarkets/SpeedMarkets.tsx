@@ -1,32 +1,32 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
+import titleImage from 'assets/images/speed-markets/title.png';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
+import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
-import BannerCarousel from 'pages/Trade/components/BannerCarousel';
+import OpenPositions from 'pages/Trade/components/OpenPositions';
+import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
+import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivStart } from 'styles/common';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import AmmSpeedTrading from './components/AmmSpeedTrading';
+import ClosedPositions from './components/ClosedPositions';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime';
-import AmmSpeedTrading from './components/AmmSpeedTrading';
-import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import { getIsAppReady } from 'redux/modules/app';
-import OpenPositions from 'pages/Trade/components/OpenPositions';
-import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
-import { getSupportedNetworksByRoute } from 'utils/network';
-import { RouteComponentProps } from 'react-router-dom';
-import { secondsToMilliseconds } from 'date-fns';
-import ClosedPositions from './components/ClosedPositions';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -120,12 +120,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         <>
             {supportedNetworks.includes(networkId) ? (
                 <Container>
-                    <BannerCarousel />
-                    <FlexDivCentered>
-                        <Icon className="icon icon--thunder" />
-                        <Title>{t('speed-markets.title')}</Title>
-                        <Icon className="icon icon--thunder" />
-                    </FlexDivCentered>
+                    <HeaderImage />
                     <Info>
                         <Trans
                             i18nKey="speed-markets.info"
@@ -210,6 +205,17 @@ const Container = styled.div`
     max-width: 974px;
 `;
 
+const HeaderImage = styled.div`
+    height: 120px;
+    background-image: url(${titleImage});
+    background-position: center;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        height: 60px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+`;
+
 const ContentWrapper = styled.div`
     width: 100%;
     display: flex;
@@ -266,16 +272,8 @@ const StepName = styled.span`
     text-transform: capitalize;
 `;
 
-const Title = styled.span`
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 200%;
-    color: ${(props) => props.theme.textColor.primary};
-    text-transform: uppercase;
-`;
-
 const Info = styled.span`
+    display: block;
     text-align: justify;
     font-size: 18px;
     font-weight: 300;
@@ -288,13 +286,6 @@ const UnsupportedNetworkWrapper = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 0;
     }
-`;
-
-const Icon = styled.i`
-    font-size: 22px;
-    line-height: 200%;
-    color: ${(props) => props.theme.warning.textColor.primary};
-    padding: 0 5px;
 `;
 
 export default SpeedMarkets;
