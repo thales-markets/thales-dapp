@@ -27,3 +27,5 @@ export const isAndroid = () => {
     const userAgent = navigator.userAgent || window.opera;
     return /android/i.test(userAgent);
 };
+
+export const isFirefox = () => navigator.userAgent.toLowerCase().indexOf('firefox') > -1;

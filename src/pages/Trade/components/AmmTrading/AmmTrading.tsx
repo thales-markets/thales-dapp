@@ -77,10 +77,12 @@ import {
     Container,
     DetailsIcon,
     FinalizeTrade,
+    ShareIcon,
     TradingDetailsContainer,
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
+import SharePositionModal from './components/SharePositionModal/SharePositionModal';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -135,6 +137,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
     const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isBuyWithNonDefaultCollateral = selectedCollateralIndex !== 0 && isMultiCollateralSupported && isBuy;
@@ -689,6 +692,19 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
                         />
                     </Tooltip>
+                    <Tooltip
+                        overlay={
+                            isDetailsIconDisabled
+                                ? t('markets.amm-trading.details-modal.tooltip-disabled')
+                                : t('markets.amm-trading.details-modal.tooltip')
+                        }
+                    >
+                        <ShareIcon
+                            className="icon icon__network"
+                            disabled={false}
+                            onClick={() => setOpenTwitterShareModal(true)}
+                        />
+                    </Tooltip>
                 </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
@@ -795,6 +811,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         />
                     }
                     onClose={() => setOpenTradingDetailsModal(false)}
+                />
+            )}
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type="potential"
+                    position={Positions.UP}
+                    currencyKey="ETH"
+                    strikeDate={100000000}
+                    strikePrice={1800}
+                    buyIn={1000}
+                    payout={20000}
+                    onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}
             {openApprovalModal && (
