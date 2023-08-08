@@ -29,15 +29,19 @@ const useUserResolvedSpeedMarketsDataQuery = (
                     speedMarketsAMMContract.numMaturedMarketsPerUser(walletAddress),
                 ]);
                 const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
-                const lastTenMaturedMarkets = await speedMarketsAMMContract.maturedMarketsPerUser(
-                    numMaturedMarkets >= 10 ? numMaturedMarkets - 10 : 0,
-                    10,
+                const maturedMarkets = await speedMarketsAMMContract.maturedMarketsPerUser(
+                    0,
+                    numMaturedMarkets,
                     walletAddress
                 );
-                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(lastTenMaturedMarkets);
+                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(maturedMarkets);
 
-                for (let i = 0; i < marketsDataArray.length; i++) {
-                    const marketsData = marketsDataArray[i];
+                const lastTenMaturedMarkets = [...marketsDataArray]
+                    .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
+                    .slice(-10);
+
+                for (let i = 0; i < lastTenMaturedMarkets.length; i++) {
+                    const marketsData = lastTenMaturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
                     const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
@@ -50,7 +54,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
                         amount: payout,
                         amountBigNumber: marketsData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: lastTenMaturedMarkets[i],
+                        market: maturedMarkets[i],
                         side: side,
                         paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
