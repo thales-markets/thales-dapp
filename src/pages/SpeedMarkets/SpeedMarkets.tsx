@@ -82,7 +82,6 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
 
     const resetData = () => {
         setIsResetTriggered(true);
-        setCurrencyKey(SUPPORTED_ASSETS[0]);
         setPositionType(undefined);
         setDeltaTimeSec(0);
         setStrikeTimeSec(0);

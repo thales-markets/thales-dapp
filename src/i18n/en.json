@@ -425,7 +425,8 @@
             "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
             "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
             "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future",
-            "cap-breach": "OI cap breached"
+            "cap-breach": "OI cap breached",
+            "insufficient-balance-fee": "Not enough {{currencyKey}} in wallet for {{fee}} fee"
         },
         "user-positions": {
             "end-time": "End time",

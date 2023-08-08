@@ -156,6 +156,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     useEffect(() => {
         let messageKey = '';
 
+        if (totalPaidAmount > stableBalance) {
+            messageKey = 'speed-markets.errors.insufficient-balance-fee';
+        }
         if (
             (isWalletConnected && Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) ||
             stableBalance === 0
@@ -171,7 +174,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
 
         setErrorMessageKey(messageKey);
-    }, [ammSpeedMarketsLimits, paidAmount, stableBalance, isWalletConnected]);
+    }, [ammSpeedMarketsLimits, paidAmount, stableBalance, isWalletConnected, totalPaidAmount]);
 
     // Submit validations
     useEffect(() => {
@@ -395,6 +398,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                             currencyKey: getCollateral(networkId, selectedCollateralIndex),
                             minAmount: ammSpeedMarketsLimits?.minBuyinAmount,
                             maxAmount: ammSpeedMarketsLimits?.maxBuyinAmount,
+                            fee: totalFee ? formatPercentage(totalFee, 0) : '...',
                         })}
                         balance={
                             showWalletBalance && isWalletConnected
