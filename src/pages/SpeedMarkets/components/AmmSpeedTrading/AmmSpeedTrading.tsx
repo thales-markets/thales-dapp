@@ -41,6 +41,7 @@ import {
     formatCurrencyWithSign,
     formatPercentage,
     roundNumberToDecimals,
+    truncToDecimals,
 } from 'utils/formatters/number';
 import { checkAllowance } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
@@ -345,9 +346,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     };
 
     const onMaxClick = () => {
-        if (ammSpeedMarketsLimits && stableBalance > 0) {
-            setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, stableBalance));
-            setBuyinAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, stableBalance));
+        if (ammSpeedMarketsLimits && stableBalance > 0 && totalFee) {
+            const totalToPay = Number(truncToDecimals(stableBalance / (1 + totalFee)));
+            setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, totalToPay));
+            setBuyinAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, totalToPay));
         }
     };
 
