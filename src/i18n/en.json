@@ -164,7 +164,11 @@
             "open-market": "Go to Market page"
         },
         "flex-card": {
-            "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial perimutuel</bold> markets"
+            "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial perimutuel</bold> markets",
+            "strike-price": "Strike price",
+            "strike-date": "Strike date",
+            "buy-in": "Buy-In",
+            "potential-win": "Potential win"
         }
     },
     "landing-page": {
