@@ -17,15 +17,15 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                     <CellValue>{t('thales-token.gamified-staking.rewards.points.trading')}</CellValue>
                 </AbsoluteContainer>
                 <TextContainer>
-                    <Label>Volume</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.volume')}</Label>
                     <Value>{formatCurrencyWithKey(USD_SIGN, stakingData.globalTrading, 2)}</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Multiplier</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.multiplier')}</Label>
                     <Value>{stakingData.tradingMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Points</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.points')}</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.tradingPoints, 2)}</Value>
                 </TextContainer>
             </Container>
@@ -35,15 +35,15 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                     <CellValue>{t('thales-token.gamified-staking.rewards.points.amm-lp')}</CellValue>
                 </AbsoluteContainer>
                 <TextContainer>
-                    <Label>Volume</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.volume')}</Label>
                     <Value>{formatCurrencyWithKey(USD_SIGN, stakingData.globalLp, 2)}</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Multiplier</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.multiplier')}</Label>
                     <Value>{stakingData.lpMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Points</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.points')}</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.lpPoints, 2)}</Value>
                 </TextContainer>
             </Container>
@@ -53,33 +53,37 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                     <CellValue>{t('thales-token.gamified-staking.rewards.points.vaults')}</CellValue>
                 </AbsoluteContainer>
                 <TextContainer>
-                    <Label>Volume</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.volume')}</Label>
                     <Value>{formatCurrencyWithKey(USD_SIGN, stakingData.globalVaults, 2)}</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Multiplier</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.multiplier')}</Label>
                     <Value>{stakingData.vaultMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Points</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.points')}</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.vaultPoints, 2)}</Value>
                 </TextContainer>
             </Container>
             <Container>
                 <AbsoluteContainer>
                     <Icon className="sidebar-icon icon--token" />
-                    <CellValue>Global Data</CellValue>
+                    <CellValue>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.title')}</CellValue>
                 </AbsoluteContainer>
                 <TextContainer>
-                    <Label>Points for 1 Thales</Label>
+                    <Label>
+                        {t('thales-token.gamified-staking.rewards.leaderboard.global-data.points-for-thales')}
+                    </Label>
                     <Value>{formatCurrencyWithKey('', stakingData.estimationForOneThales, 2)}</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>THALES Multiplier</Label>
+                    <Label>
+                        {t('thales-token.gamified-staking.rewards.leaderboard.global-data.thales-multiplier')}
+                    </Label>
                     <Value>{stakingData.maxStakingMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>Total Points</Label>
+                    <Label>T{t('thales-token.gamified-staking.rewards.leaderboard.global-data.total-points')}</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.globalPoints, 2)}</Value>
                 </TextContainer>
             </Container>

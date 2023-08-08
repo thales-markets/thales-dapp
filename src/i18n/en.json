@@ -641,6 +641,15 @@
                     "rewards": "Total Rewards",
                     "text": "Leaderboard for current round is based on estimations of current user balances across LP pools and vaults. Actual points are determined when rounds close.",
                     "time-left": "Time left in round: ",
+                    "global-data": {
+                        "title": "Global Data",
+                        "volume": "Volume",
+                        "multiplier": "Multiplier",
+                        "points": "Points",
+                        "points-for-thales": "Points for 1 THALES",
+                        "total-points": "Total Points",
+                        "thales-multiplier": "THALES Multiplier"
+                    },
                     "expanded-row": {
                         "trading": "Trading",
                         "lp": "LP",
