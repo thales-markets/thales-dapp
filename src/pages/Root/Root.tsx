@@ -141,7 +141,7 @@ export const plausible = Plausible({
     domain: 'https://thalesmarket.io',
     hashMode: true,
     trackLocalhost: true,
-    apiHost: 'http://analytics-v2.thalesmarket.io',
+    apiHost: 'https://analytics-v2.thalesmarket.io',
 });
 
 const theme = getDefaultTheme();
