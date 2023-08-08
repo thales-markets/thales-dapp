@@ -19,8 +19,8 @@ import { getColorPerPosition } from 'utils/options';
 import Tooltip from 'components/Tooltip';
 import useInterval from 'hooks/useInterval';
 import { secondsToMilliseconds } from 'date-fns';
-import { refetchUserOpenPositions } from 'utils/queryConnector';
-import { getNetworkId } from 'redux/modules/wallet';
+import { refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -34,6 +34,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
     const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isSpeedMarketMatured, setIsSpeedMarketMatured] = useState(
@@ -43,13 +44,15 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
 
     useInterval(() => {
-        if (isSpeedMarkets && Date.now() > position.maturityDate && !isSpeedMarketMatured) {
-            setIsSpeedMarketMatured(true);
-            if (!position.finalPrice && position.user) {
-                refetchUserOpenPositions(position.user, networkId);
+        if (isSpeedMarkets && Date.now() > position.maturityDate) {
+            if (!isSpeedMarketMatured) {
+                setIsSpeedMarketMatured(true);
+            }
+            if (!position.finalPrice) {
+                refetchUserSpeedMarkets(networkId, walletAddress);
             }
         }
-    }, secondsToMilliseconds(1));
+    }, secondsToMilliseconds(5));
 
     return (
         <Position>
