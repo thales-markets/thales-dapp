@@ -47,6 +47,7 @@
         "result": "Result",
         "won": "Won",
         "loss": "Loss",
+        "admin": "Admin",
         "time-remaining": {
             "ended": "ended",
             "years": "years",

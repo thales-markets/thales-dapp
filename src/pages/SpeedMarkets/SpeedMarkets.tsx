@@ -46,7 +46,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const [buyinAmount, setBuyinAmount] = useState(0);
     const [isResetTriggered, setIsResetTriggered] = useState(false);
 
-    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
+    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, undefined, {
         enabled: isAppReady,
     });
 

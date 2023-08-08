@@ -10,13 +10,21 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import AdminPositionAction from '../AdminPositionAction';
+import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
     isSubmittingBatch: boolean;
+    ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
+    isAmmWinnerSection: boolean;
 };
 
-const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position, isSubmittingBatch }) => {
+const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
+    position,
+    isSubmittingBatch,
+    ammSpeedMarketsLimitsData,
+    isAmmWinnerSection,
+}) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -59,7 +67,12 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({ position, isSub
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <AdminPositionAction position={position} isSubmittingBatch={isSubmittingBatch} />
+            <AdminPositionAction
+                position={position}
+                isSubmittingBatch={isSubmittingBatch}
+                ammSpeedMarketsLimitsData={ammSpeedMarketsLimitsData}
+                isAmmWinnerSection={isAmmWinnerSection}
+            />
         </Position>
     );
 };

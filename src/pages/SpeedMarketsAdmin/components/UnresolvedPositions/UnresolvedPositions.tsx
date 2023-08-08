@@ -8,7 +8,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
@@ -30,6 +30,7 @@ import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { delay } from 'utils/timer';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
+import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 
 const SECTIONS = {
     userWinner: 'userWinner',
@@ -43,10 +44,19 @@ const UnresolvedPositions: React.FC = () => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmittingSection, setIsSubmittingSection] = useState('');
+
+    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, walletAddress, {
+        enabled: isAppReady,
+    });
+
+    const ammSpeedMarketsLimitsData = useMemo(() => {
+        return ammSpeedMarketsLimitsQuery.isSuccess ? ammSpeedMarketsLimitsQuery.data : null;
+    }, [ammSpeedMarketsLimitsQuery]);
 
     const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
@@ -71,7 +81,8 @@ const UnresolvedPositions: React.FC = () => {
         (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice
     );
     const openSpeedMarketsData = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate > Date.now());
-    const handleResolveAll = async (positions: UserLivePositions[]) => {
+
+    const handleResolveAll = async (positions: UserLivePositions[], isAdmin: boolean) => {
         if (!positions.length) {
             return;
         }
@@ -87,10 +98,23 @@ const UnresolvedPositions: React.FC = () => {
 
             const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
 
-            const marketsToResolve: string[] = [];
+            const marketsToResolve: string[] = isAdmin
+                ? positions.filter((position) => !!position.finalPrice).map((position) => position.market)
+                : [];
+            const finalPrices: number[] = isAdmin
+                ? positions
+                      .filter((position) => !!position.finalPrice)
+                      .map((position) =>
+                          Number(ethers.utils.parseUnits((position.finalPrice || 0).toString(), PYTH_CURRENCY_DECIMALS))
+                      )
+                : [];
             const priceUpdateDataArray: string[] = [];
             let totalUpdateFee = BigNumber.from(0);
+
             for (const position of positions) {
+                if (isAdmin) {
+                    break;
+                }
                 try {
                     const pythContract = new ethers.Contract(
                         PYTH_CONTRACT_ADDRESS[networkId],
@@ -116,11 +140,16 @@ const UnresolvedPositions: React.FC = () => {
 
             if (marketsToResolve.length > 0) {
                 try {
-                    const tx: ethers.ContractTransaction = await speedMarketsAMMContractWithSigner.resolveMarketsBatch(
-                        marketsToResolve,
-                        priceUpdateDataArray,
-                        { value: totalUpdateFee }
-                    );
+                    const tx: ethers.ContractTransaction = isAdmin
+                        ? await speedMarketsAMMContractWithSigner.resolveMarketManuallyBatch(
+                              marketsToResolve,
+                              finalPrices
+                          )
+                        : await speedMarketsAMMContractWithSigner.resolveMarketsBatch(
+                              marketsToResolve,
+                              priceUpdateDataArray,
+                              { value: totalUpdateFee }
+                          );
 
                     const txResult = await tx.wait();
 
@@ -145,6 +174,7 @@ const UnresolvedPositions: React.FC = () => {
     };
 
     const getButton = (positions: UserLivePositions[], sectionName: typeof SECTIONS[keyof typeof SECTIONS]) => {
+        const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && sectionName === SECTIONS.ammWinner;
         return (
             !!positions.length && (
                 <Button
@@ -153,11 +183,13 @@ const UnresolvedPositions: React.FC = () => {
                     additionalStyles={additionalButtonStyle}
                     onClick={() => {
                         setIsSubmittingSection(sectionName);
-                        handleResolveAll(positions);
+                        handleResolveAll(positions, isAdmin);
                     }}
                 >
                     {isSubmittingSection === sectionName
                         ? t(`speed-markets.admin.resolve-progress`)
+                        : isAdmin
+                        ? `${t('common.admin')} ${t('speed-markets.admin.resolve-all')}`
                         : t('speed-markets.admin.resolve-all')}
                 </Button>
             )
@@ -202,6 +234,8 @@ const UnresolvedPositions: React.FC = () => {
                                         position={position}
                                         key={`${section}${index}`}
                                         isSubmittingBatch={isSubmitting}
+                                        ammSpeedMarketsLimitsData={ammSpeedMarketsLimitsData}
+                                        isAmmWinnerSection={section === SECTIONS.ammWinner}
                                     />
                                 ))
                         ) : (

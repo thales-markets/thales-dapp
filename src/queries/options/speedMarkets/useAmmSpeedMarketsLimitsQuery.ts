@@ -17,9 +17,14 @@ export type AmmSpeedMarketsLimits = {
     risksPerAsset: RiskPerAsset[];
     lpFee: number;
     safeBoxImpact: number;
+    whitelistedAddress: boolean;
 };
 
-const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOptions<AmmSpeedMarketsLimits>) => {
+const useAmmSpeedMarketsLimitsQuery = (
+    networkId: Network,
+    walletAddress?: string,
+    options?: UseQueryOptions<AmmSpeedMarketsLimits>
+) => {
     return useQuery<AmmSpeedMarketsLimits>(
         QUERY_KEYS.BinaryOptions.SpeedMarkets(networkId),
         async () => {
@@ -32,6 +37,7 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                 risksPerAsset: [],
                 lpFee: 0,
                 safeBoxImpact: 0,
+                whitelistedAddress: false,
             };
             const { speedMarketsAMMContract } = snxJSConnector;
             if (speedMarketsAMMContract) {
@@ -47,6 +53,7 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                     maxRiskForBTC,
                     lpFee,
                     safeBoxImpact,
+                    whitelistedAddress,
                 ] = await Promise.all([
                     speedMarketsAMMContract.minBuyinAmount(),
                     speedMarketsAMMContract.maxBuyinAmount(),
@@ -63,6 +70,9 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                     speedMarketsAMMContract.maxRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)),
                     speedMarketsAMMContract.lpFee(),
                     speedMarketsAMMContract.safeBoxImpact(),
+                    walletAddress
+                        ? speedMarketsAMMContract.whitelistedAddresses(walletAddress)
+                        : Promise.resolve(false),
                 ]);
 
                 ammSpeedMarkets.minBuyinAmount = stableCoinFormatter(minBuyinAmount, networkId);
@@ -84,6 +94,7 @@ const useAmmSpeedMarketsLimitsQuery = (networkId: Network, options?: UseQueryOpt
                 ];
                 ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
                 ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
+                ammSpeedMarkets.whitelistedAddress = whitelistedAddress;
             }
 
             return ammSpeedMarkets;

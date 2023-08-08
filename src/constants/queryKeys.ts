@@ -38,7 +38,7 @@ const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: Network) => ['markets', networkId],
-        SpeedMarkets: (networkId: Network) => ['speedMarkets', networkId],
+        SpeedMarkets: (networkId: Network, walletAddress?: string) => ['speedMarkets', networkId, walletAddress],
         UserSpeedMarkets: (networkId: Network, walletAddress: string) => ['userSpeedMarkets', networkId, walletAddress],
         UserResolvedSpeedMarkets: (networkId: Network, walletAddress: string) => [
             'userResolvedSpeedMarkets',

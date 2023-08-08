@@ -32,6 +32,7 @@ type TimeInputProps = {
     width?: string;
     height?: string;
     enableCurrencyComponentOnly?: boolean;
+    validationMargin?: string;
 };
 
 const INVALID_CHARS = ['-', '+', 'e', '.'];
@@ -60,6 +61,7 @@ const TimeInput: React.FC<TimeInputProps> = ({
     width,
     height,
     enableCurrencyComponentOnly,
+    validationMargin,
     ...rest
 }) => {
     const { t } = useTranslation();
@@ -84,7 +86,12 @@ const TimeInput: React.FC<TimeInputProps> = ({
     };
 
     return (
-        <ValidationTooltip open={showValidation} title={validationMessage || ''} placement="bottom">
+        <ValidationTooltip
+            open={showValidation}
+            title={validationMessage || ''}
+            placement="bottom"
+            margin={validationMargin}
+        >
             <FieldContainer margin={margin}>
                 {label && (
                     <FieldLabel>
@@ -195,9 +202,11 @@ const MaxButton = styled.button`
     }
 `;
 
-const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props.className }} {...props} />)`
+const ValidationTooltip = styled((props) => <MuiTooltip classes={{ popper: props.className }} {...props} />)<{
+    margin?: string;
+}>`
     & .MuiTooltip-tooltip {
-        margin: -10px 0 0 0;
+        margin: ${(props) => (props.margin ? props.margin : '-10px 0 0 0')};
         padding: 2px 0;
         font-weight: 600;
         font-size: 13px;

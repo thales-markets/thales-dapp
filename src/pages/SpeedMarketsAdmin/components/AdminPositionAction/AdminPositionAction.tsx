@@ -8,15 +8,14 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { ethers } from 'ethers';
-import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -32,28 +31,28 @@ import { Label, Separator } from '../UnresolvedPosition/UnresolvedPosition';
 type AdminPositionActionProps = {
     position: UserLivePositions;
     isSubmittingBatch: boolean;
+    ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
+    isAmmWinnerSection: boolean;
 };
 
-const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position, isSubmittingBatch }) => {
+const AdminPositionAction: React.FC<AdminPositionActionProps> = ({
+    position,
+    isSubmittingBatch,
+    ammSpeedMarketsLimitsData,
+    isAmmWinnerSection,
+}) => {
     const { t } = useTranslation();
 
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, {
-        enabled: isAppReady,
-    });
-
-    const ammSpeedMarketsLimitsData = useMemo(() => {
-        return ammSpeedMarketsLimitsQuery.isSuccess ? ammSpeedMarketsLimitsQuery.data : null;
-    }, [ammSpeedMarketsLimitsQuery]);
-
     useEffect(() => {
         setIsSubmitting(isSubmittingBatch);
     }, [isSubmittingBatch]);
+
+    const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && isAmmWinnerSection;
 
     const handleResolve = async () => {
         const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
@@ -93,11 +92,14 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position, isS
                 const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
 
-                const tx: ethers.ContractTransaction = await speedMarketsAMMContractWithSigner.resolveMarket(
-                    position.market,
-                    priceUpdateData,
-                    { value: updateFee }
-                );
+                const tx: ethers.ContractTransaction = isAdmin
+                    ? await speedMarketsAMMContractWithSigner.resolveMarketManually(
+                          position.market,
+                          Number(ethers.utils.parseUnits((position.finalPrice || 0).toString(), PYTH_CURRENCY_DECIMALS))
+                      )
+                    : await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
+                          value: updateFee,
+                      });
 
                 const txResult = await tx.wait();
 
@@ -136,6 +138,8 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({ position, isS
                 >
                     {isSubmitting && !isSubmittingBatch
                         ? t(`speed-markets.admin.resolve-progress`)
+                        : isAdmin
+                        ? `${t('common.admin')} ${t('speed-markets.admin.resolve')}`
                         : t('speed-markets.admin.resolve')}
                 </Button>
             )}

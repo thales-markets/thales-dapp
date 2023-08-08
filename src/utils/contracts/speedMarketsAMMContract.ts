@@ -13,6 +13,15 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
+                { indexed: false, internalType: 'address', name: '_whitelistAddress', type: 'address' },
+                { indexed: false, internalType: 'bool', name: '_flag', type: 'bool' },
+            ],
+            name: 'AddedIntoWhitelist',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
                 { indexed: false, internalType: 'uint256', name: '_minBuyinAmount', type: 'uint256' },
                 { indexed: false, internalType: 'uint256', name: '_maxBuyinAmount', type: 'uint256' },
             ],
@@ -31,6 +40,16 @@ const speedMarketsContract = {
                 { indexed: false, internalType: 'uint256', name: 'buyinAmount', type: 'uint256' },
             ],
             name: 'MarketCreated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'enum SpeedMarket.Direction', name: 'result', type: 'uint8' },
+                { indexed: false, internalType: 'bool', name: 'userIsWinner', type: 'bool' },
+            ],
+            name: 'MarketResolved',
             type: 'event',
         },
         {
@@ -93,6 +112,15 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
+                { indexed: false, internalType: 'address', name: '_onramper', type: 'address' },
+                { indexed: false, internalType: 'bool', name: 'enabled', type: 'bool' },
+            ],
+            name: 'SetMultiCollateralOnOffRamp',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
                 { indexed: false, internalType: 'address', name: '_safeBox', type: 'address' },
                 { indexed: false, internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
             ],
@@ -146,6 +174,16 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
+            inputs: [
+                { internalType: 'address', name: '_whitelistAddress', type: 'address' },
+                { internalType: 'bool', name: '_flag', type: 'bool' },
+            ],
+            name: 'addToWhitelist',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             name: 'assetToPythId',
             outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
@@ -181,6 +219,36 @@ const speedMarketsContract = {
                 { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
             ],
             name: 'createNewMarketWithDelta',
+            outputs: [],
+            stateMutability: 'payable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'strikeTime', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: 'collateral', type: 'address' },
+                { internalType: 'uint256', name: 'collateralAmount', type: 'uint256' },
+                { internalType: 'bool', name: 'isEth', type: 'bool' },
+            ],
+            name: 'createNewMarketWithDifferentCollateral',
+            outputs: [],
+            stateMutability: 'payable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'delta', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: 'collateral', type: 'address' },
+                { internalType: 'uint256', name: 'collateralAmount', type: 'uint256' },
+                { internalType: 'bool', name: 'isEth', type: 'bool' },
+            ],
+            name: 'createNewMarketWithDifferentCollateralAndDelta',
             outputs: [],
             stateMutability: 'payable',
             type: 'function',
@@ -321,6 +389,20 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
+            inputs: [],
+            name: 'multiCollateralOnOffRamp',
+            outputs: [{ internalType: 'contract IMultiCollateralOnOffRamp', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'multicollateralEnabled',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'nominateNewOwner',
             outputs: [],
@@ -391,6 +473,26 @@ const speedMarketsContract = {
             name: 'resolveMarket',
             outputs: [],
             stateMutability: 'payable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address', name: '_market', type: 'address' },
+                { internalType: 'int64', name: '_finalPrice', type: 'int64' },
+            ],
+            name: 'resolveMarketManually',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: 'markets', type: 'address[]' },
+                { internalType: 'int64[]', name: 'finalPrices', type: 'int64[]' },
+            ],
+            name: 'resolveMarketManuallyBatch',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -476,6 +578,16 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
+            inputs: [
+                { internalType: 'address', name: '_onramper', type: 'address' },
+                { internalType: 'bool', name: 'enabled', type: 'bool' },
+            ],
+            name: 'setMultiCollateralOnOffRamp',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'setOwner',
             outputs: [],
@@ -552,6 +664,13 @@ const speedMarketsContract = {
             name: 'transferOwnershipAtInit',
             outputs: [],
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'whitelistedAddresses',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
             type: 'function',
         },
     ],

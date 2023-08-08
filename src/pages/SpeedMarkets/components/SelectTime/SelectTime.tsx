@@ -14,6 +14,7 @@ import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedM
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
@@ -39,6 +40,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const theme: ThemeInterface = useTheme();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isDeltaSelected, setIsDeltaSelected] = useState(true); // false is when exact time is selected
     const [customDeltaTime, setCustomDeltaTime] = useState<string | number>('');
@@ -104,6 +106,8 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                             timeUnit:
                                 minimalTimeHours === 0
                                     ? t('common.time-remaining.minutes')
+                                    : minimalTimeHours === 1
+                                    ? t('common.time-remaining.hour')
                                     : t('common.time-remaining.hours'),
                         })
                     );
@@ -169,42 +173,44 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     // Validations for delta time
     useEffect(() => {
-        if (isDeltaSelected && ammSpeedMarketsLimits && customDeltaTime !== '') {
-            const customDeltaTimeSec = isDeltaMinutesSelected
-                ? minutesToSeconds(Number(customDeltaTime))
-                : hoursToSeconds(Number(customDeltaTime));
+        if (isDeltaSelected) {
+            if (ammSpeedMarketsLimits && customDeltaTime !== '') {
+                const customDeltaTimeSec = isDeltaMinutesSelected
+                    ? minutesToSeconds(Number(customDeltaTime))
+                    : hoursToSeconds(Number(customDeltaTime));
 
-            if (customDeltaTimeSec < ammSpeedMarketsLimits.minimalTimeToMaturity) {
-                const minimalTimeHours = secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0);
-                setErrorMessage(
-                    t('speed-markets.errors.min-time', {
-                        minTime:
-                            isDeltaMinutesSelected || minimalTimeHours === 0
-                                ? secondsToMinutes(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0)
-                                : minimalTimeHours,
-                        timeUnit:
-                            isDeltaMinutesSelected || minimalTimeHours === 0
+                if (customDeltaTimeSec < ammSpeedMarketsLimits.minimalTimeToMaturity) {
+                    const minimalTimeHours = secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0);
+                    setErrorMessage(
+                        t('speed-markets.errors.min-time', {
+                            minTime:
+                                isDeltaMinutesSelected || minimalTimeHours === 0
+                                    ? secondsToMinutes(ammSpeedMarketsLimits?.minimalTimeToMaturity || 0)
+                                    : minimalTimeHours,
+                            timeUnit:
+                                isDeltaMinutesSelected || minimalTimeHours === 0
+                                    ? t('common.time-remaining.minutes')
+                                    : t('common.time-remaining.hours'),
+                        })
+                    );
+                    return;
+                } else if (customDeltaTimeSec > ammSpeedMarketsLimits.maximalTimeToMaturity) {
+                    setErrorMessage(
+                        t('speed-markets.errors.max-time', {
+                            maxTime: isDeltaMinutesSelected
+                                ? secondsToMinutes(ammSpeedMarketsLimits?.maximalTimeToMaturity || 0)
+                                : secondsToHours(ammSpeedMarketsLimits?.maximalTimeToMaturity || 0),
+                            timeUnit: isDeltaMinutesSelected
                                 ? t('common.time-remaining.minutes')
                                 : t('common.time-remaining.hours'),
-                    })
-                );
-                return;
-            } else if (customDeltaTimeSec > ammSpeedMarketsLimits.maximalTimeToMaturity) {
-                setErrorMessage(
-                    t('speed-markets.errors.max-time', {
-                        maxTime: isDeltaMinutesSelected
-                            ? secondsToMinutes(ammSpeedMarketsLimits?.maximalTimeToMaturity || 0)
-                            : secondsToHours(ammSpeedMarketsLimits?.maximalTimeToMaturity || 0),
-                        timeUnit: isDeltaMinutesSelected
-                            ? t('common.time-remaining.minutes')
-                            : t('common.time-remaining.hours'),
-                    })
-                );
-                return;
+                        })
+                    );
+                    return;
+                }
             }
-        }
 
-        setErrorMessage('');
+            setErrorMessage('');
+        }
     }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t, isDeltaSelected]);
 
     const resetData = useCallback(() => {
@@ -331,18 +337,18 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         value={exactTimeHours}
                         onChange={(_, value) => setExactTimeHours(value)}
                         showValidation={!!errorMessage}
-                        validationMessage={errorMessage.substring(0, errorMessage.length / 2)}
+                        validationMessage={errorMessage}
                         min="1"
                         max="12"
                         margin="0"
                         inputPadding="5px 10px"
+                        validationMargin={isMobile ? '-10px 0 0 5px' : '-10px 0 0 150px'}
                     />
                     <TimeSeparator>:</TimeSeparator>
                     <TimeInput
                         value={exactTimeMinutes}
                         onChange={(_, value) => setExactTimeMinutes(value)}
                         showValidation={!!errorMessage}
-                        validationMessage={errorMessage.substring(errorMessage.length / 2)}
                         min="0"
                         max="59"
                         margin="0"
