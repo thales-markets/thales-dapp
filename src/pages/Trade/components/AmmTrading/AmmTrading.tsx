@@ -545,13 +545,23 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         action: `buy-with-${getCollateral(networkId, selectedCollateralIndex)}`,
                         value: Number(paidAmount),
                     });
-                    plausible.trackEvent(isRangedMarket ? 'range-buy' : 'amm buy');
+                    plausible.trackEvent(isRangedMarket ? 'range-buy' : 'amm-buy', {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                        },
+                    });
                 } else {
                     trackEvent({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
                     });
-                    plausible.trackEvent(isRangedMarket ? 'range-sell' : 'sell');
+                    plausible.trackEvent(isRangedMarket ? 'range-sell' : 'amm-sell', {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                        },
+                    });
                 }
             }
         } catch (e) {
