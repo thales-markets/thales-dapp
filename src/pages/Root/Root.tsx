@@ -138,8 +138,7 @@ interface RootProps {
 }
 
 export const plausible = Plausible({
-    domain: 'https://thalesmarket.io',
-    hashMode: true,
+    domain: 'thalesmarket.io',
     trackLocalhost: true,
     apiHost: 'https://analytics-v2.thalesmarket.io',
 });
