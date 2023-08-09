@@ -5,11 +5,28 @@ import Footer from '../Footer/Footer';
 import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/currency';
+import QRCode from 'react-qr-code';
+import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useSelector } from 'react-redux';
+import { buildReferrerLink } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 const PotentialWinCard: React.FC = () => {
     const { t } = useTranslation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+
+    const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
+    const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
+
     return (
         <Container>
+            {reffererID && (
+                <ReferralWrapper>
+                    <QRCode size={70} value={buildReferrerLink(ROUTES.Home, reffererID)} />
+                </ReferralWrapper>
+            )}
             <PositionInfo>
                 <CurrencyIcon className="currency-icon currency-icon--eth" />
                 <AssetName>{getSynthName('sETH')}</AssetName>
@@ -19,18 +36,20 @@ const PotentialWinCard: React.FC = () => {
                 <PotentialWinHeading>{t('common.flex-card.potential-win')}</PotentialWinHeading>
                 <PotentialWin>{'$520.00'}</PotentialWin>
             </PotentialWinContainer>
-            <MarketDetailsItemContainer>
-                <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                <Value>{'$ 24.400'}</Value>
-            </MarketDetailsItemContainer>
-            <MarketDetailsItemContainer>
-                <ItemName>{t('common.flex-card.strike-date')}</ItemName>
-                <Value>{'$ 24.400'}</Value>
-            </MarketDetailsItemContainer>
-            <MarketDetailsItemContainer>
-                <ItemName>{t('common.flex-card.buy-in')}</ItemName>
-                <Value>{'$ 24.400'}</Value>
-            </MarketDetailsItemContainer>
+            <MarketDetailsContainer>
+                <MarketDetailsItemContainer>
+                    <ItemName>{t('common.flex-card.strike-price')}</ItemName>
+                    <Value>{'$ 24.400'}</Value>
+                </MarketDetailsItemContainer>
+                <MarketDetailsItemContainer>
+                    <ItemName>{t('common.flex-card.strike-date')}</ItemName>
+                    <Value>{'$ 24.400'}</Value>
+                </MarketDetailsItemContainer>
+                <MarketDetailsItemContainer>
+                    <ItemName>{t('common.flex-card.buy-in')}</ItemName>
+                    <Value>{'$ 24.400'}</Value>
+                </MarketDetailsItemContainer>
+            </MarketDetailsContainer>
             <Footer />
         </Container>
     );
@@ -39,15 +58,25 @@ const PotentialWinCard: React.FC = () => {
 const Container = styled.div`
     border: 10px solid #03dac5;
     border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 383px;
     height: 510px;
     padding: 10px 10px;
     background: url(${ZeusPotentialWinBackground}), lightgray 50% / cover no-repeat;
 `;
 
+const MarketDetailsContainer = styled(FlexDiv)`
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 20px;
+`;
+
 const MarketDetailsItemContainer = styled(FlexDiv)`
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 5px;
     width: 100%;
 `;
 
@@ -108,6 +137,14 @@ const Position = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 22px;
     font-weight: 700;
+`;
+
+const ReferralWrapper = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 50px;
 `;
 
 export default PotentialWinCard;
