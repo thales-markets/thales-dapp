@@ -83,7 +83,7 @@ const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData
                     <Value>{stakingData.maxStakingMultiplier}x</Value>
                 </TextContainer>
                 <TextContainer>
-                    <Label>T{t('thales-token.gamified-staking.rewards.leaderboard.global-data.total-points')}</Label>
+                    <Label>{t('thales-token.gamified-staking.rewards.leaderboard.global-data.total-points')}</Label>
                     <Value>{formatCurrencyWithKey('', stakingData.globalPoints, 2)}</Value>
                 </TextContainer>
             </Container>
