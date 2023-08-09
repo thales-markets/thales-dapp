@@ -246,8 +246,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 {!isMobile && <CloseIcon className={`icon icon--close`} onClick={onClose} />}
                 <PotentialWinCard />
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
-                    <TwitterIcon disabled={isLoading} fontSize={'30px'} />
-                    <TwitterShareLabel>{t('markets.parlay.share-ticket.share')}</TwitterShareLabel>
+                    <TwitterIcon className="icon-home icon-home--twitter" disabled={isLoading} fontSize={'30px'} />
+                    <TwitterShareLabel>{t('common.flex-card.share')}</TwitterShareLabel>
                 </TwitterShare>
             </Container>
         </ReactModal>
@@ -303,10 +303,6 @@ const TwitterIcon = styled.i<{ disabled?: boolean; fontSize?: string; padding?: 
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.4' : '1')};
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')}
-    &:before {
-        font-family: ExoticIcons !important;
-        content: '\\005C';
-    }
 `;
 
 const TwitterShareLabel = styled.span`
