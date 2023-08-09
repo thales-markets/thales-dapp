@@ -31,6 +31,7 @@ import { delay } from 'utils/timer';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import { truncToDecimals } from 'utils/formatters/number';
 
 const SECTIONS = {
     userWinner: 'userWinner',
@@ -105,7 +106,12 @@ const UnresolvedPositions: React.FC = () => {
                 ? positions
                       .filter((position) => !!position.finalPrice)
                       .map((position) =>
-                          Number(ethers.utils.parseUnits((position.finalPrice || 0).toString(), PYTH_CURRENCY_DECIMALS))
+                          Number(
+                              ethers.utils.parseUnits(
+                                  truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
+                                  PYTH_CURRENCY_DECIMALS
+                              )
+                          )
                       )
                 : [];
             const priceUpdateDataArray: string[] = [];

@@ -27,6 +27,7 @@ import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 import { Label, Separator } from '../UnresolvedPosition/UnresolvedPosition';
+import { truncToDecimals } from 'utils/formatters/number';
 
 type AdminPositionActionProps = {
     position: UserLivePositions;
@@ -95,7 +96,12 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({
                 const tx: ethers.ContractTransaction = isAdmin
                     ? await speedMarketsAMMContractWithSigner.resolveMarketManually(
                           position.market,
-                          Number(ethers.utils.parseUnits((position.finalPrice || 0).toString(), PYTH_CURRENCY_DECIMALS))
+                          Number(
+                              ethers.utils.parseUnits(
+                                  truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
+                                  PYTH_CURRENCY_DECIMALS
+                              )
+                          )
                       )
                     : await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
                           value: updateFee,
