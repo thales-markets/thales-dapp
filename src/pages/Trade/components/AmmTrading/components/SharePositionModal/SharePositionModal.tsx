@@ -18,6 +18,7 @@ import { isMetamask, isFirefox, isIos } from 'utils/device';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { Positions } from 'enums/options';
 import PotentialWinCard from './components/PotentialWinCard/PotentialWinCard';
+import ResolvedWinCard from './components/ResolvedWinCard/ResolvedWinCard';
 
 type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
 
@@ -244,7 +245,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--close`} onClick={onClose} />}
-                <PotentialWinCard />
+                {type == 'potential' && <PotentialWinCard />}
+                {type == 'resolved' && <ResolvedWinCard />}
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
                     <TwitterIcon className="icon-home icon-home--twitter" disabled={isLoading} fontSize={'30px'} />
                     <TwitterShareLabel>{t('common.flex-card.share')}</TwitterShareLabel>

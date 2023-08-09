@@ -169,7 +169,8 @@
             "strike-date": "Strike date",
             "buy-in": "Buy-In",
             "potential-win": "Potential win",
-            "share": "Share"
+            "share": "Share",
+            "won": "Won"
         }
     },
     "landing-page": {
