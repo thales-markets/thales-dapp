@@ -42,8 +42,14 @@ export const DetailsIcon = styled.i<{ disabled: boolean }>`
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
 `;
 
-export const ShareIcon = styled(DetailsIcon)`
-    right: 40px;
+export const ShareIcon = styled.i<{ disabled: boolean }>`
+    position: absolute;
+    color: ${(props) => props.theme.textColor.secondary};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    right: 10px;
+    font-size: 20px;
+    bottom: 10px;
 `;
 
 export const DetailsRow = styled(FlexDivRowCentered)<{ margin?: string; padding?: string }>`

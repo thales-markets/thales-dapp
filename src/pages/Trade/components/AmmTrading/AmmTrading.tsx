@@ -692,19 +692,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
                         />
                     </Tooltip>
-                    <Tooltip
-                        overlay={
-                            isDetailsIconDisabled
-                                ? t('markets.amm-trading.details-modal.tooltip-disabled')
-                                : t('markets.amm-trading.details-modal.tooltip')
-                        }
-                    >
-                        <ShareIcon
-                            className="icon icon__network"
-                            disabled={isDetailsIconDisabled}
-                            onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
-                        />
-                    </Tooltip>
+                    <ShareIcon
+                        className="icon-home icon-home--twitter"
+                        disabled={isDetailsIconDisabled}
+                        onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
+                    />
                 </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
