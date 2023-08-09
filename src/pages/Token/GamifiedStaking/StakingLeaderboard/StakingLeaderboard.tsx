@@ -10,16 +10,17 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import snxJSConnector from 'utils/snxJSConnector';
-import HighlightCard from './components/HighlightCard/HighlightCard';
+// import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import GlobalStakingData from './components/GlobalStakingData/GlobalStakingData';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -59,6 +60,26 @@ const StakingLeaderboard: React.FC = () => {
         return [];
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
 
+    const globalData = useMemo(() => {
+        if (leaderboardQuery.isSuccess && leaderboardQuery.data) {
+            return leaderboardQuery.data.data;
+        }
+        return {
+            globalVaults: 0,
+            globalLp: 0,
+            globalTrading: 0,
+            tradingPoints: 0,
+            vaultPoints: 0,
+            lpPoints: 0,
+            globalPoints: 0,
+            tradingMultiplier: 0,
+            vaultMultiplier: 0,
+            lpMultiplier: 0,
+            estimationForOneThales: 0,
+            maxStakingMultiplier: 0,
+        };
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+
     const closingDate = useMemo(() => {
         if (Number(period) === Number(currentPeriod) && leaderboardQuery.isSuccess && leaderboardQuery.data) {
             return leaderboardQuery.data.closingDate;
@@ -66,13 +87,13 @@ const StakingLeaderboard: React.FC = () => {
         return Date.now();
     }, [leaderboardQuery.isSuccess, leaderboardQuery.data, period, currentPeriod]);
 
-    const highlightCardData = useMemo(() => {
-        if (stakingData) {
-            return stakingData.filter((staker) => staker.rank == 1 || staker.rank == 2 || staker.rank == 3);
-        }
+    // const highlightCardData = useMemo(() => {
+    //     if (stakingData) {
+    //         return stakingData.filter((staker) => staker.rank == 1 || staker.rank == 2 || staker.rank == 3);
+    //     }
 
-        return null;
-    }, [stakingData]);
+    //     return null;
+    // }, [stakingData]);
 
     const stickyRowInfo = useMemo(() => {
         if (stakingData) {
@@ -135,6 +156,11 @@ const StakingLeaderboard: React.FC = () => {
                             </Cell>
                         );
                     },
+                    sortable: true,
+                    sortType: (rowA: any, rowB: any) => {
+                        return rowA.original.stakingMultiplier - rowB.original.stakingMultiplier;
+                    },
+                    sortDescFirst: true,
                 },
                 {
                     id: 'rewards',
@@ -195,33 +221,7 @@ const StakingLeaderboard: React.FC = () => {
                             ]}
                         ></PeriodDropdown>
                     </HeaderWrapper>
-
-                    <BadgeContainer>
-                        {highlightCardData && highlightCardData[0] && (
-                            <HighlightCard
-                                rank={highlightCardData[0].rank ? highlightCardData[0].rank : 0}
-                                walletAddress={highlightCardData[0].id}
-                                totalPoints={truncToDecimals(highlightCardData[0].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[0].estimatedRewards}
-                            />
-                        )}
-                        {highlightCardData && highlightCardData[1] && (
-                            <HighlightCard
-                                rank={highlightCardData[1].rank ? highlightCardData[1].rank : 0}
-                                walletAddress={highlightCardData[1].id}
-                                totalPoints={truncToDecimals(highlightCardData[1].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[1].estimatedRewards}
-                            />
-                        )}
-                        {highlightCardData && highlightCardData[2] && (
-                            <HighlightCard
-                                rank={highlightCardData[2].rank ? highlightCardData[2].rank : 0}
-                                walletAddress={highlightCardData[2].id}
-                                totalPoints={truncToDecimals(highlightCardData[2].userRoundBonusPoints, 2)}
-                                totalRewards={highlightCardData[2].estimatedRewards}
-                            />
-                        )}
-                    </BadgeContainer>
+                    <GlobalStakingData stakingData={globalData} />
                     <Table
                         columns={columns}
                         data={stakingData}
@@ -334,67 +334,78 @@ const StickyRowComponent: React.FC<{ stickyRowInfo: StakersWithLeaderboardData }
                 <Rank>
                     <TableText>{stickyRowInfo[0].rank}</TableText>
                 </Rank>
-                <StickyCell first={true}>
-                    <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
-                </StickyCell>
-                <StickyCell>
-                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}</TableText>
-                </StickyCell>
-                <StickyCell hide={true}>
-                    <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}</TableText>
-                </StickyCell>
-                <StickyCell last={true}>
-                    <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
-                </StickyCell>
+                <StickyRowWrapper>
+                    <StickyRowFlex>
+                        <StickyCell first={true}>
+                            <TableText>{truncateAddress(stickyRowInfo[0].id, 5, 5)}</TableText>
+                        </StickyCell>
+                        <StickyCell>
+                            <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].userRoundBonusPoints, 2)}</TableText>
+                        </StickyCell>
+                        <StickyCell hide={true}>
+                            <TableText>{formatCurrencyWithKey('', stickyRowInfo[0].stakingMultiplier, 2)}</TableText>
+                        </StickyCell>
+                        <StickyCell last={true}>
+                            <TableText>{stickyRowInfo[0].estimatedRewards}</TableText>
+                        </StickyCell>
+                    </StickyRowFlex>
+
+                    {open && (
+                        <StickyExpandedRow>
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--markets" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userTradingBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--liquidity-pool" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userLPBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+
+                            <FlexWrapper>
+                                <FlexDivCentered>
+                                    <Icon dark={true} className="sidebar-icon icon--vaults" />
+                                    <TableText>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults')}
+                                    </TableText>
+                                </FlexDivCentered>
+                                <FlexWrapper>
+                                    <Label dark={true}>
+                                        {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}
+                                    </Label>
+                                    <TableText>
+                                        {formatCurrencyWithKey('', stickyRowInfo[0].userVaultBasePointsPerRound, 2)}
+                                    </TableText>
+                                </FlexWrapper>
+                            </FlexWrapper>
+                        </StickyExpandedRow>
+                    )}
+                </StickyRowWrapper>
             </StickyRow>
-            {open && (
-                <StickyExpandedRow>
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--markets" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.trading')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userTradingBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--liquidity-pool" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.lp')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userLPBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-
-                    <FlexWrapper>
-                        <FlexDivCentered>
-                            <Icon className="sidebar-icon icon--vaults" />
-                            <TableText>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.vaults')}
-                            </TableText>
-                        </FlexDivCentered>
-                        <FlexWrapper>
-                            <Label>{t('thales-token.gamified-staking.rewards.leaderboard.expanded-row.points')}</Label>
-                            <TableText>
-                                {formatCurrencyWithKey('', stickyRowInfo[0].userVaultBasePointsPerRound, 2)}
-                            </TableText>
-                        </FlexWrapper>
-                    </FlexWrapper>
-                </StickyExpandedRow>
-            )}
         </>
     );
 };
@@ -456,37 +467,6 @@ const Wrapper = styled.div`
     }
 `;
 
-const ExpandedRow = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
-    padding: 20px 0;
-    margin: auto;
-    width: calc(100% - 30px);
-`;
-
-const StickyExpandedRow = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px 0;
-    margin-left: auto;
-    width: calc(100% - 55px);
-`;
-
-const BadgeContainer = styled.div`
-    margin: 20px 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        flex-direction: column;
-    }
-`;
-
 const TableText = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
@@ -542,11 +522,43 @@ const Cell = styled.div<{ hide?: boolean }>`
     width: 100%;
 `;
 
-const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolean }>`
-    color: ${(props) => props.theme.button.textColor.primary};
+const ExpandedRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    padding: 20px 0;
+    margin: auto;
+    width: calc(100% - 30px);
+`;
+
+const StickyRowWrapper = styled.div`
     background: ${(props) => props.theme.borderColor.tertiary};
     width: 100%;
+    border-radius: 8px;
+`;
 
+const StickyRowFlex = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    border-radius: 8px;
+`;
+
+const StickyExpandedRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    margin: auto;
+    width: calc(100% - 55px);
+    border-top: 1px solid ${(props) => props.theme.background.primary};
+`;
+
+const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolean }>`
+    color: ${(props) => props.theme.button.textColor.primary};
+    width: 100%;
     margin-left: ${(props) => (props.first ? '4px' : '0')};
 
     border-top-left-radius: ${(props) => (props.first ? '8px' : '0')};
@@ -561,8 +573,8 @@ const StickyCell = styled(Cell)<{ first?: boolean; last?: boolean; hide?: boolea
 
 const StickyRow = styled.div`
     display: flex;
-    height: 50px;
     margin-bottom: 10px;
+    gap: 4px;
     cursor: pointer;
 
     ${TableText} {
@@ -578,9 +590,9 @@ const StickyRow = styled.div`
     }
 `;
 
-const Icon = styled.i`
+const Icon = styled.i<{ dark?: boolean }>`
     font-size: 32px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.dark ? props.theme.background.primary : props.theme.textColor.primary)};
     margin-right: 6px;
 `;
 
@@ -588,8 +600,8 @@ const FlexWrapper = styled(FlexDivCentered)`
     flex-direction: column;
 `;
 
-const Label = styled.span`
-    color: ${(props) => props.theme.textColor.secondary};
+const Label = styled.span<{ dark?: boolean }>`
+    color: ${(props) => (props.dark ? props.theme.background.primary : props.theme.textColor.secondary)};
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
