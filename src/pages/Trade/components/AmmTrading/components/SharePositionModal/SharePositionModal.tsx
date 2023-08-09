@@ -245,8 +245,28 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--close`} onClick={onClose} />}
-                {type == 'potential' && <PotentialWinCard />}
-                {type == 'resolved' && <ResolvedWinCard />}
+                {type == 'potential' && (
+                    <PotentialWinCard
+                        type={'resolved'}
+                        currencyKey={currencyKey}
+                        position={position}
+                        strikeDate={strikeDate}
+                        strikePrice={strikePrice}
+                        buyIn={buyIn}
+                        payout={payout}
+                    />
+                )}
+                {type == 'resolved' && (
+                    <ResolvedWinCard
+                        type={'resolved'}
+                        currencyKey={currencyKey}
+                        position={position}
+                        strikeDate={strikeDate}
+                        strikePrice={strikePrice}
+                        buyIn={buyIn}
+                        payout={payout}
+                    />
+                )}
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
                     <TwitterIcon className="icon-home icon-home--twitter" disabled={isLoading} fontSize={'30px'} />
                     <TwitterShareLabel>{t('common.flex-card.share')}</TwitterShareLabel>

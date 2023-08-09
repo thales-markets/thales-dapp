@@ -701,8 +701,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     >
                         <ShareIcon
                             className="icon icon__network"
-                            disabled={false}
-                            onClick={() => setOpenTwitterShareModal(true)}
+                            disabled={isDetailsIconDisabled}
+                            onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
                         />
                     </Tooltip>
                 </TradingDetailsContainer>
@@ -816,12 +816,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             {openTwitterShareModal && (
                 <SharePositionModal
                     type="potential"
-                    position={Positions.UP}
-                    currencyKey="ETH"
-                    strikeDate={100000000}
-                    strikePrice={1800}
-                    buyIn={1000}
-                    payout={20000}
+                    position={market.positionType}
+                    currencyKey={currencyKey}
+                    strikeDate={maturityDate}
+                    strikePrice={market.price}
+                    buyIn={Number(paidAmount)}
+                    payout={Number(priceProfit)}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}

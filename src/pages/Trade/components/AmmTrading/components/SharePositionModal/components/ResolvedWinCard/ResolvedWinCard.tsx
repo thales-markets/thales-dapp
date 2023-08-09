@@ -12,8 +12,19 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import { SharePositionData } from '../../SharePositionModal';
+import { USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 
-const ResolvedWinCard: React.FC = () => {
+const ResolvedWinCard: React.FC<SharePositionData> = ({
+    position,
+    currencyKey,
+    strikePrice,
+    strikeDate,
+    buyIn,
+    payout,
+}) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
@@ -29,26 +40,26 @@ const ResolvedWinCard: React.FC = () => {
                 </ReferralWrapper>
             )}
             <PositionInfo>
-                <CurrencyIcon className="currency-icon currency-icon--eth" />
-                <AssetName>{getSynthName('sETH')}</AssetName>
-                <Position>{'ETH UP'}</Position>
+                <CurrencyIcon className={`currency-icon currency-icon--${currencyKey}`} />
+                <AssetName>{getSynthName(currencyKey)}</AssetName>
+                <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
                 <PotentialWinHeading>{t('common.flex-card.won')}</PotentialWinHeading>
-                <PotentialWin>{'$520.00'}</PotentialWin>
+                <PotentialWin>{formatCurrencyWithSign(USD_SIGN, payout ?? 0)}</PotentialWin>
             </PotentialWinContainer>
             <MarketDetailsContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-date')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.buy-in')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
         </Container>
@@ -60,6 +71,7 @@ const Container = styled.div`
     border-radius: 15px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     width: 383px;
     height: 510px;
     padding: 10px 10px;
@@ -139,7 +151,7 @@ const PositionInfo = styled(FlexDiv)`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: 90px;
+    margin-top: 200px;
 `;
 
 const CurrencyIcon = styled.i`

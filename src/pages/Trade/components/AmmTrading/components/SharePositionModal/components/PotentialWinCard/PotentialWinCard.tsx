@@ -12,14 +12,29 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import { USD_SIGN } from 'constants/currency';
+import { formatShortDateWithTime } from 'utils/formatters/date';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { SharePositionData } from '../../SharePositionModal';
 
-const PotentialWinCard: React.FC = () => {
+const PotentialWinCard: React.FC<SharePositionData> = ({
+    position,
+    currencyKey,
+    strikePrice,
+    strikeDate,
+    buyIn,
+    payout,
+}) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
     const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
 
+    const potentialWinFormatted = `${formatCurrencyWithSign(
+        USD_SIGN,
+        Number(buyIn) * Number(payout) + Number(payout)
+    )}`;
     return (
         <Container>
             {reffererID && (
@@ -28,26 +43,26 @@ const PotentialWinCard: React.FC = () => {
                 </ReferralWrapper>
             )}
             <PositionInfo>
-                <CurrencyIcon className="currency-icon currency-icon--eth" />
-                <AssetName>{getSynthName('sETH')}</AssetName>
-                <Position>{'ETH UP'}</Position>
+                <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
+                <AssetName>{getSynthName(currencyKey)}</AssetName>
+                <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
                 <PotentialWinHeading>{t('common.flex-card.potential-win')}</PotentialWinHeading>
-                <PotentialWin>{'$520.00'}</PotentialWin>
+                <PotentialWin>{potentialWinFormatted}</PotentialWin>
             </PotentialWinContainer>
             <MarketDetailsContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-date')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.buy-in')}</ItemName>
-                    <Value>{'$ 24.400'}</Value>
+                    <Value>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
             <Footer />
