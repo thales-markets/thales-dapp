@@ -4,8 +4,8 @@ export enum Network {
     BSC = 56,
     PolygonMainnet = 137,
     OptimismGoerli = 420,
-    Arbitrum = 42161,
     Base = 8453,
+    Arbitrum = 42161,
 }
 
 export enum OneInchLiquidityProtocol {
