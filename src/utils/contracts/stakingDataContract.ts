@@ -8,6 +8,7 @@ const stakingDataContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x0D72F9DB9efD3cbd91Ec4C296A01e3Cd5155Cc31',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

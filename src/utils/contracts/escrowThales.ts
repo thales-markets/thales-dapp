@@ -8,6 +8,7 @@ const escrowThales = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x391a45F31c1837E3d837c23e05F42A098329D50d',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

@@ -8,6 +8,7 @@ const parlayLiquidityPoolContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x6848f7C1B5aa2da86F6529bed9d641A67663f0bE',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {
