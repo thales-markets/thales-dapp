@@ -235,12 +235,12 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
             contentElement={(props, children) => (
                 <>
                     <div {...props}>{children}</div>
-                    {isMobile && <CloseIcon className={`icon icon--close`} onClick={onClose} />}
+                    {isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
                 </>
             )}
         >
             <Container ref={ref}>
-                {!isMobile && <CloseIcon className={`icon icon--close`} onClick={onClose} />}
+                {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
                 {type == 'potential' && (
                     <PotentialWinCard
                         type={'resolved'}
