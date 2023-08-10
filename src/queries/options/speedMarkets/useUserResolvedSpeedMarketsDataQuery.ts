@@ -7,7 +7,7 @@ import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserClosedPositions } from 'types/options';
-import { bigNumberFormatter, parseBytes32String, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -43,7 +43,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
                 for (let i = 0; i < lastTenMaturedMarkets.length; i++) {
                     const marketsData = lastTenMaturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     const userData: UserClosedPositions = {
                         currencyKey: parseBytes32String(marketsData.asset),
@@ -56,7 +56,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
                         market: maturedMarkets[i],
                         side: side,
-                        paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         finalPrice: bigNumberFormatter(marketsData.finalPrice, PYTH_CURRENCY_DECIMALS),
                         isUserWinner: marketsData.isUserWinner,

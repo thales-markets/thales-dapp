@@ -435,7 +435,8 @@
                 "price-stale": "Can't resolve market with stale price"
             }
         },
-        "total-pay": "Total to pay {{buyinAmount}} + {{fee}} fee",
+        "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+        "total-pay-conversion": "Total to pay {{convertedAmount}} ({{amount}}) + {{fee}} fee",
         "admin": {
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",

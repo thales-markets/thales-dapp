@@ -13,7 +13,7 @@ export type RangedMarketPositionType = 'in' | 'out';
 
 type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
-export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
+export type Coins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD' | 'OP' | 'WETH' | 'ETH';
 
 export type OptionsTransaction = {
     hash: string;

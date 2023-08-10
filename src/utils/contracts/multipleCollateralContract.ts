@@ -1147,6 +1147,28 @@ const multipleCollateral = {
         },
         abi,
     },
+    OP: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: '0x4200000000000000000000000000000000000042',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
+        },
+        abi,
+    },
+    WETH: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: '0x4200000000000000000000000000000000000006',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
+        },
+        abi,
+    },
 };
 
 export default multipleCollateral;

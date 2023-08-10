@@ -8,7 +8,7 @@ import RadioButtons from 'pages/Trade/components/RadioButtons';
 import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQuery';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import queryString from 'query-string';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -41,7 +41,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
-    const [networkSwitched, setNetworkSwitched] = useState(false);
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
 
     const queryParamPosition = queryString.parse(location.search).position;
@@ -67,12 +66,15 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         dispatch(setIsBuy(orderSide === 'buy'));
     }, [orderSide, dispatch]);
 
+    const isMounted = useRef(false);
     useEffect(() => {
-        if (networkSwitched) {
+        // skip first render
+        if (isMounted.current) {
             navigateTo(ROUTES.Options.Home);
+        } else {
+            isMounted.current = true;
         }
-        setNetworkSwitched(true);
-    }, [networkId, networkSwitched]);
+    }, [networkId]);
 
     useEffect(() => {
         if (!isRangedMarket && marketQuery.isSuccess && marketQuery.data) {

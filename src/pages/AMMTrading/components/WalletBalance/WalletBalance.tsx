@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { AccountMarketInfo, RangedMarketBalanceInfo } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getCollateral, getDefaultCollateral, getStableCoinBalance } from 'utils/currency';
+import { getCollateral, getDefaultCollateral, getCoinBalance } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type WalletBalanceProps = {
@@ -66,13 +66,13 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
 
     const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
 
-    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
+    const multipleCollateralBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && userSelectedCollateralIndex !== 0,
     });
 
     const sUSDBalance =
         userSelectedCollateralIndex && Number(userSelectedCollateralIndex) !== 0
-            ? getStableCoinBalance(multipleStableBalances?.data, getCollateral(networkId, userSelectedCollateralIndex))
+            ? getCoinBalance(multipleCollateralBalances?.data, getCollateral(networkId, userSelectedCollateralIndex))
             : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId)) || 0;
 
     return (

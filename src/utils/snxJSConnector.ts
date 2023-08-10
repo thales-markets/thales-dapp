@@ -76,11 +76,14 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
 
+        // TODO: refactor like on OT to use object instead of array
         this.multipleCollateral = [
-            conditionalInitializeContract(multipleCollateral['sUSD'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['DAI'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['USDC'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['USDT'], contractSettings),
+            conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),
+            conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
+            conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
+            conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
+            conditionalInitializeContract(multipleCollateral.OP, contractSettings),
+            conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
         ];
 
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);

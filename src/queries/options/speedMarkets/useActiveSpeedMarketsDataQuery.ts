@@ -9,7 +9,7 @@ import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
-import { bigNumberFormatter, parseBytes32String, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -57,12 +57,11 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                 for (let i = 0; i < maturedMarkets.length; i++) {
                     const marketsData = maturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     let isClaimable = false;
-                    let price = 0;
                     const priceFeed: PromiseSettledResult<PriceFeed> = priceFeeds[i];
-                    price =
+                    const price =
                         priceFeed.status === 'fulfilled'
                             ? priceFeed.value?.getPriceUnchecked().getPriceAsNumberUnchecked()
                             : 0;
@@ -85,7 +84,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
                         market: activeMarkets[i],
                         side: side,
-                        paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: isClaimable,
                         finalPrice: price,
@@ -104,7 +103,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                     const marketsData = openMarkets[i];
                     const currencyKey = parseBytes32String(marketsData.asset);
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
@@ -118,7 +117,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
                         market: activeMarkets[i],
                         side: side,
-                        paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: false,
                         finalPrice: prices[currencyKey],

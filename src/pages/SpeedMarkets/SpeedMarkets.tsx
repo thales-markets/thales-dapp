@@ -43,7 +43,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const [positionType, setPositionType] = useState<Positions.UP | Positions.DOWN | undefined>(undefined);
     const [deltaTimeSec, setDeltaTimeSec] = useState(0);
     const [strikeTimeSec, setStrikeTimeSec] = useState(0);
-    const [buyinAmount, setBuyinAmount] = useState(0);
+    const [stableBuyinAmount, setStableBuyinAmount] = useState(0);
     const [isResetTriggered, setIsResetTriggered] = useState(false);
 
     const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, undefined, {
@@ -85,7 +85,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         setPositionType(undefined);
         setDeltaTimeSec(0);
         setStrikeTimeSec(0);
-        setBuyinAmount(0);
+        setStableBuyinAmount(0);
     };
 
     useEffect(() => {
@@ -161,8 +161,8 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             />
                             {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
                             <SelectBuyin
-                                value={buyinAmount}
-                                onChange={setBuyinAmount}
+                                value={stableBuyinAmount}
+                                onChange={setStableBuyinAmount}
                                 ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                             />
                         </RightSide>
@@ -173,8 +173,8 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                         positionType={positionType}
                         strikeTimeSec={strikeTimeSec}
                         deltaTimeSec={deltaTimeSec}
-                        buyinAmount={buyinAmount}
-                        setBuyinAmount={setBuyinAmount}
+                        stableBuyinAmount={stableBuyinAmount}
+                        setStableBuyinAmount={setStableBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                         currentPrice={currentPrices[currencyKey]}
                         resetData={resetData}

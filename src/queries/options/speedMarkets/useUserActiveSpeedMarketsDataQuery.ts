@@ -10,7 +10,7 @@ import { Positions } from 'enums/options';
 import { reject } from 'lodash';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
-import { bigNumberFormatter, parseBytes32String, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -64,7 +64,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                 for (let i = 0; i < marketsDataArray.length; i++) {
                     const marketsData = marketsDataArray[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = stableCoinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     let isClaimable = false;
                     let price = 0;
@@ -95,7 +95,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
                         market: activeMarkets[i],
                         side: side,
-                        paid: stableCoinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: isClaimable,
                         finalPrice: price,

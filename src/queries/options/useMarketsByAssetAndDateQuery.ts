@@ -6,7 +6,7 @@ import { uniq } from 'lodash';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { Network } from 'enums/network';
 import thalesData from 'thales-data';
-import { stableCoinFormatter } from 'utils/formatters/ethers';
+import { coinFormatter } from 'utils/formatters/ethers';
 import { truncToDecimals } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
@@ -38,7 +38,7 @@ const useMarketsByAssetAndDateQuery = (
                 const data = finalResult.map((market: any) => {
                     const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
-                    const price = stableCoinFormatter(market.price, networkId);
+                    const price = coinFormatter(market.price, networkId);
                     const newPrice = (1 - discount) * price;
 
                     const roi = calculatePotentialProfit(price);
@@ -95,14 +95,14 @@ const useMarketsByAssetAndDateQuery = (
                 const finalResult = rangedMarketsInfo.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
-                        stableCoinFormatter(marketInfo.price, networkId) !== 0
+                        coinFormatter(marketInfo.price, networkId) !== 0
                 );
 
                 return finalResult
                     .map((market: any) => {
                         const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
-                        const price = stableCoinFormatter(market.price, networkId);
+                        const price = coinFormatter(market.price, networkId);
                         const newPrice = (1 - discount) * price;
 
                         const roi = calculatePotentialProfit(price);

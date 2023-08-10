@@ -35,7 +35,7 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
+import { coinFormatter, coinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
 import { checkAllowance } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
@@ -170,7 +170,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = stableCoinFormatter(ammQuotes, networkId) / position.amount;
+                    const ammPrice = coinFormatter(ammQuotes, networkId) / position.amount;
                     // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
                         ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||
@@ -198,7 +198,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
             const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
 
-            const parsedTotal = stableCoinParser(position.value.toString(), networkId);
+            const parsedTotal = coinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(

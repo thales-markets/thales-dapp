@@ -5,8 +5,10 @@ import {
     CRYPTO_CURRENCY,
     COMMODITY,
     COLLATERALS,
+    ADDITIONAL_COLLATERALS,
+    STABLE_COINS,
 } from 'constants/currency';
-import { StableCoins } from 'types/options';
+import { Coins } from 'types/options';
 import { Network } from 'enums/network';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
@@ -23,12 +25,18 @@ export const getSynthAsset = (currencyKey: string) =>
 
 export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0];
 
-export const getCollateral = (networkId: Network, index: number) => COLLATERALS[networkId][index];
+export const getCollateral = (networkId: Network, index: number, includeAdditional?: boolean) =>
+    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : [])[index];
 
-export const getCollaterals = (networkId: Network) => COLLATERALS[networkId];
+export const getCollaterals = (networkId: Network, includeAdditional?: boolean) =>
+    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []);
 
-export const getCollateralIndexForNetwork = (networkId: Network, currencyKey: StableCoins) =>
-    COLLATERALS[networkId].indexOf(currencyKey);
+export const getCollateralIndexForNetwork = (networkId: Network, currencyKey: Coins) =>
+    COLLATERALS[networkId].concat(ADDITIONAL_COLLATERALS[networkId]).indexOf(currencyKey);
+
+export const isStableCurrency = (currencyKey: Coins) => {
+    return STABLE_COINS.includes(currencyKey);
+};
 
 type StableBalances = {
     sUSD: number | null;
@@ -37,12 +45,12 @@ type StableBalances = {
     USDT: number | null;
 };
 
-export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: Network, currencyKey: StableCoins) => {
+export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: Network, currencyKey: Coins) => {
     let index = COLLATERALS[networkId].indexOf(currencyKey);
     if (balancesObject && balancesObject[currencyKey] < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
             if (value && value > 1) {
-                index = COLLATERALS[networkId].indexOf(key as StableCoins);
+                index = COLLATERALS[networkId].indexOf(key as Coins);
                 break;
             }
         }
@@ -51,7 +59,7 @@ export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: N
     return index;
 };
 
-export const getStableCoinBalance = (balancesQueryObject: any, currency: StableCoins) => {
+export const getCoinBalance = (balancesQueryObject: any, currency: Coins) => {
     if (balancesQueryObject && currency) {
         return balancesQueryObject[currency] ? balancesQueryObject[currency] : 0;
     }
