@@ -14,7 +14,7 @@ import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { SharePositionData } from '../../SharePositionModal';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatStrikePrice } from 'utils/formatters/number';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 
 const ResolvedWinCard: React.FC<SharePositionData> = ({
@@ -32,6 +32,13 @@ const ResolvedWinCard: React.FC<SharePositionData> = ({
 
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
     const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
+
+    const price =
+        typeof strikePrice == 'string' && strikePrice
+            ? strikePrice
+            : strikePrice
+            ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
+            : formatStrikePrice(leftPrice ?? 0, position, rightPrice);
 
     return (
         <Container>
@@ -53,14 +60,7 @@ const ResolvedWinCard: React.FC<SharePositionData> = ({
             <MarketDetailsContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>
-                        {strikePrice
-                            ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
-                            : `${formatCurrencyWithSign(USD_SIGN, leftPrice ?? 0)} <-> ${formatCurrencyWithSign(
-                                  USD_SIGN,
-                                  rightPrice ?? 0
-                              )}`}
-                    </Value>
+                    <Value>{price}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-date')}</ItemName>
@@ -110,6 +110,7 @@ const ItemName = styled.span`
 const Value = styled.span`
     font-weight: 700;
     text-transform: capitalize;
+    text-align: center;
     font-size: 13px;
     color: ${(props) => props.theme.textColor.primary};
 `;
@@ -160,7 +161,7 @@ const PositionInfo = styled(FlexDiv)`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: 200px;
+    margin-top: 100px;
 `;
 
 const CurrencyIcon = styled.i`
