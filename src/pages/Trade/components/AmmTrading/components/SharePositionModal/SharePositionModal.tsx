@@ -157,19 +157,19 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                             ? setTimeout(() => {
                                   toast.update(
                                       toastIdParam,
-                                      getSuccessToastOptions(t('market.toast-message.click-open-twitter'), toastIdParam)
+                                      getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
                                   );
                               }, IOS_DOWNLOAD_DELAY)
                             : toast.update(
                                   toastIdParam,
-                                  getSuccessToastOptions(t('market.toast-message.click-open-twitter'), toastIdParam)
+                                  getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
                               )
                         : toast.update(
                               toastIdParam,
                               getSuccessToastOptions(
                                   !useDownloadImage
-                                      ? t('market.toast-message.image-in-clipboard')
-                                      : t('market.toast-message.open-twitter'),
+                                      ? t('common.flex-card.image-in-clipboard')
+                                      : t('common.flex-card.open-twitter'),
                                   toastIdParam
                               )
                           );
@@ -185,7 +185,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     setIsLoading(false);
                     toast.update(
                         toastIdParam,
-                        getErrorToastOptions(t('market.toast-message.save-image-error'), toastIdParam)
+                        getErrorToastOptions(t('common.flex-card.save-image-error'), toastIdParam)
                     );
                 }
             }
@@ -205,7 +205,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 toast.error(t('market.toast-message.metamask-not-supported'), toastBasicProperties);
             } else {
                 const id = toast.loading(
-                    useDownloadImage ? t('market.toast-message.download-image') : t('market.toast-message.save-image')
+                    useDownloadImage ? t('common.flex-card.download-image') : t('common.flex-card.save-image')
                 );
                 setToastId(id);
                 setIsLoading(true);
@@ -221,7 +221,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
 
     const onModalClose = () => {
         if (isLoading) {
-            toast.update(toastId, getErrorToastOptions(t('market.toast-message.save-image-cancel'), toastId));
+            toast.update(toastId, getErrorToastOptions(t('common.flex-card.save-image-cancel'), toastId));
         }
         onClose();
     };

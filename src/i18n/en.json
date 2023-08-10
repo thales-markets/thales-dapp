@@ -170,7 +170,14 @@
             "buy-in": "Buy-In",
             "potential-win": "Potential win",
             "share": "Share",
-            "won": "Won"
+            "won": "Won",
+            "open-twitter": "Opening Twitter...",
+            "save-image": "Saving image to clipboard. Please wait...",
+            "save-image-error": "Failed to save image! Try again",
+            "save-image-cancel": "Image saving canceled!",
+            "click-open-twitter": "Click here to open Twitter",
+            "download-image": "Downloading image. Please wait...",
+            "image-in-clipboard": "Image is in clipboard!"
         }
     },
     "landing-page": {
