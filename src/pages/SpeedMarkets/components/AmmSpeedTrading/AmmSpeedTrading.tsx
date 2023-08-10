@@ -12,7 +12,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
 import { USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP, SPEED_MARKETS_QUOTE } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP, PRICE_FEED_BUFFER_PERCENTAGE, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
@@ -183,6 +183,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (ammSpeedMarketsLimits) {
             return ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact;
         }
+        return 0;
     }, [ammSpeedMarketsLimits]);
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
@@ -213,13 +214,23 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     useEffect(() => {
         if (totalFee) {
-            setTotalPaidAmount((1 + totalFee) * Number(paidAmount));
+            if (isStableCurrency(selectedCollateral)) {
+                setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE));
+            } else {
+                setTotalPaidAmount(Number(paidAmount));
+            }
         }
-    }, [paidAmount, totalFee]);
+    }, [paidAmount, totalFee, selectedCollateral]);
 
     useEffect(() => {
-        setPaidAmount(stableBuyinAmount > 0 ? convertFromStable(stableBuyinAmount) : '');
-    }, [stableBuyinAmount, convertFromStable]);
+        if (stableBuyinAmount > 0) {
+            if (isStableCurrency(selectedCollateral)) {
+                setPaidAmount(stableBuyinAmount);
+            } else {
+                setPaidAmount(convertFromStable(stableBuyinAmount) * (1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE));
+            }
+        }
+    }, [stableBuyinAmount, convertFromStable, totalFee, selectedCollateral]);
 
     // Reset inputs
     useEffect(() => {
@@ -242,16 +253,35 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         ) {
             messageKey = 'common.errors.insufficient-balance-wallet';
         }
-        if (ammSpeedMarketsLimits && stableBuyinAmount > 0) {
-            if (stableBuyinAmount < ammSpeedMarketsLimits.minBuyinAmount) {
+        if (ammSpeedMarketsLimits && Number(paidAmount) > 0) {
+            const minBuyinAmount = isStableCurrency(selectedCollateral)
+                ? ammSpeedMarketsLimits.minBuyinAmount
+                : convertFromStable(ammSpeedMarketsLimits.minBuyinAmount) *
+                  (1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE);
+            const maxBuyinAmount = isStableCurrency(selectedCollateral)
+                ? ammSpeedMarketsLimits.maxBuyinAmount
+                : convertFromStable(ammSpeedMarketsLimits.maxBuyinAmount) *
+                  (1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE);
+
+            if (Number(paidAmount) < minBuyinAmount) {
                 messageKey = 'speed-markets.errors.min-buyin';
-            } else if (stableBuyinAmount > ammSpeedMarketsLimits.maxBuyinAmount) {
+            } else if (Number(paidAmount) > maxBuyinAmount) {
                 messageKey = 'speed-markets.errors.max-buyin';
             }
         }
 
         setErrorMessageKey(messageKey);
-    }, [ammSpeedMarketsLimits, paidAmount, collateralBalance, isWalletConnected, totalPaidAmount, stableBuyinAmount]);
+    }, [
+        ammSpeedMarketsLimits,
+        paidAmount,
+        collateralBalance,
+        isWalletConnected,
+        totalPaidAmount,
+        stableBuyinAmount,
+        selectedCollateral,
+        totalFee,
+        convertFromStable,
+    ]);
 
     // Submit validations
     useEffect(() => {
@@ -423,7 +453,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     const onMaxClick = () => {
         if (ammSpeedMarketsLimits && collateralBalance > 0 && totalFee) {
-            const totalToPay = Number(truncToDecimals(collateralBalance / (1 + totalFee)));
+            const totalToPay = isStableCurrency(selectedCollateral)
+                ? Number(truncToDecimals(collateralBalance / (1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE)))
+                : Number(collateralBalance);
             setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, totalToPay));
             setStableBuyinAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, convertToStable(totalToPay)));
         }
@@ -463,14 +495,22 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         placeholder={t('common.enter-amount')}
                         onChange={(_, value) => {
                             setPaidAmount(value);
-                            setStableBuyinAmount(convertToStable(Number(value)));
+                            setStableBuyinAmount(isStableCurrency(selectedCollateral) ? Number(value) : 0);
                         }}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
                             currencyKey: selectedCollateral,
-                            minAmount: convertFromStable(ammSpeedMarketsLimits?.minBuyinAmount || 0),
-                            maxAmount: convertFromStable(ammSpeedMarketsLimits?.maxBuyinAmount || 0),
+                            minAmount:
+                                convertFromStable(ammSpeedMarketsLimits?.minBuyinAmount || 0) *
+                                (isStableCurrency(selectedCollateral)
+                                    ? 1
+                                    : 1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE),
+                            maxAmount:
+                                convertFromStable(ammSpeedMarketsLimits?.maxBuyinAmount || 0) *
+                                (isStableCurrency(selectedCollateral)
+                                    ? 1
+                                    : 1 + totalFee + PRICE_FEED_BUFFER_PERCENTAGE),
                             fee: totalFee ? formatPercentage(totalFee, 0) : '...',
                         })}
                         balance={
