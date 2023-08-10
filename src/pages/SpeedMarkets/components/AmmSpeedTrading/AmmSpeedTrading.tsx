@@ -242,7 +242,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         ) {
             messageKey = 'common.errors.insufficient-balance-wallet';
         }
-        if (ammSpeedMarketsLimits && Number(paidAmount) > 0) {
+        if (ammSpeedMarketsLimits && stableBuyinAmount > 0) {
             if (stableBuyinAmount < ammSpeedMarketsLimits.minBuyinAmount) {
                 messageKey = 'speed-markets.errors.min-buyin';
             } else if (stableBuyinAmount > ammSpeedMarketsLimits.maxBuyinAmount) {
@@ -469,8 +469,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
                             currencyKey: selectedCollateral,
-                            minAmount: ammSpeedMarketsLimits?.minBuyinAmount,
-                            maxAmount: ammSpeedMarketsLimits?.maxBuyinAmount,
+                            minAmount: convertFromStable(ammSpeedMarketsLimits?.minBuyinAmount || 0),
+                            maxAmount: convertFromStable(ammSpeedMarketsLimits?.maxBuyinAmount || 0),
                             fee: totalFee ? formatPercentage(totalFee, 0) : '...',
                         })}
                         balance={
