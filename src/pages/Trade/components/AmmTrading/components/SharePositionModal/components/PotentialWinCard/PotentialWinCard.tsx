@@ -21,6 +21,8 @@ const PotentialWinCard: React.FC<SharePositionData> = ({
     position,
     currencyKey,
     strikePrice,
+    leftPrice,
+    rightPrice,
     strikeDate,
     buyIn,
     payout,
@@ -31,10 +33,18 @@ const PotentialWinCard: React.FC<SharePositionData> = ({
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
     const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
 
-    const potentialWinFormatted = `${formatCurrencyWithSign(
-        USD_SIGN,
-        Number(buyIn) * Number(payout) + Number(payout)
-    )}`;
+    const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
+
+    const price =
+        typeof strikePrice == 'string' && strikePrice
+            ? strikePrice
+            : strikePrice
+            ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
+            : `${formatCurrencyWithSign(USD_SIGN, leftPrice ?? 0)} <-> ${formatCurrencyWithSign(
+                  USD_SIGN,
+                  rightPrice ?? 0
+              )}`;
+
     return (
         <Container>
             {reffererID && (
@@ -54,7 +64,7 @@ const PotentialWinCard: React.FC<SharePositionData> = ({
             <MarketDetailsContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>{formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)}</Value>
+                    <Value>{price}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-date')}</ItemName>

@@ -1,6 +1,6 @@
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UserLivePositions } from 'types/options';
@@ -17,6 +17,7 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import Tooltip from 'components/Tooltip';
+import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -27,6 +28,8 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
     const theme: ThemeInterface = useTheme();
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     return (
         <Position>
@@ -56,6 +59,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                 </FlexContainer>
             </AlignedFlex>
             <MyPositionAction position={position} />
+            <ShareIcon
+                className="icon-home icon-home--twitter"
+                disabled={false}
+                onClick={() => setOpenTwitterShareModal(true)}
+            />
             <SPAAnchor
                 href={
                     isRanged
@@ -79,6 +87,20 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position }) => {
                     </Tooltip>
                 )}
             </SPAAnchor>
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={position.claimable ? 'resolved' : 'potential'}
+                    position={position.side}
+                    currencyKey={position.currencyKey}
+                    strikeDate={position.maturityDate}
+                    strikePrice={position.strikePrice}
+                    leftPrice={undefined}
+                    rightPrice={undefined}
+                    buyIn={position.paid}
+                    payout={position.amount}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
         </Position>
     );
 };
@@ -175,6 +197,13 @@ const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: strin
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
     margin-top: ${(props) => props.marginTop || '0px'};
+`;
+
+export const ShareIcon = styled.i<{ disabled: boolean }>`
+    color: ${(props) => props.theme.textColor.secondary};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    font-size: 20px;
 `;
 
 export default OpenPosition;

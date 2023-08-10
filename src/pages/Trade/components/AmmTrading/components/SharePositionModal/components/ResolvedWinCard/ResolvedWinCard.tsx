@@ -21,6 +21,8 @@ const ResolvedWinCard: React.FC<SharePositionData> = ({
     position,
     currencyKey,
     strikePrice,
+    leftPrice,
+    rightPrice,
     strikeDate,
     buyIn,
     payout,
@@ -51,7 +53,14 @@ const ResolvedWinCard: React.FC<SharePositionData> = ({
             <MarketDetailsContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>{formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)}</Value>
+                    <Value>
+                        {strikePrice
+                            ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
+                            : `${formatCurrencyWithSign(USD_SIGN, leftPrice ?? 0)} <-> ${formatCurrencyWithSign(
+                                  USD_SIGN,
+                                  rightPrice ?? 0
+                              )}`}
+                    </Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
                     <ItemName>{t('common.flex-card.strike-date')}</ItemName>

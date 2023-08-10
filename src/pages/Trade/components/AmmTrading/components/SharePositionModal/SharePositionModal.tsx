@@ -26,7 +26,9 @@ export type SharePositionData = {
     type: SharePositionType;
     position: Positions;
     currencyKey: string;
-    strikePrice: number;
+    strikePrice?: number | string;
+    leftPrice?: number;
+    rightPrice?: number;
     strikeDate: number;
     buyIn: number;
     payout: number;
@@ -45,6 +47,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     position,
     currencyKey,
     strikePrice,
+    leftPrice,
+    rightPrice,
     strikeDate,
     buyIn,
     payout,
@@ -57,14 +61,6 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [toastId, setToastId] = useState<string | number>(0);
     const [isMetamaskBrowser, setIsMetamaskBrowser] = useState(false);
-
-    console.log('type ', type);
-    console.log('position ', position);
-    console.log('currencyKey ', currencyKey);
-    console.log('strikePrice ', strikePrice);
-    console.log('strikeDate ', strikeDate);
-    console.log('payout ', payout);
-    console.log('buyIn ', buyIn);
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -252,6 +248,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         position={position}
                         strikeDate={strikeDate}
                         strikePrice={strikePrice}
+                        leftPrice={leftPrice}
+                        rightPrice={rightPrice}
                         buyIn={buyIn}
                         payout={payout}
                     />
@@ -263,6 +261,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         position={position}
                         strikeDate={strikeDate}
                         strikePrice={strikePrice}
+                        leftPrice={leftPrice}
+                        rightPrice={rightPrice}
                         buyIn={buyIn}
                         payout={payout}
                     />
