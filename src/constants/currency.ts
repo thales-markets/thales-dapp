@@ -441,6 +441,7 @@ export const COLLATERALS: Record<Network, StableCoins[]> = {
     [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
     [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as StableCoins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
 };
 
 export const STABLE_DECIMALS = {

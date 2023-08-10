@@ -10,6 +10,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { COLLATERALS } from 'constants/currency';
 import {
     ARBITRUM_NETWORK,
+    BASE_NETWORK,
     BSC_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
     OPTIMISM_NETWORKS,
@@ -137,7 +138,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
             await changeNetwork(polygonNetworkParams, callback);
         },
-        order: 3,
+        order: 4,
     },
     [Network.Mainnet]: {
         name: 'Mainnet',
@@ -146,7 +147,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
             const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
             await changeNetwork(undefined, callback, formattedChainId);
         },
-        order: 5,
+        order: 6,
     },
     [Network.BSC]: {
         name: 'BNBChain',
@@ -155,7 +156,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
             const bscNetworkParams = BSC_NETWORK[networkId];
             await changeNetwork(bscNetworkParams, callback);
         },
-        order: 4,
+        order: 5,
     },
     [Network.Arbitrum]: {
         name: 'Arbitrum',
@@ -165,6 +166,15 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
             await changeNetwork(arbNetworkParams, callback);
         },
         order: 2,
+    },
+    [Network.Base]: {
+        name: 'Base',
+        icon: ArbitrumLogo,
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
+            const baseNetworkParams = BASE_NETWORK[networkId];
+            await changeNetwork(baseNetworkParams, callback);
+        },
+        order: 3,
     },
 };
 
@@ -179,7 +189,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
             ];
         case ROUTES.Options.SpeedMarkets:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }

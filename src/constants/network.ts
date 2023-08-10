@@ -1,5 +1,6 @@
 import { Network } from 'enums/network';
 import { OptimismNetwork } from 'types/network';
+import { Chain } from 'wagmi';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
@@ -12,6 +13,7 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.PolygonMainnet]: 'POLYGON-MAINNET',
     [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
+    [Network.Base]: 'BASE',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
@@ -21,6 +23,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.PolygonMainnet]: 'POLYGON',
     [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
+    [Network.Base]: 'BASE',
 };
 
 export const defaultNetwork: { name: string; networkId: Network } = {
@@ -90,3 +93,53 @@ export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
         },
     },
 };
+
+export const BASE_NETWORK: Record<number, OptimismNetwork> = {
+    [Network.Base]: {
+        chainId: '0x2105',
+        chainName: 'BASE',
+        rpcUrls: ['https://mainnet.base.org'],
+        blockExplorerUrls: ['https://basescan.org/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'ETH',
+            decimals: 18,
+        },
+    },
+};
+
+// configuration for wagmi
+export const base = {
+    id: 8453,
+    network: 'base',
+    name: 'Base',
+    nativeCurrency: { name: 'Base', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://mainnet.base.org'],
+        },
+        public: {
+            http: ['https://mainnet.base.org'],
+        },
+    },
+    blockExplorers: {
+        blockscout: {
+            name: 'Basescout',
+            url: 'https://base.blockscout.com',
+        },
+        default: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
+        },
+        etherscan: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
+        },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 5022,
+        },
+    },
+} as Chain;
