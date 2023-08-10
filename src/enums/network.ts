@@ -5,6 +5,7 @@ export enum Network {
     PolygonMainnet = 137,
     OptimismGoerli = 420,
     Arbitrum = 42161,
+    Base = 8453,
 }
 
 export enum OneInchLiquidityProtocol {

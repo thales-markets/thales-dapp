@@ -124,5 +124,6 @@ export const gelatoContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
 };

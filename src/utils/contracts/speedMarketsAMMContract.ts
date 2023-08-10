@@ -8,6 +8,7 @@ const speedMarketsContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x02D0123a89Ae6ef27419d5EBb158d1ED4Cf24FA3',
+        [Network.Base]: '0x85b827d133FEDC36B844b20f4a198dA583B25BAA',
     },
     abi: [
         {

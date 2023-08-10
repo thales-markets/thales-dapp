@@ -448,6 +448,7 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     ],
     [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as Coins],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
 };
 
@@ -458,6 +459,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     [Network.OptimismGoerli]: [],
     [Network.PolygonMainnet]: [],
     [Network.BSC]: [],
+    [Network.Base]: [],
     [Network.Arbitrum]: [],
 };
 
