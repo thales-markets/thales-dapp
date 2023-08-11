@@ -436,7 +436,8 @@
             }
         },
         "total-pay": "Total to pay {{amount}} + {{fee}} fee",
-        "total-pay-conversion": "Total to pay {{convertedAmount}} ({{amount}}) + {{fee}} fee",
+        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
+        "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "admin": {
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
