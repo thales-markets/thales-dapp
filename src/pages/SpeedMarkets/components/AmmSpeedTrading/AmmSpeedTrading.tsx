@@ -179,9 +179,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             if (isStableCurrency(selectedCollateral)) {
                 return value;
             } else {
-                return rate
-                    ? Math.ceil((value / (rate * (1 - PRICE_FEED_BUFFER_PERCENTAGE))) * 10 ** 18) / 10 ** 18
-                    : 0;
+                const priceFeedBuffer =
+                    value === ammSpeedMarketsLimits?.minBuyinAmount ? 1 - PRICE_FEED_BUFFER_PERCENTAGE : 1;
+                return rate ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** 18) / 10 ** 18 : 0;
             }
         },
         [selectedCollateral, exchangeRates]
@@ -281,7 +281,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     // Submit validations
     useEffect(() => {
-        const convertedStableBuyinAmount = convertToStable(selectedStableBuyinAmount || Number(paidAmount));
+        const convertedStableBuyinAmount = selectedStableBuyinAmount || convertToStable(Number(paidAmount));
         if (convertedStableBuyinAmount > 0) {
             const riskData = ammSpeedMarketsLimits?.risksPerAsset.filter((data) => data.currency === currencyKey)[0];
             if (riskData) {
@@ -480,9 +480,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     isRangedMarket={false}
                     isFetchingQuote={false}
                     priceProfit={SPEED_MARKETS_QUOTE - 1}
-                    paidAmount={
-                        selectedStableBuyinAmount ? selectedStableBuyinAmount : convertToStable(Number(paidAmount))
-                    }
+                    paidAmount={selectedStableBuyinAmount || convertToStable(Number(paidAmount))}
                     breakFirstLine={false}
                 />
                 <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
