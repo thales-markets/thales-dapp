@@ -66,6 +66,8 @@ export const getIsPolygon = (networkId: number): boolean => [137, 80001].include
 
 export const getIsArbitrum = (networkId: number): boolean => [42161].includes(networkId);
 
+export const getIsBase = (networkId: number): boolean => [Network.Base].includes(networkId);
+
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {
         const approved = await token.allowance(walletAddress, spender);
@@ -189,7 +191,14 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
             ];
         case ROUTES.Options.SpeedMarkets:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                Network.Base,
+                Network.BSC,
+                Network.PolygonMainnet,
+            ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }
