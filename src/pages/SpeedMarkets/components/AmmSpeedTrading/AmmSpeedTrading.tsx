@@ -480,7 +480,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     isRangedMarket={false}
                     isFetchingQuote={false}
                     priceProfit={SPEED_MARKETS_QUOTE - 1}
-                    paidAmount={selectedStableBuyinAmount}
+                    paidAmount={
+                        selectedStableBuyinAmount ? selectedStableBuyinAmount : convertToStable(Number(paidAmount))
+                    }
                     breakFirstLine={false}
                 />
                 <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
