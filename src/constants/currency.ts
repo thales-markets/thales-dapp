@@ -455,7 +455,11 @@ export const COLLATERALS: Record<Network, Coins[]> = {
 // TODO: merge with COLLATERALS when all pages will support these
 export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     [Network.Mainnet]: [],
-    [Network.OptimismMainnet]: [CRYPTO_CURRENCY_MAP.OP as Coins, CRYPTO_CURRENCY_MAP.WETH as Coins],
+    [Network.OptimismMainnet]: [
+        CRYPTO_CURRENCY_MAP.OP as Coins,
+        CRYPTO_CURRENCY_MAP.WETH as Coins,
+        CRYPTO_CURRENCY_MAP.ETH as Coins,
+    ],
     [Network.OptimismGoerli]: [],
     [Network.PolygonMainnet]: [],
     [Network.BSC]: [],

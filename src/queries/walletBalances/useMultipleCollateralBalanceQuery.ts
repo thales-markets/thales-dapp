@@ -4,6 +4,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { COLLATERAL_DECIMALS } from 'constants/currency';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
@@ -24,24 +25,35 @@ const useMultipleCollateralBalanceQuery = (
                         USDT: 0,
                         OP: 0,
                         WETH: 0,
+                        ETH: 0,
                     };
                 }
 
-                const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance, OPBalance, WETHBalance] = await Promise.all([
+                const [
+                    sUSDBalance,
+                    DAIBalance,
+                    USDCBalance,
+                    USDTBalance,
+                    OPBalance,
+                    WETHBalance,
+                    ETHBalance,
+                ] = await Promise.all([
                     multipleCollateral?.length ? multipleCollateral[0]?.balanceOf(walletAddress) : undefined,
                     multipleCollateral?.length ? multipleCollateral[1]?.balanceOf(walletAddress) : undefined,
                     multipleCollateral?.length ? multipleCollateral[2]?.balanceOf(walletAddress) : undefined,
                     multipleCollateral?.length ? multipleCollateral[3]?.balanceOf(walletAddress) : undefined,
                     multipleCollateral?.length ? multipleCollateral[4]?.balanceOf(walletAddress) : undefined,
                     multipleCollateral?.length ? multipleCollateral[5]?.balanceOf(walletAddress) : undefined,
+                    snxJSConnector.provider ? snxJSConnector.provider.getBalance(walletAddress) : undefined,
                 ]);
                 return {
-                    sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** COLLATERAL_DECIMALS.sUSD : 0,
-                    DAI: DAIBalance ? parseInt(DAIBalance) / 10 ** COLLATERAL_DECIMALS.DAI : 0,
-                    USDC: USDCBalance ? parseInt(USDCBalance) / 10 ** COLLATERAL_DECIMALS.USDC : 0,
-                    USDT: USDTBalance ? parseInt(USDTBalance) / 10 ** COLLATERAL_DECIMALS.USDT : 0,
-                    OP: OPBalance ? parseInt(OPBalance) / 10 ** COLLATERAL_DECIMALS.OP : 0,
-                    WETH: WETHBalance ? parseInt(WETHBalance) / 10 ** COLLATERAL_DECIMALS.WETH : 0,
+                    sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, COLLATERAL_DECIMALS.sUSD) : 0,
+                    DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,
+                    USDC: USDCBalance ? bigNumberFormatter(USDCBalance, COLLATERAL_DECIMALS.USDC) : 0,
+                    USDT: USDTBalance ? bigNumberFormatter(USDTBalance, COLLATERAL_DECIMALS.USDT) : 0,
+                    OP: OPBalance ? bigNumberFormatter(OPBalance, COLLATERAL_DECIMALS.OP) : 0,
+                    WETH: WETHBalance ? bigNumberFormatter(WETHBalance, COLLATERAL_DECIMALS.WETH) : 0,
+                    ETH: ETHBalance ? bigNumberFormatter(ETHBalance, COLLATERAL_DECIMALS.ETH) : 0,
                 };
             } catch (e) {
                 console.log('e ', e);
@@ -52,6 +64,7 @@ const useMultipleCollateralBalanceQuery = (
                     USDT: 0,
                     OP: 0,
                     WETH: 0,
+                    ETH: 0,
                 };
             }
         },

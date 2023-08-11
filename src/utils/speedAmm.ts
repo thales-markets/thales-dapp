@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from 'constants/network';
 import { BigNumber, ethers } from 'ethers';
 
 export const getTransactionForSpeedAMM = async (
@@ -13,7 +14,7 @@ export const getTransactionForSpeedAMM = async (
     collateralAddress: string
 ) => {
     let tx: ethers.ContractTransaction;
-    const isEth = false; // TODO: check from collateral address
+    const isEth = collateralAddress === ZERO_ADDRESS;
 
     if (isNonDefaultCollateral) {
         tx = deltaTimeSec
@@ -25,7 +26,7 @@ export const getTransactionForSpeedAMM = async (
                   collateralAddress,
                   buyInAmount,
                   isEth,
-                  { value: pythUpdateFee }
+                  { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
               )
             : await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
                   asset,
@@ -35,7 +36,7 @@ export const getTransactionForSpeedAMM = async (
                   collateralAddress,
                   buyInAmount,
                   isEth,
-                  { value: pythUpdateFee }
+                  { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
               );
     } else {
         tx = deltaTimeSec

@@ -1,4 +1,5 @@
 import { POLYGON_DAI, POLYGON_USDC, POLYGON_USDT } from 'components/Swap/tokens';
+import { ZERO_ADDRESS } from 'constants/network';
 import { Network } from 'enums/network';
 
 const sUSDABI = [
@@ -1172,6 +1173,18 @@ const multipleCollateral = {
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
             [Network.Base]: 'TBD',
+        },
+        abi,
+    },
+    ETH: {
+        addresses: {
+            [Network.Mainnet]: ZERO_ADDRESS,
+            [Network.OptimismMainnet]: ZERO_ADDRESS,
+            [Network.OptimismGoerli]: ZERO_ADDRESS,
+            [Network.PolygonMainnet]: ZERO_ADDRESS,
+            [Network.BSC]: ZERO_ADDRESS,
+            [Network.Arbitrum]: ZERO_ADDRESS,
+            [Network.Base]: ZERO_ADDRESS,
         },
         abi,
     },

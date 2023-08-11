@@ -11,7 +11,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
-import { USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { POSITIONS_TO_SIDE_MAP, PRICE_FEED_BUFFER_PERCENTAGE, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -71,8 +71,8 @@ type AmmSpeedTradingProps = {
     positionType: Positions.UP | Positions.DOWN | undefined;
     strikeTimeSec: number;
     deltaTimeSec: number;
-    stableBuyinAmount: number;
-    setStableBuyinAmount: React.Dispatch<number>;
+    selectedStableBuyinAmount: number;
+    setSelectedStableBuyinAmount: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
     currentPrice: number;
     resetData: React.Dispatch<void>;
@@ -85,8 +85,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     positionType,
     strikeTimeSec,
     deltaTimeSec,
-    stableBuyinAmount,
-    setStableBuyinAmount,
+    selectedStableBuyinAmount,
+    setSelectedStableBuyinAmount,
     ammSpeedMarketsLimits,
     currentPrice,
     resetData,
@@ -103,7 +103,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [paidAmount, setPaidAmount] = useState<number | string>(stableBuyinAmount ? stableBuyinAmount : '');
+    const [paidAmount, setPaidAmount] = useState<number | string>(
+        selectedStableBuyinAmount ? selectedStableBuyinAmount : ''
+    );
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -177,7 +179,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             if (isStableCurrency(selectedCollateral)) {
                 return value;
             } else {
-                return rate ? value / (rate * (1 - PRICE_FEED_BUFFER_PERCENTAGE)) : 0;
+                return rate
+                    ? Math.ceil((value / (rate * (1 - PRICE_FEED_BUFFER_PERCENTAGE))) * 10 ** 18) / 10 ** 18
+                    : 0;
             }
         },
         [selectedCollateral, exchangeRates]
@@ -222,22 +226,22 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     // when buttons are used to populate amount
     useEffect(() => {
-        if (stableBuyinAmount > 0) {
+        if (selectedStableBuyinAmount > 0) {
             if (isStableCurrency(selectedCollateral)) {
-                setPaidAmount(stableBuyinAmount);
+                setPaidAmount(selectedStableBuyinAmount);
             } else {
-                setPaidAmount(convertFromStable(stableBuyinAmount));
+                setPaidAmount(convertFromStable(selectedStableBuyinAmount));
             }
         }
-    }, [stableBuyinAmount, convertFromStable, totalFee, selectedCollateral]);
+    }, [selectedStableBuyinAmount, convertFromStable, totalFee, selectedCollateral]);
 
     // Reset inputs
     useEffect(() => {
         if (!isWalletConnected) {
-            setStableBuyinAmount(0);
+            setSelectedStableBuyinAmount(0);
             setPaidAmount('');
         }
-    }, [isWalletConnected, setStableBuyinAmount]);
+    }, [isWalletConnected, setSelectedStableBuyinAmount]);
 
     // Input field validations
     useEffect(() => {
@@ -277,15 +281,16 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     // Submit validations
     useEffect(() => {
-        if (stableBuyinAmount > 0) {
+        const convertedStableBuyinAmount = convertToStable(selectedStableBuyinAmount || Number(paidAmount));
+        if (convertedStableBuyinAmount > 0) {
             const riskData = ammSpeedMarketsLimits?.risksPerAsset.filter((data) => data.currency === currencyKey)[0];
             if (riskData) {
-                setIsCapBreached(riskData?.current + stableBuyinAmount >= riskData?.max);
+                setIsCapBreached(riskData?.current + convertedStableBuyinAmount >= riskData?.max);
             }
         } else {
             setIsCapBreached(false);
         }
-    }, [ammSpeedMarketsLimits, currencyKey, stableBuyinAmount]);
+    }, [ammSpeedMarketsLimits, currencyKey, selectedStableBuyinAmount, convertToStable, paidAmount]);
 
     // Check allowance
     useEffect(() => {
@@ -310,7 +315,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             }
         };
         if (isWalletConnected && erc20Instance.provider) {
-            getAllowance();
+            if (selectedCollateral === CRYPTO_CURRENCY_MAP.ETH) {
+                setAllowance(true);
+            } else {
+                getAllowance();
+            }
         }
     }, [
         collateralAddress,
@@ -448,9 +457,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (ammSpeedMarketsLimits && collateralBalance > 0 && totalFee) {
             const maxWalletAmount = isStableCurrency(selectedCollateral)
                 ? Number(truncToDecimals(collateralBalance / (1 + totalFee)))
-                : Number(collateralBalance / (1 + totalFee));
+                : Number(truncToDecimals(collateralBalance / (1 + totalFee), 18));
             setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, maxWalletAmount));
-            setStableBuyinAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, convertToStable(maxWalletAmount)));
+            setSelectedStableBuyinAmount(
+                Math.min(ammSpeedMarketsLimits.maxBuyinAmount, convertToStable(maxWalletAmount))
+            );
         }
     };
 
@@ -469,7 +480,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     isRangedMarket={false}
                     isFetchingQuote={false}
                     priceProfit={SPEED_MARKETS_QUOTE - 1}
-                    paidAmount={stableBuyinAmount}
+                    paidAmount={selectedStableBuyinAmount}
                     breakFirstLine={false}
                 />
                 <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
@@ -488,7 +499,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         placeholder={t('common.enter-amount')}
                         onChange={(_, value) => {
                             setPaidAmount(value);
-                            setStableBuyinAmount(isStableCurrency(selectedCollateral) ? Number(value) : 0);
+                            setSelectedStableBuyinAmount(isStableCurrency(selectedCollateral) ? Number(value) : 0);
                         }}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
@@ -520,15 +531,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     <PaymentInfo>
                         {isStableCurrency(selectedCollateral)
                             ? t('speed-markets.total-pay', {
-                                  amount: stableBuyinAmount
-                                      ? formatCurrencyWithSign(USD_SIGN, stableBuyinAmount)
+                                  amount: selectedStableBuyinAmount
+                                      ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
                                   fee: totalFee ? formatPercentage(totalFee, 0) : '...',
                               })
                             : t('speed-markets.to-pay-with-conversion', {
                                   amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
-                                  stableAmount: stableBuyinAmount
-                                      ? formatCurrencyWithSign(USD_SIGN, stableBuyinAmount)
+                                  stableAmount: selectedStableBuyinAmount
+                                      ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                   fee: formatPercentage(totalFee, 0),
                               })}
@@ -537,8 +548,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         <PaymentInfo>
                             {t('speed-markets.total-pay-with-conversion', {
                                 amount: formatCurrencyWithKey(selectedCollateral, totalPaidAmount),
-                                stableAmount: stableBuyinAmount
-                                    ? formatCurrencyWithSign(USD_SIGN, stableBuyinAmount * (1 + totalFee))
+                                stableAmount: selectedStableBuyinAmount
+                                    ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount * (1 + totalFee))
                                     : formatCurrencyWithSign(USD_SIGN, convertToStable(totalPaidAmount)),
                             })}
                         </PaymentInfo>
