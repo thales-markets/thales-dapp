@@ -4,7 +4,7 @@ import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
+import { getIsBSC, getIsBase, getIsMainnet, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -27,12 +27,13 @@ const DappSidebar: React.FC = () => {
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isMainnet = getIsMainnet(networkId);
+    const isBase = getIsBase(networkId);
 
-    const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
-    const showLP = !isMainnet && !isPolygon && !isBSC;
+    const showVaultsPage = !isMainnet && !isPolygon && !isBSC && !isBase;
+    const showLP = !isMainnet && !isPolygon && !isBSC && !isBase;
     const showWizardPage = !isMobile;
-    const showReferralPage = !isMainnet;
-    const showTokenPage = !isPolygon && !isBSC;
+    const showReferralPage = !isMainnet && !isBase;
+    const showTokenPage = !isPolygon && !isBSC && !isBase;
     const showGovernancePage = !isMainnet;
     const showGamePage = !isMainnet;
     const showProfilePage = !isMainnet && isWalletConnected;
