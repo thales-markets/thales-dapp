@@ -68,8 +68,8 @@ import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
 import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
-
-export type CurrencyKeyOptionType = { value: string; label: string };
+import { Network } from 'enums/network';
+import { StableCoins } from 'types/options';
 
 const SYNTHS = [
     'sBTC',
@@ -154,7 +154,6 @@ export const CRYPTO_CURRENCY = [
     'REP',
     'USDC',
     'USDT',
-    'DAI',
     'VELO',
     'ZRX',
     'THALES',
@@ -173,6 +172,8 @@ export const CRYPTO_CURRENCY = [
     'ETC',
     'BUSD',
     'CAKE',
+    'PEPE',
+    'WLD',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -333,6 +334,8 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
+    [CRYPTO_CURRENCY_MAP.PEPE]: 'PEPE',
+    [CRYPTO_CURRENCY_MAP.WLD]: 'Worldcoin',
     [COMMODITY_MAP.XAU]: 'Gold',
     [COMMODITY_MAP.XAG]: 'Silver',
 };
@@ -346,8 +349,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.BTC]: 'bitcoin',
     [CRYPTO_CURRENCY_MAP.ETH]: 'ethereum',
     [CRYPTO_CURRENCY_MAP.XRP]: 'ripple',
-    [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
-    [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
+    [CRYPTO_CURRENCY_MAP.BCH]: 'bitcoin-cash',
+    [CRYPTO_CURRENCY_MAP.LTC]: 'litecoin',
     [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
     [CRYPTO_CURRENCY_MAP.BNB]: 'binancecoin',
     [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
@@ -375,8 +378,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sETH]: 'ethereum',
     [SYNTHS_MAP.sCOMP]: 'compound-coin',
     [SYNTHS_MAP.sXRP]: 'ripple',
-    [SYNTHS_MAP.sBCH]: 'binance-peg-bitcoin-cash',
-    [SYNTHS_MAP.sXRP]: 'binance-peg-litecoin',
+    [SYNTHS_MAP.sBCH]: 'bitcoin-cash',
+    [SYNTHS_MAP.sLTC]: 'litecoin',
     [SYNTHS_MAP.sEOS]: 'eos',
     [SYNTHS_MAP.sBNB]: 'oec-binance-coin',
     [SYNTHS_MAP.sXTZ]: 'tezos',
@@ -415,6 +418,46 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
+    [CRYPTO_CURRENCY_MAP.PEPE]: 'pepe',
+    [CRYPTO_CURRENCY_MAP.WLD]: 'worldcoin-wld',
     [COMMODITY_MAP.XAU]: 'tether-gold',
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
+};
+
+export const COLLATERALS: Record<Network, StableCoins[]> = {
+    [Network.Mainnet]: [SYNTHS_MAP.sUSD as StableCoins],
+    [Network.Ropsten]: [],
+    [Network.Rinkeby]: [],
+    [Network.Goerli]: [],
+    [Network.Kovan]: [],
+    [Network['Mainnet-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['Kovan-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['Goerli-Ovm']]: [
+        SYNTHS_MAP.sUSD as StableCoins,
+        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
+        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    ],
+    [Network['POLYGON-MUMBAI']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network['POLYGON-MAINNET']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as StableCoins],
+    [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+};
+
+export const STABLE_DECIMALS = {
+    sUSD: 18,
+    DAI: 18,
+    USDC: 6,
+    USDT: 6,
+    BUSD: 18,
 };

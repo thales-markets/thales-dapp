@@ -15,7 +15,6 @@ import { BigNumber, ethers } from 'ethers';
 import { checkAllowance } from 'utils/network';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { FlexDivColumnCentered } from 'styles/common';
 import ApprovalModal from 'components/ApprovalModal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -119,9 +118,7 @@ const Stake: React.FC = () => {
             setIsStaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await stakingThalesContractWithSigner.stake(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.stake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -147,13 +144,10 @@ const Stake: React.FC = () => {
         const addressToApprove = stakingThalesContract.address;
         try {
             setIsAllowingStake(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
+
             const tx = (await thalesTokenContractWithSigner.approve(
                 addressToApprove,
-                approveAmount,
-                providerOptions
+                approveAmount
             )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();

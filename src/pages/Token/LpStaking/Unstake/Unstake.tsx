@@ -11,7 +11,6 @@ import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnect
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -51,9 +50,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             setIsUnstaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
-            const tx = await lpStakingRewardsContractWithSigner.withdraw(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await lpStakingRewardsContractWithSigner.withdraw(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

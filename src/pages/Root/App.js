@@ -15,7 +15,8 @@ import {
     updateWallet,
 } from 'redux/modules/wallet';
 import { isMobile } from 'utils/device';
-import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -47,6 +48,7 @@ const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
 const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
+
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
@@ -298,6 +300,16 @@ const App = () => {
                                     <Markets />
                                 </DappLayout>
                             </Route>
+
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarkets}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Markets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            ></Route>
 
                             <Route exact path={ROUTES.Options.Wizard}>
                                 <DappLayout>

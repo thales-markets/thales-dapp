@@ -71,63 +71,61 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
     ];
 
     return (
-        <>
-            <Container>
-                <RowCard isRangedMarket={isRangedMarket} />
-                <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
-                    {currentTab
-                        ? t('markets.market.row-card.current-view', {
-                              currentView: tabItems.find((item) => item.index == currentTab)?.title,
-                          })
-                        : t('markets.market.row-card.views')}
-                </ViewButton>
-                {showViewsDropdown && (
-                    <ViewsDropDownWrapper>
-                        <ViewsDropDown>
-                            <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
-                                <ViewTitle>Views</ViewTitle>
-                                {tabItems &&
-                                    tabItems.map((item, index) => {
-                                        return (
-                                            <ViewItem
-                                                active={currentTab === item.index}
-                                                key={index}
-                                                onClick={() => {
-                                                    setCurrentTab(item.index);
-                                                    setShowViewsDropdown(false);
-                                                }}
-                                            >
-                                                {item.title}
-                                            </ViewItem>
-                                        );
-                                    })}
-                            </OutsideClickHandler>
-                        </ViewsDropDown>
-                    </ViewsDropDownWrapper>
-                )}
-                <MenuContainer justifyContent={inMaturity ? 'flex-start' : 'stretch'}>
-                    {tabItems &&
-                        tabItems.map((item, index) => {
-                            return (
-                                <MenuItem
-                                    active={item.index == currentTab}
-                                    key={index}
-                                    noStrech={inMaturity}
-                                    onClick={() => setCurrentTab(item.index)}
-                                >
-                                    {item.title}
-                                </MenuItem>
-                            );
-                        })}
-                </MenuContainer>
-                <Tab>
-                    {currentTab == 1 && <TradingView />}
-                    {currentTab == 2 && <OptionPriceTab isRangedMarket={isRangedMarket} />}
-                    {currentTab == 3 && <UserActivity isRangedMarket={isRangedMarket} />}
-                    {currentTab == 4 && <MarketActivity isRangedMarket={isRangedMarket} />}
-                </Tab>
-            </Container>
-        </>
+        <Container>
+            <RowCard isRangedMarket={isRangedMarket} />
+            <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
+                {currentTab
+                    ? t('markets.market.row-card.current-view', {
+                          currentView: tabItems.find((item) => item.index == currentTab)?.title,
+                      })
+                    : t('markets.market.row-card.views')}
+            </ViewButton>
+            {showViewsDropdown && (
+                <ViewsDropDownWrapper>
+                    <ViewsDropDown>
+                        <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
+                            <ViewTitle>Views</ViewTitle>
+                            {tabItems &&
+                                tabItems.map((item, index) => {
+                                    return (
+                                        <ViewItem
+                                            active={currentTab === item.index}
+                                            key={index}
+                                            onClick={() => {
+                                                setCurrentTab(item.index);
+                                                setShowViewsDropdown(false);
+                                            }}
+                                        >
+                                            {item.title}
+                                        </ViewItem>
+                                    );
+                                })}
+                        </OutsideClickHandler>
+                    </ViewsDropDown>
+                </ViewsDropDownWrapper>
+            )}
+            <MenuContainer justifyContent={inMaturity ? 'flex-start' : 'stretch'}>
+                {tabItems &&
+                    tabItems.map((item, index) => {
+                        return (
+                            <MenuItem
+                                active={item.index == currentTab}
+                                key={index}
+                                noStrech={inMaturity}
+                                onClick={() => setCurrentTab(item.index)}
+                            >
+                                {item.title}
+                            </MenuItem>
+                        );
+                    })}
+            </MenuContainer>
+            <Tab>
+                {currentTab == 1 && <TradingView />}
+                {currentTab == 2 && <OptionPriceTab isRangedMarket={isRangedMarket} />}
+                {currentTab == 3 && <UserActivity isRangedMarket={isRangedMarket} />}
+                {currentTab == 4 && <MarketActivity isRangedMarket={isRangedMarket} />}
+            </Tab>
+        </Container>
     );
 };
 

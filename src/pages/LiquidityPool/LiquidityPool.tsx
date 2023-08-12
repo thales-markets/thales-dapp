@@ -11,7 +11,6 @@ import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import {
     getDefaultToastContent,
     getLoadingToastOptions,
@@ -36,9 +35,9 @@ import { FlexDivRow } from 'styles/common';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultCollateral } from 'utils/currency';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
-import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import PnL from './PnL';
@@ -117,7 +116,7 @@ const LiquidityPool: React.FC = () => {
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
             setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getStableCoinForNetwork(networkId))
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
@@ -251,9 +250,10 @@ const LiquidityPool: React.FC = () => {
             try {
                 const collateralWithSigner = collateral.connect(signer);
 
-                const tx = (await collateralWithSigner.approve(liquidityPoolContract.address, approveAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await collateralWithSigner.approve(
+                    liquidityPoolContract.address,
+                    approveAmount
+                )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
 
@@ -290,9 +290,7 @@ const LiquidityPool: React.FC = () => {
                     getDefaultDecimalsForNetwork(networkId)
                 );
 
-                const tx = await liquidityPoolContractWithSigner.deposit(parsedAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await liquidityPoolContractWithSigner.deposit(parsedAmount);
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
@@ -325,12 +323,8 @@ const LiquidityPool: React.FC = () => {
                 const parsedPercentage = ethers.utils.parseEther((Number(withdrawalPercentage) / 100).toString());
 
                 const tx = withdrawAll
-                    ? await liquidityPoolContractWithSigner.withdrawalRequest({
-                          gasLimit: getMaxGasLimitForNetwork(networkId),
-                      })
-                    : await liquidityPoolContractWithSigner.partialWithdrawalRequest(parsedPercentage, {
-                          gasLimit: getMaxGasLimitForNetwork(networkId),
-                      });
+                    ? await liquidityPoolContractWithSigner.withdrawalRequest()
+                    : await liquidityPoolContractWithSigner.partialWithdrawalRequest(parsedPercentage);
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
@@ -347,6 +341,67 @@ const LiquidityPool: React.FC = () => {
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsSubmitting(false);
             }
+        }
+    };
+
+    const closeRound = async () => {
+        const id = toast.loading(getDefaultToastContent(t('liquidity-pool.closing-round')), getLoadingToastOptions());
+        setIsSubmitting(true);
+        try {
+            const { signer, liquidityPoolContract } = snxJSConnector;
+
+            if (signer && liquidityPoolContract) {
+                const lpContractWithSigner = liquidityPoolContract.connect(signer);
+
+                const canCloseCurrentRound = await lpContractWithSigner?.canCloseCurrentRound();
+                const roundClosingPrepared = await lpContractWithSigner?.roundClosingPrepared();
+
+                let getUsersCountInCurrentRound = await lpContractWithSigner?.getUsersCountInCurrentRound();
+                let usersProcessedInRound = await lpContractWithSigner?.usersProcessedInRound();
+                if (canCloseCurrentRound) {
+                    try {
+                        if (!roundClosingPrepared) {
+                            const tx = await lpContractWithSigner.prepareRoundClosing({
+                                type: 2,
+                            });
+                            await tx.wait().then(() => {
+                                console.log('prepareRoundClosing closed');
+                            });
+                            await delay(1000 * 2);
+                        }
+
+                        while (usersProcessedInRound < getUsersCountInCurrentRound) {
+                            const tx = await lpContractWithSigner.processRoundClosingBatch(100, {
+                                type: 2,
+                            });
+                            await tx.wait().then(() => {
+                                console.log('processRoundClosingBatch for batch done');
+                            });
+                            await delay(1000 * 2);
+                            getUsersCountInCurrentRound = await lpContractWithSigner.getUsersCountInCurrentRound();
+                            usersProcessedInRound = await lpContractWithSigner.usersProcessedInRound();
+                        }
+
+                        const tx = await lpContractWithSigner.closeRound({
+                            type: 2,
+                        });
+                        await tx.wait().then(() => {
+                            console.log('Round closed');
+                        });
+
+                        toast.update(id, getSuccessToastOptions(t('liquidity-pool.round-successfully-closed'), id));
+                        setIsSubmitting(false);
+                    } catch (e) {
+                        toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+                        setIsSubmitting(false);
+                        console.log(e);
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('E ', e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+            setIsSubmitting(false);
         }
     };
 
@@ -465,6 +520,11 @@ const LiquidityPool: React.FC = () => {
                                                     fontSize={20}
                                                     showFullCounter
                                                 />
+                                            )}
+                                            {liquidityPoolData.canCloseCurrentRound && (
+                                                <Button disabled={isSubmitting} onClick={closeRound}>
+                                                    {t('liquidity-pool.button.close-round')}
+                                                </Button>
                                             )}
                                         </RoundEnd>
                                     </RoundEndContainer>
@@ -1034,6 +1094,10 @@ const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: num
         nextRoundBalancePercenatage,
         maxAllowancePercenatage,
     };
+};
+
+const delay = (interval: number) => {
+    return new Promise((resolve) => setTimeout(resolve, interval));
 };
 
 export default LiquidityPool;

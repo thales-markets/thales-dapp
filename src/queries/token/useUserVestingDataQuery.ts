@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { UserVestingData, VestingSchedule } from 'types/token';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
@@ -11,7 +11,7 @@ import { orderBy } from 'lodash';
 
 const useUserVestingDataQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<UserVestingData | undefined>
 ) => {
     return useQuery<UserVestingData | undefined>(

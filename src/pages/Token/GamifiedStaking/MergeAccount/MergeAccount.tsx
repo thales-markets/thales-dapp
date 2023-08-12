@@ -4,7 +4,6 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { ZERO_ADDRESS } from 'constants/network';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { TransactionFilterEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getAddress, isAddress } from 'ethers/lib/utils';
@@ -30,6 +29,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -43,6 +43,7 @@ const MergeAccount: React.FC = () => {
     const [isMerging, setIsMerging] = useState<boolean>(false);
     const [isDelegating, setIsDelegating] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
+    const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
@@ -104,6 +105,7 @@ const MergeAccount: React.FC = () => {
             ? srcStakingThalesQuery.data.mergeAccountEnabled
             : true;
 
+    const isUserLPing = srcStakingThalesQuery.data && srcStakingThalesQuery.data?.isUserLPing;
     const hasSrcAccountSomethingToClaim =
         srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data ? srcStakingThalesQuery.data.rewards > 0 : false;
     const isSrcAccountUnstaking =
@@ -128,6 +130,7 @@ const MergeAccount: React.FC = () => {
         isAccountMergingEnabled &&
         (hasSrcAccountSomethingToClaim ||
             isSrcAccountUnstaking ||
+            isUserLPing ||
             hasDestAccountSomethingToClaim ||
             isDestAccountUnstaking);
 
@@ -149,9 +152,7 @@ const MergeAccount: React.FC = () => {
 
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
-            const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress), {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress));
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -176,10 +177,7 @@ const MergeAccount: React.FC = () => {
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
             const tx = await stakingThalesContractWithSigner.delegateVolume(
-                getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress),
-                {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                }
+                getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress)
             );
             const txResult = await tx.wait();
 
@@ -253,17 +251,30 @@ const MergeAccount: React.FC = () => {
             <>
                 <div>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.title')}:</div>
                 <ul>
+                    {isUserLPing && (
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.user-lping')}
+                        </ValidationMessage>
+                    )}
                     {hasSrcAccountSomethingToClaim && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-claim')}
+                        </ValidationMessage>
                     )}
                     {isSrcAccountUnstaking && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.src-unstaking')}
+                        </ValidationMessage>
                     )}
                     {hasDestAccountSomethingToClaim && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-claim')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-claim')}
+                        </ValidationMessage>
                     )}
                     {isDestAccountUnstaking && (
-                        <li>{t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}</li>
+                        <ValidationMessage>
+                            {t('thales-token.gamified-staking.merge-account.merge-blocked-message.dest-unstaking')}
+                        </ValidationMessage>
                     )}
                 </ul>
             </>
@@ -276,6 +287,16 @@ const MergeAccount: React.FC = () => {
                 <SectionContentWrapper>
                     <SectionTitle>{t('thales-token.gamified-staking.merge-account.delegate-volume')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
+                        <TextInput
+                            value={walletAddress}
+                            disabled={true}
+                            label={t('thales-token.gamified-staking.merge-account.source-account-label')}
+                        />
+                    </InputContainer>
+                    <ArrowContainer>
+                        <ArrowDown />
+                    </ArrowContainer>
+                    <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
                             <TextInput
                                 value={
@@ -285,7 +306,7 @@ const MergeAccount: React.FC = () => {
                                 }
                                 onChange={(e: any) => setDelegateDestAddress(e.target.value)}
                                 disabled={delegatedVolumeAddress !== ZERO_ADDRESS || isDelegating || !isWalletConnected}
-                                label={t('thales-token.gamified-staking.merge-account.delegate-volume-address-label')}
+                                label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
                                 placeholder={t('common.enter-address')}
                                 showValidation={!isDelegateDestAddressValid}
                                 validationMessage={t(`common.errors.invalid-address`)}
@@ -346,7 +367,7 @@ const MergeAccount: React.FC = () => {
                             <TextInput
                                 value={destAddress}
                                 onChange={(e: any) => setDestAddress(e.target.value)}
-                                disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
+                                disabled={isMerging || !isAccountMergingEnabled || isMergeBlocked || !isWalletConnected}
                                 label={t('thales-token.gamified-staking.merge-account.destination-account-label')}
                                 placeholder={t('common.enter-address')}
                                 showValidation={!isDestAddressValid}
@@ -382,6 +403,16 @@ const MergeAccount: React.FC = () => {
                     {t('thales-token.gamified-staking.merge-account.merge-account-description-2')}
                 </SectionDescriptionParagraph>
             </SectionDescription>
+            <SectionWrapper>
+                <SectionContentWrapper>
+                    <SectionTitle>{t('thales-token.gamified-staking.rewards.claim-on-behalf.label-1')}</SectionTitle>
+                    <Info>{t('thales-token.gamified-staking.rewards.claim-on-behalf.label-2')}</Info>
+                    <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
+                        {t('thales-token.gamified-staking.rewards.claim-on-behalf.enable')}
+                    </Button>
+                </SectionContentWrapper>
+            </SectionWrapper>
+            {showClaimOnBehalfModal && <ClaimOnBehalfModal onClose={() => setShowClaimOnBehalfModal(false)} />}
             <YourTransactions gridColumns={12} gridColumnStart={1} />
         </>
     );
@@ -478,6 +509,10 @@ const MergeInfo = styled.div`
     padding: 3px;
 `;
 
+const Info = styled(MergeInfo)`
+    margin-bottom: 20px;
+`;
+
 const AddressesDelegatingToYouContainer = styled.div`
     grid-column: 9 / span 4;
     padding: 20px;
@@ -493,6 +528,10 @@ const AddressesDelegatingToYouTitle = styled.div`
     text-align: justify;
     text-transform: uppercase;
     margin-bottom: 30px;
+`;
+
+const ValidationMessage = styled.li`
+    color: ${(props) => props.theme.warning.textColor.primary};
 `;
 
 const DelegationAddress = styled.div`

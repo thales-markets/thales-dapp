@@ -4,7 +4,7 @@ import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-lo
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import Button from 'components/Button';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { SUPPORTED_NETWORK_IDS_MAP } from 'constants/network';
 import { Network } from 'enums/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
@@ -13,17 +13,17 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { NetworkId, getIsMainnet } from 'utils/network';
+import { getIsMainnet } from 'utils/network';
 
 const UnsupportedNetwork: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMainnet = getIsMainnet(networkId);
 
-    const getButton = (network: NetworkId) => {
+    const getButton = (networkId: Network) => {
         let logo;
         let text;
-        switch (network) {
+        switch (networkId) {
             case Network.Mainnet:
                 logo = <EthereumLogo />;
                 text = t(`common.unsupported-network.button.mainnet`);
@@ -50,7 +50,7 @@ const UnsupportedNetwork: React.FC = () => {
             <Button
                 width="250px"
                 additionalStyles={{ textTransform: 'none' }}
-                onClick={() => SUPPORTED_MAINNET_NETWORK_IDS_MAP[network].changeNetwork(network)}
+                onClick={() => SUPPORTED_NETWORK_IDS_MAP[networkId].changeNetwork(networkId)}
             >
                 {logo}
                 <ButtonText>{text}</ButtonText>

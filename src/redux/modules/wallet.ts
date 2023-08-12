@@ -1,17 +1,17 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { getAddress } from 'utils/formatters/ethers';
-import { defaultNetwork, NetworkId } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
-import { COLLATERALS_INDEX } from 'enums/options';
+import { Network } from 'enums/network';
+import { defaultNetwork } from 'constants/network';
 
 const sliceName = 'wallet';
 
 type WalletSliceState = {
     walletAddress: string | null;
-    networkId: NetworkId;
+    networkId: Network;
     networkName: string;
-    switchToNetworkId: NetworkId; // used to trigger manually network switch in App.js
-    selectedCollateral: COLLATERALS_INDEX;
+    switchToNetworkId: Network; // used to trigger manually network switch in App.js
+    selectedCollateralIndex: number;
 };
 
 const initialState: WalletSliceState = {
@@ -19,7 +19,7 @@ const initialState: WalletSliceState = {
     networkId: defaultNetwork.networkId,
     networkName: defaultNetwork.name,
     switchToNetworkId: defaultNetwork.networkId,
-    selectedCollateral: COLLATERALS_INDEX.sUSD,
+    selectedCollateralIndex: 0,
 };
 
 const walletDetailsSlice = createSlice({
@@ -39,7 +39,7 @@ const walletDetailsSlice = createSlice({
         updateNetworkSettings: (
             state,
             action: PayloadAction<{
-                networkId: NetworkId;
+                networkId: Network;
                 networkName: string;
             }>
         ) => {
@@ -51,13 +51,13 @@ const walletDetailsSlice = createSlice({
         switchToNetworkId: (
             state,
             action: PayloadAction<{
-                networkId: NetworkId;
+                networkId: Network;
             }>
         ) => {
             state.switchToNetworkId = action.payload.networkId;
         },
-        setSelectedCollateral: (state, action: PayloadAction<number>) => {
-            state.selectedCollateral = action.payload;
+        setSelectedCollateralIndex: (state, action: PayloadAction<number>) => {
+            state.selectedCollateralIndex = action.payload;
         },
     },
 });
@@ -73,13 +73,13 @@ export const getSwitchToNetworkId = (state: RootState) => getWalletState(state).
 export const getWalletAddress = (state: RootState) => getWalletState(state).walletAddress;
 export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);
 
-export const getSelectedCollateral = (state: RootState) => getWalletState(state).selectedCollateral;
+export const getSelectedCollateralIndex = (state: RootState) => getWalletState(state).selectedCollateralIndex;
 
 export const {
     updateNetworkSettings,
     switchToNetworkId,
     updateWallet,
-    setSelectedCollateral,
+    setSelectedCollateralIndex,
 } = walletDetailsSlice.actions;
 
 export default walletDetailsSlice.reducer;

@@ -79,4 +79,26 @@ export const NFT_COLLECTIONS = [
             { name: 'Boots', src: '/miletus-nfts/NFT_25.png', itemId: 26 },
         ],
     },
+    {
+        collectionId: 8,
+        name: 'COLLECTION APPRENTICE WIZARD',
+        condition: '"Apprentice Wizard is unlocked for all participants in the Decoration Competition',
+        items: [
+            { name: 'Hat', src: '/miletus-nfts/NFT_26.png', itemId: 27 },
+            { name: 'Robe', src: '/miletus-nfts/NFT_27.png', itemId: 28 },
+            { name: 'Boots', src: '/miletus-nfts/NFT_28.png', itemId: 29 },
+            { name: 'Staff', src: '/miletus-nfts/NFT_29.png', itemId: 30 },
+        ],
+    },
+    {
+        collectionId: 9,
+        name: 'COLLECTION ELDER WIZARD',
+        condition: '"Elder Wizard is unlocked for the winners of the Decoration Competition',
+        items: [
+            { name: 'Hat', src: '/miletus-nfts/NFT_30.png', itemId: 31 },
+            { name: 'Robe', src: '/miletus-nfts/NFT_31.png', itemId: 32 },
+            { name: 'Boots', src: '/miletus-nfts/NFT_32.png', itemId: 33 },
+            { name: 'Staff', src: '/miletus-nfts/NFT_33.png', itemId: 34 },
+        ],
+    },
 ];

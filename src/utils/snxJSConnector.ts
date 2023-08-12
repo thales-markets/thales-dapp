@@ -3,12 +3,13 @@ import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import liquidityPoolDataContract from 'utils/contracts/liquidityPoolDataContract';
 import sportLiquidityPoolContract from 'utils/contracts/sportLiquidityPoolContract';
+import parlayLiquidityPoolContract from 'utils/contracts/parlayLiquidityPoolContract';
 import stakingDataContract from 'utils/contracts/stakingDataContract';
 import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import bridgeContract from './contracts/bridgeContract';
-import usdcContract from './contracts/collateralContract';
+import collateralContract from './contracts/collateralContract';
 import escrowThales from './contracts/escrowThales';
 import { gelatoContract } from './contracts/gelatoContract';
 import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
@@ -21,6 +22,7 @@ import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
+import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -44,11 +46,13 @@ type SnxJSConnector = {
     bridgeContract?: ethers.Contract;
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
     sportLiquidityPoolContract?: ethers.Contract;
+    parlayLiquidityPoolContract?: ethers.Contract;
     liquidityPoolContract?: ethers.Contract;
     liquidityPoolDataContract?: ethers.Contract;
     taleOfThalesNFTContract?: ethers.Contract;
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
+    stakingBonusRewardsManager?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -68,7 +72,7 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketManagerContract,
             contractSettings
         );
-        this.collateral = conditionalInitializeContract(usdcContract, contractSettings);
+        this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
 
         this.multipleCollateral = [
             conditionalInitializeContract(multipleCollateral['sUSD'], contractSettings),
@@ -93,11 +97,13 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.sportLiquidityPoolContract = conditionalInitializeContract(sportLiquidityPoolContract, contractSettings);
+        this.parlayLiquidityPoolContract = conditionalInitializeContract(parlayLiquidityPoolContract, contractSettings);
         this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
         this.liquidityPoolDataContract = conditionalInitializeContract(liquidityPoolDataContract, contractSettings);
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
+        this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
     },
 };
 

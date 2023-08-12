@@ -1,4 +1,3 @@
-import { COLLATERALS } from 'constants/options';
 import { Positions } from 'enums/options';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
@@ -10,13 +9,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
-import { AccountMarketInfo, RangedMarketBalanceInfo, StableCoins } from 'types/options';
+import { AccountMarketInfo, RangedMarketBalanceInfo } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { getCollateral, getDefaultCollateral, getStableCoinBalance } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type WalletBalanceProps = {
@@ -32,7 +31,7 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
+    const userSelectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
 
     let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
@@ -66,26 +65,20 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
     const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && walletAddress !== '' && userSelectedCollateral !== 0,
+        enabled: isAppReady && walletAddress !== '' && userSelectedCollateralIndex !== 0,
     });
 
     const sUSDBalance =
-        userSelectedCollateral && Number(userSelectedCollateral) !== 0
-            ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[userSelectedCollateral] as StableCoins)
-            : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId)) || 0;
+        userSelectedCollateralIndex && Number(userSelectedCollateralIndex) !== 0
+            ? getStableCoinBalance(multipleStableBalances?.data, getCollateral(networkId, userSelectedCollateralIndex))
+            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId)) || 0;
 
     return (
         <Wrapper>
             <Label>{t(`common.wallet.balance`)}:</Label>
             <BalanceContainer>
                 <Balance>
-                    {formatCurrencyWithKey(
-                        getStableCoinForNetwork(
-                            networkId,
-                            userSelectedCollateral ? (COLLATERALS[userSelectedCollateral] as StableCoins) : undefined
-                        ),
-                        sUSDBalance
-                    )}
+                    {formatCurrencyWithKey(getCollateral(networkId, userSelectedCollateralIndex), sUSDBalance)}
                 </Balance>
                 {!!tokenBalance && <Balance>{formatCurrencyWithKey(positionType, tokenBalance)}</Balance>}
             </BalanceContainer>

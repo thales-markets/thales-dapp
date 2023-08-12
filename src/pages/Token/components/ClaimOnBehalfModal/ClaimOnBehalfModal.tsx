@@ -11,7 +11,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
 import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import TextInput from 'components/fields/TextInput';
@@ -23,6 +22,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -72,10 +72,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 
             const tx = await stakingThalesContractWithSigner.setCanClaimOnBehalf(
                 getAddress(account),
-                !canClaimOnBehalf,
-                {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                }
+                !canClaimOnBehalf
             );
             const txResult = await tx.wait();
 
@@ -185,6 +182,9 @@ const Container = styled(FlexDivColumnCentered)`
     min-width: 70px;
     position: relative;
     width: 380px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 325px;
+    }
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`

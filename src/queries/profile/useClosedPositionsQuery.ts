@@ -3,9 +3,9 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
 import { UserPosition } from 'types/profile';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
-import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
+import { MAX_MATURITY, MIN_MATURITY, POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
@@ -13,15 +13,13 @@ import { isOptionClaimable } from 'utils/options';
 import { orderBy } from 'lodash';
 
 const useClosedPositionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<UserPosition[]>
 ) => {
     return useQuery<UserPosition[]>(
         QUERY_KEYS.Profile.ClosedPositions(walletAddress, networkId),
         async () => {
-            const today = new Date();
-
             const [positionBalances, rangedPositionBalances, userMarketTransactions] = await Promise.all([
                 thalesData.binaryOptions.positionBalances({
                     max: Infinity,
@@ -118,20 +116,20 @@ const useClosedPositionsQuery = (
             });
             const rangedMarketIds = filteredUserMarketTransactions.map((tx: any) => tx.market);
 
-            const maxMaturity = Math.round(Number(today.getTime() / 1000));
-
             const [optionsMarkets, rangedMarkets] = await Promise.all([
                 thalesData.binaryOptions.markets({
                     max: Infinity,
                     network: networkId,
-                    maxMaturity,
+                    minMaturity: MIN_MATURITY,
+                    maxMaturity: MAX_MATURITY,
                 }),
                 rangedMarketIds.length > 0
                     ? thalesData.binaryOptions.rangedMarkets({
                           max: Infinity,
                           network: networkId,
                           marketIds: rangedMarketIds,
-                          maxMaturity,
+                          minMaturity: MIN_MATURITY,
+                          maxMaturity: MAX_MATURITY,
                       })
                     : [],
             ]);

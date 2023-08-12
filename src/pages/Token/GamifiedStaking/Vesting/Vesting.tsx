@@ -2,7 +2,6 @@ import Button from 'components/Button/Button';
 import TileTable from 'components/TileTable';
 import { TileRow } from 'components/TileTable/TileTable';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import { ButtonContainer } from 'pages/Token/styled-components';
@@ -88,9 +87,7 @@ const Vesting: React.FC = () => {
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
 
-            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            })) as ethers.ContractTransaction;
+            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable)) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

@@ -55,14 +55,14 @@ import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
 import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
 import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
 import vaultContract from 'utils/contracts/ammVaultContract';
-import { getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultCollateral } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInput';
@@ -71,7 +71,6 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
 import Button from 'components/Button/Button';
@@ -86,6 +85,7 @@ import {
 import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
 import { buildHref } from '../../utils/routes';
 import ROUTES from '../../constants/routes';
+import { navigateTo } from 'utils/routes';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -110,8 +110,14 @@ const Vault: React.FC<VaultProps> = (props) => {
     const [lastValidUserVaultData, setLastValidUserVaultData] = useState<UserVaultData | undefined>(undefined);
 
     const { params } = props.match;
-    const vaultId = params && params.vaultId ? params.vaultId : '';
-    const vaultAddress = !!VAULT_MAP[vaultId] ? VAULT_MAP[vaultId].addresses[networkId] : undefined;
+    const vaultId = params && params.vaultId && !!VAULT_MAP[params.vaultId] ? params.vaultId : '';
+    const vaultAddress = !!vaultId ? VAULT_MAP[vaultId].addresses[networkId] : undefined;
+
+    useEffect(() => {
+        if (!vaultAddress) {
+            navigateTo(ROUTES.Options.Vaults);
+        }
+    }, []);
 
     const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -120,7 +126,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
             setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getStableCoinForNetwork(networkId))
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
@@ -236,9 +242,10 @@ const Vault: React.FC<VaultProps> = (props) => {
             try {
                 const collateralWithSigner = collateral.connect(signer);
 
-                const tx = (await collateralWithSigner.approve(vaultAddress, approveAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await collateralWithSigner.approve(
+                    vaultAddress,
+                    approveAmount
+                )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
 
@@ -277,9 +284,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     getDefaultDecimalsForNetwork(networkId)
                 );
 
-                const tx = await ammVaultContractWithSigner.deposit(parsedAmount, {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await ammVaultContractWithSigner.deposit(parsedAmount);
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
@@ -307,9 +312,7 @@ const Vault: React.FC<VaultProps> = (props) => {
             try {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
-                const tx = await ammVaultContractWithSigner.withdrawalRequest({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = await ammVaultContractWithSigner.withdrawalRequest();
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {

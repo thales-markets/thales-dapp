@@ -2,6 +2,7 @@ import { Phase } from '../types/options';
 import { formatCurrency } from './formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
+import { MARKET_DURATION_IN_DAYS } from '../constants/options';
 
 export const getPhaseAndEndDate = (
     maturityDate: number,
@@ -53,3 +54,6 @@ export const isOptionClaimable = (positionBalance: any) =>
     (positionBalance.position.side === 'short' && positionBalance.position.market.result === 1) ||
     (positionBalance.position.side === 'in' && positionBalance.position.market.result === 0) ||
     (positionBalance.position.side === 'out' && positionBalance.position.market.result === 1);
+
+export const getMinMaturityDateForClaim = () =>
+    Math.round(new Date(new Date().setDate(new Date().getDate() - MARKET_DURATION_IN_DAYS)).getTime() / 1000);

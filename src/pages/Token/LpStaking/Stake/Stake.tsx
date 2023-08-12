@@ -17,7 +17,6 @@ import { FlexDivColumnCentered } from 'styles/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import { toast } from 'react-toastify';
@@ -94,9 +93,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await lpStakingRewardsContractWithSigner.stake(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await lpStakingRewardsContractWithSigner.stake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -123,9 +120,10 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         const addressToApprove = lpStakingRewardsContract.address;
         try {
             setIsAllowingStake(true);
-            const tx = (await gelatoContractWithSigner.approve(addressToApprove, approveAmount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            })) as ethers.ContractTransaction;
+            const tx = (await gelatoContractWithSigner.approve(
+                addressToApprove,
+                approveAmount
+            )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {

@@ -1,22 +1,22 @@
 import { BigNumber, ethers } from 'ethers';
 import { OptionSide, RangedMarketPositionType } from 'types/options';
 import { ZERO_ADDRESS } from '../constants/network';
+import { Network } from 'enums/network';
 
 export const getQuoteFromAMM = (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     parsedAmount: BigNumber,
     marketAddress: string,
     side: number | OptionSide,
-    sellToken?: string,
-    excludeImpact?: boolean
+    collateral?: string
 ) => {
     const promises = [];
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
         promises.push(
-            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, sellToken)
+            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, collateral)
         );
         promises.push(ammContractWithSigner.buyPriceImpact(marketAddress, side, parsedAmount));
     } else {
@@ -32,28 +32,23 @@ export const getQuoteFromAMM = (
         );
     }
 
-    if (excludeImpact) {
-        return promises[0];
-    }
-
     return promises;
 };
 
 export const getQuoteFromRangedAMM = (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     parsedAmount: BigNumber,
     marketAddress: string,
     side: number | RangedMarketPositionType,
-    sellToken?: string,
-    excludeImpact?: boolean
+    collateral?: string
 ) => {
     const promises = [];
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
         promises.push(
-            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, sellToken)
+            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, collateral)
         );
         promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     } else {
@@ -65,15 +60,13 @@ export const getQuoteFromRangedAMM = (
         promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     }
 
-    if (excludeImpact) {
-        return promises[0];
-    }
-
     return promises;
 };
 
+const GAS_ESTIMATION_BUFFER = 1.2; // Adding 20% on gas estimation as a buffer. Used only on Optimism
+
 export const prepareTransactionForAMM = async (
-    isNonDefaultStable: boolean,
+    isBuyWithNonDefaultCollateral: boolean,
     isBuy: boolean,
     ammContractWithSigner: any,
     marketAddress: string,
@@ -81,32 +74,67 @@ export const prepareTransactionForAMM = async (
     parsedAmount: BigNumber,
     parsedTotal: BigNumber,
     parsedSlippage: BigNumber,
-    sellToken: string | undefined,
+    collateral: string | undefined,
     referral: string | null,
-    providerOptions:
-        | {
-              gasLimit: number | null;
-              gasPrice: BigNumber;
-          }
-        | {
-              gasLimit: number | null;
-              gasPrice?: undefined;
-          }
+    networkId: Network
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
+    let finalEstimation = null;
 
-    if (isNonDefaultStable) {
+    if (isBuyWithNonDefaultCollateral) {
+        if (networkId === Network['Mainnet-Ovm']) {
+            const estimation = await ammContractWithSigner.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(
+                marketAddress,
+                side,
+                parsedAmount,
+                parsedTotal,
+                parsedSlippage,
+                collateral,
+                referral ? referral : ZERO_ADDRESS
+            );
+            finalEstimation = Math.ceil(Number(estimation) * GAS_ESTIMATION_BUFFER); // using Math.celi as gasLimit is accepting only integer.
+        }
+
         tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
             marketAddress,
             side,
             parsedAmount,
             parsedTotal,
             parsedSlippage,
-            sellToken,
+            collateral,
             referral ? referral : ZERO_ADDRESS,
-            providerOptions
+            { gasLimit: finalEstimation }
         )) as ethers.ContractTransaction;
     } else {
+        if (networkId === Network['Mainnet-Ovm']) {
+            const estimation = isBuy
+                ? !referral
+                    ? await ammContractWithSigner.estimateGas.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      )
+                    : await ammContractWithSigner.estimateGas.buyFromAMMWithReferrer(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage,
+                          referral
+                      )
+                : await ammContractWithSigner.estimateGas.sellToAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  );
+
+            finalEstimation = Math.ceil(Number(estimation) * GAS_ESTIMATION_BUFFER);
+        }
+
         tx = (isBuy
             ? !referral
                 ? await ammContractWithSigner.buyFromAMM(
@@ -115,7 +143,7 @@ export const prepareTransactionForAMM = async (
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      providerOptions
+                      { gasLimit: finalEstimation }
                   )
                 : await ammContractWithSigner.buyFromAMMWithReferrer(
                       marketAddress,
@@ -124,16 +152,11 @@ export const prepareTransactionForAMM = async (
                       parsedTotal,
                       parsedSlippage,
                       referral,
-                      providerOptions
+                      { gasLimit: finalEstimation }
                   )
-            : await ammContractWithSigner.sellToAMM(
-                  marketAddress,
-                  side,
-                  parsedAmount,
-                  parsedTotal,
-                  parsedSlippage,
-                  providerOptions
-              )) as ethers.ContractTransaction;
+            : await ammContractWithSigner.sellToAMM(marketAddress, side, parsedAmount, parsedTotal, parsedSlippage, {
+                  gasLimit: finalEstimation,
+              })) as ethers.ContractTransaction;
     }
 
     return tx;

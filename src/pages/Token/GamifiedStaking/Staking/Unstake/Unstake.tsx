@@ -4,7 +4,6 @@ import TimeRemaining from 'components/TimeRemaining';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
@@ -18,7 +17,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
@@ -116,9 +115,7 @@ const Unstake: React.FC = () => {
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
-            const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.startUnstake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -148,7 +145,7 @@ const Unstake: React.FC = () => {
         try {
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.unstake({ gasLimit: getMaxGasLimitForNetwork(networkId) });
+            const tx = await stakingThalesContractWithSigner.unstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -176,9 +173,7 @@ const Unstake: React.FC = () => {
         try {
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.cancelUnstake({
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            });
+            const tx = await stakingThalesContractWithSigner.cancelUnstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -431,7 +426,7 @@ const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
     }
 `;
 
-const ButtonWrapperTooltip = styled.div`
+const ButtonWrapperTooltip = styled(FlexDivCentered)`
     width: 100%;
 `;
 

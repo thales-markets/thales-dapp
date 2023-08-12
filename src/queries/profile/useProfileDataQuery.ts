@@ -1,14 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
 
-const useProfileDataQuery = (
-    networkId: NetworkId,
-    walletAddress: string,
-    options?: UseQueryOptions<UserProfileData>
-) => {
+const useProfileDataQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<UserProfileData>) => {
     return useQuery<UserProfileData>(
         QUERY_KEYS.Profile.Data(walletAddress, networkId),
         async () => {

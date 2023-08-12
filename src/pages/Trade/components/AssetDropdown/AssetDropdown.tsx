@@ -15,8 +15,14 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper onClick={() => setOpen(!open)}>
-                <Asset open={open} asset={asset} setAsset={setAsset} showDropDownIcon={true} selectedAsset={true} />
-                {open && (
+                <Asset
+                    open={open}
+                    asset={asset}
+                    setAsset={setAsset}
+                    showDropDownIcon={!!allAssets.length}
+                    selectedAsset={true}
+                />
+                {open && !!allAssets.length && (
                     <AssetContainer>
                         {allAssets.map((_asset, index) => (
                             <Asset key={index} asset={_asset} setAsset={setAsset} />
@@ -38,7 +44,7 @@ type AssetProps = {
 
 const Asset: React.FC<AssetProps> = ({ asset, setAsset, open, showDropDownIcon = false, selectedAsset = false }) => {
     return (
-        <Container onClick={() => setAsset(asset)} isSelected={selectedAsset}>
+        <Container onClick={() => setAsset(asset)} isSelected={selectedAsset} isClickable={showDropDownIcon}>
             <AssetWrapper>
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
@@ -59,7 +65,7 @@ const Icon = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const Container = styled.div<{ isSelected?: boolean }>`
+const Container = styled.div<{ isSelected?: boolean; isClickable?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -68,7 +74,7 @@ const Container = styled.div<{ isSelected?: boolean }>`
     max-height: 23px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
-    cursor: pointer;
+    cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
     &:hover {
         ${(props) => (!props.isSelected ? `background: ${props.theme.background.primary};` : '')};
     }

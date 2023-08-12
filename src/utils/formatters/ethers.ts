@@ -1,7 +1,7 @@
-import { STABLE_DECIMALS } from 'constants/options';
-import { Network } from 'enums/network';
+import { STABLE_DECIMALS } from 'constants/currency';
 import { BigNumberish, ethers } from 'ethers';
 import { StableCoins } from 'types/options';
+import { getDefaultDecimalsForNetwork } from 'utils/network';
 
 export const bytesFormatter = (input: string) => ethers.utils.formatBytes32String(input);
 
@@ -10,34 +10,16 @@ export const parseBytes32String = (input: string) => ethers.utils.parseBytes32St
 export const bigNumberFormatter = (value: BigNumberish, decimals?: number) =>
     Number(ethers.utils.formatUnits(value, decimals ? decimals : 18));
 
-export const stableCoinFormatter = (value: BigNumberish, networkId: number, currency?: string) => {
-    if (networkId == Network['POLYGON-MAINNET'] || networkId == Network.Arbitrum) {
-        return Number(ethers.utils.formatUnits(value, 6));
-    }
+export const stableCoinFormatter = (value: BigNumberish, networkId: number, currency?: StableCoins) => {
+    const decimals = currency ? STABLE_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId);
 
-    if (networkId == Network.BSC) {
-        return Number(ethers.utils.formatUnits(value, 18));
-    }
-
-    if (currency && STABLE_DECIMALS[currency as StableCoins]) {
-        return Number(ethers.utils.formatUnits(value, STABLE_DECIMALS[currency as StableCoins]));
-    }
-
-    return Number(ethers.utils.formatUnits(value, 18));
+    return Number(ethers.utils.formatUnits(value, decimals));
 };
 
-export const stableCoinParser = (value: string, networkId: number, currency?: string) => {
-    if (networkId == Network['POLYGON-MAINNET'] || networkId == Network.Arbitrum) {
-        return ethers.utils.parseUnits(value, 6);
-    }
-    if (networkId == Network.BSC) {
-        return ethers.utils.parseUnits(value, 18);
-    }
-    if (currency && STABLE_DECIMALS[currency as StableCoins]) {
-        return ethers.utils.parseUnits(value, STABLE_DECIMALS[currency as StableCoins]);
-    }
+export const stableCoinParser = (value: string, networkId: number, currency?: StableCoins) => {
+    const decimals = currency ? STABLE_DECIMALS[currency] : getDefaultDecimalsForNetwork(networkId);
 
-    return ethers.utils.parseUnits(value, 18);
+    return ethers.utils.parseUnits(value, decimals);
 };
 
 export const getAddress = (addr: string) => ethers.utils.getAddress(addr);

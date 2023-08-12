@@ -11,7 +11,7 @@ export const VoteRow = styled(FlexDivColumnCentered)`
 export const VoteLabel = styled.div`
     width: 125px;
     @media (max-width: 575px) {
-        width: 105px;
+        width: 100px;
     }
 `;
 

@@ -3,7 +3,6 @@ import Button from 'components/Button/Button';
 import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import useGelatoQuery from 'queries/token/useGelatoQuery';
@@ -126,9 +125,7 @@ const LpStaking: React.FC = () => {
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await lpStakingRewardsContractWithSigner.getReward({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await lpStakingRewardsContractWithSigner.getReward()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {

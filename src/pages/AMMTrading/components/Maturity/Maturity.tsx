@@ -37,16 +37,15 @@ import {
     refetchUserNotifications,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getMaxGasLimitForNetwork } from 'constants/options';
 import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'utils/formatters/number';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from '../../../../utils/currency';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
+import { getDefaultCollateral } from 'utils/currency';
 
 type MaturityProps = {
     isRangedMarket: boolean;
@@ -107,13 +106,9 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx = (isRangedMarket
-                ? await BOMContractWithSigner.exercisePositions(providerOptions)
-                : await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
+                ? await BOMContractWithSigner.exercisePositions()
+                : await BOMContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -173,7 +168,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             <InfoLabel>{t('markets.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
                             <Info>
                                 {formatCurrencyWithKey(
-                                    getStableCoinForNetwork(networkId),
+                                    getDefaultCollateral(networkId),
                                     isRangedMarket
                                         ? isInResult
                                             ? inAmount

@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { SUPPORTED_NETWORK_IDS_MAP, defaultNetwork } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { NetworkId, defaultNetwork, hasEthereumInjected } from 'utils/network';
 import UserSwap from '../UserSwap';
+import { getIsMobile } from 'redux/modules/ui';
+import { Network } from 'enums/network';
+import { useSwitchNetwork } from 'wagmi';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -19,24 +21,33 @@ const UserWallet: React.FC = () => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
     const { openAccountModal } = useAccountModal();
+    const { switchNetwork } = useSwitchNetwork();
     const dispatch = useDispatch();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [walletText, setWalletText] = useState('');
 
     // TODO: add support for testnets
     const selectedNetwork = useMemo(
-        () =>
-            SUPPORTED_MAINNET_NETWORK_IDS_MAP[networkId] || SUPPORTED_MAINNET_NETWORK_IDS_MAP[defaultNetwork.networkId],
+        () => SUPPORTED_NETWORK_IDS_MAP[networkId] || SUPPORTED_NETWORK_IDS_MAP[defaultNetwork.networkId],
         [networkId]
     );
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { trackEvent } = useMatomo();
+
+    // currently not supported network synchronization between browser without integrated wallet and wallet app on mobile
+    const hideNetworkSwitcher =
+        isMobile &&
+        !window.ethereum?.isMetaMask &&
+        !window.ethereum?.isBraveWallet &&
+        !window.ethereum?.isCoinbaseWallet &&
+        !window.ethereum?.isTrust;
 
     return (
         <Container isWalletConnected={isWalletConnected}>
@@ -77,31 +88,47 @@ const UserWallet: React.FC = () => {
                                     style: { marginRight: 5 },
                                 })}
                                 {selectedNetwork.name}
-                                <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                                {!hideNetworkSwitcher && (
+                                    <Icon
+                                        className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`}
+                                    />
+                                )}
                             </NetworkItem>
-                            {isDropdownOpen && (
+                            {!hideNetworkSwitcher && isDropdownOpen && (
                                 <NetworkDropDown>
-                                    {Object.keys(SUPPORTED_MAINNET_NETWORK_IDS_MAP).map((id) => (
-                                        <NetworkItem
-                                            key={id}
-                                            onClick={() => {
-                                                if (hasEthereumInjected()) {
+                                    {Object.keys(SUPPORTED_NETWORK_IDS_MAP)
+                                        .map((key) => {
+                                            return { id: Number(key), ...SUPPORTED_NETWORK_IDS_MAP[Number(key)] };
+                                        })
+                                        .sort((a, b) => a.order - b.order)
+                                        .map((network, index) => (
+                                            <NetworkItem
+                                                key={index}
+                                                onClick={async () => {
                                                     setIsDropdownOpen(!isDropdownOpen);
-                                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id, undefined);
-                                                }
-                                                // Trigger App.js init
-                                                // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
-                                                dispatch(switchToNetworkId({ networkId: Number(id) as NetworkId }));
-                                            }}
-                                        >
-                                            {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {
-                                                height: '18px',
-                                                width: '18px',
-                                                style: { marginRight: 5 },
-                                            })}
-                                            {SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].name}
-                                        </NetworkItem>
-                                    ))}
+                                                    await SUPPORTED_NETWORK_IDS_MAP[network.id].changeNetwork(
+                                                        network.id,
+                                                        () => {
+                                                            switchNetwork?.(network.id);
+                                                            // Trigger App.js init
+                                                            // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
+                                                            dispatch(
+                                                                switchToNetworkId({
+                                                                    networkId: Number(network.id) as Network,
+                                                                })
+                                                            );
+                                                        }
+                                                    );
+                                                }}
+                                            >
+                                                {React.createElement(SUPPORTED_NETWORK_IDS_MAP[network.id].icon, {
+                                                    height: '18px',
+                                                    width: '18px',
+                                                    style: { marginRight: 5 },
+                                                })}
+                                                {SUPPORTED_NETWORK_IDS_MAP[network.id].name}
+                                            </NetworkItem>
+                                        ))}
                                 </NetworkDropDown>
                             )}
                         </SelectedNetworkContainer>
@@ -115,7 +142,7 @@ const UserWallet: React.FC = () => {
 const Container = styled.div<{ isWalletConnected: boolean }>`
     width: 400px;
     @media (max-width: 500px) {
-        width: 270px;
+        width: 100%;
     }
 `;
 
@@ -147,8 +174,8 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     text-align: center;
     @media (max-width: 500px) {
         min-width: fit-content;
-        border-right: none;
-        padding: 4px 10px;
+        max-width: 120px;
+        padding: 4px 7px;
     }
 `;
 
@@ -157,9 +184,6 @@ const NetworkInfoContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    @media (max-width: 500px) {
-        display: none;
-    }
 `;
 
 const NetworkDropDown = styled.div`
@@ -177,6 +201,9 @@ const NetworkDropDown = styled.div`
     justify-content: center;
     align-items: center;
     gap: 5px;
+    @media (max-width: 500px) {
+        width: 110px;
+    }
 `;
 
 const SelectedNetworkContainer = styled.div<{ cursor: string }>`
@@ -189,6 +216,9 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;
+    @media (max-width: 500px) {
+        width: 110px;
+    }
 `;
 
 const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
@@ -204,6 +234,9 @@ const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
     svg {
         width: 16px;
         height: 16px;
+    }
+    @media (max-width: 500px) {
+        ${(props) => (props.selectedItem ? 'padding: 4px 7px' : '')}
     }
 `;
 

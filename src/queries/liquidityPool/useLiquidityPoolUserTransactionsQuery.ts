@@ -2,10 +2,10 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { LiquidityPoolUserTransactions } from 'types/liquidityPool';
-import { NetworkId } from 'utils/network';
+import { Network } from 'enums/network';
 
 const useLiquidityPoolUserTransactionsQuery = (
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<LiquidityPoolUserTransactions>
 ) => {
     return useQuery<LiquidityPoolUserTransactions>(

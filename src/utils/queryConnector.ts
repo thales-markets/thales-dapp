@@ -1,7 +1,7 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { SpaceKey } from 'enums/governance';
+import { Network } from 'enums/network';
 import { QueryClient } from 'react-query';
-import { NetworkId } from 'utils/network';
 
 type QueryConnector = {
     queryClient: QueryClient;
@@ -35,7 +35,7 @@ export const refetchRangeMarketQueries = (
     walletAddress: string,
     BOMContractAddress: string,
     marketAddress: string,
-    networkId: NetworkId
+    networkId: Network
 ) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.RangedMarket(BOMContractAddress));
 
@@ -46,15 +46,15 @@ export const refetchRangeMarketQueries = (
     }
 };
 
-export const refetchUserNotifications = (walletAddress: string, networkId: NetworkId) => {
+export const refetchUserNotifications = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Notifications(walletAddress, networkId));
 };
 
-export const refetchUserOpenPositions = (walletAddress: string, networkId: NetworkId) => {
+export const refetchUserOpenPositions = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
 };
 
-export const refetchUserProfileQueries = (walletAddress: string, networkId: NetworkId) => {
+export const refetchUserProfileQueries = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Data(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.ClaimablePositions(walletAddress, networkId));
@@ -69,14 +69,14 @@ export const refetchAmmData = (walletAddress: string, marketAddress: string) => 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
 
-export const refetchRangedAmmData = (walletAddress: string, marketAddress: string, networkId: NetworkId) => {
+export const refetchRangedAmmData = (walletAddress: string, marketAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.BinaryOptions.UserRangedMarketPositions(marketAddress, walletAddress, networkId)
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
 
-export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId) => {
+export const refetchTokenQueries = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingData(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.UserStakingData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.UserVestingData(walletAddress, networkId));
@@ -84,27 +84,27 @@ export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId)
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Thales(walletAddress, networkId));
 };
 
-export const refetchLPStakingQueries = (walletAddress: string, networkId: NetworkId) => {
+export const refetchLPStakingQueries = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.GelatoBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Gelato());
 };
 
-export const refetchUserTokenTransactions = (walletAddress: string, networkId: NetworkId) => {
+export const refetchUserTokenTransactions = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId, undefined));
 };
 
-export const refetchMigratedInvestorsRetroRewards = (walletAddress: string, networkId: NetworkId) => {
+export const refetchMigratedInvestorsRetroRewards = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.Token.MigratedInvestorsRetroRewards(walletAddress, networkId)
     );
 };
 
-export const refetchVestingEscrow = (walletAddress: string, networkId: NetworkId) => {
+export const refetchVestingEscrow = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.VestingEscrow(walletAddress, networkId));
 };
 
-export const refetchBalances = (walletAddress: string, networkId: NetworkId) => {
+export const refetchBalances = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
@@ -115,7 +115,7 @@ export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress:
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
-export const refetchVaultData = (vaultAddress: string, walletAddress: string, networkId: NetworkId) => {
+export const refetchVaultData = (vaultAddress: string, walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Data(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserData(vaultAddress, walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.PnL(vaultAddress, networkId));
@@ -123,11 +123,17 @@ export const refetchVaultData = (vaultAddress: string, walletAddress: string, ne
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
 };
 
-export const refetchLiquidityPoolData = (walletAddress: string, networkId: NetworkId) => {
+export const refetchLiquidityPoolData = (walletAddress: string, networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId));
+};
+
+export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, networkId, period)
+    );
 };
 
 export default queryConnector;

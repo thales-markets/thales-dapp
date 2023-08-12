@@ -49,6 +49,7 @@ type TableProps = {
     stickyRow?: JSX.Element;
     showCurrentPrice?: boolean;
     selectedRowIndex?: number;
+    hoverColor?: string;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -70,6 +71,7 @@ const Table: React.FC<TableProps> = ({
     stickyRow,
     showCurrentPrice,
     selectedRowIndex,
+    hoverColor,
 }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -155,7 +157,7 @@ const Table: React.FC<TableProps> = ({
                         indexOfElement = i;
                         break;
                     }
-                    if (markets[i].strikePrice > currentPrice && markets[i + 1].strikePrice < currentPrice) {
+                    if (markets[i].strikePrice >= currentPrice && markets[i + 1].strikePrice <= currentPrice) {
                         indexOfElement = i;
                         break;
                     }
@@ -221,6 +223,7 @@ const Table: React.FC<TableProps> = ({
                                             tableRowCellStyles={tableRowCellStyles}
                                             isVisible={false}
                                             tableRowStyles={tableRowStyles}
+                                            hoverColor={hoverColor}
                                         >
                                             {expandedRow(row)}
                                         </ExpandableRowReact>
@@ -236,6 +239,7 @@ const Table: React.FC<TableProps> = ({
                                                         onClick={
                                                             onTableRowClick ? () => onTableRowClick(row) : undefined
                                                         }
+                                                        hover={hoverColor}
                                                     >
                                                         {row.cells.map((cell, cellIndex: any) => {
                                                             return (
@@ -259,6 +263,7 @@ const Table: React.FC<TableProps> = ({
                                                     {...row.getRowProps()}
                                                     cursorPointer={!!onTableRowClick}
                                                     onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
+                                                    hover={hoverColor}
                                                 >
                                                     {row.cells.map((cell, cellIndex: any) => {
                                                         return (
@@ -279,12 +284,19 @@ const Table: React.FC<TableProps> = ({
                                             {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
                                                 <PriceWrapper ref={elementRef as any}>
                                                     <Price>
-                                                        {formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            indexForDrawingAndPrice?.price ?? 0,
-                                                            2
-                                                        )}
+                                                        {(indexForDrawingAndPrice?.price as any) < 0.01
+                                                            ? formatCurrencyWithSign(
+                                                                  USD_SIGN,
+                                                                  indexForDrawingAndPrice?.price ?? 0
+                                                              )
+                                                            : formatCurrencyWithSign(
+                                                                  USD_SIGN,
+                                                                  indexForDrawingAndPrice?.price ?? 0,
+                                                                  2
+                                                              )}
                                                     </Price>
+                                                    <DirectedArrowIcon className="icon icon--caret-up" top="-12px" />
+                                                    <DirectedArrowIcon className="icon icon--caret-down" top="0" />
                                                 </PriceWrapper>
                                             )}
                                         </>
@@ -303,7 +315,7 @@ const PriceWrapper = styled.div`
     width: 100%;
     height: 0;
     border-top: 1px dashed ${(props) => props.theme.borderColor.tertiary};
-    margin: 8px 0;
+    margin: 9px 0 10px 0;
     position: relative;
 `;
 
@@ -327,7 +339,6 @@ const Price = styled.div`
 
     font-weight: 700;
     font-size: 10px;
-    line-height: 90%;
 
     text-align: center;
     color: ${(props) => props.theme.borderColor.tertiary};
@@ -338,7 +349,8 @@ const ExpandableRowReact: React.FC<{
     tableRowStyles: React.CSSProperties;
     row: Row<any>;
     tableRowCellStyles: React.CSSProperties;
-}> = ({ isVisible, tableRowStyles, row, tableRowCellStyles, children }) => {
+    hoverColor?: string;
+}> = ({ isVisible, tableRowStyles, row, tableRowCellStyles, children, hoverColor }) => {
     const [hidden, setHidden] = useState<boolean>(!isVisible);
 
     return (
@@ -348,6 +360,7 @@ const ExpandableRowReact: React.FC<{
                 {...row.getRowProps()}
                 cursorPointer={true}
                 onClick={setHidden.bind(this, !hidden)}
+                hover={hoverColor}
             >
                 {row.cells.map((cell, cellIndex: any) => (
                     <TableCell
@@ -360,7 +373,6 @@ const ExpandableRowReact: React.FC<{
                         {cell.render('Cell')}
                     </TableCell>
                 ))}
-                <ArrowIcon className={hidden ? 'icon icon--arrow-down' : 'icon icon--arrow-up'} />
             </TableRow>
             <ExpandableRow style={{ display: hidden ? 'none' : 'block' }}>{children}</ExpandableRow>
         </>
@@ -382,7 +394,7 @@ const TableBody = styled.div`
     width: 100%;
 `;
 
-const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string; selected?: boolean }>`
+const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string; selected?: boolean; hover?: string }>`
     cursor: ${(props) => (props.cursorPointer ? 'pointer' : 'default')};
     min-height: 24px;
     height: 35px;
@@ -394,7 +406,7 @@ const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string;
     background-color: ${(props) => (props.selected ? props.theme.background.quaternary : 'transparent')};
     &:hover {
         background-color: ${(props) =>
-            props.selected ? props.theme.background.quaternary : props.theme.background.secondary};
+            props.selected ? props.theme.background.quaternary : props.hover ?? 'transparent'};
     }
 
     justify-content: space-around;
@@ -485,22 +497,16 @@ const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
     }
 `;
 
-// const CellAlignment: Record<string, string> = {
-//     wallet: 'center',
-//     points: 'center',
-//     rewards: 'center',
-//     finishTime: 'center',
-// };
-
 const ExpandableRow = styled.div`
     display: block;
 `;
 
-const ArrowIcon = styled.i`
-    font-size: 9px;
-    display: flex;
-    align-items: center;
-    margin-right: 6px;
+const DirectedArrowIcon = styled.i<{ top: string }>`
+    position: absolute;
+    top: ${(props) => props.top};
+    right: 0;
+    color: ${(props) => props.theme.borderColor.tertiary};
+    font-size: 11px;
 `;
 
 export default Table;

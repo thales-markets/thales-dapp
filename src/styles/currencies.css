@@ -10,6 +10,10 @@
     content: '\0042';
 }
 
+.currency-icon--crv::before {
+    content: '\0046';
+}
+
 .currency-icon--bnb:before {
     content: '\004C';
 }
@@ -64,4 +68,28 @@
 
 .currency-icon--magic::before {
     content: '\0069';
+}
+
+.currency-icon--sol::before {
+    content: '\006A';
+}
+
+.currency-icon--bch::before {
+    content: '\006B';
+}
+
+.currency-icon--ltc::before {
+    content: '\006C';
+}
+
+.currency-icon--xrp::before {
+    content: '\006D';
+}
+
+.currency-icon--pepe::before {
+    content: '\006E';
+}
+
+.currency-icon--wld::before {
+    content: '\006F';
 }

@@ -12,16 +12,15 @@ The trading UI is available on [thalesmarket.io](https://thalesmarket.io).
 -   React
 -   React Redux
 -   React Query
--   React Grid Layout
--   Styled-Components
--   Material-UI
+-   react-i18next
+-   styled-components
+-   Material UI
+-   Recharts
 
 ## Ethereum stack
 
--   ethers.js v5 - Ethereum wallet implementation.
--   Blocknative Onboard - for ethereum wallet connectivity.
--   [@synthetixio/contracts-interface](https://github.com/Synthetixio/js-monorepo/tree/master/packages/contracts-interface) - for interactions with the Synthetix protocol.
--   [0x](https://github.com/0xProject/protocol) - for interactions with the 0x protocol.
+-   `ethers.js` v5 - Ethereum wallet implementation.
+-   `RainbowKit` and `wagmi` - for ethereum wallet connectivity.
 -   [thales-data](https://github.com/thales-markets/thales-data) - for historical data (powered by [TheGraph](https://thegraph.com/))
 
 ## Development
@@ -38,12 +37,12 @@ Copy the `.env.local.example` file in this directory to `.env.local` (which will
 Then, open `.env.local` and add the missing environment variables:
 
 -   `REACT_APP_INFURA_PROJECT_ID` - Infura project id (get it from [infura.io](https://infura.io/)).
--   `REACT_APP_PORTIS_APP_ID` - Portis app id (get it from [portis.io](https://www.portis.io/)).
--   `REACT_APP_MAINTENANCE_MODE` - Is dApp in maintenance mode. Set to `false`.
+-   `REACT_APP_CHAINNODE_PROJECT_ID` - Chainnodes project id (get it from [chainnodes.org](https://app.chainnodes.org/)).
 -   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thalesmarket.io`.
--   `REACT_APP_TOKEN_STAKING_DISABLED` - Enable/disable THALES token staking. Set to `false`.
 -   `REACT_APP_IPFS_DEPLOYMENT` - Is dApp in the mode for deployment on IPFS. Set to `false`.
+-   `REACT_APP_BUNGEE_API_KEY` - Bungee API key.
 -   `REACT_APP_SNAPSHOT_API_KEY` - The Snapshot API KEY.
+-   `REACT_APP_WALLET_CONNECT_PROJECT_ID` - WalletConnect project id (get it from [WalletConnect Cloud](https://cloud.walletconnect.com/)).
 
 ### Set up Google Translate API
 

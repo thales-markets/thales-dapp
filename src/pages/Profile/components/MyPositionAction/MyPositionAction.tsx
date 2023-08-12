@@ -2,7 +2,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import {
     getDefaultToastContent,
     getLoadingToastOptions,
@@ -108,15 +108,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
 
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -161,7 +154,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
+                    const ammPrice = stableCoinFormatter(ammQuotes, networkId) / position.amount;
                     // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
                         ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||
@@ -192,10 +185,6 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const parsedTotal = stableCoinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 false,
                 false,
@@ -207,7 +196,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 parsedSlippage,
                 undefined,
                 '',
-                providerOptions
+                networkId
             );
 
             const txResult = await tx.wait();
@@ -253,12 +242,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
             try {
-                const providerOptions = {
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                };
                 const tx = (isRangedMarket
-                    ? await marketContractWithSigner.exercisePositions(providerOptions)
-                    : await marketContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
+                    ? await marketContractWithSigner.exercisePositions()
+                    : await marketContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
 
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
@@ -304,20 +290,24 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         const today = new Date();
         if (position.maturityDate > today.getTime() / 1000 && position.value > 0) {
             return (
-                <Button
-                    {...getDefaultButtonProps(isMobile)}
-                    disabled={isAllowing || isSubmitting}
-                    additionalStyles={additionalButtonStyle}
-                    onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
-                >
-                    {isAllowing
-                        ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
-                        : `${
-                              isSubmitting
-                                  ? t(`markets.user-positions.cash-out-progress`)
-                                  : t('markets.user-positions.cash-out')
-                          } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
-                </Button>
+                <Tooltip overlay={t('markets.user-positions.tooltip-cash-out')}>
+                    <div>
+                        <Button
+                            {...getDefaultButtonProps(isMobile)}
+                            disabled={isAllowing || isSubmitting}
+                            additionalStyles={additionalButtonStyle}
+                            onClick={() => (hasAllowance ? handleCashout() : setOpenApprovalModal(true))}
+                        >
+                            {isAllowing
+                                ? `${t('common.enable-wallet-access.approve-progress')} ${position.side}...`
+                                : `${
+                                      isSubmitting
+                                          ? t('markets.user-positions.cash-out-progress')
+                                          : t('markets.user-positions.cash-out')
+                                  } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
+                        </Button>
+                    </div>
+                </Tooltip>
             );
         }
         if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {

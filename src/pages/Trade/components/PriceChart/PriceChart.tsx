@@ -18,7 +18,7 @@ import {
     YAxis,
 } from 'recharts';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivSpaceBetween } from 'styles/common';
+import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import {
     calculatePercentageChange,
@@ -30,6 +30,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
+import TooltipInfo from 'components/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 type PriceChartProps = {
     asset: string;
@@ -62,13 +66,14 @@ const ToggleButtons = [
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
     const theme: ThemeInterface = useTheme();
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
-
     const [ticks, setTicks] = useState<number[]>();
+    const [iv, setIV] = useState(0);
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
@@ -124,7 +129,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 if (result) {
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), 'dd/MM'),
-                        price: Number(price[1].toFixed(2)),
+                        price: Number(price[1]),
                     }));
 
                     priceData.push({ date: format(new Date(), 'dd/MM'), price: currentPrice });
@@ -139,6 +144,20 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         };
         fetchData();
     }, [asset, dateRange, currentPrice]);
+
+    useEffect(() => {
+        const { ammContract } = snxJSConnector;
+        const getImpliedVolatility = async () => {
+            try {
+                const impliedVolatility = await ammContract?.impliedVolatilityPerAsset(bytesFormatter(asset));
+                setIV(bigNumberFormatter(impliedVolatility));
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        getImpliedVolatility();
+    }, [asset]);
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -192,10 +211,19 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
-                <IconPriceWrapper>
-                    <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
-                </IconPriceWrapper>
+                <FlexDivRowCentered>
+                    <IconPriceWrapper>
+                        <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
+                        <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
+                    </IconPriceWrapper>
+                    <FlexDiv>
+                        <Value>{`IV ${iv}%`}</Value>
+                        <TooltipInfo
+                            overlay={t('markets.amm-trading.iv-tooltip')}
+                            customIconStyling={{ marginTop: '1px' }}
+                        />
+                    </FlexDiv>
+                </FlexDivRowCentered>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
             {data && (
@@ -216,7 +244,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
+                        <CartesianGrid stroke={theme.borderColor.primary} strokeDasharray="1" />
                         <XAxis
                             tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
                             tickLine={false}
@@ -233,6 +261,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 fill: theme.textColor.secondary,
                                 width: 100,
                             }}
+                            width={70}
                             tickCount={10}
                             tickLine={false}
                             axisLine={false}
@@ -251,17 +280,17 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <Area
                             type="monotone"
                             dataKey="price"
-                            stroke="#F7B91A"
+                            stroke={theme.borderColor.tertiary}
                             strokeWidth={2}
                             fill="transparent"
                             animationEasing="ease-in"
-                            animationDuration={400}
+                            animationDuration={150}
                             xHeight={2}
                         />
 
                         <ReferenceLine
                             y={data[data?.length - 1].price}
-                            stroke="#F7B91A"
+                            stroke={theme.borderColor.tertiary}
                             strokeDasharray="3 3"
                             xHeight={2}
                             label={<CustomLabel price={data[data?.length - 1].price} />}
@@ -270,7 +299,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="#03DAC6"
+                                stroke={theme.borderColor.quaternary}
                                 label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
@@ -278,7 +307,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedRightPrice && (
                             <ReferenceLine
                                 y={selectedRightPrice}
-                                stroke="#03DAC6"
+                                stroke={theme.borderColor.quaternary}
                                 label={<CustomLabel2 price={selectedRightPrice} />}
                             />
                         )}
@@ -291,6 +320,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 };
 
 const formatYAxisTick = (value: number) => {
+    if (value < 0.01) {
+        return formatCurrencyWithSign(USD_SIGN, value);
+    }
     return formatCurrencyWithSign(USD_SIGN, value, 2);
 };
 
@@ -354,7 +386,9 @@ const CustomLabel = (props: any) => {
         <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
             <Rectangle rx={10} y={3}></Rectangle>
             <Text x={8} y={14}>
-                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+                {props.price < 0.01
+                    ? formatCurrencyWithSign(USD_SIGN, props.price)
+                    : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text>
         </SVGBorder>
     );
@@ -383,7 +417,9 @@ const CustomLabel2 = (props: any) => {
         <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
             <Rectangle2 rx={10} y={3}></Rectangle2>
             <Text2 x={8} y={14}>
-                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+                {props.price < 0.01
+                    ? formatCurrencyWithSign(USD_SIGN, props.price)
+                    : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text2>
         </SVGBorder>
     );
@@ -436,6 +472,14 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-size: 22px;
     line-height: 100%;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+`;
+
+const Value = styled.span`
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-left: 20px;
 `;
 
 export default PriceChart;

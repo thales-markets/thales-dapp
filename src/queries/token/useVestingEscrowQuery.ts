@@ -1,11 +1,11 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { VestingInfo } from 'types/token';
+import { Network } from 'enums/network';
 
-const useVestingEscrowQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<VestingInfo>) => {
+const useVestingEscrowQuery = (walletAddress: string, networkId: Network, options?: UseQueryOptions<VestingInfo>) => {
     return useQuery<VestingInfo>(
         QUERY_KEYS.Token.VestingEscrow(walletAddress, networkId),
         async () => {

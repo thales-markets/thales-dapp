@@ -87,7 +87,7 @@ const Referral: React.FC = () => {
     const showOPBanner = getIsOVM(networkId);
 
     const [tabIndex, setTabIndex] = useState(tabs[0].id);
-    const [landingPage, setLandingPage] = useState<number>(0);
+    const [landingPage, setLandingPage] = useState(0);
     const [referralLink, setReferralLink] = useState('');
     const [reffererID, setReffererID] = useState('');
     const [savedReffererID, setSavedReffererID] = useState('');
@@ -127,7 +127,7 @@ const Referral: React.FC = () => {
 
     const transactionData: ReferralTransactions[] | [] = useMemo(() => {
         if (transactionsQuery.isSuccess && transactionsQuery.data && walletAddress) {
-            return orderBy(transactionsQuery.data, ['timestamp'], ['desc']);
+            return transactionsQuery.data;
         }
 
         return [];
@@ -260,7 +260,7 @@ const Referral: React.FC = () => {
                         <SelectInput
                             options={landingPageOptions}
                             handleChange={(value) => handleLandingPageChange(value)}
-                            defaultValue={0}
+                            defaultValue={landingPage}
                         />
                     </RowContrainer>
                     <RowContrainer>
@@ -403,6 +403,14 @@ const Referral: React.FC = () => {
                                     Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
                                 },
                             ]}
+                            initialState={{
+                                sortBy: [
+                                    {
+                                        id: 'timestamp',
+                                        desc: true,
+                                    },
+                                ],
+                            }}
                         />
                     </TableWrapper>
                 )}

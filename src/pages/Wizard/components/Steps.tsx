@@ -22,7 +22,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Colors } from 'styles/common';
-import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import Swap from 'components/Swap';
 
 enum NavItems {
@@ -381,7 +381,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             )}
             {showSwap && (
                 <Modal
-                    title={t('common.swap.title')}
+                    title={t('common.swap.title', { token: t('common.swap.stablecoin') })}
                     onClose={() => setShowSwap(false)}
                     shouldCloseOnOverlayClick={true}
                 >

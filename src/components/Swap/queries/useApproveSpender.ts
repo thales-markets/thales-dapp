@@ -1,19 +1,19 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
+import { Network } from 'enums/network';
+import { generalConfig } from 'config/general';
 
 interface Spender {
     address: string;
 }
 
-const baseUrl = 'https://api.1inch.exchange/v4.0/';
 const suffix = '/approve/spender';
 
-const useApproveSpender = (networkId: NetworkId, options?: UseQueryOptions<Spender>) => {
+const useApproveSpender = (networkId: Network, options?: UseQueryOptions<Spender>) => {
     return useQuery<Spender>(
         QUERY_KEYS.Swap.Approve(networkId),
         async () => {
-            const url = baseUrl + networkId + suffix;
+            const url = generalConfig.ONE_INCH_API_URL + networkId + suffix;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;

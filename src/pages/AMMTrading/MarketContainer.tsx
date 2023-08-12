@@ -27,7 +27,7 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
 
         let contract: ethers.Contract | undefined = undefined;
 
-        if (props.location.pathname.includes('ranged-markets')) {
+        if (props.location.pathname.includes(ROUTES.Options.RangeMarkets)) {
             setIsRangedMarket(true);
             contract = new ethers.Contract(
                 params?.marketAddress,

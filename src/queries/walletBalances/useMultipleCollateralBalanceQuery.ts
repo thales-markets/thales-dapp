@@ -2,13 +2,12 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
-import { STABLE_DECIMALS } from 'constants/options';
-import { COLLATERALS_INDEX } from 'enums/options';
+import { Network } from 'enums/network';
+import { STABLE_DECIMALS } from 'constants/currency';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
-    networkId: NetworkId,
+    networkId: Network,
     options?: UseQueryOptions<any>
 ) => {
     return useQuery<any>(
@@ -27,18 +26,10 @@ const useMultipleCollateralBalanceQuery = (
                 }
 
                 const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
-                    multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.sUSD]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.DAI]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.USDC]?.balanceOf(walletAddress)
-                        : undefined,
-                    multipleCollateral?.length
-                        ? multipleCollateral[COLLATERALS_INDEX.USDT]?.balanceOf(walletAddress)
-                        : undefined,
+                    multipleCollateral?.length ? multipleCollateral[0]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[1]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[2]?.balanceOf(walletAddress) : undefined,
+                    multipleCollateral?.length ? multipleCollateral[3]?.balanceOf(walletAddress) : undefined,
                 ]);
                 return {
                     sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
