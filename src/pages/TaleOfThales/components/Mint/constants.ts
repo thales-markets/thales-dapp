@@ -82,7 +82,7 @@ export const NFT_COLLECTIONS = [
     {
         collectionId: 8,
         name: 'COLLECTION APPRENTICE WIZARD',
-        condition: '"Apprentice Wizard is unlocked for all participants in the Decoration Competition',
+        condition: '"Apprentice Wizard Collection" is unlocked for all participants in the Decoration Competition',
         items: [
             { name: 'Hat', src: '/miletus-nfts/NFT_26.png', itemId: 27 },
             { name: 'Robe', src: '/miletus-nfts/NFT_27.png', itemId: 28 },
@@ -93,7 +93,7 @@ export const NFT_COLLECTIONS = [
     {
         collectionId: 9,
         name: 'COLLECTION ELDER WIZARD',
-        condition: '"Elder Wizard is unlocked for the winners of the Decoration Competition',
+        condition: '"Elder Wizard Collection" is unlocked for the winners of the Decoration Competition',
         items: [
             { name: 'Hat', src: '/miletus-nfts/NFT_30.png', itemId: 31 },
             { name: 'Robe', src: '/miletus-nfts/NFT_31.png', itemId: 32 },
