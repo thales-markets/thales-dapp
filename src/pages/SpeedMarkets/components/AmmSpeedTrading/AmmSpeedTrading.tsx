@@ -112,7 +112,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const [hasAllowance, setAllowance] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
     const isButtonDisabled =
         positionType === undefined ||
         !(strikeTimeSec || deltaTimeSec) ||
@@ -520,6 +520,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     selectedItem={selectedCollateralIndex}
                                     onChangeCollateral={() => {}}
                                     disabled={isSubmitting}
+                                    isDetailedView
+                                    collateralBalances={multipleCollateralBalances.data}
+                                    exchangeRates={exchangeRates}
                                 />
                             ) : undefined
                         }
@@ -618,6 +621,7 @@ const PaymentInfo = styled.span`
 `;
 
 const ShareIcon = styled.i<{ disabled: boolean }>`
+    display: none; // TODO: not supported yet
     position: absolute;
     top: 12px;
     right: 12px;

@@ -7,7 +7,7 @@ import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { COLLATERALS } from 'constants/currency';
+import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     ARBITRUM_NETWORK,
     BASE_NETWORK,
@@ -56,7 +56,8 @@ export const isNetworkSupported = (networkId: Network): boolean => {
 
 export const getIsMainnet = (networkId: number): boolean => [1].includes(networkId);
 
-export const getIsMultiCollateralSupported = (networkId: Network): boolean => COLLATERALS[networkId].length > 1;
+export const getIsMultiCollateralSupported = (networkId: Network, includeAdditional?: boolean): boolean =>
+    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
 
 export const getIsBSC = (networkId: number): boolean => [56].includes(networkId);
 

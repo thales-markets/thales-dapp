@@ -464,7 +464,12 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     [Network.PolygonMainnet]: [],
     [Network.BSC]: [],
     [Network.Base]: [],
-    [Network.Arbitrum]: [],
+    [Network.Arbitrum]: [
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
+        CRYPTO_CURRENCY_MAP.ARB as Coins,
+        CRYPTO_CURRENCY_MAP.WETH as Coins,
+    ],
 };
 
 export const COLLATERAL_DECIMALS = {

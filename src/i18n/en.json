@@ -48,6 +48,7 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
+        "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -439,7 +440,7 @@
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
-            "oi": "Open interest cap"
+            "liquidity": "Current available liquidity for this Asset"
         },
         "admin": {
             "user-title": "Unresolved user winner positions",

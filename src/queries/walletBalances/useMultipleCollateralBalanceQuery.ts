@@ -1,5 +1,4 @@
 import snxJSConnector from 'utils/snxJSConnector';
-
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';

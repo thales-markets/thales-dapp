@@ -24,7 +24,6 @@ import {
     calculatePercentageChange,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
-    formatPercentage,
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
 import Toggle from './components/DateToggle';
@@ -193,7 +192,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     }, [asset, isSpeedMarkets]);
 
     const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
-    const openInterest = riskPerAsset ? formatPercentage(riskPerAsset.current / riskPerAsset.max) : 0;
+    const openInterest = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -265,9 +264,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     )}
                     {!!openInterest && (
                         <FlexDiv>
-                            <Value>{`OI ${openInterest}`}</Value>
+                            <Value>{`${t('common.liquidity')} ${openInterest}`}</Value>
                             <TooltipInfo
-                                overlay={t('speed-markets.tooltips.oi')}
+                                overlay={t('speed-markets.tooltips.liquidity')}
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>
