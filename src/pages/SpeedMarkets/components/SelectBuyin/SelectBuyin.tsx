@@ -1,8 +1,8 @@
 import { USD_SIGN } from 'constants/currency';
-import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
+import { AmmSpeedMarketsLimits } from 'types/options';
 
 type SelectBuyinProps = {
     value: number;

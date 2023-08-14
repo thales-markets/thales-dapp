@@ -143,7 +143,7 @@ const UnresolvedPositions: React.FC = () => {
                     console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
                 }
             }
-
+            console.log(marketsToResolve, finalPrices);
             if (marketsToResolve.length > 0) {
                 try {
                     const tx: ethers.ContractTransaction = isAdmin
@@ -160,10 +160,7 @@ const UnresolvedPositions: React.FC = () => {
                     const txResult = await tx.wait();
 
                     if (txResult && txResult.transactionHash) {
-                        toast.update(
-                            id,
-                            getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
-                        );
+                        toast.update(id, getSuccessToastOptions(t(`speed-markets.admin.confirmation-message`), id));
                         refetchActiveSpeedMarkets(networkId);
                     }
                 } catch (e) {
@@ -181,6 +178,7 @@ const UnresolvedPositions: React.FC = () => {
 
     const getButton = (positions: UserLivePositions[], sectionName: typeof SECTIONS[keyof typeof SECTIONS]) => {
         const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && sectionName === SECTIONS.ammWinner;
+
         return (
             !!positions.length && (
                 <Button
@@ -224,7 +222,7 @@ const UnresolvedPositions: React.FC = () => {
             <>
                 <Row>
                     <Title>{`${t(titleKey)} (${positions.length})`}</Title>
-                    {section !== SECTIONS.openPositions && getButton(positions, section)}
+                    {[SECTIONS.userWinner, SECTIONS.ammWinner].includes(section) && getButton(positions, section)}
                 </Row>
                 {activeSpeedMarketsDataQuery.isLoading ? (
                     <LoaderContainer>

@@ -10,7 +10,6 @@ import {
     secondsToMinutes,
 } from 'date-fns';
 import useInterval from 'hooks/useInterval';
-import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -19,6 +18,7 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { AmmSpeedMarketsLimits } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 
 type SelectTimeProps = {

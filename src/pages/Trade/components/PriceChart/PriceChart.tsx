@@ -24,6 +24,7 @@ import {
     calculatePercentageChange,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
+    formatPercentage,
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
 import Toggle from './components/DateToggle';
@@ -36,6 +37,7 @@ import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import TooltipInfo from 'components/Tooltip';
 import { useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
+import { RiskPerAsset } from 'types/options';
 
 type PriceChartProps = {
     asset: string;
@@ -45,6 +47,7 @@ type PriceChartProps = {
     isSpeedMarkets?: boolean;
     explicitCurrentPrice?: number;
     prevExplicitPrice?: number;
+    risksPerAsset?: RiskPerAsset[];
 };
 
 const coinGeckoClientPublic = new CoinGeckoClient({
@@ -86,6 +89,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     isSpeedMarkets,
     explicitCurrentPrice,
     prevExplicitPrice,
+    risksPerAsset,
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
@@ -188,6 +192,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
         }
     }, [asset, isSpeedMarkets]);
 
+    const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
+    const openInterest = riskPerAsset ? formatPercentage(riskPerAsset.current / riskPerAsset.max) : 0;
+
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
             if (selectedPrice) {
@@ -252,6 +259,15 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             <Value>{`IV ${iv}%`}</Value>
                             <TooltipInfo
                                 overlay={t('markets.amm-trading.iv-tooltip')}
+                                customIconStyling={{ marginTop: '1px' }}
+                            />
+                        </FlexDiv>
+                    )}
+                    {!!openInterest && (
+                        <FlexDiv>
+                            <Value>{`OI ${openInterest}`}</Value>
+                            <TooltipInfo
+                                overlay={t('speed-markets.tooltips.oi')}
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>

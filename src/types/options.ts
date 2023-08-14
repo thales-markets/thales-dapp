@@ -237,3 +237,17 @@ export type UserClosedPositions = {
     finalPrice: number;
     isUserWinner: boolean;
 };
+
+export type RiskPerAsset = { currency: string; current: number; max: number };
+
+export type AmmSpeedMarketsLimits = {
+    maxBuyinAmount: number;
+    minBuyinAmount: number;
+    minimalTimeToMaturity: number;
+    maximalTimeToMaturity: number;
+    maxPriceDelaySec: number;
+    risksPerAsset: RiskPerAsset[];
+    lpFee: number;
+    safeBoxImpact: number;
+    whitelistedAddress: boolean;
+};

@@ -3,14 +3,13 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { UserLivePositions } from 'types/options';
+import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithPrecision, formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import AdminPositionAction from '../AdminPositionAction';
-import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;

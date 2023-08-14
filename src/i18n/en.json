@@ -438,6 +438,9 @@
         "total-pay": "Total to pay {{amount}} + {{fee}} fee",
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
+        "tooltips": {
+            "oi": "Open interest cap"
+        },
         "admin": {
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
@@ -446,6 +449,7 @@
             "resolve-progress": "Resolving...",
             "resolve": "Resolve",
             "resolve-all": "Resolve all",
+            "confirmation-message": "Positions successfully resolved",
             "no-resolve-positions": "No positions for this section with price",
             "user": "User",
             "no-positions": "No positions for this section"

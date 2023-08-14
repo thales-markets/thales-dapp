@@ -35,12 +35,12 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
 
                 const activeMarkets = await speedMarketsAMMContract.activeMarkets(0, numActiveMarkets);
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
-                const maturedMarkets: any = marketsDataArray.filter(
-                    (market: any) => secondsToMilliseconds(Number(market.strikeTime)) < Date.now()
-                );
-                const openMarkets: any = marketsDataArray.filter(
-                    (market: any) => secondsToMilliseconds(Number(market.strikeTime)) > Date.now()
-                );
+                const maturedMarkets: any = marketsDataArray
+                    .map((marketData: any, index: number) => ({ ...marketData, market: activeMarkets[index] }))
+                    .filter((market: any) => secondsToMilliseconds(Number(market.strikeTime)) < Date.now());
+                const openMarkets: any = marketsDataArray
+                    .map((marketData: any, index: number) => ({ ...marketData, market: activeMarkets[index] }))
+                    .filter((market: any) => secondsToMilliseconds(Number(market.strikeTime)) > Date.now());
 
                 // Fetch prices for all matured markets
                 const pricePromises = maturedMarkets.map((market: any) =>
@@ -82,7 +82,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         amount: payout,
                         amountBigNumber: marketsData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: activeMarkets[i],
+                        market: marketsData.market,
                         side: side,
                         paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
@@ -115,7 +115,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         amount: payout,
                         amountBigNumber: marketsData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: activeMarkets[i],
+                        market: marketsData.market,
                         side: side,
                         paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,

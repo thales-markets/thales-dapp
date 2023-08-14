@@ -19,7 +19,6 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
-import { AmmSpeedMarketsLimits } from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -39,15 +38,15 @@ import {
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
-import { Coins } from 'types/options';
+import { AmmSpeedMarketsLimits, Coins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import {
+    getCoinBalance,
     getCollateral,
     getCollaterals,
     getDefaultCollateral,
     getDefaultStableIndexByBalance,
-    getCoinBalance,
     isStableCurrency,
 } from 'utils/currency';
 import { coinParser } from 'utils/formatters/ethers';
@@ -61,7 +60,7 @@ import {
 } from 'utils/formatters/number';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
@@ -77,7 +76,6 @@ type AmmSpeedTradingProps = {
     currentPrice: number;
     resetData: React.Dispatch<void>;
     showWalletBalance?: boolean;
-    autoFocus?: boolean;
 };
 
 const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
@@ -184,7 +182,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 return rate ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** 18) / 10 ** 18 : 0;
             }
         },
-        [selectedCollateral, exchangeRates]
+        [selectedCollateral, exchangeRates, ammSpeedMarketsLimits?.minBuyinAmount]
     );
 
     const totalFee = useMemo(() => {
@@ -407,6 +405,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
                     refetchUserSpeedMarkets(networkId, walletAddress);
+                    refetchSpeedMarketsLimits(networkId);
 
                     resetData();
                     setPaidAmount('');

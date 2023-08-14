@@ -130,6 +130,10 @@ export const refetchLiquidityPoolData = (walletAddress: string, networkId: Netwo
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId));
 };
 
+export const refetchSpeedMarketsLimits = (networkId: Network, walletAddress?: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress));
+};
+
 export const refetchUserSpeedMarkets = (networkId: Network, walletAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress));
 };

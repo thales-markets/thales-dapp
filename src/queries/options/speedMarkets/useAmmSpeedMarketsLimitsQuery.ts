@@ -3,22 +3,9 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
+import { AmmSpeedMarketsLimits } from 'types/options';
 import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-
-type RiskPerAsset = { currency: string; current: number; max: number };
-
-export type AmmSpeedMarketsLimits = {
-    maxBuyinAmount: number;
-    minBuyinAmount: number;
-    minimalTimeToMaturity: number;
-    maximalTimeToMaturity: number;
-    maxPriceDelaySec: number;
-    risksPerAsset: RiskPerAsset[];
-    lpFee: number;
-    safeBoxImpact: number;
-    whitelistedAddress: boolean;
-};
 
 const useAmmSpeedMarketsLimitsQuery = (
     networkId: Network,
@@ -26,7 +13,7 @@ const useAmmSpeedMarketsLimitsQuery = (
     options?: UseQueryOptions<AmmSpeedMarketsLimits>
 ) => {
     return useQuery<AmmSpeedMarketsLimits>(
-        QUERY_KEYS.BinaryOptions.SpeedMarkets(networkId),
+        QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress),
         async () => {
             const ammSpeedMarkets: AmmSpeedMarketsLimits = {
                 minBuyinAmount: 0,
