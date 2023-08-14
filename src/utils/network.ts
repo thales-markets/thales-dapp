@@ -189,6 +189,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.PolygonMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
+                Network.Base,
             ];
         case ROUTES.Options.SpeedMarkets:
             return [

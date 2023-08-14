@@ -8,7 +8,7 @@ const priceFeedContract = {
         [Network.PolygonMainnet]: '0xCd9c0E99396627C7746b4363B880939Ac2828d3E',
         [Network.BSC]: '0x4A5A6f3a79589305786DA6d4e03D82b95942602A',
         [Network.Arbitrum]: '0x563cCaBfBaCCb1a2e00d21704570cFc1AF21f47f',
-        [Network.Base]: 'TBD',
+        [Network.Base]: '0x5B5DbF38a1fcf63B58d263648EBb63b53c1de3E7',
     },
     abi: [
         {

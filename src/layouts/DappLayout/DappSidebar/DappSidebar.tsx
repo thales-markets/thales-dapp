@@ -30,7 +30,7 @@ const DappSidebar: React.FC = () => {
     const isBase = getIsBase(networkId);
 
     const showVaultsPage = !isMainnet && !isPolygon && !isBSC && !isBase;
-    const showLP = !isMainnet && !isPolygon && !isBSC && !isBase;
+    const showLP = !isMainnet && !isPolygon && !isBSC;
     const showWizardPage = !isMobile;
     const showReferralPage = !isMainnet && !isBase;
     const showTokenPage = !isPolygon && !isBSC && !isBase;
