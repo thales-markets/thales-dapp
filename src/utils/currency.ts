@@ -41,6 +41,7 @@ export const isStableCurrency = (currencyKey: Coins) => {
 type StableBalances = {
     sUSD: number | null;
     DAI: number | null;
+    USDCe: number | null;
     USDC: number | null;
     USDT: number | null;
 };

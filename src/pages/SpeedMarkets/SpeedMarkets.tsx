@@ -27,6 +27,7 @@ import ClosedPositions from './components/ClosedPositions';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime';
+import Tooltip from 'components/Tooltip';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -127,6 +128,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                                 bold: <BoldText />,
                             }}
                         />
+                        <Tooltip overlay={t('speed-markets.tooltips.buyin-fees')} />
                     </Info>
                     <ContentWrapper>
                         <LeftSide>

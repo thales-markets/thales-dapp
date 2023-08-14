@@ -1,4 +1,4 @@
-import { POLYGON_DAI, POLYGON_USDC, POLYGON_USDT } from 'components/Swap/tokens';
+import { POLYGON_DAI, POLYGON_USDCe, POLYGON_USDT } from 'components/Swap/tokens';
 import { ZERO_ADDRESS } from 'constants/network';
 import { Network } from 'enums/network';
 
@@ -1109,7 +1109,7 @@ const multipleCollateral = {
             [Network.Mainnet]: 'TBD',
             [Network.OptimismMainnet]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
             [Network.OptimismGoerli]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
-            [Network.PolygonMainnet]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC TODO: why defined in sUSD, shouldn't be in USDC object?
+            [Network.PolygonMainnet]: 'TBD',
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
             [Network.Base]: 'TBD',
@@ -1123,20 +1123,32 @@ const multipleCollateral = {
             [Network.OptimismGoerli]: 'TBD',
             [Network.PolygonMainnet]: POLYGON_DAI.address,
             [Network.BSC]: 'TBD',
-            [Network.Arbitrum]: 'TBD',
+            [Network.Arbitrum]: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
             [Network.Base]: 'TBD',
         },
         abi: DAIABI,
     },
-    USDC: {
+    USDCe: {
         addresses: {
             [Network.Mainnet]: 'TBD',
             [Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
             [Network.OptimismGoerli]: 'TBD',
-            [Network.PolygonMainnet]: POLYGON_USDC.address,
+            [Network.PolygonMainnet]: POLYGON_USDCe.address,
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
             [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+        },
+        abi,
+    },
+    USDC: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+            [Network.Base]: 'TBD',
         },
         abi,
     },
@@ -1147,7 +1159,7 @@ const multipleCollateral = {
             [Network.OptimismGoerli]: 'TBD',
             [Network.PolygonMainnet]: POLYGON_USDT.address,
             [Network.BSC]: 'TBD',
-            [Network.Arbitrum]: 'TBD',
+            [Network.Arbitrum]: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
             [Network.Base]: 'TBD',
         },
         abi,
@@ -1164,6 +1176,18 @@ const multipleCollateral = {
         },
         abi,
     },
+    ARB: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+            [Network.Base]: 'TBD',
+        },
+        abi,
+    },
     WETH: {
         addresses: {
             [Network.Mainnet]: 'TBD',
@@ -1171,7 +1195,7 @@ const multipleCollateral = {
             [Network.OptimismGoerli]: 'TBD',
             [Network.PolygonMainnet]: 'TBD',
             [Network.BSC]: 'TBD',
-            [Network.Arbitrum]: 'TBD',
+            [Network.Arbitrum]: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
             [Network.Base]: 'TBD',
         },
         abi,

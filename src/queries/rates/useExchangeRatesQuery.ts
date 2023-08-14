@@ -20,6 +20,9 @@ const useExchangeRatesQuery = (networkId: Network, options?: UseQueryOptions<Rat
                 currencies.forEach((currency: string, idx: number) => {
                     const currencyName = parseBytes32String(currency);
                     exchangeRates[currencyName] = bigNumberFormatter(rates[idx]);
+                    if (currencyName === CRYPTO_CURRENCY_MAP.USDC) {
+                        exchangeRates[`${currencyName}e`] = bigNumberFormatter(rates[idx]);
+                    }
                     if (currencyName === 'SUSD') {
                         exchangeRates[`sUSD`] = bigNumberFormatter(rates[idx]);
                     } else {

@@ -80,11 +80,13 @@ const snxJSConnector: SnxJSConnector = {
         this.multipleCollateral = [
             conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),
             conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
-            conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
+            conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
             conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
             conditionalInitializeContract(multipleCollateral.OP, contractSettings),
             conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
             conditionalInitializeContract(multipleCollateral.ETH, contractSettings),
+            conditionalInitializeContract(multipleCollateral.ARB, contractSettings),
+            conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
         ];
 
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);

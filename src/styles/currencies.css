@@ -58,6 +58,10 @@
     content: '\0057';
 }
 
+.currency-icon--usdce::before {
+    content: '\0057';
+}
+
 .currency-icon--s::before {
     content: '\005A';
 }
