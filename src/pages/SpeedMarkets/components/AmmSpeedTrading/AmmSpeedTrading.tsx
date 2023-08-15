@@ -10,6 +10,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import {
@@ -224,24 +225,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     ]);
 
     useEffect(() => {
-        if (
-            selectedCollateral !== defaultCollateral &&
-            isStableCurrency(selectedCollateral) &&
-            selectedStableBuyinAmount === ammSpeedMarketsLimits?.minBuyinAmount
-        ) {
-            // add half percent to amount to take into account price changes
+        if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
+            // add half percent to amount to take into account collateral conversion
             setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE));
         } else {
             setTotalPaidAmount(Number(paidAmount) * (1 + totalFee));
         }
-    }, [
-        paidAmount,
-        totalFee,
-        selectedCollateral,
-        defaultCollateral,
-        selectedStableBuyinAmount,
-        ammSpeedMarketsLimits?.minBuyinAmount,
-    ]);
+    }, [paidAmount, totalFee, selectedCollateral, defaultCollateral, selectedStableBuyinAmount]);
 
     // when buttons are used to populate amount
     useEffect(() => {
@@ -511,6 +501,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     isFetchingQuote={false}
                     priceProfit={SPEED_MARKETS_QUOTE - 1}
                     paidAmount={selectedStableBuyinAmount || convertToStable(Number(paidAmount))}
+                    hasCollateralConversion={selectedCollateral !== defaultCollateral}
                     breakFirstLine={false}
                 />
                 <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
@@ -579,6 +570,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                   fee: formatPercentage(totalFee, 0),
                               })}
+                        {selectedCollateral !== defaultCollateral && (
+                            <Tooltip
+                                overlay={t('speed-markets.tooltips.paid-conversion', {
+                                    percentage: formatPercentage(PRICE_CHANGES_BUFFER_PERCENTAGE),
+                                })}
+                            />
+                        )}
                     </PaymentInfo>
                     {!isStableCurrency(selectedCollateral) && (
                         <PaymentInfo>

@@ -279,6 +279,7 @@
             "pick-price": "pick a price",
             "based-amount": "based on amount",
             "you-win": "you win",
+            "at-least": "at least",
             "select-price": "Select price",
             "amm-disabled": "AMM trading disabled",
             "max-buy": "Max buy",
@@ -441,7 +442,9 @@
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
             "buyin-fees": "Buy-in is subject to fees",
-            "liquidity": "Current available liquidity for this Asset"
+            "liquidity": "Current available liquidity for this Asset",
+            "payout-conversion": "Exact payout known after the transaction",
+            "paid-conversion": "Total paid amount can be up to {{percentage}} more due to collateral conversion"
         },
         "admin": {
             "user-title": "Unresolved user winner positions",

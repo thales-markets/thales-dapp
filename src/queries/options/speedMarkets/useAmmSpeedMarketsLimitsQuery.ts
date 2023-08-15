@@ -7,6 +7,8 @@ import { AmmSpeedMarketsLimits } from 'types/options';
 import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
+const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 10;
+
 const useAmmSpeedMarketsLimitsQuery = (
     networkId: Network,
     walletAddress?: string,
@@ -63,7 +65,8 @@ const useAmmSpeedMarketsLimitsQuery = (
                 ]);
 
                 ammSpeedMarkets.minBuyinAmount = coinFormatter(minBuyinAmount, networkId);
-                ammSpeedMarkets.maxBuyinAmount = coinFormatter(maxBuyinAmount, networkId);
+                ammSpeedMarkets.maxBuyinAmount =
+                    coinFormatter(maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
                 ammSpeedMarkets.minimalTimeToMaturity = Number(minTimeToMaturity);
                 ammSpeedMarkets.maximalTimeToMaturity = Number(maxTimeToMaturity);
                 ammSpeedMarkets.maxPriceDelaySec = Number(maxPriceDelay);

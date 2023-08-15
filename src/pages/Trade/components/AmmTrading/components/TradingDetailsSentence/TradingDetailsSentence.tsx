@@ -14,6 +14,7 @@ import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
 import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
 import useInterval from 'hooks/useInterval';
+import Tooltip from 'components/Tooltip/Tooltip';
 
 type SpeedMarketsTrade = { address: string; strikePrice: number; positionType: Positions | undefined };
 
@@ -27,6 +28,7 @@ type TradingDetailsSentenceProps = {
     paidAmount: number | string;
     breakFirstLine: boolean;
     deltaTimeSec?: number;
+    hasCollateralConversion?: boolean;
 };
 
 const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
@@ -39,6 +41,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     paidAmount,
     breakFirstLine,
     deltaTimeSec,
+    hasCollateralConversion,
 }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -161,11 +164,15 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             <FlexDivCentered>
                 <Text>
                     <TextLabel>{t('markets.amm-trading.you-win')}</TextLabel>
+                    {hasCollateralConversion && <TextLabel>{` ${t('markets.amm-trading.at-least')}`}</TextLabel>}
                     <SentanceTextValue isProfit={true}>
                         {Number(priceProfit) > 0 && Number(paidAmount) > 0
                             ? potentialWinFormatted
                             : '( ' + t('markets.amm-trading.based-amount') + ' )'}
                     </SentanceTextValue>
+                    {hasCollateralConversion && Number(priceProfit) > 0 && Number(paidAmount) > 0 && (
+                        <Tooltip overlay={t('speed-markets.tooltips.payout-conversion')} />
+                    )}
                 </Text>
             </FlexDivCentered>
         </ColumnSpaceBetween>
