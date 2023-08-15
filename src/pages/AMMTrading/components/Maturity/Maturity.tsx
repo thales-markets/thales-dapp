@@ -14,6 +14,7 @@ import {
     InfoLabel,
     Info,
     LoaderContainer,
+    ShareIcon,
 } from './styled-components';
 import Button from 'components/Button';
 import TimeRemaining from 'components/TimeRemaining';
@@ -46,6 +47,9 @@ import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketCo
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
+import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
+import { UserPosition } from 'types/profile';
 
 type MaturityProps = {
     isRangedMarket: boolean;
@@ -63,6 +67,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const [isExercising, setIsExercising] = useState<boolean>(false);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
 
     let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
 
@@ -82,6 +87,15 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
         optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
 
+    const claimablePositionsQuery = useClaimablePositionsQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const claimablePosition: UserPosition | undefined =
+        claimablePositionsQuery.isSuccess && claimablePositionsQuery.data
+            ? claimablePositionsQuery.data.find((position) => position.market == market.address)
+            : undefined;
+
     const { result } = market;
     const upAmount = optBalances.long || 0;
     const downAmount = optBalances.short || 0;
@@ -90,6 +104,8 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
 
     const isUpResult = result === 'long';
     const isInResult = (result as RangedMarketPositionType) === 'in';
+
+    const position = result == 'long' ? 'UP' : result == 'short' ? 'DOWN' : result.toUpperCase();
 
     const nothingToExercise = isRangedMarket
         ? (isInResult && !inAmount) || (!isInResult && !outAmount)
@@ -210,6 +226,35 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             ? t('markets.market.trade-card.maturity.confirm-button.label')
                             : t('markets.market.trade-card.maturity.confirm-button.progress-label')}
                     </Button>
+                    <ShareIcon
+                        className="icon-home icon-home--twitter"
+                        disabled={false}
+                        onClick={() => {
+                            setOpenTwitterShareModal(true);
+                        }}
+                    />
+                    {openTwitterShareModal && claimablePosition && (
+                        <SharePositionModal
+                            type={'resolved'}
+                            position={position as Positions}
+                            currencyKey={claimablePosition.currencyKey}
+                            strikeDate={claimablePosition.maturityDate}
+                            strikePrice={claimablePosition.strikePrice}
+                            leftPrice={claimablePosition.leftPrice}
+                            rightPrice={claimablePosition.rightPrice}
+                            buyIn={claimablePosition.paid}
+                            payout={
+                                isRangedMarket
+                                    ? isInResult
+                                        ? inAmount
+                                        : outAmount
+                                    : isUpResult
+                                    ? upAmount
+                                    : downAmount
+                            }
+                            onClose={() => setOpenTwitterShareModal(false)}
+                        />
+                    )}
                 </Container>
             )}
         </>
