@@ -46,7 +46,7 @@ const StakingOverview: React.FC = () => {
                     users: length,
                     share: user[0].share,
                     points: user[0].userRoundBonusPoints,
-                    globalPoints: leaderboardQuery.data.globalPoints,
+                    globalPoints: leaderboardQuery.data.data.globalPoints,
                     bonusRewards: leaderboardQuery.data.bonusRewards,
                 };
             }

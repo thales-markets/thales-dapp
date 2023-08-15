@@ -44,6 +44,9 @@ const StakingSteps: React.FC = () => {
                                     bold: <BoldedText />,
                                     highlight: <HighlightTextSecondary />,
                                 }}
+                                values={{
+                                    multiplier: stakingData?.tradingMultiplier ?? 0,
+                                }}
                             />
                         </CardText>
                     </CardContent>
@@ -58,6 +61,9 @@ const StakingSteps: React.FC = () => {
                                 components={{
                                     bold: <BoldedText />,
                                     highlight: <HighlightTextSecondary />,
+                                }}
+                                values={{
+                                    multiplier: stakingData?.lpMultiplier ?? 0,
                                 }}
                             />
                         </CardText>
@@ -74,6 +80,9 @@ const StakingSteps: React.FC = () => {
                                     bold: <BoldedText />,
                                     highlight: <HighlightTextSecondary />,
                                 }}
+                                values={{
+                                    multiplier: stakingData?.vaultsMultiplier ?? 0,
+                                }}
                             />
                         </CardText>
                     </CardContent>
@@ -89,6 +98,9 @@ const StakingSteps: React.FC = () => {
                                     bold: <BoldedText />,
                                     highlight: <HighlightTextSecondary />,
                                     br: <br />,
+                                }}
+                                values={{
+                                    multiplier: stakingData?.maxThalesMultiplier ?? 0,
                                 }}
                             />
                         </CardText>

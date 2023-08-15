@@ -10,6 +10,10 @@
     content: '\0042';
 }
 
+.currency-icon--crv::before {
+    content: '\0046';
+}
+
 .currency-icon--bnb:before {
     content: '\004C';
 }
@@ -84,4 +88,8 @@
 
 .currency-icon--pepe::before {
     content: '\006E';
+}
+
+.currency-icon--wld::before {
+    content: '\006F';
 }

@@ -507,6 +507,7 @@ const HeaderTitle = styled.span<{ cssProp?: CSSPropertiesWithMedia }>`
 const SortIconContainer = styled.span`
     display: flex;
     align-items: center;
+    margin-left: 4px;
 `;
 
 const LoaderContainer = styled(FlexDivCentered)`
@@ -525,7 +526,9 @@ const NoResultContainer = styled(TableRow)`
 `;
 
 const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
-    font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 22 : 19)}px;
+    display: flex;
+    font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 10 : 14)}px;
+    color: ${(props) => props.theme.textColor.primary};
     &:before {
         font-family: Icons !important;
         content: ${(props) =>
@@ -538,7 +541,7 @@ const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
                 : "'\\0023'"};
     }
     @media (max-width: 512px) {
-        font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 17 : 14)}px;
+        font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 8 : 10)}px;
     }
 `;
 
