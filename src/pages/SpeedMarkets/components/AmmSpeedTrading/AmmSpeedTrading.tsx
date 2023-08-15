@@ -570,7 +570,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                   fee: formatPercentage(totalFee, 0),
                               })}
-                        {selectedCollateral !== defaultCollateral && (
+                        {isStableCurrency(selectedCollateral) && selectedCollateral !== defaultCollateral && (
                             <Tooltip
                                 overlay={t('speed-markets.tooltips.paid-conversion', {
                                     percentage: formatPercentage(PRICE_CHANGES_BUFFER_PERCENTAGE),
@@ -586,6 +586,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount * (1 + totalFee))
                                     : formatCurrencyWithSign(USD_SIGN, convertToStable(totalPaidAmount)),
                             })}
+                            {selectedCollateral !== defaultCollateral && (
+                                <Tooltip
+                                    overlay={t('speed-markets.tooltips.paid-conversion', {
+                                        percentage: formatPercentage(PRICE_CHANGES_BUFFER_PERCENTAGE),
+                                    })}
+                                />
+                            )}
                         </PaymentInfo>
                     )}
                 </ColumnSpaceBetween>

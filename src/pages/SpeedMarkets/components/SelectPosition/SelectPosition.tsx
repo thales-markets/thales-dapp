@@ -42,6 +42,7 @@ const PositionSymbol = styled(FlexDivCentered)`
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    padding-left: 1px;
 `;
 
 const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean }>`
