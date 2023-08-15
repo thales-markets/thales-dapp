@@ -3,6 +3,7 @@ import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-lo
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
+import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -172,7 +173,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
     },
     [Network.Base]: {
         name: 'Base',
-        icon: ArbitrumLogo,
+        icon: BaseLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const baseNetworkParams = BASE_NETWORK[networkId];
             await changeNetwork(baseNetworkParams, callback);
