@@ -39,8 +39,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
 
-    console.log('positionsShareData ', positionsShareData);
-
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
     });
