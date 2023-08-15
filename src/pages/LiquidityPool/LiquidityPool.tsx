@@ -81,6 +81,7 @@ import {
     defaultButtonProps,
 } from './styled-components';
 import { plausible } from 'pages/Root/Root';
+import { PLAUSIBLE_KEYS } from 'constants/analytics';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -295,7 +296,7 @@ const LiquidityPool: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    plausible.trackEvent('deposit-lp');
+                    plausible.trackEvent(PLAUSIBLE_KEYS.depositLp);
                     toast.update(
                         id,
                         getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)

@@ -82,6 +82,7 @@ import {
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
 import { plausible } from 'pages/Root/Root';
+import { PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -545,7 +546,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         action: `buy-with-${getCollateral(networkId, selectedCollateralIndex)}`,
                         value: Number(paidAmount),
                     });
-                    plausible.trackEvent(isRangedMarket ? 'range-buy' : 'amm-buy', {
+                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
@@ -556,7 +557,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
                     });
-                    plausible.trackEvent(isRangedMarket ? 'range-sell' : 'amm-sell', {
+                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
