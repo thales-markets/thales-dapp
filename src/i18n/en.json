@@ -444,7 +444,7 @@
             "buyin-fees": "Buy-in is subject to fees",
             "liquidity": "Current available liquidity for this Asset",
             "payout-conversion": "Exact payout known after the transaction",
-            "paid-conversion": "Total paid amount can be up to {{percentage}} more due to collateral conversion and it will participate in payout"
+            "paid-conversion": "Total paid amount in $ can be slightly different due to collateral conversion and will be known after transaction"
         },
         "admin": {
             "user-title": "Unresolved user winner positions",

@@ -12,7 +12,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
-import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import {
     POSITIONS_TO_SIDE_MAP,
     PRICE_CHANGES_BUFFER_PERCENTAGE,
@@ -185,7 +185,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             } else {
                 const priceFeedBuffer =
                     value === ammSpeedMarketsLimits?.minBuyinAmount ? 1 - PRICE_FEED_BUFFER_PERCENTAGE : 1;
-                return rate ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** 18) / 10 ** 18 : 0;
+                return rate
+                    ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** COLLATERAL_DECIMALS[selectedCollateral]) /
+                          10 ** COLLATERAL_DECIMALS[selectedCollateral]
+                    : 0;
             }
         },
         [selectedCollateral, exchangeRates, ammSpeedMarketsLimits?.minBuyinAmount]
@@ -247,7 +250,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     // Reset inputs
     useEffect(() => {
         setPaidAmount('');
-    }, [networkId, isWalletConnected]);
+        dispatch(setSelectedCollateralIndex(0));
+    }, [networkId, isWalletConnected, dispatch]);
 
     // Input field validations
     useEffect(() => {
@@ -313,7 +317,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         ? truncToDecimals(paidAmount)
                         : isStableCurrency(selectedCollateral)
                         ? truncToDecimals(totalPaidAmount)
-                        : truncToDecimals(totalPaidAmount, 15),
+                        : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]),
                     networkId,
                     selectedCollateral
                 );
@@ -402,7 +406,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         ? coinParser(truncToDecimals(paidAmount), networkId, selectedCollateral)
                         : isStableCurrency(selectedCollateral)
                         ? coinParser(truncToDecimals(totalPaidAmount), networkId, selectedCollateral)
-                        : coinParser(truncToDecimals(totalPaidAmount, 15), networkId, selectedCollateral);
+                        : coinParser(
+                              truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]),
+                              networkId,
+                              selectedCollateral
+                          );
                 const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
 
                 const tx: ethers.ContractTransaction = await getTransactionForSpeedAMM(

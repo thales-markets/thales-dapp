@@ -478,7 +478,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     ],
 };
 
-export const COLLATERAL_DECIMALS = {
+export const COLLATERAL_DECIMALS: Record<Coins, number> = {
     sUSD: 18,
     DAI: 18,
     USDCe: 6,
