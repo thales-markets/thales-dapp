@@ -27,7 +27,7 @@ import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -133,7 +133,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         selectedCollateralIndex,
     ]);
     const collateralAddress = isMultiCollateralSupported
-        ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
+        ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
         : snxJSConnector.collateral?.address;
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
@@ -224,13 +224,24 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     ]);
 
     useEffect(() => {
-        if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
+        if (
+            selectedCollateral !== defaultCollateral &&
+            isStableCurrency(selectedCollateral) &&
+            selectedStableBuyinAmount === ammSpeedMarketsLimits?.minBuyinAmount
+        ) {
             // add half percent to amount to take into account price changes
             setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE));
         } else {
             setTotalPaidAmount(Number(paidAmount) * (1 + totalFee));
         }
-    }, [paidAmount, totalFee, selectedCollateral, defaultCollateral]);
+    }, [
+        paidAmount,
+        totalFee,
+        selectedCollateral,
+        defaultCollateral,
+        selectedStableBuyinAmount,
+        ammSpeedMarketsLimits?.minBuyinAmount,
+    ]);
 
     // when buttons are used to populate amount
     useEffect(() => {
@@ -245,11 +256,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     // Reset inputs
     useEffect(() => {
-        if (!isWalletConnected) {
-            setSelectedStableBuyinAmount(0);
-            setPaidAmount('');
-        }
-    }, [isWalletConnected, setSelectedStableBuyinAmount]);
+        setPaidAmount('');
+    }, [networkId, isWalletConnected]);
 
     // Input field validations
     useEffect(() => {
@@ -311,7 +319,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         const getAllowance = async () => {
             try {
                 const parsedAmount: BigNumber = coinParser(
-                    truncToDecimals(totalPaidAmount, 15),
+                    selectedCollateral === defaultCollateral
+                        ? truncToDecimals(paidAmount)
+                        : isStableCurrency(selectedCollateral)
+                        ? truncToDecimals(totalPaidAmount)
+                        : truncToDecimals(totalPaidAmount, 15),
                     networkId,
                     selectedCollateral
                 );
@@ -322,6 +334,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 console.log(e);
             }
         };
+
         if (isWalletConnected && erc20Instance.provider) {
             if (selectedCollateral === CRYPTO_CURRENCY_MAP.ETH) {
                 setAllowance(true);
@@ -332,12 +345,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     }, [
         collateralAddress,
         networkId,
+        paidAmount,
         totalPaidAmount,
         walletAddress,
         isWalletConnected,
         hasAllowance,
         isAllowing,
         selectedCollateral,
+        defaultCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -395,6 +410,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 const buyInAmountBigNum =
                     selectedCollateral === defaultCollateral
                         ? coinParser(truncToDecimals(paidAmount), networkId, selectedCollateral)
+                        : isStableCurrency(selectedCollateral)
+                        ? coinParser(truncToDecimals(totalPaidAmount), networkId, selectedCollateral)
                         : coinParser(truncToDecimals(totalPaidAmount, 15), networkId, selectedCollateral);
                 const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
 
@@ -501,11 +518,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         );
     };
 
+    const inputWrapperRef = useRef<HTMLDivElement>(null);
+
     return (
         <Container>
             {!isMobile && getTradingDetails()}
             <FinalizeTrade>
-                <ColumnSpaceBetween>
+                <ColumnSpaceBetween ref={inputWrapperRef}>
                     <NumericInput
                         value={paidAmount}
                         disabled={isSubmitting}
@@ -537,6 +556,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     isDetailedView
                                     collateralBalances={multipleCollateralBalances.data}
                                     exchangeRates={exchangeRates}
+                                    dropDownWidth={inputWrapperRef.current?.getBoundingClientRect().width + 'px'}
                                 />
                             ) : undefined
                         }

@@ -24,13 +24,14 @@ import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvesto
 import vestingEscrow from './contracts/vestingEscrow';
 import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
 import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
+import { Coins } from 'types/options';
 
 type SnxJSConnector = {
     initialized: boolean;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
     collateral?: ethers.Contract;
-    multipleCollateral?: Array<ethers.Contract | undefined>;
+    multipleCollateral?: Record<Coins, ethers.Contract | undefined>;
     binaryOptionsMarketDataContract?: ethers.Contract;
     binaryOptionsMarketManagerContract?: ethers.Contract;
     retroAirdropContract?: ethers.Contract;
@@ -76,18 +77,18 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
 
-        // TODO: refactor like on OT to use object instead of array
-        this.multipleCollateral = [
-            conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),
-            conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
-            conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
-            conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
-            conditionalInitializeContract(multipleCollateral.OP, contractSettings),
-            conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
-            conditionalInitializeContract(multipleCollateral.ETH, contractSettings),
-            conditionalInitializeContract(multipleCollateral.ARB, contractSettings),
-            conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
-        ];
+        this.multipleCollateral = {
+            sUSD: conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),
+            DAI: conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
+            USDC: conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
+            USDCe: conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
+            USDT: conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
+            OP: conditionalInitializeContract(multipleCollateral.OP, contractSettings),
+            WETH: conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
+            ETH: conditionalInitializeContract(multipleCollateral.ETH, contractSettings),
+            ARB: conditionalInitializeContract(multipleCollateral.ARB, contractSettings),
+            BUSD: conditionalInitializeContract(multipleCollateral.BUSD, contractSettings),
+        };
 
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);

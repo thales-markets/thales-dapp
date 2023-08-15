@@ -5,13 +5,9 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import { setSelectedCollateralIndex } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import {
-    FlexDivSpaceBetween,
-    FlexDivColumnCentered,
-    FlexDivRowCentered,
-    FlexDivStart,
-    FlexDivCentered,
-} from 'styles/common';
+import { FlexDivSpaceBetween, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
+import { Coins } from 'types/options';
+import { isStableCurrency } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 type CollateralSelectorProps = {
@@ -22,6 +18,7 @@ type CollateralSelectorProps = {
     isDetailedView?: boolean;
     collateralBalances?: any;
     exchangeRates?: Rates | null;
+    dropDownWidth?: string;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -32,6 +29,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     isDetailedView,
     collateralBalances,
     exchangeRates,
+    dropDownWidth,
 }) => {
     const dispatch = useDispatch();
 
@@ -48,7 +46,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                 </SelectedCollateral>
                 {isDetailedView
                     ? open && (
-                          <DetailedDropdown onClick={() => setOpen(!open)}>
+                          <DetailedDropdown width={dropDownWidth} onClick={() => setOpen(!open)}>
                               {collateralArray.map((collateral, index) => {
                                   return (
                                       <DetailedCollateralOption
@@ -69,11 +67,16 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                                                   {formatCurrencyWithSign(null, collateralBalances[collateral])}
                                               </TextCollateral>
                                               <TextCollateral fontWeight="800">
-                                                  {` (${formatCurrencyWithSign(
-                                                      USD_SIGN,
-                                                      collateralBalances[collateral] *
-                                                          (exchangeRates?.[collateral] || 0)
-                                                  )})`}
+                                                  {!exchangeRates?.[collateral] &&
+                                                  !isStableCurrency(collateral as Coins)
+                                                      ? '...'
+                                                      : ` (${formatCurrencyWithSign(
+                                                            USD_SIGN,
+                                                            collateralBalances[collateral] *
+                                                                (isStableCurrency(collateral as Coins)
+                                                                    ? 1
+                                                                    : exchangeRates?.[collateral] || 0)
+                                                        )})`}
                                               </TextCollateral>
                                           </div>
                                       </DetailedCollateralOption>
@@ -82,7 +85,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                           </DetailedDropdown>
                       )
                     : open && (
-                          <Dropdown onClick={() => setOpen(!open)}>
+                          <Dropdown width={dropDownWidth} onClick={() => setOpen(!open)}>
                               {collateralArray.map((collateral, index) => {
                                   return (
                                       <CollateralOption
@@ -127,7 +130,7 @@ const TextCollateral = styled(Text)`
 `;
 
 const TextCollateralWrapper = styled.div`
-    min-width: 40px;
+    min-width: 45px;
 `;
 
 const Arrow = styled.i`
@@ -140,27 +143,29 @@ const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `;
 
-const Dropdown = styled(FlexDivColumnCentered)`
+const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     position: absolute;
     top: 30px;
     left: -7px;
-    width: 66px;
+    width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
 `;
 
-const DetailedDropdown = styled(FlexDivColumnCentered)`
+const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     position: absolute;
     top: 35px;
     right: -9px;
-    width: 350px;
+    width: ${(props) => (props.width ? props.width : '350px')};
     padding: 5px 3px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
 `;
 
-const CollateralOption = styled(FlexDivCentered)`
+const CollateralOption = styled.div`
+    display: flex;
+    align-items: center;
     padding: 5px 7px;
     border-radius: 8px;
     cursor: pointer;
