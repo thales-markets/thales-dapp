@@ -3,6 +3,7 @@ import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import Button from 'components/Button';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { Network } from 'enums/network';
@@ -23,6 +24,7 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
     const isArbitrumSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Arbitrum);
     const isBSCSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.BSC);
     const isMainnetSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Mainnet);
+    const isBaseSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Base);
 
     const getButton = (networkId: Network) => {
         let logo;
@@ -48,6 +50,10 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
                 logo = <ArbitrumLogo />;
                 text = t(`common.unsupported-network.button.arbitrum`);
                 break;
+            case Network.Base:
+                logo = <BaseLogo />;
+                text = t(`common.unsupported-network.button.base`);
+                break;
         }
 
         return (
@@ -66,19 +72,24 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
         <Wrapper>
             <Title>{t(`common.unsupported-network.title`)}</Title>
             <ExplanationText>{t(`common.unsupported-network.description`)}</ExplanationText>
-            {(isOptimismSupported || isPolygonSupported) && (
+            {(isOptimismSupported || isBaseSupported) && (
                 <ButtonWrapper>
                     {isOptimismSupported && getButton(Network.OptimismMainnet)}
+                    {isBaseSupported && getButton(Network.Base)}
+                </ButtonWrapper>
+            )}
+            {(isArbitrumSupported || isPolygonSupported) && (
+                <ButtonWrapper>
+                    {isArbitrumSupported && getButton(Network.Arbitrum)}
                     {isPolygonSupported && getButton(Network.PolygonMainnet)}
                 </ButtonWrapper>
             )}
-            {(isArbitrumSupported || isBSCSupported) && (
+            {(isBSCSupported || isMainnetSupported) && (
                 <ButtonWrapper>
-                    {isArbitrumSupported && getButton(Network.Arbitrum)}
                     {isBSCSupported && getButton(Network.BSC)}
+                    {isMainnetSupported && getButton(Network.Mainnet)}
                 </ButtonWrapper>
             )}
-            {isMainnetSupported && <ButtonWrapper>{getButton(Network.Mainnet)}</ButtonWrapper>}
         </Wrapper>
     );
 };
@@ -128,6 +139,10 @@ const ButtonWrapper = styled.div`
         flex-direction: column;
         margin: 10px 0px;
         gap: 20px;
+    }
+    svg {
+        width: 18px;
+        height: 18px;
     }
 `;
 
