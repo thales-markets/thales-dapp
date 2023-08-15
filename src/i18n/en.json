@@ -48,6 +48,7 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
+        "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -412,7 +413,7 @@
         }
     },
     "speed-markets": {
-        "info": "Choose an <bold>asset</bold> and the <bold>time</bold> you think will be <bold>above or below</bold> the current price. If you are correct you will <bold>double your money</bold>!",
+        "info": "Choose an <bold>asset</bold> and the <bold>time</bold> you think will be <bold>above or below</bold> the current price. If you are correct you will <bold>double your buy-in</bold>!",
         "steps": {
             "choose-asset": "Asset",
             "choose-direction": "Direction",
@@ -439,7 +440,8 @@
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
-            "oi": "Open interest cap"
+            "buyin-fees": "Buy-in is subject to fees",
+            "liquidity": "Current available liquidity for this Asset"
         },
         "admin": {
             "user-title": "Unresolved user winner positions",

@@ -45,6 +45,7 @@ export const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 export const SPEED_MARKETS_QUOTE = 2;
 
 export const PRICE_FEED_BUFFER_PERCENTAGE = 0.01;
+export const PRICE_CHANGES_BUFFER_PERCENTAGE = 0.005;
 
 export const TODAY = new Date();
 export const MIN_MATURITY = Math.round(

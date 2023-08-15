@@ -12,7 +12,12 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP, PRICE_FEED_BUFFER_PERCENTAGE, SPEED_MARKETS_QUOTE } from 'constants/options';
+import {
+    POSITIONS_TO_SIDE_MAP,
+    PRICE_CHANGES_BUFFER_PERCENTAGE,
+    PRICE_FEED_BUFFER_PERCENTAGE,
+    SPEED_MARKETS_QUOTE,
+} from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
@@ -112,7 +117,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const [hasAllowance, setAllowance] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
     const isButtonDisabled =
         positionType === undefined ||
         !(strikeTimeSec || deltaTimeSec) ||
@@ -219,8 +224,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     ]);
 
     useEffect(() => {
-        setTotalPaidAmount(Number(paidAmount) * (1 + totalFee));
-    }, [paidAmount, totalFee]);
+        if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
+            // add half percent to amount to take into account price changes
+            setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE));
+        } else {
+            setTotalPaidAmount(Number(paidAmount) * (1 + totalFee));
+        }
+    }, [paidAmount, totalFee, selectedCollateral, defaultCollateral]);
 
     // when buttons are used to populate amount
     useEffect(() => {
@@ -382,9 +392,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
                 const asset = ethers.utils.formatBytes32String(currencyKey);
                 const side = POSITIONS_TO_SIDE_MAP[positionType];
-                const buyInAmountBigNum = isStableCurrency(selectedCollateral)
-                    ? coinParser(truncToDecimals(paidAmount), networkId, selectedCollateral)
-                    : coinParser(truncToDecimals(totalPaidAmount, 15), networkId, selectedCollateral);
+                const buyInAmountBigNum =
+                    selectedCollateral === defaultCollateral
+                        ? coinParser(truncToDecimals(paidAmount), networkId, selectedCollateral)
+                        : coinParser(truncToDecimals(totalPaidAmount, 15), networkId, selectedCollateral);
                 const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
 
                 const tx: ethers.ContractTransaction = await getTransactionForSpeedAMM(
@@ -454,9 +465,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     const onMaxClick = () => {
         if (ammSpeedMarketsLimits && collateralBalance > 0 && totalFee) {
-            const maxWalletAmount = isStableCurrency(selectedCollateral)
-                ? Number(truncToDecimals(collateralBalance / (1 + totalFee)))
-                : Number(truncToDecimals(collateralBalance / (1 + totalFee), 18));
+            const maxWalletAmount =
+                selectedCollateral === defaultCollateral
+                    ? Number(truncToDecimals(collateralBalance / (1 + totalFee)))
+                    : isStableCurrency(selectedCollateral)
+                    ? Number(truncToDecimals(collateralBalance / (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE)))
+                    : Number(truncToDecimals(collateralBalance / (1 + totalFee), 18));
             setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, maxWalletAmount));
             setSelectedStableBuyinAmount(
                 Math.min(ammSpeedMarketsLimits.maxBuyinAmount, convertToStable(maxWalletAmount))
@@ -520,6 +534,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     selectedItem={selectedCollateralIndex}
                                     onChangeCollateral={() => {}}
                                     disabled={isSubmitting}
+                                    isDetailedView
+                                    collateralBalances={multipleCollateralBalances.data}
+                                    exchangeRates={exchangeRates}
                                 />
                             ) : undefined
                         }
@@ -618,6 +635,7 @@ const PaymentInfo = styled.span`
 `;
 
 const ShareIcon = styled.i<{ disabled: boolean }>`
+    display: none; // TODO: not supported yet
     position: absolute;
     top: 12px;
     right: 12px;
