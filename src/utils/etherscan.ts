@@ -1,5 +1,5 @@
 import { Network } from 'enums/network';
-import { getIsArbitrum, getIsBSC, isMainNet } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsBase, isMainNet } from 'utils/network';
 import { SUPPORTED_NETWORKS } from 'constants/network';
 
 const getEtherScanBaseURL = (networkId: Network) => {
@@ -12,6 +12,8 @@ const getEtherScanBaseURL = (networkId: Network) => {
         return 'https://bscscan.com';
     } else if (getIsArbitrum(networkId)) {
         return 'https://arbiscan.io';
+    } else if (getIsBase(networkId)) {
+        return 'https://basescan.org';
     } else if (networkId === Network.PolygonMainnet) {
         return 'https://polygonscan.com';
     }

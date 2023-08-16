@@ -32,7 +32,7 @@ const DappSidebar: React.FC = () => {
     const showVaultsPage = !isMainnet && !isPolygon && !isBSC && !isBase;
     const showLP = !isMainnet && !isPolygon && !isBSC;
     const showWizardPage = !isMobile;
-    const showReferralPage = !isMainnet && !isBase;
+    const showReferralPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC && !isBase;
     const showGovernancePage = !isMainnet;
     const showGamePage = !isMainnet;
