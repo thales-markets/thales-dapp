@@ -451,7 +451,7 @@
         },
         "overview": {
             "title": "Overview",
-            "navigate": "Speed markets Overview page",
+            "navigate": "Speed Markets Overview page",
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
             "unknown-price-title": "Unresolved positions without final price",

@@ -1,6 +1,6 @@
 import { USD_SIGN } from 'constants/currency';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import { setSelectedCollateralIndex } from 'redux/modules/wallet';
@@ -35,6 +35,20 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
 
     const [open, setOpen] = useState(false);
 
+    const getUSDForCollateral = useCallback(
+        (collateral: Coins) =>
+            (collateralBalances ? collateralBalances[collateral] : 0) *
+            (isStableCurrency(collateral as Coins) ? 1 : exchangeRates?.[collateral] || 0),
+        [collateralBalances, exchangeRates]
+    );
+
+    const collateralsDetailsSorted = useMemo(() => {
+        if (!isDetailedView) {
+            return collateralArray;
+        }
+        return collateralArray.sort((a, b) => getUSDForCollateral(b as Coins) - getUSDForCollateral(a as Coins));
+    }, [collateralArray, isDetailedView, getUSDForCollateral]);
+
     return (
         <Container>
             <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
@@ -47,7 +61,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                 {isDetailedView
                     ? open && (
                           <DetailedDropdown width={dropDownWidth} onClick={() => setOpen(!open)}>
-                              {collateralArray.map((collateral, index) => {
+                              {collateralsDetailsSorted.map((collateral, index) => {
                                   return (
                                       <DetailedCollateralOption
                                           key={index}
@@ -75,10 +89,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                                                       ? '...'
                                                       : ` (${formatCurrencyWithSign(
                                                             USD_SIGN,
-                                                            (collateralBalances ? collateralBalances[collateral] : 0) *
-                                                                (isStableCurrency(collateral as Coins)
-                                                                    ? 1
-                                                                    : exchangeRates?.[collateral] || 0)
+                                                            getUSDForCollateral(collateral as Coins)
                                                         )})`}
                                               </TextCollateral>
                                           </div>
