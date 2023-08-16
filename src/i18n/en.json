@@ -473,7 +473,8 @@
                     "staking": "Staking",
                     "amount-to-stake": "Amount to stake",
                     "confirmation-message": "Tokens successfully staked",
-                    "paused-message": "Staking is paused."
+                    "paused-message": "Staking is paused.",
+                    "test": "test"
                 },
                 "unstake": {
                     "name": "Unstake",

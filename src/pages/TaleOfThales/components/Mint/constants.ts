@@ -52,10 +52,10 @@ export const NFT_COLLECTIONS = [
         name: 'Fisherman Collection',
         condition: '"Fisherman Collection" is unlocked for all participants in the Fishing Competition',
         items: [
-            { name: 'Rod', src: '/miletus-nfts/NFT_16.png', itemId: 17 },
             { name: 'Hat', src: '/miletus-nfts/NFT_17.png', itemId: 18 },
             { name: 'Robe', src: '/miletus-nfts/NFT_18.png', itemId: 19 },
             { name: 'Boots', src: '/miletus-nfts/NFT_19.png', itemId: 20 },
+            { name: 'Rod', src: '/miletus-nfts/NFT_16.png', itemId: 17 },
         ],
     },
     {
@@ -77,6 +77,28 @@ export const NFT_COLLECTIONS = [
             { name: 'Hat', src: '/miletus-nfts/NFT_23.png', itemId: 24 },
             { name: 'Robe', src: '/miletus-nfts/NFT_24.png', itemId: 25 },
             { name: 'Boots', src: '/miletus-nfts/NFT_25.png', itemId: 26 },
+        ],
+    },
+    {
+        collectionId: 8,
+        name: 'Apprentice Wizard Collection',
+        condition: '"Apprentice Wizard Collection" is unlocked for all participants in the Decoration Competition',
+        items: [
+            { name: 'Hat', src: '/miletus-nfts/NFT_26.png', itemId: 27 },
+            { name: 'Robe', src: '/miletus-nfts/NFT_27.png', itemId: 28 },
+            { name: 'Boots', src: '/miletus-nfts/NFT_28.png', itemId: 29 },
+            { name: 'Staff', src: '/miletus-nfts/NFT_29.png', itemId: 30 },
+        ],
+    },
+    {
+        collectionId: 9,
+        name: 'Elder Wizard Collection',
+        condition: '"Elder Wizard Collection" is unlocked for the winners of the Decoration Competition',
+        items: [
+            { name: 'Hat', src: '/miletus-nfts/NFT_30.png', itemId: 31 },
+            { name: 'Robe', src: '/miletus-nfts/NFT_31.png', itemId: 32 },
+            { name: 'Boots', src: '/miletus-nfts/NFT_32.png', itemId: 33 },
+            { name: 'Staff', src: '/miletus-nfts/NFT_33.png', itemId: 34 },
         ],
     },
 ];
