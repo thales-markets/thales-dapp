@@ -43,10 +43,13 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     );
 
     const collateralsDetailsSorted = useMemo(() => {
+        const mappedCollaterals = collateralArray.map((collateral, index) => ({ name: collateral as Coins, index }));
         if (!isDetailedView) {
-            return collateralArray;
+            return mappedCollaterals;
         }
-        return collateralArray.sort((a, b) => getUSDForCollateral(b as Coins) - getUSDForCollateral(a as Coins));
+        return mappedCollaterals.sort(
+            (collateralA, collateralB) => getUSDForCollateral(collateralB.name) - getUSDForCollateral(collateralA.name)
+        );
     }, [collateralArray, isDetailedView, getUSDForCollateral]);
 
     return (
@@ -61,35 +64,35 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                 {isDetailedView
                     ? open && (
                           <DetailedDropdown width={dropDownWidth} onClick={() => setOpen(!open)}>
-                              {collateralsDetailsSorted.map((collateral, index) => {
+                              {collateralsDetailsSorted.map((collateral, i) => {
                                   return (
                                       <DetailedCollateralOption
-                                          key={index}
+                                          key={i}
                                           onClick={() => {
-                                              onChangeCollateral(index);
-                                              dispatch(setSelectedCollateralIndex(index));
+                                              onChangeCollateral(collateral.index);
+                                              dispatch(setSelectedCollateralIndex(collateral.index));
                                           }}
                                       >
                                           <div>
                                               <Icon
-                                                  className={`currency-icon currency-icon--${collateral.toLowerCase()}`}
+                                                  className={`currency-icon currency-icon--${collateral.name.toLowerCase()}`}
                                               />
-                                              <TextCollateral fontWeight="400">{collateral}</TextCollateral>
+                                              <TextCollateral fontWeight="400">{collateral.name}</TextCollateral>
                                           </div>
                                           <div>
                                               <TextCollateral fontWeight="400">
                                                   {formatCurrencyWithSign(
                                                       null,
-                                                      collateralBalances ? collateralBalances[collateral] : 0
+                                                      collateralBalances ? collateralBalances[collateral.name] : 0
                                                   )}
                                               </TextCollateral>
                                               <TextCollateral fontWeight="800">
-                                                  {!exchangeRates?.[collateral] &&
-                                                  !isStableCurrency(collateral as Coins)
+                                                  {!exchangeRates?.[collateral.name] &&
+                                                  !isStableCurrency(collateral.name as Coins)
                                                       ? '...'
                                                       : ` (${formatCurrencyWithSign(
                                                             USD_SIGN,
-                                                            getUSDForCollateral(collateral as Coins)
+                                                            getUSDForCollateral(collateral.name as Coins)
                                                         )})`}
                                               </TextCollateral>
                                           </div>
