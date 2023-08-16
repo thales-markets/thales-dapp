@@ -442,18 +442,18 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     [Network.OptimismMainnet]: [
         SYNTHS_MAP.sUSD as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,
-        CRYPTO_CURRENCY_MAP.USDCe as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
         CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
     [Network.OptimismGoerli]: [
         SYNTHS_MAP.sUSD as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,
-        CRYPTO_CURRENCY_MAP.USDCe as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
         CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
-    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as Coins],
-    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
 };
 
@@ -478,7 +478,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     ],
 };
 
-export const COLLATERAL_DECIMALS = {
+export const COLLATERAL_DECIMALS: Record<Coins, number> = {
     sUSD: 18,
     DAI: 18,
     USDCe: 6,

@@ -60,7 +60,7 @@ const UserSwap: React.FC = () => {
 
     const sUSDBalance = getCoinBalance(multipleStableBalancesData, SYNTHS_MAP.sUSD as Coins);
     const DAIBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.DAI as Coins);
-    const USDCeBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDCe as Coins);
+    const USDCBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDC as Coins);
     const USDTBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDT as Coins);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
@@ -76,7 +76,7 @@ const UserSwap: React.FC = () => {
             collaterals.push(
                 { type: SYNTHS_MAP.sUSD as Coins, balance: sUSDBalance },
                 { type: CRYPTO_CURRENCY_MAP.DAI as Coins, balance: DAIBalance },
-                { type: CRYPTO_CURRENCY_MAP.USDCe as Coins, balance: USDCeBalance }, // default for Polygon
+                { type: CRYPTO_CURRENCY_MAP.USDC as Coins, balance: USDCBalance }, // default for Polygon
                 { type: CRYPTO_CURRENCY_MAP.USDT as Coins, balance: USDTBalance }
             );
         } else {
@@ -84,7 +84,7 @@ const UserSwap: React.FC = () => {
         }
 
         return collaterals;
-    }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCeBalance, USDTBalance, balance, networkId]);
+    }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCBalance, USDTBalance, balance, networkId]);
 
     const defaultCollateral = isMultiCollateralSupported
         ? userCollaterals.find(

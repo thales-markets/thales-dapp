@@ -128,7 +128,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                                 bold: <BoldText />,
                             }}
                         />
-                        <Tooltip overlay={t('speed-markets.tooltips.buyin-fees')} />
+                        <Tooltip overlay={t('speed-markets.tooltips.buyin-fees')} customIconStyling={{ top: '-2px' }} />
                     </Info>
                     <ContentWrapper>
                         <LeftSide>

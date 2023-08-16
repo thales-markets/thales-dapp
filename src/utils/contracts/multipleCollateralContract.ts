@@ -1,4 +1,4 @@
-import { POLYGON_DAI, POLYGON_USDCe, POLYGON_USDT } from 'components/Swap/tokens';
+import { POLYGON_DAI, POLYGON_USDC, POLYGON_USDT } from 'components/Swap/tokens';
 import { ZERO_ADDRESS } from 'constants/network';
 import { Network } from 'enums/network';
 
@@ -1131,24 +1131,24 @@ const multipleCollateral = {
     USDCe: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+            [Network.OptimismMainnet]: 'TBD',
             [Network.OptimismGoerli]: 'TBD',
-            [Network.PolygonMainnet]: POLYGON_USDCe.address,
+            [Network.PolygonMainnet]: 'TBD',
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-            [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+            [Network.Base]: 'TBD',
         },
         abi,
     },
     USDC: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
             [Network.OptimismGoerli]: 'TBD',
-            [Network.PolygonMainnet]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_USDC.address,
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-            [Network.Base]: 'TBD',
+            [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
         },
         abi,
     },
@@ -1209,6 +1209,18 @@ const multipleCollateral = {
             [Network.BSC]: ZERO_ADDRESS,
             [Network.Arbitrum]: ZERO_ADDRESS,
             [Network.Base]: ZERO_ADDRESS,
+        },
+        abi,
+    },
+    BUSD: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+            [Network.Arbitrum]: 'TBD',
+            [Network.Base]: 'TBD',
         },
         abi,
     },

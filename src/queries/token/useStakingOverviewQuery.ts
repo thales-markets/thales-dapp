@@ -8,6 +8,10 @@ export type OverviewData = {
     period: number;
     bonusRewards: number;
     fixedPeriodReward: number;
+    maxThalesMultiplier: number;
+    vaultsMultiplier: number;
+    lpMultiplier: number;
+    tradingMultiplier: number;
 };
 
 const useStakingOverviewQuery = (
@@ -19,17 +23,34 @@ const useStakingOverviewQuery = (
         QUERY_KEYS.Token.StakingOverview(walletAddress, networkId),
         async () => {
             const { stakingThalesContract } = snxJSConnector;
+            const { stakingBonusRewardsManager } = snxJSConnector;
             try {
-                const [period, bonusRewards, fixedPeriodReward] = await Promise.all([
+                const [
+                    period,
+                    bonusRewards,
+                    fixedPeriodReward,
+                    maxThalesMultiplier,
+                    vaultsMultiplier,
+                    lpMultiplier,
+                    tradingMultiplier,
+                ] = await Promise.all([
                     stakingThalesContract?.periodsOfStaking(),
                     stakingThalesContract?.periodExtraReward(),
                     stakingThalesContract?.fixedPeriodReward(),
+                    stakingBonusRewardsManager?.maxStakingMultiplier(),
+                    stakingBonusRewardsManager?.vaultsMultiplier(),
+                    stakingBonusRewardsManager?.lpMultiplier(),
+                    stakingBonusRewardsManager?.tradingMultiplier(),
                 ]);
 
                 return {
                     period: Number(period),
                     bonusRewards: bigNumberFormatter(bonusRewards),
                     fixedPeriodReward: bigNumberFormatter(fixedPeriodReward),
+                    maxThalesMultiplier: bigNumberFormatter(maxThalesMultiplier) + 1,
+                    vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
+                    lpMultiplier: bigNumberFormatter(lpMultiplier),
+                    tradingMultiplier: bigNumberFormatter(tradingMultiplier),
                 };
             } catch (e) {
                 console.log(e);

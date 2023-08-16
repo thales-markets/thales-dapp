@@ -88,6 +88,8 @@ import {
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
+import { plausible } from 'pages/Root/Root';
+import { PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -268,9 +270,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
-            ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
+            ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
             : snxJSConnector.collateral?.address;
-    }, [selectedCollateralIndex, isMultiCollateralSupported]);
+    }, [selectedCollateral, isMultiCollateralSupported]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
@@ -553,10 +555,22 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         action: `buy-with-${selectedCollateral}`,
                         value: Number(paidAmount),
                     });
+                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                        },
+                    });
                 } else {
                     trackEvent({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
+                    });
+                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                        },
                     });
                 }
             }
