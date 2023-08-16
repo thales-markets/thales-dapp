@@ -51,7 +51,8 @@ export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: N
     if (balancesObject && balancesObject[currencyKey] < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
             if (value && value > 1) {
-                index = COLLATERALS[networkId].indexOf(key as Coins);
+                const collateralIndex = COLLATERALS[networkId].indexOf(key as Coins);
+                index = collateralIndex !== -1 ? collateralIndex : 0;
                 break;
             }
         }

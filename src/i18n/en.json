@@ -443,10 +443,11 @@
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
-            "buyin-fees": "Buy-in is subject to fees",
+            "buyin-fees": "Excluding fees",
+            "current-price": "Current price as reported by Pyth oracles",
             "liquidity": "Current available liquidity for this Asset",
-            "payout-conversion": "Exact payout known after the transaction",
-            "paid-conversion": "Amount in $ is estimated and can be slightly different due to collateral conversion"
+            "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
+            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time"
         },
         "overview": {
             "title": "Overview",

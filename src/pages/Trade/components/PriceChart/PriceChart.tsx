@@ -70,6 +70,7 @@ const ToggleButtons = [
     { label: '6M', value: 182 },
     { label: '1Y', value: 365 },
 ];
+const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
 const SpeedMarketsToggleButtons = [
     { label: '1H', value: 0.05 },
@@ -79,6 +80,7 @@ const SpeedMarketsToggleButtons = [
     { label: '2W', value: 14 },
     { label: '1M', value: 30 },
 ];
+const DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX = 0;
 
 const PriceChart: React.FC<PriceChartProps> = ({
     asset,
@@ -96,7 +98,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const [data, setData] = useState<{ date: string; price: number }[]>();
-    const [dateRange, setDateRange] = useState(14); // default date range
+    const [dateRange, setDateRange] = useState(
+        isSpeedMarkets
+            ? SpeedMarketsToggleButtons[DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX].value
+            : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX].value
+    ); // default date range
     const [ticks, setTicks] = useState<number[]>();
     const [iv, setIV] = useState(0);
 
@@ -192,7 +198,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     }, [asset, isSpeedMarkets]);
 
     const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
-    const openInterest = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
+    const liquidity = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -253,6 +259,12 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         animatePrice={isSpeedMarkets}
                         isPriceUp={isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined}
                     />
+                    {isSpeedMarkets && (
+                        <TooltipInfo
+                            overlay={t('speed-markets.tooltips.current-price')}
+                            customIconStyling={{ marginTop: '1px' }}
+                        />
+                    )}
                     {!!iv && (
                         <FlexDiv>
                             <Value>{`IV ${iv}%`}</Value>
@@ -262,17 +274,18 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             />
                         </FlexDiv>
                     )}
-                    {!!openInterest && (
+                </FlexDivRowCentered>
+                {isSpeedMarkets ? (
+                    !!liquidity && (
                         <FlexDiv>
-                            <Value>{`${t('common.liquidity')} ${openInterest}`}</Value>
+                            <Value>{`${t('common.liquidity')} ${liquidity}`}</Value>
                             <TooltipInfo
                                 overlay={t('speed-markets.tooltips.liquidity')}
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>
-                    )}
-                </FlexDivRowCentered>
-                {!isSpeedMarkets && (
+                    )
+                ) : (
                     <PriceChange up={processedPriceData > 0}>
                         {formatPricePercentageGrowth(processedPriceData)}
                     </PriceChange>
@@ -369,7 +382,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
             )}
             <Toggle
                 options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
-                defaultSelectedIndex={2}
+                defaultSelectedIndex={
+                    isSpeedMarkets ? DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX : DEFAULT_TOGGLE_BUTTON_INDEX
+                }
                 onChange={handleDateRangeChange}
             />
         </Wrapper>
