@@ -26,7 +26,15 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Base]: 'BASE',
 };
 
-export const defaultNetwork: { name: string; networkId: Network } = {
+export const SWAP_SUPPORTED_NETWORKS = [
+    Network.Mainnet,
+    Network.OptimismMainnet,
+    Network.BSC,
+    Network.PolygonMainnet,
+    Network.Arbitrum,
+];
+
+export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
     networkId: Network.OptimismMainnet,
 };

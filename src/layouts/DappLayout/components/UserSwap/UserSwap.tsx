@@ -30,6 +30,7 @@ import {
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsMultiCollateralSupported } from 'utils/network';
 import Swap from 'components/Swap';
+import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 type SwapCollateral = {
     type: Coins;
@@ -142,7 +143,7 @@ const UserSwap: React.FC = () => {
     }, [userSelectedCollateralIndex, networkId, userCollaterals]);
 
     const onStableHoverHandler = (index: number, stableCoin: Coins) => {
-        if (isWalletConnected) {
+        if (isWalletConnected && SWAP_SUPPORTED_NETWORKS.includes(networkId)) {
             setSwapTextIndex(index);
             setSwapText(
                 t('common.swap.button-text', {
@@ -153,7 +154,7 @@ const UserSwap: React.FC = () => {
     };
 
     const onStableClickHandler = (coinType: Coins) => {
-        if (!showSwap) {
+        if (!showSwap && SWAP_SUPPORTED_NETWORKS.includes(networkId)) {
             setSwapToStableCoin(coinType);
             isWalletConnected && setShowSwap(true);
             dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, coinType)));
@@ -178,7 +179,7 @@ const UserSwap: React.FC = () => {
             <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
                 <Wrapper>
                     <SwapWrapper
-                        clickable={isWalletConnected && !showSwap}
+                        clickable={isWalletConnected && !showSwap && SWAP_SUPPORTED_NETWORKS.includes(networkId)}
                         onClick={() =>
                             isWalletConnected &&
                             (isMultiCollateralSupported

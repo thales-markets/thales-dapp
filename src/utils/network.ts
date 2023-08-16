@@ -18,7 +18,7 @@ import {
     POLYGON_NETWORKS,
     SUPPORTED_NETWORKS,
     SUPPORTED_NETWORKS_NAMES,
-    defaultNetwork,
+    DEFAULT_NETWORK,
 } from 'constants/network';
 import { Network } from 'enums/network';
 import { OptimismNetwork } from 'types/network';
@@ -42,10 +42,10 @@ export async function getEthereumNetwork() {
                 return { name: SUPPORTED_NETWORKS_NAMES[networkId], networkId };
             }
         }
-        return defaultNetwork;
+        return DEFAULT_NETWORK;
     } catch (e) {
         console.log(e);
-        return defaultNetwork;
+        return DEFAULT_NETWORK;
     }
 }
 

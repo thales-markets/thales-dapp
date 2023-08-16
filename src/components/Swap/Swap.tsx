@@ -9,7 +9,7 @@ import {
     getErrorToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { Network, OneInchLiquidityProtocol } from 'enums/network';
+import { OneInchLiquidityProtocol } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,7 @@ import {
     mapTokenByNetwork,
 } from './tokens';
 import { truncToDecimals } from 'utils/formatters/number';
+import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
@@ -274,13 +275,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             );
     };
 
-    const unsupportedNetwork = ![
-        Network.Mainnet,
-        Network.OptimismMainnet,
-        Network.BSC,
-        Network.PolygonMainnet,
-        Network.Arbitrum,
-    ].includes(networkId);
+    const unsupportedNetwork = !SWAP_SUPPORTED_NETWORKS.includes(networkId);
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
