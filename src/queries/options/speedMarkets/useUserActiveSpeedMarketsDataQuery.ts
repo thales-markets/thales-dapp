@@ -44,9 +44,13 @@ const useUserActiveSpeedMarketsDataQuery = (
                     walletAddress
                 );
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
+                const userActiveMarkets = marketsDataArray.map((marketData: any, index: number) => ({
+                    ...marketData,
+                    market: activeMarkets[index],
+                }));
 
                 // Fetch prices for all matured markets
-                const pricePromises = marketsDataArray.map((market: any) => {
+                const pricePromises = userActiveMarkets.map((market: any) => {
                     const isMarketMatured = secondsToMilliseconds(Number(market.strikeTime)) < Date.now();
                     if (isMarketMatured) {
                         return priceConnection
@@ -61,14 +65,14 @@ const useUserActiveSpeedMarketsDataQuery = (
                 });
                 const priceFeeds = await Promise.allSettled(pricePromises);
 
-                for (let i = 0; i < marketsDataArray.length; i++) {
-                    const marketsData = marketsDataArray[i];
-                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                for (let i = 0; i < userActiveMarkets.length; i++) {
+                    const marketData = userActiveMarkets[i];
+                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
+                    const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     let isClaimable = false;
                     let price = 0;
-                    const isMarketMatured = secondsToMilliseconds(Number(marketsData.strikeTime)) < Date.now();
+                    const isMarketMatured = secondsToMilliseconds(Number(marketData.strikeTime)) < Date.now();
                     if (isMarketMatured) {
                         const priceFeed: PromiseSettledResult<PriceFeed> = priceFeeds[i];
                         price =
@@ -78,24 +82,24 @@ const useUserActiveSpeedMarketsDataQuery = (
 
                         isClaimable =
                             (side === Positions.UP &&
-                                price >= bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
+                                price >= bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
                             (side === Positions.DOWN &&
-                                price < bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS));
+                                price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS));
                     }
 
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
-                        currencyKey: parseBytes32String(marketsData.asset),
+                        currencyKey: parseBytes32String(marketData.asset),
                         strikePrice: formatCurrencyWithSign(
                             USD_SIGN,
-                            bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)
+                            bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
                         ),
                         amount: payout,
-                        amountBigNumber: marketsData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: activeMarkets[i],
+                        amountBigNumber: marketData.buyinAmount,
+                        maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
+                        market: marketData.market,
                         side: side,
-                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: isClaimable,
                         finalPrice: price,

@@ -31,6 +31,7 @@ import Tooltip from 'components/Tooltip';
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
+import SimpleLoader from 'components/SimpleLoader';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -122,84 +123,91 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     return (
         <>
             {supportedNetworks.includes(networkId) ? (
-                <Container>
-                    <HeaderImage />
-                    <Info>
-                        <Trans
-                            i18nKey="speed-markets.info"
-                            components={{
-                                bold: <BoldText />,
-                            }}
-                        />
-                        <Tooltip overlay={t('speed-markets.tooltips.buyin-fees')} customIconStyling={{ top: '-2px' }} />
-                    </Info>
-                    <ContentWrapper>
-                        <LeftSide>
-                            <PriceChart
-                                position={positionType}
-                                asset={currencyKey}
-                                selectedPrice={positionType !== undefined ? currentPrices[currencyKey] : undefined}
-                                selectedRightPrice={undefined}
-                                isSpeedMarkets
-                                explicitCurrentPrice={currentPrices[currencyKey]}
-                                prevExplicitPrice={prevPrice.current}
-                                risksPerAsset={ammSpeedMarketsLimitsData?.risksPerAsset}
-                            ></PriceChart>
-                        </LeftSide>
-                        <RightSide>
-                            {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
-                            <AssetDropdown
-                                asset={currencyKey}
-                                setAsset={setCurrencyKey}
-                                allAssets={SUPPORTED_ASSETS}
-                                showAssetIcon={true}
-                                type="center"
+                ammSpeedMarketsLimitsQuery.isLoading ? (
+                    <SimpleLoader />
+                ) : (
+                    <Container>
+                        <HeaderImage />
+                        <Info>
+                            <Trans
+                                i18nKey="speed-markets.info"
+                                components={{
+                                    bold: <BoldText />,
+                                }}
                             />
-                            {getStepLabel(2, t('speed-markets.steps.choose-direction'))}
-                            <SelectPosition selected={positionType} onChange={setPositionType} />
-                            {getStepLabel(3, t('speed-markets.steps.choose-time'))}
-                            <SelectTime
-                                selectedDeltaSec={deltaTimeSec}
-                                onDeltaChange={setDeltaTimeSec}
-                                onExactTimeChange={setStrikeTimeSec}
-                                ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                                isResetTriggered={isResetTriggered}
+                            <Tooltip
+                                overlay={t('speed-markets.tooltips.buyin-fees')}
+                                customIconStyling={{ top: '-2px' }}
                             />
-                            {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
-                            <SelectBuyin
-                                value={selectedStableBuyinAmount}
-                                onChange={setSelectedStableBuyinAmount}
-                                ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                            />
-                        </RightSide>
-                    </ContentWrapper>
+                        </Info>
+                        <ContentWrapper>
+                            <LeftSide>
+                                <PriceChart
+                                    position={positionType}
+                                    asset={currencyKey}
+                                    selectedPrice={positionType !== undefined ? currentPrices[currencyKey] : undefined}
+                                    selectedRightPrice={undefined}
+                                    isSpeedMarkets
+                                    explicitCurrentPrice={currentPrices[currencyKey]}
+                                    prevExplicitPrice={prevPrice.current}
+                                    risksPerAsset={ammSpeedMarketsLimitsData?.risksPerAsset}
+                                ></PriceChart>
+                            </LeftSide>
+                            <RightSide>
+                                {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
+                                <AssetDropdown
+                                    asset={currencyKey}
+                                    setAsset={setCurrencyKey}
+                                    allAssets={SUPPORTED_ASSETS}
+                                    showAssetIcon={true}
+                                    type="center"
+                                />
+                                {getStepLabel(2, t('speed-markets.steps.choose-direction'))}
+                                <SelectPosition selected={positionType} onChange={setPositionType} />
+                                {getStepLabel(3, t('speed-markets.steps.choose-time'))}
+                                <SelectTime
+                                    selectedDeltaSec={deltaTimeSec}
+                                    onDeltaChange={setDeltaTimeSec}
+                                    onExactTimeChange={setStrikeTimeSec}
+                                    ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                                    isResetTriggered={isResetTriggered}
+                                />
+                                {getStepLabel(4, t('speed-markets.steps.enter-buyin'))}
+                                <SelectBuyin
+                                    value={selectedStableBuyinAmount}
+                                    onChange={setSelectedStableBuyinAmount}
+                                    ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                                />
+                            </RightSide>
+                        </ContentWrapper>
 
-                    <AmmSpeedTrading
-                        currencyKey={currencyKey}
-                        positionType={positionType}
-                        strikeTimeSec={strikeTimeSec}
-                        deltaTimeSec={deltaTimeSec}
-                        selectedStableBuyinAmount={selectedStableBuyinAmount}
-                        setSelectedStableBuyinAmount={setSelectedStableBuyinAmount}
-                        ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                        currentPrice={currentPrices[currencyKey]}
-                        resetData={resetData}
-                    />
-                    {isWalletConnected && (
-                        <>
-                            <OpenPositions
-                                isSpeedMarkets
-                                maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
-                                currentPrices={currentPrices}
-                            />
-                            <ClosedPositions />
-                        </>
-                    )}
-                    <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
-                        <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
-                        <ArrowRight className="icon icon--arrow" />
-                    </SPAAnchor>
-                </Container>
+                        <AmmSpeedTrading
+                            currencyKey={currencyKey}
+                            positionType={positionType}
+                            strikeTimeSec={strikeTimeSec}
+                            deltaTimeSec={deltaTimeSec}
+                            selectedStableBuyinAmount={selectedStableBuyinAmount}
+                            setSelectedStableBuyinAmount={setSelectedStableBuyinAmount}
+                            ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                            currentPrice={currentPrices[currencyKey]}
+                            resetData={resetData}
+                        />
+                        {isWalletConnected && (
+                            <>
+                                <OpenPositions
+                                    isSpeedMarkets
+                                    maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
+                                    currentPrices={currentPrices}
+                                />
+                                <ClosedPositions />
+                            </>
+                        )}
+                        <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
+                            <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
+                            <ArrowRight className="icon icon--arrow" />
+                        </SPAAnchor>
+                    </Container>
+                )
             ) : (
                 <UnsupportedNetworkWrapper>
                     <UnsupportedNetwork supportedNetworks={supportedNetworks} />
