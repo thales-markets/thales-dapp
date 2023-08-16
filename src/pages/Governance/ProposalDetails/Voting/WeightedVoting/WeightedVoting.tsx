@@ -64,10 +64,8 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     }, [myVote]);
 
     useEffect(() => {
-        if (selectedChoices.some((value) => value > 0)) {
-            setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
-        }
-    }, [walletAddress]);
+        setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
+    }, [walletAddress, proposal.choices.length]);
 
     function addVote(i: number, selectedChoices: number[]) {
         selectedChoices[i] = selectedChoices[i] ? (selectedChoices[i] += 1) : 1;
@@ -373,7 +371,7 @@ const SeePitchButton = styled.button`
     }
 `;
 
-const PitchModal = styled((props) => <Dialog classes={{ papper: props.className }} {...props} />)`
+const PitchModal = styled((props) => <Dialog classes={{ paper: props.className }} {...props} />)`
     & .MuiDialog-paper {
         border-radius: 15px;
         width: 900px;
