@@ -160,7 +160,7 @@ const UnresolvedPositions: React.FC = () => {
                     const txResult = await tx.wait();
 
                     if (txResult && txResult.transactionHash) {
-                        toast.update(id, getSuccessToastOptions(t(`speed-markets.admin.confirmation-message`), id));
+                        toast.update(id, getSuccessToastOptions(t(`speed-markets.overview.confirmation-message`), id));
                         refetchActiveSpeedMarkets(networkId);
                     }
                 } catch (e) {
@@ -169,7 +169,7 @@ const UnresolvedPositions: React.FC = () => {
                     toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 }
             } else {
-                toast.update(id, getInfoToastOptions(t('speed-markets.admin.no-resolve-positions'), id));
+                toast.update(id, getInfoToastOptions(t('speed-markets.overview.no-resolve-positions'), id));
             }
             setIsSubmitting(false);
             setIsSubmittingSection('');
@@ -184,17 +184,17 @@ const UnresolvedPositions: React.FC = () => {
                 <Button
                     {...getDefaultButtonProps(isMobile)}
                     disabled={isSubmitting || !positions.length}
-                    additionalStyles={additionalButtonStyle}
+                    additionalStyles={getAdditionalButtonStyle(isMobile)}
                     onClick={() => {
                         setIsSubmittingSection(sectionName);
                         handleResolveAll(positions, isAdmin);
                     }}
                 >
                     {isSubmittingSection === sectionName
-                        ? t(`speed-markets.admin.resolve-progress`)
+                        ? t(`speed-markets.overview.resolve-progress`)
                         : isAdmin
-                        ? `${t('common.admin')} ${t('speed-markets.admin.resolve-all')}`
-                        : t('speed-markets.admin.resolve-all')}
+                        ? `${t('common.admin')} ${t('speed-markets.overview.resolve-all')}`
+                        : t('speed-markets.overview.resolve-all')}
                 </Button>
             )
         );
@@ -204,16 +204,16 @@ const UnresolvedPositions: React.FC = () => {
         let titleKey = '';
         switch (section) {
             case SECTIONS.userWinner:
-                titleKey = 'speed-markets.admin.user-title';
+                titleKey = 'speed-markets.overview.user-title';
                 break;
             case SECTIONS.ammWinner:
-                titleKey = 'speed-markets.admin.amm-title';
+                titleKey = 'speed-markets.overview.amm-title';
                 break;
             case SECTIONS.unknownPrice:
-                titleKey = 'speed-markets.admin.unknown-price-title';
+                titleKey = 'speed-markets.overview.unknown-price-title';
                 break;
             case SECTIONS.openPositions:
-                titleKey = 'speed-markets.admin.open-positions-title';
+                titleKey = 'speed-markets.overview.open-positions-title';
                 break;
             default:
         }
@@ -243,7 +243,7 @@ const UnresolvedPositions: React.FC = () => {
                                     />
                                 ))
                         ) : (
-                            <NoPositionsText>{t('speed-markets.admin.no-positions')}</NoPositionsText>
+                            <NoPositionsText>{t('speed-markets.overview.no-positions')}</NoPositionsText>
                         )}
                     </PositionsWrapper>
                 )}
@@ -267,11 +267,11 @@ const getDefaultButtonProps = (isMobile: boolean) => ({
     padding: '0px 5px',
 });
 
-const additionalButtonStyle: CSSProperties = {
-    minWidth: '180px',
+const getAdditionalButtonStyle = (isMobile: boolean): CSSProperties => ({
+    minWidth: isMobile ? '120px' : '180px',
     lineHeight: '100%',
     border: 'none',
-};
+});
 
 const Wrapper = styled.div`
     position: relative;
@@ -324,6 +324,7 @@ const NoPositionsText = styled.span`
     line-height: 100%;
     color: ${(props) => props.theme.textColor.secondary};
     min-width: max-content;
+    overflow: hidden;
 `;
 
 export default UnresolvedPositions;

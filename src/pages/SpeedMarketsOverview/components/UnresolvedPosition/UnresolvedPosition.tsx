@@ -9,7 +9,7 @@ import { formatCurrencyWithPrecision, formatCurrencyWithSign, formatNumberShort 
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
-import AdminPositionAction from '../AdminPositionAction';
+import OverviewPositionAction from '../OverviewPositionAction';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
@@ -31,7 +31,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
         <Position>
             <AlignedFlex>
                 <FlexContainer>
-                    <Label>{t('speed-markets.admin.user')}</Label>
+                    <Label>{t('speed-markets.overview.user')}</Label>
                     <Value>{position.user}</Value>
                 </FlexContainer>
                 <Separator />
@@ -66,7 +66,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <AdminPositionAction
+            <OverviewPositionAction
                 position={position}
                 isSubmittingBatch={isSubmittingBatch}
                 ammSpeedMarketsLimitsData={ammSpeedMarketsLimitsData}

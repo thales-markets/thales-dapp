@@ -28,14 +28,14 @@ import { delay } from 'utils/timer';
 import { Label, Separator } from '../UnresolvedPosition/UnresolvedPosition';
 import { truncToDecimals } from 'utils/formatters/number';
 
-type AdminPositionActionProps = {
+type OverviewPositionActionProps = {
     position: UserLivePositions;
     isSubmittingBatch: boolean;
     ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
     isAmmWinnerSection: boolean;
 };
 
-const AdminPositionAction: React.FC<AdminPositionActionProps> = ({
+const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
     position,
     isSubmittingBatch,
     ammSpeedMarketsLimitsData,
@@ -142,10 +142,10 @@ const AdminPositionAction: React.FC<AdminPositionActionProps> = ({
                     onClick={() => handleResolve()}
                 >
                     {isSubmitting && !isSubmittingBatch
-                        ? t(`speed-markets.admin.resolve-progress`)
+                        ? t(`speed-markets.overview.resolve-progress`)
                         : isAdmin
-                        ? `${t('common.admin')} ${t('speed-markets.admin.resolve')}`
-                        : t('speed-markets.admin.resolve')}
+                        ? `${t('common.admin')} ${t('speed-markets.overview.resolve')}`
+                        : t('speed-markets.overview.resolve')}
                 </Button>
             )}
         </>
@@ -173,4 +173,4 @@ const ResultsContainer = styled(FlexDivCentered)`
     min-width: 174px;
 `;
 
-export default AdminPositionAction;
+export default OverviewPositionAction;
