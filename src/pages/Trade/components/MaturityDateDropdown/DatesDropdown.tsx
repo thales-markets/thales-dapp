@@ -16,16 +16,16 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     // hooks
     useEffect(() => {
         if (allDates[0]) setDate(allDates[0]);
-    }, [allDates]);
+    }, [allDates, setDate]);
 
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper>
-                <Container onClick={() => setOpen(!open)} isClickable={!!allDates.length}>
+                <Container onClick={() => setOpen(!open)} isClickable={allDates.length > 1}>
                     <Date onClick={() => date && setDate(date)}>{date ? formatShortDateWithTime(date) : 'N/A'}</Date>
-                    {!!allDates.length && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
+                    {allDates.length > 1 && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                 </Container>
-                {open && !!allDates.length && (
+                {open && allDates.length > 1 && (
                     <Dropdown onClick={() => setOpen(!open)}>
                         {allDates.map((_date, index) => (
                             <DateContainer key={index}>

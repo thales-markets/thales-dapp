@@ -2,8 +2,6 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import i18n from 'i18n';
-import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -63,10 +61,6 @@ const RetroRewards: React.FC = () => {
     const { vestingEscrowContract } = snxJSConnector as any;
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
-
-    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
-        ? i18n.language
-        : DEFAULT_LANGUAGE;
 
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!vestingEscrowContract,
@@ -128,7 +122,7 @@ const RetroRewards: React.FC = () => {
             },
             { name: t('thales-token.snx-stakers.locked'), value: locked, color: theme.error.textColor.primary },
         ];
-    }, [vestingInfo, locked, selectedLanguage]);
+    }, [vestingInfo, locked, t, theme]);
 
     const CustomTooltip = ({ active, payload }: any) => {
         if (active && payload && payload.length) {

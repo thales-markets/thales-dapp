@@ -3,18 +3,12 @@ import { Network } from 'enums/network';
 const lpStakingRewardsContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0x31a20E5b7b1b067705419D57Ab4F72E81cC1F6Bf',
-        [Network['Kovan-Ovm']]: '0x44d55a58211b2120Dc9f280ae68B99ffcaC03c7C',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: '0x31a20E5b7b1b067705419D57Ab4F72E81cC1F6Bf',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

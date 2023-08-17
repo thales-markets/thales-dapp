@@ -22,14 +22,16 @@ import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
+import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
 import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
+import { Coins } from 'types/options';
 
 type SnxJSConnector = {
     initialized: boolean;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
     collateral?: ethers.Contract;
-    multipleCollateral?: Array<ethers.Contract | undefined>;
+    multipleCollateral?: Record<Coins, ethers.Contract | undefined>;
     binaryOptionsMarketDataContract?: ethers.Contract;
     binaryOptionsMarketManagerContract?: ethers.Contract;
     retroAirdropContract?: ethers.Contract;
@@ -52,6 +54,7 @@ type SnxJSConnector = {
     taleOfThalesNFTContract?: ethers.Contract;
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
+    speedMarketsAMMContract?: ethers.Contract;
     stakingBonusRewardsManager?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
@@ -74,12 +77,18 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
 
-        this.multipleCollateral = [
-            conditionalInitializeContract(multipleCollateral['sUSD'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['DAI'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['USDC'], contractSettings),
-            conditionalInitializeContract(multipleCollateral['USDT'], contractSettings),
-        ];
+        this.multipleCollateral = {
+            sUSD: conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),
+            DAI: conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
+            USDC: conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
+            USDCe: conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
+            USDT: conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
+            OP: conditionalInitializeContract(multipleCollateral.OP, contractSettings),
+            WETH: conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
+            ETH: conditionalInitializeContract(multipleCollateral.ETH, contractSettings),
+            ARB: conditionalInitializeContract(multipleCollateral.ARB, contractSettings),
+            BUSD: conditionalInitializeContract(multipleCollateral.BUSD, contractSettings),
+        };
 
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
@@ -103,6 +112,7 @@ const snxJSConnector: SnxJSConnector = {
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
+        this.speedMarketsAMMContract = conditionalInitializeContract(speedMarketsAMMContract, contractSettings);
         this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
     },
 };

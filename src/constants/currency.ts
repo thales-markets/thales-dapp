@@ -69,7 +69,7 @@ import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 import { Network } from 'enums/network';
-import { StableCoins } from 'types/options';
+import { Coins } from 'types/options';
 
 const SYNTHS = [
     'sBTC',
@@ -152,6 +152,7 @@ export const CRYPTO_CURRENCY = [
     'DAI',
     'PHP',
     'REP',
+    'USDCe',
     'USDC',
     'USDT',
     'VELO',
@@ -174,8 +175,18 @@ export const CRYPTO_CURRENCY = [
     'CAKE',
     'PEPE',
     'WLD',
+    'WETH',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
+
+export const STABLE_COINS = [
+    SYNTHS_MAP.sUSD,
+    CRYPTO_CURRENCY_MAP.DAI,
+    CRYPTO_CURRENCY_MAP.USDCe,
+    CRYPTO_CURRENCY_MAP.USDC,
+    CRYPTO_CURRENCY_MAP.USDT,
+    CRYPTO_CURRENCY_MAP.BUSD,
+];
 
 export const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
@@ -247,6 +258,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.OHM]: OHMIcon,
     [CRYPTO_CURRENCY_MAP.DAI]: DAIIcon,
     [CRYPTO_CURRENCY_MAP.USDC]: USDCIcon,
+    [CRYPTO_CURRENCY_MAP.USDCe]: USDCIcon,
     [CRYPTO_CURRENCY_MAP.USDT]: USDTIcon,
     [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
     [CRYPTO_CURRENCY_MAP.ARB]: ARBIcon,
@@ -313,6 +325,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.DAI]: 'Dai',
     [CRYPTO_CURRENCY_MAP.PHP]: 'Philippine Peso',
     [CRYPTO_CURRENCY_MAP.REP]: 'Augur',
+    [CRYPTO_CURRENCY_MAP.USDCe]: 'Bridged USDC',
     [CRYPTO_CURRENCY_MAP.USDC]: 'USD Coin',
     [CRYPTO_CURRENCY_MAP.USDT]: 'Tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'Velo',
@@ -363,7 +376,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.BAT]: 'basic-attention-token',
     [CRYPTO_CURRENCY_MAP.DAI]: 'dai',
     [CRYPTO_CURRENCY_MAP.REP]: 'augur',
-    [CRYPTO_CURRENCY_MAP.USDC]: 'usd-coin',
+    [CRYPTO_CURRENCY_MAP.USDCe]: 'usd-coin',
     [CRYPTO_CURRENCY_MAP.USDT]: 'tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
@@ -424,40 +437,57 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [COMMODITY_MAP.XAG]: 'kinesis-silver',
 };
 
-export const COLLATERALS: Record<Network, StableCoins[]> = {
-    [Network.Mainnet]: [SYNTHS_MAP.sUSD as StableCoins],
-    [Network.Ropsten]: [],
-    [Network.Rinkeby]: [],
-    [Network.Goerli]: [],
-    [Network.Kovan]: [],
-    [Network['Mainnet-Ovm']]: [
-        SYNTHS_MAP.sUSD as StableCoins,
-        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+export const COLLATERALS: Record<Network, Coins[]> = {
+    [Network.Mainnet]: [SYNTHS_MAP.sUSD as Coins],
+    [Network.OptimismMainnet]: [
+        SYNTHS_MAP.sUSD as Coins,
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
-    [Network['Kovan-Ovm']]: [
-        SYNTHS_MAP.sUSD as StableCoins,
-        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
+    [Network.OptimismGoerli]: [
+        SYNTHS_MAP.sUSD as Coins,
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
-    [Network['Goerli-Ovm']]: [
-        SYNTHS_MAP.sUSD as StableCoins,
-        CRYPTO_CURRENCY_MAP.DAI as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDC as StableCoins,
-        CRYPTO_CURRENCY_MAP.USDT as StableCoins,
-    ],
-    [Network['POLYGON-MUMBAI']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
-    [Network['POLYGON-MAINNET']]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
-    [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as StableCoins],
-    [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDC as StableCoins],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as Coins],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
 };
 
-export const STABLE_DECIMALS = {
+// TODO: merge with COLLATERALS when all pages will support these
+export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
+    [Network.Mainnet]: [],
+    [Network.OptimismMainnet]: [
+        CRYPTO_CURRENCY_MAP.OP as Coins,
+        CRYPTO_CURRENCY_MAP.WETH as Coins,
+        CRYPTO_CURRENCY_MAP.ETH as Coins,
+    ],
+    [Network.OptimismGoerli]: [],
+    [Network.PolygonMainnet]: [],
+    [Network.BSC]: [],
+    [Network.Base]: [],
+    [Network.Arbitrum]: [
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+        CRYPTO_CURRENCY_MAP.ARB as Coins,
+        CRYPTO_CURRENCY_MAP.WETH as Coins,
+        CRYPTO_CURRENCY_MAP.ETH as Coins,
+    ],
+};
+
+export const COLLATERAL_DECIMALS: Record<Coins, number> = {
     sUSD: 18,
     DAI: 18,
+    USDCe: 6,
     USDC: 6,
     USDT: 6,
     BUSD: 18,
+    OP: 18,
+    WETH: 18,
+    ETH: 18,
+    ARB: 18,
 };

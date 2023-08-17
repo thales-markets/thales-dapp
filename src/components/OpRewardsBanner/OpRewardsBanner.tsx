@@ -6,10 +6,10 @@ import { FlexDiv } from 'styles/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
-import { getIsPolygon } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
+import { Network } from 'enums/network';
 
 type OpRewardsBannerProps = {
     isLandingPage?: boolean;
@@ -20,7 +20,7 @@ const SHOW_BANNER = false;
 
 const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
 
     const textLink = useMemo(() => {
         return (

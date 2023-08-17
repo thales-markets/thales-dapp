@@ -78,7 +78,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
         if (networkId === Network.Mainnet) {
             fetchAuthorEns();
         }
-    }, [proposal]);
+    }, [proposal, networkId]);
 
     return (
         <Container>

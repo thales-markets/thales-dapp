@@ -115,7 +115,7 @@ const SubTitle = styled.h3`
     margin-bottom: 10px;
 `;
 
-export const Text = styled.p`
+const Text = styled.p`
     font-weight: 400;
     font-size: 13px;
     line-height: 110%;

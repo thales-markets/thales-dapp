@@ -3,18 +3,12 @@ import { Network } from 'enums/network';
 const airdrop = {
     addresses: {
         [Network.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: '0x686525728323b10bF611C6d260604c02946792ab',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: 'TBD',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: 'TBD',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

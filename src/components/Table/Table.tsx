@@ -93,7 +93,7 @@ const Table: React.FC<TableProps> = ({
             const offset = elementRect.top - containerRect.top;
             container.scrollTop += offset;
         }
-    }, [elementRef.current, containerRef.current]);
+    }, []);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady && showCurrentPrice });
 
@@ -134,7 +134,7 @@ const Table: React.FC<TableProps> = ({
 
     useEffect(() => {
         onSortByChanged && onSortByChanged();
-    }, [state.sortBy]);
+    }, [state.sortBy, onSortByChanged]);
 
     useEffect(() => {
         if (currentPage !== undefined) {

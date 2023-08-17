@@ -58,7 +58,7 @@ const PointsBreakdown: React.FC = () => {
             return query.data;
         }
         return lastValidStakingData;
-    }, [query.isSuccess, query.data, lastValidStakingData]);
+    }, [query.data, lastValidStakingData]);
 
     const onTabClick = (type: TabType) => {
         const _tabs = tabs.map((item) => {

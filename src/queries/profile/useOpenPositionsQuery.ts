@@ -4,7 +4,7 @@ import thalesData from 'thales-data';
 import { UserPosition } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'enums/network';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
@@ -75,7 +75,7 @@ const useOpenPositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: stableCoinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
@@ -98,7 +98,7 @@ const useOpenPositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: stableCoinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
@@ -112,7 +112,7 @@ const useOpenPositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -133,7 +133,7 @@ const useOpenPositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: 0,

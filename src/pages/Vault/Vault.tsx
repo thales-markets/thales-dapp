@@ -86,6 +86,7 @@ import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
 import { buildHref } from '../../utils/routes';
 import ROUTES from '../../constants/routes';
 import { navigateTo } from 'utils/routes';
+import { PLAUSIBLE_KEYS, PLAUSIBLE } from 'constants/analytics';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -117,7 +118,7 @@ const Vault: React.FC<VaultProps> = (props) => {
         if (!vaultAddress) {
             navigateTo(ROUTES.Options.Vaults);
         }
-    }, []);
+    }, [vaultAddress]);
 
     const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -129,7 +130,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
-    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
+    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
 
     const vaultDataQuery = useVaultDataQuery(vaultAddress, networkId, {
         enabled: isAppReady && !!vaultAddress,
@@ -228,7 +229,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 getAllowance();
             }
         }
-    }, [walletAddress, isWalletConnected, hasAllowance, amount, isAllowing, vaultAddress]);
+    }, [walletAddress, isWalletConnected, hasAllowance, amount, isAllowing, vaultAddress, networkId]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral } = snxJSConnector;
@@ -288,6 +289,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositVaults);
                     toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message'), id));
                     setAmount('');
                     setIsSubmitting(false);

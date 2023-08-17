@@ -1,6 +1,7 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import Tooltip from 'components/Tooltip';
 import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,6 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { getIsMainnet } from 'utils/network';
 import { buildHref } from 'utils/routes';
 
 const Notifications: React.FC = () => {
@@ -20,10 +20,8 @@ const Notifications: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const isMainnet = getIsMainnet(networkId);
-
     const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isMainnet,
+        enabled: isAppReady && isWalletConnected && networkId !== Network.Mainnet,
     });
 
     const notifications = useMemo(() => {

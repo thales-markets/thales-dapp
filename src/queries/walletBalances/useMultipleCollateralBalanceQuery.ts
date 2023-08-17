@@ -1,9 +1,10 @@
 import snxJSConnector from 'utils/snxJSConnector';
-
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { STABLE_DECIMALS } from 'constants/currency';
+import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { Coins } from 'types/options';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
@@ -20,30 +21,76 @@ const useMultipleCollateralBalanceQuery = (
                     return {
                         sUSD: 0,
                         DAI: 0,
-                        USDC: 0,
+                        USDCe: 0,
                         USDT: 0,
+                        OP: 0,
+                        WETH: 0,
+                        ETH: 0,
+                        ARB: 0,
+                        USDC: 0,
                     };
                 }
 
-                const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
-                    multipleCollateral?.length ? multipleCollateral[0]?.balanceOf(walletAddress) : undefined,
-                    multipleCollateral?.length ? multipleCollateral[1]?.balanceOf(walletAddress) : undefined,
-                    multipleCollateral?.length ? multipleCollateral[2]?.balanceOf(walletAddress) : undefined,
-                    multipleCollateral?.length ? multipleCollateral[3]?.balanceOf(walletAddress) : undefined,
+                const [
+                    sUSDBalance,
+                    DAIBalance,
+                    USDCBalance,
+                    USDCeBalance,
+                    USDTBalance,
+                    OPBalance,
+                    WETHBalance,
+                    ETHBalance,
+                    ARBBalance,
+                ] = await Promise.all([
+                    multipleCollateral
+                        ? multipleCollateral[SYNTHS_MAP.sUSD as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.DAI as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDC as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDCe as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDT as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.OP as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.WETH as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    snxJSConnector.provider ? snxJSConnector.provider.getBalance(walletAddress) : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.ARB as Coins]?.balanceOf(walletAddress)
+                        : undefined,
                 ]);
                 return {
-                    sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
-                    DAI: DAIBalance ? parseInt(DAIBalance) / 10 ** STABLE_DECIMALS.DAI : 0,
-                    USDC: USDCBalance ? parseInt(USDCBalance) / 10 ** STABLE_DECIMALS.USDC : 0,
-                    USDT: USDTBalance ? parseInt(USDTBalance) / 10 ** STABLE_DECIMALS.USDT : 0,
+                    sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, COLLATERAL_DECIMALS.sUSD) : 0,
+                    DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,
+                    USDC: USDCBalance ? bigNumberFormatter(USDCBalance, COLLATERAL_DECIMALS.USDC) : 0,
+                    USDCe: USDCeBalance ? bigNumberFormatter(USDCeBalance, COLLATERAL_DECIMALS.USDCe) : 0,
+                    USDT: USDTBalance ? bigNumberFormatter(USDTBalance, COLLATERAL_DECIMALS.USDT) : 0,
+                    OP: OPBalance ? bigNumberFormatter(OPBalance, COLLATERAL_DECIMALS.OP) : 0,
+                    WETH: WETHBalance ? bigNumberFormatter(WETHBalance, COLLATERAL_DECIMALS.WETH) : 0,
+                    ETH: ETHBalance ? bigNumberFormatter(ETHBalance, COLLATERAL_DECIMALS.ETH) : 0,
+                    ARB: ARBBalance ? bigNumberFormatter(ARBBalance, COLLATERAL_DECIMALS.ARB) : 0,
                 };
             } catch (e) {
                 console.log('e ', e);
                 return {
                     sUSD: 0,
                     DAI: 0,
-                    USDC: 0,
+                    USDCe: 0,
                     USDT: 0,
+                    OP: 0,
+                    WETH: 0,
+                    ETH: 0,
+                    ARB: 0,
+                    USDC: 0,
                 };
             }
         },

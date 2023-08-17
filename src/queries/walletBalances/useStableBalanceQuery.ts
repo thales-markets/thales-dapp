@@ -3,8 +3,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { StableCoins } from 'types/options';
-import { STABLE_DECIMALS } from 'constants/currency';
+import { Coins } from 'types/options';
+import { COLLATERAL_DECIMALS } from 'constants/currency';
 import { getDefaultCollateral } from 'utils/currency';
 
 const useStableBalanceQuery = (walletAddress: string, networkId: Network, options?: UseQueryOptions<any>) => {
@@ -19,8 +19,8 @@ const useStableBalanceQuery = (walletAddress: string, networkId: Network, option
                 usdBalance = usdBalance
                     ? parseInt(usdBalance) /
                       10 **
-                          (STABLE_DECIMALS[collateralKey as StableCoins]
-                              ? STABLE_DECIMALS[collateralKey as StableCoins]
+                          (COLLATERAL_DECIMALS[collateralKey as Coins]
+                              ? COLLATERAL_DECIMALS[collateralKey as Coins]
                               : 18)
                     : 0;
 

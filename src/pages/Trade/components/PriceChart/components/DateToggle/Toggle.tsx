@@ -1,4 +1,5 @@
 import Button from 'components/Button';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
@@ -46,10 +47,11 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
 const Wrapper = styled.div`
     display: flex;
     align-items: center;
-    margin-top: 5px;
-    margin-bottom: 10px;
     justify-content: center;
     gap: 6px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
 `;
 
 export default Toggle;

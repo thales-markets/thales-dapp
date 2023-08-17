@@ -13,7 +13,7 @@ export type RangedMarketPositionType = 'in' | 'out';
 
 type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
-export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
+export type Coins = 'sUSD' | 'DAI' | 'USDCe' | 'USDC' | 'USDT' | 'BUSD' | 'OP' | 'WETH' | 'ETH' | 'ARB';
 
 export type OptionsTransaction = {
     hash: string;
@@ -220,4 +220,34 @@ export type UserLivePositions = {
     paid: number;
     value: number;
     claimable?: boolean;
+    finalPrice?: number;
+    user?: string;
+};
+
+export type UserClosedPositions = {
+    currencyKey: string;
+    strikePrice: string;
+    amount: number;
+    amountBigNumber: BigNumber;
+    maturityDate: number;
+    market: string;
+    side: Positions;
+    paid: number;
+    value: number;
+    finalPrice: number;
+    isUserWinner: boolean;
+};
+
+export type RiskPerAsset = { currency: string; current: number; max: number };
+
+export type AmmSpeedMarketsLimits = {
+    maxBuyinAmount: number;
+    minBuyinAmount: number;
+    minimalTimeToMaturity: number;
+    maximalTimeToMaturity: number;
+    maxPriceDelaySec: number;
+    risksPerAsset: RiskPerAsset[];
+    lpFee: number;
+    safeBoxImpact: number;
+    whitelistedAddress: boolean;
 };

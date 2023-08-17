@@ -5,8 +5,7 @@ import Mint from './components/Mint';
 import Story from './components/Story';
 import { history } from 'utils/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+import { delay } from 'utils/timer';
 
 const TaleOfThales: React.FC = () => {
     const [activeTab, setActiveTab] = useState<number>(0);
