@@ -19,6 +19,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { Positions } from 'enums/options';
 import PotentialWinCard from './components/PotentialWinCard/PotentialWinCard';
 import ResolvedWinCard from './components/ResolvedWinCard/ResolvedWinCard';
+import SpeedMarketPotentialWinCard from './components/SpeedMarketPotentialWinCard/SpeedMarketPotentialWinCard';
 
 type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
 
@@ -30,6 +31,7 @@ export type SharePositionData = {
     leftPrice?: number;
     rightPrice?: number;
     strikeDate: number;
+    marketDuration?: number;
     buyIn: number;
     payout: number;
 };
@@ -263,6 +265,18 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         strikePrice={strikePrice}
                         leftPrice={leftPrice}
                         rightPrice={rightPrice}
+                        buyIn={buyIn}
+                        payout={payout}
+                    />
+                )}
+                {type == 'potential-speed' && (
+                    <SpeedMarketPotentialWinCard
+                        type={'potential-speed'}
+                        currencyKey={currencyKey}
+                        position={position}
+                        strikeDate={strikeDate}
+                        strikePrice={strikePrice}
+                        marketDuration={12}
                         buyIn={buyIn}
                         payout={payout}
                     />
