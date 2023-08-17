@@ -2,7 +2,6 @@ import { CoinGeckoClient } from 'coingecko-api-v3';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import { format } from 'date-fns';
 import { Positions } from 'enums/options';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -37,6 +36,8 @@ import TooltipInfo from 'components/Tooltip';
 import { useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
 import { RiskPerAsset } from 'types/options';
+import { getIsMobile } from 'redux/modules/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -70,6 +71,7 @@ const ToggleButtons = [
     { label: '6M', value: 182 },
     { label: '1Y', value: 365 },
 ];
+const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
 const SpeedMarketsToggleButtons = [
     { label: '1H', value: 0.05 },
@@ -79,6 +81,7 @@ const SpeedMarketsToggleButtons = [
     { label: '2W', value: 14 },
     { label: '1M', value: 30 },
 ];
+const DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX = 0;
 
 const PriceChart: React.FC<PriceChartProps> = ({
     asset,
@@ -92,11 +95,17 @@ const PriceChart: React.FC<PriceChartProps> = ({
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [data, setData] = useState<{ date: string; price: number }[]>();
-    const [dateRange, setDateRange] = useState(14); // default date range
+    const [dateRange, setDateRange] = useState(
+        isSpeedMarkets
+            ? SpeedMarketsToggleButtons[DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX].value
+            : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX].value
+    ); // default date range
     const [ticks, setTicks] = useState<number[]>();
     const [iv, setIV] = useState(0);
 
@@ -192,7 +201,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     }, [asset, isSpeedMarkets]);
 
     const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
-    const openInterest = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
+    const liquidity = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
 
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -253,32 +262,39 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         animatePrice={isSpeedMarkets}
                         isPriceUp={isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined}
                     />
+                    {isSpeedMarkets && (
+                        <TooltipInfo
+                            overlay={t('speed-markets.tooltips.current-price')}
+                            customIconStyling={{ marginTop: '1px' }}
+                        />
+                    )}
                     {!!iv && (
                         <FlexDiv>
-                            <Value>{`IV ${iv}%`}</Value>
+                            <Value margin="0 0 0 20px">{`IV ${iv}%`}</Value>
                             <TooltipInfo
                                 overlay={t('markets.amm-trading.iv-tooltip')}
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>
                     )}
-                    {!!openInterest && (
+                </FlexDivRowCentered>
+                {isSpeedMarkets ? (
+                    !!liquidity && (
                         <FlexDiv>
-                            <Value>{`${t('common.liquidity')} ${openInterest}`}</Value>
+                            <Value>{`${t('common.liquidity')} ${liquidity}`}</Value>
                             <TooltipInfo
                                 overlay={t('speed-markets.tooltips.liquidity')}
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>
-                    )}
-                </FlexDivRowCentered>
-                {!isSpeedMarkets && (
+                    )
+                ) : (
                     <PriceChange up={processedPriceData > 0}>
                         {formatPricePercentageGrowth(processedPriceData)}
                     </PriceChange>
                 )}
             </FlexDivSpaceBetween>
-            {data && (
+            {!isMobile && data && (
                 <ResponsiveContainer width="100%" height={isSpeedMarkets ? 323 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
@@ -369,7 +385,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
             )}
             <Toggle
                 options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
-                defaultSelectedIndex={2}
+                defaultSelectedIndex={
+                    isSpeedMarkets ? DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX : DEFAULT_TOGGLE_BUTTON_INDEX
+                }
                 onChange={handleDateRangeChange}
             />
         </Wrapper>
@@ -499,9 +517,6 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
@@ -510,14 +525,17 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-size: 22px;
     line-height: 100%;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
 `;
 
-const Value = styled.span`
+const Value = styled.span<{ margin?: string }>`
     font-weight: 400;
     font-size: 18px;
     line-height: 100%;
     color: ${(props) => props.theme.textColor.primary};
-    margin-left: 20px;
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')};
 `;
 
 export default PriceChart;

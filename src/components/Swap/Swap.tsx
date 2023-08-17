@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import useApproveSpender from './queries/useApproveSpender';
@@ -38,6 +38,7 @@ import {
     mapTokenByNetwork,
 } from './tokens';
 import { truncToDecimals } from 'utils/formatters/number';
+import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
@@ -45,9 +46,9 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const isL2 = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
+    const isBSC = networkId === Network.BSC;
+    const isArbitrum = networkId === Network.Arbitrum;
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
         isL2,
@@ -274,13 +275,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             );
     };
 
-    const unsupportedNetwork = ![
-        Network.Mainnet,
-        Network.OptimismMainnet,
-        Network.BSC,
-        Network.PolygonMainnet,
-        Network.Arbitrum,
-    ].includes(networkId);
+    const unsupportedNetwork = !SWAP_SUPPORTED_NETWORKS.includes(networkId);
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>

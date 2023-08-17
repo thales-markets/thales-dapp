@@ -51,7 +51,9 @@ const ClosedPositions: React.FC = () => {
                             <ClosedPosition position={position} key={`closedPosition${index}`} />
                         ))}
                     </PositionsWrapper>
-                    {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
+                    {noPositions && (
+                        <NoPositionsText>{t('speed-markets.user-positions.no-closed-positions')}</NoPositionsText>
+                    )}
                 </>
             )}
         </Wrapper>

@@ -3,7 +3,6 @@ import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
-// import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
 import LpStaking from 'pages/Token/LpStaking';
@@ -18,11 +17,12 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { TokenTabSection } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { getIsArbitrum, getIsOVM } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard';
+import { Network } from 'enums/network';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -34,7 +34,7 @@ const Tab: React.FC<{
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
-    const isArb = getIsArbitrum(networkId);
+    const isArb = networkId === Network.Arbitrum;
 
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 

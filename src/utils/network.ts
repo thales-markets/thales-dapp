@@ -3,7 +3,7 @@ import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-lo
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
+// import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -11,14 +11,14 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     ARBITRUM_NETWORK,
-    BASE_NETWORK,
+    // BASE_NETWORK,
     BSC_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
     OPTIMISM_NETWORKS,
     POLYGON_NETWORKS,
     SUPPORTED_NETWORKS,
     SUPPORTED_NETWORKS_NAMES,
-    defaultNetwork,
+    DEFAULT_NETWORK,
 } from 'constants/network';
 import { Network } from 'enums/network';
 import { OptimismNetwork } from 'types/network';
@@ -42,33 +42,22 @@ export async function getEthereumNetwork() {
                 return { name: SUPPORTED_NETWORKS_NAMES[networkId], networkId };
             }
         }
-        return defaultNetwork;
+        return DEFAULT_NETWORK;
     } catch (e) {
         console.log(e);
-        return defaultNetwork;
+        return DEFAULT_NETWORK;
     }
 }
-
-export const isMainNet = (networkId: Network) => networkId === 1;
 
 export const isNetworkSupported = (networkId: Network): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsMainnet = (networkId: number): boolean => [1].includes(networkId);
-
 export const getIsMultiCollateralSupported = (networkId: Network, includeAdditional?: boolean): boolean =>
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
 
-export const getIsBSC = (networkId: number): boolean => [56].includes(networkId);
-
-export const getIsOVM = (networkId: number): boolean => [10, 69, 420].includes(networkId);
-
-export const getIsPolygon = (networkId: number): boolean => [137, 80001].includes(networkId);
-
-export const getIsArbitrum = (networkId: number): boolean => [42161].includes(networkId);
-
-export const getIsBase = (networkId: number): boolean => [Network.Base].includes(networkId);
+export const getIsOVM = (networkId: number): boolean =>
+    [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {
@@ -171,6 +160,8 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 2,
     },
+    // TODO: Release on 28.08.
+    /*
     [Network.Base]: {
         name: 'Base',
         icon: BaseLogo,
@@ -180,6 +171,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 3,
     },
+    */
 };
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
@@ -187,20 +179,80 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.Home:
             return [
                 Network.OptimismMainnet,
-                Network.BSC,
-                Network.PolygonMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                Network.Base,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.RangeMarkets:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.Vaults:
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+        case ROUTES.Options.LiquidityPool:
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+        case ROUTES.Options.Referral:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.Token:
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet];
+        case ROUTES.Governance.Home:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.Game:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.Profile:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
+            ];
+        case ROUTES.Options.CreateMarket:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                // Network.Base, // TODO: Release on 28.08.
+                Network.PolygonMainnet,
+                Network.BSC,
             ];
         case ROUTES.Options.SpeedMarkets:
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.BSC,
-                Network.PolygonMainnet,
+                // Network.Arbitrum, // TODO: Release on 22.08.
+                // Network.Base, // TODO: Release on 28.08.
+                // Network.PolygonMainnet, // TODO: Release on 23.08.
+                // Network.BSC, // TODO: Release on 24.08.
             ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);

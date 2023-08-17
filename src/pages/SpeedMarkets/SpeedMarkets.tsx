@@ -1,6 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import titleImage from 'assets/images/speed-markets/title.png';
-import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -20,7 +19,6 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivStart } from 'styles/common';
-import { getSupportedNetworksByRoute } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import AmmSpeedTrading from './components/AmmSpeedTrading';
 import ClosedPositions from './components/ClosedPositions';
@@ -28,8 +26,12 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import SelectTime from './components/SelectTime';
 import Tooltip from 'components/Tooltip';
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import ROUTES from 'constants/routes';
+import { buildHref } from 'utils/routes';
+import SimpleLoader from 'components/SimpleLoader';
 
-const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
+const SpeedMarkets: React.FC<RouteComponentProps> = () => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -114,11 +116,11 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         );
     };
 
-    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
-
     return (
         <>
-            {supportedNetworks.includes(networkId) ? (
+            {ammSpeedMarketsLimitsQuery.isLoading ? (
+                <SimpleLoader />
+            ) : (
                 <Container>
                     <HeaderImage />
                     <Info>
@@ -192,11 +194,11 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             <ClosedPositions />
                         </>
                     )}
+                    <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
+                        <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
+                        <ArrowRight className="icon icon--arrow" />
+                    </SPAAnchor>
                 </Container>
-            ) : (
-                <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
-                </UnsupportedNetworkWrapper>
             )}
         </>
     );
@@ -283,10 +285,20 @@ const Info = styled.span`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const UnsupportedNetworkWrapper = styled.div`
-    margin: 90px 0;
+const OverviewLinkText = styled.span`
+    font-size: 18px;
+    line-height: 110%;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+const ArrowRight = styled.i`
+    font-size: 14px;
+    margin-left: 6px;
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: 0;
+        margin-bottom: 4px;
     }
 `;
 

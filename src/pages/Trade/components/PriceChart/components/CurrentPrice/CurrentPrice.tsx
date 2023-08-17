@@ -1,4 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -74,6 +75,10 @@ const Icon = styled.i<{ isUp?: boolean }>`
             : ''}
     ${(props) =>
         props.isUp !== undefined ? (props.isUp ? 'transform: rotate(-90deg);' : 'transform: rotate(90deg);') : ''}
+    
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: ${(props) => (props.isUp !== undefined ? '18' : '22')}px;
+    }
 `;
 
 const Price = styled.span<{ isUp?: boolean }>`
@@ -87,6 +92,10 @@ const Price = styled.span<{ isUp?: boolean }>`
                 ? props.theme.positionColor.up
                 : props.theme.positionColor.down
             : props.theme.textColor.primary};
+
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
 `;
 
 const getPriceAnimation = (priceLength: number, skipIndexes: number[]) => {

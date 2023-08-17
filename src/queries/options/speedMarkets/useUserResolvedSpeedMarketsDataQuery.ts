@@ -35,31 +35,35 @@ const useUserResolvedSpeedMarketsDataQuery = (
                     walletAddress
                 );
                 const marketsDataArray = await speedMarketsAMMContract.getMarketsData(maturedMarkets);
+                const userResolvedMarkets = marketsDataArray.map((marketData: any, index: number) => ({
+                    ...marketData,
+                    market: maturedMarkets[index],
+                }));
 
-                const lastTenMaturedMarkets = [...marketsDataArray]
+                const lastTenMaturedMarkets = [...userResolvedMarkets]
                     .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
                     .slice(-10);
 
                 for (let i = 0; i < lastTenMaturedMarkets.length; i++) {
-                    const marketsData = lastTenMaturedMarkets[i];
-                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const marketData = lastTenMaturedMarkets[i];
+                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
+                    const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     const userData: UserClosedPositions = {
-                        currencyKey: parseBytes32String(marketsData.asset),
+                        currencyKey: parseBytes32String(marketData.asset),
                         strikePrice: formatCurrencyWithSign(
                             USD_SIGN,
-                            bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)
+                            bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
                         ),
                         amount: payout,
-                        amountBigNumber: marketsData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: maturedMarkets[i],
+                        amountBigNumber: marketData.buyinAmount,
+                        maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
+                        market: marketData.market,
                         side: side,
-                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
-                        finalPrice: bigNumberFormatter(marketsData.finalPrice, PYTH_CURRENCY_DECIMALS),
-                        isUserWinner: marketsData.isUserWinner,
+                        finalPrice: bigNumberFormatter(marketData.finalPrice, PYTH_CURRENCY_DECIMALS),
+                        isUserWinner: marketData.isUserWinner,
                     };
 
                     userSpeedMarketsData.push(userData);

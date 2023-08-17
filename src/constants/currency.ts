@@ -475,6 +475,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.USDT as Coins,
         CRYPTO_CURRENCY_MAP.ARB as Coins,
         CRYPTO_CURRENCY_MAP.WETH as Coins,
+        CRYPTO_CURRENCY_MAP.ETH as Coins,
     ],
 };
 

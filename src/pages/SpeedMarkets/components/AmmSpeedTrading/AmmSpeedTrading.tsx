@@ -44,7 +44,7 @@ import {
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
-import { AmmSpeedMarketsLimits, Coins } from 'types/options';
+import { AmmSpeedMarketsLimits } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import {
@@ -213,7 +213,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             const defaultStableIndex = getDefaultStableIndexByBalance(
                 multipleCollateralBalances?.data,
                 networkId,
-                defaultCollateral as Coins
+                selectedCollateral
             );
             dispatch(setSelectedCollateralIndex(defaultStableIndex));
         }
@@ -610,7 +610,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 <ApprovalModal
                     defaultAmount={roundNumberToDecimals(totalPaidAmount)}
                     tokenSymbol={selectedCollateral}
-                    isNonStable={false}
+                    isNonStable={!isStableCurrency(selectedCollateral)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
