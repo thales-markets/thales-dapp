@@ -86,8 +86,7 @@ import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
 import { buildHref } from '../../utils/routes';
 import ROUTES from '../../constants/routes';
 import { navigateTo } from 'utils/routes';
-import { plausible } from 'pages/Root/Root';
-import { PLAUSIBLE_KEYS } from 'constants/analytics';
+import { PLAUSIBLE_KEYS, PLAUSIBLE } from 'constants/analytics';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -290,7 +289,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    plausible.trackEvent(PLAUSIBLE_KEYS.depositVaults);
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositVaults);
                     toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message'), id));
                     setAmount('');
                     setIsSubmitting(false);

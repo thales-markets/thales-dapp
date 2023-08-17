@@ -20,7 +20,7 @@ import PeriodDropdown from './components/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import GlobalStakingData from './components/GlobalStakingData/GlobalStakingData';
+import GlobalStakingData from './components/GlobalStakingData';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
