@@ -167,6 +167,8 @@
             "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial perimutuel</bold> markets",
             "strike-price": "Strike price",
             "strike-date": "Strike date",
+            "entry-price": "Entry price",
+            "market-duration": "Market duration",
             "buy-in": "Buy-In",
             "potential-win": "Potential win",
             "share": "Share",
