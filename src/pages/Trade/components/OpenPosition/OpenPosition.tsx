@@ -17,11 +17,11 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import Tooltip from 'components/Tooltip';
-import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 import useInterval from 'hooks/useInterval';
 import { secondsToMilliseconds } from 'date-fns';
 import { refetchUserSpeedMarkets } from 'utils/queryConnector';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -107,6 +107,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 </FlexContainer>
             </AlignedFlex>
             <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
+            <ShareIcon
+                className="icon-home icon-home--twitter"
+                disabled={false}
+                onClick={() => setOpenTwitterShareModal(true)}
+            />
             {!isSpeedMarkets && (
                 <SPAAnchor
                     href={
@@ -132,31 +137,27 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                     )}
                 </SPAAnchor>
             )}
-            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
-            {!isSpeedMarkets && (
-                <SPAAnchor
-                    href={
-                        isRanged
-                            ? buildRangeMarketLink(position.market, position.side)
-                            : buildOptionsMarketLink(position.market, position.side)
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={
+                        position.claimable
+                            ? isSpeedMarkets
+                                ? 'resolved-speed'
+                                : 'resolved'
+                            : isSpeedMarkets
+                            ? 'potential-speed'
+                            : 'potential'
                     }
-                >
-                    {isMobile ? (
-                        <TextLink>
-                            {t('profile.go-to-market')}{' '}
-                            <IconLink
-                                className="icon icon--right"
-                                fontSize="10px"
-                                marginTop="-2px"
-                                color={theme.link.textColor.primary}
-                            />
-                        </TextLink>
-                    ) : (
-                        <Tooltip overlay={t('common.tooltip.open-market')}>
-                            <IconLink className="icon icon--right" />
-                        </Tooltip>
-                    )}
-                </SPAAnchor>
+                    position={position.side}
+                    currencyKey={position.currencyKey}
+                    strikeDate={position.maturityDate}
+                    strikePrice={position.strikePrice}
+                    leftPrice={undefined}
+                    rightPrice={undefined}
+                    buyIn={position.paid}
+                    payout={position.amount}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
             )}
         </Position>
     );
