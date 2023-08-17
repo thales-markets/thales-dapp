@@ -14,8 +14,15 @@ import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 
-const OpenPositions: React.FC = () => {
+type OpenPositionsProps = {
+    isSpeedMarkets?: boolean;
+    maxPriceDelaySec?: number;
+    currentPrices?: { [key: string]: number };
+};
+
+const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -24,29 +31,49 @@ const OpenPositions: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isSpeedMarkets,
     });
 
     const livePositions = useMemo(() => (positionsQuery.isSuccess && positionsQuery.data ? positionsQuery.data : []), [
         positionsQuery,
     ]);
 
-    const noPositions = livePositions.length === 0;
-    const positions = noPositions ? dummyPositions : livePositions;
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+    });
+
+    const userOpenSpeedMarketsData = useMemo(
+        () =>
+            userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
+                ? userActiveSpeedMarketsDataQuery.data
+                : [],
+        [userActiveSpeedMarketsDataQuery]
+    );
+
+    const noPositions = isSpeedMarkets ? userOpenSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-positions')}</Title>
-            {positionsQuery.isLoading ? (
+            {userActiveSpeedMarketsDataQuery.isLoading || positionsQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {positions.map((position, index) => (
-                            <OpenPosition position={position} key={`position${index}`} />
-                        ))}
+                        {positions
+                            .sort((a, b) => a.maturityDate - b.maturityDate)
+                            .map((position, index) => (
+                                <OpenPosition
+                                    position={position}
+                                    isSpeedMarkets={isSpeedMarkets}
+                                    key={`position${position.market}${position.positionAddress}${index}`}
+                                    maxPriceDelaySec={maxPriceDelaySec}
+                                    currentPrices={currentPrices}
+                                />
+                            ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>

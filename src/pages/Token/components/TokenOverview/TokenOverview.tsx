@@ -138,7 +138,7 @@ const TokentOverview: React.FC = () => {
 
 const getUrlForSwap = (networkId: Network) => {
     switch (networkId) {
-        case Network['Mainnet-Ovm']:
+        case Network.OptimismMainnet:
             return 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11';
         case Network.Arbitrum:
             return 'https://app.camelot.exchange';
@@ -150,7 +150,7 @@ const getUrlForSwap = (networkId: Network) => {
 
 const getTitleForPrice = (networkId: Network) => {
     switch (networkId) {
-        case Network['Mainnet-Ovm']:
+        case Network.OptimismMainnet:
             return 'thales-token.overview.price-tooltip-l2';
         case Network.Arbitrum:
             return 'thales-token.overview.price-tooltip-camelot';

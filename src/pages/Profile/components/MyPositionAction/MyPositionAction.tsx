@@ -1,14 +1,21 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
+import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
+import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
-import { USD_SIGN } from 'constants/currency';
-import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import {
     getDefaultToastContent,
-    getLoadingToastOptions,
     getErrorToastOptions,
+    getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip/Tooltip';
+import { USD_SIGN } from 'constants/currency';
+import { ZERO_ADDRESS } from 'constants/network';
+import { POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -16,41 +23,49 @@ import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { UserLivePositions } from 'types/options';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
+import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
+import { coinFormatter, coinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
+import { checkAllowance } from 'utils/network';
+import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,
     refetchUserNotifications,
     refetchUserOpenPositions,
     refetchUserProfileQueries,
+    refetchUserResolvedSpeedMarkets,
+    refetchUserSpeedMarkets,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance } from 'utils/network';
-import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
-import { getIsMobile } from 'redux/modules/ui';
-import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { delay } from 'utils/timer';
 import { UsingAmmLink } from '../styled-components';
-import Tooltip from 'components/Tooltip/Tooltip';
-import { UserLivePositions } from 'types/options';
-import { ZERO_ADDRESS } from 'constants/network';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
 type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
+    isSpeedMarkets?: boolean;
+    maxPriceDelaySec?: number;
 };
 
-const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction }) => {
+const MyPositionAction: React.FC<MyPositionActionProps> = ({
+    position,
+    isProfileAction,
+    isSpeedMarkets,
+    maxPriceDelaySec,
+}) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
@@ -98,6 +113,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         isWalletConnected,
         hasAllowance,
         isAllowing,
+        isRangedMarket,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -154,7 +170,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = stableCoinFormatter(ammQuotes, networkId) / position.amount;
+                    const ammPrice = coinFormatter(ammQuotes, networkId) / position.amount;
                     // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
                         ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||
@@ -182,7 +198,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
             const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
 
-            const parsedTotal = stableCoinParser(position.value.toString(), networkId);
+            const parsedTotal = coinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
@@ -202,13 +218,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(
-                    id,
-                    getSuccessToastOptions(
-                        t(`markets.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`),
-                        id
-                    )
-                );
+                toast.update(id, getSuccessToastOptions(t(`common.sell.confirmation-message`), id));
 
                 refetchBalances(walletAddress, networkId);
                 refetchUserNotifications(walletAddress, networkId);
@@ -269,7 +279,110 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         }
     };
 
+    const handleResolve = async () => {
+        const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
+            timeout: CONNECTION_TIMEOUT_MS,
+        });
+
+        const { speedMarketsAMMContract, signer } = snxJSConnector as any;
+        if (speedMarketsAMMContract) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+
+            const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
+            try {
+                const pythContract = new ethers.Contract(
+                    PYTH_CONTRACT_ADDRESS[networkId],
+                    PythInterfaceAbi as any,
+                    (snxJSConnector as any).provider
+                );
+
+                const [priceFeedUpdateVaa, publishTime] = await priceConnection.getVaa(
+                    getPriceId(networkId, position.currencyKey),
+                    millisecondsToSeconds(position.maturityDate)
+                );
+
+                // check if price feed is not too late
+                if (
+                    maxPriceDelaySec &&
+                    differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) > maxPriceDelaySec
+                ) {
+                    await delay(800);
+                    toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));
+                    setIsSubmitting(false);
+                    return;
+                }
+
+                const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
+                const updateFee = await pythContract.getUpdateFee(priceUpdateData);
+
+                const tx: ethers.ContractTransaction = await speedMarketsAMMContractWithSigner.resolveMarket(
+                    position.market,
+                    priceUpdateData,
+                    { value: updateFee }
+                );
+
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.transactionHash) {
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
+                    );
+                    refetchUserSpeedMarkets(networkId, walletAddress);
+                    refetchUserResolvedSpeedMarkets(networkId, walletAddress);
+                }
+            } catch (e) {
+                console.log(e);
+                await delay(800);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+            }
+            setIsSubmitting(false);
+        }
+    };
+
     const getButton = () => {
+        if (isSpeedMarkets) {
+            if (position.claimable) {
+                return (
+                    <Button
+                        {...getDefaultButtonProps(isMobile)}
+                        disabled={isSubmitting}
+                        additionalStyles={additionalButtonStyle}
+                        backgroundColor={theme.button.textColor.quaternary}
+                        onClick={() => handleResolve()}
+                    >
+                        {`${
+                            isSubmitting
+                                ? t(`markets.user-positions.claim-win-progress`)
+                                : t('markets.user-positions.claim-win')
+                        } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
+                    </Button>
+                );
+            } else if (position.finalPrice) {
+                return (
+                    <>
+                        <Separator />
+                        <ResultsContainer>
+                            <Label>{t('common.result')}</Label>
+                            <Value isUpperCase color={theme.error.borderColor.primary}>
+                                {t('common.loss')}
+                            </Value>
+                        </ResultsContainer>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <Separator />
+                        <ResultsContainer>
+                            <Label>{t('markets.user-positions.results')}</Label>
+                            <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
+                        </ResultsContainer>
+                    </>
+                );
+            }
+        }
         if (position.claimable && position.amount > 0) {
             return (
                 <Button
@@ -410,8 +523,9 @@ const Label = styled.span`
     color: ${(props) => props.theme.textColor.secondary};
 `;
 
-const Value = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
+const Value = styled.span<{ color?: string; isUpperCase?: boolean }>`
+    color: ${(props) => props.color || props.theme.textColor.primary};
+    ${(props) => (props.isUpperCase ? 'text-transform: uppercase;' : '')}
     font-weight: bold;
     line-height: 100%;
 `;

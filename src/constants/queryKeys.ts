@@ -38,6 +38,18 @@ const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: Network) => ['markets', networkId],
+        SpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
+            'speedMarketsLimits',
+            networkId,
+            walletAddress,
+        ],
+        UserSpeedMarkets: (networkId: Network, walletAddress: string) => ['userSpeedMarkets', networkId, walletAddress],
+        UserResolvedSpeedMarkets: (networkId: Network, walletAddress: string) => [
+            'userResolvedSpeedMarkets',
+            networkId,
+            walletAddress,
+        ],
+        ActiveSpeedMarkets: (networkId: Network) => ['activeSpeedMarkets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
         Market: (marketAddress: string) => ['market', marketAddress],

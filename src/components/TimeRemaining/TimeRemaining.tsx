@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import intervalToDuration from 'date-fns/intervalToDuration';
@@ -69,14 +69,14 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
         }
     }, [onEnded, timeElapsed]);
 
-    useMemo(() => {
+    useEffect(() => {
         const today = Date.now();
         setTimeElapsed(today >= Number(end));
         setWeekDiff(Math.abs(differenceInWeeks(today, end)));
         setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, end)) > 4);
         setCountdownDisabled(today >= Number(end) || Math.abs(differenceInWeeks(today, end)) > 4);
-        setDuration(intervalToDuration({ start: today, end }));
-    }, [end]);
+        setDuration(intervalToDuration({ start: timeElapsed ? end : today, end }));
+    }, [end, timeElapsed]);
 
     useInterval(() => {
         if (now <= Number(end)) {

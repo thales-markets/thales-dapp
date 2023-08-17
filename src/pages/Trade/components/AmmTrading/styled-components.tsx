@@ -56,9 +56,9 @@ export const Text = styled.span`
 export const TextLabel = styled(Text)`
     color: ${(props) => props.theme.textColor.secondary};
 `;
-export const TextValue = styled(Text)<{ isProfit?: boolean; uppercase?: boolean }>`
+export const TextValue = styled(Text)<{ isProfit?: boolean; uppercase?: boolean; lowercase?: boolean }>`
     color: ${(props) => (props.isProfit ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
-    text-transform: ${(props) => (props.uppercase ? 'uppercase;' : 'initial')};
+    text-transform: ${(props) => (props.uppercase ? 'uppercase' : props.lowercase ? 'lowercase' : 'initial')};
 `;
 
 export const ColumnSpaceBetween = styled(FlexDivColumn)`

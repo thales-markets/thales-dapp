@@ -51,7 +51,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                       ['desc', 'desc']
                   )
                 : [],
-        [userTokenTransactionsQuery.data, walletAddress]
+        [userTokenTransactionsQuery.data, filters, userTokenTransactionsQuery.isSuccess]
     );
 
     const filteredTransactions = useMemo(

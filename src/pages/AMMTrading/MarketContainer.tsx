@@ -50,7 +50,7 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
             .catch(() => {
                 navigateTo(ROUTES.Options.Home);
             });
-    }, [props.match]);
+    }, [props.match, props.location.pathname]);
 
     return BOMContract ? (
         <BOMContractProvider contract={BOMContract}>

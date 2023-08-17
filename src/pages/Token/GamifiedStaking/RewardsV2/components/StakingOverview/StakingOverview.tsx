@@ -52,7 +52,7 @@ const StakingOverview: React.FC = () => {
             }
         }
         return undefined;
-    }, [leaderboardQuery.isSuccess, leaderboardQuery.data]);
+    }, [leaderboardQuery.isSuccess, leaderboardQuery.data, walletAddress]);
 
     return (
         <Container>
@@ -116,7 +116,7 @@ const StakingOverview: React.FC = () => {
                             }
                         >
                             {t('thales-token.gamified-staking.rewards.overview.go-to')}
-                            <ArrowIcon className="icon icon__arrow" />
+                            <ArrowIcon className="icon icon--arrow" />
                         </LinkToLeaderboard>
                     </Column>
                 </SecondaryContainer>

@@ -3,18 +3,12 @@ import { Network } from 'enums/network';
 const bridgeContract = {
     addresses: {
         [Network.Mainnet]: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: '0x22F24361D548e5FaAfb36d1437839f080363982B',
-        // added to resolve error with typings
-        [Network.Goerli]: 'TBD', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: 'TBD',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.OptimismMainnet]: 'TBD',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

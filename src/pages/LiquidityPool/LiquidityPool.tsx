@@ -80,8 +80,8 @@ import {
     Wrapper,
     defaultButtonProps,
 } from './styled-components';
-import { plausible } from 'pages/Root/Root';
-import { PLAUSIBLE_KEYS } from 'constants/analytics';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
+import { delay } from 'utils/timer';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -121,7 +121,7 @@ const LiquidityPool: React.FC = () => {
                 getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
             );
         }
-    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
+    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
 
     const liquidityPoolDataQuery = useLiquidityPoolDataQuery(networkId, {
         enabled: isAppReady,
@@ -296,7 +296,7 @@ const LiquidityPool: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    plausible.trackEvent(PLAUSIBLE_KEYS.depositLp);
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositLp);
                     toast.update(
                         id,
                         getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)
@@ -1097,10 +1097,6 @@ const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: num
         nextRoundBalancePercenatage,
         maxAllowancePercenatage,
     };
-};
-
-const delay = (interval: number) => {
-    return new Promise((resolve) => setTimeout(resolve, interval));
 };
 
 export default LiquidityPool;

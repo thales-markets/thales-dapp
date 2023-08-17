@@ -126,41 +126,6 @@ export const Line = styled.hr<{ margin?: string }>`
     ${(props) => (props.margin ? `margin: ${props.margin}` : '')};
 `;
 
-export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
-    border: none;
-    border-bottom: 2px dashed ${(props) => props.theme.borderColor.primary};
-    grid-row: ${(props) => props.gridRow};
-    grid-column: 1 / 13;
-    width: ${(props) => props.widthPer}%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
-`;
-
-export const DashedLineVertical = styled.hr<{
-    gridRow: number;
-    columnStart: number;
-    marginTop: number;
-    heightPer: number;
-    marginLeft?: number;
-    mobileLong?: boolean;
-}>`
-    border: none;
-    border-left: 2px dashed ${(props) => props.theme.borderColor.primary};
-    grid-row: ${(props) => props.gridRow};
-    grid-column-start: ${(props) => props.columnStart};
-    margin-top: ${(props) => props.marginTop}px;
-    height: ${(props) => props.heightPer}%;
-    ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        ${(props) => (props.mobileLong ? 'position: absolute;' : '')}
-        height: ${(props) => (props.mobileLong ? '153px' : '20px')};
-        margin-top: -10px;
-        margin-bottom: -10px;
-        ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
-    }
-`;
-
 export const LearnMore = styled.span<{ top: string }>`
     position: absolute;
     bottom: 18%;
@@ -185,14 +150,6 @@ export const Tip66Link: React.FC = () => {
     );
 };
 
-export const Tip17Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP17}>
-            TIP-17
-        </TooltipLink>
-    );
-};
-
 export const Tip20Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
@@ -213,22 +170,6 @@ export const Tip37Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP37}>
             TIP-37
-        </TooltipLink>
-    );
-};
-
-export const Tip48Link: React.FC = () => {
-    return (
-        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP48}>
-            TIP-48
-        </DescriptionLink>
-    );
-};
-
-export const Tip125Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP125}>
-            TIP-125
         </TooltipLink>
     );
 };

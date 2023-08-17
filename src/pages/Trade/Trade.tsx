@@ -1,4 +1,7 @@
+import Tooltip from 'components/Tooltip/Tooltip';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import ROUTES from 'constants/routes';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
@@ -7,13 +10,14 @@ import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesB
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { getIsMainnet } from 'utils/network';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -22,10 +26,6 @@ import OpenPositions from './components/OpenPositions';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
-import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { RouteComponentProps } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import Tooltip from 'components/Tooltip/Tooltip';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -35,7 +35,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const isMainnet = getIsMainnet(networkId);
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
     // states
@@ -44,15 +43,17 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const [positionType, setPositionType] = useState(isRangedMarkets ? Positions.IN : Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     // queries
     const assetsQuery = useAvailableAssetsQuery(networkId, {
-        enabled: isAppReady && !isMainnet,
+        enabled: isAppReady && supportedNetworks.includes(networkId),
     });
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
-        enabled: isAppReady && !isMainnet,
+        enabled: isAppReady && supportedNetworks.includes(networkId),
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
-        enabled: !!maturityDate && !isMainnet,
+        enabled: !!maturityDate && supportedNetworks.includes(networkId),
     });
 
     // hooks
@@ -106,11 +107,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     return (
         <>
-            {isMainnet ? (
-                <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork />
-                </UnsupportedNetworkWrapper>
-            ) : (
+            {supportedNetworks.includes(networkId) ? (
                 <Wrapper>
                     <BannerCarousel />
                     <ContentWrapper>
@@ -182,6 +179,10 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     />
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
+            ) : (
+                <UnsupportedNetworkWrapper>
+                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
+                </UnsupportedNetworkWrapper>
             )}
         </>
     );
@@ -210,6 +211,7 @@ const ContentWrapper = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
+        margin-top: 0;
     }
 `;
 
@@ -226,8 +228,9 @@ const LeftSide = styled.div`
     width: 100%;
     max-width: 600px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: grid;
         max-width: initial;
-        height: 60px;
+        height: fit-content;
     }
 `;
 const RightSide = styled.div`
@@ -256,6 +259,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
+        order: 2;
     }
 `;
 

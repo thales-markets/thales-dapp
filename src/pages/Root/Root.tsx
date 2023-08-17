@@ -27,8 +27,9 @@ import { arbitrum, bsc, mainnet, optimism, optimismGoerli, polygon } from 'wagmi
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
-import Plausible from 'plausible-tracker';
 import App from './App';
+import { base } from 'constants/network';
+import { PLAUSIBLE } from 'constants/analytics';
 dotenv.config();
 
 type RpcProvider = {
@@ -43,7 +44,7 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         chainnode: 'mainnet',
         blast: 'eth-mainnet',
     },
-    [Network['Mainnet-Ovm']]: {
+    [Network.OptimismMainnet]: {
         ankr: 'optimism',
         chainnode: 'optimism-mainnet',
         blast: 'optimism-mainnet',
@@ -53,19 +54,20 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         chainnode: 'bsc-mainnet',
         blast: 'bsc-mainnet',
     },
-    [Network['POLYGON-MAINNET']]: {
+    [Network.PolygonMainnet]: {
         ankr: '',
         chainnode: 'polygon-mainnet',
         blast: 'polygon-mainnet',
     },
-    [Network['Goerli-Ovm']]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
+    [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
     [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
+    [Network.Base]: { ankr: 'base', chainnode: '', blast: '' },
 };
 
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc],
+    [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc, base],
     [
         jsonRpcProvider({
             rpc: (chain) => ({
@@ -137,17 +139,11 @@ interface RootProps {
     store: Store;
 }
 
-export const plausible = Plausible({
-    domain: 'thalesmarket.io',
-    trackLocalhost: true,
-    apiHost: 'https://analytics-v2.thalesmarket.io',
-});
-
 const theme = getDefaultTheme();
 const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });
 
 const Root: React.FC<RootProps> = ({ store }) => {
-    plausible.enableAutoPageviews();
+    PLAUSIBLE.enableAutoPageviews();
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>

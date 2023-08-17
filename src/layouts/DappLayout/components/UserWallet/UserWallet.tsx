@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { SUPPORTED_NETWORK_IDS_MAP, defaultNetwork } from 'constants/network';
+import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
+import { DEFAULT_NETWORK } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
@@ -33,7 +34,7 @@ const UserWallet: React.FC = () => {
 
     // TODO: add support for testnets
     const selectedNetwork = useMemo(
-        () => SUPPORTED_NETWORK_IDS_MAP[networkId] || SUPPORTED_NETWORK_IDS_MAP[defaultNetwork.networkId],
+        () => SUPPORTED_NETWORK_IDS_MAP[networkId] || SUPPORTED_NETWORK_IDS_MAP[DEFAULT_NETWORK.networkId],
         [networkId]
     );
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -174,7 +175,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     text-align: center;
     @media (max-width: 500px) {
         min-width: fit-content;
-        max-width: 120px;
+        max-width: ${(props) => (props.connected ? '100px' : '120px')};
         padding: 4px 7px;
     }
 `;

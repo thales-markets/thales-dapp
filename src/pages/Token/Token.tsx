@@ -1,7 +1,7 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -10,17 +10,18 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
-import { getIsArbitrum, getIsOVM } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
+import { Network } from 'enums/network';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
-    const isArb = getIsArbitrum(networkId);
+    const isArb = networkId === Network.Arbitrum;
 
     const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
@@ -31,52 +32,55 @@ const TokenPage: React.FC = () => {
         },
     ];
 
-    const tabSections = [
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.REWARDS,
-            title: t('thales-token.gamified-staking.rewards.section-title'),
-            warning: t('thales-token.gamified-staking.rewards.section-warning'),
-            description: '',
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.LEADERBOARD,
-            title: t('thales-token.gamified-staking.rewards.leaderboard.section-title'),
-            description: '',
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.STAKING,
-            title: t('thales-token.gamified-staking.staking.section-title'),
-            description: t('thales-token.gamified-staking.staking.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.VESTING,
-            title: t('thales-token.gamified-staking.vesting.section-title'),
-            description: t('thales-token.gamified-staking.vesting.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
-            title: t('thales-token.gamified-staking.merge-account.section-title'),
-            description: '',
-            isButton: true,
-            buttonWidth: 'auto',
-        },
-        {
-            tab: TokenTabEnum.LP_STAKING,
-            id: TokenTabSectionIdEnum.LP_STAKING,
-            title: t('thales-token.lp-staking.section-title'),
-            description: '',
-            isButton: false,
-        },
-    ];
+    const tabSections = useMemo(
+        () => [
+            {
+                tab: TokenTabEnum.GAMIFIED_STAKING,
+                id: TokenTabSectionIdEnum.REWARDS,
+                title: t('thales-token.gamified-staking.rewards.section-title'),
+                warning: t('thales-token.gamified-staking.rewards.section-warning'),
+                description: '',
+                isButton: true,
+            },
+            {
+                tab: TokenTabEnum.GAMIFIED_STAKING,
+                id: TokenTabSectionIdEnum.LEADERBOARD,
+                title: t('thales-token.gamified-staking.rewards.leaderboard.section-title'),
+                description: '',
+                isButton: true,
+            },
+            {
+                tab: TokenTabEnum.GAMIFIED_STAKING,
+                id: TokenTabSectionIdEnum.STAKING,
+                title: t('thales-token.gamified-staking.staking.section-title'),
+                description: t('thales-token.gamified-staking.staking.section-description'),
+                isButton: true,
+            },
+            {
+                tab: TokenTabEnum.GAMIFIED_STAKING,
+                id: TokenTabSectionIdEnum.VESTING,
+                title: t('thales-token.gamified-staking.vesting.section-title'),
+                description: t('thales-token.gamified-staking.vesting.section-description'),
+                isButton: true,
+            },
+            {
+                tab: TokenTabEnum.GAMIFIED_STAKING,
+                id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
+                title: t('thales-token.gamified-staking.merge-account.section-title'),
+                description: '',
+                isButton: true,
+                buttonWidth: 'auto',
+            },
+            {
+                tab: TokenTabEnum.LP_STAKING,
+                id: TokenTabSectionIdEnum.LP_STAKING,
+                title: t('thales-token.lp-staking.section-title'),
+                description: '',
+                isButton: false,
+            },
+        ],
+        [t]
+    );
 
     if (isL2) {
         tabs.push({
@@ -120,13 +124,13 @@ const TokenPage: React.FC = () => {
         const paramTab = queryString.parse(location.search).tab;
         const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
         setSelectedTab(isTabAvailable ? paramTab : defaultTab);
-    }, [location, isL2]);
+    }, [location, isL2, defaultTab, tabIds]);
 
     useEffect(() => {
         const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
         const section = tabSections.find((section) => section.id === paramActiveButtonId);
         setSelectedSection(section?.id);
-    }, [selectedTab, location]);
+    }, [selectedTab, location, tabSections]);
 
     return (
         <>

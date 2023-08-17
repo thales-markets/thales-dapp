@@ -52,7 +52,9 @@ type MaturityProps = {
 };
 
 const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
-    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const market = isRangedMarket ? rangedMarket : directMarket;
     const BOMContract = useBOMContractContext();
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();

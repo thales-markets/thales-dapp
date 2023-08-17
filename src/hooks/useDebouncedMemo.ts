@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 function useDebouncedMemo<T>(factory: () => T, deps: DependencyList | undefined, debounceMs: number): T {
     const [state, setState] = useState(factory());
 
+    // eslint-disable-next-line
     const debouncedSetState = useCallback(debounce(setState, debounceMs), []);
 
     useEffect(() => {

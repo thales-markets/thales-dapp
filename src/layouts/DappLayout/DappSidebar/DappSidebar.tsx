@@ -4,7 +4,7 @@ import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -24,18 +24,9 @@ const DappSidebar: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
-    const isMainnet = getIsMainnet(networkId);
-
-    const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
-    const showLP = !isMainnet && !isPolygon && !isBSC;
-    const showWizardPage = !isMobile;
-    const showReferralPage = !isMainnet;
-    const showTokenPage = !isPolygon && !isBSC;
-    const showGovernancePage = !isMainnet;
-    const showGamePage = !isMainnet;
-    const showProfilePage = !isMainnet && isWalletConnected;
+    const showGamePage = getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId);
+    const showProfilePage =
+        isWalletConnected && getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId);
     const showProfileDivider = showGamePage || showProfilePage;
 
     return (
@@ -62,7 +53,16 @@ const DappSidebar: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
-                    {showVaultsPage && (
+                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.SpeedMarkets ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.SpeedMarkets)}
+                            iconName="speed-markets"
+                            label={t('common.sidebar.speed-markets')}
+                        />
+                    )}
+
+                    {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Vaults)}
@@ -71,7 +71,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showLP && (
+                    {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.LiquidityPool)}
@@ -80,7 +80,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showWizardPage && (
+                    {!isMobile && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Wizard)}
@@ -89,7 +89,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showReferralPage && (
+                    {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Referral ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Referral)}
@@ -100,7 +100,7 @@ const DappSidebar: React.FC = () => {
 
                     <Divider />
 
-                    {showTokenPage && (
+                    {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Token)}
@@ -109,7 +109,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showGovernancePage && (
+                    {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Governance.Home)}
