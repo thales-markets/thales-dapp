@@ -6,8 +6,16 @@
         "save": "Save",
         "close": "Close",
         "no-data": "Do not have any data to show",
-        "buy": "buy",
-        "sell": "sell",
+        "buy": {
+            "label": "Buy",
+            "progress-label": "Buying in progress...",
+            "confirmation-message": "Successfully bought"
+        },
+        "sell": {
+            "label": "Sell",
+            "progress-label": "Selling in progress...",
+            "confirmation-message": "Successfully sold"
+        },
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "or": "or",
@@ -17,12 +25,15 @@
         "enter-amount": "Enter amount",
         "enter-percentage": "Enter percentage",
         "enter-address": "Enter address",
+        "enter-minutes": "Enter minutes",
+        "enter-hours": "Enter hours",
         "search-placeholder": "Search...",
         "progress": "Please wait...",
         "market": "Market",
         "sort-menu": "Sorting menu",
         "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>.",
         "on": "on",
+        "in": "in",
         "above": "Above",
         "below": "Below",
         "between": "Between",
@@ -33,6 +44,11 @@
         "strike-price": "Strike price",
         "end-date": "End date",
         "balance": "Balance",
+        "result": "Result",
+        "won": "Won",
+        "loss": "Loss",
+        "admin": "Admin",
+        "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -107,6 +123,7 @@
         },
         "sidebar": {
             "markets": "Markets",
+            "speed-markets": "Speed markets",
             "leaderboard-label": "Leaderboard",
             "earn-label": "Thales Token",
             "governance-label": "Governance",
@@ -129,14 +146,14 @@
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BNBChain"
+                "bsc": "Switch to BNBChain",
+                "base": "Switch to Base"
             }
         },
         "swap": {
             "title": "Get {{token}}",
             "button-text": "Get {{token}}",
             "select-token": "Select a token",
-            "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
@@ -274,13 +291,14 @@
         "go-to-market": "Go to market"
     },
     "markets": {
-        "title": "Markets",
         "amm-trading": {
             "asset-price": "If {{asset}} price is",
+            "choose-direction": "choose direction",
+            "choose-time": "choose time",
             "pick-price": "pick a price",
             "based-amount": "based on amount",
             "you-win": "you win",
-            "enter-amount": "Enter amount",
+            "at-least": "at least",
             "select-price": "Select price",
             "amm-disabled": "AMM trading disabled",
             "max-buy": "Max buy",
@@ -315,6 +333,7 @@
         },
         "user-positions": {
             "your-positions": "Your open positions",
+            "your-closed-positions": "Your closed positions (last 10)",
             "no-positions": "Your open positions will be visible here",
             "end-date": "End date",
             "size": "Size",
@@ -410,23 +429,59 @@
                         "confirmation-message": "Positions successfully exercised"
                     }
                 }
-            },
-            "trade-options": {
-                "place-order": {
-                    "swap-confirm-button": {
-                        "buy": {
-                            "label": "Buy",
-                            "progress-label": "Buying in progress...",
-                            "confirmation-message": "Successfully bought"
-                        },
-                        "sell": {
-                            "label": "Sell",
-                            "progress-label": "Selling in progress...",
-                            "confirmation-message": "Successfully sold"
-                        }
-                    }
-                }
             }
+        }
+    },
+    "speed-markets": {
+        "title": "Speed Markets",
+        "info": "Choose an <bold>asset</bold> and the <bold>time</bold> you think will be <bold>above or below</bold> the current price. If you are correct you will <bold>double your buy-in</bold>!",
+        "steps": {
+            "choose-asset": "Asset",
+            "choose-direction": "Direction",
+            "choose-time": "Time",
+            "enter-buyin": "Amount"
+        },
+        "errors": {
+            "min-buyin": "The minimum buy-in is {{minAmount}}",
+            "max-buyin": "The maximum buy-in is {{maxAmount}}",
+            "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
+            "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
+            "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future",
+            "cap-breach": "OI cap breached",
+            "insufficient-balance-fee": "Not enough {{currencyKey}} in wallet for {{fee}} fee"
+        },
+        "user-positions": {
+            "end-time": "End time",
+            "confirmation-message": "Positions successfully claimed",
+            "no-closed-positions": "Your closed positions will be visible here",
+            "errors": {
+                "price-stale": "Can't resolve market with stale price"
+            }
+        },
+        "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
+        "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
+        "tooltips": {
+            "buyin-fees": "Excluding fees",
+            "current-price": "Current price as reported by Pyth oracles",
+            "liquidity": "Current available liquidity for this Asset",
+            "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
+            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time"
+        },
+        "overview": {
+            "title": "Overview",
+            "navigate": "Speed Markets Overview page",
+            "user-title": "Unresolved user winner positions",
+            "amm-title": "Unresolved AMM winner positions",
+            "unknown-price-title": "Unresolved positions without final price",
+            "open-positions-title": "Active positions",
+            "resolve-progress": "Resolving...",
+            "resolve": "Resolve",
+            "resolve-all": "Resolve all",
+            "confirmation-message": "Positions successfully resolved",
+            "no-resolve-positions": "No positions for this section with price",
+            "user": "User",
+            "no-positions": "No positions for this section"
         }
     },
     "thales-token": {
@@ -491,7 +546,8 @@
                     "staking": "Staking",
                     "amount-to-stake": "Amount to stake",
                     "confirmation-message": "Tokens successfully staked",
-                    "paused-message": "Staking is paused."
+                    "paused-message": "Staking is paused.",
+                    "test": "test"
                 },
                 "unstake": {
                     "name": "Unstake",

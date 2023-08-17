@@ -14,7 +14,7 @@ const NetworkSwitch: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const switchOrAddOptimismNetwork = async () => {
-        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
+        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network.OptimismMainnet;
         const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
         if (typeof window.ethereum !== 'undefined') {

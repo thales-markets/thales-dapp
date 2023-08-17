@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
 import { BigNumber } from 'ethers';
@@ -76,12 +76,12 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                     bigNumberFormatter(ammMarketData.downBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
                 ammMaxLimits.maxSellShort =
                     bigNumberFormatter(ammMarketData.downSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
-                ammMaxLimits.buyLongPrice = stableCoinFormatter(ammMarketData.upBuyPrice, networkId);
-                ammMaxLimits.buyShortPrice = stableCoinFormatter(ammMarketData.downBuyPrice, networkId);
-                ammMaxLimits.maxBuyLongPrice = stableCoinFormatter(maxBuyLongPrice, networkId);
-                ammMaxLimits.maxBuyShortPrice = stableCoinFormatter(maxBuyShortPrice, networkId);
-                ammMaxLimits.sellLongPrice = stableCoinFormatter(ammMarketData.upSellPrice, networkId);
-                ammMaxLimits.sellShortPrice = stableCoinFormatter(ammMarketData.downSellPrice, networkId);
+                ammMaxLimits.buyLongPrice = coinFormatter(ammMarketData.upBuyPrice, networkId);
+                ammMaxLimits.buyShortPrice = coinFormatter(ammMarketData.downBuyPrice, networkId);
+                ammMaxLimits.maxBuyLongPrice = coinFormatter(maxBuyLongPrice, networkId);
+                ammMaxLimits.maxBuyShortPrice = coinFormatter(maxBuyShortPrice, networkId);
+                ammMaxLimits.sellLongPrice = coinFormatter(ammMarketData.upSellPrice, networkId);
+                ammMaxLimits.sellShortPrice = coinFormatter(ammMarketData.downSellPrice, networkId);
                 ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(ammMarketData.upBuyPriceImpact) - MIN_SCEW_IMPACT;
                 ammMaxLimits.buyShortPriceImpact =
                     bigNumberFormatter(ammMarketData.downBuyPriceImpact) - MIN_SCEW_IMPACT;

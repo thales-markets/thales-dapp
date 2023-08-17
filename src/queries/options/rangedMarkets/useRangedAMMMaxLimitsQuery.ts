@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, RANGE_SIDE } from 'constants/options';
 import { BigNumber } from 'ethers';
@@ -76,12 +76,12 @@ const useRangedAMMMaxLimitsQuery = (
                         : 0,
                 ]);
 
-                ammMaxLimits.in.buyPrice = stableCoinFormatter(rangedAmmMarketData.inBuyPrice, networkId);
-                ammMaxLimits.out.buyPrice = stableCoinFormatter(rangedAmmMarketData.outBuyPrice, networkId);
-                ammMaxLimits.in.maxBuyPrice = stableCoinFormatter(maxBuyInPrice, networkId);
-                ammMaxLimits.out.maxBuyPrice = stableCoinFormatter(maxBuyOutPrice, networkId);
-                ammMaxLimits.in.sellPrice = stableCoinFormatter(rangedAmmMarketData.inSellPrice, networkId);
-                ammMaxLimits.out.sellPrice = stableCoinFormatter(rangedAmmMarketData.outSellPrice, networkId);
+                ammMaxLimits.in.buyPrice = coinFormatter(rangedAmmMarketData.inBuyPrice, networkId);
+                ammMaxLimits.out.buyPrice = coinFormatter(rangedAmmMarketData.outBuyPrice, networkId);
+                ammMaxLimits.in.maxBuyPrice = coinFormatter(maxBuyInPrice, networkId);
+                ammMaxLimits.out.maxBuyPrice = coinFormatter(maxBuyOutPrice, networkId);
+                ammMaxLimits.in.sellPrice = coinFormatter(rangedAmmMarketData.inSellPrice, networkId);
+                ammMaxLimits.out.sellPrice = coinFormatter(rangedAmmMarketData.outSellPrice, networkId);
                 ammMaxLimits.in.maxBuy =
                     ammMaxLimits.in.buyPrice !== 0
                         ? bigNumberFormatter(rangedAmmMarketData.inBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE

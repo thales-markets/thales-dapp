@@ -82,7 +82,7 @@ export const prepareTransactionForAMM = async (
     let finalEstimation = null;
 
     if (isBuyWithNonDefaultCollateral) {
-        if (networkId === Network['Mainnet-Ovm']) {
+        if (networkId === Network.OptimismMainnet) {
             const estimation = await ammContractWithSigner.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(
                 marketAddress,
                 side,
@@ -106,7 +106,7 @@ export const prepareTransactionForAMM = async (
             { gasLimit: finalEstimation }
         )) as ethers.ContractTransaction;
     } else {
-        if (networkId === Network['Mainnet-Ovm']) {
+        if (networkId === Network.OptimismMainnet) {
             const estimation = isBuy
                 ? !referral
                     ? await ammContractWithSigner.estimateGas.buyFromAMM(

@@ -38,7 +38,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             };
             fetchIdAddress();
         }
-    }, []);
+    }, [queryParams?.referralId, queryParams.referrerId]);
 
     useEffect(() => {
         const referralWallet = getReferralWallet();
@@ -55,7 +55,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 },
             ],
         });
-    }, [rawParams, networkId]);
+    }, [rawParams, networkId, trackPageView]);
 
     return <>{isAppReady ? children : <Loader />}</>;
 };

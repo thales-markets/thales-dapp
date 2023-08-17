@@ -62,7 +62,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         }
 
         return data;
-    }, [proposalResults]);
+    }, [proposalResults, chartColor, numberOfCouncilMembers, theme]);
 
     const chartInnerText = isPassed
         ? t(`governance.proposal.voting-approval-status.passed`)

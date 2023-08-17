@@ -131,7 +131,7 @@ const Referral: React.FC = () => {
         }
 
         return [];
-    }, [transactionsQuery.isSuccess, walletAddress]);
+    }, [transactionsQuery.isSuccess, transactionsQuery.data, walletAddress]);
 
     const tradersData: ReferredTrader[] | [] = useMemo(() => {
         if (tradersQuery.isSuccess && tradersQuery.data && walletAddress) {
@@ -139,7 +139,7 @@ const Referral: React.FC = () => {
         }
 
         return [];
-    }, [tradersQuery.isSuccess, walletAddress]);
+    }, [tradersQuery.isSuccess, tradersQuery.data, walletAddress]);
 
     const affiliateLeaderboardQuery = useReferrerQuery(networkId, undefined, {
         enabled: isAppReady,
@@ -150,7 +150,7 @@ const Referral: React.FC = () => {
             return orderBy(affiliateLeaderboardQuery.data, ['totalVolume'], ['desc']);
         }
         return [];
-    }, [affiliateLeaderboardQuery?.isSuccess]);
+    }, [affiliateLeaderboardQuery.data]);
 
     const statisticsData = useMemo(() => {
         const data = {
@@ -222,7 +222,7 @@ const Referral: React.FC = () => {
                 getSuccessToastOptions('', 'customId')
             );
         }
-    }, [reffererID, walletAddress, savedReffererID, t]);
+    }, [reffererID, walletAddress, savedReffererID, t, landingPage]);
 
     useEffect(() => {
         if (reffererIDQuery.isSuccess && reffererIDQuery.data) {
@@ -234,7 +234,7 @@ const Referral: React.FC = () => {
             setSavedReffererID('');
             setReferralLink('');
         }
-    }, [reffererIDQuery.isSuccess, reffererIDQuery.data]);
+    }, [reffererIDQuery.isSuccess, reffererIDQuery.data, landingPage]);
 
     const handleReadMore = () => {
         if (!showMore) setHeight('100%');

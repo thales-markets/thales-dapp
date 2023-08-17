@@ -3,8 +3,7 @@ import React, { CSSProperties, MouseEventHandler } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { navigateTo } from '../../utils/routes';
-
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+import { delay } from 'utils/timer';
 
 type FieldValidationMessageProps = {
     className?: string;

@@ -112,7 +112,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
             setSelectedTab(SpaceKey.TIPS);
             setSelectedProposal(undefined);
         }
-    }, [props.match]);
+    }, [props.match, fetchPreloadedProposal]);
 
     const optionsTabContent: Array<{
         id: SpaceKey;

@@ -192,7 +192,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 }
             }
         },
-        [isLoading, isMobile, useDownloadImage, onClose]
+        [isLoading, useDownloadImage, isMobile, t, onClose]
     );
 
     const onTwitterShareClick = () => {

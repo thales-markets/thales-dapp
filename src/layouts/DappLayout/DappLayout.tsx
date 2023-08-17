@@ -50,7 +50,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
             };
             fetchIdAddress();
         }
-    }, []);
+    }, [queryParams?.referralId, queryParams?.referrerId]);
 
     useEffect(() => {
         const referralWallet = getReferralWallet();
@@ -67,7 +67,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
                 },
             ],
         });
-    }, [rawParams, networkId]);
+    }, [rawParams, networkId, trackPageView]);
 
     useEffect(() => {
         const checkMetamaskBrowser = async () => {

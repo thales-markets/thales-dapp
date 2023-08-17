@@ -3,6 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'enums/network';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 export type Rates = Record<string, number>;
 
 const useExchangeRatesQuery = (networkId: Network, options?: UseQueryOptions<Rates>) => {
@@ -19,7 +20,17 @@ const useExchangeRatesQuery = (networkId: Network, options?: UseQueryOptions<Rat
                 currencies.forEach((currency: string, idx: number) => {
                     const currencyName = parseBytes32String(currency);
                     exchangeRates[currencyName] = bigNumberFormatter(rates[idx]);
-                    exchangeRates[`s${currencyName}`] = bigNumberFormatter(rates[idx]);
+                    if (currencyName === CRYPTO_CURRENCY_MAP.USDC) {
+                        exchangeRates[`${currencyName}e`] = bigNumberFormatter(rates[idx]);
+                    }
+                    if (currencyName === 'SUSD') {
+                        exchangeRates[`sUSD`] = bigNumberFormatter(rates[idx]);
+                    } else {
+                        exchangeRates[`s${currencyName}`] = bigNumberFormatter(rates[idx]);
+                    }
+                    if (currencyName === CRYPTO_CURRENCY_MAP.ETH) {
+                        exchangeRates[`W${currencyName}`] = bigNumberFormatter(rates[idx]);
+                    }
                 });
             }
 

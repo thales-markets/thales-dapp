@@ -69,6 +69,7 @@ const Wrapper = styled.button<{
     border-radius: 30px;
     font-weight: 700;
     font-size: ${(props) => props.fontSize || '18px'};
+    line-height: 100%;
     cursor: pointer;
     color: ${(props) => props.textColor || props.theme.button.textColor.primary};
     background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};

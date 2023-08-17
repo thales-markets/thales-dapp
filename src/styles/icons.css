@@ -194,6 +194,10 @@
     content: '\0047';
 }
 
+.icon--thunder:before {
+    content: '\0054';
+}
+
 .icon--success:before {
     content: '\0057';
 }
@@ -306,8 +310,20 @@
     content: '\004B';
 }
 
+.icon--discount-sport-vault:before {
+    content: '\0050';
+}
+
+.icon--safu-thales-vault:before {
+    content: '\0056';
+}
+
 .icon--thales:before {
     content: '\0059';
+}
+
+.icon--arrow:before {
+    content: '\005C';
 }
 
 .icon--overtime:before {
@@ -320,14 +336,6 @@
 
 .icon__degen-discount-vault:before {
     content: '\0052';
-}
-
-.icon--safu-thales-vault:before {
-    content: '\0056';
-}
-
-.icon--discount-sport-vault:before {
-    content: '\0050';
 }
 
 .icon__degen-vault:before {

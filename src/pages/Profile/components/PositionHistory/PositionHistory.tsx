@@ -35,8 +35,10 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         enabled: isAppReady && isWalletConnected,
     });
 
-    const closedPositions: UserPosition[] =
-        closedPositionsQuery.isSuccess && closedPositionsQuery.data ? closedPositionsQuery.data : [];
+    const closedPositions: UserPosition[] = useMemo(
+        () => (closedPositionsQuery.isSuccess && closedPositionsQuery.data ? closedPositionsQuery.data : []),
+        [closedPositionsQuery.isSuccess, closedPositionsQuery.data]
+    );
 
     const filteredData = useMemo(() => {
         if (searchText === '') return closedPositions;
@@ -45,75 +47,75 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         );
     }, [searchText, closedPositions]);
 
-    const generateRows = (data: UserPosition[]) => {
-        try {
-            return data.map((row: UserPosition) => {
-                const cells: any = [
-                    {
-                        value: getStatus(row.claimed, theme, t),
-                    },
-                    {
-                        title: row.isRanged
-                            ? t('markets.market.ranged-markets.strike-range')
-                            : t(`profile.strike-price`),
-                        value: row.isRanged
-                            ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
-                            : `$${formatCurrency(row.strikePrice)}`,
-                    },
-                    {
-                        title: t('profile.final-price'),
-                        value: formatCurrencyWithSign(USD_SIGN, row.finalPrice),
-                    },
-                    {
-                        title: t('profile.leaderboard.trades.table.amount-col'),
-                        value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
-                    },
-                    {
-                        title: t('profile.history.expired'),
-                        value: formatShortDate(row.maturityDate).toUpperCase(),
-                    },
-                ];
-
-                if (!isMobile) {
-                    cells.push({
-                        value: (
-                            <SPAAnchor
-                                href={
-                                    row.isRanged
-                                        ? buildRangeMarketLink(row.market, row.side)
-                                        : buildOptionsMarketLink(row.market, row.side)
-                                }
-                            >
-                                <IconLink className="icon icon--right" />
-                            </SPAAnchor>
-                        ),
-                        width: '30px',
-                    });
-                }
-
-                return {
-                    asset: {
-                        currencyKey: row.currencyKey,
-                    },
-                    cells: cells,
-                    link: isMobile
-                        ? row.isRanged
-                            ? buildRangeMarketLink(row.market, row.side)
-                            : buildOptionsMarketLink(row.market, row.side)
-                        : undefined,
-                };
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     const rows = useMemo(() => {
+        const generateRows = (data: UserPosition[]) => {
+            try {
+                return data.map((row: UserPosition) => {
+                    const cells: any = [
+                        {
+                            value: getStatus(row.claimed, theme, t),
+                        },
+                        {
+                            title: row.isRanged
+                                ? t('markets.market.ranged-markets.strike-range')
+                                : t(`profile.strike-price`),
+                            value: row.isRanged
+                                ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
+                                : `$${formatCurrency(row.strikePrice)}`,
+                        },
+                        {
+                            title: t('profile.final-price'),
+                            value: formatCurrencyWithSign(USD_SIGN, row.finalPrice),
+                        },
+                        {
+                            title: t('profile.leaderboard.trades.table.amount-col'),
+                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
+                        },
+                        {
+                            title: t('profile.history.expired'),
+                            value: formatShortDate(row.maturityDate).toUpperCase(),
+                        },
+                    ];
+
+                    if (!isMobile) {
+                        cells.push({
+                            value: (
+                                <SPAAnchor
+                                    href={
+                                        row.isRanged
+                                            ? buildRangeMarketLink(row.market, row.side)
+                                            : buildOptionsMarketLink(row.market, row.side)
+                                    }
+                                >
+                                    <IconLink className="icon icon--right" />
+                                </SPAAnchor>
+                            ),
+                            width: '30px',
+                        });
+                    }
+
+                    return {
+                        asset: {
+                            currencyKey: row.currencyKey,
+                        },
+                        cells: cells,
+                        link: isMobile
+                            ? row.isRanged
+                                ? buildRangeMarketLink(row.market, row.side)
+                                : buildOptionsMarketLink(row.market, row.side)
+                            : undefined,
+                    };
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
         if (filteredData.length > 0) {
             return generateRows(filteredData);
         }
         return [];
-    }, [filteredData]);
+    }, [filteredData, isMobile, t, theme]);
 
     return <TileTable rows={rows as any} isLoading={closedPositionsQuery.isLoading} />;
 };

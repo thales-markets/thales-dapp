@@ -1,4 +1,5 @@
 import { POLYGON_DAI, POLYGON_USDC, POLYGON_USDT } from 'components/Swap/tokens';
+import { ZERO_ADDRESS } from 'constants/network';
 import { Network } from 'enums/network';
 
 const sUSDABI = [
@@ -1106,69 +1107,120 @@ const multipleCollateral = {
     sUSD: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            // added to resolve error with typings
-            [Network.Goerli]: 'TBD', // TODO: goerli network remove or implement
-            [Network['Mainnet-Ovm']]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
-            [Network['Kovan-Ovm']]: '0xaA5068dC2B3AADE533d3e52C6eeaadC6a8154c57', // sUSD
-            [Network['Goerli-Ovm']]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
-            [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
-            [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC TODO: why defined in sUSD, shouldn't be in USDC object?
+            [Network.OptimismMainnet]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
+            [Network.OptimismGoerli]: '0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198', // exoticSUSD
+            [Network.PolygonMainnet]: 'TBD',
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
+            [Network.Base]: 'TBD',
         },
         abi: sUSDABI,
     },
     DAI: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_DAI.address,
+            [Network.OptimismMainnet]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_DAI.address,
             [Network.BSC]: 'TBD',
-            [Network.Arbitrum]: 'TBD',
+            [Network.Arbitrum]: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+            [Network.Base]: 'TBD',
         },
         abi: DAIABI,
+    },
+    USDCe: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+            [Network.Base]: 'TBD',
+        },
+        abi,
     },
     USDC: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_USDC.address,
+            [Network.OptimismMainnet]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_USDC.address,
             [Network.BSC]: 'TBD',
-            [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+            [Network.Arbitrum]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+            [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
         },
         abi,
     },
     USDT: {
         addresses: {
             [Network.Mainnet]: 'TBD',
-            [Network.Ropsten]: 'TBD',
-            [Network.Rinkeby]: 'TBD',
-            [Network.Kovan]: 'TBD',
-            [Network.Goerli]: 'TBD',
-            [Network['Mainnet-Ovm']]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
-            [Network['Kovan-Ovm']]: 'TBD',
-            [Network['Goerli-Ovm']]: 'TBD',
-            [Network['POLYGON-MUMBAI']]: 'TBD',
-            [Network['POLYGON-MAINNET']]: POLYGON_USDT.address,
+            [Network.OptimismMainnet]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: POLYGON_USDT.address,
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
+            [Network.Base]: 'TBD',
+        },
+        abi,
+    },
+    OP: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: '0x4200000000000000000000000000000000000042',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
             [Network.BSC]: 'TBD',
             [Network.Arbitrum]: 'TBD',
+            [Network.Base]: 'TBD',
+        },
+        abi,
+    },
+    ARB: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+            [Network.Base]: 'TBD',
+        },
+        abi,
+    },
+    WETH: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: '0x4200000000000000000000000000000000000006',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+            [Network.Base]: 'TBD',
+        },
+        abi,
+    },
+    ETH: {
+        addresses: {
+            [Network.Mainnet]: ZERO_ADDRESS,
+            [Network.OptimismMainnet]: ZERO_ADDRESS,
+            [Network.OptimismGoerli]: ZERO_ADDRESS,
+            [Network.PolygonMainnet]: ZERO_ADDRESS,
+            [Network.BSC]: ZERO_ADDRESS,
+            [Network.Arbitrum]: ZERO_ADDRESS,
+            [Network.Base]: ZERO_ADDRESS,
+        },
+        abi,
+    },
+    BUSD: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.BSC]: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+            [Network.Arbitrum]: 'TBD',
+            [Network.Base]: 'TBD',
         },
         abi,
     },

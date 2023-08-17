@@ -39,7 +39,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             setMarket(undefined);
         }
         setFirstPositionMarketAddress(positionMarketAddress);
-    }, [markets, setMarket, firstPositionMarketAddress]);
+    }, [markets, setMarket, firstPositionMarketAddress, position]);
 
     const noMarkets = markets.length === 0;
     const isRangedMarkets = position === Positions.IN || position === Positions.OUT;
@@ -115,7 +115,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 headWidth: '110px',
             },
         ];
-    }, [t, position, rowIndex]);
+    }, [t, position, rowIndex, isRangedMarkets]);
 
     return (
         <Wrapper>

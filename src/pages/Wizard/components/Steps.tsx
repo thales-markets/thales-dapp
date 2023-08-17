@@ -95,7 +95,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
-                    networkId === Network['POLYGON-MAINNET']
+                    networkId === Network.PolygonMainnet
                         ? '&net=polygon_mainnet&bsc=EUR&bdc=MATIC&crys=MATIC'
                         : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
                 setIframe(Provider.MT_PELERIN.toString() + queryParams);

@@ -38,10 +38,16 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
     const tradesQuery = useTradesQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const trades: Trades = tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : [];
+    const trades: Trades = useMemo(() => (tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : []), [
+        tradesQuery.isSuccess,
+        tradesQuery.data,
+    ]);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-    const markets = marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : [];
+    const markets = useMemo(() => (marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : []), [
+        marketsQuery.isSuccess,
+        marketsQuery.data,
+    ]);
 
     const rangedTrades = trades
         .filter((trade: Trade) => trade.optionSide === 'in' || trade.optionSide === 'out')
@@ -50,9 +56,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, rangedTrades, {
         enabled: isAppReady && rangedTrades.length > 0,
     });
-    const rangedMarkets = rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : [];
+    const rangedMarkets = useMemo(
+        () => (rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : []),
+        [rangedMarketsQuery.isSuccess, rangedMarketsQuery.data]
+    );
 
-    const allMarkets = [...markets, ...rangedMarkets];
+    const allMarkets = useMemo(() => [...markets, ...rangedMarkets], [markets, rangedMarkets]);
 
     const data = useMemo(() => {
         const marketsMap = keyBy(allMarkets, 'address');
@@ -72,93 +81,93 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         [searchText, data]
     );
 
-    const generateRows = (data: TradeWithMarket[]) => {
-        try {
-            const dateMap: Record<string, TradeWithMarket[]> = {};
-            const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
-            sortedData.forEach((trade) => {
-                const tradeDateKey = formatShortDate(trade.timestamp).toUpperCase();
-                if (!dateMap[tradeDateKey]) {
-                    dateMap[tradeDateKey] = [];
-                }
-                dateMap[tradeDateKey].push(trade);
-            });
-
-            const rows = Object.keys(dateMap).reduce((prev: (string | TradeWithMarket)[], curr: string) => {
-                prev.push(curr);
-                prev.push(...dateMap[curr]);
-                return prev;
-            }, []);
-
-            return rows.map((row: string | TradeWithMarket) => {
-                if (typeof row === 'string') {
-                    return row;
-                }
-                const isRanged = row.optionSide === 'in' || row.optionSide == 'out';
-                const marketExpired = row.marketItem.result;
-                const optionPrice =
-                    row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
-                const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
-                const amount = row.orderSide == 'sell' ? row.takerAmount : row.makerAmount;
-
-                const cells: any = [
-                    { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
-                    {
-                        title: t('profile.history.strike'),
-                        value: isRanged
-                            ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
-                                  (row.marketItem as RangedMarket).rightPrice
-                              )}`
-                            : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
-                    },
-                    {
-                        title: t('profile.history.price'),
-                        value: `$${formatCurrency(optionPrice)}`,
-                    },
-                    {
-                        title: t('profile.history.amount'),
-                        value: getAmount(
-                            formatCurrency(amount),
-                            OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
-                            theme
-                        ),
-                    },
-                    {
-                        title: row.orderSide == 'sell' ? t('profile.history.received') : t('profile.history.paid'),
-                        value: `$${formatCurrency(paidAmount)}`,
-                    },
-                    {
-                        title: marketExpired ? t('profile.history.expired') : t('profile.history.expires'),
-                        value: formatShortDate(new Date(row.marketItem.maturityDate)),
-                    },
-                ];
-
-                if (!isMobile) {
-                    cells.push({
-                        value: <ArrowLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
-                        width: '30px',
-                    });
-                }
-
-                return {
-                    asset: {
-                        currencyKey: row.marketItem.currencyKey,
-                    },
-                    cells,
-                    link: isMobile ? getEtherscanTxLink(networkId, row.transactionHash) : undefined,
-                };
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     const rows = useMemo(() => {
+        const generateRows = (data: TradeWithMarket[]) => {
+            try {
+                const dateMap: Record<string, TradeWithMarket[]> = {};
+                const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
+                sortedData.forEach((trade) => {
+                    const tradeDateKey = formatShortDate(trade.timestamp).toUpperCase();
+                    if (!dateMap[tradeDateKey]) {
+                        dateMap[tradeDateKey] = [];
+                    }
+                    dateMap[tradeDateKey].push(trade);
+                });
+
+                const rows = Object.keys(dateMap).reduce((prev: (string | TradeWithMarket)[], curr: string) => {
+                    prev.push(curr);
+                    prev.push(...dateMap[curr]);
+                    return prev;
+                }, []);
+
+                return rows.map((row: string | TradeWithMarket) => {
+                    if (typeof row === 'string') {
+                        return row;
+                    }
+                    const isRanged = row.optionSide === 'in' || row.optionSide == 'out';
+                    const marketExpired = row.marketItem.result;
+                    const optionPrice =
+                        row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
+                    const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
+                    const amount = row.orderSide == 'sell' ? row.takerAmount : row.makerAmount;
+
+                    const cells: any = [
+                        { title: row.orderSide, value: formatHoursAndMinutesFromTimestamp(row.timestamp) },
+                        {
+                            title: t('profile.history.strike'),
+                            value: isRanged
+                                ? `$${formatCurrency((row.marketItem as RangedMarket).leftPrice)} - $${formatCurrency(
+                                      (row.marketItem as RangedMarket).rightPrice
+                                  )}`
+                                : `$${formatCurrency((row.marketItem as HistoricalOptionsMarketInfo).strikePrice)}`,
+                        },
+                        {
+                            title: t('profile.history.price'),
+                            value: `$${formatCurrency(optionPrice)}`,
+                        },
+                        {
+                            title: t('profile.history.amount'),
+                            value: getAmount(
+                                formatCurrency(amount),
+                                OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
+                                theme
+                            ),
+                        },
+                        {
+                            title: row.orderSide == 'sell' ? t('profile.history.received') : t('profile.history.paid'),
+                            value: `$${formatCurrency(paidAmount)}`,
+                        },
+                        {
+                            title: marketExpired ? t('profile.history.expired') : t('profile.history.expires'),
+                            value: formatShortDate(new Date(row.marketItem.maturityDate)),
+                        },
+                    ];
+
+                    if (!isMobile) {
+                        cells.push({
+                            value: <ArrowLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
+                            width: '30px',
+                        });
+                    }
+
+                    return {
+                        asset: {
+                            currencyKey: row.marketItem.currencyKey,
+                        },
+                        cells,
+                        link: isMobile ? getEtherscanTxLink(networkId, row.transactionHash) : undefined,
+                    };
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
         if (filteredData.length > 0) {
             return generateRows(filteredData);
         }
         return [];
-    }, [filteredData]);
+    }, [filteredData, isMobile, networkId, t, theme]);
 
     return (
         <TileTable

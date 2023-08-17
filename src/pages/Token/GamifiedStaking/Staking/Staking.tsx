@@ -137,7 +137,7 @@ const Staking: React.FC = () => {
         );
     };
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare, baseRewardsPool]);
 
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
