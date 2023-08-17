@@ -17,7 +17,7 @@ import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign, formatStrikePrice } from 'utils/formatters/number';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 
-const ResolvedWinCard: React.FC<SharePositionData> = ({
+const PotentialWinCard: React.FC<SharePositionData> = ({
     position,
     currencyKey,
     strikePrice,
@@ -49,7 +49,7 @@ const ResolvedWinCard: React.FC<SharePositionData> = ({
                 </ReferralWrapper>
             )}
             <PositionInfo>
-                <CurrencyIcon className={`currency-icon currency-icon--${currencyKey}`} />
+                <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
                 <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
@@ -191,4 +191,4 @@ const ReferralWrapper = styled.div`
     margin-bottom: 50px;
 `;
 
-export default ResolvedWinCard;
+export default PotentialWinCard;

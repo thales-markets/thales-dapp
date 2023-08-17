@@ -17,7 +17,7 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { SharePositionData } from '../../SharePositionModal';
 
-const PotentialWinCard: React.FC<SharePositionData> = ({
+const ResolvedWinCard: React.FC<SharePositionData> = ({
     position,
     currencyKey,
     strikePrice,
@@ -172,4 +172,4 @@ const ReferralWrapper = styled.div`
     margin-bottom: 50px;
 `;
 
-export default PotentialWinCard;
+export default ResolvedWinCard;
