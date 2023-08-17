@@ -10,6 +10,7 @@ import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import OverviewPositionAction from '../OverviewPositionAction';
+import { Label, Separator } from '../OverviewPositionAction/OverviewPositionAction';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
@@ -132,29 +133,9 @@ const FlexContainer = styled(AlignedFlex)`
     }
 `;
 
-export const Label = styled.span`
-    font-style: normal;
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 100%;
-    color: ${(props) => props.theme.textColor.secondary};
-    white-space: nowrap;
-`;
-
 const Value = styled(Label)<{ color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     white-space: nowrap;
-`;
-
-export const Separator = styled.div`
-    min-width: 2px;
-    width: 2px;
-    height: 14px;
-    background: ${(props) => props.theme.background.secondary};
-    border-radius: 3px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 export default UnresolvedPosition;

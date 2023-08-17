@@ -2,7 +2,6 @@ import { CoinGeckoClient } from 'coingecko-api-v3';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import { format } from 'date-fns';
 import { Positions } from 'enums/options';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -37,6 +36,8 @@ import TooltipInfo from 'components/Tooltip';
 import { useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
 import { RiskPerAsset } from 'types/options';
+import { getIsMobile } from 'redux/modules/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -94,8 +95,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(
@@ -267,7 +270,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     )}
                     {!!iv && (
                         <FlexDiv>
-                            <Value>{`IV ${iv}%`}</Value>
+                            <Value margin="0 0 0 20px">{`IV ${iv}%`}</Value>
                             <TooltipInfo
                                 overlay={t('markets.amm-trading.iv-tooltip')}
                                 customIconStyling={{ marginTop: '1px' }}
@@ -291,7 +294,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     </PriceChange>
                 )}
             </FlexDivSpaceBetween>
-            {data && (
+            {!isMobile && data && (
                 <ResponsiveContainer width="100%" height={isSpeedMarkets ? 323 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
@@ -514,9 +517,6 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
@@ -525,14 +525,17 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-size: 22px;
     line-height: 100%;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
 `;
 
-const Value = styled.span`
+const Value = styled.span<{ margin?: string }>`
     font-weight: 400;
     font-size: 18px;
     line-height: 100%;
     color: ${(props) => props.theme.textColor.primary};
-    margin-left: 20px;
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')};
 `;
 
 export default PriceChart;

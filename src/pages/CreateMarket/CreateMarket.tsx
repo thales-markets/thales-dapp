@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { checkAllowance } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
 import { RootState } from 'redux/rootReducer';
@@ -40,7 +40,6 @@ import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
-import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getDefaultCollateral, getSynthName } from 'utils/currency';
 import ApprovalModal from 'components/ApprovalModal';
@@ -53,6 +52,7 @@ import {
     getLoadingToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { CurrencyKeyOptionType } from 'types/options';
+import { Network } from 'enums/network';
 
 const MIN_FUNDING_AMOUNT = 0;
 
@@ -91,7 +91,7 @@ const CreateMarket: React.FC = () => {
     const [market, setMarket] = useState<string>('');
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
-    const isPolygon = getIsPolygon(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
 
     const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -231,7 +231,7 @@ const CreateMarket: React.FC = () => {
           })
         : EMPTY_VALUE;
 
-    return isNetworkSupported(networkId) ? (
+    return (
         <>
             <Title>{t('create-market.title')}</Title>
             <Container>
@@ -480,8 +480,6 @@ const CreateMarket: React.FC = () => {
                 />
             )}
         </>
-    ) : (
-        <Loader />
     );
 };
 

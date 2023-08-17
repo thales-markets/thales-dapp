@@ -1,6 +1,6 @@
 import { CRYPTO_CURRENCY_MAP, currencyKeyToNameMap } from 'constants/currency';
 import { Network } from 'enums/network';
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 
 export enum TokenSymbol {
     SUSD = 'sUSD',
@@ -185,10 +185,10 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
 };
 
 export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
+    const isBSC = networkId === Network.BSC;
     const isOP = getIsOVM(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isArbitrum = networkId === Network.Arbitrum;
 
     const toToken = mapTokenByNetwork(TokenSymbol[initialToToken as keyof typeof TokenSymbol], isOP, isPolygon);
 
@@ -232,10 +232,10 @@ export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
 };
 
 export const getFromTokenSwap = (networkId: Network) => {
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
+    const isBSC = networkId === Network.BSC;
     const isOP = getIsOVM(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isArbitrum = networkId === Network.Arbitrum;
 
     if (isArbitrum) return ARB_ETH;
     if (isPolygon) return POLYGON_MATIC;

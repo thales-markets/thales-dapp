@@ -3,6 +3,7 @@ import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import Button from 'components/Button';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { Network } from 'enums/network';
@@ -10,19 +11,18 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { TEST_NETWORKS } from 'constants/network';
 
 type UnsupportedNetworkProps = {
-    supportedNetworks?: Network[];
+    supportedNetworks: Network[];
 };
 
 const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetworks }) => {
     const { t } = useTranslation();
 
-    const isOptimismSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.OptimismMainnet);
-    const isPolygonSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.PolygonMainnet);
-    const isArbitrumSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Arbitrum);
-    const isBSCSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.BSC);
-    const isMainnetSupported = supportedNetworks === undefined || supportedNetworks.includes(Network.Mainnet);
+    const supportedMainnetNetworks = supportedNetworks?.filter(
+        (supportedNetwork) => !TEST_NETWORKS.includes(supportedNetwork)
+    );
 
     const getButton = (networkId: Network) => {
         let logo;
@@ -48,6 +48,10 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
                 logo = <ArbitrumLogo />;
                 text = t(`common.unsupported-network.button.arbitrum`);
                 break;
+            case Network.Base:
+                logo = <StyledBaseLogo />;
+                text = t(`common.unsupported-network.button.base`);
+                break;
         }
 
         return (
@@ -66,19 +70,33 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
         <Wrapper>
             <Title>{t(`common.unsupported-network.title`)}</Title>
             <ExplanationText>{t(`common.unsupported-network.description`)}</ExplanationText>
-            {(isOptimismSupported || isPolygonSupported) && (
-                <ButtonWrapper>
-                    {isOptimismSupported && getButton(Network.OptimismMainnet)}
-                    {isPolygonSupported && getButton(Network.PolygonMainnet)}
-                </ButtonWrapper>
-            )}
-            {(isArbitrumSupported || isBSCSupported) && (
-                <ButtonWrapper>
-                    {isArbitrumSupported && getButton(Network.Arbitrum)}
-                    {isBSCSupported && getButton(Network.BSC)}
-                </ButtonWrapper>
-            )}
-            {isMainnetSupported && <ButtonWrapper>{getButton(Network.Mainnet)}</ButtonWrapper>}
+            {supportedMainnetNetworks.map((supportedNetwork, index) => {
+                const isSecondInRow = (index + 1) % 2 === 0;
+                const prevNetwork = supportedMainnetNetworks[index - 1];
+                if (index < supportedMainnetNetworks.length - 1) {
+                    // has next
+                    if (isSecondInRow) {
+                        return (
+                            <ButtonWrapper key={index}>
+                                {getButton(prevNetwork)}
+                                {getButton(supportedNetwork)}
+                            </ButtonWrapper>
+                        );
+                    }
+                } else {
+                    // it is last
+                    if (isSecondInRow) {
+                        return (
+                            <ButtonWrapper key={index}>
+                                {getButton(prevNetwork)}
+                                {getButton(supportedNetwork)}
+                            </ButtonWrapper>
+                        );
+                    } else {
+                        return <ButtonWrapper key={index}>{getButton(supportedNetwork)}</ButtonWrapper>;
+                    }
+                }
+            })}
         </Wrapper>
     );
 };
@@ -133,6 +151,11 @@ const ButtonWrapper = styled.div`
 
 const ButtonText = styled.span`
     padding-left: 5px;
+`;
+
+const StyledBaseLogo = styled(BaseLogo)`
+    width: 18px;
+    height: 18px;
 `;
 
 export default UnsupportedNetwork;

@@ -17,7 +17,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { getIsMainnet, getSupportedNetworksByRoute } from 'utils/network';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -35,7 +35,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const isMainnet = getIsMainnet(networkId);
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
     // states
@@ -44,15 +43,17 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const [positionType, setPositionType] = useState(isRangedMarkets ? Positions.IN : Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     // queries
     const assetsQuery = useAvailableAssetsQuery(networkId, {
-        enabled: isAppReady && !isMainnet,
+        enabled: isAppReady && supportedNetworks.includes(networkId),
     });
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
-        enabled: isAppReady && !isMainnet,
+        enabled: isAppReady && supportedNetworks.includes(networkId),
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
-        enabled: !!maturityDate && !isMainnet,
+        enabled: !!maturityDate && supportedNetworks.includes(networkId),
     });
 
     // hooks
@@ -103,8 +104,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             }
         }
     };
-
-    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
 
     return (
         <>
@@ -212,6 +211,7 @@ const ContentWrapper = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
+        margin-top: 0;
     }
 `;
 
@@ -228,8 +228,9 @@ const LeftSide = styled.div`
     width: 100%;
     max-width: 600px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: grid;
         max-width: initial;
-        height: 60px;
+        height: fit-content;
     }
 `;
 const RightSide = styled.div`
@@ -258,6 +259,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
+        order: 2;
     }
 `;
 

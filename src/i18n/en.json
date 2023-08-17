@@ -146,7 +146,8 @@
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BNBChain"
+                "bsc": "Switch to BNBChain",
+                "base": "Switch to Base"
             }
         },
         "swap": {

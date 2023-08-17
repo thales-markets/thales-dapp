@@ -25,8 +25,8 @@ import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
-import { Label, Separator } from '../UnresolvedPosition/UnresolvedPosition';
 import { truncToDecimals } from 'utils/formatters/number';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type OverviewPositionActionProps = {
     position: UserLivePositions;
@@ -171,6 +171,26 @@ const ResultsContainer = styled(FlexDivCentered)`
     line-height: 100%;
     white-space: nowrap;
     min-width: 174px;
+`;
+
+export const Separator = styled.div`
+    min-width: 2px;
+    width: 2px;
+    height: 14px;
+    background: ${(props) => props.theme.background.secondary};
+    border-radius: 3px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
+`;
+
+export const Label = styled.span`
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 100%;
+    color: ${(props) => props.theme.textColor.secondary};
+    white-space: nowrap;
 `;
 
 export default OverviewPositionAction;

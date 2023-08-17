@@ -10,17 +10,18 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
-import { getIsArbitrum, getIsOVM } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
+import { Network } from 'enums/network';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
-    const isArb = getIsArbitrum(networkId);
+    const isArb = networkId === Network.Arbitrum;
 
     const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 

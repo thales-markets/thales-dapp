@@ -9,7 +9,7 @@ import {
     getErrorToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { OneInchLiquidityProtocol } from 'enums/network';
+import { Network, OneInchLiquidityProtocol } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import useApproveSpender from './queries/useApproveSpender';
@@ -46,9 +46,9 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const isL2 = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
+    const isBSC = networkId === Network.BSC;
+    const isArbitrum = networkId === Network.Arbitrum;
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
         isL2,

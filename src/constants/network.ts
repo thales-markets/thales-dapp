@@ -34,6 +34,8 @@ export const SWAP_SUPPORTED_NETWORKS = [
     Network.Arbitrum,
 ];
 
+export const TEST_NETWORKS = [Network.OptimismGoerli];
+
 export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
     networkId: Network.OptimismMainnet,

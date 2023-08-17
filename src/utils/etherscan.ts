@@ -1,16 +1,14 @@
 import { Network } from 'enums/network';
-import { getIsArbitrum, getIsBSC, isMainNet } from 'utils/network';
 import { SUPPORTED_NETWORKS } from 'constants/network';
 
 const getEtherScanBaseURL = (networkId: Network) => {
     const network = SUPPORTED_NETWORKS[networkId];
-    const isBSC = getIsBSC(networkId);
 
-    if (isMainNet(networkId) || network == null) {
+    if (networkId === Network.Mainnet || network == null) {
         return 'https://etherscan.io';
-    } else if (isBSC) {
+    } else if (networkId === Network.BSC) {
         return 'https://bscscan.com';
-    } else if (getIsArbitrum(networkId)) {
+    } else if (networkId === Network.Arbitrum) {
         return 'https://arbiscan.io';
     } else if (networkId === Network.PolygonMainnet) {
         return 'https://polygonscan.com';
