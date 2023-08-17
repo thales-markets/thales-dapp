@@ -113,6 +113,31 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                         },
                         {
                             value: (
+                                <>
+                                    <ShareIcon
+                                        className="icon-home icon-home--twitter"
+                                        disabled={false}
+                                        onClick={() => {
+                                            setOpenTwitterShareModal(true);
+                                            setPositionShareData({
+                                                type: row.claimable ? 'resolved' : 'potential',
+                                                position: row.side,
+                                                currencyKey: row.currencyKey,
+                                                strikePrice: row.strikePrice,
+                                                leftPrice: row.leftPrice,
+                                                rightPrice: row.rightPrice,
+                                                strikeDate: row.maturityDate,
+                                                buyIn: row.paid,
+                                                payout: row.amount,
+                                            });
+                                        }}
+                                    />
+                                </>
+                            ),
+                            width: isMobile ? undefined : '20px',
+                        },
+                        {
+                            value: (
                                 <SPAAnchor
                                     href={
                                         row.isRanged

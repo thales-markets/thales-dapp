@@ -132,6 +132,32 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                     )}
                 </SPAAnchor>
             )}
+            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
+            {!isSpeedMarkets && (
+                <SPAAnchor
+                    href={
+                        isRanged
+                            ? buildRangeMarketLink(position.market, position.side)
+                            : buildOptionsMarketLink(position.market, position.side)
+                    }
+                >
+                    {isMobile ? (
+                        <TextLink>
+                            {t('profile.go-to-market')}{' '}
+                            <IconLink
+                                className="icon icon--right"
+                                fontSize="10px"
+                                marginTop="-2px"
+                                color={theme.link.textColor.primary}
+                            />
+                        </TextLink>
+                    ) : (
+                        <Tooltip overlay={t('common.tooltip.open-market')}>
+                            <IconLink className="icon icon--right" />
+                        </Tooltip>
+                    )}
+                </SPAAnchor>
+            )}
         </Position>
     );
 };
