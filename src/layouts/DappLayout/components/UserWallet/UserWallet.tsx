@@ -101,7 +101,7 @@ const UserWallet: React.FC = () => {
                                 )}
                             </NetworkItem>
                             {!hideNetworkSwitcher && isDropdownOpen && (
-                                <NetworkDropDown>
+                                <NetworkDropDown isOpBnbTestnet={isOpBnbTestnet}>
                                     {Object.keys(SUPPORTED_NETWORK_IDS_MAP)
                                         // Hide opBNB Testnet in dropdown for now
                                         .filter((key) => Number(key) !== Network.OpBnbTestnet)
@@ -148,7 +148,7 @@ const UserWallet: React.FC = () => {
 };
 
 const Container = styled.div<{ isWalletConnected: boolean; isOpBnbTestnet: boolean }>`
-    width: ${(props) => (props.isOpBnbTestnet ? 415 : 400)}px;
+    width: ${(props) => (props.isOpBnbTestnet ? 420 : 400)}px;
     @media (max-width: 500px) {
         width: 100%;
     }
@@ -194,7 +194,7 @@ const NetworkInfoContainer = styled.div`
     justify-content: center;
 `;
 
-const NetworkDropDown = styled.div`
+const NetworkDropDown = styled.div<{ isOpBnbTestnet: boolean }>`
     z-index: 1000;
     position: absolute;
     top: 30px;
@@ -203,8 +203,8 @@ const NetworkDropDown = styled.div`
     flex-direction: column;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
-    width: 130px;
-    max-width: 130px;
+    max-width: ${(props) => (props.isOpBnbTestnet ? 150 : 130)}px;
+    width: ${(props) => (props.isOpBnbTestnet ? 150 : 130)}px;
     padding: 5px;
     justify-content: center;
     align-items: center;
@@ -218,8 +218,8 @@ const SelectedNetworkContainer = styled.div<{ cursor: string; isOpBnbTestnet: bo
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: ${(props) => (props.isOpBnbTestnet ? 145 : 130)}px;
-    width: ${(props) => (props.isOpBnbTestnet ? 145 : 130)}px;
+    max-width: ${(props) => (props.isOpBnbTestnet ? 150 : 130)}px;
+    width: ${(props) => (props.isOpBnbTestnet ? 150 : 130)}px;
     color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => props.cursor};
     flex-direction: column;
