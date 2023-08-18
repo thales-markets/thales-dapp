@@ -157,7 +157,7 @@
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
-            "not-supported": " Swap is not supported on Test networks",
+            "not-supported": "Swap is not supported on this network",
             "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
