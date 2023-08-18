@@ -40,13 +40,7 @@ const useQuoteTokensQuery = (
             const amountUrl = '&amount=' + amount;
             const protocolsUrl = protocols?.length ? '&protocols=' + protocols?.toString() : '';
             url = url + fromUrl + toUrl + amountUrl + protocolsUrl;
-
-            const response = await fetch(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer 0AgzZ2uTmq7zWAJaTn7suXLxRfOoqmt3',
-                },
-            });
+            const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;
         },
