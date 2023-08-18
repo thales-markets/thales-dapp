@@ -50,8 +50,10 @@ const UserWallet: React.FC = () => {
         !window.ethereum?.isCoinbaseWallet &&
         !window.ethereum?.isTrust;
 
+    const isOpBnbTestnet = networkId === Network.OpBnbTestnet;
+
     return (
-        <Container isWalletConnected={isWalletConnected}>
+        <Container isWalletConnected={isWalletConnected} isOpBnbTestnet={isOpBnbTestnet}>
             <Wrapper>
                 <UserSwap />
                 <WalletContainer
@@ -79,7 +81,10 @@ const UserWallet: React.FC = () => {
                 </WalletContainer>
                 <NetworkInfoContainer>
                     <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
-                        <SelectedNetworkContainer cursor={isLedgerLive ? 'initial' : 'pointer'}>
+                        <SelectedNetworkContainer
+                            cursor={isLedgerLive ? 'initial' : 'pointer'}
+                            isOpBnbTestnet={isOpBnbTestnet}
+                        >
                             <NetworkItem
                                 selectedItem={true}
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen && !isLedgerLive)}
@@ -142,8 +147,8 @@ const UserWallet: React.FC = () => {
     );
 };
 
-const Container = styled.div<{ isWalletConnected: boolean }>`
-    width: 400px;
+const Container = styled.div<{ isWalletConnected: boolean; isOpBnbTestnet: boolean }>`
+    width: ${(props) => (props.isOpBnbTestnet ? 415 : 400)}px;
     @media (max-width: 500px) {
         width: 100%;
     }
@@ -209,12 +214,12 @@ const NetworkDropDown = styled.div`
     }
 `;
 
-const SelectedNetworkContainer = styled.div<{ cursor: string }>`
+const SelectedNetworkContainer = styled.div<{ cursor: string; isOpBnbTestnet: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 130px;
-    width: 130px;
+    max-width: ${(props) => (props.isOpBnbTestnet ? 145 : 130)}px;
+    width: ${(props) => (props.isOpBnbTestnet ? 145 : 130)}px;
     color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => props.cursor};
     flex-direction: column;

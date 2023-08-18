@@ -162,7 +162,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         order: 2,
     },
     [Network.OpBnbTestnet]: {
-        name: 'opBNB Test',
+        name: 'opBNB Testnet',
         icon: BSCLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const opBnbTestnetNetworkParams = OPBNB_TESTNET_NETWORK[networkId];
