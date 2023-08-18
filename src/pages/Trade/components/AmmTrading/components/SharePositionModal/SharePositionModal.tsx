@@ -335,22 +335,25 @@ const TwitterShare = styled(FlexDivColumnCentered)<{ disabled?: boolean }>`
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -100px;
+    bottom: -80px;
     margin-left: auto;
     margin-right: auto;
-    width: 84px;
-    height: 84px;
-    border-radius: 50%;
-    background: linear-gradient(217.61deg, #123eae 9.6%, #3ca8ca 78.9%);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 55px;
+    border-radius: 15px;
+    background: ${(props) => props.theme.button.background.primary};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 `;
 
-const TwitterIcon = styled.i<{ disabled?: boolean; fontSize?: string; padding?: string; color?: string }>`
+const TwitterIcon = styled.i<{ disabled?: boolean; fontSize?: string; padding?: string }>`
     font-size: ${(props) => (props.fontSize ? props.fontSize : '20px')};
-    color: ${(props) => (props.color ? props.color : ' #ffffff')};
+    color: ${(props) => props.theme.button.textColor.primary};
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.4' : '1')};
+    margin-right: 10px;
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')}
 `;
 
@@ -359,7 +362,7 @@ const TwitterShareLabel = styled.span`
     font-size: 18px;
     line-height: 25px;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
 `;
 
 export default React.memo(SharePositionModal);
