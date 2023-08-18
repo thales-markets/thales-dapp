@@ -26,13 +26,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Base]: 'BASE',
 };
 
-export const SWAP_SUPPORTED_NETWORKS = [
-    Network.Mainnet,
-    Network.OptimismMainnet,
-    Network.BSC,
-    Network.PolygonMainnet,
-    Network.Arbitrum,
-];
+export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
 export const TEST_NETWORKS = [Network.OptimismGoerli];
 
