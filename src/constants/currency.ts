@@ -455,7 +455,7 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     [Network.BSC]: [CRYPTO_CURRENCY_MAP.BUSD as Coins],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
-    [Network.OpBnbTestnet]: [CRYPTO_CURRENCY_MAP.BUSD as Coins],
+    [Network.OpBnbTestnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
 };
 
 // TODO: merge with COLLATERALS when all pages will support these
