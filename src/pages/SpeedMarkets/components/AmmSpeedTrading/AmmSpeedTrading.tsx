@@ -608,7 +608,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={roundNumberToDecimals(totalPaidAmount)}
+                    defaultAmount={
+                        isStableCurrency(selectedCollateral)
+                            ? roundNumberToDecimals(totalPaidAmount)
+                            : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                    }
                     tokenSymbol={selectedCollateral}
                     isNonStable={!isStableCurrency(selectedCollateral)}
                     isAllowing={isAllowing}
