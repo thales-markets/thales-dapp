@@ -167,12 +167,4 @@ const Position = styled.span`
     font-weight: 700;
 `;
 
-const ReferralWrapper = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 50px;
-`;
-
 export default SpeedMarketResolvedWinCard;

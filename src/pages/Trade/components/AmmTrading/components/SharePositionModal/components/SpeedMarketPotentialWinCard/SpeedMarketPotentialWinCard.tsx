@@ -10,6 +10,7 @@ import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 
 const DOWN_BORDER_COLOR = '#DE496D';
 const UP_BORDER_COLOR = '#03DAC5';
@@ -18,14 +19,10 @@ const SpeedMarketPotentialWinCard: React.FC<SharePositionData> = ({
     position,
     currencyKey,
     strikePrice,
-    marketDuration,
-    buyIn,
+    strikeDate,
     payout,
 }) => {
     const { t } = useTranslation();
-
-    console.log('marketDuration ', marketDuration);
-    console.log('buyIn ', buyIn);
 
     const price =
         typeof strikePrice == 'string' && strikePrice
@@ -51,8 +48,8 @@ const SpeedMarketPotentialWinCard: React.FC<SharePositionData> = ({
                     <Value>{price}</Value>
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.market-duration')}</ItemName>
-                    <Value>{marketDuration}</Value>
+                    <ItemName>{t('common.flex-card.strike-date')}</ItemName>
+                    <Value>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
             <SpeedMarketsFooter />
