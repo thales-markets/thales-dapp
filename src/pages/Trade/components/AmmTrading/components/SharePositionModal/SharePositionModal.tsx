@@ -20,6 +20,7 @@ import { Positions } from 'enums/options';
 import PotentialWinCard from './components/PotentialWinCard/PotentialWinCard';
 import ResolvedWinCard from './components/ResolvedWinCard/ResolvedWinCard';
 import SpeedMarketPotentialWinCard from './components/SpeedMarketPotentialWinCard/SpeedMarketPotentialWinCard';
+import SpeedMarketResolvedWinCard from './components/SpeedMarketResolvedWinCard/SpeedMarketResolvedWinCard';
 
 type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
 
@@ -245,7 +246,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
                 {type == 'potential' && (
                     <PotentialWinCard
-                        type={'resolved'}
+                        type={type}
                         currencyKey={currencyKey}
                         position={position}
                         strikeDate={strikeDate}
@@ -258,7 +259,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 )}
                 {type == 'resolved' && (
                     <ResolvedWinCard
-                        type={'resolved'}
+                        type={type}
                         currencyKey={currencyKey}
                         position={position}
                         strikeDate={strikeDate}
@@ -271,7 +272,19 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 )}
                 {type == 'potential-speed' && (
                     <SpeedMarketPotentialWinCard
-                        type={'potential-speed'}
+                        type={type}
+                        currencyKey={currencyKey}
+                        position={position}
+                        strikeDate={strikeDate}
+                        strikePrice={strikePrice}
+                        marketDuration={12}
+                        buyIn={buyIn}
+                        payout={payout}
+                    />
+                )}
+                {type == 'resolved-speed' && (
+                    <SpeedMarketResolvedWinCard
+                        type={type}
                         currencyKey={currencyKey}
                         position={position}
                         strikeDate={strikeDate}
