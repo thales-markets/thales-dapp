@@ -24,6 +24,7 @@ import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
 import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
@@ -117,6 +118,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const [isCapBreached, setIsCapBreached] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
     const isButtonDisabled =
@@ -512,7 +514,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     hasCollateralConversion={selectedCollateral !== defaultCollateral}
                     breakFirstLine={false}
                 />
-                <ShareIcon className="sidebar-icon icon--share" disabled={false} onClick={() => {}} />
+                <ShareIcon
+                    className="icon-home icon-home--twitter"
+                    disabled={isButtonDisabled}
+                    onClick={() => setOpenTwitterShareModal(true)}
+                />
             </TradingDetailsContainer>
         );
     };
@@ -605,7 +611,20 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     )}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
-
+            {openTwitterShareModal && positionType && (
+                <SharePositionModal
+                    type="potential-speed"
+                    position={positionType}
+                    currencyKey={currencyKey}
+                    strikeDate={
+                        secondsToMilliseconds(strikeTimeSec) || Date.now() + secondsToMilliseconds(deltaTimeSec)
+                    }
+                    strikePrice={currentPrice ?? 0}
+                    buyIn={convertToStable(Number(paidAmount))}
+                    payout={(1 + Number(SPEED_MARKETS_QUOTE - 1)) * Number(paidAmount)}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={roundNumberToDecimals(totalPaidAmount)}
@@ -668,7 +687,6 @@ const PaymentInfo = styled.span`
 `;
 
 const ShareIcon = styled.i<{ disabled: boolean }>`
-    display: none; // TODO: not supported yet
     position: absolute;
     top: 12px;
     right: 12px;
