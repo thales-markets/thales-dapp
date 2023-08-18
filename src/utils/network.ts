@@ -19,6 +19,7 @@ import {
     SUPPORTED_NETWORKS,
     SUPPORTED_NETWORKS_NAMES,
     DEFAULT_NETWORK,
+    OPBNB_TESTNET_NETWORK,
 } from 'constants/network';
 import { Network } from 'enums/network';
 import { OptimismNetwork } from 'types/network';
@@ -160,6 +161,15 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 2,
     },
+    [Network.OpBnbTestnet]: {
+        name: 'opBNB Test',
+        icon: BSCLogo,
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
+            const opBnbTestnetNetworkParams = OPBNB_TESTNET_NETWORK[networkId];
+            await changeNetwork(opBnbTestnetNetworkParams, callback);
+        },
+        order: 7,
+    },
     // TODO: Release on 28.08.
     /*
     [Network.Base]: {
@@ -184,6 +194,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.RangeMarkets:
             return [
@@ -193,6 +204,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
@@ -206,6 +218,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.Token:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet];
@@ -217,6 +230,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.Game:
             return [
@@ -226,6 +240,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.Profile:
             return [
@@ -235,6 +250,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.CreateMarket:
             return [
@@ -244,6 +260,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
                 Network.BSC,
+                Network.OpBnbTestnet,
             ];
         case ROUTES.Options.SpeedMarkets:
             return [

@@ -9,6 +9,7 @@ const ammContract = {
         [Network.BSC]: '0x465B66A3e33088F0666dB1836652fBcF037c7319',
         [Network.Arbitrum]: '0x2b89275efB9509c33d9AD92A4586bdf8c4d21505',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: '0x2Bb7D689780e7a34dD365359bD7333ab24903268',
     },
     abi: [
         {

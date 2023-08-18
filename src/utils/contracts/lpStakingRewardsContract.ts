@@ -9,6 +9,7 @@ const lpStakingRewardsContract = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

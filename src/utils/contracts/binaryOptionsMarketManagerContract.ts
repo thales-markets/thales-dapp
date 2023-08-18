@@ -9,6 +9,7 @@ const binaryOptionsMarketManagerContract = {
         [Network.BSC]: '0x3124A11216273018C8F37181b4505d36573D9701',
         [Network.Arbitrum]: '0x95d93c88c1b5190fA7FA4350844e0663e5a11fF0',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: '0x67A01b4F95476a5b39A9F8cb6d426F0eb3e34Fba',
     },
     abi: [
         {

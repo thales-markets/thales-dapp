@@ -9,6 +9,7 @@ const erc20Contract = {
         [Network.BSC]: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', //BUSD
         [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', //USDCe
         [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA', // USDbC
+        [Network.OpBnbTestnet]: '0x845e27b8a4ad1fe3dc0b41b900dc8c1bb45141c3', // USDC
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

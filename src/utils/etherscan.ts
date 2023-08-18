@@ -12,6 +12,8 @@ const getEtherScanBaseURL = (networkId: Network) => {
         return 'https://arbiscan.io';
     } else if (networkId === Network.PolygonMainnet) {
         return 'https://polygonscan.com';
+    } else if (networkId === Network.OpBnbTestnet) {
+        return 'http://opbnbscan.com/';
     }
 
     return `https://${network.toLowerCase()}.etherscan.io`;

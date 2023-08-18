@@ -14,6 +14,7 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
     [Network.Base]: 'BASE',
+    [Network.OpBnbTestnet]: 'OPBNB-TESTNET',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
@@ -24,6 +25,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
+    [Network.OpBnbTestnet]: 'OPBNB TESTNET',
 };
 
 export const SWAP_SUPPORTED_NETWORKS = [
@@ -118,6 +120,20 @@ export const BASE_NETWORK: Record<number, OptimismNetwork> = {
     },
 };
 
+export const OPBNB_TESTNET_NETWORK: Record<number, OptimismNetwork> = {
+    [Network.OpBnbTestnet]: {
+        chainId: '0x15EB',
+        chainName: 'opBNB Testnet',
+        rpcUrls: ['https://opbnb-testnet-rpc.bnbchain.org'],
+        blockExplorerUrls: ['http://opbnbscan.com/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'BNB',
+            decimals: 18,
+        },
+    },
+};
+
 // configuration for wagmi
 export const base = {
     id: 8453,
@@ -144,6 +160,42 @@ export const base = {
         etherscan: {
             name: 'Basescan',
             url: 'https://basescan.org',
+        },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 5022,
+        },
+    },
+} as Chain;
+
+// configuration for wagmi
+export const opBnbTestnet = {
+    id: 5611,
+    network: 'opBNB Testnet',
+    name: 'opBNB Testnet',
+    nativeCurrency: { name: 'opBNB Testnet', symbol: 'BNB', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://opbnb-testnet-rpc.bnbchain.org'],
+        },
+        public: {
+            http: ['https://opbnb-testnet-rpc.bnbchain.org'],
+        },
+    },
+    blockExplorers: {
+        blockscout: {
+            name: 'opBNBscout',
+            url: 'https://opbnb.blockscout.com',
+        },
+        default: {
+            name: 'opBNBscan',
+            url: 'http://opbnbscan.com/',
+        },
+        etherscan: {
+            name: 'opBNBscan',
+            url: 'http://opbnbscan.com/',
         },
     },
     contracts: {

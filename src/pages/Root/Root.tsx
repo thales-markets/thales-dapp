@@ -28,7 +28,7 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { base } from 'constants/network';
+import { base, opBnbTestnet } from 'constants/network';
 import { PLAUSIBLE } from 'constants/analytics';
 dotenv.config();
 
@@ -62,12 +62,13 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
     [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
     [Network.Base]: { ankr: 'base', chainnode: '', blast: '' },
+    [Network.OpBnbTestnet]: { ankr: '', chainnode: '', blast: '' },
 };
 
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc, base],
+    [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc, base, opBnbTestnet],
     [
         jsonRpcProvider({
             rpc: (chain) => ({

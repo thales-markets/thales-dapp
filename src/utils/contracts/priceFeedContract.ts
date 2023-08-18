@@ -9,6 +9,7 @@ const priceFeedContract = {
         [Network.BSC]: '0x4A5A6f3a79589305786DA6d4e03D82b95942602A',
         [Network.Arbitrum]: '0x563cCaBfBaCCb1a2e00d21704570cFc1AF21f47f',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: '0xBbC6Bf169235aD9CA1b7d0f6a4593BB770e8C6cd',
     },
     abi: [
         {

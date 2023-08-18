@@ -6,6 +6,7 @@ export enum Network {
     OptimismGoerli = 420,
     Base = 8453,
     Arbitrum = 42161,
+    OpBnbTestnet = 5611,
 }
 
 export enum OneInchLiquidityProtocol {

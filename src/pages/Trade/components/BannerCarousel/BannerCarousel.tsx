@@ -7,11 +7,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { Network } from 'enums/network';
 
 const BannerCarousel: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const bannersQuery = useBannersQuery(networkId);
+    // For opBNB Testnet return Base banners
+    const bannersQuery = useBannersQuery(networkId === Network.OpBnbTestnet ? Network.Base : networkId);
 
     const banners: Banner[] = useMemo(() => {
         return bannersQuery.isSuccess && bannersQuery.data ? bannersQuery.data : [];

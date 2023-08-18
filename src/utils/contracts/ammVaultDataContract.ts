@@ -9,6 +9,7 @@ const sportVaultDataContract = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x4A096E1d719A2087F5CAfB0839aa25B6dd6dB324',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

@@ -9,6 +9,7 @@ const speedMarketsContract = {
         [Network.BSC]: '0x72ca0765d4bE0529377d656c9645600606214610',
         [Network.Arbitrum]: '0x02D0123a89Ae6ef27419d5EBb158d1ED4Cf24FA3',
         [Network.Base]: '0x85b827d133FEDC36B844b20f4a198dA583B25BAA',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

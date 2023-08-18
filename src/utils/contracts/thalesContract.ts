@@ -9,6 +9,7 @@ export const thalesContract = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

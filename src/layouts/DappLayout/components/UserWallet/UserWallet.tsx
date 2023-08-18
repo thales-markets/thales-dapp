@@ -98,6 +98,8 @@ const UserWallet: React.FC = () => {
                             {!hideNetworkSwitcher && isDropdownOpen && (
                                 <NetworkDropDown>
                                     {Object.keys(SUPPORTED_NETWORK_IDS_MAP)
+                                        // Hide opBNB Testnet in dropdown for now
+                                        .filter((key) => Number(key) !== Network.OpBnbTestnet)
                                         .map((key) => {
                                             return { id: Number(key), ...SUPPORTED_NETWORK_IDS_MAP[Number(key)] };
                                         })

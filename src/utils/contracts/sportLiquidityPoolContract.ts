@@ -9,6 +9,7 @@ const sportLiquidityPoolContract = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x8e9018b48456202aA9bb3E485192B8475822B874',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

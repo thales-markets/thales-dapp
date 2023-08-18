@@ -9,6 +9,7 @@ const stakingThales = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x160Ca569999601bca06109D42d561D85D6Bb4b57',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

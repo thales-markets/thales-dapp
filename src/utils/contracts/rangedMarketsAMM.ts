@@ -9,6 +9,7 @@ const rangedMarketAMMContract = {
         [Network.BSC]: '0xda5Bd4aBAFbE249bdC5684eAD594B0ac379687fd',
         [Network.Arbitrum]: '0x5cf3b1882357BB66Cf3cd2c85b81AbBc85553962',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: 'TBD',
     },
     abi: [
         {

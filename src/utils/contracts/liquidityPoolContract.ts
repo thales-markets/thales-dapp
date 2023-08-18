@@ -9,6 +9,7 @@ const liquidityPoolContract = {
         [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
         [Network.Base]: 'TBD',
+        [Network.OpBnbTestnet]: '0x9B91d27568c51cEf3C4E04D504EF3CE11D5f2427',
     },
     abi: [
         {
