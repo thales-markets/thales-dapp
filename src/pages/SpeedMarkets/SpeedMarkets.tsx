@@ -30,8 +30,9 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
+import { getSupportedNetworksByRoute } from 'utils/network';
 
-const SpeedMarkets: React.FC<RouteComponentProps> = () => {
+const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -116,9 +117,13 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
         );
     };
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     return (
         <>
-            {ammSpeedMarketsLimitsQuery.isLoading ? (
+            {!supportedNetworks.includes(networkId) ? (
+                <Info style={{ marginTop: '100px', fontSize: '22px' }}>{t('common.coming-soon')}</Info>
+            ) : ammSpeedMarketsLimitsQuery.isLoading ? (
                 <SimpleLoader />
             ) : (
                 <Container>
