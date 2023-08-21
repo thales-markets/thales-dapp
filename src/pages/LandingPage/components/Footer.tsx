@@ -44,7 +44,7 @@ const Footer: React.FC<HeaderInput> = ({ className }) => {
                         <FooterIcon className="icon-home icon-home--medium" />
                     </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
-                        <FooterIcon className="icon-home icon-home--twitter" />
+                        <FooterIcon className="icon-home icon-home--twitter-x" />
                     </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://t.me/thalesprotocol/">
                         <FooterIcon className="icon-home icon-home--telegram" />
