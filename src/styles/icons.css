@@ -120,6 +120,10 @@
     content: '\005A';
 }
 
+.icon-home--twitter-x:before {
+    content: '\0061';
+}
+
 /* icons.ttf */
 
 .icon--caret-down:before {
