@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import titleImage from 'assets/images/speed-markets/title.png';
+import banner from 'assets/images/speed-markets/speed-markets-banner.png';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -218,12 +218,12 @@ const Container = styled.div`
 
 const HeaderImage = styled.div`
     height: 120px;
-    background-image: url(${titleImage});
+    background-image: url(${banner});
     background-position: center;
+    border-radius: 11px;
+    margin-bottom: 20px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        height: 60px;
-        background-size: 100%;
-        background-repeat: no-repeat;
+        display: none;
     }
 `;
 
