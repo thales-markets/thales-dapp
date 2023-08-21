@@ -47,7 +47,6 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
 
     const isL2 = getIsOVM(networkId);
     const isPolygon = networkId === Network.PolygonMainnet;
-    const isBSC = networkId === Network.BSC;
     const isArbitrum = networkId === Network.Arbitrum;
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
@@ -75,7 +74,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         fromToken,
         toToken,
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
-        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
+        isPolygon || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         { enabled: false }
     );
 
@@ -85,7 +84,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
         toToken,
         walletAddress ? walletAddress : '',
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
-        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
+        isPolygon || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         {
             enabled: false,
         }

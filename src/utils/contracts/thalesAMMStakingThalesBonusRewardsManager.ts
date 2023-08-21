@@ -6,7 +6,6 @@ const stakingBonusRewardsManager = {
         [Network.OptimismMainnet]: '0xc07520843239C2CAA28101D8241D9132669B4271',
         [Network.OptimismGoerli]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
-        [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x6535F4cCC70E0CCb192a8A224d5eBA420DDF9e3f',
         [Network.Base]: 'TBD',
     },

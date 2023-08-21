@@ -1,5 +1,4 @@
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
@@ -35,10 +34,6 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
             case Network.OptimismMainnet:
                 logo = <OpLogo />;
                 text = t(`common.unsupported-network.button.optimism`);
-                break;
-            case Network.BSC:
-                logo = <BSCLogo />;
-                text = t(`common.unsupported-network.button.bsc`);
                 break;
             case Network.PolygonMainnet:
                 logo = <PolygonLogo />;

@@ -199,10 +199,12 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                             <ClosedPositions />
                         </>
                     )}
-                    <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
-                        <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
-                        <ArrowRight className="icon icon--arrow" />
-                    </SPAAnchor>
+                    <OverviewLinkWrapper>
+                        <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
+                            <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
+                            <ArrowRight className="icon icon--arrow" />
+                        </SPAAnchor>
+                    </OverviewLinkWrapper>
                 </Container>
             )}
         </>
@@ -288,6 +290,10 @@ const Info = styled.span`
     font-weight: 300;
     line-height: 110%;
     color: ${(props) => props.theme.textColor.primary};
+`;
+
+const OverviewLinkWrapper = styled.div`
+    margin-top: 20px;
 `;
 
 const OverviewLinkText = styled.span`
