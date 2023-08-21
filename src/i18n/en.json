@@ -48,6 +48,7 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
+        "coming-soon": "Coming Soon!",
         "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
@@ -157,7 +158,7 @@
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
-            "not-supported": " Swap is not supported on Test networks",
+            "not-supported": "Swap is not supported on this network",
             "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",

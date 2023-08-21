@@ -252,7 +252,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 // Network.Arbitrum, // TODO: Release on 22.08.
                 // Network.Base, // TODO: Release on 28.08.
                 // Network.PolygonMainnet, // TODO: Release on 23.08.
-                // Network.BSC, // TODO: Release on 24.08.
             ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
