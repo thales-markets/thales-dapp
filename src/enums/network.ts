@@ -1,7 +1,6 @@
 export enum Network {
     Mainnet = 1,
     OptimismMainnet = 10,
-    BSC = 56,
     PolygonMainnet = 137,
     OptimismGoerli = 420,
     Base = 8453,

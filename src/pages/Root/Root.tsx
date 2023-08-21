@@ -49,11 +49,6 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         chainnode: 'optimism-mainnet',
         blast: 'optimism-mainnet',
     },
-    [Network.BSC]: {
-        ankr: '',
-        chainnode: 'bsc-mainnet',
-        blast: 'bsc-mainnet',
-    },
     [Network.PolygonMainnet]: {
         ankr: '',
         chainnode: 'polygon-mainnet',

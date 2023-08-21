@@ -6,8 +6,6 @@ const getEtherScanBaseURL = (networkId: Network) => {
 
     if (networkId === Network.Mainnet || network == null) {
         return 'https://etherscan.io';
-    } else if (networkId === Network.BSC) {
-        return 'https://bscscan.com';
     } else if (networkId === Network.Arbitrum) {
         return 'https://arbiscan.io';
     } else if (networkId === Network.PolygonMainnet) {

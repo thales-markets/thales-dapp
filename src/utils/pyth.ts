@@ -5,7 +5,7 @@ import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
     switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.BSC, Network.PolygonMainnet, Network.Arbitrum):
+        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
             return PRICE_SERVICE_ENDPOINTS.mainnet;
         case Network.OptimismGoerli:
             return PRICE_SERVICE_ENDPOINTS.testnet;
@@ -17,7 +17,7 @@ export const getPriceServiceEndpoint = (networkId: Network) => {
 
 export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_MAP[number]) => {
     switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.BSC, Network.PolygonMainnet, Network.Arbitrum):
+        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
             return PRICE_ID.mainnet[currency];
         case Network.OptimismGoerli:
             return PRICE_ID.testnet[currency];
@@ -29,7 +29,7 @@ export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_
 
 const getCurrencyByPriceId = (networkId: Network, priceId: string) => {
     switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.BSC, Network.PolygonMainnet, Network.Arbitrum):
+        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
             return (
                 Object.keys(PRICE_ID.mainnet).find((key) => PRICE_ID.mainnet[key] === '0x' + priceId) ||
                 'currencyNotFound'
