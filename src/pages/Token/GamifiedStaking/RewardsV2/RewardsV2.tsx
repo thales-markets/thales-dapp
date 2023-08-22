@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import StakingSteps from './components/StakingSteps/StakingSteps';
+import StakingSteps from './components/StakingSteps';
 import StakingOverview from './components/StakingOverview/StakingOverview';
 import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 import BaseRewards from './components/BaseRewards/BaseRewards';
@@ -29,7 +29,7 @@ const RewardsV2: React.FC = () => {
         if (query.data && query.isSuccess) {
             setStakingData(query.data);
         }
-    }, [query.data]);
+    }, [query.data, query.isSuccess]);
 
     return (
         <Wrapper>

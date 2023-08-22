@@ -12,6 +12,7 @@ function useDebouncedEffect(
     const { leading, trailing } = options;
     const [_dependency, _setdependency] = useState(dependency);
 
+    // eslint-disable-next-line
     const makeChangeTodependency = useCallback(
         debounce(
             (dependency) => {
@@ -27,8 +28,10 @@ function useDebouncedEffect(
         if (dependency) {
             makeChangeTodependency(dependency);
         }
+        // eslint-disable-next-line
     }, dependency);
 
+    // eslint-disable-next-line
     useEffect(callback, _dependency);
 }
 

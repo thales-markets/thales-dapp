@@ -12,12 +12,7 @@ import { hexToRGB } from 'utils/style';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 import { getDefaultCollateral } from 'utils/currency';
 
-const SUPPORTED_DESTINATION_NETWORKS = [
-    Network['Mainnet-Ovm'],
-    Network.Arbitrum,
-    Network['POLYGON-MAINNET'],
-    Network.BSC,
-];
+const SUPPORTED_DESTINATION_NETWORKS = [Network.OptimismMainnet, Network.Arbitrum, Network.PolygonMainnet];
 
 const BungeePlugin: React.FC = () => {
     const theme: ThemeInterface = useTheme();

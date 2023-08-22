@@ -4,7 +4,7 @@ import thalesData from 'thales-data';
 import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
 import { UserPosition } from 'types/profile';
 import { Network } from 'enums/network';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import { MAX_MATURITY, MIN_MATURITY, POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
@@ -68,7 +68,7 @@ const useClosedPositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -89,7 +89,7 @@ const useClosedPositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: 0,

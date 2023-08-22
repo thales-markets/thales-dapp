@@ -1,0 +1,98 @@
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import QUERY_KEYS from 'constants/queryKeys';
+import { Network } from 'enums/network';
+import { ethers } from 'ethers';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { AmmSpeedMarketsLimits } from 'types/options';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import snxJSConnector from 'utils/snxJSConnector';
+
+const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 10;
+
+const useAmmSpeedMarketsLimitsQuery = (
+    networkId: Network,
+    walletAddress?: string,
+    options?: UseQueryOptions<AmmSpeedMarketsLimits>
+) => {
+    return useQuery<AmmSpeedMarketsLimits>(
+        QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress),
+        async () => {
+            const ammSpeedMarkets: AmmSpeedMarketsLimits = {
+                minBuyinAmount: 0,
+                maxBuyinAmount: 0,
+                minimalTimeToMaturity: 0,
+                maximalTimeToMaturity: 0,
+                maxPriceDelaySec: 0,
+                risksPerAsset: [],
+                lpFee: 0,
+                safeBoxImpact: 0,
+                whitelistedAddress: false,
+            };
+            const { speedMarketsAMMContract } = snxJSConnector;
+            if (speedMarketsAMMContract) {
+                const [
+                    minBuyinAmount,
+                    maxBuyinAmount,
+                    minTimeToMaturity,
+                    maxTimeToMaturity,
+                    maxPriceDelay,
+                    currentRiskForETH,
+                    maxRiskForETH,
+                    currentRiskForBTC,
+                    maxRiskForBTC,
+                    lpFee,
+                    safeBoxImpact,
+                    whitelistedAddress,
+                ] = await Promise.all([
+                    speedMarketsAMMContract.minBuyinAmount(),
+                    speedMarketsAMMContract.maxBuyinAmount(),
+                    speedMarketsAMMContract.minimalTimeToMaturity(),
+                    speedMarketsAMMContract.maximalTimeToMaturity(),
+                    speedMarketsAMMContract.maximumPriceDelay(),
+                    speedMarketsAMMContract.currentRiskPerAsset(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)),
+                    speedMarketsAMMContract.currentRiskPerAsset(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)),
+                    speedMarketsAMMContract.lpFee(),
+                    speedMarketsAMMContract.safeBoxImpact(),
+                    walletAddress
+                        ? speedMarketsAMMContract.whitelistedAddresses(walletAddress)
+                        : Promise.resolve(false),
+                ]);
+
+                ammSpeedMarkets.minBuyinAmount = coinFormatter(minBuyinAmount, networkId);
+                ammSpeedMarkets.maxBuyinAmount =
+                    coinFormatter(maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
+                ammSpeedMarkets.minimalTimeToMaturity = Number(minTimeToMaturity);
+                ammSpeedMarkets.maximalTimeToMaturity = Number(maxTimeToMaturity);
+                ammSpeedMarkets.maxPriceDelaySec = Number(maxPriceDelay);
+                ammSpeedMarkets.risksPerAsset = [
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.ETH,
+                        current: coinFormatter(currentRiskForETH, networkId),
+                        max: coinFormatter(maxRiskForETH, networkId),
+                    },
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.BTC,
+                        current: coinFormatter(currentRiskForBTC, networkId),
+                        max: coinFormatter(maxRiskForBTC, networkId),
+                    },
+                ];
+                ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
+                ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
+                ammSpeedMarkets.whitelistedAddress = whitelistedAddress;
+            }
+
+            return ammSpeedMarkets;
+        },
+        {
+            ...options,
+        }
+    );
+};
+
+export default useAmmSpeedMarketsLimitsQuery;

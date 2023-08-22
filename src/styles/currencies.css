@@ -10,8 +10,16 @@
     content: '\0042';
 }
 
+.currency-icon--usdt::before {
+    content: '\0044';
+}
+
 .currency-icon--crv::before {
     content: '\0046';
+}
+
+.currency-icon--dai::before {
+    content: '\0049';
 }
 
 .currency-icon--bnb:before {
@@ -36,6 +44,10 @@
 
 .currency-icon--eth::before {
     content: '\0055';
+}
+
+.currency-icon--usdc::before {
+    content: '\0057';
 }
 
 .currency-icon--s::before {
@@ -92,4 +104,16 @@
 
 .currency-icon--wld::before {
     content: '\006F';
+}
+
+.currency-icon--usdce::before {
+    content: '\0070';
+}
+
+.currency-icon--weth::before {
+    content: '\0071';
+}
+
+.currency-icon--susd::before {
+    content: '\0072';
 }

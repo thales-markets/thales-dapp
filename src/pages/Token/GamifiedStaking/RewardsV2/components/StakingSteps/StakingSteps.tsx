@@ -26,7 +26,7 @@ const StakingSteps: React.FC = () => {
         if (query.data && query.isSuccess) {
             setStakingData(query.data);
         }
-    }, [query.data]);
+    }, [query.data, query.isSuccess]);
 
     return (
         <Container>

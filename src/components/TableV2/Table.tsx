@@ -72,10 +72,12 @@ const Table: React.FC<TableProps> = ({
     const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(false);
 
+    // eslint-disable-next-line
     const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
 
     useEffect(() => {
         setGlobalFilter(searchQuery);
+        // eslint-disable-next-line
     }, [searchQuery]);
 
     const {
@@ -119,27 +121,27 @@ const Table: React.FC<TableProps> = ({
 
     useEffect(() => {
         setPageSize(defaultPageSize || DEFAULT_PAGE_SIZE);
-    }, []);
+    }, [defaultPageSize, setPageSize]);
 
     useEffect(() => {
         gotoPage(0);
-    }, [sortBy, searchQuery]);
-
-    const handleResize = () => {
-        if (window.innerWidth <= columns.length * 150 * 0.9 && !preventMobileView) {
-            setIsMobile(true);
-        } else {
-            setIsMobile(false);
-        }
-    };
+    }, [sortBy, searchQuery, gotoPage]);
 
     useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= columns.length * 150 * 0.9 && !preventMobileView) {
+                setIsMobile(true);
+            } else {
+                setIsMobile(false);
+            }
+        };
+
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [columns.length, preventMobileView]);
 
     const sortHeaderMenus = useMemo(() => {
         const menuItems: any = [];

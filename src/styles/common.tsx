@@ -10,9 +10,10 @@ export const FlexDivCentered = styled(FlexDiv)`
     justify-content: center;
 `;
 
-export const FlexDivSpaceBetween = styled(FlexDiv)`
+export const FlexDivSpaceBetween = styled(FlexDiv)<{ margin?: string }>`
     align-items: center;
     justify-content: space-between;
+    ${(props) => (props.margin ? `margin: ${props.margin}` : '')}
 `;
 
 export const FlexDivEnd = styled(FlexDiv)`
@@ -38,6 +39,10 @@ export const FlexDivColumn = styled(FlexDiv)`
 
 export const FlexDivColumnCentered = styled(FlexDivColumn)`
     justify-content: center;
+`;
+
+export const BoldText = styled.span`
+    font-weight: 700;
 `;
 
 // TODO: Update color names

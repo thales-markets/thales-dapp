@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -36,7 +36,10 @@ const ThalesStakers: React.FC = () => {
     const stakersQuery = useThalesStakersQuery(filter, {
         enabled: isAppReady,
     });
-    const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
+    const stakers: Staker[] = useMemo(() => (stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : []), [
+        stakersQuery.isSuccess,
+        stakersQuery.data,
+    ]);
 
     useEffect(() => {
         const getEnsNames = async (stakers: Stakers) => {
@@ -53,7 +56,7 @@ const ThalesStakers: React.FC = () => {
         if (networkId === Network.Mainnet) {
             getEnsNames(stakers);
         }
-    }, [stakers]);
+    }, [stakers, networkId]);
 
     const findByEnsName = (address: string) => {
         if (ensNames && ensNames[address]) {
@@ -171,7 +174,7 @@ const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
         if (networkId === Network.Mainnet) {
             fetchStakerEns();
         }
-    }, [staker]);
+    }, [staker, networkId]);
 
     return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;
 };

@@ -1,5 +1,5 @@
 import { TablePagination } from '@material-ui/core';
-import Table from 'components/Table/Table';
+import Table from 'components/Table';
 import useStakersDataLeaderboardQuery, {
     StakersWithLeaderboardData,
 } from 'queries/token/useStakersDataLeaderboardQuery';
@@ -16,11 +16,11 @@ import snxJSConnector from 'utils/snxJSConnector';
 // import HighlightCard from './components/HighlightCard/HighlightCard';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import PeriodDropdown from './components/PeriodDropdown/PeriodDropdown';
+import PeriodDropdown from './components/PeriodDropdown';
 import { refetchStakingLeaderboardData } from 'utils/queryConnector';
 import TimeRemaining from 'components/TimeRemaining';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import GlobalStakingData from './components/GlobalStakingData/GlobalStakingData';
+import GlobalStakingData from './components/GlobalStakingData';
 
 const StakingLeaderboard: React.FC = () => {
     const { t } = useTranslation();
@@ -101,7 +101,7 @@ const StakingLeaderboard: React.FC = () => {
         }
 
         return [];
-    }, [stakingData]);
+    }, [stakingData, walletAddress]);
 
     const columns = useMemo(() => {
         if (stakingData) {
@@ -178,13 +178,13 @@ const StakingLeaderboard: React.FC = () => {
         } else {
             return [];
         }
-    }, [stakingData]);
+    }, [stakingData, networkId, t]);
 
     useMemo(() => {
         if (Number(period) > 0 && Number(currentPeriod) > 0) {
             refetchStakingLeaderboardData(walletAddress, networkId, period);
         }
-    }, [period, currentPeriod]);
+    }, [period, currentPeriod, networkId, walletAddress]);
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);

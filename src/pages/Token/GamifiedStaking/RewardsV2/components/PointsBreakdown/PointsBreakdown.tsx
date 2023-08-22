@@ -58,7 +58,7 @@ const PointsBreakdown: React.FC = () => {
             return query.data;
         }
         return lastValidStakingData;
-    }, [query.isSuccess, query.data, lastValidStakingData]);
+    }, [query.data, lastValidStakingData]);
 
     const onTabClick = (type: TabType) => {
         const _tabs = tabs.map((item) => {
@@ -130,6 +130,21 @@ const PointsBreakdown: React.FC = () => {
                                             <LinkLabel>
                                                 {t(
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.trading'
+                                                )}
+                                            </LinkLabel>
+                                            <ExternalIcon className="icon icon__external" />
+                                        </LinkLabelContainer>
+                                    </LinkWrapper>
+                                    <LinkWrapper
+                                        href={buildHref(ROUTES.Options.SpeedMarkets)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <LinkIcon className="sidebar-icon icon--speed-markets" />
+                                        <LinkLabelContainer>
+                                            <LinkLabel>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.speed-trading'
                                                 )}
                                             </LinkLabel>
                                             <ExternalIcon className="icon icon__external" />

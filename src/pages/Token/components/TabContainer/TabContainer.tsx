@@ -9,7 +9,7 @@ import { TokenTabSection } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';
 
-export type TabItem = { id: string; name: string };
+type TabItem = { id: string; name: string };
 
 const TabContainer: React.FC<{
     tabItems: TabItem[];

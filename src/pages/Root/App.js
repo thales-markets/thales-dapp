@@ -15,7 +15,7 @@ import {
     updateWallet,
 } from 'redux/modules/wallet';
 import { isMobile } from 'utils/device';
-import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported } from 'utils/network';
+import { isNetworkSupported } from 'utils/network';
 import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -28,6 +28,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { createGlobalStyle } from 'styled-components';
 import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
+import { getSupportedNetworksByRoute } from 'utils/network';
+import { Network } from 'enums/network';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -41,6 +43,10 @@ const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/
 const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
+const SpeedMarkets = lazy(() => import(/* webpackChunkName: "SpeedMarkets" */ '../SpeedMarkets'));
+const SpeedMarketsOverview = lazy(() =>
+    import(/* webpackChunkName: "SpeedMarketsOverview" */ '../SpeedMarketsOverview')
+);
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
@@ -60,10 +66,6 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
-
-    const isMainnet = getIsMainnet(networkId);
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
 
     const isLedgerLive = isLedgerDappBrowserProvider();
 
@@ -191,7 +193,7 @@ const App = () => {
                 <Suspense fallback={<Loader />}>
                     <Router history={history}>
                         <Switch>
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.CreateMarket).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.CreateMarket}>
                                     <DappLayout>
                                         <CreateMarket />
@@ -199,7 +201,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
                                 <Route
                                     exact
                                     path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
@@ -211,7 +213,7 @@ const App = () => {
                                 />
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.Game}>
                                     <DappLayout>
                                         <TaleOfThales />
@@ -219,7 +221,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.Profile}>
                                     <DappLayout>
                                         <Profile />
@@ -227,7 +229,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && !isBSC && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
                                         <TokenPage />
@@ -235,7 +237,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.Referral}>
                                     <DappLayout>
                                         <Referral />
@@ -243,7 +245,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && !isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.Vaults}>
                                     <DappLayout>
                                         <Vaults />
@@ -251,7 +253,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && !isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Vault).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.Vault}
@@ -263,7 +265,7 @@ const App = () => {
                                 />
                             )}
 
-                            {!isPolygon && !isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                                 <Route exact path={ROUTES.Options.LiquidityPool}>
                                     <DappLayout>
                                         <LiquidityPool />
@@ -271,7 +273,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.MarketMatch}
@@ -283,7 +285,7 @@ const App = () => {
                                 />
                             )}
 
-                            {!isMainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.RangeMarkets).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.RangeMarketMatch}
@@ -295,11 +297,38 @@ const App = () => {
                                 />
                             )}
 
-                            <Route exact path={ROUTES.Options.Home}>
-                                <DappLayout>
-                                    <Markets />
-                                </DappLayout>
-                            </Route>
+                            <Route
+                                exact
+                                path={ROUTES.Options.Home}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Markets {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+
+                            {networkId !== Network.Mainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.SpeedMarkets}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <SpeedMarkets {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+                            {networkId !== Network.Mainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.SpeedMarketsOverview}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <SpeedMarketsOverview {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
                             <Route
                                 exact

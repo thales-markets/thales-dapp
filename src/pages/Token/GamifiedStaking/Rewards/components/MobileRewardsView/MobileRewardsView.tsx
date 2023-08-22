@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import ClaimRewards from '../ClaimRewards/ClaimRewards';
-import StakingOverview from '../StakingOverview';
-import PointsBreakdown from '../PointsBreakdown/PointsBreakdown';
-import StakingStepsMobile from '../StakingSteps/StakingStepsMobile';
-import BaseRewards from '../BaseRewards';
+import ClaimRewards from '../../../RewardsV2/components/ClaimRewards';
+import StakingOverview from '../../../RewardsV2/components/StakingOverview';
+import PointsBreakdown from '../../../RewardsV2/components/PointsBreakdown';
+import StakingStepsMobile from '../../../RewardsV2/components/StakingSteps/StakingStepsMobile';
+import BaseRewards from '../../../RewardsV2/components/BaseRewards';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();

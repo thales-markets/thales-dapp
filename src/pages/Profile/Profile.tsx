@@ -95,7 +95,7 @@ const Profile: React.FC = () => {
         if (searchAddress?.toLowerCase() !== searchText?.toLowerCase() && searchText !== '') {
             setSearchAddress('');
         }
-    }, [searchAddress]);
+    }, [searchAddress, searchText]);
 
     const onTabClickHandler = (tab: NavItems) => {
         history.push({

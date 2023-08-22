@@ -3,17 +3,11 @@ import { Network } from 'enums/network';
 const sportLiquidityPoolContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: '0x842e89b7a7eF8Ce099540b3613264C933cE0eBa5',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: '0xdd0879AB819287637f33A29d1ee91d5a76c890Af',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
-        [Network.BSC]: 'TBD',
+        [Network.OptimismMainnet]: '0x842e89b7a7eF8Ce099540b3613264C933cE0eBa5',
+        [Network.OptimismGoerli]: '0xdd0879AB819287637f33A29d1ee91d5a76c890Af',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x8e9018b48456202aA9bb3E485192B8475822B874',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

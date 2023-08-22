@@ -3,18 +3,11 @@ import { Network } from 'enums/network';
 const escrowThales = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0xa25816b9605009aa446d4d597F0AA46FD828f056',
-        [Network['Kovan-Ovm']]: '0xEeDe0f1D1d70009348f3D9a66Fe03BA3CA0Aeef7',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
-        [Network.BSC]: 'TBD',
+        [Network.OptimismMainnet]: '0xa25816b9605009aa446d4d597F0AA46FD828f056',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x391a45F31c1837E3d837c23e05F42A098329D50d',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

@@ -1,3 +1,4 @@
+import { Network } from 'enums/network';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import queryString from 'query-string';
@@ -9,7 +10,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { TokenTabSection } from 'types/token';
-import { getIsArbitrum, getIsOVM } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
 
 type TokenNavProps = {
@@ -28,7 +29,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId) || getIsArbitrum(networkId);
+    const isL2 = getIsOVM(networkId) || networkId === Network.Arbitrum;
     const isOP = getIsOVM(networkId);
 
     const [showNav, setShowNav] = useState(false);

@@ -6,6 +6,14 @@
     color: #ffffff;
 }
 
+.icon--speed-markets:before {
+    content: '\003D';
+}
+
+.icon--nav-menu:before {
+    content: '\0040';
+}
+
 .icon--token:before {
     content: '\0043';
 }
@@ -48,6 +56,10 @@
 
 .icon--create-market:before {
     content: '\0057';
+}
+
+.icon--trading:before {
+    content: '\0058';
 }
 
 .icon--markets:before {
@@ -147,10 +159,6 @@
     content: '\007D';
 }
 
-.icon--nav-menu:before {
-    content: '\0064';
-}
-
-.icon--trading:before {
-    content: '\0058';
+.icon--share::before {
+    content: '\007E';
 }

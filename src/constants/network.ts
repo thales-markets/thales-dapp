@@ -1,13 +1,6 @@
-import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
-import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
-import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
-import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-import { FunctionComponent, SVGProps } from 'react';
-import { hexStripZeros } from '@ethersproject/bytes';
-import { BigNumber } from 'ethers';
 import { Network } from 'enums/network';
-import { hasEthereumInjected } from 'utils/network';
+import { OptimismNetwork } from 'types/network';
+import { Chain } from 'wagmi';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
@@ -15,37 +8,29 @@ export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 
 export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
-    [Network.Ropsten]: 'ROPSTEN',
-    [Network.Rinkeby]: 'RINKEBY',
-    [Network.Goerli]: 'GOERLI',
-    [Network['Mainnet-Ovm']]: 'OPTIMISTIC',
-    [Network.Kovan]: 'KOVAN',
-    [Network.BSC]: 'BSC-MAINNET',
-    [Network['Kovan-Ovm']]: 'KOVAN-OPTIMISTIC',
-    [Network['POLYGON-MAINNET']]: 'POLYGON-MAINNET',
-    [Network['Goerli-Ovm']]: 'GOERLI-OPTIMISM',
+    [Network.OptimismMainnet]: 'OPTIMISTIC',
+    [Network.PolygonMainnet]: 'POLYGON-MAINNET',
+    [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
-    [Network['POLYGON-MUMBAI']]: 'POLYGON-MUMBAI',
+    [Network.Base]: 'BASE',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
-    [Network.Ropsten]: 'ROPSTEN',
-    [Network.Rinkeby]: 'RINKEBY',
-    [Network.Goerli]: 'GOERLI',
-    [Network['Mainnet-Ovm']]: 'OPTIMISM MAINNET',
-    [Network.Kovan]: 'KOVAN',
-    [Network.BSC]: 'BINANCE SMART CHAIN MAINNET',
-    [Network['Kovan-Ovm']]: 'OPTIMISM KOVAN',
-    [Network['POLYGON-MAINNET']]: 'POLYGON',
-    [Network['Goerli-Ovm']]: 'OPTIMISM GOERLI',
+    [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
+    [Network.PolygonMainnet]: 'POLYGON',
+    [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
-    [Network['POLYGON-MUMBAI']]: 'POLYGON MUMBAI',
+    [Network.Base]: 'BASE',
 };
 
-export const defaultNetwork: { name: string; networkId: Network } = {
-    name: SUPPORTED_NETWORKS_NAMES[Network['Mainnet-Ovm']],
-    networkId: Network['Mainnet-Ovm'],
+export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
+
+export const TEST_NETWORKS = [Network.OptimismGoerli];
+
+export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
+    name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
+    networkId: Network.OptimismMainnet,
 };
 
 type NetworkMapper = Record<number, number>;
@@ -55,21 +40,8 @@ export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     42: 69,
 };
 
-type OptimismNetwork = {
-    chainId: string;
-    chainName: string;
-    rpcUrls: string[];
-    blockExplorerUrls: string[];
-    iconUrls: string[];
-    fraudProofWindow?: number;
-    nativeCurrency: {
-        symbol: string;
-        decimals: number;
-    };
-};
-
 export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
-    [Network['Mainnet-Ovm']]: {
+    [Network.OptimismMainnet]: {
         chainId: '0xA',
         chainName: 'Optimism',
         rpcUrls: ['https://mainnet.optimism.io'],
@@ -80,21 +52,10 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    [Network['Kovan-Ovm']]: {
-        chainId: '0x45',
-        chainName: 'Optimism Kovan',
-        rpcUrls: ['https://kovan.optimism.io'],
-        blockExplorerUrls: ['https://kovan-optimistic.etherscan.io/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'ETH',
-            decimals: 18,
-        },
-    },
 };
 
-const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
-    [Network['POLYGON-MAINNET']]: {
+export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
+    [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
         rpcUrls: ['https://polygon-rpc.com'],
@@ -105,34 +66,9 @@ const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-    [Network['POLYGON-MUMBAI']]: {
-        chainId: '0x13881',
-        chainName: 'Polygon Mumbai',
-        rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
-        blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'MATIC',
-            decimals: 18,
-        },
-    },
 };
 
-const BSC_NETWORK: Record<number, OptimismNetwork> = {
-    [Network.BSC]: {
-        chainId: '0x38',
-        chainName: 'BSC',
-        rpcUrls: ['https://bsc-dataseed.binance.org/'],
-        blockExplorerUrls: ['https://bscscan.com/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'BNB',
-            decimals: 18,
-        },
-    },
-};
-
-const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
+export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
@@ -146,90 +82,52 @@ const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     },
 };
 
-type DropdownNetwork = {
-    name: string;
-    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => Promise<void>;
-    order: number;
+export const BASE_NETWORK: Record<number, OptimismNetwork> = {
+    [Network.Base]: {
+        chainId: '0x2105',
+        chainName: 'BASE',
+        rpcUrls: ['https://mainnet.base.org'],
+        blockExplorerUrls: ['https://basescan.org/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'ETH',
+            decimals: 18,
+        },
+    },
 };
 
-const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction, chainId?: string): Promise<void> => {
-    if (hasEthereumInjected()) {
-        try {
-            await (window.ethereum as any).request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: network?.chainId || chainId }],
-            });
-            callback && callback();
-        } catch (switchError: any) {
-            if (network && switchError.code === 4902) {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_addEthereumChain',
-                        params: [network],
-                    });
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: network.chainId }],
-                    });
-                    callback && callback();
-                } catch (addError) {
-                    console.log(addError);
-                }
-            } else {
-                console.log(switchError);
-            }
-        }
-    } else {
-        callback && callback();
-    }
-};
-
-export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
-    [Network['Mainnet-Ovm']]: {
-        name: 'Optimism',
-        icon: OpLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? 10;
-            const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
-            await changeNetwork(optimismNetworkParms, callback);
+// configuration for wagmi
+export const base = {
+    id: 8453,
+    network: 'base',
+    name: 'Base',
+    nativeCurrency: { name: 'Base', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://mainnet.base.org'],
         },
-        order: 1,
-    },
-    [Network['POLYGON-MAINNET']]: {
-        name: 'Polygon',
-        icon: PolygonLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const polygonNetworkParams = POLYGON_NETWORKS[networkId];
-            await changeNetwork(polygonNetworkParams, callback);
+        public: {
+            http: ['https://mainnet.base.org'],
         },
-        order: 3,
     },
-    [Network.Mainnet]: {
-        name: 'Mainnet',
-        icon: EthereumLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
-            await changeNetwork(undefined, callback, formattedChainId);
+    blockExplorers: {
+        blockscout: {
+            name: 'Basescout',
+            url: 'https://base.blockscout.com',
         },
-        order: 5,
-    },
-    [Network.BSC]: {
-        name: 'BNBChain',
-        icon: BSCLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const bscNetworkParams = BSC_NETWORK[networkId];
-            await changeNetwork(bscNetworkParams, callback);
+        default: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
         },
-        order: 4,
-    },
-    [Network.Arbitrum]: {
-        name: 'Arbitrum',
-        icon: ArbitrumLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const arbNetworkParams = ARBITRUM_NETWORK[networkId];
-            await changeNetwork(arbNetworkParams, callback);
+        etherscan: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
         },
-        order: 2,
     },
-};
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 5022,
+        },
+    },
+} as Chain;

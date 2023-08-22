@@ -1,12 +1,13 @@
-import { CRYPTO_CURRENCY_MAP, currencyKeyToNameMap } from 'constants/currency';
+import { currencyKeyToNameMap } from 'constants/currency';
 import { Network } from 'enums/network';
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 
 export enum TokenSymbol {
     SUSD = 'sUSD',
     DAI = 'DAI',
     ETH = 'ETH',
     USDC = 'USDC',
+    USDCe = 'USDCe',
     USDT = 'USDT',
     MATIC = 'MATIC',
     BUSD = 'BUSD',
@@ -135,14 +136,6 @@ export const BSC_BNB = {
     logoURI: 'https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c_1.png',
 };
 
-const BSC_BUSD = {
-    symbol: TokenSymbol.BUSD,
-    name: CRYPTO_CURRENCY_MAP.BUSD,
-    address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-    decimals: 18,
-    logoURI: 'https://tokens.1inch.io/0x4fabb145d64652a948d72533023f6e7a623c7c53.png',
-};
-
 export const ARB_ETH = {
     symbol: TokenSymbol.ETH,
     name: currencyKeyToNameMap.ETH,
@@ -151,9 +144,9 @@ export const ARB_ETH = {
     logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
 };
 
-const ARB_USDC = {
-    symbol: TokenSymbol.USDC,
-    name: currencyKeyToNameMap.USDC,
+const ARB_USDCe = {
+    symbol: TokenSymbol.USDCe,
+    name: currencyKeyToNameMap.USDCe,
     address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
     decimals: 6,
     logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
@@ -184,26 +177,17 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
 };
 
 export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
     const isOP = getIsOVM(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isArbitrum = networkId === Network.Arbitrum;
 
     const toToken = mapTokenByNetwork(TokenSymbol[initialToToken as keyof typeof TokenSymbol], isOP, isPolygon);
 
-    if (isBSC) {
-        return {
-            preloadTokens: [BSC_BUSD],
-            fromToken: BSC_BNB,
-            toToken: BSC_BUSD,
-        };
-    }
-
     if (isArbitrum) {
         return {
-            preloadTokens: [ARB_USDC],
+            preloadTokens: [ARB_USDCe],
             fromToken: ARB_ETH,
-            toToken: ARB_USDC,
+            toToken: ARB_USDCe,
         };
     }
 
@@ -231,14 +215,12 @@ export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
 };
 
 export const getFromTokenSwap = (networkId: Network) => {
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
+    const isPolygon = networkId === Network.PolygonMainnet;
     const isOP = getIsOVM(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
+    const isArbitrum = networkId === Network.Arbitrum;
 
     if (isArbitrum) return ARB_ETH;
     if (isPolygon) return POLYGON_MATIC;
-    if (isBSC) return BSC_BNB;
     if (isOP) return OP_Eth;
     return ETH_Eth;
 };

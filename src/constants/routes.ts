@@ -8,6 +8,8 @@ const ROUTES = {
     Options: {
         Home: '/markets',
         RangeMarkets: '/ranged-markets',
+        SpeedMarkets: '/speed-markets',
+        SpeedMarketsOverview: '/speed-markets/overview',
         HotMarkets: '/markets?anchor=hot-markets',
         CustomMarkets: '/markets?userFilter2=custom',
         CompetitionMarkets: '/markets?userFilter2=competition',

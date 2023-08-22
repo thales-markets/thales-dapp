@@ -1,5 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -12,16 +12,23 @@ import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/
 import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
 import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
+import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
+import useInterval from 'hooks/useInterval';
+import Tooltip from 'components/Tooltip/Tooltip';
+
+type SpeedMarketsTrade = { address: string; strikePrice: number; positionType: Positions | undefined };
 
 type TradingDetailsSentenceProps = {
     currencyKey: string;
     maturityDate: number;
-    market: MarketInfo | RangedMarketPerPosition;
+    market: MarketInfo | RangedMarketPerPosition | SpeedMarketsTrade;
     isRangedMarket: boolean;
     isFetchingQuote: boolean;
     priceProfit: number | string;
     paidAmount: number | string;
     breakFirstLine: boolean;
+    deltaTimeSec?: number;
+    hasCollateralConversion?: boolean;
 };
 
 const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
@@ -33,16 +40,35 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     priceProfit,
     paidAmount,
     breakFirstLine,
+    deltaTimeSec,
+    hasCollateralConversion,
 }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const [deltaDate, setDeltaDate] = useState(0);
+
+    useEffect(() => {
+        if (deltaTimeSec) {
+            setDeltaDate(Date.now() + secondsToMilliseconds(deltaTimeSec));
+        }
+    }, [deltaTimeSec]);
+
+    // Refresh datetime on every minute change
+    useInterval(() => {
+        if (deltaTimeSec) {
+            const currentMinute = new Date().getMinutes();
+            const maturityMinute = new Date(maturityDate).getMinutes() - secondsToMinutes(deltaTimeSec);
+
+            if (currentMinute !== maturityMinute) {
+                setDeltaDate(Date.now() + secondsToMilliseconds(deltaTimeSec));
+            }
+        }
+    }, secondsToMilliseconds(5));
+
     const potentialWinFormatted = isFetchingQuote
         ? '...'
-        : `${formatCurrencyWithKey(
-              getDefaultCollateral(networkId),
-              Number(priceProfit) * Number(paidAmount) + Number(paidAmount)
-          )}`;
+        : `${formatCurrencyWithKey(getDefaultCollateral(networkId), (1 + Number(priceProfit)) * Number(paidAmount))}`;
 
     const positionTypeFormatted =
         market.positionType === Positions.UP
@@ -51,7 +77,25 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             ? t('common.below')
             : market.positionType === Positions.IN
             ? t('common.between')
-            : t('common.not-between');
+            : market.positionType === Positions.OUT
+            ? t('common.not-between')
+            : '';
+
+    const deltaTimeFormatted = deltaTimeSec
+        ? `${secondsToHours(deltaTimeSec) !== 0 ? secondsToHours(deltaTimeSec) : secondsToMinutes(deltaTimeSec)} ${
+              secondsToHours(deltaTimeSec) !== 0
+                  ? secondsToHours(deltaTimeSec) === 1
+                      ? t('common.time-remaining.hour')
+                      : t('common.time-remaining.hours')
+                  : t('common.time-remaining.minutes')
+          } (${formatShortDateWithTime(deltaDate)})`
+        : '';
+
+    const timeFormatted = deltaTimeSec
+        ? deltaTimeFormatted
+        : maturityDate
+        ? formatShortDateWithTime(maturityDate)
+        : `( ${t('markets.amm-trading.choose-time')} )`;
 
     return (
         <ColumnSpaceBetween>
@@ -60,7 +104,11 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     <TextLabel>{t('markets.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
                     {market.address ? (
                         <>
-                            <SentanceTextValue uppercase={true}>{positionTypeFormatted}</SentanceTextValue>
+                            <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
+                                {positionTypeFormatted
+                                    ? positionTypeFormatted
+                                    : `( ${t('markets.amm-trading.choose-direction')} )`}
+                            </SentanceTextValue>
                             {isRangedMarket ? (
                                 !breakFirstLine && (
                                     <>
@@ -109,18 +157,22 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             )}
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{t('common.on')}</TextLabel>
-                    <SentanceTextValue>{formatShortDateWithTime(maturityDate)}</SentanceTextValue>
+                    <TextLabel>{deltaTimeSec ? t('common.in') : t('common.on')}</TextLabel>
+                    <SentanceTextValue lowercase>{timeFormatted}</SentanceTextValue>
                 </Text>
             </FlexDivCentered>
             <FlexDivCentered>
                 <Text>
                     <TextLabel>{t('markets.amm-trading.you-win')}</TextLabel>
+                    {hasCollateralConversion && <TextLabel>{` ${t('markets.amm-trading.at-least')}`}</TextLabel>}
                     <SentanceTextValue isProfit={true}>
                         {Number(priceProfit) > 0 && Number(paidAmount) > 0
                             ? potentialWinFormatted
                             : '( ' + t('markets.amm-trading.based-amount') + ' )'}
                     </SentanceTextValue>
+                    {hasCollateralConversion && Number(priceProfit) > 0 && Number(paidAmount) > 0 && (
+                        <Tooltip overlay={t('speed-markets.tooltips.payout-conversion')} />
+                    )}
                 </Text>
             </FlexDivCentered>
         </ColumnSpaceBetween>

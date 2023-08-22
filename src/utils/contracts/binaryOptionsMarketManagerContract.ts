@@ -3,18 +3,11 @@ import { Network } from 'enums/network';
 const binaryOptionsMarketManagerContract = {
     addresses: {
         [Network.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
-        [Network.Ropsten]: '0x708f748CD51dcFaE38F9f18ae928007F293898ce',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: '0x547818b1ee8bd9a6d5854e8A9E84E066B9a07aA7',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0x9227334352A890e51e980BeB7A56Bbdd01499B54',
-        [Network['Kovan-Ovm']]: '0xAfBA2e76B4580Ab88c07Beb2Ca884ca733fD4dD4',
-        [Network['Goerli-Ovm']]: '0x6a282c7E0656c3E1DAbB2fe0972e8Ea2BD109Fb3',
-        [Network['POLYGON-MUMBAI']]: '0x924364736B2e1c3d84656591a84bFA4aF1dc1291',
-        [Network['POLYGON-MAINNET']]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
-        [Network.BSC]: '0x3124A11216273018C8F37181b4505d36573D9701',
+        [Network.OptimismMainnet]: '0x9227334352A890e51e980BeB7A56Bbdd01499B54',
+        [Network.OptimismGoerli]: '0x6a282c7E0656c3E1DAbB2fe0972e8Ea2BD109Fb3',
+        [Network.PolygonMainnet]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
         [Network.Arbitrum]: '0x95d93c88c1b5190fA7FA4350844e0663e5a11fF0',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

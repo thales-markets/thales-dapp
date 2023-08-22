@@ -3,18 +3,11 @@ import { Network } from 'enums/network';
 const stakingBonusRewardsManager = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.Ropsten]: 'TBD',
-        [Network.Rinkeby]: 'TBD',
-        [Network.Kovan]: 'TBD',
-        // added to resolve error with typings
-        [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0xc07520843239C2CAA28101D8241D9132669B4271',
-        [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: 'TBD',
-        [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
-        [Network.BSC]: 'TBD',
+        [Network.OptimismMainnet]: '0xc07520843239C2CAA28101D8241D9132669B4271',
+        [Network.OptimismGoerli]: 'TBD',
+        [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x6535F4cCC70E0CCb192a8A224d5eBA420DDF9e3f',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {

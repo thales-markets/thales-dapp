@@ -7,7 +7,7 @@ import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
@@ -101,7 +101,7 @@ const useUserLivePositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: stableCoinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
@@ -124,7 +124,7 @@ const useUserLivePositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: stableCoinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
@@ -138,7 +138,7 @@ const useUserLivePositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -156,7 +156,7 @@ const useUserLivePositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -174,7 +174,7 @@ const useUserLivePositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.leftPrice),
@@ -193,7 +193,7 @@ const useUserLivePositionsQuery = (
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.leftPrice),

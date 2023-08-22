@@ -10,7 +10,13 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
-import { MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, POSITIONS_TO_SIDE_MAP, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import {
+    MINIMUM_AMM_LIQUIDITY,
+    MIN_SCEW_IMPACT,
+    ONE_HUNDRED_AND_THREE_PERCENT,
+    POSITIONS_TO_SIDE_MAP,
+    SLIPPAGE_PERCENTAGE,
+} from 'constants/options';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
@@ -53,9 +59,10 @@ import {
     getCollaterals,
     getDefaultCollateral,
     getDefaultStableIndexByBalance,
-    getStableCoinBalance,
+    getCoinBalance,
+    isStableCurrency,
 } from 'utils/currency';
-import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter, coinParser } from 'utils/formatters/ethers';
 import {
     formatCurrency,
     formatCurrencyWithSign,
@@ -81,8 +88,7 @@ import {
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
-import { plausible } from 'pages/Root/Root';
-import { PLAUSIBLE_KEYS } from 'constants/analytics';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -93,8 +99,6 @@ type AmmTradingProps = {
     showWalletBalance?: boolean;
 };
 
-const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
-
 const AmmTrading: React.FC<AmmTradingProps> = ({
     currencyKey,
     maturityDate,
@@ -104,7 +108,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     showWalletBalance,
 }) => {
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
-    const contextMarket = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const contextMarket = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
@@ -114,7 +120,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
+    const selectedCollateralIndexSelector = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isBuy = useSelector((state: RootState) => getIsBuy(state)) || !isDetailsPage;
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
@@ -137,6 +143,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
     const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
+
+    // Still not supporting all collaterals
+    const selectedCollateralIndex = useMemo(
+        () =>
+            selectedCollateralIndexSelector < getCollaterals(networkId).length ? selectedCollateralIndexSelector : 0,
+        [networkId, selectedCollateralIndexSelector]
+    );
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isBuyWithNonDefaultCollateral = selectedCollateralIndex !== 0 && isMultiCollateralSupported && isBuy;
@@ -213,26 +226,33 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
     }, [stableBalanceQuery]);
 
+    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
+    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex), [
+        networkId,
+        selectedCollateralIndex,
+    ]);
+
     const stableBalance = useMemo(() => {
         return isMultiCollateralSupported
             ? multipleStableBalances.isSuccess
-                ? getStableCoinBalance(multipleStableBalances?.data, getCollateral(networkId, selectedCollateralIndex))
+                ? getCoinBalance(multipleStableBalances?.data, selectedCollateral)
                 : null
-            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId));
-    }, [networkId, multipleStableBalances, walletBalancesMap, selectedCollateralIndex, isMultiCollateralSupported]);
+            : getCurrencyKeyStableBalance(walletBalancesMap, defaultCollateral);
+    }, [multipleStableBalances, walletBalancesMap, isMultiCollateralSupported, defaultCollateral, selectedCollateral]);
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {
         if (
+            isStableCurrency(selectedCollateral) &&
             multipleStableBalances?.data &&
             multipleStableBalances?.isSuccess &&
-            selectedCollateralIndex === 0 &&
+            selectedCollateral === defaultCollateral &&
             isMultiCollateralSupported
         ) {
             const defaultStableBalance = getDefaultStableIndexByBalance(
                 multipleStableBalances?.data,
                 networkId,
-                getCollateral(networkId, selectedCollateralIndex)
+                selectedCollateral
             );
             dispatch(setSelectedCollateralIndex(defaultStableBalance));
         }
@@ -242,13 +262,16 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         multipleStableBalances?.data,
         selectedCollateralIndex,
         isMultiCollateralSupported,
+        networkId,
+        selectedCollateral,
+        defaultCollateral,
     ]);
 
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
-            ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateralIndex]?.address
+            ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
             : snxJSConnector.collateral?.address;
-    }, [selectedCollateralIndex, networkId, isMultiCollateralSupported]);
+    }, [selectedCollateral, isMultiCollateralSupported]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
@@ -317,7 +340,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         : market.positionType === Positions.UP
         ? (contextMarket as OptionsMarketInfo).longAddress
         : (contextMarket as OptionsMarketInfo).shortAddress;
-    const approvalCurrency = isBuy ? getCollateral(networkId, selectedCollateralIndex) : market.positionType;
+    const approvalCurrency = isBuy ? selectedCollateral : market.positionType;
 
     useEffect(() => {
         if (!approvalCurrencyAddress) {
@@ -330,11 +353,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         const getAllowance = async () => {
             try {
                 const parsedAmount: BigNumber = isBuy
-                    ? stableCoinParser(
-                          Number(paidAmount).toString(),
-                          networkId,
-                          getCollateral(networkId, selectedCollateralIndex)
-                      )
+                    ? coinParser(Number(paidAmount).toString(), networkId, selectedCollateral)
                     : ethers.utils.parseEther(Number(paidAmount).toString());
 
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
@@ -351,13 +370,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         approvalCurrencyAddress,
         networkId,
         paidAmount,
-        selectedCollateralIndex,
         walletAddress,
         isWalletConnected,
         hasAllowance,
         isAllowing,
         isRangedMarket,
         isBuy,
+        selectedCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -435,11 +454,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
                 const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isBuyWithNonDefaultCollateral ? (ammQuotes as any)[0] : ammQuotes;
-                const formattedAmmQuote = stableCoinFormatter(
-                    ammQuote,
-                    networkId,
-                    getCollateral(networkId, selectedCollateralIndex)
-                );
+                const formattedAmmQuote = coinFormatter(ammQuote, networkId, selectedCollateral);
 
                 const ammPrice = formattedAmmQuote / suggestedAmount;
 
@@ -493,10 +508,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
             const parsedAmount = isBuy
                 ? ethers.utils.parseEther(positionAmount.toString())
-                : stableCoinParser(paidAmount.toString(), networkId);
+                : coinParser(paidAmount.toString(), networkId);
 
             const parsedTotal = isBuy
-                ? stableCoinParser(paidAmount.toString(), networkId)
+                ? coinParser(paidAmount.toString(), networkId)
                 : ethers.utils.parseEther(positionAmount.toString());
 
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
@@ -520,14 +535,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             if (txResult && txResult.transactionHash) {
                 toast.update(
                     id,
-                    getSuccessToastOptions(
-                        t(
-                            `markets.market.trade-options.place-order.swap-confirm-button.${
-                                isBuy ? 'buy' : 'sell'
-                            }.confirmation-message`
-                        ),
-                        id
-                    )
+                    getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
                 );
 
                 refetchBalances(walletAddress, networkId);
@@ -543,10 +551,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 if (isBuy) {
                     trackEvent({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
-                        action: `buy-with-${getCollateral(networkId, selectedCollateralIndex)}`,
+                        action: `buy-with-${selectedCollateral}`,
                         value: Number(paidAmount),
                     });
-                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
+                    PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
@@ -557,7 +565,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         category: isRangedMarket ? 'RangeAMM' : 'AMM',
                         action: 'sell-to-amm',
                     });
-                    plausible.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
+                    PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
@@ -607,7 +615,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         }
 
         setErrorMessageKey(messageKey);
-    }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
+    }, [paidAmount, stableBalance, insufficientLiquidity, isWalletConnected, isBuy, market.address, tokenBalance]);
 
     useEffect(() => {
         if (market.address && liquidity > 0) {
@@ -666,12 +674,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         return (
             <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
-                    ? t(
-                          `markets.market.trade-options.place-order.swap-confirm-button.${
-                              isBuy ? 'buy' : 'sell'
-                          }.progress-label`
-                      )
-                    : t(`markets.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'buy' : 'sell'}.label`)}
+                    ? t(`common.${isBuy ? 'buy' : 'sell'}.progress-label`)
+                    : t(`common.${isBuy ? 'buy' : 'sell'}.label`)}
             </Button>
         );
     };
@@ -710,14 +714,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     <NumericInput
                         value={paidAmount}
                         disabled={isFormDisabled}
-                        placeholder={t('markets.amm-trading.enter-amount')}
+                        placeholder={t('common.enter-amount')}
                         onChange={(_, value) => setPaidAmount(value)}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
-                            currencyKey: isBuy
-                                ? getCollateral(networkId, selectedCollateralIndex)
-                                : market.positionType,
+                            currencyKey: isBuy ? selectedCollateral : market.positionType,
                         })}
                         balance={
                             showWalletBalance && isWalletConnected
@@ -744,11 +746,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             ) : undefined
                         }
                         currencyLabel={
-                            isBuy
-                                ? !isMultiCollateralSupported
-                                    ? getDefaultCollateral(networkId)
-                                    : undefined
-                                : market.positionType
+                            isBuy ? (!isMultiCollateralSupported ? defaultCollateral : undefined) : market.positionType
                         }
                     />
                     {isDetailsPage && (
@@ -761,7 +759,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 )}
                                 positionAmount={Number(positionPrice) > 0 ? Number(positionAmount) : 0}
                                 paidAmount={Number(paidAmount)}
-                                selectedStable={getCollateral(networkId, selectedCollateralIndex)}
+                                selectedStable={selectedCollateral}
                                 profit={Number(priceProfit) * Number(paidAmount)}
                                 isLoading={isFetchingQuote}
                                 isBuy={isBuy}
@@ -791,7 +789,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     )}
                     positionAmount={Number(positionPrice) > 0 ? Number(positionAmount) : 0}
                     paidAmount={Number(paidAmount)}
-                    selectedStable={getCollateral(networkId, selectedCollateralIndex)}
+                    selectedStable={selectedCollateral}
                     profit={Number(priceProfit) * Number(paidAmount)}
                     skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
                     slippage={slippagePerc}

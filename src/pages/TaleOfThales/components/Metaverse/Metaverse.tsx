@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Unity, { UnityContext } from 'react-unity-webgl';
 import fullScreenImage from 'assets/images/full_screen_icon.png';
 import { useSelector } from 'react-redux';
@@ -35,7 +35,10 @@ const Metaverse: React.FC = () => {
     const NFTBalancesQuery = useNFTBalancesQuery(walletAddress || '', networkId, {
         enabled: isAppReady && !!walletAddress,
     });
-    const NFTBalancesMap = NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {};
+    const NFTBalancesMap = useMemo(() => (NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {}), [
+        NFTBalancesQuery.data,
+        NFTBalancesQuery.isSuccess,
+    ]);
 
     const handleOnClickFullscreen = () => {
         unityContext.setFullscreen(true);

@@ -6,7 +6,9 @@ import { Container, CopyrightLabel, TradingViewLink } from './styled-components'
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
-    const market = useMarketContext() || useRangedMarketContext();
+    const directMarket = useMarketContext();
+    const rangedMarket = useRangedMarketContext();
+    const market = directMarket || rangedMarket;
     const symbol = assetToTradingViewMap[market.currencyKey] || `${market.currencyKey}USDT`;
 
     return (

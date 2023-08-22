@@ -14,7 +14,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({ value, onChange, disabled, ch
         <Container className={disabled ? 'disabled' : ''}>
             {label}
             <Input {...rest} type="radio" checked={checked} value={value} onChange={onChange} disabled={disabled} />
-            <Checkmark className="checkmark" checked={checked} />
+            <Checkmark className="checkmark" />
         </Container>
     );
 };
@@ -37,7 +37,7 @@ const Container = styled.label`
     font-size: 16px;
     line-height: 20px;
     min-height: 24px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -59,13 +59,13 @@ const Container = styled.label`
     align-self: start;
 `;
 
-const Checkmark = styled.span<{ checked: boolean }>`
+const Checkmark = styled.span`
     position: absolute;
     top: 0;
     left: 0;
     height: 18px;
     width: 18px;
-    border: 3px solid ${(props) => (props.checked ? '#f6f6fe' : '#f6f6fe')};
+    border: 3px solid ${(props) => props.theme.textColor.primary}};
     background-color: transparent;
     border-radius: 50%;
     margin-top: 0px;
@@ -78,7 +78,7 @@ const Checkmark = styled.span<{ checked: boolean }>`
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: #f6f6fe;
+        background: ${(props) => props.theme.textColor.primary};
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
