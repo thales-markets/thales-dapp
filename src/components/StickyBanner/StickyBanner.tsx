@@ -2,16 +2,25 @@ import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import { navigateTo } from 'utils/routes';
 
 const StickyBanner: React.FC = () => {
     const { t } = useTranslation();
-    return (
+
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    return getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) ? (
         <Container onClick={() => navigateTo(ROUTES.Options.Token)}>
             <Label>{t('banner.main-paragraph')}</Label>
         </Container>
+    ) : (
+        <></>
     );
 };
 
