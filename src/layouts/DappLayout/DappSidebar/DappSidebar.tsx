@@ -16,7 +16,6 @@ import { getIsMobile } from 'redux/modules/ui';
 import DappHeaderItem from '../components/DappHeaderItem';
 import { ScreenSizeBreakpoint } from '../../../enums/ui';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { Network } from 'enums/network';
 
 const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
@@ -54,7 +53,7 @@ const DappSidebar: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
-                    {networkId !== Network.Mainnet && (
+                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.SpeedMarkets ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.SpeedMarkets)}
