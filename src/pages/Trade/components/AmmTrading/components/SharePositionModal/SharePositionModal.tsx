@@ -17,9 +17,8 @@ import { getIsMobile } from 'redux/modules/ui';
 import { isMetamask, isFirefox, isIos } from 'utils/device';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { Positions } from 'enums/options';
-import SpeedMarketPotentialWinCard from './components/SpeedMarketPotentialWinCard/SpeedMarketPotentialWinCard';
-import SpeedMarketResolvedWinCard from './components/SpeedMarketResolvedWinCard/SpeedMarketResolvedWinCard';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
+import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
 
 export type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
 
@@ -258,20 +257,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         payout={payout}
                     />
                 )}
-                {type == 'potential-speed' && (
-                    <SpeedMarketPotentialWinCard
-                        type={type}
-                        currencyKey={currencyKey}
-                        position={position}
-                        strikeDate={strikeDate}
-                        strikePrice={strikePrice}
-                        marketDuration={12}
-                        buyIn={buyIn}
-                        payout={payout}
-                    />
-                )}
-                {type == 'resolved-speed' && (
-                    <SpeedMarketResolvedWinCard
+                {(type == 'potential-speed' || type == 'resolved-speed') && (
+                    <SpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
                         position={position}

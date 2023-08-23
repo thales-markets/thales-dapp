@@ -5,21 +5,24 @@ import DownBackground from 'assets/images/flex-cards/speed-markets-down-backgrou
 import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/currency';
-import { SharePositionData } from '../../SharePositionModal';
+import { SharePositionData, SharePositionType } from '../../SharePositionModal';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import { formatShortDateWithTime } from 'utils/formatters/date';
+import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
 
 const DOWN_BORDER_COLOR = '#DE496D';
 const UP_BORDER_COLOR = '#03DAC5';
 
-const SpeedMarketPotentialWinCard: React.FC<SharePositionData> = ({
+const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
+    type,
     position,
     currencyKey,
     strikePrice,
     strikeDate,
+    buyIn,
     payout,
 }) => {
     const { t } = useTranslation();
@@ -32,32 +35,44 @@ const SpeedMarketPotentialWinCard: React.FC<SharePositionData> = ({
             : 0;
 
     return (
-        <Container position={position}>
+        <Container position={position} type={type}>
             <PositionInfo>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
                 <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
-            <PotentialWinContainer>
-                <PotentialWinHeading>{t('common.flex-card.potential-win')}</PotentialWinHeading>
+            <PotentialWinContainer type={type}>
+                <PotentialWinHeading>
+                    {type == 'potential-speed' ? t('common.flex-card.potential-win') : t('common.flex-card.won')}
+                </PotentialWinHeading>
                 <PotentialWin position={position}>{formatCurrencyWithSign(USD_SIGN, payout ?? 0)}</PotentialWin>
             </PotentialWinContainer>
-            <MarketDetailsContainer>
-                <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.entry-price')}</ItemName>
-                    <Value>{price}</Value>
+            <MarketDetailsContainer type={type}>
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>
+                        {type == 'potential-speed'
+                            ? t('common.flex-card.entry-price')
+                            : t('common.flex-card.strike-price')}
+                    </ItemName>
+                    <Value type={type}>{price}</Value>
                 </MarketDetailsItemContainer>
-                <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.strike-date')}</ItemName>
-                    <Value>{formatShortDateWithTime(strikeDate)}</Value>
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.strike-date')}</ItemName>
+                    <Value type={type}>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
+                {type == 'resolved-speed' && (
+                    <MarketDetailsItemContainer type={type}>
+                        <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
+                        <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
+                    </MarketDetailsItemContainer>
+                )}
             </MarketDetailsContainer>
             <SpeedMarketsFooter />
         </Container>
     );
 };
 
-const Container = styled.div<{ position: Positions }>`
+const Container = styled.div<{ position: Positions; type: SharePositionType }>`
     border: ${(props) => `10px solid ${props.position == 'UP' ? UP_BORDER_COLOR : DOWN_BORDER_COLOR}`};
     border-radius: 15px;
     display: flex;
@@ -67,40 +82,48 @@ const Container = styled.div<{ position: Positions }>`
     height: 510px;
     padding: 10px 10px;
     background: ${(props) =>
-        `url(${props.position == 'UP' ? UpBackground : DownBackground}), lightgray 50% / cover no-repeat`};
+        `url(${
+            props.type == 'resolved-speed'
+                ? ZeusResolvedWinBackground
+                : props.position == 'DOWN'
+                ? DownBackground
+                : UpBackground
+        }), lightgray 50% / cover no-repeat`};
 `;
 
-const MarketDetailsContainer = styled(FlexDiv)`
+const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     width: 100%;
-    flex-direction: column;
-    margin-bottom: 10px;
+    flex-direction: ${(props) => (props.type == 'potential-speed' ? 'column' : 'row')};
+    margin-bottom: ${(props) => (props.type == 'potential-speed' ? '10px' : '')};
 `;
 
-const MarketDetailsItemContainer = styled(FlexDiv)`
+const MarketDetailsItemContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: space-between;
+    flex-direction: ${(props) => (props.type == 'potential-speed' ? '' : 'column')};
     align-items: center;
     margin-bottom: 5px;
     width: 100%;
 `;
 
-const ItemName = styled.span`
+const ItemName = styled.span<{ type: SharePositionType }>`
     text-transform: capitalize;
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 18px;
-    font-weight: 700;
+    color: ${(props) => (props.type == 'potential-speed' ? props.theme.textColor.primary : '#808997')};
+    font-size: ${(props) => (props.type == 'potential-speed' ? '18px' : '13px')};
+    font-weight: ${(props) => (props.type == 'potential-speed' ? '700' : '400')};
 `;
 
-const Value = styled.span`
+const Value = styled.span<{ type: SharePositionType }>`
     font-weight: 700;
     text-transform: capitalize;
-    font-size: 18px;
+    text-align: ${(props) => (props.type == 'potential-speed' ? '' : 'center')};
+    font-size: ${(props) => (props.type == 'potential-speed' ? '18px' : '13px')};
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const PotentialWinContainer = styled(FlexDiv)`
+const PotentialWinContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     width: 100%;
     flex-direction: column;
-    margin: 10px 0px 150px 0px;
+    margin: ${(props) => (props.type ? '10px 0px 150px 0px' : '20px 0px')};
 `;
 
 const PotentialWinHeading = styled.span`
@@ -165,4 +188,4 @@ const Position = styled.span`
     font-weight: 700;
 `;
 
-export default SpeedMarketPotentialWinCard;
+export default SpeedMarketFlexCard;
