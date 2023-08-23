@@ -167,6 +167,9 @@ const Position = styled.span`
 const ReferralWrapper = styled.div`
     display: flex;
     justify-content: flex-start;
+    width: fit-content;
+    background-color: white;
+    padding: 5px;
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 50px;

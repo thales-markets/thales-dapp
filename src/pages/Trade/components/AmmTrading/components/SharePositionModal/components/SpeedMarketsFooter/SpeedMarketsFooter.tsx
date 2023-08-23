@@ -44,6 +44,8 @@ const Logo = styled.img`
 const ReferralWrapper = styled.div`
     display: flex;
     justify-content: flex-start;
+    background-color: white;
+    padding: 5px;
 `;
 
 export default SpeedMarketsFooter;
