@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import ZeusPotentialWinBackground from 'assets/images/zeus-potential-win.png';
 import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
 import Footer from '../Footer/Footer';
 import { FlexDiv } from 'styles/common';
@@ -12,12 +13,13 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { SharePositionData } from '../../SharePositionModal';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign, formatStrikePrice } from 'utils/formatters/number';
 import { formatShortDateWithTime } from 'utils/formatters/date';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { SharePositionData, SharePositionType } from '../../SharePositionModal';
 
-const PotentialWinCard: React.FC<SharePositionData> = ({
+const MarketFlexCard: React.FC<SharePositionData> = ({
+    type,
     position,
     currencyKey,
     strikePrice,
@@ -33,50 +35,58 @@ const PotentialWinCard: React.FC<SharePositionData> = ({
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
     const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
 
+    const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
+
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice
             : strikePrice
             ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
-            : formatStrikePrice(leftPrice ?? 0, position, rightPrice);
+            : `${formatCurrencyWithSign(USD_SIGN, leftPrice ?? 0)} <-> ${formatCurrencyWithSign(
+                  USD_SIGN,
+                  rightPrice ?? 0
+              )}`;
 
     return (
-        <Container>
-            <Footer />
+        <Container type={type}>
+            {type == 'resolved' && <Footer />}
             {reffererID && (
                 <ReferralWrapper>
                     <QRCode size={70} value={buildReferrerLink(ROUTES.Home, reffererID)} />
                 </ReferralWrapper>
             )}
-            <PositionInfo>
+            <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
                 <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
-                <PotentialWinHeading>{t('common.flex-card.won')}</PotentialWinHeading>
-                <PotentialWin>{formatCurrencyWithSign(USD_SIGN, payout ?? 0)}</PotentialWin>
+                <PotentialWinHeading type={type}>
+                    {type == 'potential' ? t('common.flex-card.potential-win') : t('common.flex-card.won')}
+                </PotentialWinHeading>
+                <PotentialWin type={type}>{potentialWinFormatted}</PotentialWin>
             </PotentialWinContainer>
-            <MarketDetailsContainer>
-                <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.strike-price')}</ItemName>
-                    <Value>{price}</Value>
+            <MarketDetailsContainer type={type}>
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.strike-price')}</ItemName>
+                    <Value type={type}>{price}</Value>
                 </MarketDetailsItemContainer>
-                <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.strike-date')}</ItemName>
-                    <Value>{formatShortDateWithTime(strikeDate)}</Value>
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.strike-date')}</ItemName>
+                    <Value type={type}>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
-                <MarketDetailsItemContainer>
-                    <ItemName>{t('common.flex-card.buy-in')}</ItemName>
-                    <Value>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
+                    <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
+            {type == 'potential' && <Footer />}
         </Container>
     );
 };
 
-const Container = styled.div`
-    border: 10px solid #9b8327;
+const Container = styled.div<{ type?: SharePositionType }>`
+    border: 10px solid ${(props) => (props.type == 'potential' ? '#03dac5' : '#9b8327')};
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -84,35 +94,36 @@ const Container = styled.div`
     width: 383px;
     height: 510px;
     padding: 10px 10px;
-    background: url(${ZeusResolvedWinBackground}), lightgray 50% / cover no-repeat;
+    background: url(${(props) => (props.type == 'potential' ? ZeusPotentialWinBackground : ZeusResolvedWinBackground)})
+        lightgray 50% / cover no-repeat;
 `;
 
-const MarketDetailsContainer = styled(FlexDiv)`
+const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     width: 100%;
-    flex-direction: row;
+    flex-direction: ${(props) => (props.type == 'potential' ? 'column' : 'row')};
+    margin-bottom: ${(props) => (props.type == 'potential' ? '20px' : '')};
 `;
 
-const MarketDetailsItemContainer = styled(FlexDiv)`
+const MarketDetailsItemContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: space-between;
-    flex-direction: column;
+    flex-direction: ${(props) => (props.type == 'potential' ? 'row' : 'column')};
     align-items: center;
     margin-bottom: 5px;
     width: 100%;
 `;
 
-const ItemName = styled.span`
+const ItemName = styled.span<{ type: SharePositionType }>`
     text-transform: capitalize;
     color: #808997;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: ${(props) => (props.type == 'potential' ? '18px' : '13px')};
+    font-weight: 700;
 `;
 
-const Value = styled.span`
+const Value = styled.span<{ green?: boolean; type: SharePositionType }>`
     font-weight: 700;
     text-transform: capitalize;
-    text-align: center;
-    font-size: 13px;
-    color: ${(props) => props.theme.textColor.primary};
+    font-size: ${(props) => (props.type == 'potential' ? '18px' : '13px')};
+    color: ${(props) => (props.green ? '#03DAC6' : props.theme.textColor.primary)};
 `;
 
 const PotentialWinContainer = styled(FlexDiv)`
@@ -121,11 +132,11 @@ const PotentialWinContainer = styled(FlexDiv)`
     margin: 20px 0px;
 `;
 
-const PotentialWinHeading = styled.span`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${(props) => props.theme.textColor.primary};
+const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
+    display: ${(props) => (props.type == 'potential' ? '' : 'flex')};
+    align-items: ${(props) => (props.type == 'potential' ? '' : 'center')};
+    justify-content: ${(props) => (props.type == 'potential' ? '' : 'center')};
+    color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
     font-size: 35px;
     font-weight: 300;
     text-transform: uppercase;
@@ -136,7 +147,7 @@ const PotentialWinHeading = styled.span`
         margin: 0px 5px;
         transform: rotate(45deg);
         content: '';
-        display: inline-block;
+        display: ${(props) => (props.type == 'potential' ? 'none' : 'inline-block')};
         background-color: ${(props) => props.theme.textColor.primary};
     }
     ::after {
@@ -145,23 +156,23 @@ const PotentialWinHeading = styled.span`
         height: 13px;
         transform: rotate(45deg);
         content: '';
-        display: inline-block;
+        display: ${(props) => (props.type == 'potential' ? 'none' : 'inline-block')};
         background-color: ${(props) => props.theme.textColor.primary};
     }
 `;
 
-const PotentialWin = styled.span`
+const PotentialWin = styled(PotentialWinHeading)<{ type: SharePositionType }>`
     font-size: 45px;
     font-weight: 800;
     text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.type == 'potential' ? '' : '100px')};
 `;
 
-const PositionInfo = styled(FlexDiv)`
+const PositionInfo = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: 100px;
+    margin-top: ${(props) => (props.type == 'potential' ? '' : '100px')};
 `;
 
 const CurrencyIcon = styled.i`
@@ -186,6 +197,7 @@ const Position = styled.span`
 const ReferralWrapper = styled.div`
     display: flex;
     justify-content: flex-start;
+    width: fit-content;
     background-color: white;
     padding: 5px;
     margin-left: 10px;
@@ -193,4 +205,4 @@ const ReferralWrapper = styled.div`
     margin-bottom: 50px;
 `;
 
-export default PotentialWinCard;
+export default MarketFlexCard;

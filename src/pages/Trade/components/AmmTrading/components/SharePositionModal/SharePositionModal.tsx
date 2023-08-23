@@ -17,12 +17,11 @@ import { getIsMobile } from 'redux/modules/ui';
 import { isMetamask, isFirefox, isIos } from 'utils/device';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { Positions } from 'enums/options';
-import PotentialWinCard from './components/PotentialWinCard/PotentialWinCard';
-import ResolvedWinCard from './components/ResolvedWinCard/ResolvedWinCard';
 import SpeedMarketPotentialWinCard from './components/SpeedMarketPotentialWinCard/SpeedMarketPotentialWinCard';
 import SpeedMarketResolvedWinCard from './components/SpeedMarketResolvedWinCard/SpeedMarketResolvedWinCard';
+import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 
-type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
+export type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
 
 export type SharePositionData = {
     type: SharePositionType;
@@ -246,21 +245,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
-                {type == 'potential' && (
-                    <PotentialWinCard
-                        type={type}
-                        currencyKey={currencyKey}
-                        position={position}
-                        strikeDate={strikeDate}
-                        strikePrice={strikePrice}
-                        leftPrice={leftPrice}
-                        rightPrice={rightPrice}
-                        buyIn={buyIn}
-                        payout={payout}
-                    />
-                )}
-                {type == 'resolved' && (
-                    <ResolvedWinCard
+                {(type == 'potential' || type == 'resolved') && (
+                    <MarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
                         position={position}
