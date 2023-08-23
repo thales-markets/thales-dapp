@@ -18,7 +18,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
     return useQuery<UserLivePositions[]>(
         QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId),
         async () => {
-            const maturedSpeedMarketsData: UserLivePositions[] = [];
+            const activeSpeedMarketsData: UserLivePositions[] = [];
 
             const { speedMarketsAMMContract } = snxJSConnector;
             const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
@@ -53,7 +53,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                 );
                 const priceFeeds = await Promise.allSettled(pricePromises);
 
-                // Matured markets
+                // Matured markets - not resolved
                 for (let i = 0; i < maturedMarkets.length; i++) {
                     const marketsData = maturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
@@ -92,7 +92,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         isSpeedMarket: true,
                     };
 
-                    maturedSpeedMarketsData.push(userData);
+                    activeSpeedMarketsData.push(userData);
                 }
 
                 // Fetch current prices
@@ -126,11 +126,11 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         isSpeedMarket: true,
                     };
 
-                    maturedSpeedMarketsData.push(userData);
+                    activeSpeedMarketsData.push(userData);
                 }
             }
 
-            return maturedSpeedMarketsData;
+            return activeSpeedMarketsData;
         },
         {
             ...options,
