@@ -44,6 +44,7 @@ export type SharePositionModalProps = SharePositionData & {
 const PARLAY_IMAGE_NAME = 'ParlayImage.png';
 const TWITTER_MESSAGE_PASTE = '%0A<PASTE YOUR IMAGE>';
 const TWITTER_MESSAGE_UPLOAD = `%0A<UPLOAD YOUR ${PARLAY_IMAGE_NAME}>`;
+const TWITTER_MESSAGE_CHECKOUT = `CHECKOUT MY POSITION ON %0A`;
 
 const SharePositionModal: React.FC<SharePositionModalProps> = ({
     type,
@@ -151,7 +152,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
 
                     const twitterLinkWithStatusMessage =
                         LINKS.TwitterTweetStatus +
-                        LINKS.Overtime +
+                        TWITTER_MESSAGE_CHECKOUT +
+                        LINKS.Markets.Home +
                         (useDownloadImage ? TWITTER_MESSAGE_UPLOAD : TWITTER_MESSAGE_PASTE);
 
                     // Mobile requires user action in order to open new window, it can't open in async call, so adding <a>
