@@ -219,7 +219,9 @@ export type UserLivePositions = {
     side: Positions;
     paid: number;
     value: number;
+    isSpeedMarket: boolean;
     claimable?: boolean;
+    strikePriceNum?: number;
     finalPrice?: number;
     user?: string;
 };

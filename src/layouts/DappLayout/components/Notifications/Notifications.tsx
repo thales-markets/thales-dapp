@@ -2,6 +2,7 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import Tooltip from 'components/Tooltip';
 import ROUTES from 'constants/routes';
 import { Network } from 'enums/network';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,16 +32,30 @@ const Notifications: React.FC = () => {
         return 0;
     }, [notificationsQuery]);
 
-    const hasNotifications = notifications > 0;
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const speedMarketsNotifications = useMemo(() => {
+        if (userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data) {
+            return userActiveSpeedMarketsDataQuery.data.filter(
+                (marketData) => marketData.maturityDate < Date.now() && marketData.claimable
+            ).length;
+        }
+        return 0;
+    }, [userActiveSpeedMarketsDataQuery]);
+
+    const totalNotifications = notifications + speedMarketsNotifications;
+
+    const hasNotifications = totalNotifications > 0;
 
     return isWalletConnected ? (
         <SPAAnchor href={buildHref(ROUTES.Options.Profile)}>
             <Container>
                 {hasNotifications ? (
-                    <Tooltip overlay={t('common.header.notification.tooltip', { count: notifications })}>
+                    <Tooltip overlay={t('common.header.notification.tooltip', { count: totalNotifications })}>
                         <Wrapper>
                             <Bell className="icon icon--bell" />
-                            <Number>{notifications}</Number>
+                            <Number>{totalNotifications}</Number>
                         </Wrapper>
                     </Tooltip>
                 ) : (

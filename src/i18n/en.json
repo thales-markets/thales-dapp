@@ -1476,6 +1476,7 @@
         "strike-price": "Strike price",
         "final-price": "Final price",
         "current-price": "Current price",
+        "current-price-tooltip": "This is a Speed Market position that uses Pyth oracles for querying the current price",
         "claimed": "CLAIMED",
         "rip": "RIP",
         "chart-info": {
@@ -1494,7 +1495,7 @@
             "position-history": "Position history",
             "transaction-history": "Transaction history"
         },
-        "search-placeholder": "Search wallet",
+        "search-placeholder": "Search wallet/asset",
         "history": {
             "strike": "Strike",
             "price": "Price",

@@ -80,6 +80,7 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedRipPositions.map((positionBalance: any) => {
@@ -101,6 +102,7 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
+                        isSpeedMarket: false,
                     };
                 }),
             ];

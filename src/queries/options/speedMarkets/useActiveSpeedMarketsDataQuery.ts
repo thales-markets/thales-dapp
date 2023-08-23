@@ -89,6 +89,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         claimable: isClaimable,
                         finalPrice: price,
                         user: marketsData.user,
+                        isSpeedMarket: true,
                     };
 
                     maturedSpeedMarketsData.push(userData);
@@ -122,6 +123,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         claimable: false,
                         finalPrice: prices[currencyKey],
                         user: marketsData.user,
+                        isSpeedMarket: true,
                     };
 
                     maturedSpeedMarketsData.push(userData);

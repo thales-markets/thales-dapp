@@ -61,6 +61,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
         return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
     }, [networkId]);
 
+    const prevPrice = useRef(0);
     const fetchCurrentPrice = useCallback(async () => {
         const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
         const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
@@ -77,8 +78,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
         fetchCurrentPrice();
     }, [currencyKey, fetchCurrentPrice]);
 
-    const prevPrice = useRef(0);
-    // Update current price latest on every minute
+    // Update current price on every 5 seconds
     useInterval(async () => {
         fetchCurrentPrice();
     }, secondsToMilliseconds(5));
