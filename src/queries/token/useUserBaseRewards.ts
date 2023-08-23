@@ -6,6 +6,7 @@ import { BALANCE_THRESHOLD } from 'constants/token';
 import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { Network } from 'enums/network';
+import { getFixedRewardsForNetwork } from 'utils/network';
 
 export type UserStakingData = {
     thalesStaked: string;
@@ -58,7 +59,7 @@ const useUserBaseRewardsQuery = (
                     totalEscrowedRewards -
                     totalEscrowBalanceNotIncludedInStaking;
 
-                const baseRewardsPool = bigNumberFormatter(contractStakingData.baseRewardsPool);
+                const baseRewardsPool = getFixedRewardsForNetwork(networkId);
 
                 const baseRewards = (baseRewardsPool * (thalesStaked + escrowedBalance)) / totalStaked;
 

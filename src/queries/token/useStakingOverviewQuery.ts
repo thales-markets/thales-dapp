@@ -3,6 +3,7 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { Network } from 'enums/network';
+import { getBonusRewardsForNetwork, getFixedRewardsForNetwork } from 'utils/network';
 
 export type OverviewData = {
     period: number;
@@ -28,7 +29,7 @@ const useStakingOverviewQuery = (
                 const [
                     period,
                     // bonusRewards,
-                    fixedPeriodReward,
+                    // fixedPeriodReward,
                     maxThalesMultiplier,
                     vaultsMultiplier,
                     lpMultiplier,
@@ -36,7 +37,7 @@ const useStakingOverviewQuery = (
                 ] = await Promise.all([
                     stakingThalesContract?.periodsOfStaking(),
                     // stakingThalesContract?.periodExtraReward(),
-                    stakingThalesContract?.fixedPeriodReward(),
+                    // stakingThalesContract?.fixedPeriodReward(),
                     stakingBonusRewardsManager?.maxStakingMultiplier(),
                     stakingBonusRewardsManager?.vaultsMultiplier(),
                     stakingBonusRewardsManager?.lpMultiplier(),
@@ -46,7 +47,7 @@ const useStakingOverviewQuery = (
                 return {
                     period: Number(period),
                     bonusRewards: getBonusRewardsForNetwork(networkId),
-                    fixedPeriodReward: bigNumberFormatter(fixedPeriodReward),
+                    fixedPeriodReward: getFixedRewardsForNetwork(networkId),
                     maxThalesMultiplier: bigNumberFormatter(maxThalesMultiplier) + 1,
                     vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
                     lpMultiplier: bigNumberFormatter(lpMultiplier),
@@ -62,19 +63,6 @@ const useStakingOverviewQuery = (
             ...options,
         }
     );
-};
-
-const getBonusRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 15000;
-        case Network.Arbitrum:
-            return 7000;
-        case Network.Base:
-            return 5000;
-        default:
-            return 30000;
-    }
 };
 
 export default useStakingOverviewQuery;
