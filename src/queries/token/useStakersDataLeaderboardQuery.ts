@@ -7,6 +7,7 @@ import thalesData from 'thales-data';
 import { Staker, Stakers } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getBonusRewardsForNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type StakerContractLeaderboardData = {
@@ -216,17 +217,6 @@ const useStakersDataLeaderboardQuery = (
             ...options,
         }
     );
-};
-
-const getBonusRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 15000;
-        case Network.Arbitrum:
-            return 7000;
-        default:
-            return 30000;
-    }
 };
 
 export default useStakersDataLeaderboardQuery;
