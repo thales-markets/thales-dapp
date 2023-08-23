@@ -229,7 +229,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             : t('markets.market.trade-card.maturity.confirm-button.progress-label')}
                     </Button>
                     <ShareIcon
-                        className="icon-home icon-home--twitter"
+                        className="icon-home icon-home--twitter-x"
                         disabled={false}
                         onClick={() => {
                             setOpenTwitterShareModal(true);

@@ -108,7 +108,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
             </AlignedFlex>
             <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
             <ShareIcon
-                className="icon-home icon-home--twitter"
+                className="icon-home icon-home--twitter-x"
                 disabled={false}
                 onClick={() => setOpenTwitterShareModal(true)}
             />

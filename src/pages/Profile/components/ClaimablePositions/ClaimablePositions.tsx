@@ -87,7 +87,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                             value: (
                                 <>
                                     <ShareIcon
-                                        className="icon-home icon-home--twitter"
+                                        className="icon-home icon-home--twitter-x"
                                         disabled={false}
                                         onClick={() => {
                                             setOpenTwitterShareModal(true);

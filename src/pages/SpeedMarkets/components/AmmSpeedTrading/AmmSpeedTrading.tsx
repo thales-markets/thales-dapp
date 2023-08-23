@@ -520,7 +520,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     breakFirstLine={false}
                 />
                 <ShareIcon
-                    className="icon-home icon-home--twitter"
+                    className="icon-home icon-home--twitter-x"
                     disabled={isButtonDisabled}
                     onClick={() => setOpenTwitterShareModal(true)}
                 />

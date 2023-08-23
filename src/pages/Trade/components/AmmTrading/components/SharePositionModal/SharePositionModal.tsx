@@ -295,7 +295,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     />
                 )}
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
-                    <TwitterIcon className="icon-home icon-home--twitter" disabled={isLoading} fontSize={'30px'} />
+                    <TwitterIcon className="icon-home icon-home--twitter-x" disabled={isLoading} fontSize={'30px'} />
                     <TwitterShareLabel>{t('common.flex-card.share')}</TwitterShareLabel>
                 </TwitterShare>
             </Container>
