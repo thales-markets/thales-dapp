@@ -114,6 +114,24 @@ const useUserStakingDataQuery = (
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     userStakingData.mergeAccountEnabled = contractStakingData.mergeAccountEnabled;
 
+                    const totalEscrowBalanceNotIncludedInStaking = bigNumberFormatter(
+                        contractStakingData.totalEscrowBalanceNotIncludedInStaking
+                    );
+                    const totalEscrowedRewards = bigNumberFormatter(contractStakingData.totalEscrowedRewards);
+
+                    const totalStaked =
+                        bigNumberFormatter(contractStakingData.totalStakedAmount) +
+                        totalEscrowedRewards -
+                        totalEscrowBalanceNotIncludedInStaking;
+                    const baseRewardsPool = bigNumberFormatter(contractStakingData.baseRewardsPool);
+
+                    const baseRewards =
+                        (baseRewardsPool * (userStakingData.thalesStaked + userStakingData.escrowedBalance)) /
+                        totalStaked;
+
+                    userStakingData.baseRewards =
+                        userStakingData.baseRewards === 0 ? baseRewards : userStakingData.baseRewards;
+
                     return userStakingData;
                 }
             } catch (e) {
