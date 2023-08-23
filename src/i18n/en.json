@@ -448,7 +448,8 @@
             "current-price": "Current price as reported by Pyth oracles",
             "liquidity": "Current available liquidity for this Asset",
             "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
-            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time"
+            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
+            "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration"
         },
         "overview": {
             "title": "Overview",
