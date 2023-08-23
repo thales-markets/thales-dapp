@@ -87,22 +87,30 @@ const useStakersDataLeaderboardQuery = (
                 }
 
                 const [
-                    bonusRewards,
+                    bonusRewardsRaw,
                     lastPeriodTimestamp,
                     durationPeriod,
-                    tradingMultiplier,
-                    lpMultiplier,
-                    vaultMultiplier,
-                    maxStakingMultiplier,
+                    tradingMultiplierRaw,
+                    lpMultiplierRaw,
+                    vaultMultiplierRaw,
+                    maxStakingMultiplierRaw,
                 ] = await Promise.all([
-                    bigNumberFormatter(await stakingThalesContract?.periodExtraReward()),
+                    stakingThalesContract?.periodExtraReward(),
                     stakingThalesContract?.lastPeriodTimeStamp(),
                     stakingThalesContract?.durationPeriod(),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.tradingMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.lpMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.vaultsMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.maxStakingMultiplier()),
+                    stakingBonusRewardsManager?.tradingMultiplier(),
+                    stakingBonusRewardsManager?.lpMultiplier(),
+                    stakingBonusRewardsManager?.vaultsMultiplier(),
+                    stakingBonusRewardsManager?.maxStakingMultiplier(),
                 ]);
+
+                const [bonusRewards, tradingMultiplier, lpMultiplier, vaultMultiplier, maxStakingMultiplier] = [
+                    bigNumberFormatter(bonusRewardsRaw),
+                    bigNumberFormatter(tradingMultiplierRaw),
+                    bigNumberFormatter(lpMultiplierRaw),
+                    bigNumberFormatter(vaultMultiplierRaw),
+                    bigNumberFormatter(maxStakingMultiplierRaw),
+                ];
 
                 const closingDate = Number(lastPeriodTimestamp) * 1000 + Number(durationPeriod) * 1000;
 
