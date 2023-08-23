@@ -50,6 +50,7 @@ import {
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 import { UsingAmmLink } from '../styled-components';
+import { getDefaultCollateral } from 'utils/currency';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
@@ -478,7 +479,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
                     defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * position.amount)}
-                    tokenSymbol={position.side}
+                    tokenSymbol={getDefaultCollateral(networkId)}
                     isNonStable={true}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
