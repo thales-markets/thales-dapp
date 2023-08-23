@@ -151,7 +151,7 @@ const CurrencyIcon = styled.i`
 `;
 
 const AssetName = styled.span`
-    color: #808997;
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 22px;
     margin-right: 5px;
     font-weight: 400;
