@@ -11,12 +11,11 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import { getCollateral } from 'utils/currency';
+import { Coins } from 'types/options';
 import { bigNumberFormatter, coinParser } from 'utils/formatters/ethers';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
-    collateralIndex?: number;
     tokenSymbol: string;
     isNonStable?: boolean;
     isAllowing: boolean;
@@ -26,7 +25,6 @@ type ApprovalModalProps = {
 
 const ApprovalModal: React.FC<ApprovalModalProps> = ({
     defaultAmount,
-    collateralIndex,
     tokenSymbol,
     isNonStable,
     isAllowing,
@@ -48,7 +46,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     const amountConverted = isNonStable
         ? ethers.utils.parseEther(Number(amount).toString())
-        : coinParser(Number(amount).toString(), networkId, getCollateral(networkId, collateralIndex || 0));
+        : coinParser(Number(amount).toString(), networkId, tokenSymbol as Coins);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
