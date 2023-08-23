@@ -48,6 +48,7 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
+        "coming-soon": "Coming Soon!",
         "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
@@ -146,7 +147,6 @@
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BNBChain",
                 "base": "Switch to Base"
             }
         },
@@ -157,7 +157,7 @@
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
-            "not-supported": " Swap is not supported on Test networks",
+            "not-supported": "Swap is not supported on this network",
             "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
@@ -684,6 +684,7 @@
                     "volume-gathered": {
                         "trading": "Thales Markets Trading",
                         "overtime-trading": "Overtime Trading",
+                        "speed-trading": "Speed Markets Trading",
                         "lp-thales": "Thales Liquidity Providing",
                         "lp-overtime": "Overtime Liquidity Providing",
                         "parlay-lp-overtime": "Overtime Parlay Liquidity Providing",

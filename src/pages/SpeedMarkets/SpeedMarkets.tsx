@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import titleImage from 'assets/images/speed-markets/title.png';
+import banner from 'assets/images/speed-markets/speed-markets-banner.png';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -30,8 +30,9 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
+import { getSupportedNetworksByRoute } from 'utils/network';
 
-const SpeedMarkets: React.FC<RouteComponentProps> = () => {
+const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -116,9 +117,13 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
         );
     };
 
+    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
+
     return (
         <>
-            {ammSpeedMarketsLimitsQuery.isLoading ? (
+            {!supportedNetworks.includes(networkId) ? (
+                <Info style={{ marginTop: '100px', fontSize: '22px' }}>{t('common.coming-soon')}</Info>
+            ) : ammSpeedMarketsLimitsQuery.isLoading ? (
                 <SimpleLoader />
             ) : (
                 <Container>
@@ -194,10 +199,12 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                             <ClosedPositions />
                         </>
                     )}
-                    <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
-                        <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
-                        <ArrowRight className="icon icon--arrow" />
-                    </SPAAnchor>
+                    <OverviewLinkWrapper>
+                        <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
+                            <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
+                            <ArrowRight className="icon icon--arrow" />
+                        </SPAAnchor>
+                    </OverviewLinkWrapper>
                 </Container>
             )}
         </>
@@ -211,12 +218,12 @@ const Container = styled.div`
 
 const HeaderImage = styled.div`
     height: 120px;
-    background-image: url(${titleImage});
+    background-image: url(${banner});
     background-position: center;
+    border-radius: 11px;
+    margin-bottom: 20px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        height: 60px;
-        background-size: 100%;
-        background-repeat: no-repeat;
+        display: none;
     }
 `;
 
@@ -283,6 +290,10 @@ const Info = styled.span`
     font-weight: 300;
     line-height: 110%;
     color: ${(props) => props.theme.textColor.primary};
+`;
+
+const OverviewLinkWrapper = styled.div`
+    margin-top: 20px;
 `;
 
 const OverviewLinkText = styled.span`

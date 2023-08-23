@@ -6,7 +6,6 @@ export const thalesContract = {
         [Network.OptimismMainnet]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',
         [Network.OptimismGoerli]: '0xe2aD7187B3b079183a2D16C1d34A255592aC276b',
         [Network.PolygonMainnet]: 'TBD',
-        [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30',
         [Network.Base]: 'TBD',
     },

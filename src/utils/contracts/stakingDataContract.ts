@@ -6,7 +6,6 @@ const stakingDataContract = {
         [Network.OptimismMainnet]: '0xCc134245424fe9E10A011961451D5AD6Cd0C087C',
         [Network.OptimismGoerli]: '0x87005978e76C7356D1e0a8118DC82eaF52D49FB1',
         [Network.PolygonMainnet]: 'TBD',
-        [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0x0D72F9DB9efD3cbd91Ec4C296A01e3Cd5155Cc31',
         [Network.Base]: 'TBD',
     },

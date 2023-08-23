@@ -15,8 +15,8 @@ import NumericInput from 'components/fields/NumericInput';
 import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import {
     POSITIONS_TO_SIDE_MAP,
-    PRICE_CHANGES_BUFFER_PERCENTAGE,
-    PRICE_FEED_BUFFER_PERCENTAGE,
+    STABLECOIN_CONVERSION_BUFFER_PERCENTAGE,
+    ALTCOIN_CONVERSION_BUFFER_PERCENTAGE,
     SPEED_MARKETS_QUOTE,
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
@@ -25,6 +25,7 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
@@ -175,7 +176,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const convertToStable = useCallback(
         (value: number) => {
             const rate = exchangeRates?.[selectedCollateral] || 0;
-            return isStableCurrency(selectedCollateral) ? value : value * rate * (1 - PRICE_FEED_BUFFER_PERCENTAGE);
+            return isStableCurrency(selectedCollateral)
+                ? value
+                : value * rate * (1 - ALTCOIN_CONVERSION_BUFFER_PERCENTAGE);
         },
         [selectedCollateral, exchangeRates]
     );
@@ -186,7 +189,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 return value;
             } else {
                 const priceFeedBuffer =
-                    value === ammSpeedMarketsLimits?.minBuyinAmount ? 1 - PRICE_FEED_BUFFER_PERCENTAGE : 1;
+                    value === ammSpeedMarketsLimits?.minBuyinAmount ? 1 - ALTCOIN_CONVERSION_BUFFER_PERCENTAGE : 1;
                 return rate
                     ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** COLLATERAL_DECIMALS[selectedCollateral]) /
                           10 ** COLLATERAL_DECIMALS[selectedCollateral]
@@ -232,7 +235,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     useEffect(() => {
         if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
             // add half percent to amount to take into account collateral conversion
-            setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE));
+            setTotalPaidAmount(Number(paidAmount) * (1 + totalFee + STABLECOIN_CONVERSION_BUFFER_PERCENTAGE));
         } else {
             setTotalPaidAmount(Number(paidAmount) * (1 + totalFee));
         }
@@ -305,7 +308,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     }, [ammSpeedMarketsLimits, currencyKey, selectedStableBuyinAmount, convertToStable, paidAmount]);
 
     // Check allowance
-    useEffect(() => {
+    useDebouncedEffect(() => {
         if (!collateralAddress) {
             return;
         }
@@ -486,7 +489,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 selectedCollateral === defaultCollateral
                     ? Number(truncToDecimals(collateralBalance / (1 + totalFee)))
                     : isStableCurrency(selectedCollateral)
-                    ? Number(truncToDecimals(collateralBalance / (1 + totalFee + PRICE_CHANGES_BUFFER_PERCENTAGE)))
+                    ? Number(
+                          truncToDecimals(collateralBalance / (1 + totalFee + STABLECOIN_CONVERSION_BUFFER_PERCENTAGE))
+                      )
                     : Number(truncToDecimals(collateralBalance / (1 + totalFee), 18));
             setPaidAmount(Math.min(ammSpeedMarketsLimits.maxBuyinAmount, maxWalletAmount));
             setSelectedStableBuyinAmount(
@@ -585,11 +590,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                   fee: formatPercentage(totalFee, 0),
                               })}
                         {isStableCurrency(selectedCollateral) && selectedCollateral !== defaultCollateral && (
-                            <Tooltip
-                                overlay={t('speed-markets.tooltips.paid-conversion', {
-                                    percentage: formatPercentage(PRICE_CHANGES_BUFFER_PERCENTAGE),
-                                })}
-                            />
+                            <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
                         )}
                     </PaymentInfo>
                     {!isStableCurrency(selectedCollateral) && (
@@ -601,11 +602,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     : formatCurrencyWithSign(USD_SIGN, convertToStable(totalPaidAmount)),
                             })}
                             {selectedCollateral !== defaultCollateral && (
-                                <Tooltip
-                                    overlay={t('speed-markets.tooltips.paid-conversion', {
-                                        percentage: formatPercentage(PRICE_CHANGES_BUFFER_PERCENTAGE),
-                                    })}
-                                />
+                                <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
                             )}
                         </PaymentInfo>
                     )}
@@ -627,7 +624,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             )}
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={roundNumberToDecimals(totalPaidAmount)}
+                    defaultAmount={
+                        isStableCurrency(selectedCollateral)
+                            ? roundNumberToDecimals(totalPaidAmount)
+                            : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                    }
                     tokenSymbol={selectedCollateral}
                     isNonStable={!isStableCurrency(selectedCollateral)}
                     isAllowing={isAllowing}

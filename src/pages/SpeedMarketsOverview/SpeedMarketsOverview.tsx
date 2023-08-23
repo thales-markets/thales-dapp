@@ -4,7 +4,6 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import UnresolvedPositions from './components/UnresolvedPositions';
-import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { RouteComponentProps } from 'react-router-dom';
 import { getSupportedNetworksByRoute } from 'utils/network';
@@ -23,7 +22,9 @@ const SpeedMarketsOverview: React.FC<RouteComponentProps> = (props) => {
 
     return (
         <>
-            {supportedNetworks.includes(networkId) ? (
+            {!supportedNetworks.includes(networkId) ? (
+                <Info style={{ marginTop: '100px', fontSize: '22px' }}>{t('common.coming-soon')}</Info>
+            ) : (
                 <Container>
                     <Header>
                         <SPAAnchor href={buildHref(ROUTES.Options.SpeedMarkets)}>
@@ -36,10 +37,6 @@ const SpeedMarketsOverview: React.FC<RouteComponentProps> = (props) => {
                     </Header>
                     <UnresolvedPositions />
                 </Container>
-            ) : (
-                <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
-                </UnsupportedNetworkWrapper>
             )}
         </>
     );
@@ -73,11 +70,13 @@ const BackIcon = styled.i`
     position: relative;
 `;
 
-const UnsupportedNetworkWrapper = styled.div`
-    margin: 90px 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: 0;
-    }
+const Info = styled.span`
+    display: block;
+    text-align: justify;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 110%;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default SpeedMarketsOverview;

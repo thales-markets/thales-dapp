@@ -94,7 +94,6 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    padding-bottom: 20px;
 `;
 
 const PositionsWrapper = styled.div<{ noPositions?: boolean }>`

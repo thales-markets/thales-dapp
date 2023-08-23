@@ -1,7 +1,6 @@
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 // import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
@@ -12,7 +11,6 @@ import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     ARBITRUM_NETWORK,
     // BASE_NETWORK,
-    BSC_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
     OPTIMISM_NETWORKS,
     POLYGON_NETWORKS,
@@ -142,15 +140,6 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 6,
     },
-    [Network.BSC]: {
-        name: 'BNBChain',
-        icon: BSCLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const bscNetworkParams = BSC_NETWORK[networkId];
-            await changeNetwork(bscNetworkParams, callback);
-        },
-        order: 5,
-    },
     [Network.Arbitrum]: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
@@ -183,7 +172,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.RangeMarkets:
             return [
@@ -192,7 +180,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
@@ -205,7 +192,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.Token:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet];
@@ -216,7 +202,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.Game:
             return [
@@ -225,7 +210,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.Profile:
             return [
@@ -234,7 +218,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.CreateMarket:
             return [
@@ -243,16 +226,14 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 Network.PolygonMainnet,
-                Network.BSC,
             ];
         case ROUTES.Options.SpeedMarkets:
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
-                // Network.Arbitrum, // TODO: Release on 22.08.
+                // Network.Arbitrum, // TODO: Release on 23.08.
                 // Network.Base, // TODO: Release on 28.08.
-                // Network.PolygonMainnet, // TODO: Release on 23.08.
-                // Network.BSC, // TODO: Release on 24.08.
+                // Network.PolygonMainnet, // TODO: Release on 25.08.
             ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);

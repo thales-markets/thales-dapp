@@ -6,7 +6,6 @@ const taleOfThalesNFT = {
         [Network.OptimismMainnet]: '0xA9218C6d51b87EB3ee74E14Cb5D50BDE00Be7021',
         [Network.OptimismGoerli]: '0x48a2984D7BDdBF7Af6c3822CcD26A583a70C0A65',
         [Network.PolygonMainnet]: 'TBD',
-        [Network.BSC]: 'TBD',
         [Network.Arbitrum]: '0xe42517a1Bf3E6Bd088Bf26ead8d8754e0e2BeBA3',
         [Network.Base]: 'TBD',
     },
