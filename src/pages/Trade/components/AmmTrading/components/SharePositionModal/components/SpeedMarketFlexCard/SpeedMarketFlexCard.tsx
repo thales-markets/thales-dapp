@@ -46,7 +46,9 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
                 <PotentialWinHeading>
                     {type == 'potential-speed' ? t('common.flex-card.potential-win') : t('common.flex-card.won')}
                 </PotentialWinHeading>
-                <PotentialWin position={position}>{formatCurrencyWithSign(USD_SIGN, payout ?? 0)}</PotentialWin>
+                <PotentialWin position={position} type={type}>
+                    {formatCurrencyWithSign(USD_SIGN, payout ?? 0)}
+                </PotentialWin>
             </PotentialWinContainer>
             <MarketDetailsContainer type={type}>
                 <MarketDetailsItemContainer type={type}>
@@ -163,11 +165,18 @@ const PotentialWinHeading = styled.span`
     }
 `;
 
-const PotentialWin = styled.span<{ position: Positions }>`
+const PotentialWin = styled.span<{ position: Positions; type: SharePositionType }>`
     font-size: 45px;
     font-weight: 800;
     text-align: center;
-    color: ${(props) => `${props.position == 'UP' ? UP_BORDER_COLOR : DOWN_BORDER_COLOR}`};
+    color: ${(props) =>
+        `${
+            props.type == 'resolved-speed'
+                ? props.theme.textColor.primary
+                : props.position == 'UP'
+                ? UP_BORDER_COLOR
+                : DOWN_BORDER_COLOR
+        }`};
 `;
 
 const PositionInfo = styled(FlexDiv)`
