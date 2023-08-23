@@ -15,6 +15,7 @@ import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.p
 
 const DOWN_BORDER_COLOR = '#DE496D';
 const UP_BORDER_COLOR = '#03DAC5';
+const RESOLVED_COLOR = '#9b8327';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
@@ -73,7 +74,14 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
 };
 
 const Container = styled.div<{ position: Positions; type: SharePositionType }>`
-    border: ${(props) => `10px solid ${props.position == 'UP' ? UP_BORDER_COLOR : DOWN_BORDER_COLOR}`};
+    border: ${(props) =>
+        `10px solid ${
+            props.type == 'resolved-speed'
+                ? RESOLVED_COLOR
+                : props.position == 'UP'
+                ? UP_BORDER_COLOR
+                : DOWN_BORDER_COLOR
+        }`};
     border-radius: 15px;
     display: flex;
     flex-direction: column;
