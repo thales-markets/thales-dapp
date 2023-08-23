@@ -27,7 +27,7 @@ const useStakingOverviewQuery = (
             try {
                 const [
                     period,
-                    bonusRewards,
+                    // bonusRewards,
                     fixedPeriodReward,
                     maxThalesMultiplier,
                     vaultsMultiplier,
@@ -35,7 +35,7 @@ const useStakingOverviewQuery = (
                     tradingMultiplier,
                 ] = await Promise.all([
                     stakingThalesContract?.periodsOfStaking(),
-                    stakingThalesContract?.periodExtraReward(),
+                    // stakingThalesContract?.periodExtraReward(),
                     stakingThalesContract?.fixedPeriodReward(),
                     stakingBonusRewardsManager?.maxStakingMultiplier(),
                     stakingBonusRewardsManager?.vaultsMultiplier(),
@@ -45,7 +45,7 @@ const useStakingOverviewQuery = (
 
                 return {
                     period: Number(period),
-                    bonusRewards: bigNumberFormatter(bonusRewards),
+                    bonusRewards: getBonusRewardsForNetwork(networkId),
                     fixedPeriodReward: bigNumberFormatter(fixedPeriodReward),
                     maxThalesMultiplier: bigNumberFormatter(maxThalesMultiplier) + 1,
                     vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
@@ -62,6 +62,19 @@ const useStakingOverviewQuery = (
             ...options,
         }
     );
+};
+
+const getBonusRewardsForNetwork = (network: Network) => {
+    switch (network) {
+        case Network.OptimismMainnet:
+            return 15000;
+        case Network.Arbitrum:
+            return 7000;
+        case Network.Base:
+            return 5000;
+        default:
+            return 30000;
+    }
 };
 
 export default useStakingOverviewQuery;

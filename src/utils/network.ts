@@ -231,7 +231,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
-                // Network.Arbitrum, // TODO: Release on 23.08.
+                Network.Arbitrum,
                 // Network.Base, // TODO: Release on 28.08.
                 // Network.PolygonMainnet, // TODO: Release on 25.08.
             ];

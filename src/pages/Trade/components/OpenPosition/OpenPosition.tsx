@@ -70,13 +70,18 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                                 {isSpeedMarketMatured ? t('profile.final-price') : t('profile.current-price')}
                             </Label>
                             <Value>
-                                {isSpeedMarketMatured
-                                    ? position.finalPrice
-                                        ? formatCurrencyWithPrecision(position.finalPrice)
-                                        : '. . .'
-                                    : formatCurrencyWithPrecision(
-                                          currentPrices ? currentPrices[position.currencyKey] : 0
-                                      )}
+                                {isSpeedMarketMatured ? (
+                                    position.finalPrice ? (
+                                        formatCurrencyWithPrecision(position.finalPrice)
+                                    ) : (
+                                        <>
+                                            {'. . .'}
+                                            <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                        </>
+                                    )
+                                ) : (
+                                    formatCurrencyWithPrecision(currentPrices ? currentPrices[position.currencyKey] : 0)
+                                )}
                             </Value>
                         </FlexContainer>
                     </>
