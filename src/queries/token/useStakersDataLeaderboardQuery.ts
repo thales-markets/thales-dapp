@@ -185,7 +185,7 @@ const useStakersDataLeaderboardQuery = (
                         maxStakingMultiplier: maxStakingMultiplier + 1,
                     },
 
-                    bonusRewards: bigNumberFormatter(bonusRewards),
+                    bonusRewards: bonusRewardsFix,
                     closingDate,
                 };
             } catch (e) {
