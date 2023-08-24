@@ -271,6 +271,7 @@ export const ShareIcon = styled.i<{ disabled: boolean }>`
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
     font-size: 20px;
+    text-transform: none;
 `;
 
 export default OpenPosition;
