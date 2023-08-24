@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Trans } from 'react-i18next';
+import LogoIcon from 'assets/images/logo-light.svg';
 
 const Footer: React.FC = () => {
     return (
         <Container>
-            <ThalesLogo className="icon-home icon-home--thales" />
+            <ThalesLogo src={LogoIcon} />
             <Text>
                 <Trans
                     i18nKey="common.flex-card.footer-text"
@@ -22,15 +23,13 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 50px;
+    margin-bottom: -10px;
 `;
 
-const ThalesLogo = styled.i`
-    font-size: 100px !important;
-    color: ${(props) => props.theme.textColor.primary};
-`;
+const ThalesLogo = styled.img``;
 
 const Text = styled.div`
     font-size: 10px;
