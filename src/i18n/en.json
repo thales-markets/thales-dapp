@@ -1496,7 +1496,7 @@
             "position-history": "Position history",
             "transaction-history": "Transaction history"
         },
-        "search-placeholder": "Search wallet/asset",
+        "search-placeholder": "Search wallet",
         "history": {
             "strike": "Strike",
             "price": "Price",

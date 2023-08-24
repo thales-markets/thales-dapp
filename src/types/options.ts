@@ -212,6 +212,7 @@ export type UserLivePositions = {
     positionAddress: string;
     currencyKey: string;
     strikePrice: string;
+    strikePriceNum?: number;
     amount: number;
     amountBigNumber: BigNumber;
     maturityDate: number;
@@ -221,7 +222,6 @@ export type UserLivePositions = {
     value: number;
     isSpeedMarket: boolean;
     claimable?: boolean;
-    strikePriceNum?: number;
     finalPrice?: number;
     user?: string;
 };
@@ -229,6 +229,7 @@ export type UserLivePositions = {
 export type UserClosedPositions = {
     currencyKey: string;
     strikePrice: string;
+    strikePriceNum: number;
     amount: number;
     amountBigNumber: BigNumber;
     maturityDate: number;

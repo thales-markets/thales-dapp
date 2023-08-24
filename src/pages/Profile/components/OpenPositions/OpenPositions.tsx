@@ -232,7 +232,13 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
         return [];
     }, [filteredData, isMobile, exchangeRates, t, theme, currentPrices]);
 
-    return <TileTable rows={rows as any} isLoading={openPositionsQuery.isLoading} hideFlow />;
+    return (
+        <TileTable
+            rows={rows as any}
+            isLoading={openPositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
+            hideFlow
+        />
+    );
 };
 
 export default OpenPositions;

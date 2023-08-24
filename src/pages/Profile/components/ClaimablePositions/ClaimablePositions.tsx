@@ -124,7 +124,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                             title: t('profile.history.expired'),
                             value: row.isSpeedMarket
                                 ? formatShortDateWithTime(row.maturityDate)
-                                : formatShortDate(row.maturityDate).toUpperCase(),
+                                : formatShortDate(row.maturityDate),
                         },
                         {
                             value: <MyPositionAction position={row} isProfileAction />,
@@ -180,7 +180,13 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         return [];
     }, [filteredData, isMobile, t, theme]);
 
-    return <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />;
+    return (
+        <TileTable
+            rows={rows as any}
+            isLoading={claimablePositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
+            hideFlow
+        />
+    );
 };
 
 export default ClaimablePositions;
