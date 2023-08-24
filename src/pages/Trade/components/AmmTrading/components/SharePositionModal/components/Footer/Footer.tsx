@@ -33,11 +33,12 @@ const ThalesLogo = styled.img``;
 
 const Text = styled.div`
     font-size: 10px;
-    font-weight: 200;
+    font-weight: 100;
     color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
     width: 204px;
     text-align: right;
+    word-spacing: 0.3ch;
 `;
 
 const BoldText = styled.span`
