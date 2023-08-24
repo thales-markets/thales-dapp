@@ -1,5 +1,5 @@
 import { generalConfig } from 'config/general';
-import { DEAD_ADDRESS, SAFE_BOX_ADDRESS } from 'constants/network';
+import { ARB_SAFE_BOX_ADDRESS, DEAD_ADDRESS, OP_SAFE_BOX_ADDRESS } from 'constants/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { TOTAL_SUPPLY } from 'constants/token';
 import { Network } from 'enums/network';
@@ -19,6 +19,7 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                     await fetch(`${generalConfig.API_URL}/token/marketcap`),
                 ]);
 
+                // Thales burned - Mainnet
                 const infuraProvider = new ethers.providers.InfuraProvider(
                     Network.Mainnet,
                     process.env.REACT_APP_INFURA_PROJECT_ID
@@ -28,8 +29,8 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                     thalesContract.abi,
                     infuraProvider
                 );
-                const mainThalesBurnedBalance = await mainThalesBurned.balanceOf(DEAD_ADDRESS);
 
+                // Thales burned - Optimism
                 const opInfuraProvider = new ethers.providers.InfuraProvider(
                     Network.OptimismMainnet,
                     process.env.REACT_APP_INFURA_PROJECT_ID
@@ -39,11 +40,28 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                     thalesContract.abi,
                     opInfuraProvider
                 );
-                const opThalesBurnedBalance = await opThalesBurned.balanceOf(SAFE_BOX_ADDRESS);
+
+                // Thales burned - Arbitrum
+                const arbInfuraProvider = new ethers.providers.InfuraProvider(
+                    Network.Arbitrum,
+                    process.env.REACT_APP_INFURA_PROJECT_ID
+                );
+                const arbThalesBurned = new ethers.Contract(
+                    thalesContract.addresses[Network.Arbitrum],
+                    thalesContract.abi,
+                    arbInfuraProvider
+                );
+
+                const [mainThalesBurnedBalance, opThalesBurnedBalance, arbThalesBurnedBalance] = await Promise.all([
+                    mainThalesBurned.balanceOf(DEAD_ADDRESS),
+                    opThalesBurned.balanceOf(OP_SAFE_BOX_ADDRESS),
+                    arbThalesBurned.balanceOf(ARB_SAFE_BOX_ADDRESS),
+                ]);
 
                 const totalThalesBurned =
                     Number(ethers.utils.formatEther(mainThalesBurnedBalance)) +
-                    Number(ethers.utils.formatEther(opThalesBurnedBalance));
+                    Number(ethers.utils.formatEther(opThalesBurnedBalance)) +
+                    Number(ethers.utils.formatEther(arbThalesBurnedBalance));
 
                 const tokenInfo: TokenInfo = {
                     price: Number(await price.text()),
