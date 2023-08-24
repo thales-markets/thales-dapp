@@ -42,7 +42,7 @@ export type SharePositionModalProps = SharePositionData & {
 const PARLAY_IMAGE_NAME = 'ParlayImage.png';
 const TWITTER_MESSAGE_PASTE = '%0A<PASTE YOUR IMAGE>';
 const TWITTER_MESSAGE_UPLOAD = `%0A<UPLOAD YOUR ${PARLAY_IMAGE_NAME}>`;
-const TWITTER_MESSAGE_CHECKOUT = `CHECKOUT MY POSITION ON %0A`;
+const TWITTER_MESSAGE_CHECKOUT = `Check out my position on%0A`;
 
 const SharePositionModal: React.FC<SharePositionModalProps> = ({
     type,

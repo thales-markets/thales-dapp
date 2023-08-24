@@ -161,9 +161,14 @@ const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
     }
 `;
 
-const PotentialWin = styled(PotentialWinHeading)<{ type: SharePositionType }>`
-    font-size: 45px;
-    font-weight: 800;
+const PotentialWin = styled.div<{ type: SharePositionType }>`
+    display: ${(props) => (props.type == 'potential' ? '' : 'flex')};
+    align-items: ${(props) => (props.type == 'potential' ? '' : 'center')};
+    justify-content: ${(props) => (props.type == 'potential' ? '' : 'center')};
+    color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
+    font-size: 35px;
+    font-weight: 300;
+    text-transform: uppercase;
     text-align: center;
     color: ${(props) => (props.type == 'potential' ? '' : '100px')};
 `;
