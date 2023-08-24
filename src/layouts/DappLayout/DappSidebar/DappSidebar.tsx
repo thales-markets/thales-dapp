@@ -55,7 +55,13 @@ const DappSidebar: React.FC = () => {
 
                     {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                         <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.SpeedMarkets ? 'selected' : ''}`}
+                            className={`${
+                                [ROUTES.Options.SpeedMarkets, ROUTES.Options.SpeedMarketsOverview].includes(
+                                    location.pathname
+                                )
+                                    ? 'selected'
+                                    : ''
+                            }`}
                             href={buildHref(ROUTES.Options.SpeedMarkets)}
                             iconName="speed-markets"
                             label={t('common.sidebar.speed-markets')}

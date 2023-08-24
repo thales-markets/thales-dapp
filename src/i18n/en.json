@@ -146,7 +146,6 @@
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BNBChain",
                 "base": "Switch to Base"
             }
         },
@@ -157,7 +156,7 @@
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
-            "not-supported": " Swap is not supported on Test networks",
+            "not-supported": "Swap is not supported on this network",
             "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
@@ -448,7 +447,8 @@
             "current-price": "Current price as reported by Pyth oracles",
             "liquidity": "Current available liquidity for this Asset",
             "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
-            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time"
+            "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
+            "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration"
         },
         "overview": {
             "title": "Overview",
@@ -666,6 +666,7 @@
                     "volume-gathered": {
                         "trading": "Thales Markets Trading",
                         "overtime-trading": "Overtime Trading",
+                        "speed-trading": "Speed Markets Trading",
                         "lp-thales": "Thales Liquidity Providing",
                         "lp-overtime": "Overtime Liquidity Providing",
                         "parlay-lp-overtime": "Overtime Parlay Liquidity Providing",
@@ -1476,6 +1477,7 @@
         "strike-price": "Strike price",
         "final-price": "Final price",
         "current-price": "Current price",
+        "current-price-tooltip": "This is a Speed Market position that uses Pyth oracles for querying the current price",
         "claimed": "CLAIMED",
         "rip": "RIP",
         "chart-info": {

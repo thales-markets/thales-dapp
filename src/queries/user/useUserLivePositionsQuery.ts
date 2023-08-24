@@ -147,6 +147,7 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: positionBalance.value,
                         claimable: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...claimablePositions.map((positionBalance: any) => {
@@ -165,6 +166,7 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...resultsRanged.map((positionBalance: any) => {
@@ -184,6 +186,7 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
                         claimable: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
@@ -203,6 +206,7 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        isSpeedMarket: false,
                     };
                 }),
             ];

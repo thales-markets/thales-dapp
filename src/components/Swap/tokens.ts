@@ -1,4 +1,4 @@
-import { CRYPTO_CURRENCY_MAP, currencyKeyToNameMap } from 'constants/currency';
+import { currencyKeyToNameMap } from 'constants/currency';
 import { Network } from 'enums/network';
 import { getIsOVM } from 'utils/network';
 
@@ -136,14 +136,6 @@ export const BSC_BNB = {
     logoURI: 'https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c_1.png',
 };
 
-const BSC_BUSD = {
-    symbol: TokenSymbol.BUSD,
-    name: CRYPTO_CURRENCY_MAP.BUSD,
-    address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-    decimals: 18,
-    logoURI: 'https://tokens.1inch.io/0x4fabb145d64652a948d72533023f6e7a623c7c53.png',
-};
-
 export const ARB_ETH = {
     symbol: TokenSymbol.ETH,
     name: currencyKeyToNameMap.ETH,
@@ -186,19 +178,10 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
 
 export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
     const isPolygon = networkId === Network.PolygonMainnet;
-    const isBSC = networkId === Network.BSC;
     const isOP = getIsOVM(networkId);
     const isArbitrum = networkId === Network.Arbitrum;
 
     const toToken = mapTokenByNetwork(TokenSymbol[initialToToken as keyof typeof TokenSymbol], isOP, isPolygon);
-
-    if (isBSC) {
-        return {
-            preloadTokens: [BSC_BUSD],
-            fromToken: BSC_BNB,
-            toToken: BSC_BUSD,
-        };
-    }
 
     if (isArbitrum) {
         return {
@@ -233,13 +216,11 @@ export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
 
 export const getFromTokenSwap = (networkId: Network) => {
     const isPolygon = networkId === Network.PolygonMainnet;
-    const isBSC = networkId === Network.BSC;
     const isOP = getIsOVM(networkId);
     const isArbitrum = networkId === Network.Arbitrum;
 
     if (isArbitrum) return ARB_ETH;
     if (isPolygon) return POLYGON_MATIC;
-    if (isBSC) return BSC_BNB;
     if (isOP) return OP_Eth;
     return ETH_Eth;
 };

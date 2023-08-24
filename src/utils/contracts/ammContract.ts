@@ -6,7 +6,6 @@ const ammContract = {
         [Network.OptimismMainnet]: '0x278B5A44397c9D8E52743fEdec263c4760dc1A1A',
         [Network.OptimismGoerli]: '0xCf0f20487d4d5361C104DA48317b0028086Ad503',
         [Network.PolygonMainnet]: '0xd52B865584c25FEBfcB676B9A87F32683356A063',
-        [Network.BSC]: '0x465B66A3e33088F0666dB1836652fBcF037c7319',
         [Network.Arbitrum]: '0x2b89275efB9509c33d9AD92A4586bdf8c4d21505',
         [Network.Base]: '0xe41cD3A25CBdeDA0BC46D48C380393D953bD2034',
     },

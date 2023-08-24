@@ -11,6 +11,7 @@ import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
 import OverviewPositionAction from '../OverviewPositionAction';
 import { Label, Separator } from '../OverviewPositionAction/OverviewPositionAction';
+import Tooltip from 'components/Tooltip';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
@@ -46,7 +47,16 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                     <Label>
                         {position.maturityDate < Date.now() ? t('profile.final-price') : t('profile.current-price')}
                     </Label>
-                    <Value>{formatCurrencyWithPrecision(position.finalPrice || 0)}</Value>
+                    <Value>
+                        {position.finalPrice ? (
+                            formatCurrencyWithPrecision(position.finalPrice)
+                        ) : (
+                            <>
+                                {'. . .'}
+                                <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                            </>
+                        )}
+                    </Value>
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
@@ -125,6 +135,9 @@ const FlexContainer = styled(AlignedFlex)`
     }
     &:nth-child(3) {
         min-width: 130px;
+    }
+    &:nth-child(5) {
+        min-width: 140px;
     }
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {

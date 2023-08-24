@@ -24,12 +24,11 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 type OpenPositionProps = {
     position: UserLivePositions;
-    isSpeedMarkets?: boolean;
     maxPriceDelaySec?: number;
     currentPrices?: { [key: string]: number };
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -38,13 +37,13 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isSpeedMarketMatured, setIsSpeedMarketMatured] = useState(
-        isSpeedMarkets && Date.now() > position.maturityDate
+        position.isSpeedMarket && Date.now() > position.maturityDate
     );
 
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
 
     useInterval(() => {
-        if (isSpeedMarkets && Date.now() > position.maturityDate) {
+        if (position.isSpeedMarket && Date.now() > position.maturityDate) {
             if (!isSpeedMarketMatured) {
                 setIsSpeedMarketMatured(true);
             }
@@ -58,11 +57,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
         <Position>
             <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
             <AlignedFlex>
-                <FlexContainer firstChildWidth={isSpeedMarkets ? '130px' : undefined}>
+                <FlexContainer firstChildWidth={position.isSpeedMarket ? '130px' : undefined}>
                     <Label>{position.currencyKey}</Label>
                     <Value>{position.strikePrice}</Value>
                 </FlexContainer>
-                {isSpeedMarkets && (
+                {position.isSpeedMarket && (
                     <>
                         <Separator />
                         <FlexContainer secondChildWidth="140px">
@@ -70,13 +69,18 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                                 {isSpeedMarketMatured ? t('profile.final-price') : t('profile.current-price')}
                             </Label>
                             <Value>
-                                {isSpeedMarketMatured
-                                    ? position.finalPrice
-                                        ? formatCurrencyWithPrecision(position.finalPrice)
-                                        : '. . .'
-                                    : formatCurrencyWithPrecision(
-                                          currentPrices ? currentPrices[position.currencyKey] : 0
-                                      )}
+                                {isSpeedMarketMatured ? (
+                                    position.finalPrice ? (
+                                        formatCurrencyWithPrecision(position.finalPrice)
+                                    ) : (
+                                        <>
+                                            {'. . .'}
+                                            <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                        </>
+                                    )
+                                ) : (
+                                    formatCurrencyWithPrecision(currentPrices ? currentPrices[position.currencyKey] : 0)
+                                )}
                             </Value>
                         </FlexContainer>
                     </>
@@ -84,7 +88,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 <Separator />
                 <FlexContainer>
                     <Label>
-                        {isSpeedMarkets
+                        {position.isSpeedMarket
                             ? t('speed-markets.user-positions.end-time')
                             : t('markets.user-positions.end-date')}
                     </Label>
@@ -104,8 +108,8 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
-            {!isSpeedMarkets && (
+            <MyPositionAction position={position} maxPriceDelaySec={maxPriceDelaySec} />
+            {!position.isSpeedMarket && (
                 <SPAAnchor
                     href={
                         isRanged

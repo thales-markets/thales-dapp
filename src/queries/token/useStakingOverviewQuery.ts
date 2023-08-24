@@ -3,6 +3,7 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { Network } from 'enums/network';
+import { getBonusRewardsForNetwork, getFixedRewardsForNetwork } from 'utils/network';
 
 export type OverviewData = {
     period: number;
@@ -27,16 +28,16 @@ const useStakingOverviewQuery = (
             try {
                 const [
                     period,
-                    bonusRewards,
-                    fixedPeriodReward,
+                    // bonusRewards,
+                    // fixedPeriodReward,
                     maxThalesMultiplier,
                     vaultsMultiplier,
                     lpMultiplier,
                     tradingMultiplier,
                 ] = await Promise.all([
                     stakingThalesContract?.periodsOfStaking(),
-                    stakingThalesContract?.periodExtraReward(),
-                    stakingThalesContract?.fixedPeriodReward(),
+                    // stakingThalesContract?.periodExtraReward(),
+                    // stakingThalesContract?.fixedPeriodReward(),
                     stakingBonusRewardsManager?.maxStakingMultiplier(),
                     stakingBonusRewardsManager?.vaultsMultiplier(),
                     stakingBonusRewardsManager?.lpMultiplier(),
@@ -45,8 +46,8 @@ const useStakingOverviewQuery = (
 
                 return {
                     period: Number(period),
-                    bonusRewards: bigNumberFormatter(bonusRewards),
-                    fixedPeriodReward: bigNumberFormatter(fixedPeriodReward),
+                    bonusRewards: getBonusRewardsForNetwork(networkId),
+                    fixedPeriodReward: getFixedRewardsForNetwork(networkId),
                     maxThalesMultiplier: bigNumberFormatter(maxThalesMultiplier) + 1,
                     vaultsMultiplier: bigNumberFormatter(vaultsMultiplier),
                     lpMultiplier: bigNumberFormatter(lpMultiplier),

@@ -19,7 +19,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
     return useQuery<UserClosedPositions[]>(
         QUERY_KEYS.BinaryOptions.UserResolvedSpeedMarkets(networkId, walletAddress),
         async () => {
-            const userSpeedMarketsData: UserClosedPositions[] = [];
+            const userClosedSpeedMarketsData: UserClosedPositions[] = [];
             const { speedMarketsAMMContract } = snxJSConnector;
 
             if (speedMarketsAMMContract) {
@@ -40,12 +40,8 @@ const useUserResolvedSpeedMarketsDataQuery = (
                     market: maturedMarkets[index],
                 }));
 
-                const lastTenMaturedMarkets = [...userResolvedMarkets]
-                    .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
-                    .slice(-10);
-
-                for (let i = 0; i < lastTenMaturedMarkets.length; i++) {
-                    const marketData = lastTenMaturedMarkets[i];
+                for (let i = 0; i < userResolvedMarkets.length; i++) {
+                    const marketData = userResolvedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
@@ -55,6 +51,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
                             USD_SIGN,
                             bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
                         ),
+                        strikePriceNum: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
@@ -66,11 +63,11 @@ const useUserResolvedSpeedMarketsDataQuery = (
                         isUserWinner: marketData.isUserWinner,
                     };
 
-                    userSpeedMarketsData.push(userData);
+                    userClosedSpeedMarketsData.push(userData);
                 }
             }
 
-            return userSpeedMarketsData;
+            return userClosedSpeedMarketsData;
         },
         {
             ...options,

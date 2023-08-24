@@ -20,6 +20,7 @@ export type UserPosition = {
     claimable: boolean;
     claimed: boolean;
     isRanged: boolean;
+    isSpeedMarket: boolean;
 };
 
 export type UserProfileData = {

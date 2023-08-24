@@ -122,7 +122,6 @@ export const gelatoContract = {
         [Network.OptimismMainnet]: GELATO_POOL_ADDRESS,
         [Network.OptimismGoerli]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
-        [Network.BSC]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
     },

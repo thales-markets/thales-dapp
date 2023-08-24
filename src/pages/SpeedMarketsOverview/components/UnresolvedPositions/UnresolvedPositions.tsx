@@ -271,6 +271,7 @@ const getAdditionalButtonStyle = (isMobile: boolean): CSSProperties => ({
     minWidth: isMobile ? '120px' : '180px',
     lineHeight: '100%',
     border: 'none',
+    marginRight: '10px',
 });
 
 const Wrapper = styled.div`

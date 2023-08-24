@@ -7,6 +7,7 @@ import thalesData from 'thales-data';
 import { Staker, Stakers } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getBonusRewardsForNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type StakerContractLeaderboardData = {
@@ -87,24 +88,34 @@ const useStakersDataLeaderboardQuery = (
                 }
 
                 const [
-                    bonusRewards,
+                    bonusRewardsRaw,
                     lastPeriodTimestamp,
                     durationPeriod,
-                    tradingMultiplier,
-                    lpMultiplier,
-                    vaultMultiplier,
-                    maxStakingMultiplier,
+                    tradingMultiplierRaw,
+                    lpMultiplierRaw,
+                    vaultMultiplierRaw,
+                    maxStakingMultiplierRaw,
                 ] = await Promise.all([
                     stakingThalesContract?.periodExtraReward(),
                     stakingThalesContract?.lastPeriodTimeStamp(),
                     stakingThalesContract?.durationPeriod(),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.tradingMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.lpMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.vaultsMultiplier()),
-                    bigNumberFormatter(await stakingBonusRewardsManager?.maxStakingMultiplier()),
+                    stakingBonusRewardsManager?.tradingMultiplier(),
+                    stakingBonusRewardsManager?.lpMultiplier(),
+                    stakingBonusRewardsManager?.vaultsMultiplier(),
+                    stakingBonusRewardsManager?.maxStakingMultiplier(),
                 ]);
 
+                const [bonusRewards, tradingMultiplier, lpMultiplier, vaultMultiplier, maxStakingMultiplier] = [
+                    bigNumberFormatter(bonusRewardsRaw),
+                    bigNumberFormatter(tradingMultiplierRaw),
+                    bigNumberFormatter(lpMultiplierRaw),
+                    bigNumberFormatter(vaultMultiplierRaw),
+                    bigNumberFormatter(maxStakingMultiplierRaw),
+                ];
+
                 const closingDate = Number(lastPeriodTimestamp) * 1000 + Number(durationPeriod) * 1000;
+
+                const bonusRewardsFix = lastPeriod ? getBonusRewardsForNetwork(network) : bonusRewards;
 
                 const stakersDataFromContract = await Promise.all(calls);
                 let globalPoints = 0;
@@ -143,7 +154,7 @@ const useStakersDataLeaderboardQuery = (
 
                 finalData = orderBy(finalData, 'userRoundBonusPoints', 'desc');
 
-                const estimationForOneThales = globalPoints / bigNumberFormatter(bonusRewards);
+                const estimationForOneThales = globalPoints / bonusRewardsFix;
 
                 const finalDataWithRank = finalData.map((item, index) => {
                     return {
@@ -152,7 +163,7 @@ const useStakersDataLeaderboardQuery = (
                         share: item.userRoundBonusPoints / globalPoints,
                         estimatedRewards: formatCurrencyWithKey(
                             THALES_CURRENCY,
-                            (item.userRoundBonusPoints / globalPoints) * bigNumberFormatter(bonusRewards),
+                            (item.userRoundBonusPoints / globalPoints) * bonusRewardsFix,
                             2
                         ),
                     };
@@ -175,7 +186,7 @@ const useStakersDataLeaderboardQuery = (
                         maxStakingMultiplier: maxStakingMultiplier + 1,
                     },
 
-                    bonusRewards: bigNumberFormatter(bonusRewards),
+                    bonusRewards: bonusRewardsFix,
                     closingDate,
                 };
             } catch (e) {

@@ -4,19 +4,32 @@ import useInterval from 'hooks/useInterval';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { formatShortDate, formattedDuration, formattedDurationFull } from 'utils/formatters/date';
+import {
+    formatShortDate,
+    formatShortDateWithTime,
+    formattedDuration,
+    formattedDurationFull,
+} from 'utils/formatters/date';
 
 type MaturityDateProps = {
     maturityDateUnix: number;
     onEnded?: () => void;
     showFullCounter?: boolean;
+    showDateWithTime?: boolean;
     fontSize?: string;
     color?: string;
 };
 
 const ONE_SECOND_IN_MS = 1000;
 
-const MaturityDate: React.FC<MaturityDateProps> = ({ maturityDateUnix, onEnded, showFullCounter, fontSize, color }) => {
+const MaturityDate: React.FC<MaturityDateProps> = ({
+    maturityDateUnix,
+    onEnded,
+    showFullCounter,
+    showDateWithTime,
+    fontSize,
+    color,
+}) => {
     const { t } = useTranslation();
     const now = Date.now();
     const [showTimeRemaining, setTimeRemaningVisibility] = useState<boolean>(false);
@@ -82,7 +95,11 @@ const MaturityDate: React.FC<MaturityDateProps> = ({ maturityDateUnix, onEnded, 
                 fontSize={fontSize}
             >
                 {!showTimeRemaining
-                    ? `${formatShortDate(maturityDateUnix)}`
+                    ? `${
+                          showDateWithTime
+                              ? formatShortDateWithTime(maturityDateUnix)
+                              : formatShortDate(maturityDateUnix)
+                      }`
                     : timeElapsed
                     ? t('common.time-remaining.ended')
                     : showRemainingInWeeks

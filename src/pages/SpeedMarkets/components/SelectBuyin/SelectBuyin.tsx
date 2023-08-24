@@ -40,8 +40,8 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMark
                             setBuyinAmount(amount);
                         }}
                     >
-                        {amount}
                         <DollarSign>{USD_SIGN}</DollarSign>
+                        {amount}
                     </Amount>
                 );
             })}
@@ -67,7 +67,7 @@ const Amount = styled(FlexDivCentered)<{ isSelected: boolean }>`
 `;
 
 const DollarSign = styled.span`
-    padding-left: 2px;
+    padding-right: 2px;
 `;
 
 export default SelectBuyin;

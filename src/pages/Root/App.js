@@ -317,7 +317,7 @@ const App = () => {
                                     )}
                                 />
                             )}
-                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarketsOverview).includes(networkId) && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.SpeedMarketsOverview}

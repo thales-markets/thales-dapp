@@ -3,6 +3,9 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
+import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { SPEED_MARKETS_QUOTE } from 'constants/options';
 
 const useProfileDataQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<UserProfileData>) => {
     return useQuery<UserProfileData>(
@@ -10,7 +13,16 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
         async () => {
             let [profit, volume, numberOfTrades, gain, investment] = [0, 0, 0, 0, 0];
 
-            const [userMarketTransactions, userTrades] = await Promise.all([
+            const { speedMarketsAMMContract } = snxJSConnector;
+
+            const [
+                userMarketTransactions,
+                userTrades,
+                lpFee,
+                safeBoxImpact,
+                numActiveSpeedMarkets,
+                numMaturedSpeedMarkets,
+            ] = await Promise.all([
                 thalesData.binaryOptions.optionTransactions({
                     account: walletAddress,
                     network: networkId,
@@ -19,6 +31,10 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     taker: walletAddress,
                     network: networkId,
                 }),
+                speedMarketsAMMContract?.lpFee(),
+                speedMarketsAMMContract?.safeBoxImpact(),
+                speedMarketsAMMContract?.numActiveMarketsPerUser(walletAddress) || Promise.resolve(0),
+                speedMarketsAMMContract?.numMaturedMarketsPerUser(walletAddress) || Promise.resolve(0),
             ]);
 
             userMarketTransactions.map((tx: any) => {
@@ -43,6 +59,34 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     volume += tx.takerAmount;
                 }
             });
+
+            if (speedMarketsAMMContract) {
+                const [activeSpeedMarkets, maturedSpeedMarkets] = await Promise.all([
+                    speedMarketsAMMContract.activeMarketsPerUser(0, numActiveSpeedMarkets, walletAddress),
+                    speedMarketsAMMContract.maturedMarketsPerUser(0, numMaturedSpeedMarkets, walletAddress),
+                ]);
+                const [activeSpeedMarketsData, maturedSpeedMarketsData] = await Promise.all([
+                    speedMarketsAMMContract.getMarketsData(activeSpeedMarkets),
+                    speedMarketsAMMContract.getMarketsData(maturedSpeedMarkets),
+                ]);
+
+                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+
+                activeSpeedMarketsData.concat(maturedSpeedMarketsData).forEach((marketData: any) => {
+                    const paid = coinFormatter(marketData.buyinAmount, networkId) * (1 + fees);
+                    const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    if (marketData.isUserWinner) {
+                        profit += payout;
+                    } else {
+                        profit -= paid;
+                    }
+                    investment += paid;
+                    volume += paid;
+                });
+
+                const numSpeedMarkets = Number(numActiveSpeedMarkets) + Number(numMaturedSpeedMarkets);
+                numberOfTrades += numSpeedMarkets;
+            }
 
             gain = investment !== 0 ? profit / investment : 0;
 

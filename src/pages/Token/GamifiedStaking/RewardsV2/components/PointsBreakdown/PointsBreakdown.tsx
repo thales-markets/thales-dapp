@@ -135,6 +135,21 @@ const PointsBreakdown: React.FC = () => {
                                             <ExternalIcon className="icon icon__external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
+                                    <LinkWrapper
+                                        href={buildHref(ROUTES.Options.SpeedMarkets)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <LinkIcon className="sidebar-icon icon--speed-markets" />
+                                        <LinkLabelContainer>
+                                            <LinkLabel>
+                                                {t(
+                                                    'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.speed-trading'
+                                                )}
+                                            </LinkLabel>
+                                            <ExternalIcon className="icon icon__external" />
+                                        </LinkLabelContainer>
+                                    </LinkWrapper>
                                     <LinkWrapper href={LINKS.Overtime.Markets} target="_blank" rel="noreferrer">
                                         <LinkIcon className="icon icon--overtime" />
                                         <LinkLabelContainer>

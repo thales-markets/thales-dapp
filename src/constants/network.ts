@@ -4,12 +4,12 @@ import { Chain } from 'wagmi';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
-export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
+export const OP_SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
+export const ARB_SAFE_BOX_ADDRESS = '0xE9F5E7579931a46e4beaC08Ca9ab52961AD66203';
 
 export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISTIC',
-    [Network.BSC]: 'BSC-MAINNET',
     [Network.PolygonMainnet]: 'POLYGON-MAINNET',
     [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
@@ -19,20 +19,13 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
-    [Network.BSC]: 'BINANCE SMART CHAIN MAINNET',
     [Network.PolygonMainnet]: 'POLYGON',
     [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
 };
 
-export const SWAP_SUPPORTED_NETWORKS = [
-    Network.Mainnet,
-    Network.OptimismMainnet,
-    Network.BSC,
-    Network.PolygonMainnet,
-    Network.Arbitrum,
-];
+export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
 export const TEST_NETWORKS = [Network.OptimismGoerli];
 
@@ -71,20 +64,6 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
             symbol: 'MATIC',
-            decimals: 18,
-        },
-    },
-};
-
-export const BSC_NETWORK: Record<number, OptimismNetwork> = {
-    [Network.BSC]: {
-        chainId: '0x38',
-        chainName: 'BSC',
-        rpcUrls: ['https://bsc-dataseed.binance.org/'],
-        blockExplorerUrls: ['https://bscscan.com/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'BNB',
             decimals: 18,
         },
     },
