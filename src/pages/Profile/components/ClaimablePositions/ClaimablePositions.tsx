@@ -161,7 +161,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
 
     return (
         <>
-            <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />;
+            <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />
             {positionsShareData !== null && openTwitterShareModal && (
                 <SharePositionModal
                     type={positionsShareData.type}
