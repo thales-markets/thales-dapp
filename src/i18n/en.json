@@ -1544,6 +1544,7 @@
         }
     },
     "banner": {
-        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!"
+        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
+        "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!"
     }
 }
