@@ -1,6 +1,6 @@
 export const SNAPSHOT_GRAPHQL_URL = `https://hub.snapshot.org/graphql?apiKey=${process.env.REACT_APP_SNAPSHOT_API_KEY}`;
 
-export const VOTING_COUNCIL_PROPOSAL_ID = '0xfb0b6c5f7eaf8f40032be7f8b38965294a4b809cedcf48b0533e68682ea4043a';
+export const VOTING_COUNCIL_PROPOSAL_ID = '0x22ad5b531b6efa86e56bef8206bad55e441d9c9144afde854f7b15194dc89778';
 export const COUNCIL_PROPOSAL_ID = '0xfb0b6c5f7eaf8f40032be7f8b38965294a4b809cedcf48b0533e68682ea4043a';
 export const VOTING_ORACLE_COUNCIL_PROPOSAL_ID = '0xb94b357561a620ab38777f75aba7f6d14d21e019911c2c1ff5cd88e5f1b18eeb';
 export const FIRST_COUNCIL_ELECTIONS_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
@@ -28,5 +28,5 @@ export const EXCLUDED_PROPOSALS = [
     '0xbe858d9db6b9abc060bcf2c064f642a1dd3f8dd3ba396328938dee87c51dbd25',
 ];
 
-export const BLOCK_OPTIMISM = 93902848;
-export const BLOCK_ARBITRUM = 83864135;
+export const BLOCK_OPTIMISM = 108648155;
+export const BLOCK_ARBITRUM = 124559462;
