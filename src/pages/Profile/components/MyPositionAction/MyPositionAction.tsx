@@ -371,7 +371,12 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                         {!isProfileAction && <Separator />}
                         <ResultsContainer minWidth="180px">
                             <Label>{t('markets.user-positions.results')}</Label>
-                            <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
+                            <TimeRemaining
+                                fontSize={13}
+                                end={position.maturityDate}
+                                showFullCounter
+                                showSecondsCounter
+                            />
                         </ResultsContainer>
                     </>
                 );
