@@ -14,6 +14,7 @@ type TimeRemainingProps = {
     fontSize?: number;
     showBorder?: boolean;
     showFullCounter?: boolean;
+    showSecondsCounter?: boolean;
     zIndex?: number;
     textColor?: string;
     fontWeight?: number;
@@ -27,6 +28,7 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
     fontSize,
     showBorder,
     showFullCounter,
+    showSecondsCounter,
     zIndex,
     textColor,
     fontWeight,
@@ -101,7 +103,7 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
                 : showRemainingInWeeks
                 ? `${weeksDiff} ${t('common.time-remaining.weeks')}`
                 : showFullCounter
-                ? formattedDurationFull(duration, dateTimeTranslationMap)
+                ? formattedDurationFull(duration, dateTimeTranslationMap, undefined, undefined, showSecondsCounter)
                 : formattedDuration(duration, dateTimeTranslationMap)}
         </Container>
     );

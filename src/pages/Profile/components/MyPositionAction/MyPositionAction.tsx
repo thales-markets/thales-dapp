@@ -377,7 +377,12 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                         <Separator />
                         <ResultsContainer>
                             <Label>{t('markets.user-positions.results')}</Label>
-                            <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter />
+                            <TimeRemaining
+                                fontSize={13}
+                                end={position.maturityDate}
+                                showFullCounter
+                                showSecondsCounter
+                            />
                         </ResultsContainer>
                     </>
                 );
