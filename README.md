@@ -46,7 +46,7 @@ Then, open `.env.local` and add the missing environment variables:
 -   `REACT_APP_OPTIMISM_API_KEY` - Optimism API key (get it from [Getting an API key](https://docs.optimism.etherscan.io/getting-started/viewing-api-usage-statistics))
 -   `REACT_APP_ARBITRUM_API_KEY` - Arbitrum API key (get it from [Getting an API key](https://docs.arbiscan.io/getting-started/viewing-api-usage-statistics))
 -   `REACT_APP_POLYGON_API_KEY` - Polygon API key (get it from [Getting an API key](https://docs.polygonscan.com/getting-started/viewing-api-usage-statistics))
--   `REACT_APP_BASE_API_KEY` - Base API key (get it from [Getting an API key](https://basescan.org/apis))
+-   `REACT_APP_BASE_API_KEY` - Base API key (get it from [Getting an API key](https://docs.basescan.org/getting-started/viewing-api-usage-statistics))
 
 ### Set up Google Translate API
 
