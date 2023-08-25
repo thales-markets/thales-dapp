@@ -254,3 +254,15 @@ export type AmmSpeedMarketsLimits = {
     safeBoxImpact: number;
     whitelistedAddress: boolean;
 };
+
+export type SpeedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: string;
+    strikePrice: number;
+    maturityDate: number;
+    isOpen: boolean;
+    result: OptionSide | null;
+    finalPrice?: number;
+    isSpeedMarket: boolean;
+};

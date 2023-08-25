@@ -218,13 +218,19 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileSection title={t('profile.accordions.transaction-history')}>
+                                <ProfileSection
+                                    title={t('profile.accordions.transaction-history')}
+                                    subtitle={t('profile.history-limit', { days: MARKET_DURATION_IN_DAYS })}
+                                >
                                     <TransactionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
                                     />
                                 </ProfileSection>
-                                <ProfileSection title={t('profile.accordions.position-history')}>
+                                <ProfileSection
+                                    title={t('profile.accordions.position-history')}
+                                    subtitle={t('profile.history-limit', { days: MARKET_DURATION_IN_DAYS })}
+                                >
                                     <PositionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}

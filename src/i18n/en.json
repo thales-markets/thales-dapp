@@ -1485,16 +1485,17 @@
             "claimable": "Claimable"
         },
         "winnings-are-forfeit": "* Winnings not claimed within {{days}} days of a market being resolved are forfeit.",
+        "history-limit": "* Showing only markets with expiry date not older than {{days}} days.",
         "tabs": {
             "my-positions": "My Positions",
             "history": "History",
             "vaults-lp": "Vaults/LP"
         },
         "accordions": {
-            "claimable-positions": "Claimable positions",
-            "open-positions": "Open positions",
-            "position-history": "Position history",
-            "transaction-history": "Transaction history"
+            "claimable-positions": "Claimable Positions",
+            "open-positions": "Open Positions",
+            "position-history": "Position History",
+            "transaction-history": "Transaction History"
         },
         "search-placeholder": "Search wallet",
         "history": {

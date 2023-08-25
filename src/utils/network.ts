@@ -237,6 +237,23 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
     }
 };
 
+export const getAPIKeyByNetwork = (networkId: Network) => {
+    switch (networkId) {
+        case Network.OptimismMainnet:
+            return process.env.REACT_APP_OPTIMISM_API_KEY;
+        case Network.OptimismGoerli:
+            return process.env.REACT_APP_OPTIMISM_API_KEY;
+        case Network.Arbitrum:
+            return process.env.REACT_APP_ARBITRUM_API_KEY;
+        case Network.PolygonMainnet:
+            return process.env.REACT_APP_POLYGON_API_KEY;
+        case Network.Base:
+            return process.env.REACT_APP_BASE_API_KEY;
+        default:
+            return 'NOT SUPPORTED';
+    }
+};
+
 // TODO: delete this method after params changes on contract
 export const getFixedRewardsForNetwork = (network: Network) => {
     switch (network) {

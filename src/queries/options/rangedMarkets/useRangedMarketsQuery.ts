@@ -3,6 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { RangedMarket } from 'types/options';
 import { Network } from 'enums/network';
 import thalesData from 'thales-data';
+import { MIN_MATURITY } from 'constants/options';
 
 const useRangedMarketsQuery = (networkId: Network, marketIds?: string[], options?: UseQueryOptions<RangedMarket[]>) => {
     return useQuery<RangedMarket[]>(
@@ -12,6 +13,7 @@ const useRangedMarketsQuery = (networkId: Network, marketIds?: string[], options
                 max: Infinity,
                 network: networkId,
                 marketIds,
+                minMaturity: MIN_MATURITY,
             });
 
             return rangedMarkets;

@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { HistoricalOptionsMarketInfo, RangedMarket, Trade, Trades } from 'types/options';
+import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade, Trades } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDate, formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency } from 'utils/formatters/number';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
@@ -20,6 +20,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { TradeWithMarket } from 'types/profile';
 import useTradesQuery from 'queries/profile/useTradesQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
+import useUserSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserSpeedMarketsTransactionsQuery';
 
 type TransactionHistoryProps = {
     searchAddress: string;
@@ -61,15 +62,25 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         [rangedMarketsQuery.isSuccess, rangedMarketsQuery.data]
     );
 
-    const allMarkets = useMemo(() => [...markets, ...rangedMarkets], [markets, rangedMarkets]);
+    const directionalAndRangedMarkets = useMemo(() => [...markets, ...rangedMarkets], [markets, rangedMarkets]);
 
-    const data = useMemo(() => {
-        const marketsMap = keyBy(allMarkets, 'address');
-        return trades.map((trade: Trade) => ({
+    const speedMarketsDataQuery = useUserSpeedMarketsTransactionsQuery(networkId, searchAddress || walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const speedMarketsData: TradeWithMarket[] = useMemo(
+        () => (speedMarketsDataQuery.isSuccess && speedMarketsDataQuery.data ? speedMarketsDataQuery.data : []),
+        [speedMarketsDataQuery.isSuccess, speedMarketsDataQuery.data]
+    );
+
+    const data: TradeWithMarket[] = useMemo(() => {
+        const marketsMap = keyBy(directionalAndRangedMarkets, 'address');
+        const tradesWithMarket = trades.map((trade: Trade) => ({
             ...trade,
             marketItem: marketsMap[trade.market],
         }));
-    }, [trades, allMarkets]);
+
+        return [...tradesWithMarket, ...speedMarketsData];
+    }, [trades, directionalAndRangedMarkets, speedMarketsData]);
 
     const filteredData = useMemo(
         () =>
@@ -105,6 +116,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                         return row;
                     }
                     const isRanged = row.optionSide === 'in' || row.optionSide == 'out';
+                    const isSpeedMarket = (row.marketItem as SpeedMarket)?.isSpeedMarket;
                     const marketExpired = row.marketItem.result;
                     const optionPrice =
                         row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
@@ -139,13 +151,17 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                         },
                         {
                             title: marketExpired ? t('profile.history.expired') : t('profile.history.expires'),
-                            value: formatShortDate(new Date(row.marketItem.maturityDate)),
+                            value: isSpeedMarket
+                                ? formatShortDateWithTime(row.marketItem.maturityDate)
+                                : formatShortDate(row.marketItem.maturityDate),
                         },
                     ];
 
                     if (!isMobile) {
                         cells.push({
-                            value: <ArrowLink href={getEtherscanTxLink(networkId, row.transactionHash)} />,
+                            value: !isSpeedMarket && (
+                                <ArrowLink href={getEtherscanTxLink(networkId, row.transactionHash)} />
+                            ),
                             width: '30px',
                         });
                     }
@@ -172,7 +188,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
     return (
         <TileTable
             rows={rows as any}
-            isLoading={tradesQuery.isLoading || marketsQuery.isLoading || rangedMarketsQuery.isLoading}
+            isLoading={
+                tradesQuery.isLoading ||
+                marketsQuery.isLoading ||
+                rangedMarketsQuery.isLoading ||
+                speedMarketsDataQuery.isLoading
+            }
         />
     );
 };
