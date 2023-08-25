@@ -63,15 +63,27 @@ export const formattedDurationFull = (
     duration: Duration,
     dateTimeTranslationMap: any,
     delimiter = ' ',
-    firstTwo = false
+    firstTwo = false,
+    showSeconds = false
 ) => {
     const formatted = [];
-    duration?.months && duration.months > 0
-        ? formatted.push(`${duration.months}${dateTimeTranslationMap['months-short']}`)
-        : '';
-    formatted.push(`${duration.days}${dateTimeTranslationMap['days-short']}`);
-    formatted.push(`${duration.hours}${dateTimeTranslationMap['hours-short']}`);
-    formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
+    if (
+        showSeconds &&
+        duration?.months === 0 &&
+        duration?.days === 0 &&
+        duration?.hours === 0 &&
+        duration?.minutes === 0 &&
+        duration.seconds != null
+    ) {
+        formatted.push(`${duration.seconds}${dateTimeTranslationMap['seconds-short']}`);
+    } else {
+        duration?.months && duration.months > 0
+            ? formatted.push(`${duration.months}${dateTimeTranslationMap['months-short']}`)
+            : '';
+        formatted.push(`${duration.days}${dateTimeTranslationMap['days-short']}`);
+        formatted.push(`${duration.hours}${dateTimeTranslationMap['hours-short']}`);
+        formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
+    }
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
 };
 
