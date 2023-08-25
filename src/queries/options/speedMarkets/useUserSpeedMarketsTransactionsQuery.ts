@@ -1,5 +1,5 @@
 import { generalConfig } from 'config/general';
-import { SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
+import { MIN_MATURITY, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
 import { secondsToMilliseconds } from 'date-fns';
@@ -38,6 +38,14 @@ const useUserSpeedMarketsTransactionsQuery = (
                 ]);
                 const allMarkets: any[] = activeMarkets.concat(maturedMarkets);
 
+                const allMarketsDataArray = await speedMarketsAMMContract.getMarketsData(allMarkets);
+                const filteredMarketsData = allMarketsDataArray
+                    .map((marketData: any, index: number) => ({
+                        ...marketData,
+                        market: allMarkets[index],
+                    }))
+                    .filter((marketData: any) => Number(marketData.strikeTime) > MIN_MATURITY);
+
                 const MAX_CONTRACT_ADDRESSES_PER_REQUEST = 5;
                 const contractCreationDataArray: {
                     contractAddress: string;
@@ -45,8 +53,9 @@ const useUserSpeedMarketsTransactionsQuery = (
                     txHash: string;
                 }[] = [];
                 // Fetch each market creation timestamp
-                for (let i = 0; i < Math.ceil(allMarkets.length / MAX_CONTRACT_ADDRESSES_PER_REQUEST); i++) {
-                    const contractAddresses = allMarkets
+                for (let i = 0; i < Math.ceil(filteredMarketsData.length / MAX_CONTRACT_ADDRESSES_PER_REQUEST); i++) {
+                    const contractAddresses = filteredMarketsData
+                        .map((marketData: any) => marketData.market)
                         .slice(
                             i * MAX_CONTRACT_ADDRESSES_PER_REQUEST,
                             i * MAX_CONTRACT_ADDRESSES_PER_REQUEST + MAX_CONTRACT_ADDRESSES_PER_REQUEST
@@ -69,14 +78,8 @@ const useUserSpeedMarketsTransactionsQuery = (
                     }
                 }
 
-                const allMarketsDataArray = await speedMarketsAMMContract.getMarketsData(allMarkets);
-                const allMarketsData = allMarketsDataArray.map((marketData: any, index: number) => ({
-                    ...marketData,
-                    market: allMarkets[index],
-                }));
-
-                for (let i = 0; i < allMarketsData.length; i++) {
-                    const marketData = allMarketsData[i];
+                for (let i = 0; i < filteredMarketsData.length; i++) {
+                    const marketData = filteredMarketsData[i];
                     const side = SIDE[marketData.direction] as OptionSide;
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
