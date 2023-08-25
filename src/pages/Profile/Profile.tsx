@@ -101,12 +101,10 @@ const Profile: React.FC = () => {
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
             setSearchAddress(searchText.toLowerCase());
-        }
-
-        if (searchText == '') {
+        } else {
             setSearchAddress('');
         }
-    }, [searchText, searchAddress]);
+    }, [searchText]);
 
     const onTabClickHandler = (tab: NavItems) => {
         history.push({
