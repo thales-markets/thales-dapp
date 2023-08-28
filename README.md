@@ -38,6 +38,7 @@ Then, open `.env.local` and add the missing environment variables:
 
 -   `REACT_APP_INFURA_PROJECT_ID` - Infura project id (get it from [infura.io](https://infura.io/)).
 -   `REACT_APP_CHAINNODE_PROJECT_ID` - Chainnodes project id (get it from [chainnodes.org](https://app.chainnodes.org/)).
+-   `REACT_APP_ANKR_PROJECT_ID` - Ankr project id (get it from [ankr.com](https://www.ankr.com/rpc/account/)).
 -   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thalesmarket.io`.
 -   `REACT_APP_IPFS_DEPLOYMENT` - Is dApp in the mode for deployment on IPFS. Set to `false`.
 -   `REACT_APP_BUNGEE_API_KEY` - Bungee API key.
