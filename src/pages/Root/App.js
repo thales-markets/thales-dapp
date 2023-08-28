@@ -29,7 +29,6 @@ import { createGlobalStyle } from 'styled-components';
 import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
-import { Network } from 'enums/network';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -307,7 +306,7 @@ const App = () => {
                                 )}
                             />
 
-                            {networkId !== Network.Mainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.SpeedMarkets}
@@ -318,7 +317,7 @@ const App = () => {
                                     )}
                                 />
                             )}
-                            {networkId !== Network.Mainnet && (
+                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.SpeedMarketsOverview}

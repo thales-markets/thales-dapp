@@ -30,9 +30,8 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
-import { getSupportedNetworksByRoute } from 'utils/network';
 
-const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
+const SpeedMarkets: React.FC<RouteComponentProps> = () => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -62,6 +61,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
     }, [networkId]);
 
+    const prevPrice = useRef(0);
     const fetchCurrentPrice = useCallback(async () => {
         const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
         const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
@@ -78,8 +78,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         fetchCurrentPrice();
     }, [currencyKey, fetchCurrentPrice]);
 
-    const prevPrice = useRef(0);
-    // Update current price latest on every minute
+    // Update current price on every 5 seconds
     useInterval(async () => {
         fetchCurrentPrice();
     }, secondsToMilliseconds(5));
@@ -117,13 +116,9 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
         );
     };
 
-    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
-
     return (
         <>
-            {!supportedNetworks.includes(networkId) ? (
-                <Info style={{ marginTop: '100px', fontSize: '22px' }}>{t('common.coming-soon')}</Info>
-            ) : ammSpeedMarketsLimitsQuery.isLoading ? (
+            {ammSpeedMarketsLimitsQuery.isLoading ? (
                 <SimpleLoader />
             ) : (
                 <Container>

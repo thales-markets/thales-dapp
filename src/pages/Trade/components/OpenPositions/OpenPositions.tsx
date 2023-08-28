@@ -68,7 +68,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ isSpeedMarkets, maxPriceD
                             .map((position, index) => (
                                 <OpenPosition
                                     position={position}
-                                    isSpeedMarkets={isSpeedMarkets}
                                     key={`position${position.market}${position.positionAddress}${index}`}
                                     maxPriceDelaySec={maxPriceDelaySec}
                                     currentPrices={currentPrices}
@@ -94,6 +93,7 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 25,000.00',
         side: Positions.UP,
         value: 0,
+        isSpeedMarket: false,
     },
     {
         positionAddress: ZERO_ADDRESS,
@@ -106,6 +106,7 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 35,000.00',
         side: Positions.DOWN,
         value: 0,
+        isSpeedMarket: false,
     },
 ];
 

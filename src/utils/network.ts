@@ -2,7 +2,7 @@ import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-// import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
+import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -10,7 +10,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     ARBITRUM_NETWORK,
-    // BASE_NETWORK,
+    BASE_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
     OPTIMISM_NETWORKS,
     POLYGON_NETWORKS,
@@ -149,8 +149,6 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 2,
     },
-    // TODO: Release on 28.08.
-    /*
     [Network.Base]: {
         name: 'Base',
         icon: BaseLogo,
@@ -160,7 +158,6 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 3,
     },
-    */
 };
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
@@ -170,7 +167,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.RangeMarkets:
@@ -178,7 +175,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Vaults:
@@ -190,7 +187,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Token:
@@ -200,7 +197,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Game:
@@ -208,7 +205,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Profile:
@@ -216,7 +213,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.CreateMarket:
@@ -224,7 +221,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.SpeedMarkets:
@@ -232,11 +229,28 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
                 Network.Arbitrum,
-                // Network.Base, // TODO: Release on 28.08.
+                Network.Base,
                 Network.PolygonMainnet,
             ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
+    }
+};
+
+export const getAPIKeyByNetwork = (networkId: Network) => {
+    switch (networkId) {
+        case Network.OptimismMainnet:
+            return process.env.REACT_APP_OPTIMISM_API_KEY;
+        case Network.OptimismGoerli:
+            return process.env.REACT_APP_OPTIMISM_API_KEY;
+        case Network.Arbitrum:
+            return process.env.REACT_APP_ARBITRUM_API_KEY;
+        case Network.PolygonMainnet:
+            return process.env.REACT_APP_POLYGON_API_KEY;
+        case Network.Base:
+            return process.env.REACT_APP_BASE_API_KEY;
+        default:
+            return 'NOT SUPPORTED';
     }
 };
 

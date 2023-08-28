@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { formatShortDate } from 'utils/formatters/date';
+import { formatShortDate, formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { getAmount, IconLink, TextLink } from '../styled-components';
@@ -17,6 +17,8 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import { orderBy } from 'lodash';
 
 type ClaimablePositionsProps = {
     searchAddress: string;
@@ -41,12 +43,61 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         [claimablePositionsQuery.isSuccess, claimablePositionsQuery.data]
     );
 
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    const userOpenSpeedMarketsData = useMemo(
+        () =>
+            userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
+                ? userActiveSpeedMarketsDataQuery.data
+                : [],
+        [userActiveSpeedMarketsDataQuery]
+    );
+
+    const data: UserPosition[] = useMemo(() => {
+        const speedMarketsOpenPositions: UserPosition[] = userOpenSpeedMarketsData
+            .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable)
+            .map((marketData) => {
+                return {
+                    positionAddress: marketData.positionAddress,
+                    currencyKey: marketData.currencyKey,
+                    strikePrice: marketData.strikePriceNum || 0,
+                    leftPrice: 0,
+                    rightPrice: 0,
+                    finalPrice: marketData.finalPrice || 0,
+                    amount: marketData.amount,
+                    amountBigNumber: marketData.amountBigNumber,
+                    maturityDate: marketData.maturityDate,
+                    expiryDate: marketData.maturityDate,
+                    market: marketData.market,
+                    side: marketData.side,
+                    paid: marketData.paid,
+                    value: marketData.value,
+                    claimable: !!marketData.claimable,
+                    claimed: false,
+                    isRanged: false,
+                    isSpeedMarket: true,
+                };
+            });
+
+        return orderBy(
+            claimablePositions.concat(speedMarketsOpenPositions),
+            ['maturityDate', 'value'],
+            ['asc', 'desc']
+        );
+    }, [claimablePositions, userOpenSpeedMarketsData]);
+
     const filteredData = useMemo(() => {
-        if (searchText === '') return claimablePositions;
-        return claimablePositions.filter(
+        if (searchText === '') return data;
+        return data.filter(
             (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
-    }, [searchText, claimablePositions]);
+    }, [searchText, data]);
 
     const rows = useMemo(() => {
         const generateRows = (data: UserPosition[]) => {
@@ -71,13 +122,15 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                         },
                         {
                             title: t('profile.history.expired'),
-                            value: formatShortDate(row.maturityDate).toUpperCase(),
+                            value: row.isSpeedMarket
+                                ? formatShortDateWithTime(row.maturityDate)
+                                : formatShortDate(row.maturityDate),
                         },
                         {
                             value: <MyPositionAction position={row} isProfileAction />,
                         },
                         {
-                            value: (
+                            value: !row.isSpeedMarket && (
                                 <SPAAnchor
                                     href={
                                         row.isRanged
@@ -127,7 +180,13 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         return [];
     }, [filteredData, isMobile, t, theme]);
 
-    return <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />;
+    return (
+        <TileTable
+            rows={rows as any}
+            isLoading={claimablePositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
+            hideFlow
+        />
+    );
 };
 
 export default ClaimablePositions;

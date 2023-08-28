@@ -136,6 +136,9 @@ const FlexContainer = styled(AlignedFlex)`
     &:nth-child(3) {
         min-width: 130px;
     }
+    &:nth-child(5) {
+        min-width: 140px;
+    }
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { formatShortDate } from 'utils/formatters/date';
+import { formatShortDate, formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { IconLink, getAmount, getStatus } from '../styled-components';
@@ -16,6 +16,9 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useClosedPositionsQuery from 'queries/profile/useClosedPositionsQuery';
+import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
+import { orderBy } from 'lodash';
+import { ZERO_ADDRESS } from 'constants/network';
 
 type PositionHistoryProps = {
     searchAddress: string;
@@ -40,12 +43,55 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         [closedPositionsQuery.isSuccess, closedPositionsQuery.data]
     );
 
+    const closedSpeedMarketsDataQuery = useUserResolvedSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    const closedSpeedMarketsData = useMemo(
+        () =>
+            closedSpeedMarketsDataQuery.isSuccess && closedSpeedMarketsDataQuery.data
+                ? closedSpeedMarketsDataQuery.data
+                : [],
+        [closedSpeedMarketsDataQuery]
+    );
+
+    const data: UserPosition[] = useMemo(() => {
+        const speedMarketsClosedPositions: UserPosition[] = closedSpeedMarketsData.map((marketData) => {
+            return {
+                positionAddress: ZERO_ADDRESS,
+                currencyKey: marketData.currencyKey,
+                strikePrice: marketData.strikePriceNum,
+                leftPrice: 0,
+                rightPrice: 0,
+                finalPrice: marketData.finalPrice,
+                amount: marketData.amount,
+                amountBigNumber: marketData.amountBigNumber,
+                maturityDate: marketData.maturityDate,
+                expiryDate: marketData.maturityDate,
+                market: marketData.market,
+                side: marketData.side,
+                paid: marketData.paid,
+                value: marketData.value,
+                claimable: false,
+                claimed: marketData.isUserWinner,
+                isRanged: false,
+                isSpeedMarket: true,
+            };
+        });
+
+        return orderBy(closedPositions.concat(speedMarketsClosedPositions), ['maturityDate'], ['desc']);
+    }, [closedPositions, closedSpeedMarketsData]);
+
     const filteredData = useMemo(() => {
-        if (searchText === '') return closedPositions;
-        return closedPositions.filter(
+        if (searchText === '') return data;
+        return data.filter(
             (position: UserPosition) => position.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
-    }, [searchText, closedPositions]);
+    }, [searchText, data]);
 
     const rows = useMemo(() => {
         const generateRows = (data: UserPosition[]) => {
@@ -73,13 +119,15 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                         },
                         {
                             title: t('profile.history.expired'),
-                            value: formatShortDate(row.maturityDate).toUpperCase(),
+                            value: row.isSpeedMarket
+                                ? formatShortDateWithTime(row.maturityDate)
+                                : formatShortDate(row.maturityDate),
                         },
                     ];
 
                     if (!isMobile) {
                         cells.push({
-                            value: (
+                            value: !row.isSpeedMarket && (
                                 <SPAAnchor
                                     href={
                                         row.isRanged
