@@ -10,13 +10,16 @@ import { BoldedText, HighlightText } from './components/StakingSteps/styled-comp
 import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrency } from 'utils/formatters/number';
+import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters/TransactionsWithFilters';
+import { TransactionFilterEnum } from 'enums/token';
 
 const RewardsV2: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletconnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const [stakingData, setStakingData] = useState<OverviewData | null>(null);
@@ -77,6 +80,13 @@ const RewardsV2: React.FC = () => {
             <StakingOverview />
             <PointsBreakdown />
             <BaseRewards />
+            {isWalletconnected && (
+                <TransactionsWithFilters
+                    filters={[TransactionFilterEnum.CLAIM_STAKING_REWARDS]}
+                    hideFilters
+                    hideTitle
+                />
+            )}
         </Wrapper>
     );
 };

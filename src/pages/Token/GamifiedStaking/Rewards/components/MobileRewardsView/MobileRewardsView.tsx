@@ -6,9 +6,15 @@ import StakingOverview from '../../../RewardsV2/components/StakingOverview';
 import PointsBreakdown from '../../../RewardsV2/components/PointsBreakdown';
 import StakingStepsMobile from '../../../RewardsV2/components/StakingSteps/StakingStepsMobile';
 import BaseRewards from '../../../RewardsV2/components/BaseRewards';
+import { TransactionFilterEnum } from 'enums/token';
+import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();
+    const isWalletconnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [learnMoreActive, setLearnMoreActive] = useState<boolean>(false);
 
@@ -26,12 +32,24 @@ const MobileRewardsView: React.FC = () => {
             <PointsBreakdown />
             {learnMoreActive && <StakingStepsMobile onClose={() => setLearnMoreActive(false)} />}
             <BaseRewards />
+            <TxWrapper>
+                {isWalletconnected && (
+                    <TransactionsWithFilters
+                        filters={[TransactionFilterEnum.CLAIM_STAKING_REWARDS]}
+                        hideFilters
+                        hideTitle
+                    />
+                )}
+            </TxWrapper>
         </Wrapper>
     );
 };
 
 const Wrapper = styled.div`
     width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 `;
 
 const Header = styled.h1`
@@ -64,6 +82,11 @@ const LearnMoreLabel = styled.span`
 const SecondaryHeader = styled(Header)`
     font-weight: 400;
     margin: 20px 0 10px 0;
+`;
+
+const TxWrapper = styled.div`
+    max-width: calc(100vw - 30px);
+    margin: auto;
 `;
 
 export default MobileRewardsView;
