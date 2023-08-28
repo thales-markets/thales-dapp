@@ -193,7 +193,7 @@ const Referral: React.FC = () => {
             default:
                 link = ROUTES.Options.Home;
         }
-        setReferralLink(`${window.location.origin}${buildReferrerLink(link, reffererId)}`);
+        setReferralLink(`${buildReferrerLink(link, reffererId)}`);
     };
 
     const generateLinkHandler = useCallback(async () => {
