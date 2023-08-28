@@ -145,7 +145,13 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                         onClick={() => {
                                             setOpenTwitterShareModal(true);
                                             setPositionShareData({
-                                                type: row.claimable ? 'resolved' : 'potential',
+                                                type: row.claimable
+                                                    ? row.isSpeedMarket
+                                                        ? 'resolved-speed'
+                                                        : 'resolved'
+                                                    : row.isSpeedMarket
+                                                    ? 'potential-speed'
+                                                    : 'potential',
                                                 position: row.side,
                                                 currencyKey: row.currencyKey,
                                                 strikePrice: row.strikePrice,
