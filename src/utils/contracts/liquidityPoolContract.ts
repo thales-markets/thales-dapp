@@ -7,7 +7,7 @@ const liquidityPoolContract = {
         [Network.OptimismGoerli]: '0x7e98D27847e06261bE499E248060DCD6F7B82303',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
-        [Network.Base]: 'TBD',
+        [Network.Base]: '0x5713ab44042D92C642444bd2F0fee9c2336F9E3b',
     },
     abi: [
         {

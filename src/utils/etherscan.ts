@@ -8,6 +8,8 @@ const getEtherScanBaseURL = (networkId: Network) => {
         return 'https://etherscan.io';
     } else if (networkId === Network.Arbitrum) {
         return 'https://arbiscan.io';
+    } else if (networkId === Network.Base) {
+        return 'https://basescan.org';
     } else if (networkId === Network.PolygonMainnet) {
         return 'https://polygonscan.com';
     }
