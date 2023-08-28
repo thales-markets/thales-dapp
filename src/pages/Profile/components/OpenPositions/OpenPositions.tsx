@@ -18,6 +18,9 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useOpenPositionsQuery from 'queries/profile/useOpenPositionsQuery';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
+import { SharePositionData } from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
@@ -42,6 +45,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
+    const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
     const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
         [CRYPTO_CURRENCY_MAP.BTC]: 0,
         [CRYPTO_CURRENCY_MAP.ETH]: 0,
@@ -181,6 +186,38 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                             value: <MyPositionAction position={row} isProfileAction />,
                         },
                         {
+                            value: (
+                                <>
+                                    <ShareIcon
+                                        className="icon-home icon-home--twitter-x"
+                                        disabled={false}
+                                        onClick={() => {
+                                            setOpenTwitterShareModal(true);
+                                            setPositionShareData({
+                                                type:
+                                                    row.isSpeedMarket && row.claimable
+                                                        ? 'resolved-speed'
+                                                        : row.claimable
+                                                        ? 'resolved'
+                                                        : row.isSpeedMarket
+                                                        ? 'potential-speed'
+                                                        : 'potential',
+                                                position: row.side,
+                                                currencyKey: row.currencyKey,
+                                                strikePrice: row.strikePrice,
+                                                leftPrice: row.leftPrice,
+                                                rightPrice: row.rightPrice,
+                                                strikeDate: row.maturityDate,
+                                                buyIn: row.paid,
+                                                payout: row.amount,
+                                            });
+                                        }}
+                                    />
+                                </>
+                            ),
+                            width: isMobile ? undefined : '20px',
+                        },
+                        {
                             value: !row.isSpeedMarket && (
                                 <SPAAnchor
                                     href={
@@ -233,11 +270,27 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     }, [filteredData, isMobile, exchangeRates, t, theme, currentPrices]);
 
     return (
-        <TileTable
-            rows={rows as any}
-            isLoading={openPositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
-            hideFlow
-        />
+        <>
+            <TileTable
+                rows={rows as any}
+                isLoading={openPositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
+                hideFlow
+            />
+            {positionsShareData !== null && openTwitterShareModal && (
+                <SharePositionModal
+                    type={positionsShareData.type}
+                    position={positionsShareData.position}
+                    currencyKey={positionsShareData.currencyKey}
+                    strikeDate={positionsShareData.strikeDate}
+                    strikePrice={positionsShareData.strikePrice}
+                    leftPrice={positionsShareData.leftPrice}
+                    rightPrice={positionsShareData.rightPrice}
+                    buyIn={positionsShareData.buyIn}
+                    payout={positionsShareData.payout}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
+        </>
     );
 };
 

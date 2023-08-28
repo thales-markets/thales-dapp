@@ -21,6 +21,7 @@ import useInterval from 'hooks/useInterval';
 import { secondsToMilliseconds } from 'date-fns';
 import { refetchUserSpeedMarkets } from 'utils/queryConnector';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
     position: UserLivePositions;
@@ -36,6 +37,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec,
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
     const [isSpeedMarketMatured, setIsSpeedMarketMatured] = useState(
         position.isSpeedMarket && Date.now() > position.maturityDate
     );
@@ -109,6 +111,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec,
                 </FlexContainer>
             </AlignedFlex>
             <MyPositionAction position={position} maxPriceDelaySec={maxPriceDelaySec} />
+            <ShareIcon
+                className="icon-home icon-home--twitter-x"
+                disabled={false}
+                onClick={() => setOpenTwitterShareModal(true)}
+            />
             {!position.isSpeedMarket && (
                 <SPAAnchor
                     href={
@@ -133,6 +140,28 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec,
                         </Tooltip>
                     )}
                 </SPAAnchor>
+            )}
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={
+                        position.claimable
+                            ? position.isSpeedMarket
+                                ? 'resolved-speed'
+                                : 'resolved'
+                            : position.isSpeedMarket
+                            ? 'potential-speed'
+                            : 'potential'
+                    }
+                    position={position.side}
+                    currencyKey={position.currencyKey}
+                    strikeDate={position.maturityDate}
+                    strikePrice={position.strikePrice}
+                    leftPrice={undefined}
+                    rightPrice={undefined}
+                    buyIn={position.paid}
+                    payout={position.amount}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
             )}
         </Position>
     );
@@ -234,6 +263,14 @@ const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: strin
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
     margin-top: ${(props) => props.marginTop || '0px'};
+`;
+
+export const ShareIcon = styled.i<{ disabled: boolean }>`
+    color: ${(props) => props.theme.textColor.secondary};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    font-size: 20px;
+    text-transform: none;
 `;
 
 export default OpenPosition;

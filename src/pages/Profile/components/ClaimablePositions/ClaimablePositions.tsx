@@ -1,5 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
@@ -17,6 +17,10 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import SharePositionModal, {
+    SharePositionData,
+} from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import { orderBy } from 'lodash';
 
@@ -33,6 +37,9 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
+    const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
 
     const claimablePositionsQuery = useClaimablePositionsQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -130,6 +137,37 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                             value: <MyPositionAction position={row} isProfileAction />,
                         },
                         {
+                            value: (
+                                <>
+                                    <ShareIcon
+                                        className="icon-home icon-home--twitter-x"
+                                        disabled={false}
+                                        onClick={() => {
+                                            setOpenTwitterShareModal(true);
+                                            setPositionShareData({
+                                                type: row.claimable
+                                                    ? row.isSpeedMarket
+                                                        ? 'resolved-speed'
+                                                        : 'resolved'
+                                                    : row.isSpeedMarket
+                                                    ? 'potential-speed'
+                                                    : 'potential',
+                                                position: row.side,
+                                                currencyKey: row.currencyKey,
+                                                strikePrice: row.strikePrice,
+                                                leftPrice: row.leftPrice,
+                                                rightPrice: row.rightPrice,
+                                                strikeDate: row.maturityDate,
+                                                buyIn: row.paid,
+                                                payout: row.amount,
+                                            });
+                                        }}
+                                    />
+                                </>
+                            ),
+                            width: isMobile ? undefined : '20px',
+                        },
+                        {
                             value: !row.isSpeedMarket && (
                                 <SPAAnchor
                                     href={
@@ -181,11 +219,27 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
     }, [filteredData, isMobile, t, theme]);
 
     return (
-        <TileTable
-            rows={rows as any}
-            isLoading={claimablePositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
-            hideFlow
-        />
+        <>
+            <TileTable
+                rows={rows as any}
+                isLoading={claimablePositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
+                hideFlow
+            />
+            {positionsShareData !== null && openTwitterShareModal && (
+                <SharePositionModal
+                    type={positionsShareData.type}
+                    position={positionsShareData.position}
+                    currencyKey={positionsShareData.currencyKey}
+                    strikeDate={positionsShareData.strikeDate}
+                    strikePrice={positionsShareData.strikePrice}
+                    leftPrice={positionsShareData.leftPrice}
+                    rightPrice={positionsShareData.rightPrice}
+                    buyIn={positionsShareData.buyIn}
+                    payout={positionsShareData.payout}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
+        </>
     );
 };
 

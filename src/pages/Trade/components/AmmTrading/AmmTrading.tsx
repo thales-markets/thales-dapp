@@ -84,10 +84,12 @@ import {
     Container,
     DetailsIcon,
     FinalizeTrade,
+    ShareIcon,
     TradingDetailsContainer,
 } from './styled-components';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
+import SharePositionModal from './components/SharePositionModal/SharePositionModal';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmTradingProps = {
@@ -143,6 +145,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
     const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     // Still not supporting all collaterals
     const selectedCollateralIndex = useMemo(
@@ -705,6 +708,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             onClick={() => !isDetailsIconDisabled && setOpenTradingDetailsModal(true)}
                         />
                     </Tooltip>
+                    <ShareIcon
+                        className="icon-home icon-home--twitter-x"
+                        disabled={isDetailsIconDisabled}
+                        onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
+                    />
                 </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
@@ -805,6 +813,20 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         />
                     }
                     onClose={() => setOpenTradingDetailsModal(false)}
+                />
+            )}
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type="potential"
+                    position={market.positionType}
+                    currencyKey={currencyKey}
+                    strikeDate={maturityDate}
+                    strikePrice={(market as MarketInfo)?.strikePrice ?? 0}
+                    leftPrice={(market as RangedMarketPerPosition).leftPrice}
+                    rightPrice={(market as RangedMarketPerPosition).rightPrice}
+                    buyIn={Number(paidAmount)}
+                    payout={Number(priceProfit) * Number(paidAmount) + Number(paidAmount)}
+                    onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}
             {openApprovalModal && (
