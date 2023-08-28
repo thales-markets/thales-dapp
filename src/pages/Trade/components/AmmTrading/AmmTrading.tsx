@@ -509,13 +509,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
             const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
 
-            const parsedAmount = isBuy
-                ? ethers.utils.parseEther(positionAmount.toString())
-                : coinParser(paidAmount.toString(), networkId);
+            const amount = isBuy ? positionAmount : paidAmount;
+            const parsedAmount = ethers.utils.parseEther(amount.toString());
 
-            const parsedTotal = isBuy
-                ? coinParser(paidAmount.toString(), networkId)
-                : ethers.utils.parseEther(positionAmount.toString());
+            const total = isBuy ? paidAmount : positionAmount;
+            const parsedTotal = coinParser(total.toString(), networkId);
 
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
 

@@ -25,12 +25,11 @@ import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
     position: UserLivePositions;
-    isSpeedMarkets?: boolean;
     maxPriceDelaySec?: number;
     currentPrices?: { [key: string]: number };
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, maxPriceDelaySec, currentPrices }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec, currentPrices }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -40,13 +39,13 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
     const [isSpeedMarketMatured, setIsSpeedMarketMatured] = useState(
-        isSpeedMarkets && Date.now() > position.maturityDate
+        position.isSpeedMarket && Date.now() > position.maturityDate
     );
 
     const isRanged = [Positions.IN, Positions.OUT].includes(position.side);
 
     useInterval(() => {
-        if (isSpeedMarkets && Date.now() > position.maturityDate) {
+        if (position.isSpeedMarket && Date.now() > position.maturityDate) {
             if (!isSpeedMarketMatured) {
                 setIsSpeedMarketMatured(true);
             }
@@ -60,11 +59,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
         <Position>
             <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
             <AlignedFlex>
-                <FlexContainer firstChildWidth={isSpeedMarkets ? '130px' : undefined}>
+                <FlexContainer firstChildWidth={position.isSpeedMarket ? '130px' : undefined}>
                     <Label>{position.currencyKey}</Label>
                     <Value>{position.strikePrice}</Value>
                 </FlexContainer>
-                {isSpeedMarkets && (
+                {position.isSpeedMarket && (
                     <>
                         <Separator />
                         <FlexContainer secondChildWidth="140px">
@@ -91,7 +90,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 <Separator />
                 <FlexContainer>
                     <Label>
-                        {isSpeedMarkets
+                        {position.isSpeedMarket
                             ? t('speed-markets.user-positions.end-time')
                             : t('markets.user-positions.end-date')}
                     </Label>
@@ -111,13 +110,13 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <MyPositionAction position={position} isSpeedMarkets={isSpeedMarkets} maxPriceDelaySec={maxPriceDelaySec} />
+            <MyPositionAction position={position} maxPriceDelaySec={maxPriceDelaySec} />
             <ShareIcon
                 className="icon-home icon-home--twitter-x"
                 disabled={false}
                 onClick={() => setOpenTwitterShareModal(true)}
             />
-            {!isSpeedMarkets && (
+            {!position.isSpeedMarket && (
                 <SPAAnchor
                     href={
                         isRanged
@@ -146,10 +145,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, isSpeedMarkets, m
                 <SharePositionModal
                     type={
                         position.claimable
-                            ? isSpeedMarkets
+                            ? position.isSpeedMarket
                                 ? 'resolved-speed'
                                 : 'resolved'
-                            : isSpeedMarkets
+                            : position.isSpeedMarket
                             ? 'potential-speed'
                             : 'potential'
                     }

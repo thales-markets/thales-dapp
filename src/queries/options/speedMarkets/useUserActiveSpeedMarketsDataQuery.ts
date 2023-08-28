@@ -81,10 +81,11 @@ const useUserActiveSpeedMarketsDataQuery = (
                                 : 0;
 
                         isClaimable =
-                            (side === Positions.UP &&
+                            !!price &&
+                            ((side === Positions.UP &&
                                 price >= bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
-                            (side === Positions.DOWN &&
-                                price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS));
+                                (side === Positions.DOWN &&
+                                    price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)));
                     }
 
                     const userData: UserLivePositions = {
@@ -94,6 +95,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                             USD_SIGN,
                             bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
                         ),
+                        strikePriceNum: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
@@ -103,6 +105,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                         value: payout,
                         claimable: isClaimable,
                         finalPrice: price,
+                        isSpeedMarket: true,
                     };
 
                     userSpeedMarketsData.push(userData);

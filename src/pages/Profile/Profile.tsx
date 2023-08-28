@@ -37,6 +37,7 @@ import UserVaultsLp from './components/UserVaultsLp';
 import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -57,10 +58,26 @@ const Profile: React.FC = () => {
     const [searchAddress, setSearchAddress] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
 
-    const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
+    const notificationsQuery = useUserNotificationsQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
     const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
+
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+    const speedMarketsNotifications =
+        userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
+            ? userActiveSpeedMarketsDataQuery.data.filter(
+                  (marketData) => marketData.maturityDate < Date.now() && marketData.claimable
+              ).length
+            : 0;
+
+    const totalNotifications = notifications + speedMarketsNotifications;
 
     const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -84,18 +101,10 @@ const Profile: React.FC = () => {
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
             setSearchAddress(searchText.toLowerCase());
-        }
-
-        if (searchText == '') {
+        } else {
             setSearchAddress('');
         }
-    }, [searchText, searchAddress]);
-
-    useEffect(() => {
-        if (searchAddress?.toLowerCase() !== searchText?.toLowerCase() && searchText !== '') {
-            setSearchAddress('');
-        }
-    }, [searchAddress, searchText]);
+    }, [searchText]);
 
     const onTabClickHandler = (tab: NavItems) => {
         history.push({
@@ -172,7 +181,7 @@ const Profile: React.FC = () => {
                             active={view === NavItems.MyPositions}
                         >
                             {t('profile.tabs.my-positions')}
-                            {notifications > 0 && <Notification>{notifications}</Notification>}
+                            {totalNotifications > 0 && <Notification>{totalNotifications}</Notification>}
                         </NavItem>
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('profile.tabs.history')}
@@ -207,13 +216,19 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.History && (
                             <>
-                                <ProfileSection title={t('profile.accordions.transaction-history')}>
+                                <ProfileSection
+                                    title={t('profile.accordions.transaction-history')}
+                                    subtitle={t('profile.history-limit', { days: MARKET_DURATION_IN_DAYS })}
+                                >
                                     <TransactionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}
                                     />
                                 </ProfileSection>
-                                <ProfileSection title={t('profile.accordions.position-history')}>
+                                <ProfileSection
+                                    title={t('profile.accordions.position-history')}
+                                    subtitle={t('profile.history-limit', { days: MARKET_DURATION_IN_DAYS })}
+                                >
                                     <PositionHistory
                                         searchAddress={searchAddress}
                                         searchText={searchAddress ? '' : searchText}

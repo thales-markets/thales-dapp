@@ -26,16 +26,18 @@ const ClosedPositions: React.FC = () => {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const userResolvedPositions = useMemo(
+    const lastTenUserResolvedPositions = useMemo(
         () =>
             userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
                 ? userResolvedSpeedMarketsDataQuery.data
+                      .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
+                      .slice(-10)
                 : [],
         [userResolvedSpeedMarketsDataQuery]
     );
 
-    const noPositions = userResolvedPositions.length === 0;
-    const positions = noPositions ? dummyPositions : userResolvedPositions;
+    const noPositions = lastTenUserResolvedPositions.length === 0;
+    const positions = noPositions ? dummyPositions : lastTenUserResolvedPositions;
 
     return (
         <Wrapper>
@@ -69,6 +71,7 @@ const dummyPositions: UserClosedPositions[] = [
         paid: 100,
         maturityDate: 1684483200000,
         strikePrice: '$ 25,000.00',
+        strikePriceNum: 25000,
         side: Positions.UP,
         value: 0,
         finalPrice: 30000,
@@ -82,6 +85,7 @@ const dummyPositions: UserClosedPositions[] = [
         paid: 200,
         maturityDate: 1684483200000,
         strikePrice: '$ 35,000.00',
+        strikePriceNum: 35000,
         side: Positions.DOWN,
         value: 0,
         finalPrice: 30000,

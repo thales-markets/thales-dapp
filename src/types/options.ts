@@ -212,6 +212,7 @@ export type UserLivePositions = {
     positionAddress: string;
     currencyKey: string;
     strikePrice: string;
+    strikePriceNum?: number;
     amount: number;
     amountBigNumber: BigNumber;
     maturityDate: number;
@@ -219,6 +220,7 @@ export type UserLivePositions = {
     side: Positions;
     paid: number;
     value: number;
+    isSpeedMarket: boolean;
     claimable?: boolean;
     finalPrice?: number;
     user?: string;
@@ -227,6 +229,7 @@ export type UserLivePositions = {
 export type UserClosedPositions = {
     currencyKey: string;
     strikePrice: string;
+    strikePriceNum: number;
     amount: number;
     amountBigNumber: BigNumber;
     maturityDate: number;
@@ -250,4 +253,16 @@ export type AmmSpeedMarketsLimits = {
     lpFee: number;
     safeBoxImpact: number;
     whitelistedAddress: boolean;
+};
+
+export type SpeedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: string;
+    strikePrice: number;
+    maturityDate: number;
+    isOpen: boolean;
+    result: OptionSide | null;
+    finalPrice?: number;
+    isSpeedMarket: boolean;
 };

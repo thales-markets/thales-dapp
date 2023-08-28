@@ -48,7 +48,6 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
-        "coming-soon": "Coming Soon!",
         "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
@@ -1496,6 +1495,7 @@
         "strike-price": "Strike price",
         "final-price": "Final price",
         "current-price": "Current price",
+        "current-price-tooltip": "This is a Speed Market position that uses Pyth oracles for querying the current price",
         "claimed": "CLAIMED",
         "rip": "RIP",
         "chart-info": {
@@ -1503,16 +1503,17 @@
             "claimable": "Claimable"
         },
         "winnings-are-forfeit": "* Winnings not claimed within {{days}} days of a market being resolved are forfeit.",
+        "history-limit": "* Showing only markets with expiry date not older than {{days}} days.",
         "tabs": {
             "my-positions": "My Positions",
             "history": "History",
             "vaults-lp": "Vaults/LP"
         },
         "accordions": {
-            "claimable-positions": "Claimable positions",
-            "open-positions": "Open positions",
-            "position-history": "Position history",
-            "transaction-history": "Transaction history"
+            "claimable-positions": "Claimable Positions",
+            "open-positions": "Open Positions",
+            "position-history": "Position History",
+            "transaction-history": "Transaction History"
         },
         "search-placeholder": "Search wallet",
         "history": {
@@ -1562,6 +1563,7 @@
         }
     },
     "banner": {
-        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!"
+        "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
+        "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!"
     }
 }

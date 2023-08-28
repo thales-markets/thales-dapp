@@ -11,7 +11,6 @@ import { parseBytes32String } from 'ethers/lib/utils.js';
 import { ethers } from 'ethers';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
-import { orderBy } from 'lodash';
 
 const useOpenPositionsQuery = (
     networkId: Network,
@@ -124,6 +123,7 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...openRangedPositionsWithValue.map((positionBalance: any) => {
@@ -145,11 +145,12 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
+                        isSpeedMarket: false,
                     };
                 }),
             ];
 
-            return orderBy(modifiedOpenPositions, ['maturityDate', 'value'], ['asc', 'desc']);
+            return modifiedOpenPositions;
         },
         options
     );
