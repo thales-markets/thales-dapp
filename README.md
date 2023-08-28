@@ -38,11 +38,16 @@ Then, open `.env.local` and add the missing environment variables:
 
 -   `REACT_APP_INFURA_PROJECT_ID` - Infura project id (get it from [infura.io](https://infura.io/)).
 -   `REACT_APP_CHAINNODE_PROJECT_ID` - Chainnodes project id (get it from [chainnodes.org](https://app.chainnodes.org/)).
+-   `REACT_APP_ANKR_PROJECT_ID` - Ankr project id (get it from [ankr.com](https://www.ankr.com/rpc/account/)).
 -   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thalesmarket.io`.
 -   `REACT_APP_IPFS_DEPLOYMENT` - Is dApp in the mode for deployment on IPFS. Set to `false`.
 -   `REACT_APP_BUNGEE_API_KEY` - Bungee API key.
 -   `REACT_APP_SNAPSHOT_API_KEY` - The Snapshot API KEY.
 -   `REACT_APP_WALLET_CONNECT_PROJECT_ID` - WalletConnect project id (get it from [WalletConnect Cloud](https://cloud.walletconnect.com/)).
+-   `REACT_APP_OPTIMISM_API_KEY` - Optimism API key (get it from [Getting an API key](https://docs.optimism.etherscan.io/getting-started/viewing-api-usage-statistics))
+-   `REACT_APP_ARBITRUM_API_KEY` - Arbitrum API key (get it from [Getting an API key](https://docs.arbiscan.io/getting-started/viewing-api-usage-statistics))
+-   `REACT_APP_POLYGON_API_KEY` - Polygon API key (get it from [Getting an API key](https://docs.polygonscan.com/getting-started/viewing-api-usage-statistics))
+-   `REACT_APP_BASE_API_KEY` - Base API key (get it from [Getting an API key](https://docs.basescan.org/getting-started/viewing-api-usage-statistics))
 
 ### Set up Google Translate API
 

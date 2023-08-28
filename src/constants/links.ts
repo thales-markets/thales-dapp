@@ -61,6 +61,9 @@ export const LINKS = {
     ThalesAPI: {
         medium: `${generalConfig.API_URL}/medium`,
     },
+    Markets: {
+        Home: 'https://thalesmarket.io/markets',
+    },
     TradingIncentives: {
         TIP53:
             'https://thalesmarket.io/governance/thalesgov.eth/0xc0dffa06291784ddfc2364d8534ef4d9300176050b374952f231d11989a805a1',
@@ -73,4 +76,5 @@ export const LINKS = {
         'https://app.uniswap.org/#/swap?outputCurrency=0xE85B662Fe97e8562f4099d8A1d5A92D4B453bF30&chain=arbitrum',
     ThalesStaking: 'https://thalesmarket.io/token',
     ThalesTip139: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-139.md',
+    TwitterTweetStatus: 'https://twitter.com/intent/tweet?text=',
 };

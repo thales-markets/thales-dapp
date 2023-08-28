@@ -56,16 +56,10 @@ const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
-    isSpeedMarkets?: boolean;
     maxPriceDelaySec?: number;
 };
 
-const MyPositionAction: React.FC<MyPositionActionProps> = ({
-    position,
-    isProfileAction,
-    isSpeedMarkets,
-    maxPriceDelaySec,
-}) => {
+const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction, maxPriceDelaySec }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
@@ -342,7 +336,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     };
 
     const getButton = () => {
-        if (isSpeedMarkets) {
+        if (position.isSpeedMarket) {
             if (position.claimable) {
                 return (
                     <Button
@@ -374,8 +368,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             } else {
                 return (
                     <>
-                        <Separator />
-                        <ResultsContainer>
+                        {!isProfileAction && <Separator />}
+                        <ResultsContainer minWidth="180px">
                             <Label>{t('markets.user-positions.results')}</Label>
                             <TimeRemaining
                                 fontSize={13}
@@ -515,13 +509,13 @@ const PositionValueContainer = styled(FlexDivColumnCentered)`
     text-align: center;
 `;
 
-const ResultsContainer = styled(FlexDivCentered)`
+const ResultsContainer = styled(FlexDivCentered)<{ minWidth?: string }>`
     gap: 4px;
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
     white-space: nowrap;
-    min-width: 174px;
+    min-width: ${(props) => (props.minWidth ? props.minWidth : '174px')};
 `;
 
 const Label = styled.span`

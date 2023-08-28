@@ -22,7 +22,7 @@ export const buildRangeMarketLink = (marketAddress: string, position?: string) =
     }`;
 
 export const buildReferrerLink = (route: string, referralId: string) => {
-    return `${ifIpfsDeployment ? '#' : ''}${route}?referrerId=${referralId}`;
+    return `${location.protocol}//${location.host ? location.host : ''}${route}?referrerId=${referralId}`;
 };
 
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;

@@ -358,6 +358,14 @@
     content: '\0061';
 }
 
+.icon__arrow:before {
+    content: '\005C';
+}
+
+.icon__network::before {
+    content: '\0063';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);

@@ -10,7 +10,6 @@ import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
 import { isOptionClaimable } from 'utils/options';
-import { orderBy } from 'lodash';
 
 const useClosedPositionsQuery = (
     networkId: Network,
@@ -80,6 +79,7 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedRipPositions.map((positionBalance: any) => {
@@ -101,6 +101,7 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
+                        isSpeedMarket: false,
                     };
                 }),
             ];
@@ -186,7 +187,7 @@ const useClosedPositionsQuery = (
 
             const modifiedClaimedPositions: UserPosition[] = [...claimedPositions, ...claimedRangedPositions];
 
-            return orderBy([...modifiedClaimedPositions, ...modifiedRipPositions], ['maturityDate'], ['desc']);
+            return [...modifiedClaimedPositions, ...modifiedRipPositions];
         },
         options
     );

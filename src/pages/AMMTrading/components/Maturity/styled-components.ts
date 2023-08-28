@@ -73,3 +73,13 @@ export const LoaderContainer = styled(FlexDivCentered)`
 export const additionalButtonStyle: CSSProperties = {
     border: 'none',
 };
+
+export const ShareIcon = styled.i<{ disabled: boolean }>`
+    color: ${(props) => props.theme.textColor.secondary};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    font-size: 20px;
+    margin-top: 10px;
+    align-items: center;
+    text-align: center;
+`;

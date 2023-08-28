@@ -9,7 +9,6 @@ import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
-import { orderBy } from 'lodash';
 
 const useClaimablePositionsQuery = (
     networkId: Network,
@@ -79,6 +78,7 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: false,
+                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
@@ -100,11 +100,12 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: true,
+                        isSpeedMarket: false,
                     };
                 }),
             ];
 
-            return orderBy(modifiedClaimablePositions, ['maturityDate', 'value'], ['asc', 'desc']);
+            return modifiedClaimablePositions;
         },
         options
     );

@@ -48,7 +48,6 @@
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
-        "coming-soon": "Coming Soon!",
         "liquidity": "Liquidity",
         "time-remaining": {
             "ended": "ended",
@@ -179,6 +178,24 @@
         },
         "tooltip": {
             "open-market": "Go to Market page"
+        },
+        "flex-card": {
+            "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial perimutuel</bold> markets",
+            "strike-price": "Strike price",
+            "strike-date": "Strike date",
+            "entry-price": "Entry price",
+            "market-duration": "Market duration",
+            "buy-in": "Buy-In",
+            "potential-win": "Potential win",
+            "share": "Share",
+            "won": "Won",
+            "open-twitter": "Opening Twitter...",
+            "save-image": "Saving image to clipboard. Please wait...",
+            "save-image-error": "Failed to save image! Try again",
+            "save-image-cancel": "Image saving canceled!",
+            "click-open-twitter": "Click here to open Twitter",
+            "download-image": "Downloading image. Please wait...",
+            "image-in-clipboard": "Image is in clipboard!"
         }
     },
     "landing-page": {
@@ -1478,6 +1495,7 @@
         "strike-price": "Strike price",
         "final-price": "Final price",
         "current-price": "Current price",
+        "current-price-tooltip": "This is a Speed Market position that uses Pyth oracles for querying the current price",
         "claimed": "CLAIMED",
         "rip": "RIP",
         "chart-info": {
@@ -1485,16 +1503,17 @@
             "claimable": "Claimable"
         },
         "winnings-are-forfeit": "* Winnings not claimed within {{days}} days of a market being resolved are forfeit.",
+        "history-limit": "* Showing only markets with expiry date not older than {{days}} days.",
         "tabs": {
             "my-positions": "My Positions",
             "history": "History",
             "vaults-lp": "Vaults/LP"
         },
         "accordions": {
-            "claimable-positions": "Claimable positions",
-            "open-positions": "Open positions",
-            "position-history": "Position history",
-            "transaction-history": "Transaction history"
+            "claimable-positions": "Claimable Positions",
+            "open-positions": "Open Positions",
+            "position-history": "Position History",
+            "transaction-history": "Transaction History"
         },
         "search-placeholder": "Search wallet",
         "history": {

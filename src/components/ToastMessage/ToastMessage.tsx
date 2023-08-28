@@ -60,7 +60,7 @@ const CloseIcon = styled.i`
     color: ${(props) => props.theme.toastMessages.error.textColor.primary};
 `;
 
-const toastBasicProperties = {
+export const toastBasicProperties = {
     position: 'top-right' as ToastPosition,
     autoClose: 7000, // 7s
     hideProgressBar: false,
