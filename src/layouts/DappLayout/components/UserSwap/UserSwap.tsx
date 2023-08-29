@@ -157,8 +157,8 @@ const UserSwap: React.FC = () => {
         if (!showSwap && SWAP_SUPPORTED_NETWORKS.includes(networkId)) {
             setSwapToStableCoin(coinType);
             isWalletConnected && setShowSwap(true);
-            dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, coinType)));
         }
+        dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, coinType)));
     };
 
     const closeSwap = (isShowSwap: boolean) => {

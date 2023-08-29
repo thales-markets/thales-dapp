@@ -121,7 +121,8 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: false,
-                        finalPrice: prices[currencyKey],
+                        finalPrice: 0,
+                        currentPrice: prices[currencyKey],
                         user: marketsData.user,
                         isSpeedMarket: true,
                     };

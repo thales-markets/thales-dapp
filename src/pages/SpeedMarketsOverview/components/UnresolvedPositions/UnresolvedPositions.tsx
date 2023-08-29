@@ -143,7 +143,7 @@ const UnresolvedPositions: React.FC = () => {
                     console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
                 }
             }
-            console.log(marketsToResolve, finalPrices);
+
             if (marketsToResolve.length > 0) {
                 try {
                     const tx: ethers.ContractTransaction = isAdmin

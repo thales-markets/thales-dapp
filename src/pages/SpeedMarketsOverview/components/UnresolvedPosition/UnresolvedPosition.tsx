@@ -48,13 +48,19 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                         {position.maturityDate < Date.now() ? t('profile.final-price') : t('profile.current-price')}
                     </Label>
                     <Value>
-                        {position.finalPrice ? (
-                            formatCurrencyWithPrecision(position.finalPrice)
+                        {position.maturityDate < Date.now() ? (
+                            position.finalPrice ? (
+                                formatCurrencyWithPrecision(position.finalPrice)
+                            ) : (
+                                <>
+                                    {'. . .'}
+                                    <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                </>
+                            )
+                        ) : position.currentPrice ? (
+                            formatCurrencyWithPrecision(position.currentPrice)
                         ) : (
-                            <>
-                                {'. . .'}
-                                <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
-                            </>
+                            '. . .'
                         )}
                     </Value>
                 </FlexContainer>
