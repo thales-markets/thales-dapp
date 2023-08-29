@@ -223,6 +223,7 @@ export type UserLivePositions = {
     isSpeedMarket: boolean;
     claimable?: boolean;
     finalPrice?: number;
+    currentPrice?: number;
     user?: string;
 };
 
