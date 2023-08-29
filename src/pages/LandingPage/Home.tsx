@@ -64,8 +64,8 @@ const Home: React.FC = () => {
                     <SPAAnchor href={buildHref(ROUTES.Options.Home)}>
                         <Thales className="icon-home icon-home--thales" />
                     </SPAAnchor>
-                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
-                        <ThalesRoyale className="icon-home icon-home--royale" />
+                    <SPAAnchor href={buildHref(ROUTES.Options.SpeedMarkets)}>
+                        <SpeedMarkets className="icon-home icon-home--speed" />
                     </SPAAnchor>
                     <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
                         <ThalesGame className="icon-home icon-home--game" />
@@ -76,19 +76,22 @@ const Home: React.FC = () => {
                     <a target="_blank" rel="noreferrer" href="https://synthetix.io/">
                         <SNX className="icon-home icon-home--snx" />
                     </a>
-                    <a target="_blank" rel="noreferrer" href="https://1inch.io/">
-                        <INCH className="icon-home icon-home--inch" />
-                    </a>
-                </FlexDiv>
-                <FlexDiv>
                     <a target="_blank" rel="noreferrer" href="https://chain.link/">
                         <LINK className="icon-home icon-home--link" />
                     </a>
+                </FlexDiv>
+                <FlexDiv>
                     <a target="_blank" rel="noreferrer" href="https://www.optimism.io/">
                         <OPTIMISM className="icon-home icon-home--optimism" />
                     </a>
+                    <a target="_blank" rel="noreferrer" href="https://arbitrum.io/">
+                        <ARBITRUM className="icon-home icon-home--arbitrum" />
+                    </a>
                 </FlexDiv>
                 <FlexDiv>
+                    <a target="_blank" rel="noreferrer" href="https://base.org/">
+                        <BASE className="icon-home icon-home--base" />
+                    </a>
                     <a target="_blank" rel="noreferrer" href="https://polygon.technology/">
                         <OPTIMISM className="icon-home icon-home--polygon" />
                     </a>
@@ -224,13 +227,15 @@ const Thales = styled(IconAbs)`
         padding: 0 10px;
     }
 `;
-const ThalesRoyale = styled(IconAbs)`
-    font-size: 12em;
+const SpeedMarkets = styled(IconAbs)`
+    font-size: 20em;
+    margin-bottom: -50px;
     @media (max-width: 600px) {
-        font-size: 7em;
+        font-size: 12em;
     }
     @media (max-width: 450px) {
         padding: 0 10px;
+        margin-bottom: -25px;
     }
 `;
 const ThalesGame = styled(IconAbs)`
@@ -265,6 +270,7 @@ const SNX = styled(IconAbs)`
         font-size: 10em;
     }
 `;
+
 const OPTIMISM = styled(IconAbs)`
     font-size: 20em;
     line-height: 0.5em;
@@ -272,14 +278,28 @@ const OPTIMISM = styled(IconAbs)`
         font-size: 10em;
     }
 `;
-const LINK = styled(IconAbs)`
+
+const ARBITRUM = styled(IconAbs)`
     font-size: 20em;
     line-height: 0.5em;
+    margin-bottom: -35px;
     @media (max-width: 600px) {
         font-size: 10em;
+        margin-bottom: -20px;
     }
 `;
-const INCH = styled(IconAbs)`
+
+const BASE = styled(IconAbs)`
+    font-size: 16em;
+    line-height: 0.5em;
+    margin-bottom: -40px;
+    @media (max-width: 600px) {
+        font-size: 8em;
+        margin-bottom: -15px;
+    }
+`;
+
+const LINK = styled(IconAbs)`
     font-size: 20em;
     line-height: 0.5em;
     @media (max-width: 600px) {
