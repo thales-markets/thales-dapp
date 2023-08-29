@@ -22,9 +22,17 @@ type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
     gridColumns?: number;
     gridColumnStart?: number;
+    hideFilters?: boolean;
+    hideTitle?: boolean;
 };
 
-const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filters, gridColumns, gridColumnStart }) => {
+const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
+    filters,
+    gridColumns,
+    gridColumnStart,
+    hideFilters,
+    hideTitle,
+}) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -68,44 +76,49 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
             gridColumns={gridColumns}
             gridColumnStart={gridColumnStart}
         >
-            <SectionHeader>{t('thales-token.table.title')}</SectionHeader>
-            <FilterWrapper>
-                <FilterContainer
-                    onMouseEnter={() => (isMobile ? '' : setShowFilters(true))}
-                    onMouseLeave={() => setShowFilters(false)}
-                >
-                    <Button
-                        height="30px"
-                        padding="5px 40px"
-                        fontSize="15px"
-                        textColor={theme.button.textColor.secondary}
-                        backgroundColor={theme.button.background.tertiary}
-                        borderColor={theme.button.borderColor.tertiary}
-                        onClick={() => setShowFilters(!showFilters)}
+            {!hideTitle && <SectionHeader>{t('thales-token.table.title')}</SectionHeader>}
+
+            {!hideFilters && (
+                <FilterWrapper>
+                    <FilterContainer
+                        onMouseEnter={() => (isMobile ? '' : setShowFilters(true))}
+                        onMouseLeave={() => setShowFilters(false)}
                     >
-                        {t(`thales-token.table.filter.button`)}
-                    </Button>
-                    <DropDownWrapper hidden={!showFilters}>
-                        <DropDown>
-                            {filters.map((filterItem) => {
-                                if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND) return null;
-                                return (
-                                    <FilterText
-                                        onClick={() => {
-                                            setFilter(filterItem);
-                                            setShowFilters(false);
-                                        }}
-                                        className={filter === filterItem ? 'selected' : ''}
-                                        key={filterItem}
-                                    >
-                                        {t(`thales-token.table.filter.${filterItem}`)}
-                                    </FilterText>
-                                );
-                            })}
-                        </DropDown>
-                    </DropDownWrapper>
-                </FilterContainer>
-            </FilterWrapper>
+                        <Button
+                            height="30px"
+                            padding="5px 40px"
+                            fontSize="15px"
+                            textColor={theme.button.textColor.secondary}
+                            backgroundColor={theme.button.background.tertiary}
+                            borderColor={theme.button.borderColor.tertiary}
+                            onClick={() => setShowFilters(!showFilters)}
+                        >
+                            {t(`thales-token.table.filter.button`)}
+                        </Button>
+                        <DropDownWrapper hidden={!showFilters}>
+                            <DropDown>
+                                {filters.map((filterItem) => {
+                                    if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND)
+                                        return null;
+                                    return (
+                                        <FilterText
+                                            onClick={() => {
+                                                setFilter(filterItem);
+                                                setShowFilters(false);
+                                            }}
+                                            className={filter === filterItem ? 'selected' : ''}
+                                            key={filterItem}
+                                        >
+                                            {t(`thales-token.table.filter.${filterItem}`)}
+                                        </FilterText>
+                                    );
+                                })}
+                            </DropDown>
+                        </DropDownWrapper>
+                    </FilterContainer>
+                </FilterWrapper>
+            )}
+
             <SectionContent>
                 <TransactionsTable
                     transactions={filteredTransactions}
