@@ -135,11 +135,10 @@ const PotentialWinContainer = styled(FlexDiv)`
 `;
 
 const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
-    display: 'flex';
-    align-items: 'center';
-    justify-content: 'center';
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
-    line-height: 91.523%;
     font-size: 35px;
     font-weight: 400;
     letter-spacing: 1.755px;
