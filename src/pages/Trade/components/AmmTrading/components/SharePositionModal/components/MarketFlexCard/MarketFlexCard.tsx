@@ -135,9 +135,9 @@ const PotentialWinContainer = styled(FlexDiv)`
 `;
 
 const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
-    display: ${(props) => (props.type == 'potential' ? 'flex' : 'flex')};
-    align-items: ${(props) => (props.type == 'potential' ? 'center' : 'center')};
-    justify-content: ${(props) => (props.type == 'potential' ? 'center' : 'center')};
+    display: 'flex';
+    align-items: 'center';
+    justify-content: 'center';
     color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
     line-height: 91.523%;
     font-size: 35px;
@@ -181,7 +181,7 @@ const PositionInfo = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: ${(props) => (props.type == 'potential' ? '' : '100px')};
+    margin-top: ${(props) => (props.type == 'potential' ? '50px' : '100px')};
 `;
 
 const CurrencyIcon = styled.i`
