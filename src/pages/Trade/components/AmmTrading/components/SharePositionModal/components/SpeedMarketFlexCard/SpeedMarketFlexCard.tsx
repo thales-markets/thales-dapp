@@ -63,12 +63,10 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
                     <ItemName type={type}>{t('common.flex-card.strike-date')}</ItemName>
                     <Value type={type}>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
-                {type == 'resolved-speed' && (
-                    <MarketDetailsItemContainer type={type}>
-                        <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
-                        <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
-                    </MarketDetailsItemContainer>
-                )}
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
+                    <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
+                </MarketDetailsItemContainer>
             </MarketDetailsContainer>
             <SpeedMarketsFooter />
         </Container>
