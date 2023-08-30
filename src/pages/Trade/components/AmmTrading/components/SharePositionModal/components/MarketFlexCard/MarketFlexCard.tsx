@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ZeusPotentialWinBackground from 'assets/images/zeus-potential-win.png';
+import ZeusPotentialWinBackground from 'assets/images/flex-cards/potential.png';
 import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
 import Footer from '../Footer/Footer';
 import { FlexDiv } from 'styles/common';
@@ -77,7 +77,9 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
                 </MarketDetailsItemContainer>
                 <MarketDetailsItemContainer type={type}>
                     <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
-                    <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
+                    <Value type={type} green={type == 'potential' ? true : false}>
+                        {formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}
+                    </Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
             {type == 'potential' && <Footer />}
@@ -86,7 +88,8 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
 };
 
 const Container = styled.div<{ type?: SharePositionType }>`
-    border: 10px solid ${(props) => (props.type == 'potential' ? '#03dac5' : '#9b8327')};
+    border: 10px solid
+        ${(props) => (props.type == 'potential' ? props.theme.flexCard.up : props.theme.flexCard.resolved)};
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -114,7 +117,7 @@ const MarketDetailsItemContainer = styled(FlexDiv)<{ type: SharePositionType }>`
 
 const ItemName = styled.span<{ type: SharePositionType }>`
     text-transform: capitalize;
-    color: #808997;
+    color: ${(props) => (props.type == 'potential' ? props.theme.textColor.primary : props.theme.flexCard.text)};
     font-size: ${(props) => (props.type == 'potential' ? '18px' : '13px')};
     font-weight: 700;
 `;
@@ -123,7 +126,7 @@ const Value = styled.span<{ green?: boolean; type: SharePositionType }>`
     font-weight: 700;
     text-transform: capitalize;
     font-size: ${(props) => (props.type == 'potential' ? '18px' : '13px')};
-    color: ${(props) => (props.green ? '#03DAC6' : props.theme.textColor.primary)};
+    color: ${(props) => (props.green ? props.theme.flexCard.up : props.theme.textColor.primary)};
 `;
 
 const PotentialWinContainer = styled(FlexDiv)`
@@ -133,12 +136,13 @@ const PotentialWinContainer = styled(FlexDiv)`
 `;
 
 const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
-    display: ${(props) => (props.type == 'potential' ? '' : 'flex')};
-    align-items: ${(props) => (props.type == 'potential' ? '' : 'center')};
-    justify-content: ${(props) => (props.type == 'potential' ? '' : 'center')};
-    color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${(props) => (props.type == 'potential' ? props.theme.flexCard.up : props.theme.textColor.primary)};
     font-size: 35px;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: 1.755px;
     text-transform: uppercase;
     text-align: center;
     ::before {
@@ -147,8 +151,9 @@ const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
         margin: 0px 5px;
         transform: rotate(45deg);
         content: '';
-        display: ${(props) => (props.type == 'potential' ? 'none' : 'inline-block')};
-        background-color: ${(props) => props.theme.textColor.primary};
+        display: inline-block;
+        background-color: ${(props) =>
+            props.type == 'potential' ? props.theme.flexCard.up : props.theme.textColor.primary};
     }
     ::after {
         width: 13px;
@@ -156,8 +161,9 @@ const PotentialWinHeading = styled.span<{ type: SharePositionType }>`
         height: 13px;
         transform: rotate(45deg);
         content: '';
-        display: ${(props) => (props.type == 'potential' ? 'none' : 'inline-block')};
-        background-color: ${(props) => props.theme.textColor.primary};
+        display: inline-block;
+        background-color: ${(props) =>
+            props.type == 'potential' ? props.theme.flexCard.up : props.theme.textColor.primary};
     }
 `;
 
@@ -165,9 +171,9 @@ const PotentialWin = styled.div<{ type: SharePositionType }>`
     display: ${(props) => (props.type == 'potential' ? '' : 'flex')};
     align-items: ${(props) => (props.type == 'potential' ? '' : 'center')};
     justify-content: ${(props) => (props.type == 'potential' ? '' : 'center')};
-    color: ${(props) => (props.type == 'potential' ? '#03dac6' : props.theme.textColor.primary)};
-    font-size: 35px;
-    font-weight: 300;
+    color: ${(props) => (props.type == 'potential' ? props.theme.flexCard.up : props.theme.textColor.primary)};
+    font-size: 45px;
+    font-weight: 800;
     text-transform: uppercase;
     text-align: center;
     color: ${(props) => (props.type == 'potential' ? '' : '100px')};
@@ -177,7 +183,7 @@ const PositionInfo = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: ${(props) => (props.type == 'potential' ? '' : '100px')};
+    margin-top: ${(props) => (props.type == 'potential' ? '50px' : '100px')};
 `;
 
 const CurrencyIcon = styled.i`

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import UpBackground from 'assets/images/flex-cards/speed-markets-up-background.png';
-import DownBackground from 'assets/images/flex-cards/speed-markets-down-background.png';
+import UpBackground from 'assets/images/flex-cards/up-background.png';
+import DownBackground from 'assets/images/flex-cards/down-background.png';
 import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/currency';
@@ -12,10 +12,6 @@ import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
-
-const DOWN_BORDER_COLOR = '#DE496D';
-const UP_BORDER_COLOR = '#03DAC5';
-const RESOLVED_COLOR = '#9b8327';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
@@ -63,12 +59,10 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
                     <ItemName type={type}>{t('common.flex-card.strike-date')}</ItemName>
                     <Value type={type}>{formatShortDateWithTime(strikeDate)}</Value>
                 </MarketDetailsItemContainer>
-                {type == 'resolved-speed' && (
-                    <MarketDetailsItemContainer type={type}>
-                        <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
-                        <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
-                    </MarketDetailsItemContainer>
-                )}
+                <MarketDetailsItemContainer type={type}>
+                    <ItemName type={type}>{t('common.flex-card.buy-in')}</ItemName>
+                    <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
+                </MarketDetailsItemContainer>
             </MarketDetailsContainer>
             <SpeedMarketsFooter />
         </Container>
@@ -79,10 +73,10 @@ const Container = styled.div<{ position: Positions; type: SharePositionType }>`
     border: ${(props) =>
         `10px solid ${
             props.type == 'resolved-speed'
-                ? RESOLVED_COLOR
+                ? props.theme.flexCard.resolved
                 : props.position == 'UP'
-                ? UP_BORDER_COLOR
-                : DOWN_BORDER_COLOR
+                ? props.theme.flexCard.up
+                : props.theme.flexCard.down
         }`};
     border-radius: 15px;
     display: flex;
@@ -117,7 +111,7 @@ const MarketDetailsItemContainer = styled(FlexDiv)<{ type: SharePositionType }>`
 
 const ItemName = styled.span<{ type: SharePositionType }>`
     text-transform: capitalize;
-    color: ${(props) => (props.type == 'potential-speed' ? props.theme.textColor.primary : '#808997')};
+    color: ${(props) => (props.type == 'potential-speed' ? props.theme.textColor.primary : props.theme.flexCard.text)};
     font-size: ${(props) => (props.type == 'potential-speed' ? '18px' : '13px')};
     font-weight: ${(props) => (props.type == 'potential-speed' ? '700' : '400')};
 `;
@@ -174,8 +168,8 @@ const PotentialWin = styled.span<{ position: Positions; type: SharePositionType 
             props.type == 'resolved-speed'
                 ? props.theme.textColor.primary
                 : props.position == 'UP'
-                ? UP_BORDER_COLOR
-                : DOWN_BORDER_COLOR
+                ? props.theme.flexCard.up
+                : props.theme.flexCard.down
         }`};
 `;
 
