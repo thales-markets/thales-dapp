@@ -11,7 +11,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
+import ZeusResolvedWinBackground from 'assets/images/flex-cards/resolved.png';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
@@ -33,7 +33,8 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
 
     return (
         <Container position={position} type={type}>
-            <PositionInfo>
+            {type == 'resolved-speed' && <SpeedMarketsFooter />}
+            <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
                 <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
@@ -64,7 +65,7 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
                     <Value type={type}>{formatCurrencyWithSign(USD_SIGN, buyIn ?? 0)}</Value>
                 </MarketDetailsItemContainer>
             </MarketDetailsContainer>
-            <SpeedMarketsFooter />
+            {type == 'potential-speed' && <SpeedMarketsFooter />}
         </Container>
     );
 };
@@ -98,7 +99,8 @@ const Container = styled.div<{ position: Positions; type: SharePositionType }>`
 const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     width: 100%;
     flex-direction: ${(props) => (props.type == 'potential-speed' ? 'column' : 'row')};
-    margin-bottom: ${(props) => (props.type == 'potential-speed' ? '10px' : '')};
+    margin-bottom: ${(props) => (props.type == 'potential-speed' ? '10px' : '0px')};
+    margin-top: ${(props) => (props.type == 'potential-speed' ? '140px' : '')};
 `;
 
 const MarketDetailsItemContainer = styled(FlexDiv)<{ type: SharePositionType }>`
@@ -127,7 +129,8 @@ const Value = styled.span<{ type: SharePositionType }>`
 const PotentialWinContainer = styled(FlexDiv)<{ type: SharePositionType }>`
     width: 100%;
     flex-direction: column;
-    margin: ${(props) => (props.type ? '10px 0px 150px 0px' : '20px 0px')};
+    margin-top: 50px;
+    margin: ${(props) => (props.type.includes('resolve') ? '10px 0px 0px 0px' : '20px 0px')};
 `;
 
 const PotentialWinHeading = styled.span`
@@ -173,11 +176,11 @@ const PotentialWin = styled.span<{ position: Positions; type: SharePositionType 
         }`};
 `;
 
-const PositionInfo = styled(FlexDiv)`
+const PositionInfo = styled(FlexDiv)<{ type: SharePositionType }>`
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-top: 10px;
+    margin-top: ${(props) => (props.type == 'resolved-speed' ? '200px' : '10px')};
 `;
 
 const CurrencyIcon = styled.i`
