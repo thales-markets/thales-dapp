@@ -1,4 +1,4 @@
-export type OptimismNetwork = {
+export type NetworkParams = {
     chainId: string;
     chainName: string;
     rpcUrls: string[];
