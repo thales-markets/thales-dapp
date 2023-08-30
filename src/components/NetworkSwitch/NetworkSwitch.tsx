@@ -1,4 +1,4 @@
-import { L1_TO_L2_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
+import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_PARAMS } from 'constants/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ const NetworkSwitch: React.FC = () => {
 
     const switchOrAddOptimismNetwork = async () => {
         const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network.OptimismMainnet;
-        const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
+        const optimismNetworkParms = SUPPORTED_NETWORKS_PARAMS[switchTo];
 
         if (typeof window.ethereum !== 'undefined') {
             try {
