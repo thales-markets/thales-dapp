@@ -22,7 +22,6 @@ import { Line } from '../../styled-components';
 import Stake from './Stake';
 import YourTransactions from './Transactions';
 import Unstake from './Unstake';
-import { getFixedRewardsForNetwork } from 'utils/network';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -97,7 +96,7 @@ const Staking: React.FC = () => {
     }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
 
     const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
-    const baseRewardsPool = stakingData ? getFixedRewardsForNetwork(networkId) : 0;
+    const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
     const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
     const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
     const maxBonusRewardsPercentage = stakingData ? stakingData.maxBonusRewardsPercentage : 0;
