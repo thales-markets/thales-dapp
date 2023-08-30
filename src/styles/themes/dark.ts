@@ -184,4 +184,10 @@ export default {
             },
         },
     },
+    flexCard: {
+        down: Colors.RED,
+        up: Colors.GREEN,
+        resolved: Colors.YELLOW_DARK,
+        text: Colors.GRAY_BLUE,
+    },
 };
