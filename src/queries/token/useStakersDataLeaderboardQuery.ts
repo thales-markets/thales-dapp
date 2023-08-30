@@ -7,7 +7,6 @@ import thalesData from 'thales-data';
 import { Staker, Stakers } from 'types/governance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getBonusRewardsForNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type StakerContractLeaderboardData = {
@@ -115,8 +114,6 @@ const useStakersDataLeaderboardQuery = (
 
                 const closingDate = Number(lastPeriodTimestamp) * 1000 + Number(durationPeriod) * 1000;
 
-                const bonusRewardsFix = lastPeriod ? getBonusRewardsForNetwork(network) : bonusRewards;
-
                 const stakersDataFromContract = await Promise.all(calls);
                 let globalPoints = 0;
                 let globalTrading = 0;
@@ -154,7 +151,7 @@ const useStakersDataLeaderboardQuery = (
 
                 finalData = orderBy(finalData, 'userRoundBonusPoints', 'desc');
 
-                const estimationForOneThales = globalPoints / bonusRewardsFix;
+                const estimationForOneThales = globalPoints / bonusRewards;
 
                 const finalDataWithRank = finalData.map((item, index) => {
                     return {
@@ -163,7 +160,7 @@ const useStakersDataLeaderboardQuery = (
                         share: item.userRoundBonusPoints / globalPoints,
                         estimatedRewards: formatCurrencyWithKey(
                             THALES_CURRENCY,
-                            (item.userRoundBonusPoints / globalPoints) * bonusRewardsFix,
+                            (item.userRoundBonusPoints / globalPoints) * bonusRewards,
                             2
                         ),
                     };
@@ -186,7 +183,7 @@ const useStakersDataLeaderboardQuery = (
                         maxStakingMultiplier: maxStakingMultiplier + 1,
                     },
 
-                    bonusRewards: bonusRewardsFix,
+                    bonusRewards: bonusRewards,
                     closingDate,
                 };
             } catch (e) {

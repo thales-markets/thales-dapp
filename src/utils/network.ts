@@ -250,31 +250,3 @@ export const getAPIKeyByNetwork = (networkId: Network) => {
             return 'NOT SUPPORTED';
     }
 };
-
-// TODO: delete this method after params changes on contract
-export const getFixedRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 45000;
-        case Network.Arbitrum:
-            return 18000;
-        case Network.Base:
-            return 15000;
-        default:
-            return 30000;
-    }
-};
-
-// TODO: delete this method after params changes on contract
-export const getBonusRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 15000;
-        case Network.Arbitrum:
-            return 7000;
-        case Network.Base:
-            return 5000;
-        default:
-            return 15000;
-    }
-};
