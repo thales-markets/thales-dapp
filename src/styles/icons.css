@@ -112,6 +112,10 @@
     content: '\0064';
 }
 
+.icon-home--pyth:before {
+    content: '\0065';
+}
+
 .logo--bankless:before {
     content: '\0056';
 }

@@ -96,6 +96,11 @@ const Home: React.FC = () => {
                         <OPTIMISM className="icon-home icon-home--polygon" />
                     </a>
                 </FlexDiv>
+                <FlexDiv>
+                    <a target="_blank" rel="noreferrer" href="https://pyth.network/">
+                        <PYTH className="icon-home icon-home--pyth" />
+                    </a>
+                </FlexDiv>
                 <Title style={{ marginBottom: '1em' }}> {t('landing-page.featured-in')}</Title>
                 <FlexDiv>
                     <a
@@ -304,6 +309,14 @@ const LINK = styled(IconAbs)`
     line-height: 0.5em;
     @media (max-width: 600px) {
         font-size: 10em;
+    }
+`;
+
+const PYTH = styled(IconAbs)`
+    font-size: 16em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 8em;
     }
 `;
 
