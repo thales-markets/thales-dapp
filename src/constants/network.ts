@@ -1,5 +1,5 @@
 import { Network } from 'enums/network';
-import { OptimismNetwork } from 'types/network';
+import { NetworkParams } from 'types/network';
 import { Chain } from 'wagmi';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -41,7 +41,7 @@ export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     42: 69,
 };
 
-export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
+export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.OptimismMainnet]: {
         chainId: '0xA',
         chainName: 'Optimism',
@@ -53,9 +53,6 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-};
-
-export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
@@ -67,9 +64,6 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-};
-
-export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
@@ -81,9 +75,6 @@ export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
             decimals: 18,
         },
     },
-};
-
-export const BASE_NETWORK: Record<number, OptimismNetwork> = {
     [Network.Base]: {
         chainId: '0x2105',
         chainName: 'BASE',

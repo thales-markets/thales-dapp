@@ -9,18 +9,15 @@ import { BigNumber } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
-    ARBITRUM_NETWORK,
-    BASE_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
-    OPTIMISM_NETWORKS,
-    POLYGON_NETWORKS,
     SUPPORTED_NETWORKS,
     SUPPORTED_NETWORKS_NAMES,
     DEFAULT_NETWORK,
+    SUPPORTED_NETWORKS_PARAMS,
 } from 'constants/network';
 import { Network } from 'enums/network';
-import { OptimismNetwork } from 'types/network';
 import ROUTES from 'constants/routes';
+import { NetworkParams } from '../types/network';
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -72,7 +69,7 @@ export const getDefaultDecimalsForNetwork = (networkId: Network) => {
     return 18;
 };
 
-const changeNetwork = async (network?: OptimismNetwork, callback?: VoidFunction, chainId?: string): Promise<void> => {
+const changeNetwork = async (network?: NetworkParams, callback?: VoidFunction, chainId?: string): Promise<void> => {
     if (hasEthereumInjected()) {
         try {
             await (window.ethereum as any).request({
@@ -117,7 +114,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         icon: OpLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? 10;
-            const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
+            const optimismNetworkParms = SUPPORTED_NETWORKS_PARAMS[switchTo];
             await changeNetwork(optimismNetworkParms, callback);
         },
         order: 1,
@@ -126,7 +123,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         name: 'Polygon',
         icon: PolygonLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const polygonNetworkParams = POLYGON_NETWORKS[networkId];
+            const polygonNetworkParams = SUPPORTED_NETWORKS_PARAMS[networkId];
             await changeNetwork(polygonNetworkParams, callback);
         },
         order: 4,
@@ -144,7 +141,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const arbNetworkParams = ARBITRUM_NETWORK[networkId];
+            const arbNetworkParams = SUPPORTED_NETWORKS_PARAMS[networkId];
             await changeNetwork(arbNetworkParams, callback);
         },
         order: 2,
@@ -153,7 +150,7 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         name: 'Base',
         icon: BaseLogo,
         changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const baseNetworkParams = BASE_NETWORK[networkId];
+            const baseNetworkParams = SUPPORTED_NETWORKS_PARAMS[networkId];
             await changeNetwork(baseNetworkParams, callback);
         },
         order: 3,
@@ -251,33 +248,5 @@ export const getAPIKeyByNetwork = (networkId: Network) => {
             return process.env.REACT_APP_BASE_API_KEY;
         default:
             return 'NOT SUPPORTED';
-    }
-};
-
-// TODO: delete this method after params changes on contract
-export const getFixedRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 45000;
-        case Network.Arbitrum:
-            return 18000;
-        case Network.Base:
-            return 15000;
-        default:
-            return 30000;
-    }
-};
-
-// TODO: delete this method after params changes on contract
-export const getBonusRewardsForNetwork = (network: Network) => {
-    switch (network) {
-        case Network.OptimismMainnet:
-            return 15000;
-        case Network.Arbitrum:
-            return 7000;
-        case Network.Base:
-            return 5000;
-        default:
-            return 15000;
     }
 };
