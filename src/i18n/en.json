@@ -446,7 +446,7 @@
             "min-time": "The minimum time is {{minTime}} {{timeUnit}}",
             "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
             "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future",
-            "cap-breach": "OI cap breached",
+            "out-of-liquidity-direction": "Out of liquidity for direction",
             "insufficient-balance-fee": "Not enough {{currencyKey}} in wallet for {{fee}} fee"
         },
         "user-positions": {
@@ -463,7 +463,7 @@
         "tooltips": {
             "buyin-fees": "Excluding fees",
             "current-price": "Current price as reported by Pyth oracles",
-            "liquidity": "Current available liquidity for this Asset",
+            "liquidity": "Current available liquidity for this Asset<br>Open Liquidity for UP {{liquidityPerUp}}<br>Open Liquidity for DOWN {{liquidityPerDown}}",
             "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
             "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
             "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration"
