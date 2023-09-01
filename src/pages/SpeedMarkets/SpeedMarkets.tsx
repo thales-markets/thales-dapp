@@ -143,6 +143,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                                 explicitCurrentPrice={currentPrices[currencyKey]}
                                 prevExplicitPrice={prevPrice.current}
                                 risksPerAsset={ammSpeedMarketsLimitsData?.risksPerAsset}
+                                risksPerAssetAndDirection={ammSpeedMarketsLimitsData?.risksPerAssetAndDirection}
                             ></PriceChart>
                         </LeftSide>
                         <RightSide>

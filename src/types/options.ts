@@ -243,6 +243,7 @@ export type UserClosedPositions = {
 };
 
 export type RiskPerAsset = { currency: string; current: number; max: number };
+export type RiskPerAssetAndPosition = RiskPerAsset & { position: Positions };
 
 export type AmmSpeedMarketsLimits = {
     maxBuyinAmount: number;
@@ -251,6 +252,7 @@ export type AmmSpeedMarketsLimits = {
     maximalTimeToMaturity: number;
     maxPriceDelaySec: number;
     risksPerAsset: RiskPerAsset[];
+    risksPerAssetAndDirection: RiskPerAssetAndPosition[];
     lpFee: number;
     safeBoxImpact: number;
     whitelistedAddress: boolean;

@@ -1,6 +1,8 @@
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { AmmSpeedMarketsLimits } from 'types/options';
@@ -17,13 +19,14 @@ const useAmmSpeedMarketsLimitsQuery = (
     return useQuery<AmmSpeedMarketsLimits>(
         QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress),
         async () => {
-            const ammSpeedMarkets: AmmSpeedMarketsLimits = {
+            const ammSpeedMarketsLimits: AmmSpeedMarketsLimits = {
                 minBuyinAmount: 0,
                 maxBuyinAmount: 0,
                 minimalTimeToMaturity: 0,
                 maximalTimeToMaturity: 0,
                 maxPriceDelaySec: 0,
                 risksPerAsset: [],
+                risksPerAssetAndDirection: [],
                 lpFee: 0,
                 safeBoxImpact: 0,
                 whitelistedAddress: false,
@@ -40,6 +43,14 @@ const useAmmSpeedMarketsLimitsQuery = (
                     maxRiskForETH,
                     currentRiskForBTC,
                     maxRiskForBTC,
+                    currentRiskPerDirectionUpForETH,
+                    currentRiskPerDirectionDownForETH,
+                    currentRiskPerDirectionUpForBTC,
+                    currentRiskPerDirectionDownForBTC,
+                    maxRiskPerDirectionUpForETH,
+                    maxRiskPerDirectionDownForETH,
+                    maxRiskPerDirectionUpForBTC,
+                    maxRiskPerDirectionDownForBTC,
                     lpFee,
                     safeBoxImpact,
                     whitelistedAddress,
@@ -57,6 +68,38 @@ const useAmmSpeedMarketsLimitsQuery = (
                         ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
                     ),
                     speedMarketsAMMContract.maxRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)),
+                    speedMarketsAMMContract.currentRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH),
+                        POSITIONS_TO_SIDE_MAP[Positions.UP]
+                    ),
+                    speedMarketsAMMContract.currentRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH),
+                        POSITIONS_TO_SIDE_MAP[Positions.DOWN]
+                    ),
+                    speedMarketsAMMContract.currentRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC),
+                        POSITIONS_TO_SIDE_MAP[Positions.UP]
+                    ),
+                    speedMarketsAMMContract.currentRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC),
+                        POSITIONS_TO_SIDE_MAP[Positions.DOWN]
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH),
+                        POSITIONS_TO_SIDE_MAP[Positions.UP]
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH),
+                        POSITIONS_TO_SIDE_MAP[Positions.DOWN]
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC),
+                        POSITIONS_TO_SIDE_MAP[Positions.UP]
+                    ),
+                    speedMarketsAMMContract.maxRiskPerAssetAndDirection(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC),
+                        POSITIONS_TO_SIDE_MAP[Positions.DOWN]
+                    ),
                     speedMarketsAMMContract.lpFee(),
                     speedMarketsAMMContract.safeBoxImpact(),
                     walletAddress
@@ -64,13 +107,13 @@ const useAmmSpeedMarketsLimitsQuery = (
                         : Promise.resolve(false),
                 ]);
 
-                ammSpeedMarkets.minBuyinAmount = coinFormatter(minBuyinAmount, networkId);
-                ammSpeedMarkets.maxBuyinAmount =
+                ammSpeedMarketsLimits.minBuyinAmount = coinFormatter(minBuyinAmount, networkId);
+                ammSpeedMarketsLimits.maxBuyinAmount =
                     coinFormatter(maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
-                ammSpeedMarkets.minimalTimeToMaturity = Number(minTimeToMaturity);
-                ammSpeedMarkets.maximalTimeToMaturity = Number(maxTimeToMaturity);
-                ammSpeedMarkets.maxPriceDelaySec = Number(maxPriceDelay);
-                ammSpeedMarkets.risksPerAsset = [
+                ammSpeedMarketsLimits.minimalTimeToMaturity = Number(minTimeToMaturity);
+                ammSpeedMarketsLimits.maximalTimeToMaturity = Number(maxTimeToMaturity);
+                ammSpeedMarketsLimits.maxPriceDelaySec = Number(maxPriceDelay);
+                ammSpeedMarketsLimits.risksPerAsset = [
                     {
                         currency: CRYPTO_CURRENCY_MAP.ETH,
                         current: coinFormatter(currentRiskForETH, networkId),
@@ -82,12 +125,38 @@ const useAmmSpeedMarketsLimitsQuery = (
                         max: coinFormatter(maxRiskForBTC, networkId),
                     },
                 ];
-                ammSpeedMarkets.lpFee = bigNumberFormatter(lpFee);
-                ammSpeedMarkets.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
-                ammSpeedMarkets.whitelistedAddress = whitelistedAddress;
+                ammSpeedMarketsLimits.risksPerAssetAndDirection = [
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.ETH,
+                        position: Positions.UP,
+                        current: coinFormatter(currentRiskPerDirectionUpForETH, networkId),
+                        max: coinFormatter(maxRiskPerDirectionUpForETH, networkId),
+                    },
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.ETH,
+                        position: Positions.DOWN,
+                        current: coinFormatter(currentRiskPerDirectionDownForETH, networkId),
+                        max: coinFormatter(maxRiskPerDirectionDownForETH, networkId),
+                    },
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.BTC,
+                        position: Positions.UP,
+                        current: coinFormatter(currentRiskPerDirectionUpForBTC, networkId),
+                        max: coinFormatter(maxRiskPerDirectionUpForBTC, networkId),
+                    },
+                    {
+                        currency: CRYPTO_CURRENCY_MAP.BTC,
+                        position: Positions.DOWN,
+                        current: coinFormatter(currentRiskPerDirectionDownForBTC, networkId),
+                        max: coinFormatter(maxRiskPerDirectionDownForBTC, networkId),
+                    },
+                ];
+                ammSpeedMarketsLimits.lpFee = bigNumberFormatter(lpFee);
+                ammSpeedMarketsLimits.safeBoxImpact = bigNumberFormatter(safeBoxImpact);
+                ammSpeedMarketsLimits.whitelistedAddress = whitelistedAddress;
             }
 
-            return ammSpeedMarkets;
+            return ammSpeedMarketsLimits;
         },
         {
             ...options,
