@@ -117,6 +117,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessageKey, setErrorMessageKey] = useState('');
     const [isCapBreached, setIsCapBreached] = useState(false);
+    const [outOfLiquidityPerDirection, setOutOfLiquidityPerDirection] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
@@ -298,14 +299,26 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     useEffect(() => {
         const convertedStableBuyinAmount = selectedStableBuyinAmount || convertToStable(Number(paidAmount));
         if (convertedStableBuyinAmount > 0) {
-            const riskData = ammSpeedMarketsLimits?.risksPerAsset.filter((data) => data.currency === currencyKey)[0];
-            if (riskData) {
-                setIsCapBreached(riskData?.current + convertedStableBuyinAmount >= riskData?.max);
+            const riskPerAssetAndDirectionData = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
+                (data) => data.currency === currencyKey && data.position === positionType
+            )[0];
+            if (riskPerAssetAndDirectionData) {
+                setOutOfLiquidityPerDirection(
+                    riskPerAssetAndDirectionData?.current + convertedStableBuyinAmount >
+                        riskPerAssetAndDirectionData?.max
+                );
+            }
+
+            const riskPerAssetData = ammSpeedMarketsLimits?.risksPerAsset.filter(
+                (data) => data.currency === currencyKey
+            )[0];
+            if (riskPerAssetData) {
+                setIsCapBreached(riskPerAssetData?.current + convertedStableBuyinAmount > riskPerAssetData?.max);
             }
         } else {
             setIsCapBreached(false);
         }
-    }, [ammSpeedMarketsLimits, currencyKey, selectedStableBuyinAmount, convertToStable, paidAmount]);
+    }, [ammSpeedMarketsLimits, currencyKey, selectedStableBuyinAmount, convertToStable, paidAmount, positionType]);
 
     // Check allowance
     useDebouncedEffect(() => {
@@ -463,8 +476,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!paidAmount) {
             return <Button disabled={true}>{t('common.enter-amount')}</Button>;
         }
+        if (outOfLiquidityPerDirection) {
+            return <Button disabled={true}>{t('speed-markets.errors.out-of-liquidity-direction')}</Button>;
+        }
         if (isCapBreached) {
-            return <Button disabled={true}>{t('speed-markets.errors.cap-breach')}</Button>;
+            return <Button disabled={true}>{t('common.errors.out-of-liquidity')}</Button>;
         }
         if (!hasAllowance) {
             return (

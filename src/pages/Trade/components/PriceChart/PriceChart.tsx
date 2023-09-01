@@ -33,9 +33,9 @@ import { RootState } from 'redux/rootReducer';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import TooltipInfo from 'components/Tooltip';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
-import { RiskPerAsset } from 'types/options';
+import { RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { getIsMobile } from 'redux/modules/ui';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 
@@ -48,6 +48,7 @@ type PriceChartProps = {
     explicitCurrentPrice?: number;
     prevExplicitPrice?: number;
     risksPerAsset?: RiskPerAsset[];
+    risksPerAssetAndDirection?: RiskPerAssetAndPosition[];
 };
 
 const coinGeckoClientPublic = new CoinGeckoClient({
@@ -92,6 +93,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     explicitCurrentPrice,
     prevExplicitPrice,
     risksPerAsset,
+    risksPerAssetAndDirection,
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
@@ -203,6 +205,19 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
     const liquidity = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
 
+    const riskPerDirectionUp = risksPerAssetAndDirection?.filter(
+        (risk) => risk.currency === asset && risk.position === Positions.UP
+    )[0];
+    const liquidityPerUp = riskPerDirectionUp
+        ? formatCurrencyWithSign(USD_SIGN, riskPerDirectionUp.max - riskPerDirectionUp.current)
+        : 0;
+    const riskPerDirectionDown = risksPerAssetAndDirection?.filter(
+        (risk) => risk.currency === asset && risk.position === Positions.DOWN
+    )[0];
+    const liquidityPerDown = riskPerDirectionDown
+        ? formatCurrencyWithSign(USD_SIGN, riskPerDirectionDown.max - riskPerDirectionDown.current)
+        : 0;
+
     const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
             if (selectedPrice) {
@@ -283,7 +298,18 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         <FlexDiv>
                             <Value>{`${t('common.liquidity')} ${liquidity}`}</Value>
                             <TooltipInfo
-                                overlay={t('speed-markets.tooltips.liquidity')}
+                                overlay={
+                                    <Trans
+                                        i18nKey="speed-markets.tooltips.liquidity"
+                                        components={{
+                                            br: <br />,
+                                        }}
+                                        values={{
+                                            liquidityPerUp,
+                                            liquidityPerDown,
+                                        }}
+                                    />
+                                }
                                 customIconStyling={{ marginTop: '1px' }}
                             />
                         </FlexDiv>
