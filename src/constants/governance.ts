@@ -1,4 +1,5 @@
 export const SNAPSHOT_GRAPHQL_URL = `https://hub.snapshot.org/graphql?apiKey=${process.env.REACT_APP_SNAPSHOT_API_KEY}`;
+export const SNAPSHOT_SCORE_URL = `https://score.snapshot.org/?apiKey=${process.env.REACT_APP_SNAPSHOT_API_KEY}`;
 
 export const VOTING_COUNCIL_PROPOSAL_ID = '0x22ad5b531b6efa86e56bef8206bad55e441d9c9144afde854f7b15194dc89778';
 export const COUNCIL_PROPOSAL_ID = '0x22ad5b531b6efa86e56bef8206bad55e441d9c9144afde854f7b15194dc89778';
