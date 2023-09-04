@@ -1,5 +1,11 @@
 import snapshot from '@snapshot-labs/snapshot.js';
-import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, SNAPSHOT_GRAPHQL_URL, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import {
+    BLOCK_ARBITRUM,
+    BLOCK_OPTIMISM,
+    SNAPSHOT_GRAPHQL_URL,
+    SNAPSHOT_SCORE_URL,
+    VOTING_COUNCIL_PROPOSAL_ID,
+} from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import { SpaceKey, StatusEnum } from 'enums/governance';
 import { ethers } from 'ethers';
@@ -122,7 +128,8 @@ const useProposalQuery = (
                           proposal.strategies,
                           proposal.network,
                           voterAddresses,
-                          block
+                          block,
+                          SNAPSHOT_SCORE_URL
                       );
 
             let mappedVotes = votes as MappedVotes[];
