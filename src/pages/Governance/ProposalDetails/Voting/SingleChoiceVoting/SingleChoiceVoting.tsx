@@ -35,10 +35,8 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
     const [isVoting, setIsVoting] = useState<boolean>(false);
 
     useEffect(() => {
-        if (selectedChoices !== undefined) {
-            setSelectedChoices(undefined);
-        }
-    }, [walletAddress, selectedChoices]);
+        setSelectedChoices(undefined);
+    }, [walletAddress]);
 
     const handleVote = async () => {
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
