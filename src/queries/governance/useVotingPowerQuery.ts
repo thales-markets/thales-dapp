@@ -1,5 +1,5 @@
 import snapshot from '@snapshot-labs/snapshot.js';
-import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import { BLOCK_ARBITRUM, BLOCK_OPTIMISM, SNAPSHOT_SCORE_URL, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import { StatusEnum } from 'enums/governance';
 import { useQuery, UseQueryOptions } from 'react-query';
@@ -22,7 +22,8 @@ const useVotingPowerQuery = (proposal: Proposal, walletAddress: string, options?
                 proposal.strategies,
                 proposal.space.network,
                 [walletAddress],
-                parseInt(proposal.snapshot)
+                parseInt(proposal.snapshot),
+                SNAPSHOT_SCORE_URL
             );
 
             const mappedScores = scores.map((score: number) =>
