@@ -18,8 +18,7 @@ import DappHeader from './DappHeader';
 import DappFooter from './DappFooter';
 import DappSidebar from './DappSidebar';
 import { ScreenSizeBreakpoint } from '../../enums/ui';
-import ElectionsBanner from 'components/ElectionsBannerV2';
-// import StickyBanner from 'components/StickyBanner';
+import StickyBanner from 'components/StickyBanner';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -84,8 +83,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     return (
         <Background id="main-content">
-            <ElectionsBanner />
-            {/* <StickyBanner /> */}
+            <StickyBanner />
             <Wrapper>
                 <DappSidebar />
                 <DappHeader />
