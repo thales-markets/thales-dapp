@@ -7,7 +7,7 @@ export const thalesContract = {
         [Network.OptimismGoerli]: '0xe2aD7187B3b079183a2D16C1d34A255592aC276b',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30',
-        [Network.Base]: 'TBD',
+        [Network.Base]: '0xf34e0cff046e154cafcae502c7541b9e5fd8c249',
     },
     abi: [
         {

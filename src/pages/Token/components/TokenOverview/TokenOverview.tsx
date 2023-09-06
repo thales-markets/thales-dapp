@@ -20,7 +20,6 @@ import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { getIsOVM } from 'utils/network';
 
 const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -28,7 +27,6 @@ const TokentOverview: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | undefined>(undefined);
-    const isL2 = getIsOVM(networkId);
 
     const tokenInfoQuery = useTokenInfoQuery(networkId, {
         enabled: isAppReady,
@@ -119,9 +117,11 @@ const TokentOverview: React.FC = () => {
                     <Tooltip overlay={t('thales-token.overview.celer-bridge-tooltip')}>
                         <StyledLink
                             href={
-                                isL2
-                                    ? 'https://cbridge.celer.network/1/10/THALES'
-                                    : 'https://cbridge.celer.network/10/42161/THALES'
+                                networkId === Network.Arbitrum
+                                    ? 'https://cbridge.celer.network/10/42161/THALES'
+                                    : networkId === Network.Base
+                                    ? 'https://cbridge.celer.network/10/8453/THALES'
+                                    : 'https://cbridge.celer.network/1/10/THALES'
                             }
                             target="_blank"
                             rel="noreferrer"
