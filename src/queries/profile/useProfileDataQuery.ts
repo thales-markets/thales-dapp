@@ -76,7 +76,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     const paid = coinFormatter(marketData.buyinAmount, networkId) * (1 + fees);
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
                     if (marketData.isUserWinner) {
-                        profit += payout;
+                        profit += payout - paid;
                     } else {
                         profit -= paid;
                     }
