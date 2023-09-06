@@ -115,17 +115,7 @@ const TokentOverview: React.FC = () => {
             <ItemContainer>
                 <FlexDivCentered>
                     <Tooltip overlay={t('thales-token.overview.celer-bridge-tooltip')}>
-                        <StyledLink
-                            href={
-                                networkId === Network.Arbitrum
-                                    ? 'https://cbridge.celer.network/10/42161/THALES'
-                                    : networkId === Network.Base
-                                    ? 'https://cbridge.celer.network/10/8453/THALES'
-                                    : 'https://cbridge.celer.network/1/10/THALES'
-                            }
-                            target="_blank"
-                            rel="noreferrer"
-                        >
+                        <StyledLink href={getCelerBridgeUrl(networkId)} target="_blank" rel="noreferrer">
                             <CryptoName>{t('thales-token.overview.celer-bridge')}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
                         </StyledLink>
@@ -142,9 +132,21 @@ const getUrlForSwap = (networkId: Network) => {
             return 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11';
         case Network.Arbitrum:
             return 'https://app.camelot.exchange';
-
+        case Network.Base:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0xf34e0cff046e154cafcae502c7541b9e5fd8c249&chain=base';
         default:
             return 'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5';
+    }
+};
+
+const getCelerBridgeUrl = (networkId: Network) => {
+    switch (networkId) {
+        case Network.Arbitrum:
+            return 'https://cbridge.celer.network/10/42161/THALES';
+        case Network.Base:
+            return 'https://cbridge.celer.network/10/8453/THALES';
+        default:
+            return 'https://cbridge.celer.network/1/10/THALES';
     }
 };
 
