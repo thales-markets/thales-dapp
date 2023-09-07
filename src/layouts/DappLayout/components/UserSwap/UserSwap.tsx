@@ -107,24 +107,22 @@ const UserSwap: React.FC = () => {
     const [swapTextIndex, setSwapTextIndex] = useState(-1);
 
     useEffect(() => {
-        if (userSelectedCollateralIndex === 0) {
-            const positiveCollateral = isMultiCollateralSupported
-                ? userCollaterals.find(
-                      (el) =>
-                          el.type ===
-                          getCollateral(
+        const positiveCollateral = isMultiCollateralSupported
+            ? userCollaterals.find(
+                  (el) =>
+                      el.type ===
+                      getCollateral(
+                          networkId,
+                          getDefaultStableIndexByBalance(
+                              multipleStableBalances?.data,
                               networkId,
-                              getDefaultStableIndexByBalance(
-                                  multipleStableBalances?.data,
-                                  networkId,
-                                  getCollateral(networkId, userSelectedCollateralIndex) as Coins
-                              )
+                              getDefaultCollateral(networkId) as Coins
                           )
-                  ) || userCollaterals[0]
-                : userCollaterals[0];
-            setCollateral(positiveCollateral);
-            dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
-        }
+                      )
+              ) || userCollaterals[0]
+            : userCollaterals[0];
+        setCollateral(positiveCollateral);
+        dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
     }, [
         multipleStableBalances.data,
         stableBalanceQuery.data,
@@ -132,7 +130,6 @@ const UserSwap: React.FC = () => {
         isMultiCollateralSupported,
         networkId,
         userCollaterals,
-        userSelectedCollateralIndex,
     ]);
 
     useEffect(() => {
@@ -179,7 +176,11 @@ const UserSwap: React.FC = () => {
             <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
                 <Wrapper>
                     <SwapWrapper
-                        clickable={isWalletConnected && !showSwap && SWAP_SUPPORTED_NETWORKS.includes(networkId)}
+                        clickable={
+                            isWalletConnected &&
+                            !showSwap &&
+                            (SWAP_SUPPORTED_NETWORKS.includes(networkId) || isMultiCollateralSupported)
+                        }
                         onClick={() =>
                             isWalletConnected &&
                             (isMultiCollateralSupported

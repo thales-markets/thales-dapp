@@ -12,7 +12,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
 import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getBenchmarksPriceFeeds, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useUserActiveSpeedMarketsDataQuery = (
@@ -49,21 +49,28 @@ const useUserActiveSpeedMarketsDataQuery = (
                     market: activeMarkets[index],
                 }));
 
-                // Fetch prices for all matured markets
+                const unavailablePrices: { priceId: string; publishTime: number }[] = [];
+
+                // Fetch prices for all active matured markets, but not resolved (not in matured on contract)
                 const pricePromises = userActiveMarkets.map((market: any) => {
                     const isMarketMatured = secondsToMilliseconds(Number(market.strikeTime)) < Date.now();
                     if (isMarketMatured) {
-                        return priceConnection
-                            .getPriceFeed(
-                                getPriceId(networkId, parseBytes32String(market.asset)),
-                                Number(market.strikeTime)
-                            )
-                            .catch((e) => console.log('Pyth price feed error', e));
+                        const priceId = getPriceId(networkId, parseBytes32String(market.asset));
+                        return priceConnection.getPriceFeed(priceId, Number(market.strikeTime)).catch((e) => {
+                            console.log('Pyth price feed error', e);
+                            unavailablePrices.push({
+                                priceId: priceId.replace('0x', ''),
+                                publishTime: Number(market.strikeTime),
+                            });
+                        });
                     } else {
                         return reject(`Price still unknown as this is for future time: ${market.strikeTime}`);
                     }
                 });
                 const priceFeeds = await Promise.allSettled(pricePromises);
+
+                // Secondary API for fetching prices using Pyth benchmarks in case that primary fails
+                const benchmarksPriceFeeds = await getBenchmarksPriceFeeds(unavailablePrices);
 
                 for (let i = 0; i < userActiveMarkets.length; i++) {
                     const marketData = userActiveMarkets[i];
@@ -75,10 +82,20 @@ const useUserActiveSpeedMarketsDataQuery = (
                     const isMarketMatured = secondsToMilliseconds(Number(marketData.strikeTime)) < Date.now();
                     if (isMarketMatured) {
                         const priceFeed: PromiseSettledResult<PriceFeed> = priceFeeds[i];
-                        price =
-                            priceFeed.status === 'fulfilled'
-                                ? priceFeed.value?.getPriceUnchecked().getPriceAsNumberUnchecked()
-                                : 0;
+                        if (priceFeed.status === 'fulfilled' && priceFeed.value) {
+                            price = priceFeed.value.getPriceUnchecked().getPriceAsNumberUnchecked();
+                        } else {
+                            const benchmarksPriceId = getPriceId(
+                                networkId,
+                                parseBytes32String(marketData.asset)
+                            ).replace('0x', '');
+                            price =
+                                benchmarksPriceFeeds.find(
+                                    (benchmarksPrice) =>
+                                        benchmarksPrice.priceId === benchmarksPriceId &&
+                                        benchmarksPrice.publishTime === Number(marketData.strikeTime)
+                                )?.price || 0;
+                        }
 
                         isClaimable =
                             !!price &&

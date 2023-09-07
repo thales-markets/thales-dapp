@@ -79,9 +79,9 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
 
                 // check if price feed is not too late
                 if (
-                    ammSpeedMarketsLimitsData?.maxPriceDelaySec &&
+                    ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec &&
                     differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) >
-                        ammSpeedMarketsLimitsData?.maxPriceDelaySec
+                        ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
                 ) {
                     await delay(800);
                     toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));

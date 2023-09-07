@@ -11,7 +11,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
 import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getBenchmarksPriceFeeds, getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOptions<UserLivePositions[]>) => {
@@ -42,53 +42,68 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                     .map((marketData: any, index: number) => ({ ...marketData, market: activeMarkets[index] }))
                     .filter((market: any) => secondsToMilliseconds(Number(market.strikeTime)) > Date.now());
 
+                const unavailablePrices: { priceId: string; publishTime: number }[] = [];
+
                 // Fetch prices for all matured markets
-                const pricePromises = maturedMarkets.map((market: any) =>
-                    priceConnection
-                        .getPriceFeed(
-                            getPriceId(networkId, parseBytes32String(market.asset)),
-                            Number(market.strikeTime)
-                        )
-                        .catch((e) => console.log('Pyth price feed error', e))
-                );
+                const pricePromises = maturedMarkets.map((market: any) => {
+                    const priceId = getPriceId(networkId, parseBytes32String(market.asset));
+                    return priceConnection.getPriceFeed(priceId, Number(market.strikeTime)).catch((e) => {
+                        console.log('Pyth price feed error', e);
+                        unavailablePrices.push({
+                            priceId: priceId.replace('0x', ''),
+                            publishTime: Number(market.strikeTime),
+                        });
+                    });
+                });
                 const priceFeeds = await Promise.allSettled(pricePromises);
+
+                // Secondary API for fetching prices using Pyth benchmarks in case that primary fails
+                const benchmarksPriceFeeds = await getBenchmarksPriceFeeds(unavailablePrices);
 
                 // Matured markets - not resolved
                 for (let i = 0; i < maturedMarkets.length; i++) {
-                    const marketsData = maturedMarkets[i];
-                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketsData.direction] as OptionSide] as Positions;
-                    const payout = coinFormatter(marketsData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const marketData = maturedMarkets[i];
+                    const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
+                    const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
 
                     let isClaimable = false;
                     const priceFeed: PromiseSettledResult<PriceFeed> = priceFeeds[i];
-                    const price =
-                        priceFeed.status === 'fulfilled'
-                            ? priceFeed.value?.getPriceUnchecked().getPriceAsNumberUnchecked()
-                            : 0;
+                    let price = 0;
+                    if (priceFeed.status === 'fulfilled' && priceFeed.value) {
+                        price = priceFeed.value.getPriceUnchecked().getPriceAsNumberUnchecked();
+                    } else {
+                        const priceId = getPriceId(networkId, parseBytes32String(marketData.asset)).replace('0x', '');
+                        price =
+                            benchmarksPriceFeeds.find(
+                                (benchmarksPrice) =>
+                                    benchmarksPrice.priceId === priceId &&
+                                    benchmarksPrice.publishTime === Number(marketData.strikeTime)
+                            )?.price || 0;
+                    }
 
                     isClaimable =
                         (side === Positions.UP &&
-                            price >= bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
+                            price >= bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
                         (side === Positions.DOWN &&
-                            price < bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS));
+                            price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS));
 
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
-                        currencyKey: parseBytes32String(marketsData.asset),
+                        currencyKey: parseBytes32String(marketData.asset),
                         strikePrice: formatCurrencyWithSign(
                             USD_SIGN,
-                            bigNumberFormatter(marketsData.strikePrice, PYTH_CURRENCY_DECIMALS)
+                            bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
                         ),
                         amount: payout,
-                        amountBigNumber: marketsData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketsData.strikeTime)),
-                        market: marketsData.market,
+                        amountBigNumber: marketData.buyinAmount,
+                        maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
+                        market: marketData.market,
                         side: side,
-                        paid: coinFormatter(marketsData.buyinAmount, networkId) * (1 + fees),
+                        paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
                         claimable: isClaimable,
                         finalPrice: price,
-                        user: marketsData.user,
+                        user: marketData.user,
                         isSpeedMarket: true,
                     };
 
