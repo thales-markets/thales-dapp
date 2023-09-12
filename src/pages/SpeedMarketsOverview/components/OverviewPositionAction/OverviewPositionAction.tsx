@@ -66,45 +66,51 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
 
             const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
             try {
-                const pythContract = new ethers.Contract(
-                    PYTH_CONTRACT_ADDRESS[networkId],
-                    PythInterfaceAbi as any,
-                    (snxJSConnector as any).provider
-                );
+                let tx: ethers.ContractTransaction;
+                if (isAdmin) {
+                    tx = await speedMarketsAMMContractWithSigner.resolveMarketManually(
+                        position.market,
+                        Number(
+                            ethers.utils.parseUnits(
+                                truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
+                                PYTH_CURRENCY_DECIMALS
+                            )
+                        )
+                    );
+                } else {
+                    const pythContract = new ethers.Contract(
+                        PYTH_CONTRACT_ADDRESS[networkId],
+                        PythInterfaceAbi as any,
+                        (snxJSConnector as any).provider
+                    );
 
-                const [priceFeedUpdateVaa, publishTime] = await priceConnection.getVaa(
-                    getPriceId(networkId, position.currencyKey),
-                    millisecondsToSeconds(position.maturityDate)
-                );
+                    const [priceFeedUpdateVaa, publishTime] = await priceConnection.getVaa(
+                        getPriceId(networkId, position.currencyKey),
+                        millisecondsToSeconds(position.maturityDate)
+                    );
 
-                // check if price feed is not too late
-                if (
-                    ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec &&
-                    differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) >
-                        ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
-                ) {
-                    await delay(800);
-                    toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));
-                    setIsSubmitting(false);
-                    return;
+                    // check if price feed is not too late
+                    if (
+                        ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec &&
+                        differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) >
+                            ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
+                    ) {
+                        await delay(800);
+                        toast.update(
+                            id,
+                            getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id)
+                        );
+                        setIsSubmitting(false);
+                        return;
+                    }
+
+                    const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
+                    const updateFee = await pythContract.getUpdateFee(priceUpdateData);
+
+                    tx = await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
+                        value: updateFee,
+                    });
                 }
-
-                const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
-                const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-
-                const tx: ethers.ContractTransaction = isAdmin
-                    ? await speedMarketsAMMContractWithSigner.resolveMarketManually(
-                          position.market,
-                          Number(
-                              ethers.utils.parseUnits(
-                                  truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
-                                  PYTH_CURRENCY_DECIMALS
-                              )
-                          )
-                      )
-                    : await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
-                          value: updateFee,
-                      });
 
                 const txResult = await tx.wait();
 
