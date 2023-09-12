@@ -25,11 +25,11 @@ import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
     position: UserLivePositions;
-    maxPriceDelaySec?: number;
+    maxPriceDelayForResolvingSec?: number;
     currentPrices?: { [key: string]: number };
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec, currentPrices }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForResolvingSec, currentPrices }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -110,7 +110,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelaySec,
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
             </AlignedFlex>
-            <MyPositionAction position={position} maxPriceDelaySec={maxPriceDelaySec} />
+            <MyPositionAction position={position} maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec} />
             <ShareIcon
                 className="icon-home icon-home--twitter-x"
                 disabled={false}

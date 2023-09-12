@@ -189,7 +189,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                         <>
                             <OpenPositions
                                 isSpeedMarkets
-                                maxPriceDelaySec={ammSpeedMarketsLimitsData?.maxPriceDelaySec}
+                                maxPriceDelayForResolvingSec={ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec}
                                 currentPrices={currentPrices}
                             />
                             <ClosedPositions />

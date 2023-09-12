@@ -56,10 +56,14 @@ const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
-    maxPriceDelaySec?: number;
+    maxPriceDelayForResolvingSec?: number;
 };
 
-const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfileAction, maxPriceDelaySec }) => {
+const MyPositionAction: React.FC<MyPositionActionProps> = ({
+    position,
+    isProfileAction,
+    maxPriceDelayForResolvingSec,
+}) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
@@ -298,8 +302,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
                 // check if price feed is not too late
                 if (
-                    maxPriceDelaySec &&
-                    differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) > maxPriceDelaySec
+                    maxPriceDelayForResolvingSec &&
+                    differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) >
+                        maxPriceDelayForResolvingSec
                 ) {
                     await delay(800);
                     toast.update(id, getErrorToastOptions(t('speed-markets.user-positions.errors.price-stale'), id));

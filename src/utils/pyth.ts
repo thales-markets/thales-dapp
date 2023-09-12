@@ -1,7 +1,9 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import { PRICE_ID, PRICE_SERVICE_ENDPOINTS } from 'constants/pyth';
+import { PRICE_ID, PRICE_SERVICE_ENDPOINTS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { Network } from 'enums/network';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import { bigNumberFormatter } from './formatters/ethers';
+import { generalConfig } from 'config/general';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
     switch (networkId) {
@@ -66,4 +68,54 @@ export const getCurrentPrices = async (
               {}
           )
         : { [CRYPTO_CURRENCY_MAP.BTC]: 0, [CRYPTO_CURRENCY_MAP.ETH]: 0 };
+};
+
+/*
+ * Fetching historical prices for a given array of objects with price ID and publish time
+ * using Pyth benchmarks API.
+ *
+ * Pyth benchmarks API - for given price ID and publish time returns single historical price
+ * as object 'parsed' with array of prices which contains parsed object with id and price data.
+ *
+ * Parametar Price ID is without starting chars 0x
+ * Has limitations of 30 requests per 10 seconds.
+ */
+export const getBenchmarksPriceFeeds = async (priceFeeds: { priceId: string; publishTime: number }[]) => {
+    const benchmarksPriceFeeds: { priceId: string; publishTime: number; price: number }[] = [];
+
+    if (priceFeeds.length) {
+        const benchmarksPricePromises = priceFeeds.map((data: any) =>
+            fetch(`${generalConfig.PYTH_BENCHMARKS_API_URL}${data.publishTime}?ids=${data.priceId}`).catch((e) =>
+                console.log('Pyth price benchmarks error', e)
+            )
+        );
+
+        const benchmarksPriceResponses = await Promise.allSettled(benchmarksPricePromises);
+        const benchmarksResponseBodies: Promise<any>[] = [];
+
+        benchmarksPriceResponses.map((benchmarksPriceResponse) => {
+            if (benchmarksPriceResponse.status === 'fulfilled') {
+                if (benchmarksPriceResponse.value) {
+                    if (benchmarksPriceResponse.value.status == 200) {
+                        benchmarksResponseBodies.push(benchmarksPriceResponse.value.text());
+                    } else {
+                        console.log('Failed to fetch Pyth benchmarks data', benchmarksPriceResponse.value.status);
+                    }
+                }
+            }
+        });
+
+        const responses = await Promise.all(benchmarksResponseBodies);
+        responses.map((response, index) => {
+            const bodyTextParsed = JSON.parse(response).parsed[0]; // always fetching one price ID
+
+            benchmarksPriceFeeds.push({
+                priceId: bodyTextParsed.id,
+                publishTime: priceFeeds[index].publishTime, // requested publish time
+                price: bigNumberFormatter(bodyTextParsed.price.price, PYTH_CURRENCY_DECIMALS),
+            });
+        });
+    }
+
+    return benchmarksPriceFeeds;
 };

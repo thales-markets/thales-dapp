@@ -5,7 +5,7 @@ import DownBackground from 'assets/images/flex-cards/down-background.png';
 import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/currency';
-import { SharePositionData, SharePositionType } from '../../SharePositionModal';
+import { SharePositionData, SharePositionType } from 'types/flexCards';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Positions } from 'enums/options';

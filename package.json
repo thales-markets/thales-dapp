@@ -13,7 +13,7 @@
         "@rainbow-me/rainbowkit": "^0.12.16",
         "@reduxjs/toolkit": "^1.5.0",
         "@snapshot-labs/snapshot.js": "^0.5.8",
-        "@socket.tech/plugin": "^1.0.15",
+        "@socket.tech/plugin": "^1.2.4",
         "axios": "^0.21.1",
         "coingecko-api-v3": "^0.0.23",
         "date-fns": "^2.19.0",

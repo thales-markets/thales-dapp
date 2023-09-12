@@ -935,6 +935,7 @@
         "pages": {
             "market-page": "Markets page",
             "range-market-page": "Ranged markets page",
+            "speed-market-page": "Speed markets page",
             "landing-page": "Landing page"
         },
         "modal": {

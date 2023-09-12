@@ -31,17 +31,11 @@ import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipl
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
-import {
-    getIsWalletConnected,
-    getNetworkId,
-    getSelectedCollateralIndex,
-    getWalletAddress,
-    setSelectedCollateralIndex,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import {
     AccountMarketInfo,
@@ -54,14 +48,7 @@ import {
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import {
-    getCollateral,
-    getCollaterals,
-    getDefaultCollateral,
-    getDefaultStableIndexByBalance,
-    getCoinBalance,
-    isStableCurrency,
-} from 'utils/currency';
+import { getCollateral, getCollaterals, getDefaultCollateral, getCoinBalance } from 'utils/currency';
 import { bigNumberFormatter, coinFormatter, coinParser } from 'utils/formatters/ethers';
 import {
     formatCurrency,
@@ -116,7 +103,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
-    const dispatch = useDispatch();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -242,33 +228,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 : null
             : getCurrencyKeyStableBalance(walletBalancesMap, defaultCollateral);
     }, [multipleStableBalances, walletBalancesMap, isMultiCollateralSupported, defaultCollateral, selectedCollateral]);
-
-    // If sUSD balance less than 1, select first stable with nonzero value as default
-    useEffect(() => {
-        if (
-            isStableCurrency(selectedCollateral) &&
-            multipleStableBalances?.data &&
-            multipleStableBalances?.isSuccess &&
-            selectedCollateral === defaultCollateral &&
-            isMultiCollateralSupported
-        ) {
-            const defaultStableBalance = getDefaultStableIndexByBalance(
-                multipleStableBalances?.data,
-                networkId,
-                selectedCollateral
-            );
-            dispatch(setSelectedCollateralIndex(defaultStableBalance));
-        }
-    }, [
-        dispatch,
-        multipleStableBalances?.isSuccess,
-        multipleStableBalances?.data,
-        selectedCollateralIndex,
-        isMultiCollateralSupported,
-        networkId,
-        selectedCollateral,
-        defaultCollateral,
-    ]);
 
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
@@ -457,7 +416,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
                 const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isBuyWithNonDefaultCollateral ? (ammQuotes as any)[0] : ammQuotes;
-                const formattedAmmQuote = coinFormatter(ammQuote, networkId, selectedCollateral);
+                const formattedAmmQuote = coinFormatter(ammQuote, networkId, isBuy ? selectedCollateral : undefined);
 
                 const ammPrice = formattedAmmQuote / suggestedAmount;
 
