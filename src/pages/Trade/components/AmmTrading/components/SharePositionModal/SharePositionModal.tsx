@@ -16,26 +16,11 @@ import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
 import { isMetamask, isFirefox, isIos } from 'utils/device';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { Positions } from 'enums/options';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
+import { SharePositionData } from 'types/flexCards';
 
-export type SharePositionType = 'potential' | 'resolved' | 'resolved-speed' | 'potential-speed';
-
-export type SharePositionData = {
-    type: SharePositionType;
-    position: Positions;
-    currencyKey: string;
-    strikePrice?: number | string;
-    leftPrice?: number;
-    rightPrice?: number;
-    strikeDate: number;
-    marketDuration?: number;
-    buyIn: number;
-    payout: number;
-};
-
-export type SharePositionModalProps = SharePositionData & {
+type SharePositionModalProps = SharePositionData & {
     onClose: () => void;
 };
 

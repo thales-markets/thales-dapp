@@ -19,7 +19,7 @@ export const PRICE_ID = {
     },
 };
 
-export const CONNECTION_TIMEOUT_MS = 30000;
+export const CONNECTION_TIMEOUT_MS = 15000;
 
 // You can find at https://github.com/pyth-network/pyth-crosschain/tree/main/target_chains/ethereum/contracts/networks
 export const PYTH_CONTRACT_ADDRESS = {

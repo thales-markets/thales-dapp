@@ -72,6 +72,7 @@ import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryC
 import snxJSConnector from 'utils/snxJSConnector';
 import { getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
+import { getReferralWallet } from 'utils/referral';
 
 type AmmSpeedTradingProps = {
     currencyKey: string;
@@ -140,6 +141,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const collateralAddress = isMultiCollateralSupported
         ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
         : snxJSConnector.collateral?.address;
+
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+            ? getReferralWallet()
+            : null;
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -267,8 +273,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             messageKey = 'speed-markets.errors.insufficient-balance-fee';
         }
         if (
-            (isWalletConnected && Number(paidAmount) > 0 && Number(paidAmount) > collateralBalance) ||
-            collateralBalance === 0
+            Number(paidAmount) > 0 &&
+            ((isWalletConnected && Number(paidAmount) > collateralBalance) || collateralBalance === 0)
         ) {
             messageKey = 'common.errors.insufficient-balance-wallet';
         }
@@ -441,7 +447,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     buyInAmountBigNum,
                     priceUpdateData,
                     updateFee,
-                    collateralAddress || ''
+                    collateralAddress || '',
+                    referral
                 );
 
                 const txResult = await tx.wait();

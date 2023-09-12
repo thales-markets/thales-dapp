@@ -185,6 +185,37 @@ const speedMarketsContract = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'address',
+                    name: 'refferer',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'trader',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'volume',
+                    type: 'uint256',
+                },
+            ],
+            name: 'ReferrerPaid',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'bytes32',
                     name: 'asset',
                     type: 'bytes32',
@@ -242,12 +273,6 @@ const speedMarketsContract = {
                 },
                 {
                     indexed: false,
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    indexed: false,
                     internalType: 'uint256',
                     name: '_maxRiskPerAssetAndDirection',
                     type: 'uint256',
@@ -267,6 +292,19 @@ const speedMarketsContract = {
                 },
             ],
             name: 'SetMaximumPriceDelay',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_maximumPriceDelayForResolving',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetMaximumPriceDelayForResolving',
             type: 'event',
         },
         {
@@ -514,6 +552,11 @@ const speedMarketsContract = {
                     name: 'priceUpdateData',
                     type: 'bytes[]',
                 },
+                {
+                    internalType: 'address',
+                    name: '_referrer',
+                    type: 'address',
+                },
             ],
             name: 'createNewMarket',
             outputs: [],
@@ -546,6 +589,11 @@ const speedMarketsContract = {
                     internalType: 'bytes[]',
                     name: 'priceUpdateData',
                     type: 'bytes[]',
+                },
+                {
+                    internalType: 'address',
+                    name: '_referrer',
+                    type: 'address',
                 },
             ],
             name: 'createNewMarketWithDelta',
@@ -590,6 +638,11 @@ const speedMarketsContract = {
                     name: 'isEth',
                     type: 'bool',
                 },
+                {
+                    internalType: 'address',
+                    name: '_referrer',
+                    type: 'address',
+                },
             ],
             name: 'createNewMarketWithDifferentCollateral',
             outputs: [],
@@ -632,6 +685,11 @@ const speedMarketsContract = {
                     internalType: 'bool',
                     name: 'isEth',
                     type: 'bool',
+                },
+                {
+                    internalType: 'address',
+                    name: '_referrer',
+                    type: 'address',
                 },
             ],
             name: 'createNewMarketWithDifferentCollateralAndDelta',
@@ -677,6 +735,42 @@ const speedMarketsContract = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'asset',
+                    type: 'bytes32',
+                },
+            ],
+            name: 'getDirectionalRiskPerAsset',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'enum SpeedMarket.Direction',
+                            name: 'direction',
+                            type: 'uint8',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'current',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'max',
+                            type: 'uint256',
+                        },
+                    ],
+                    internalType: 'struct SpeedMarketsAMM.Risk[]',
+                    name: '',
+                    type: 'tuple[]',
                 },
             ],
             stateMutability: 'view',
@@ -743,6 +837,11 @@ const speedMarketsContract = {
                             internalType: 'bool',
                             name: 'isUserWinner',
                             type: 'bool',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'createdAt',
+                            type: 'uint256',
                         },
                     ],
                     internalType: 'struct SpeedMarketsAMM.MarketData[]',
@@ -984,6 +1083,19 @@ const speedMarketsContract = {
         },
         {
             inputs: [],
+            name: 'maximumPriceDelayForResolving',
+            outputs: [
+                {
+                    internalType: 'uint64',
+                    name: '',
+                    type: 'uint64',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
             name: 'minBuyinAmount',
             outputs: [
                 {
@@ -1156,6 +1268,19 @@ const speedMarketsContract = {
             outputs: [
                 {
                     internalType: 'contract IPyth',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'referrals',
+            outputs: [
+                {
+                    internalType: 'address',
                     name: '',
                     type: 'address',
                 },
@@ -1362,11 +1487,6 @@ const speedMarketsContract = {
                     type: 'bytes32',
                 },
                 {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
                     internalType: 'uint256',
                     name: '_maxRiskPerAssetAndDirection',
                     type: 'uint256',
@@ -1386,6 +1506,19 @@ const speedMarketsContract = {
                 },
             ],
             name: 'setMaximumPriceDelay',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'uint64',
+                    name: '_maximumPriceDelayForResolving',
+                    type: 'uint64',
+                },
+            ],
+            name: 'setMaximumPriceDelayForResolving',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1443,6 +1576,19 @@ const speedMarketsContract = {
                 },
             ],
             name: 'setPyth',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_referrals',
+                    type: 'address',
+                },
+            ],
+            name: 'setReferrals',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',

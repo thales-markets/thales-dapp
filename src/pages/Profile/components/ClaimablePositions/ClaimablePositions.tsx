@@ -18,9 +18,8 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
 import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
-import SharePositionModal, {
-    SharePositionData,
-} from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
+import { SharePositionData } from 'types/flexCards';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import { orderBy } from 'lodash';
 

@@ -20,7 +20,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import useOpenPositionsQuery from 'queries/profile/useOpenPositionsQuery';
 import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
-import { SharePositionData } from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
+import { SharePositionData } from 'types/flexCards';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';

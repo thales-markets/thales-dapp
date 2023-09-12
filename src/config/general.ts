@@ -12,4 +12,5 @@ export const generalConfig = {
         [Network.Base]: 'https://api.basescan.org/',
         [Network.Mainnet]: 'https://api.etherscan.io/',
     },
+    PYTH_BENCHMARKS_API_URL: 'https://benchmarks.pyth.network/v1/updates/price/',
 };

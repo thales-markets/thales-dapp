@@ -11,7 +11,8 @@ export const getTransactionForSpeedAMM = async (
     buyInAmount: BigNumber,
     pythPriceUpdateData: string[],
     pythUpdateFee: any,
-    collateralAddress: string
+    collateralAddress: string,
+    referral: string | null
 ) => {
     let tx: ethers.ContractTransaction;
     const isEth = collateralAddress === ZERO_ADDRESS;
@@ -26,6 +27,7 @@ export const getTransactionForSpeedAMM = async (
                   collateralAddress,
                   buyInAmount,
                   isEth,
+                  referral ? referral : ZERO_ADDRESS,
                   { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
               )
             : await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
@@ -36,6 +38,7 @@ export const getTransactionForSpeedAMM = async (
                   collateralAddress,
                   buyInAmount,
                   isEth,
+                  referral ? referral : ZERO_ADDRESS,
                   { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
               );
     } else {
@@ -46,6 +49,7 @@ export const getTransactionForSpeedAMM = async (
                   side,
                   buyInAmount,
                   pythPriceUpdateData,
+                  referral ? referral : ZERO_ADDRESS,
                   { value: pythUpdateFee }
               )
             : await speedMarketsAMMContractWithSigner.createNewMarket(
@@ -54,6 +58,7 @@ export const getTransactionForSpeedAMM = async (
                   side,
                   buyInAmount,
                   pythPriceUpdateData,
+                  referral ? referral : ZERO_ADDRESS,
                   { value: pythUpdateFee }
               );
     }

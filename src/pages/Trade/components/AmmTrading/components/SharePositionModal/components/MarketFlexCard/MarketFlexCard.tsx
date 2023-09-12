@@ -16,7 +16,7 @@ import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { SharePositionData, SharePositionType } from '../../SharePositionModal';
+import { SharePositionData, SharePositionType } from 'types/flexCards';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,

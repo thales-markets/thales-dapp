@@ -108,6 +108,10 @@ const Referral: React.FC = () => {
         },
         {
             value: 2,
+            label: t('referral-page.pages.speed-market-page'),
+        },
+        {
+            value: 3,
             label: t('referral-page.pages.landing-page'),
         },
     ];
@@ -188,6 +192,9 @@ const Referral: React.FC = () => {
                 link = ROUTES.Options.RangeMarkets;
                 break;
             case 2:
+                link = ROUTES.Options.SpeedMarkets;
+                break;
+            case 3:
                 link = ROUTES.Home;
                 break;
             default:
