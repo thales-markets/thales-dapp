@@ -65,7 +65,7 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
 };
 
 export const getDefaultDecimalsForNetwork = (networkId: Network) => {
-    if (networkId == Network.Arbitrum || networkId == Network.PolygonMainnet || networkId === Network.Base) return 6;
+    if ([Network.Arbitrum, Network.PolygonMainnet, Network.Base].includes(networkId)) return 6;
     return 18;
 };
 
