@@ -32,6 +32,7 @@ import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import { truncToDecimals } from 'utils/formatters/number';
+import useInterval from 'hooks/useInterval';
 
 const SECTIONS = {
     userWinner: 'userWinner',
@@ -61,7 +62,6 @@ const UnresolvedPositions: React.FC = () => {
 
     const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
-        refetchInterval: secondsToMilliseconds(5),
     });
 
     const activeSpeedMarketsData = useMemo(
@@ -82,6 +82,14 @@ const UnresolvedPositions: React.FC = () => {
         (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice
     );
     const openSpeedMarketsData = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate > Date.now());
+
+    // Check if there are new matured markets from open markets and refresh it
+    useInterval(async () => {
+        const openMatured = openSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
+        if (openMatured.length) {
+            refetchActiveSpeedMarkets(networkId);
+        }
+    }, secondsToMilliseconds(10));
 
     const handleResolveAll = async (positions: UserLivePositions[], isAdmin: boolean) => {
         if (!positions.length) {
