@@ -1,4 +1,3 @@
-import { Network } from 'enums/network';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import queryString from 'query-string';
@@ -10,7 +9,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { TokenTabSection } from 'types/token';
-import { getIsOVM } from 'utils/network';
+import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import { history } from 'utils/routes';
 
 type TokenNavProps = {
@@ -29,8 +28,8 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId) || networkId === Network.Arbitrum;
-    const isOP = getIsOVM(networkId);
+    const isLpStakingSupported = getIsLpStakingSupported(networkId);
+    const isStakingSupported = getIsStakingSupported(networkId);
 
     const [showNav, setShowNav] = useState(false);
 
@@ -72,7 +71,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 {'R'}
                             </IconContainer>
                         </ItemContainer>
-                        {isL2 && (
+                        {isStakingSupported && (
                             <ItemContainer
                                 onClick={() =>
                                     onItemClick(TokenTabEnum.GAMIFIED_STAKING, TokenTabSectionIdEnum.LEADERBOARD)
@@ -88,7 +87,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 </IconContainer>
                             </ItemContainer>
                         )}
-                        {isL2 && (
+                        {isStakingSupported && (
                             <ItemContainer
                                 onClick={() =>
                                     onItemClick(TokenTabEnum.GAMIFIED_STAKING, TokenTabSectionIdEnum.STAKING)
@@ -104,7 +103,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 </IconContainer>
                             </ItemContainer>
                         )}
-                        {isL2 && (
+                        {isStakingSupported && (
                             <ItemContainer
                                 onClick={() =>
                                     onItemClick(TokenTabEnum.GAMIFIED_STAKING, TokenTabSectionIdEnum.VESTING)
@@ -120,7 +119,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 </IconContainer>
                             </ItemContainer>
                         )}
-                        {isL2 && (
+                        {isStakingSupported && (
                             <ItemContainer
                                 onClick={() =>
                                     onItemClick(TokenTabEnum.GAMIFIED_STAKING, TokenTabSectionIdEnum.MERGE_ACCOUNT)
@@ -137,7 +136,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             </ItemContainer>
                         )}
 
-                        {isOP && (
+                        {isLpStakingSupported && (
                             <ItemContainer
                                 onClick={() => onItemClick(TokenTabEnum.LP_STAKING, TokenTabSectionIdEnum.LP_STAKING)}
                             >

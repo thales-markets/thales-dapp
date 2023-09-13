@@ -1,6 +1,10 @@
+import { Network } from 'enums/network';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 
 type PeriodDropdownProps = {
@@ -11,6 +15,7 @@ type PeriodDropdownProps = {
 
 const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allPeriods }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [open, setOpen] = useState(false);
 
     return (
@@ -19,22 +24,26 @@ const PeriodDropdown: React.FC<PeriodDropdownProps> = ({ period, setPeriod, allP
                 <Wrapper onClick={() => setOpen(!open)}>
                     {open ? (
                         allPeriods.map((periodLocal, index) => {
-                            return (
-                                <Container
-                                    selected={periodLocal === period}
-                                    onClick={setPeriod.bind(this, periodLocal)}
-                                    key={index}
-                                >
-                                    <Text>
-                                        {t('thales-token.gamified-staking.rewards.leaderboard.round')} {periodLocal}
-                                    </Text>
-                                </Container>
-                            );
+                            if (periodLocal >= 0) {
+                                return (
+                                    <Container
+                                        selected={periodLocal === period}
+                                        onClick={setPeriod.bind(this, periodLocal)}
+                                        key={index}
+                                    >
+                                        <Text>
+                                            {t('thales-token.gamified-staking.rewards.leaderboard.round')}{' '}
+                                            {networkId === Network.Base ? periodLocal + 1 : periodLocal}
+                                        </Text>
+                                    </Container>
+                                );
+                            }
                         })
                     ) : (
                         <Container>
                             <Text>
-                                {t('thales-token.gamified-staking.rewards.leaderboard.round')} {period}
+                                {t('thales-token.gamified-staking.rewards.leaderboard.round')}{' '}
+                                {networkId === Network.Base ? period + 1 : period}
                             </Text>
                             <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
                         </Container>

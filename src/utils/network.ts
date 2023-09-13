@@ -188,7 +188,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Token:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet];
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
         case ROUTES.Governance.Home:
             return [
                 Network.OptimismMainnet,
@@ -250,3 +250,9 @@ export const getAPIKeyByNetwork = (networkId: Network) => {
             return 'NOT SUPPORTED';
     }
 };
+
+export const getIsStakingSupported = (networkId: Network): boolean =>
+    [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base].includes(networkId);
+
+export const getIsLpStakingSupported = (networkId: Network): boolean =>
+    [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);

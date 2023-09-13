@@ -17,12 +17,11 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { TokenTabSection } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { getIsOVM } from 'utils/network';
+import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard';
-import { Network } from 'enums/network';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -33,8 +32,8 @@ const Tab: React.FC<{
     const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
-    const isArb = networkId === Network.Arbitrum;
+    const isLpStakingSupported = getIsLpStakingSupported(networkId);
+    const isStakingSupported = getIsStakingSupported(networkId);
 
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
@@ -44,7 +43,7 @@ const Tab: React.FC<{
 
     return (
         <Container>
-            {(isArb || isL2) && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
+            {isStakingSupported && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.id === activeButtonId)?.title}</SectionHeader>
@@ -109,8 +108,10 @@ const Tab: React.FC<{
                     )}
                 </>
             )}
-            {!isL2 && !isArb && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
-            {isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
+            {!isStakingSupported && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
+                <MigrationInfo messageKey="staking" />
+            )}
+            {isLpStakingSupported && selectedTab === TokenTabEnum.LP_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.tab === selectedTab)?.title}</SectionHeader>
