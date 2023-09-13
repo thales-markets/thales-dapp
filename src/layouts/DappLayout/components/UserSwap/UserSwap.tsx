@@ -107,22 +107,20 @@ const UserSwap: React.FC = () => {
     const [swapTextIndex, setSwapTextIndex] = useState(-1);
 
     useEffect(() => {
-        const positiveCollateral = isMultiCollateralSupported
-            ? userCollaterals.find(
-                  (el) =>
-                      el.type ===
-                      getCollateral(
-                          networkId,
-                          getDefaultStableIndexByBalance(
-                              multipleStableBalances?.data,
-                              networkId,
-                              getDefaultCollateral(networkId) as Coins
-                          )
-                      )
-              ) || userCollaterals[0]
-            : userCollaterals[0];
-        setCollateral(positiveCollateral);
-        dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+        if (isMultiCollateralSupported) {
+            const collateralIndexWithPositiveBalance = getDefaultStableIndexByBalance(
+                multipleStableBalances?.data,
+                networkId,
+                getDefaultCollateral(networkId) as Coins
+            );
+            const positiveCollateral =
+                userCollaterals.find(
+                    (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance)
+                ) || userCollaterals[0];
+
+            setCollateral(positiveCollateral);
+            dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+        }
     }, [
         multipleStableBalances.data,
         stableBalanceQuery.data,

@@ -7,7 +7,7 @@ const escrowThales = {
         [Network.OptimismGoerli]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x391a45F31c1837E3d837c23e05F42A098329D50d',
-        [Network.Base]: 'TBD',
+        [Network.Base]: '0x29dfc5fee05578CD913c75fF1C7A0d315595939A',
     },
     abi: [
         {

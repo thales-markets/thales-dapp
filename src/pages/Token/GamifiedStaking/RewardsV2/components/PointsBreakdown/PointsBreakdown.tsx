@@ -1,5 +1,6 @@
 import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import usePointsBreakdownQuery, {
     DEFAULT_POINTS_BREAKDOWN_DATA,
@@ -17,20 +18,23 @@ import { FlexDivRow } from 'styles/common';
 import { buildHref, buildOvertimeVaultsLink, buildVaultLink } from 'utils/routes';
 
 type TabType = 'trading' | 'amm-lp' | 'vaults';
-type TabItem = { active: boolean; type: TabType };
+type TabItem = { active: boolean; type: TabType; hideForNetwork: Network[] };
 
 const DefaultTabState: TabItem[] = [
     {
         active: false,
         type: 'trading',
+        hideForNetwork: [],
     },
     {
         active: false,
         type: 'amm-lp',
+        hideForNetwork: [Network.Base],
     },
     {
         active: false,
         type: 'vaults',
+        hideForNetwork: [Network.Base],
     },
 ];
 
@@ -83,7 +87,7 @@ const PointsBreakdown: React.FC = () => {
             </FlexDiv>
             <FlexDiv>
                 <ColumnFlex>
-                    <BrakedownWrapper active={tabs[0].active}>
+                    <BrakedownWrapper transparent={tabs[0].hideForNetwork.includes(networkId)} active={tabs[0].active}>
                         <Row>
                             <Cell row={true}>
                                 <Icon className="sidebar-icon icon--trading" />
@@ -166,7 +170,7 @@ const PointsBreakdown: React.FC = () => {
                         )}
                         <Arrow className={getClassNameForTab('trading')} onClick={() => onTabClick('trading')} />
                     </BrakedownWrapper>
-                    <BrakedownWrapper active={tabs[1].active}>
+                    <BrakedownWrapper transparent={tabs[1].hideForNetwork.includes(networkId)} active={tabs[1].active}>
                         <Row>
                             <Cell row={true}>
                                 <Icon className="sidebar-icon icon--liquidity-pool" />
@@ -247,7 +251,7 @@ const PointsBreakdown: React.FC = () => {
                         )}
                         <Arrow className={getClassNameForTab('amm-lp')} onClick={() => onTabClick('amm-lp')} />
                     </BrakedownWrapper>
-                    <BrakedownWrapper active={tabs[2].active}>
+                    <BrakedownWrapper transparent={tabs[2].hideForNetwork.includes(networkId)} active={tabs[2].active}>
                         <Row>
                             <Cell row={true}>
                                 <Icon className="sidebar-icon icon--vaults" />
@@ -499,7 +503,7 @@ const Row = styled.div`
     }
 `;
 
-const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean }>`
+const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean; transparent: boolean }>`
     position: relative;
     background-color: ${(_props) => (_props?.active ? _props.theme.background.secondary : '')};
     border: 1px solid ${(props) => props.theme.borderColor.primary};
@@ -508,6 +512,7 @@ const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean }>`
     align-items: center;
     width: 100%;
     padding-top: 10px;
+    opacity: ${(props) => (props.transparent ? 0.4 : 1)};
 `;
 
 const Cell = styled.div<{ row?: boolean }>`

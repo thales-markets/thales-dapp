@@ -65,7 +65,7 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
 };
 
 export const getDefaultDecimalsForNetwork = (networkId: Network) => {
-    if (networkId == Network.Arbitrum || networkId == Network.PolygonMainnet || networkId === Network.Base) return 6;
+    if ([Network.Arbitrum, Network.PolygonMainnet, Network.Base].includes(networkId)) return 6;
     return 18;
 };
 
@@ -188,7 +188,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.PolygonMainnet,
             ];
         case ROUTES.Options.Token:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet];
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
         case ROUTES.Governance.Home:
             return [
                 Network.OptimismMainnet,
@@ -250,3 +250,9 @@ export const getAPIKeyByNetwork = (networkId: Network) => {
             return 'NOT SUPPORTED';
     }
 };
+
+export const getIsStakingSupported = (networkId: Network): boolean =>
+    [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base].includes(networkId);
+
+export const getIsLpStakingSupported = (networkId: Network): boolean =>
+    [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);

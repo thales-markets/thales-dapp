@@ -1,5 +1,4 @@
 import ElectionsBanner from 'components/ElectionsBanner';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,20 +9,19 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
-import { getIsOVM } from 'utils/network';
+import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
-import { Network } from 'enums/network';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
-    const isArb = networkId === Network.Arbitrum;
+    const isLpStakingSupported = getIsLpStakingSupported(networkId);
+    const isStakingSupported = getIsStakingSupported(networkId);
 
-    const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
+    const defaultTab = isStakingSupported ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
     const tabs = [
         {
@@ -82,14 +80,14 @@ const TokenPage: React.FC = () => {
         [t]
     );
 
-    if (isL2) {
+    if (isLpStakingSupported) {
         tabs.push({
             id: TokenTabEnum.LP_STAKING,
             name: t('thales-token.lp-staking.tab-title'),
         });
     }
 
-    if (!isL2 && !isArb) {
+    if (!isStakingSupported) {
         tabs.push({
             id: TokenTabEnum.MIGRATION,
             name: t('migration.title'),
@@ -124,7 +122,7 @@ const TokenPage: React.FC = () => {
         const paramTab = queryString.parse(location.search).tab;
         const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
         setSelectedTab(isTabAvailable ? paramTab : defaultTab);
-    }, [location, isL2, defaultTab, tabIds]);
+    }, [location, isLpStakingSupported, defaultTab, tabIds]);
 
     useEffect(() => {
         const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
@@ -134,12 +132,11 @@ const TokenPage: React.FC = () => {
 
     return (
         <>
-            {isL2 && <OpRewardsBanner />}
             <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />
-                    {!isL2 && !isArb && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
+                    {!isStakingSupported && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
 
                     <MainContentContainer>
                         <TabContainer
