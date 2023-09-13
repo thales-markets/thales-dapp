@@ -47,10 +47,7 @@ const StakingLeaderboard: React.FC = () => {
         walletAddress,
         networkId,
         period,
-        Number(period) === Number(currentPeriod),
-        {
-            enabled: Number(period) > 0 && Number(currentPeriod) > 0,
-        }
+        Number(period) === Number(currentPeriod)
     );
 
     const stakingData = useMemo(() => {
