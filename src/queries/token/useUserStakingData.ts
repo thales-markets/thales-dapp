@@ -51,25 +51,10 @@ const useUserStakingDataQuery = (
                     liquidityPoolContract,
                     parlayLiquidityPoolContract,
                 } = snxJSConnector;
-
-                if (
-                    stakingDataContract &&
-                    sportLiquidityPoolContract &&
-                    liquidityPoolContract &&
-                    parlayLiquidityPoolContract
-                ) {
-                    const [
-                        contractStakingData,
-                        contractUserStakingData,
-                        isUserSportLPing,
-                        isUserParlayLPing,
-                        isUserLPing,
-                    ] = await Promise.all([
+                if (stakingDataContract) {
+                    const [contractStakingData, contractUserStakingData] = await Promise.all([
                         stakingDataContract.getStakingData(),
                         stakingDataContract.getUserStakingData(walletAddress),
-                        sportLiquidityPoolContract.isUserLPing(walletAddress),
-                        parlayLiquidityPoolContract.isUserLPing(walletAddress),
-                        liquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
                     userStakingData.thalesStaked =
@@ -109,7 +94,16 @@ const useUserStakingDataQuery = (
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
-                    userStakingData.isUserLPing = isUserSportLPing || isUserLPing || isUserParlayLPing;
+
+                    if (sportLiquidityPoolContract && liquidityPoolContract && parlayLiquidityPoolContract) {
+                        const [isUserSportLPing, isUserParlayLPing, isUserLPing] = await Promise.all([
+                            sportLiquidityPoolContract.isUserLPing(walletAddress),
+                            parlayLiquidityPoolContract.isUserLPing(walletAddress),
+                            liquidityPoolContract.isUserLPing(walletAddress),
+                        ]);
+                        userStakingData.isUserLPing = isUserSportLPing || isUserLPing || isUserParlayLPing;
+                    }
+
                     userStakingData.isPaused = contractStakingData.paused;
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     userStakingData.mergeAccountEnabled = contractStakingData.mergeAccountEnabled;
