@@ -113,7 +113,6 @@ const useProfileDataQuery = (
                                 acc.totalSellAmount += obj.takerAmount;
                                 acc.totalSellSpent += obj.makerAmount;
                             }
-                            console.log(acc);
                             return acc;
                         },
                         { totalBuyAmount: 0, totalBuySpent: 0, totalSellAmount: 0, totalSellSpent: 0 }
