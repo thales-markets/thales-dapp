@@ -67,9 +67,6 @@ const useProfileDataQuery = (
                 isUserWinner: boolean;
             }[] = resolvedUserDirectionalMarkets.concat(resolvedUserRangedMarkets);
 
-            const userTradesCopy = JSON.parse(JSON.stringify(userTrades));
-            // Calculate only resolved markets for profit if there are no sells
-            // When there are sells and markets are unresolved: profit = totalSell - totalBuy + remainingUnresolvedAmount
             userTrades.map((tx: any) => {
                 numberOfTrades += 1;
 
@@ -77,38 +74,53 @@ const useProfileDataQuery = (
                     (resolvedMarket) => resolvedMarket.market === tx.market
                 );
 
-                if (tx.orderSide === 'sell') {
-                    if (resolvedMarket) {
+                // Calculate only resolved markets for profit
+                if (resolvedMarket) {
+                    if (tx.orderSide === 'sell') {
                         // if user is winner buy will take whole amount which needs to be decreased by sold amount
                         profit = resolvedMarket.isUserWinner ? profit - tx.takerAmount : profit + tx.makerAmount;
                     } else {
-                        // calculate total sell
-                        profit += tx.makerAmount;
-                    }
-                    volume += tx.makerAmount;
-                } else {
-                    // buy
-                    const sellExists = !!userTradesCopy.find(
-                        (trade: any) => trade.market === tx.market && trade.orderSide === 'sell'
-                    );
-
-                    if (resolvedMarket) {
+                        // buy
                         profit = profit - tx.takerAmount + (resolvedMarket.isUserWinner ? tx.makerAmount : 0);
                         investment += tx.takerAmount;
-                    } else if (sellExists) {
-                        const remainingUnresolvedAmount = userTradesCopy
-                            .filter((trade: any) => trade.market === tx.market)
-                            .reduce(
-                                (acc: number, obj: any) =>
-                                    obj.orderSide === 'sell' ? acc - obj.takerAmount : acc + obj.makerAmount,
-                                0
-                            );
-                        // calculate total buy plus remaining amount waiting to be resolve
-                        profit = profit - tx.takerAmount + remainingUnresolvedAmount;
                     }
-
-                    volume += tx.takerAmount;
                 }
+                volume += tx.takerAmount;
+            });
+
+            // When there are sells and markets are unresolved calculate: profit = totalSell - totalBuyForSoldAmount
+            const uniqueUnresolvedMarketsWithSell: any[] = userTrades
+                .filter((tx: any) => {
+                    const resolvedMarket = resolvedUserMarkets.find(
+                        (resolvedMarket) => resolvedMarket.market === tx.market
+                    );
+
+                    return !resolvedMarket && tx.orderSide === 'sell';
+                })
+                .map((tx: any) => tx.market)
+                .filter((item: string, index: number, self: string[]) => self.indexOf(item) === index);
+
+            uniqueUnresolvedMarketsWithSell.forEach((market: string) => {
+                // calculate spent on buy for sold amount
+                const { totalBuyAmount, totalBuySpent, totalSellAmount, totalSellSpent } = userTrades
+                    .filter((trade: any) => trade.market === market)
+                    .reduce(
+                        (acc: any, obj: any) => {
+                            if (obj.orderSide === 'buy') {
+                                acc.totalBuyAmount += obj.makerAmount;
+                                acc.totalBuySpent += obj.takerAmount;
+                            } else {
+                                acc.totalSellAmount += obj.takerAmount;
+                                acc.totalSellSpent += obj.makerAmount;
+                            }
+                            console.log(acc);
+                            return acc;
+                        },
+                        { totalBuyAmount: 0, totalBuySpent: 0, totalSellAmount: 0, totalSellSpent: 0 }
+                    );
+                const buySpentForSoldAmount = (totalBuySpent / totalBuyAmount) * totalSellAmount;
+
+                profit += totalSellSpent - buySpentForSoldAmount;
             });
 
             // Speed Markets
