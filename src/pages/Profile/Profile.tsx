@@ -70,17 +70,17 @@ const Profile: React.FC = () => {
             enabled: isAppReady && isWalletConnected,
         }
     );
-    const speedMarketsNotifications =
+    const claimableSpeedMarkets =
         userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
-            ? userActiveSpeedMarketsDataQuery.data.filter(
-                  (marketData) => marketData.maturityDate < Date.now() && marketData.claimable
-              ).length
-            : 0;
+            ? userActiveSpeedMarketsDataQuery.data
+                  .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable)
+                  .map((marketData) => marketData.market)
+            : [];
 
-    const totalNotifications = notifications + speedMarketsNotifications;
+    const totalNotifications = notifications + claimableSpeedMarkets.length;
 
-    const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+    const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, claimableSpeedMarkets, {
+        enabled: isAppReady && isWalletConnected && userActiveSpeedMarketsDataQuery.isSuccess,
     });
     const profileData: UserProfileData =
         userProfileDataQuery.isSuccess && userProfileDataQuery.data

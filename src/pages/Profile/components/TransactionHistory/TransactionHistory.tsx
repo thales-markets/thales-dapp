@@ -117,7 +117,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                     }
                     const isRanged = row.optionSide === 'in' || row.optionSide == 'out';
                     const isSpeedMarket = (row.marketItem as SpeedMarket)?.isSpeedMarket;
-                    const marketExpired = row.marketItem.result;
+                    const marketExpired = row.marketItem.maturityDate < Date.now();
                     const optionPrice =
                         row.orderSide != 'sell' ? row.takerAmount / row.makerAmount : row.makerAmount / row.takerAmount;
                     const paidAmount = row.orderSide == 'sell' ? row.makerAmount : row.takerAmount;
