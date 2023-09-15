@@ -808,15 +808,7 @@ const LiquidityPool: React.FC = () => {
                         </ContentContainer>
                         <ContentContainer>
                             <ButtonContainer>
-                                <ExternalButton
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    href={
-                                        networkId !== Network.Arbitrum
-                                            ? LINKS.UniswapBuyThalesOp
-                                            : LINKS.UniswapBuyThalesArbitrum
-                                    }
-                                >
+                                <ExternalButton target="_blank" rel="noreferrer" href={getUniswapLink(networkId)}>
                                     {t('liquidity-pool.button.get-thales-label')}
                                     <GetStakeThalesIcon className={`icon icon--get-thales`} />
                                 </ExternalButton>
@@ -1097,6 +1089,12 @@ const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: num
         nextRoundBalancePercenatage,
         maxAllowancePercenatage,
     };
+};
+
+const getUniswapLink = (networkId: Network) => {
+    if (networkId === Network.Arbitrum) return LINKS.UniswapBuyThalesArbitrum;
+    if (networkId === Network.Base) return LINKS.UniswapBuyThalesBase;
+    return LINKS.UniswapBuyThalesOp;
 };
 
 export default LiquidityPool;
