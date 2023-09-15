@@ -29,7 +29,7 @@ const DefaultTabState: TabItem[] = [
     {
         active: false,
         type: 'amm-lp',
-        hideForNetwork: [Network.Base],
+        hideForNetwork: [],
     },
     {
         active: false,
