@@ -111,8 +111,11 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                 }
 
                 // Fetch current prices
-                const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
-                const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, priceIds);
+                let prices: { [key: string]: number } = {};
+                if (openMarkets.length) {
+                    const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
+                    prices = await getCurrentPrices(priceConnection, networkId, priceIds);
+                }
 
                 // Open markets
                 for (let i = 0; i < openMarkets.length; i++) {
