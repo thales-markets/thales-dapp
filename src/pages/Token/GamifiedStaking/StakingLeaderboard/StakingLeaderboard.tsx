@@ -27,7 +27,7 @@ const StakingLeaderboard: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [period, setPeriod] = useState(0);
-    const [currentPeriod, setCurrentPeriod] = useState(0);
+    const [currentPeriod, setCurrentPeriod] = useState(-1);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(50);
     const theme = useTheme();
@@ -47,7 +47,10 @@ const StakingLeaderboard: React.FC = () => {
         walletAddress,
         networkId,
         period,
-        Number(period) === Number(currentPeriod)
+        Number(period) === Number(currentPeriod),
+        {
+            enabled: Number(period) >= 0 && Number(currentPeriod) >= 0,
+        }
     );
 
     const stakingData = useMemo(() => {

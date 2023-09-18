@@ -78,7 +78,7 @@ export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
-export const formatNumberShort = (value: number, trim = true) => {
+export const formatNumberShort = (value: number, trim = true, negativeFactors = false) => {
     // Nine Zeroes for Billions
     return value >= 1.0e9
         ? formatCurrency(value / 1.0e9, 2, trim) + 'b'
@@ -88,9 +88,9 @@ export const formatNumberShort = (value: number, trim = true) => {
         : // Three Zeroes for Thousands
         value >= 1.0e3
         ? formatCurrency(value / 1.0e3, 2, trim) + 'k'
-        : value < 0.01
-        ? value
-        : formatCurrency(value, 2, trim);
+        : negativeFactors && value <= 1.0e-6
+        ? formatCurrency(value * 1.0e6, 2, trim) + 'e-6'
+        : formatCurrencyWithPrecision(value, trim);
 };
 
 export const formatStrikePrice = (leftPrice: number, position: Positions, rightPrice?: number) => {
@@ -98,14 +98,16 @@ export const formatStrikePrice = (leftPrice: number, position: Positions, rightP
     if (position === Positions.UP || position === Positions.DOWN) {
         strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)}`;
     } else if (position === Positions.IN) {
-        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)} <-> ${USD_SIGN} ${formatNumberShort(
+        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false, true)} <-> ${USD_SIGN} ${formatNumberShort(
             rightPrice as number,
-            false
+            false,
+            true
         )}`;
     } else {
         strikePrice = `<- ${USD_SIGN} ${formatNumberShort(leftPrice, false)}  ${USD_SIGN} ${formatNumberShort(
             rightPrice as number,
-            false
+            false,
+            true
         )} ->`;
     }
     return strikePrice;

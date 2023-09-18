@@ -178,7 +178,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
         case ROUTES.Options.Referral:
             return [
                 Network.OptimismMainnet,

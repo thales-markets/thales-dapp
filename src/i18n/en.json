@@ -1565,6 +1565,7 @@
     },
     "banner": {
         "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
-        "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!"
+        "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!",
+        "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 20!"
     }
 }
