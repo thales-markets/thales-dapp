@@ -15,9 +15,9 @@ const StickyBanner: React.FC = () => {
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    return getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) ? (
-        <Container onClick={() => navigateTo(ROUTES.Options.Token)}>
-            <Label>{t('banner.main-paragraph')}</Label>
+    return getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) ? (
+        <Container onClick={() => navigateTo(ROUTES.Options.SpeedMarkets)}>
+            <Label>{t('banner.speed-markets-banner')}</Label>
         </Container>
     ) : (
         <></>
