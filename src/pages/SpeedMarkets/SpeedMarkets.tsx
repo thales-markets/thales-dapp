@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import banner from 'assets/images/speed-markets/speed-markets-banner.png';
+import banner from 'assets/images/speed-markets/competition-speed-markets-banner.png';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
