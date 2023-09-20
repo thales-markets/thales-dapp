@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import banner from 'assets/images/speed-markets/speed-markets-banner.png';
+import banner from 'assets/images/speed-markets/competition-speed-markets-banner.png';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -30,6 +30,7 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
+import { LINKS } from 'constants/links';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = () => {
     const { t } = useTranslation();
@@ -122,7 +123,9 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                 <SimpleLoader />
             ) : (
                 <Container>
-                    <HeaderImage />
+                    <SPAAnchor href={LINKS.DuneSpeedMarketsCompetition}>
+                        <HeaderImage />
+                    </SPAAnchor>
                     <Info>
                         <Trans
                             i18nKey="speed-markets.info"

@@ -79,4 +79,5 @@ export const LINKS = {
     ThalesStaking: 'https://thalesmarket.io/token',
     ThalesTip139: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-139.md',
     TwitterTweetStatus: 'https://twitter.com/intent/tweet?text=',
+    DuneSpeedMarketsCompetition: 'https://dune.com/leifu/thales-speed-markets-competition',
 };
