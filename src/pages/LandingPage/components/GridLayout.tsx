@@ -59,13 +59,13 @@ const GridLayout: React.FC = () => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={thalesIW}></Image>
+                <Image src={thalesIW} alt="thales portrait greek markets"></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={thalesIIW}></Image>
+                <Image src={thalesIIW} alt="portrait greek"></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={thalesIIIW}></Image>
+                <Image src={thalesIIIW} alt="portrait greek markets"></Image>
             </ThalesImageIII>
             <StarsImage>
                 <AnimationSvg type="image/svg+xml" data={starsBlack}></AnimationSvg>
