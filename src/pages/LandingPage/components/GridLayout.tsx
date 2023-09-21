@@ -108,7 +108,7 @@ const TitleContainer = styled(CenteredDiv)`
     }
 `;
 
-const Title = styled.p`
+const Title = styled.h1`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
@@ -412,7 +412,7 @@ const SystemImage = styled.div`
     }
 `;
 
-const ContTitle = styled.p`
+const ContTitle = styled.h2`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
