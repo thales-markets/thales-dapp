@@ -1,17 +1,25 @@
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
-import thalesIW from 'assets/images/landing-page/thales1-white.png';
-import thalesIIW from 'assets/images/landing-page/thales2-white.png';
-import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
+import thalesIW from 'assets/images/landing-page/thales1-white.webp';
+import thalesIWMobile from 'assets/images/landing-page/thales1-white-mobile.webp';
+import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
+import thalesIIWMobile from 'assets/images/landing-page/thales2-white-mobile.webp';
+import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
+import thalesIIIWMobile from 'assets/images/landing-page/thales3-white-mobile.webp';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import Header from './Header/Header';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 
 const GridLayout: React.FC = () => {
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { t } = useTranslation();
+
     return (
         <Wrapper>
             <Header />
@@ -59,13 +67,13 @@ const GridLayout: React.FC = () => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={thalesIW}></Image>
+                <Image src={isMobile ? thalesIWMobile : thalesIW} alt="thales portrait greek markets"></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={thalesIIW}></Image>
+                <Image src={isMobile ? thalesIIWMobile : thalesIIW} alt="portrait greek"></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={thalesIIIW}></Image>
+                <Image src={isMobile ? thalesIIIWMobile : thalesIIIW} alt="portrait greek markets"></Image>
             </ThalesImageIII>
             <StarsImage>
                 <AnimationSvg type="image/svg+xml" data={starsBlack}></AnimationSvg>
@@ -108,7 +116,7 @@ const TitleContainer = styled(CenteredDiv)`
     }
 `;
 
-const Title = styled.p`
+const Title = styled.h1`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
@@ -309,7 +317,7 @@ const ThalesImageI = styled.div`
     z-index: 3;
     @media (max-width: 600px) {
         grid-column-start: 21;
-        grid-column-end: 48;
+        grid-column-end: 42;
         grid-row-start: 31;
         grid-row-end: 44;
         -webkit-transform: scaleX(-1);
@@ -412,7 +420,7 @@ const SystemImage = styled.div`
     }
 `;
 
-const ContTitle = styled.p`
+const ContTitle = styled.h2`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
