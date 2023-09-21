@@ -1,6 +1,7 @@
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.webp';
+import thalesIWMobile from 'assets/images/landing-page/thales1-white-mobile.webp';
 import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
 import ROUTES from 'constants/routes';
@@ -9,9 +10,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import Header from './Header/Header';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 
 const GridLayout: React.FC = () => {
     const { t } = useTranslation();
+
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     return (
         <Wrapper>
             <Header />
@@ -59,7 +66,7 @@ const GridLayout: React.FC = () => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={thalesIW} alt="thales portrait greek markets"></Image>
+                <Image src={isMobile ? thalesIWMobile : thalesIW} alt="thales portrait greek markets"></Image>
             </ThalesImageI>
             <ThalesImageII>
                 <Image src={thalesIIW} alt="portrait greek"></Image>
@@ -309,7 +316,7 @@ const ThalesImageI = styled.div`
     z-index: 3;
     @media (max-width: 600px) {
         grid-column-start: 21;
-        grid-column-end: 48;
+        grid-column-end: 42;
         grid-row-start: 31;
         grid-row-end: 44;
         -webkit-transform: scaleX(-1);
