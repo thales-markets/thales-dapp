@@ -3,7 +3,9 @@ import systemBlack from 'assets/images/landing-page/system-black.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.webp';
 import thalesIWMobile from 'assets/images/landing-page/thales1-white-mobile.webp';
 import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
+import thalesIIWMobile from 'assets/images/landing-page/thales2-white-mobile.webp';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
+import thalesIIIWMobile from 'assets/images/landing-page/thales3-white-mobile.webp';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -15,9 +17,8 @@ import { getIsMobile } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 
 const GridLayout: React.FC = () => {
-    const { t } = useTranslation();
-
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const { t } = useTranslation();
 
     return (
         <Wrapper>
@@ -69,10 +70,10 @@ const GridLayout: React.FC = () => {
                 <Image src={isMobile ? thalesIWMobile : thalesIW} alt="thales portrait greek markets"></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={thalesIIW} alt="portrait greek"></Image>
+                <Image src={isMobile ? thalesIIWMobile : thalesIIW} alt="portrait greek"></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={thalesIIIW} alt="portrait greek markets"></Image>
+                <Image src={isMobile ? thalesIIIWMobile : thalesIIIW} alt="portrait greek markets"></Image>
             </ThalesImageIII>
             <StarsImage>
                 <AnimationSvg type="image/svg+xml" data={starsBlack}></AnimationSvg>

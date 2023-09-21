@@ -1,10 +1,14 @@
 import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import footerW from 'assets/images/landing-page/footer-white.webp';
+import footerWMobile from 'assets/images/landing-page/footer-white-mobile.webp';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 
@@ -13,11 +17,12 @@ type HeaderInput = {
 };
 
 const Footer: React.FC<HeaderInput> = ({ className }) => {
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { t } = useTranslation();
 
     return (
         <FooterHtml className={className}>
-            <Image src={footerW} width={1000} alt="portrait with globe" />
+            <Image src={isMobile ? footerWMobile : footerW} width={1000} alt="portrait with globe" />
             <Lines src={footerW2} alt="circles around image" />
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />
