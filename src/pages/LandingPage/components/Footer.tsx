@@ -18,7 +18,7 @@ const Footer: React.FC<HeaderInput> = ({ className }) => {
     return (
         <FooterHtml className={className}>
             <Image src={footerW} width={1000} alt="portrait with globe" />
-            <Lines src={footerW2} />
+            <Lines src={footerW2} alt="circles around image" />
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />
                 <FooterButtonsWrapper>
