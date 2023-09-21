@@ -182,7 +182,7 @@ const FlexWrapper = styled.div`
     padding: 0 20px;
 `;
 
-const Title = styled.p`
+const Title = styled.h2`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
