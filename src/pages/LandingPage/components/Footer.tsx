@@ -1,6 +1,6 @@
 import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
-import footerW from 'assets/images/landing-page/footer-white.png';
+import footerW from 'assets/images/landing-page/footer-white.webp';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
 import ROUTES from 'constants/routes';
 import React from 'react';
@@ -17,7 +17,7 @@ const Footer: React.FC<HeaderInput> = ({ className }) => {
 
     return (
         <FooterHtml className={className}>
-            <Image src={footerW} />
+            <Image src={footerW} width={1000} />
             <Lines src={footerW2} />
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />

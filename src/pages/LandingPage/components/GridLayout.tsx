@@ -1,8 +1,8 @@
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
-import thalesIW from 'assets/images/landing-page/thales1-white.png';
-import thalesIIW from 'assets/images/landing-page/thales2-white.png';
-import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
+import thalesIW from 'assets/images/landing-page/thales1-white.webp';
+import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
+import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
