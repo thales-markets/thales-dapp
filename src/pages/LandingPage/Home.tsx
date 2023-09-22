@@ -14,20 +14,10 @@ const Home: React.FC = () => {
         <Background>
             <Suspense fallback={<Loader />}>
                 <Banners />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
                 <GridLayout />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
                 <Integrations />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
                 <Blog />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
                 <FAQ />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
                 <Footer />
             </Suspense>
         </Background>
