@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
+import { FlexWrapper, Title, FlexDiv } from './styled-components';
 
 const Integrations: React.FC = () => {
     const { t } = useTranslation();
@@ -95,15 +96,6 @@ const Integrations: React.FC = () => {
         </FlexWrapper>
     );
 };
-
-const FlexWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    max-width: 1122px;
-    align-items: center;
-    padding: 0 20px;
-`;
 
 const IconAbs = styled.i`
     cursor: pointer;
@@ -211,36 +203,6 @@ const PYTH = styled(IconAbs)`
     @media (max-width: 600px) {
         font-size: 8em;
     }
-`;
-
-const FlexDiv = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-evenly;
-    align-items: center;
-    color: ${(props) => props.theme.landingPage.textColor.primary};
-    flex-wrap: wrap;
-    &.initiatives {
-        & > a > i {
-            @media (max-width: 600px) {
-                flex: 1 40%;
-                text-align: center;
-            }
-        }
-    }
-`;
-
-const Title = styled.h2`
-    font-family: Playfair Display !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 4.4em;
-    @media (max-width: 600px) {
-        font-size: 2em;
-    }
-    line-height: 91.91%;
-    text-align: center;
-    color: ${(props) => props.theme.landingPage.textColor.primary};
 `;
 
 export default Integrations;
