@@ -1,4 +1,5 @@
-import React from 'react';
+import Loader from 'components/Loader';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 
 const Banners = React.lazy(() => import('./components/Banners'));
@@ -11,12 +12,24 @@ const Footer = React.lazy(() => import('./components/Footer'));
 const Home: React.FC = () => {
     return (
         <Background>
-            <Banners />
-            <GridLayout />
-            <Integrations />
-            <Blog />
-            <FAQ />
-            <Footer />
+            <Suspense fallback={<Loader />}>
+                <Banners />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+                <GridLayout />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+                <Integrations />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+                <Blog />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+                <FAQ />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+                <Footer />
+            </Suspense>
         </Background>
     );
 };
