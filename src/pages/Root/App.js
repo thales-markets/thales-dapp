@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Router, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 import { setIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { isMobile } from 'utils/device';
@@ -15,7 +15,6 @@ import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import Loader from 'components/Loader';
-import DappProvider from 'pages/Root/Providers/DappProvider';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -46,6 +45,8 @@ const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
+
+const DappProvider = lazy(() => import(/* webpackChunkName: "DappProvider" */ 'pages/Root/Providers/DappProvider'));
 
 const App = () => {
     const dispatch = useDispatch();
