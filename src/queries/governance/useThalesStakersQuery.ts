@@ -10,12 +10,15 @@ const useThalesStakersQuery = (filter: StakersFilterEnum, options?: UseQueryOpti
     return useQuery<Stakers>(
         QUERY_KEYS.Governance.ThalesStakers(filter),
         async () => {
-            const [stakers, stakersArb] = await Promise.all([
+            const [stakers, stakersArb, stakersBase] = await Promise.all([
                 thalesData.binaryOptions.stakers({
                     network: Network.OptimismMainnet,
                 }),
                 thalesData.binaryOptions.stakers({
                     network: Network.Arbitrum,
+                }),
+                thalesData.binaryOptions.stakers({
+                    network: Network.Base,
                 }),
             ]);
 
@@ -24,6 +27,8 @@ const useThalesStakersQuery = (filter: StakersFilterEnum, options?: UseQueryOpti
                 stakersFinal = stakers;
             } else if (filter === StakersFilterEnum.Arbitrum) {
                 stakersFinal = stakersArb;
+            } else if (filter === StakersFilterEnum.Base) {
+                stakersFinal = stakersBase;
             } else {
                 const mapToUse = new Map();
                 stakersFinal = stakers;
@@ -33,6 +38,14 @@ const useThalesStakersQuery = (filter: StakersFilterEnum, options?: UseQueryOpti
                 });
 
                 stakersArb.map((staker: Staker) => {
+                    if (mapToUse.get(staker.id)) {
+                        mapToUse.set(staker.id, staker.totalStakedAmount + mapToUse.get(staker.id));
+                    } else {
+                        stakersFinal.push(staker);
+                    }
+                });
+
+                stakersBase.map((staker: Staker) => {
                     if (mapToUse.get(staker.id)) {
                         mapToUse.set(staker.id, staker.totalStakedAmount + mapToUse.get(staker.id));
                     } else {

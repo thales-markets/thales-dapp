@@ -4,8 +4,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { formatCurrency } from 'utils/formatters/number';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
-const LP_STAKING_WEEKLY_REWARDS = 24000;
-const LP_STAKING_WEEKLY_SECOND_REWARDS = 2500;
+const LP_STAKING_WEEKLY_REWARDS = 20000;
+const LP_STAKING_WEEKLY_SECOND_REWARDS = 2000;
 
 interface Balance {
     priceInUSD: number;

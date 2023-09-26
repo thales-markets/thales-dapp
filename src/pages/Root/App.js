@@ -1,5 +1,4 @@
-import Loader from 'components/Loader';
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +28,7 @@ import { createGlobalStyle } from 'styled-components';
 import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
+import Loader from 'components/Loader';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -189,194 +189,234 @@ const App = () => {
     return (
         <ThemeProvider>
             <QueryClientProvider client={queryConnector.queryClient}>
-                <Suspense fallback={<Loader />}>
-                    <Router history={history}>
-                        <Switch>
-                            {getSupportedNetworksByRoute(ROUTES.Options.CreateMarket).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.CreateMarket}>
+                <Router history={history}>
+                    <Switch>
+                        {getSupportedNetworksByRoute(ROUTES.Options.CreateMarket).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.CreateMarket}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <CreateMarket />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                                    render={(routeProps) => (
+                        {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
+                            <Route
+                                exact
+                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
                                         <DappLayout>
                                             <GovernancePage {...routeProps} />
                                         </DappLayout>
-                                    )}
-                                />
-                            )}
+                                    </Suspense>
+                                )}
+                            />
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.Game}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Game}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <TaleOfThales />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.Profile}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Profile}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Profile />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.Token}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Token}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <TokenPage />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.Referral}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Referral}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Referral />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.Vaults}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Vaults}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Vaults />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Vault).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={ROUTES.Options.Vault}
-                                    render={(routeProps) => (
+                        {getSupportedNetworksByRoute(ROUTES.Options.Vault).includes(networkId) && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.Vault}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
                                         <DappLayout>
                                             <Vault {...routeProps} />
                                         </DappLayout>
-                                    )}
-                                />
-                            )}
+                                    </Suspense>
+                                )}
+                            />
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
-                                <Route exact path={ROUTES.Options.LiquidityPool}>
+                        {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.LiquidityPool}>
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <LiquidityPool />
                                     </DappLayout>
-                                </Route>
-                            )}
+                                </Suspense>
+                            </Route>
+                        )}
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={ROUTES.Options.MarketMatch}
-                                    render={(routeProps) => (
-                                        <DappLayout>
-                                            <AMMTrading {...routeProps} />
-                                        </DappLayout>
-                                    )}
-                                />
-                            )}
-
-                            {getSupportedNetworksByRoute(ROUTES.Options.RangeMarkets).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={ROUTES.Options.RangeMarketMatch}
-                                    render={(routeProps) => (
-                                        <DappLayout>
-                                            <AMMTrading {...routeProps} />
-                                        </DappLayout>
-                                    )}
-                                />
-                            )}
-
+                        {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
                             <Route
                                 exact
-                                path={ROUTES.Options.Home}
+                                path={ROUTES.Options.MarketMatch}
                                 render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    </Suspense>
+                                )}
+                            />
+                        )}
+
+                        {getSupportedNetworksByRoute(ROUTES.Options.RangeMarkets).includes(networkId) && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarketMatch}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    </Suspense>
+                                )}
+                            />
+                        )}
+
+                        <Route
+                            exact
+                            path={ROUTES.Options.Home}
+                            render={(routeProps) => (
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Markets {...routeProps} />
                                     </DappLayout>
-                                )}
-                            />
+                                </Suspense>
+                            )}
+                        />
 
-                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={ROUTES.Options.SpeedMarkets}
-                                    render={(routeProps) => (
+                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.SpeedMarkets}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
                                         <DappLayout>
                                             <SpeedMarkets {...routeProps} />
                                         </DappLayout>
-                                    )}
-                                />
-                            )}
-                            {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                                <Route
-                                    exact
-                                    path={ROUTES.Options.SpeedMarketsOverview}
-                                    render={(routeProps) => (
+                                    </Suspense>
+                                )}
+                            />
+                        )}
+                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.SpeedMarketsOverview}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
                                         <DappLayout>
                                             <SpeedMarketsOverview {...routeProps} />
                                         </DappLayout>
-                                    )}
-                                />
-                            )}
+                                    </Suspense>
+                                )}
+                            />
+                        )}
 
-                            <Route
-                                exact
-                                path={ROUTES.Options.RangeMarkets}
-                                render={(routeProps) => (
+                        <Route
+                            exact
+                            path={ROUTES.Options.RangeMarkets}
+                            render={(routeProps) => (
+                                <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Markets {...routeProps} />
                                     </DappLayout>
-                                )}
-                            ></Route>
+                                </Suspense>
+                            )}
+                        ></Route>
 
-                            <Route exact path={ROUTES.Options.Wizard}>
+                        <Route exact path={ROUTES.Options.Wizard}>
+                            <Suspense fallback={<Loader />}>
                                 <DappLayout>
                                     <Wizard />
                                 </DappLayout>
-                            </Route>
+                            </Suspense>
+                        </Route>
 
-                            <Route exact path={ROUTES.Home}>
+                        <Route exact path={ROUTES.Home}>
+                            <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Home />
                                 </MainLayout>
-                            </Route>
+                            </Suspense>
+                        </Route>
 
-                            <Route exact path={ROUTES.Article.Token}>
+                        <Route exact path={ROUTES.Article.Token}>
+                            <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Token />
                                 </MainLayout>
-                            </Route>
-                            <Route exact path={ROUTES.Article.Governance}>
+                            </Suspense>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Governance}>
+                            <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Governance />
                                 </MainLayout>
-                            </Route>
-                            <Route exact path={ROUTES.Article.Whitepaper}>
+                            </Suspense>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Whitepaper}>
+                            <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Whitepaper />
                                 </MainLayout>
-                            </Route>
+                            </Suspense>
+                        </Route>
 
-                            <Route>
-                                <Redirect to={ROUTES.Options.Home} />
+                        <Route>
+                            <Redirect to={ROUTES.Options.Home} />
+                            <Suspense fallback={<Loader />}>
                                 <DappLayout>
                                     <Markets />
                                 </DappLayout>
-                            </Route>
-                        </Switch>
-                    </Router>
-                    <ReactQueryDevtools initialIsOpen={false} />
-                </Suspense>
+                            </Suspense>
+                        </Route>
+                    </Switch>
+                </Router>
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
             <GlobalStyle />
         </ThemeProvider>

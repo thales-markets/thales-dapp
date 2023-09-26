@@ -111,7 +111,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const [ticks, setTicks] = useState<number[]>();
     const [iv, setIV] = useState(0);
 
-    const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
+    const priceData = usePriceDataQuery(
+        { currencyKey: asset, currencyVs: '', days: dateRange },
+        { refetchInterval: false }
+    );
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady && !explicitCurrentPrice,
@@ -184,6 +187,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
         fetchData();
+        priceData.refetch();
     }, [asset, dateRange, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {
