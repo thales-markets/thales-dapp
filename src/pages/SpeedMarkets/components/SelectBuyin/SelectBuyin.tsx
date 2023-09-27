@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type SelectBuyinProps = {
     value: number;
@@ -52,7 +53,7 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMark
 const Container = styled(FlexDivRow)``;
 
 const Amount = styled(FlexDivCentered)<{ isSelected: boolean }>`
-    width: 60px;
+    width: 70px;
     height: 31px;
     border-radius: 8px;
     background: ${(props) =>
@@ -64,6 +65,9 @@ const Amount = styled(FlexDivCentered)<{ isSelected: boolean }>`
     font-size: 13px;
     line-height: 90%;
     padding-left: 1px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 60px;
+    }
 `;
 
 const DollarSign = styled.span`
