@@ -160,7 +160,7 @@ const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
 
 const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     position: absolute;
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: -10px;
     width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;
