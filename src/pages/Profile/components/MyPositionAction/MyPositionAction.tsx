@@ -21,10 +21,16 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
-import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getSelectedCollateralIndex,
+    getWalletAddress,
+    setSelectedCollateralIndex,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -67,6 +73,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     maxPriceDelayForResolvingSec,
 }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(position.side);
@@ -91,6 +98,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
+
+    useEffect(() => {
+        dispatch(setSelectedCollateralIndex(0));
+    }, [networkId, isWalletConnected, dispatch]);
 
     useEffect(() => {
         if (position.positionAddress === ZERO_ADDRESS) {
