@@ -499,19 +499,24 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
 
     return (
         <>
-            {getButton()}
-            {isMultiCollateralSupported && position.isSpeedMarket && position.claimable && (
-                <CollateralSelector
-                    collateralArray={getCollaterals(networkId, true)}
-                    selectedItem={selectedCollateralIndex}
-                    onChangeCollateral={() => {}}
-                    disabled={isSubmitting}
-                    // isDetailedView
-                    // collateralBalances={multipleCollateralBalances.data}
-                    // exchangeRates={exchangeRates}
-                    // dropDownWidth={inputWrapperRef.current?.getBoundingClientRect().width + 'px'}
-                />
-            )}
+            <FlexDivCentered>
+                {getButton()}
+                {isMultiCollateralSupported && position.isSpeedMarket && position.claimable && (
+                    <CollateralSelectorContainer>
+                        <InLabel>IN</InLabel>
+                        <CollateralSelector
+                            collateralArray={getCollaterals(networkId, true)}
+                            selectedItem={selectedCollateralIndex}
+                            onChangeCollateral={() => {}}
+                            disabled={isSubmitting}
+                            // isDetailedView
+                            // collateralBalances={multipleCollateralBalances.data}
+                            // exchangeRates={exchangeRates}
+                            // dropDownWidth={inputWrapperRef.current?.getBoundingClientRect().width + 'px'}
+                        />
+                    </CollateralSelectorContainer>
+                )}
+            </FlexDivCentered>
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
@@ -577,6 +582,18 @@ const Separator = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
+`;
+
+const CollateralSelectorContainer = styled(FlexDivCentered)`
+    line-height: 15px;
+    padding-right: 2px;
+`;
+
+const InLabel = styled(Label)`
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    margin-left: 5px;
 `;
 
 export default MyPositionAction;

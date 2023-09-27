@@ -127,7 +127,6 @@ const Container = styled(FlexDivStart)`
     position: relative;
     margin: 0 7px;
     align-items: center;
-    z-index: 2;
 `;
 
 const Text = styled.span<{ fontWeight?: string }>`
@@ -168,6 +167,7 @@ const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     padding: 5px 3px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
+    z-index: 100;
 `;
 
 const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
@@ -178,6 +178,7 @@ const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     padding: 5px 3px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
+    z-index: 100;
 `;
 
 const CollateralOption = styled.div`
