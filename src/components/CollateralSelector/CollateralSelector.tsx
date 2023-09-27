@@ -124,7 +124,6 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
 };
 
 const Container = styled(FlexDivStart)`
-    position: relative;
     margin: 0 7px;
     align-items: center;
 `;
@@ -161,8 +160,8 @@ const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
 
 const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     position: absolute;
-    top: 30px;
-    left: -7px;
+    margin-top: 5px;
+    margin-left: -10px;
     width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;
     border-radius: 8px;
@@ -173,7 +172,7 @@ const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
 const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     position: absolute;
     top: 35px;
-    right: -9px;
+    right: 0px;
     width: ${(props) => (props.width ? props.width : '350px')};
     padding: 5px 3px;
     border-radius: 8px;

@@ -587,6 +587,7 @@ const Separator = styled.div`
 const CollateralSelectorContainer = styled(FlexDivCentered)`
     line-height: 15px;
     padding-right: 2px;
+    text-transform: none;
 `;
 
 const InLabel = styled(Label)`

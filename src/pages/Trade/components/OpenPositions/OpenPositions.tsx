@@ -126,6 +126,7 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 6px;
+    overflow-y: auto;
     max-height: 560px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
