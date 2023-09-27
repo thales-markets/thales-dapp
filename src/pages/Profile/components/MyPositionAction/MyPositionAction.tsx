@@ -19,12 +19,12 @@ import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } fro
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -37,7 +37,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { coinFormatter, coinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { checkAllowance } from 'utils/network';
+import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,
@@ -50,6 +50,8 @@ import {
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 import { UsingAmmLink } from '../styled-components';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
+import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
@@ -73,8 +75,19 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const [openApprovalModal, setOpenApprovalModal] = useState(false);
 
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
+    const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
+    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
+    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, true), [
+        networkId,
+        selectedCollateralIndex,
+    ]);
+    const collateralAddress = isMultiCollateralSupported
+        ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
+        : snxJSConnector.collateral?.address;
+
+    const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
@@ -315,11 +328,20 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
 
-                const tx: ethers.ContractTransaction = await speedMarketsAMMContractWithSigner.resolveMarket(
-                    position.market,
-                    priceUpdateData,
-                    { value: updateFee }
-                );
+                const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
+                const isEth = collateralAddress === ZERO_ADDRESS;
+                console.log(isNonDefaultCollateral, collateralAddress, isEth);
+                const tx: ethers.ContractTransaction = isNonDefaultCollateral
+                    ? await speedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
+                          position.market,
+                          priceUpdateData,
+                          collateralAddress,
+                          isEth,
+                          { value: updateFee }
+                      )
+                    : await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
+                          value: updateFee,
+                      });
 
                 const txResult = await tx.wait();
 
@@ -478,6 +500,18 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     return (
         <>
             {getButton()}
+            {isMultiCollateralSupported && position.isSpeedMarket && position.claimable && (
+                <CollateralSelector
+                    collateralArray={getCollaterals(networkId, true)}
+                    selectedItem={selectedCollateralIndex}
+                    onChangeCollateral={() => {}}
+                    disabled={isSubmitting}
+                    // isDetailedView
+                    // collateralBalances={multipleCollateralBalances.data}
+                    // exchangeRates={exchangeRates}
+                    // dropDownWidth={inputWrapperRef.current?.getBoundingClientRect().width + 'px'}
+                />
+            )}
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
