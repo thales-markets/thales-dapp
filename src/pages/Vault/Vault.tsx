@@ -289,7 +289,11 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositVaults);
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositVaults, {
+                        props: {
+                            networkId,
+                        },
+                    });
                     toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message'), id));
                     setAmount('');
                     setIsSubmitting(false);

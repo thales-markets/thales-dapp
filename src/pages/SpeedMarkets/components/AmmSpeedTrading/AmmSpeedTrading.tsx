@@ -73,6 +73,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { getReferralWallet } from 'utils/referral';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmSpeedTradingProps = {
     currencyKey: string;
@@ -457,7 +458,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
                     refetchUserSpeedMarkets(networkId, walletAddress);
                     refetchSpeedMarketsLimits(networkId);
-
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.speedMarketsBuy, {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                            networkId,
+                        },
+                    });
                     resetData();
                     setPaidAmount('');
                 }

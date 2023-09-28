@@ -518,6 +518,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
+                            networkId,
                         },
                     });
                 } else {
@@ -529,6 +530,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         props: {
                             value: Number(paidAmount),
                             collateral: getCollateral(networkId, selectedCollateralIndex),
+                            networkId,
                         },
                     });
                 }
