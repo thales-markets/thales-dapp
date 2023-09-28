@@ -43,7 +43,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { coinFormatter, coinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,
@@ -90,6 +90,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
         networkId,
         selectedCollateralIndex,
     ]);
+    const isDefaultCollateral = selectedCollateral === defaultCollateral;
     const collateralAddress = isMultiCollateralSupported
         ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
         : snxJSConnector.collateral?.address;
@@ -104,21 +105,33 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     }, [networkId, isWalletConnected, dispatch]);
 
     useEffect(() => {
-        if (position.positionAddress === ZERO_ADDRESS) {
+        if (
+            (position.positionAddress === ZERO_ADDRESS && !position.isSpeedMarket) ||
+            (isDefaultCollateral && position.isSpeedMarket)
+        ) {
             return;
         }
-        const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.provider);
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+
+        const { ammContract, rangedMarketAMMContract, speedMarketsAMMContract, collateral } = snxJSConnector;
+        const erc20Instance = new ethers.Contract(
+            position.isSpeedMarket ? collateral?.address || '' : position.positionAddress,
+            erc20Contract.abi,
+            snxJSConnector.provider
+        );
+        const addressToApprove =
+            (position.isSpeedMarket
+                ? speedMarketsAMMContract?.address
+                : isRangedMarket
+                ? rangedMarketAMMContract?.address
+                : ammContract?.address) || '';
+
+        const parsedAmount = position.isSpeedMarket
+            ? ethers.utils.parseUnits(Number(position.value).toString(), getDefaultDecimalsForNetwork(networkId))
+            : position.amountBigNumber;
 
         const getAllowance = async () => {
             try {
-                const allowance = await checkAllowance(
-                    position.amountBigNumber,
-                    erc20Instance,
-                    walletAddress,
-                    addressToApprove
-                );
+                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
                 setAllowance(allowance);
             } catch (e) {
                 console.log(e);
@@ -130,18 +143,30 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     }, [
         position.positionAddress,
         position.amountBigNumber,
+        position.isSpeedMarket,
+        position.value,
         networkId,
         walletAddress,
         isWalletConnected,
         hasAllowance,
         isAllowing,
         isRangedMarket,
+        isDefaultCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.signer);
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+        const { ammContract, rangedMarketAMMContract, speedMarketsAMMContract, collateral } = snxJSConnector;
+        const erc20Instance = new ethers.Contract(
+            position.isSpeedMarket ? collateral?.address || '' : position.positionAddress,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
+        const addressToApprove =
+            (position.isSpeedMarket
+                ? speedMarketsAMMContract?.address
+                : isRangedMarket
+                ? rangedMarketAMMContract?.address
+                : ammContract?.address) || '';
 
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
@@ -152,7 +177,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
                 toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
-                handleCashout();
+                if (!position.isSpeedMarket) {
+                    handleCashout();
+                }
+                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -339,20 +367,19 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
 
-                const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
                 const isEth = collateralAddress === ZERO_ADDRESS;
-                console.log(isNonDefaultCollateral, collateralAddress, isEth);
-                const tx: ethers.ContractTransaction = isNonDefaultCollateral
-                    ? await speedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
+
+                const tx: ethers.ContractTransaction = isDefaultCollateral
+                    ? await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
+                          value: updateFee,
+                      })
+                    : await speedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
                           position.market,
                           priceUpdateData,
                           collateralAddress,
                           isEth,
                           { value: updateFee }
-                      )
-                    : await speedMarketsAMMContractWithSigner.resolveMarket(position.market, priceUpdateData, {
-                          value: updateFee,
-                      });
+                      );
 
                 const txResult = await tx.wait();
 
@@ -373,23 +400,43 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
         }
     };
 
+    const getResolveButton = () => (
+        <Button
+            {...getDefaultButtonProps(isMobile)}
+            disabled={isSubmitting}
+            additionalStyles={additionalButtonStyle}
+            backgroundColor={theme.button.textColor.quaternary}
+            onClick={() => (hasAllowance ? handleResolve() : setOpenApprovalModal(true))}
+        >
+            {hasAllowance || isDefaultCollateral
+                ? `${
+                      isSubmitting
+                          ? t('markets.user-positions.claim-win-progress')
+                          : t('markets.user-positions.claim-win')
+                  } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`
+                : isAllowing
+                ? `${t('common.enable-wallet-access.approve-progress')} ${defaultCollateral}...`
+                : t('common.enable-wallet-access.approve-swap', {
+                      currencyKey: selectedCollateral,
+                      defaultCurrency: defaultCollateral,
+                  })}{' '}
+        </Button>
+    );
+
     const getButton = () => {
         if (position.isSpeedMarket) {
             if (position.claimable) {
-                return (
-                    <Button
-                        {...getDefaultButtonProps(isMobile)}
-                        disabled={isSubmitting}
-                        additionalStyles={additionalButtonStyle}
-                        backgroundColor={theme.button.textColor.quaternary}
-                        onClick={() => handleResolve()}
+                return hasAllowance || isDefaultCollateral ? (
+                    getResolveButton()
+                ) : (
+                    <Tooltip
+                        overlay={t('markets.user-positions.approve-swap-tooltip', {
+                            currencyKey: selectedCollateral,
+                            defaultCurrency: defaultCollateral,
+                        })}
                     >
-                        {`${
-                            isSubmitting
-                                ? t(`markets.user-positions.claim-win-progress`)
-                                : t('markets.user-positions.claim-win')
-                        } ${formatCurrencyWithSign(USD_SIGN, position.value, 2)}`}
-                    </Button>
+                        <div>{getResolveButton()}</div>
+                    </Tooltip>
                 );
             } else if (position.finalPrice) {
                 return (
@@ -514,16 +561,12 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 {getButton()}
                 {isMultiCollateralSupported && position.isSpeedMarket && position.claimable && (
                     <CollateralSelectorContainer>
-                        <InLabel>IN</InLabel>
+                        <InLabel>{t('common.in')}</InLabel>
                         <CollateralSelector
                             collateralArray={getCollaterals(networkId, true)}
                             selectedItem={selectedCollateralIndex}
                             onChangeCollateral={() => {}}
-                            disabled={isSubmitting}
-                            // isDetailedView
-                            // collateralBalances={multipleCollateralBalances.data}
-                            // exchangeRates={exchangeRates}
-                            // dropDownWidth={inputWrapperRef.current?.getBoundingClientRect().width + 'px'}
+                            disabled={isSubmitting || isAllowing}
                         />
                     </CollateralSelectorContainer>
                 )}
@@ -531,9 +574,11 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
-                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * position.amount)}
-                    tokenSymbol={position.side}
-                    isNonStable={true}
+                    defaultAmount={roundNumberToDecimals(
+                        ONE_HUNDRED_AND_THREE_PERCENT * (position.isSpeedMarket ? position.value : position.amount)
+                    )}
+                    tokenSymbol={position.isSpeedMarket ? defaultCollateral : position.side}
+                    isNonStable={!position.isSpeedMarket}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
@@ -606,6 +651,7 @@ const InLabel = styled(Label)`
     font-weight: 600;
     line-height: 18px;
     margin-left: 5px;
+    text-transform: uppercase;
 `;
 
 export default MyPositionAction;
