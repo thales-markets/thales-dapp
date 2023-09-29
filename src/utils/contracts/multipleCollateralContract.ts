@@ -1188,7 +1188,7 @@ const multipleCollateral = {
             [Network.OptimismGoerli]: 'TBD',
             [Network.PolygonMainnet]: 'TBD',
             [Network.Arbitrum]: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-            [Network.Base]: 'TBD',
+            [Network.Base]: '0x4200000000000000000000000000000000000006',
         },
         abi,
     },
