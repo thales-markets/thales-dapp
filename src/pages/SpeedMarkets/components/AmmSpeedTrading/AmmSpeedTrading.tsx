@@ -683,7 +683,7 @@ const Container = styled(FlexDivRow)`
 
 const TradingDetailsContainer = styled(FlexDivRowCentered)`
     position: relative;
-    width: 600px;
+    width: 640px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
@@ -694,7 +694,7 @@ const TradingDetailsContainer = styled(FlexDivRowCentered)`
 `;
 
 const FinalizeTrade = styled(FlexDivCentered)`
-    width: 350px;
+    width: 410px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
