@@ -20,6 +20,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type SelectTimeProps = {
     selectedDeltaSec: number;
@@ -305,7 +306,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                     <Column>
                         <Button
                             height="13px"
-                            width="60px"
+                            width={isMobile ? '60px' : '70px'}
                             padding="0 29px"
                             fontSize="13px"
                             backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -318,7 +319,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         </Button>
                         <Button
                             height="13px"
-                            width="60px"
+                            width={isMobile ? '60px' : '70px'}
                             padding="0 29px"
                             fontSize="13px"
                             backgroundColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
@@ -357,7 +358,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                     <Column>
                         <Button
                             height="13px"
-                            width="60px"
+                            width={isMobile ? '60px' : '70px'}
                             padding="0 29px"
                             fontSize="13px"
                             backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
@@ -370,7 +371,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
                         </Button>
                         <Button
                             height="13px"
-                            width="60px"
+                            width={isMobile ? '60px' : '70px'}
                             padding="0 29px"
                             fontSize="13px"
                             backgroundColor={isAM ? theme.button.background.tertiary : undefined}
@@ -406,7 +407,7 @@ const InputWrapper = styled.div`
 `;
 
 const Time = styled(FlexDivCentered)<{ isSelected: boolean }>`
-    width: 60px;
+    width: 70px;
     height: 31px;
     border-radius: 8px;
     background: ${(props) =>
@@ -415,6 +416,9 @@ const Time = styled(FlexDivCentered)<{ isSelected: boolean }>`
         props.isSelected ? props.theme.button.textColor.primary : props.theme.button.textColor.secondary};
     cursor: pointer;
     font-weight: ${(props) => (props.isSelected ? '600' : '300')};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 60px;
+    }
 `;
 
 const DeltaTime = styled(Time)`

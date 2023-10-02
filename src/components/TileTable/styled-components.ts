@@ -18,7 +18,7 @@ export const Tile = styled(FlexDiv)<{
     displayInRowMobile?: boolean;
     gap?: string;
 }>`
-    position: relative;
+    position: ${(props) => (props.hideFlow ? 'initial' : 'relative')};
     background: ${(props) => props.backgroundColor || 'transparent'};
     border: 2px solid ${(props) => (props.backgroundColor ? 'transparent' : props.theme.borderColor.primary)};
     box-sizing: border-box;
