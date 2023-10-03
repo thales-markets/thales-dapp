@@ -296,7 +296,11 @@ const LiquidityPool: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
-                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositLp);
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositLp, {
+                        props: {
+                            networkId,
+                        },
+                    });
                     toast.update(
                         id,
                         getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)

@@ -466,7 +466,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     ],
     [Network.OptimismGoerli]: [],
     [Network.PolygonMainnet]: [],
-    [Network.Base]: [],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.WETH as Coins, CRYPTO_CURRENCY_MAP.ETH as Coins],
     [Network.Arbitrum]: [
         CRYPTO_CURRENCY_MAP.USDC as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,

@@ -111,7 +111,8 @@
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}...",
             "approve-all-label": "Approve all",
-            "custom-amount-label": "Approve amount of"
+            "custom-amount-label": "Approve amount of",
+            "approve-swap": "Approve swap to {{currencyKey}}"
         },
         "header": {
             "notification": { "tooltip": "You have {{count}} claimable position(s)" }
@@ -343,7 +344,8 @@
             "claim-win": "Claim win",
             "claim-win-progress": "Claiming win...",
             "results": "Results in",
-            "position-value": "Position value"
+            "position-value": "Position value",
+            "approve-swap-tooltip": "To get payout in {{currencyKey}}, you need to approve swap from {{defaultCurrency}} to {{currencyKey}}."
         },
         "table": {
             "strike-price-col": "Strike price",
@@ -1113,7 +1115,8 @@
         "stakers-filter": {
             "all": "all",
             "optimism": "optimism",
-            "arbitrum": "arbitrum"
+            "arbitrum": "arbitrum",
+            "base": "base"
         }
     },
     "articles": {

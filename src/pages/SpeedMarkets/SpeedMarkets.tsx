@@ -212,7 +212,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
 
 const Container = styled.div`
     width: 100%;
-    max-width: 974px;
+    max-width: 1080px;
 `;
 
 const HeaderImage = styled.div`
@@ -242,7 +242,7 @@ const ContentWrapper = styled.div`
 const LeftSide = styled.div`
     height: 100%;
     width: 100%;
-    max-width: 600px;
+    max-width: 640px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }
@@ -250,7 +250,7 @@ const LeftSide = styled.div`
 const RightSide = styled.div`
     width: 100%;
     height: 100%;
-    max-width: 350px;
+    max-width: 410px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }

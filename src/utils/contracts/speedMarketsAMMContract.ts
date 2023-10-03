@@ -13,18 +13,8 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_whitelistAddress',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: '_flag',
-                    type: 'bool',
-                },
+                { indexed: false, internalType: 'address', name: '_whitelistAddress', type: 'address' },
+                { indexed: false, internalType: 'bool', name: '_flag', type: 'bool' },
             ],
             name: 'AddedIntoWhitelist',
             type: 'event',
@@ -32,18 +22,8 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_minBuyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maxBuyinAmount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: '_minBuyinAmount', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: '_maxBuyinAmount', type: 'uint256' },
             ],
             name: 'AmountsChanged',
             type: 'event',
@@ -51,48 +31,13 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'strikeTime',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'int64',
-                    name: 'strikePrice',
-                    type: 'int64',
-                },
-                {
-                    indexed: false,
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'user', type: 'address' },
+                { indexed: false, internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { indexed: false, internalType: 'uint256', name: 'strikeTime', type: 'uint256' },
+                { indexed: false, internalType: 'int64', name: 'strikePrice', type: 'int64' },
+                { indexed: false, internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { indexed: false, internalType: 'uint256', name: 'buyinAmount', type: 'uint256' },
             ],
             name: 'MarketCreated',
             type: 'event',
@@ -100,113 +45,47 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'result',
-                    type: 'uint8',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'userIsWinner',
-                    type: 'bool',
-                },
+                { indexed: false, internalType: 'address', name: 'market', type: 'address' },
+                { indexed: false, internalType: 'enum SpeedMarket.Direction', name: 'result', type: 'uint8' },
+                { indexed: false, internalType: 'bool', name: 'userIsWinner', type: 'bool' },
             ],
             name: 'MarketResolved',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'mastercopy',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'address', name: 'mastercopy', type: 'address' }],
             name: 'MastercopyChanged',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'oldOwner',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
+                { indexed: false, internalType: 'address', name: 'oldOwner', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'newOwner', type: 'address' },
             ],
             name: 'OwnerChanged',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }],
             name: 'OwnerNominated',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'isPaused',
-                    type: 'bool',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'bool', name: 'isPaused', type: 'bool' }],
             name: 'PauseChanged',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'refferer',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'trader',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'volume',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: 'refferer', type: 'address' },
+                { indexed: false, internalType: 'address', name: 'trader', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'volume', type: 'uint256' },
             ],
             name: 'ReferrerPaid',
             type: 'event',
@@ -214,50 +93,33 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'pythId',
-                    type: 'bytes32',
-                },
+                { indexed: false, internalType: 'address', name: '_pyth', type: 'address' },
+                { indexed: false, internalType: 'address', name: '_referrals', type: 'address' },
+                { indexed: false, internalType: 'address', name: '_stakingThales', type: 'address' },
+            ],
+            name: 'SetAddresses',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                { indexed: false, internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { indexed: false, internalType: 'bytes32', name: 'pythId', type: 'bytes32' },
             ],
             name: 'SetAssetToPythID',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_lpFee',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ indexed: false, internalType: 'uint256', name: '_lpFee', type: 'uint256' }],
             name: 'SetLPFee',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maxRiskPerAsset',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { indexed: false, internalType: 'uint256', name: '_maxRiskPerAsset', type: 'uint256' },
             ],
             name: 'SetMaxRiskPerAsset',
             type: 'event',
@@ -265,18 +127,8 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maxRiskPerAssetAndDirection',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { indexed: false, internalType: 'uint256', name: '_maxRiskPerAssetAndDirection', type: 'uint256' },
             ],
             name: 'SetMaxRiskPerAssetAndDirection',
             type: 'event',
@@ -284,44 +136,17 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maximumPriceDelay',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: '_maximumPriceDelay', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: '_maximumPriceDelayForResolving', type: 'uint256' },
             ],
-            name: 'SetMaximumPriceDelay',
+            name: 'SetMaximumPriceDelays',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maximumPriceDelayForResolving',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetMaximumPriceDelayForResolving',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_onramper',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
+                { indexed: false, internalType: 'address', name: '_onramper', type: 'address' },
+                { indexed: false, internalType: 'bool', name: 'enabled', type: 'bool' },
             ],
             name: 'SetMultiCollateralOnOffRamp',
             type: 'event',
@@ -329,31 +154,8 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_pyth',
-                    type: 'address',
-                },
-            ],
-            name: 'SetPyth',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_safeBox',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_safeBoxImpact',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'address', name: '_safeBox', type: 'address' },
+                { indexed: false, internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
             ],
             name: 'SetSafeBoxParams',
             type: 'event',
@@ -361,31 +163,8 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
-            ],
-            name: 'SetStakingThales',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: '_supported',
-                    type: 'bool',
-                },
+                { indexed: false, internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { indexed: false, internalType: 'bool', name: '_supported', type: 'bool' },
             ],
             name: 'SetSupportedAsset',
             type: 'event',
@@ -393,94 +172,38 @@ const speedMarketsContract = {
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_minimalTimeToMaturity',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_maximalTimeToMaturity',
-                    type: 'uint256',
-                },
+                { indexed: false, internalType: 'uint256', name: '_minimalTimeToMaturity', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: '_maximalTimeToMaturity', type: 'uint256' },
             ],
             name: 'TimesChanged',
             type: 'event',
         },
-        {
-            inputs: [],
-            name: 'acceptOwnership',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
+        { inputs: [], name: 'acceptOwnership', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
+                { internalType: 'uint256', name: 'index', type: 'uint256' },
+                { internalType: 'uint256', name: 'pageSize', type: 'uint256' },
             ],
             name: 'activeMarkets',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
+            outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
+                { internalType: 'uint256', name: 'index', type: 'uint256' },
+                { internalType: 'uint256', name: 'pageSize', type: 'uint256' },
+                { internalType: 'address', name: 'user', type: 'address' },
             ],
             name: 'activeMarketsPerUser',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
+            outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_whitelistAddress',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bool',
-                    name: '_flag',
-                    type: 'bool',
-                },
+                { internalType: 'address', name: '_whitelistAddress', type: 'address' },
+                { internalType: 'bool', name: '_flag', type: 'bool' },
             ],
             name: 'addToWhitelist',
             outputs: [],
@@ -488,75 +211,27 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-            ],
+            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             name: 'assetToPythId',
-            outputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-            ],
+            outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'market', type: 'address' }],
             name: 'canResolveMarket',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint64',
-                    name: 'strikeTime',
-                    type: 'uint64',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: '_referrer',
-                    type: 'address',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'strikeTime', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'uint256', name: 'buyinAmount', type: 'uint256' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: '_referrer', type: 'address' },
             ],
             name: 'createNewMarket',
             outputs: [],
@@ -565,36 +240,12 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint64',
-                    name: 'delta',
-                    type: 'uint64',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: '_referrer',
-                    type: 'address',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'delta', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'uint256', name: 'buyinAmount', type: 'uint256' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: '_referrer', type: 'address' },
             ],
             name: 'createNewMarketWithDelta',
             outputs: [],
@@ -603,46 +254,14 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint64',
-                    name: 'strikeTime',
-                    type: 'uint64',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'collateral',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'collateralAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'isEth',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: '_referrer',
-                    type: 'address',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'strikeTime', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: 'collateral', type: 'address' },
+                { internalType: 'uint256', name: 'collateralAmount', type: 'uint256' },
+                { internalType: 'bool', name: 'isEth', type: 'bool' },
+                { internalType: 'address', name: '_referrer', type: 'address' },
             ],
             name: 'createNewMarketWithDifferentCollateral',
             outputs: [],
@@ -651,46 +270,14 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint64',
-                    name: 'delta',
-                    type: 'uint64',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'collateral',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'collateralAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'isEth',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: '_referrer',
-                    type: 'address',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint64', name: 'delta', type: 'uint64' },
+                { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: 'collateral', type: 'address' },
+                { internalType: 'uint256', name: 'collateralAmount', type: 'uint256' },
+                { internalType: 'bool', name: 'isEth', type: 'bool' },
+                { internalType: 'address', name: '_referrer', type: 'address' },
             ],
             name: 'createNewMarketWithDifferentCollateralAndDelta',
             outputs: [],
@@ -698,75 +285,31 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-            ],
+            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             name: 'currentRiskPerAsset',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: '',
-                    type: 'uint8',
-                },
+                { internalType: 'bytes32', name: '', type: 'bytes32' },
+                { internalType: 'enum SpeedMarket.Direction', name: '', type: 'uint8' },
             ],
             name: 'currentRiskPerAssetAndDirection',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-            ],
+            inputs: [{ internalType: 'bytes32', name: 'asset', type: 'bytes32' }],
             name: 'getDirectionalRiskPerAsset',
             outputs: [
                 {
                     components: [
-                        {
-                            internalType: 'enum SpeedMarket.Direction',
-                            name: 'direction',
-                            type: 'uint8',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'current',
-                            type: 'uint256',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'max',
-                            type: 'uint256',
-                        },
+                        { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                        { internalType: 'uint256', name: 'current', type: 'uint256' },
+                        { internalType: 'uint256', name: 'max', type: 'uint256' },
                     ],
                     internalType: 'struct SpeedMarketsAMM.Risk[]',
                     name: '',
@@ -777,72 +320,22 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address[]',
-                    name: 'marketsArray',
-                    type: 'address[]',
-                },
-            ],
+            inputs: [{ internalType: 'address[]', name: 'marketsArray', type: 'address[]' }],
             name: 'getMarketsData',
             outputs: [
                 {
                     components: [
-                        {
-                            internalType: 'address',
-                            name: 'user',
-                            type: 'address',
-                        },
-                        {
-                            internalType: 'bytes32',
-                            name: 'asset',
-                            type: 'bytes32',
-                        },
-                        {
-                            internalType: 'uint64',
-                            name: 'strikeTime',
-                            type: 'uint64',
-                        },
-                        {
-                            internalType: 'int64',
-                            name: 'strikePrice',
-                            type: 'int64',
-                        },
-                        {
-                            internalType: 'enum SpeedMarket.Direction',
-                            name: 'direction',
-                            type: 'uint8',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'buyinAmount',
-                            type: 'uint256',
-                        },
-                        {
-                            internalType: 'bool',
-                            name: 'resolved',
-                            type: 'bool',
-                        },
-                        {
-                            internalType: 'int64',
-                            name: 'finalPrice',
-                            type: 'int64',
-                        },
-                        {
-                            internalType: 'enum SpeedMarket.Direction',
-                            name: 'result',
-                            type: 'uint8',
-                        },
-                        {
-                            internalType: 'bool',
-                            name: 'isUserWinner',
-                            type: 'bool',
-                        },
-                        {
-                            internalType: 'uint256',
-                            name: 'createdAt',
-                            type: 'uint256',
-                        },
+                        { internalType: 'address', name: 'user', type: 'address' },
+                        { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                        { internalType: 'uint64', name: 'strikeTime', type: 'uint64' },
+                        { internalType: 'int64', name: 'strikePrice', type: 'int64' },
+                        { internalType: 'enum SpeedMarket.Direction', name: 'direction', type: 'uint8' },
+                        { internalType: 'uint256', name: 'buyinAmount', type: 'uint256' },
+                        { internalType: 'bool', name: 'resolved', type: 'bool' },
+                        { internalType: 'int64', name: 'finalPrice', type: 'int64' },
+                        { internalType: 'enum SpeedMarket.Direction', name: 'result', type: 'uint8' },
+                        { internalType: 'bool', name: 'isUserWinner', type: 'bool' },
+                        { internalType: 'uint256', name: 'createdAt', type: 'uint256' },
                     ],
                     internalType: 'struct SpeedMarketsAMM.MarketData[]',
                     name: '',
@@ -852,30 +345,12 @@ const speedMarketsContract = {
             stateMutability: 'view',
             type: 'function',
         },
-        {
-            inputs: [],
-            name: 'initNonReentrant',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
+        { inputs: [], name: 'initNonReentrant', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract IERC20Upgradeable',
-                    name: '_sUSD',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract IPyth',
-                    name: '_pyth',
-                    type: 'address',
-                },
+                { internalType: 'address', name: '_owner', type: 'address' },
+                { internalType: 'contract IERC20Upgradeable', name: '_sUSD', type: 'address' },
+                { internalType: 'contract IPyth', name: '_pyth', type: 'address' },
             ],
             name: 'initialize',
             outputs: [],
@@ -883,277 +358,129 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'candidate',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'candidate', type: 'address' }],
             name: 'isActiveMarket',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'candidate',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'candidate', type: 'address' }],
             name: 'isKnownMarket',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'lastPauseTime',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'lpFee',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
+                { internalType: 'uint256', name: 'index', type: 'uint256' },
+                { internalType: 'uint256', name: 'pageSize', type: 'uint256' },
             ],
             name: 'maturedMarkets',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
+            outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
+                { internalType: 'uint256', name: 'index', type: 'uint256' },
+                { internalType: 'uint256', name: 'pageSize', type: 'uint256' },
+                { internalType: 'address', name: 'user', type: 'address' },
             ],
             name: 'maturedMarketsPerUser',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
+            outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'maxBuyinAmount',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-            ],
+            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             name: 'maxRiskPerAsset',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: '',
-                    type: 'uint8',
-                },
+                { internalType: 'bytes32', name: '', type: 'bytes32' },
+                { internalType: 'enum SpeedMarket.Direction', name: '', type: 'uint8' },
             ],
             name: 'maxRiskPerAssetAndDirection',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'maximalTimeToMaturity',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'maximumPriceDelay',
-            outputs: [
-                {
-                    internalType: 'uint64',
-                    name: '',
-                    type: 'uint64',
-                },
-            ],
+            outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'maximumPriceDelayForResolving',
-            outputs: [
-                {
-                    internalType: 'uint64',
-                    name: '',
-                    type: 'uint64',
-                },
-            ],
+            outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'minBuyinAmount',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'minimalTimeToMaturity',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'multiCollateralOnOffRamp',
-            outputs: [
-                {
-                    internalType: 'contract IMultiCollateralOnOffRamp',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IMultiCollateralOnOffRamp', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'multicollateralEnabled',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'nominateNewOwner',
             outputs: [],
             stateMutability: 'nonpayable',
@@ -1162,144 +489,70 @@ const speedMarketsContract = {
         {
             inputs: [],
             name: 'nominatedOwner',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'numActiveMarkets',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
             name: 'numActiveMarketsPerUser',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'numMaturedMarkets',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'user',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
             name: 'numMaturedMarketsPerUser',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'owner',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'paused',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'pyth',
-            outputs: [
-                {
-                    internalType: 'contract IPyth',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IPyth', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'referrals',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
+                { internalType: 'address', name: 'market', type: 'address' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
             ],
             name: 'resolveMarket',
             outputs: [],
@@ -1308,16 +561,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_market',
-                    type: 'address',
-                },
-                {
-                    internalType: 'int64',
-                    name: '_finalPrice',
-                    type: 'int64',
-                },
+                { internalType: 'address', name: '_market', type: 'address' },
+                { internalType: 'int64', name: '_finalPrice', type: 'int64' },
             ],
             name: 'resolveMarketManually',
             outputs: [],
@@ -1326,16 +571,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address[]',
-                    name: 'markets',
-                    type: 'address[]',
-                },
-                {
-                    internalType: 'int64[]',
-                    name: 'finalPrices',
-                    type: 'int64[]',
-                },
+                { internalType: 'address[]', name: 'markets', type: 'address[]' },
+                { internalType: 'int64[]', name: 'finalPrices', type: 'int64[]' },
             ],
             name: 'resolveMarketManuallyBatch',
             outputs: [],
@@ -1344,16 +581,20 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address[]',
-                    name: 'markets',
-                    type: 'address[]',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
+                { internalType: 'address', name: 'market', type: 'address' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
+                { internalType: 'address', name: 'collateral', type: 'address' },
+                { internalType: 'bool', name: 'toEth', type: 'bool' },
+            ],
+            name: 'resolveMarketWithOfframp',
+            outputs: [],
+            stateMutability: 'payable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: 'markets', type: 'address[]' },
+                { internalType: 'bytes[]', name: 'priceUpdateData', type: 'bytes[]' },
             ],
             name: 'resolveMarketsBatch',
             outputs: [],
@@ -1363,54 +604,39 @@ const speedMarketsContract = {
         {
             inputs: [],
             name: 'sUSD',
-            outputs: [
-                {
-                    internalType: 'contract IERC20Upgradeable',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IERC20Upgradeable', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'safeBox',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'safeBoxImpact',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_minBuyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_maxBuyinAmount',
-                    type: 'uint256',
-                },
+                { internalType: 'address', name: '_pyth', type: 'address' },
+                { internalType: 'address', name: '_referrals', type: 'address' },
+                { internalType: 'address', name: '_stakingThales', type: 'address' },
+            ],
+            name: 'setAddresses',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'uint256', name: '_minBuyinAmount', type: 'uint256' },
+                { internalType: 'uint256', name: '_maxBuyinAmount', type: 'uint256' },
             ],
             name: 'setAmounts',
             outputs: [],
@@ -1419,16 +645,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'bytes32',
-                    name: 'pythId',
-                    type: 'bytes32',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'bytes32', name: 'pythId', type: 'bytes32' },
             ],
             name: 'setAssetToPythID',
             outputs: [],
@@ -1436,26 +654,14 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_lpFee',
-                    type: 'uint256',
-                },
-            ],
+            inputs: [{ internalType: 'uint256', name: '_lpFee', type: 'uint256' }],
             name: 'setLPFee',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_mastercopy',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '_mastercopy', type: 'address' }],
             name: 'setMastercopy',
             outputs: [],
             stateMutability: 'nonpayable',
@@ -1463,16 +669,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_maxRiskPerAsset',
-                    type: 'uint256',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint256', name: '_maxRiskPerAsset', type: 'uint256' },
             ],
             name: 'setMaxRiskPerAsset',
             outputs: [],
@@ -1481,16 +679,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_maxRiskPerAssetAndDirection',
-                    type: 'uint256',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'uint256', name: '_maxRiskPerAssetAndDirection', type: 'uint256' },
             ],
             name: 'setMaxRiskPerAssetAndDirection',
             outputs: [],
@@ -1499,42 +689,18 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'uint64',
-                    name: '_maximumPriceDelay',
-                    type: 'uint64',
-                },
+                { internalType: 'uint64', name: '_maximumPriceDelay', type: 'uint64' },
+                { internalType: 'uint64', name: '_maximumPriceDelayForResolving', type: 'uint64' },
             ],
-            name: 'setMaximumPriceDelay',
+            name: 'setMaximumPriceDelays',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
             inputs: [
-                {
-                    internalType: 'uint64',
-                    name: '_maximumPriceDelayForResolving',
-                    type: 'uint64',
-                },
-            ],
-            name: 'setMaximumPriceDelayForResolving',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_onramper',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
+                { internalType: 'address', name: '_onramper', type: 'address' },
+                { internalType: 'bool', name: 'enabled', type: 'bool' },
             ],
             name: 'setMultiCollateralOnOffRamp',
             outputs: [],
@@ -1542,26 +708,14 @@ const speedMarketsContract = {
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'setOwner',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_paused',
-                    type: 'bool',
-                },
-            ],
+            inputs: [{ internalType: 'bool', name: '_paused', type: 'bool' }],
             name: 'setPaused',
             outputs: [],
             stateMutability: 'nonpayable',
@@ -1569,42 +723,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_pyth',
-                    type: 'address',
-                },
-            ],
-            name: 'setPyth',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_referrals',
-                    type: 'address',
-                },
-            ],
-            name: 'setReferrals',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_safeBox',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_safeBoxImpact',
-                    type: 'uint256',
-                },
+                { internalType: 'address', name: '_safeBox', type: 'address' },
+                { internalType: 'uint256', name: '_safeBoxImpact', type: 'uint256' },
             ],
             name: 'setSafeBoxParams',
             outputs: [],
@@ -1613,29 +733,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'address',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
-            ],
-            name: 'setStakingThales',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'bool',
-                    name: '_supported',
-                    type: 'bool',
-                },
+                { internalType: 'bytes32', name: 'asset', type: 'bytes32' },
+                { internalType: 'bool', name: '_supported', type: 'bool' },
             ],
             name: 'setSupportedAsset',
             outputs: [],
@@ -1644,16 +743,8 @@ const speedMarketsContract = {
         },
         {
             inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_minimalTimeToMaturity',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_maximalTimeToMaturity',
-                    type: 'uint256',
-                },
+                { internalType: 'uint256', name: '_minimalTimeToMaturity', type: 'uint256' },
+                { internalType: 'uint256', name: '_maximalTimeToMaturity', type: 'uint256' },
             ],
             name: 'setTimes',
             outputs: [],
@@ -1663,80 +754,39 @@ const speedMarketsContract = {
         {
             inputs: [],
             name: 'speedMarketMastercopy',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
             inputs: [],
             name: 'stakingThales',
-            outputs: [
-                {
-                    internalType: 'contract IStakingThales',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            outputs: [{ internalType: 'contract IStakingThales', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: '',
-                    type: 'bytes32',
-                },
-            ],
+            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             name: 'supportedAsset',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'proxyAddress',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: 'proxyAddress', type: 'address' }],
             name: 'transferOwnershipAtInit',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'whitelistedAddresses',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
+        { stateMutability: 'payable', type: 'receive' },
     ],
 };
 

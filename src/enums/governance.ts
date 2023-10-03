@@ -20,4 +20,5 @@ export enum StakersFilterEnum {
     All = 'all',
     Optimism = 'optimism',
     Arbitrum = 'arbitrum',
+    Base = 'base',
 }

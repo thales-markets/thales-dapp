@@ -73,6 +73,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { getReferralWallet } from 'utils/referral';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 
 type AmmSpeedTradingProps = {
     currencyKey: string;
@@ -457,7 +458,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
                     refetchUserSpeedMarkets(networkId, walletAddress);
                     refetchSpeedMarketsLimits(networkId);
-
+                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.speedMarketsBuy, {
+                        props: {
+                            value: Number(paidAmount),
+                            collateral: getCollateral(networkId, selectedCollateralIndex),
+                            networkId,
+                        },
+                    });
                     resetData();
                     setPaidAmount('');
                 }
@@ -676,7 +683,7 @@ const Container = styled(FlexDivRow)`
 
 const TradingDetailsContainer = styled(FlexDivRowCentered)`
     position: relative;
-    width: 600px;
+    width: 640px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
@@ -687,7 +694,7 @@ const TradingDetailsContainer = styled(FlexDivRowCentered)`
 `;
 
 const FinalizeTrade = styled(FlexDivCentered)`
-    width: 350px;
+    width: 410px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {

@@ -26,7 +26,7 @@ const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions
 
             const url = `https://api.coingecko.com/api/v3/coins/${coinGeckoKey}/market_chart?vs_currency=${
                 requestArgs?.currencyVs ? requestArgs.currencyVs : 'usd'
-            }&days=${requestArgs?.days ? requestArgs.days : '1'}&interval=hourly`;
+            }&days=${requestArgs?.days ? requestArgs.days : '1'}&interval=daily`;
 
             const response = await fetch(url);
             const result = JSON.parse(await response.text());

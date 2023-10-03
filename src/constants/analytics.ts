@@ -10,6 +10,7 @@ export const PLAUSIBLE_KEYS = {
     depositLp: 'deposit-lp',
     sellToAMM: 'amm-sell',
     buyFromAMM: 'amm-buy',
+    speedMarketsBuy: 'speed-markets-buy',
     buyFromRangeAMM: 'range-buy',
     sellToRangeAMM: 'range-sell',
     depositVaults: 'deposit-vaults',
