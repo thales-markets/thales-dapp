@@ -59,7 +59,7 @@ export const Faq = styled.div`
     }
 `;
 
-export const FaqQuestion = styled.p`
+export const FaqQuestion = styled.h3`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
