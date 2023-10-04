@@ -187,7 +187,8 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
         fetchData();
-        priceData.refetch();
+        priceData.refetch(); // TODO: check priceData missing dependency
+        // eslint-disable-next-line
     }, [asset, dateRange, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {
