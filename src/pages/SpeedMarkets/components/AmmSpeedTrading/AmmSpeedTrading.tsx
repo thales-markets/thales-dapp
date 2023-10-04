@@ -67,7 +67,7 @@ import {
     truncToDecimals,
 } from 'utils/formatters/number';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getTransactionForSpeedAMM } from 'utils/speedAmm';
@@ -115,6 +115,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         selectedStableBuyinAmount ? selectedStableBuyinAmount : ''
     );
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
+    const [finalStrikePrice, setFinalStrikePrice] = useState(0);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessageKey, setErrorMessageKey] = useState('');
@@ -419,10 +420,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     PythInterfaceAbi as any,
                     (snxJSConnector as any).provider
                 );
-                const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([
-                    getPriceId(networkId, currencyKey),
-                ]);
+                const priceId = getPriceId(networkId, currencyKey);
+                const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([priceId]);
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
+
+                const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, [priceId]);
+                setFinalStrikePrice(prices[currencyKey]);
 
                 const asset = ethers.utils.formatBytes32String(currencyKey);
                 const side = POSITIONS_TO_SIDE_MAP[positionType];
@@ -473,6 +476,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 await delay(800);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
             }
+            setFinalStrikePrice(0);
             setIsSubmitting(false);
         }
     };
@@ -539,7 +543,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     deltaTimeSec={deltaTimeSec}
                     market={{
                         address: 'Any',
-                        strikePrice: currentPrice,
+                        strikePrice: finalStrikePrice ? finalStrikePrice : currentPrice,
                         positionType,
                     }}
                     isRangedMarket={false}
