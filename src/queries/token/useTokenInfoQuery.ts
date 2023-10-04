@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { TokenInfo } from 'types/token';
 import thalesContract from 'utils/contracts/thalesContract';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenInfo | undefined>) => {
     return useQuery<TokenInfo | undefined>(
@@ -53,10 +54,9 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                 );
 
                 // Thales burned - Base
-                const baseInfuraProvider = new ethers.providers.JsonRpcProvider(
-                    `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`,
-                    Network.Base
-                );
+                const baseProviderUrl = snxJSConnector.provider?.chains?.filter((chain) => chain.id === Network.Base)[0]
+                    .rpcUrls.default.http[0];
+                const baseInfuraProvider = new ethers.providers.JsonRpcProvider(baseProviderUrl, Network.Base);
                 const baseThalesBurned = new ethers.Contract(
                     thalesContract.addresses[Network.Base],
                     thalesContract.abi,
