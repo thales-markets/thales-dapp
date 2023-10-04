@@ -1,5 +1,5 @@
 import { generalConfig } from 'config/general';
-import { ARB_SAFE_BOX_ADDRESS, DEAD_ADDRESS, OP_SAFE_BOX_ADDRESS } from 'constants/network';
+import { ARB_SAFE_BOX_ADDRESS, BASE_SAFE_BOX_ADDRESS, DEAD_ADDRESS, OP_SAFE_BOX_ADDRESS } from 'constants/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { TOTAL_SUPPLY } from 'constants/token';
 import { Network } from 'enums/network';
@@ -52,16 +52,34 @@ const useTokenInfoQuery = (networkId: Network, options?: UseQueryOptions<TokenIn
                     arbInfuraProvider
                 );
 
-                const [mainThalesBurnedBalance, opThalesBurnedBalance, arbThalesBurnedBalance] = await Promise.all([
+                // Thales burned - Base
+                const baseInfuraProvider = new ethers.providers.JsonRpcProvider(
+                    `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`,
+                    Network.Base
+                );
+                const baseThalesBurned = new ethers.Contract(
+                    thalesContract.addresses[Network.Base],
+                    thalesContract.abi,
+                    baseInfuraProvider
+                );
+
+                const [
+                    mainThalesBurnedBalance,
+                    opThalesBurnedBalance,
+                    arbThalesBurnedBalance,
+                    baseThalesBurnedBalance,
+                ] = await Promise.all([
                     mainThalesBurned.balanceOf(DEAD_ADDRESS),
                     opThalesBurned.balanceOf(OP_SAFE_BOX_ADDRESS),
                     arbThalesBurned.balanceOf(ARB_SAFE_BOX_ADDRESS),
+                    baseThalesBurned.balanceOf(BASE_SAFE_BOX_ADDRESS),
                 ]);
 
                 const totalThalesBurned =
                     Number(ethers.utils.formatEther(mainThalesBurnedBalance)) +
                     Number(ethers.utils.formatEther(opThalesBurnedBalance)) +
-                    Number(ethers.utils.formatEther(arbThalesBurnedBalance));
+                    Number(ethers.utils.formatEther(arbThalesBurnedBalance)) +
+                    Number(ethers.utils.formatEther(baseThalesBurnedBalance));
 
                 const tokenInfo: TokenInfo = {
                     price: Number(await price.text()),
