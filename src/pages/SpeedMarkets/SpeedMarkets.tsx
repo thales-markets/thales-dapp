@@ -213,6 +213,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
 const Container = styled.div`
     width: 100%;
     max-width: 1080px;
+    min-height: 799px;
 `;
 
 const HeaderImage = styled.div`
