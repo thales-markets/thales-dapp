@@ -25,10 +25,11 @@ import vestingEscrow from './contracts/vestingEscrow';
 import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
 import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
 import { Coins } from 'types/options';
+import { Provider } from '@wagmi/core';
 
 type SnxJSConnector = {
     initialized: boolean;
-    provider: ethers.providers.Provider | undefined;
+    provider: Provider | undefined;
     signer: Signer | undefined;
     collateral?: ethers.Contract;
     multipleCollateral?: Record<Coins, ethers.Contract | undefined>;

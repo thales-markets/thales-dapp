@@ -28,7 +28,6 @@ import useSwapTokenQuery from './queries/useSwapTokenQuery';
 import { Container, ErrorMessage, LoaderContainer, SectionWrapper, defaultButtonProps } from './styled-components';
 import {
     ARB_ETH,
-    BSC_BNB,
     ETH_Eth,
     OP_Eth,
     POLYGON_MATIC,
@@ -114,13 +113,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     useEffect(() => {
         const updateBalanceAndAllowance = async (token: any) => {
             if (token) {
-                if (
-                    token === ETH_Eth ||
-                    token === OP_Eth ||
-                    token === POLYGON_MATIC ||
-                    token == BSC_BNB ||
-                    token == ARB_ETH
-                ) {
+                if (token === ETH_Eth || token === OP_Eth || token === POLYGON_MATIC || token == ARB_ETH) {
                     setAllowance(true);
                     (snxJSConnector as any).signer
                         .getBalance()

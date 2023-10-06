@@ -128,14 +128,6 @@ export const POLYGON_DAI = {
     logoURI: 'https://tokens.1inch.io/0x6b175474e89094c44da98b954eedeac495271d0f.png',
 };
 
-export const BSC_BNB = {
-    symbol: TokenSymbol.BNB,
-    name: currencyKeyToNameMap.BNB,
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    decimals: 18,
-    logoURI: 'https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c_1.png',
-};
-
 export const ARB_ETH = {
     symbol: TokenSymbol.ETH,
     name: currencyKeyToNameMap.ETH,
