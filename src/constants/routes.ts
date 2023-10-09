@@ -1,4 +1,6 @@
-const ROUTES = {
+import { Page } from 'types/ui';
+
+export const ROUTES = {
     Home: '/',
     Article: {
         Token: '/article/token',
@@ -38,4 +40,48 @@ const ROUTES = {
         Proposal: '/governance/:space/:id',
     },
 };
+
+export const PAGE_NAME_TO_META_DATA_KEYS: { [page in Page]: { title: string; description: string } } = {
+    Home: {
+        title: 'seo.home.title',
+        description: 'seo.home.description',
+    },
+    Markets: {
+        title: 'seo.markets.title',
+        description: 'seo.markets.description',
+    },
+    SpeedMarkets: {
+        title: 'seo.speed-markets.title',
+        description: 'seo.speed-markets.description',
+    },
+    Vaults: {
+        title: 'seo.vaults.title',
+        description: 'seo.vaults.description',
+    },
+    Wizard: {
+        title: 'seo.wizard.title',
+        description: 'seo.wizard.description',
+    },
+    Referral: {
+        title: 'seo.referral.title',
+        description: 'seo.referral.description',
+    },
+    Governance: {
+        title: 'seo.governance.title',
+        description: 'seo.governance.description',
+    },
+    TaleOfThales: {
+        title: 'seo.taleofthales.title',
+        description: 'seo.taleofthales.description',
+    },
+    Profile: {
+        title: 'seo.profile.title',
+        description: 'seo.profile.description',
+    },
+    Token: {
+        title: 'seo.token.title',
+        description: 'seo.token.description',
+    },
+};
+
 export default ROUTES;
