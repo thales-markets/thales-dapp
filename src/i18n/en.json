@@ -1611,6 +1611,10 @@
         "profile": {
             "title": "A Overview of Your Trading History and Vault Performance",
             "description": "An overview of all your current and past positions on Thales Market, as well as the performance of assets you deposited in our vaults."
+        },
+        "liquidity-pool": {
+            "title": "Thales Market Liquidity Pool - Be the House",
+            "description": "Deposit sUSD collateral into the Thales liquidity pool and earn a percentage of the PnL every week."
         }
     }
 }

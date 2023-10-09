@@ -82,6 +82,10 @@ export const PAGE_NAME_TO_META_DATA_KEYS: { [page in Page]: { title: string; des
         title: 'seo.token.title',
         description: 'seo.token.description',
     },
+    LiquidityPool: {
+        title: 'seo.liquidity-pool.title',
+        description: 'seo.liquidity-pool.description',
+    },
 };
 
 export default ROUTES;

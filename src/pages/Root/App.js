@@ -190,7 +190,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.LiquidityPool}>
                                         <DappLayout>
-                                            <MetaData page={'Vaults'} />
+                                            <MetaData page={'LiquidityPool'} />
                                             <LiquidityPool />
                                         </DappLayout>
                                     </Route>

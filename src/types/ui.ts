@@ -12,7 +12,8 @@ export type Page =
     | 'Governance'
     | 'TaleOfThales'
     | 'Profile'
-    | 'Token';
+    | 'Token'
+    | 'LiquidityPool';
 
 declare module 'styled-components' {
     interface DefaultTheme extends ThemeInterface {}
