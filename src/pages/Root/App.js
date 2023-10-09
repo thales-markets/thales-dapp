@@ -15,6 +15,7 @@ import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import Loader from 'components/Loader';
+import MetaData from 'components/MetaData';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -121,6 +122,7 @@ const App = () => {
                                         ]}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'Governance'} />
                                                 <GovernancePage {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -130,6 +132,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.Game}>
                                         <DappLayout>
+                                            <MetaData page={'TaleOfThales'} />
                                             <TaleOfThales />
                                         </DappLayout>
                                     </Route>
@@ -138,6 +141,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.Profile}>
                                         <DappLayout>
+                                            <MetaData page={'Profile'} />
                                             <Profile />
                                         </DappLayout>
                                     </Route>
@@ -146,6 +150,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.Token}>
                                         <DappLayout>
+                                            <MetaData page={'Token'} />
                                             <TokenPage />
                                         </DappLayout>
                                     </Route>
@@ -154,6 +159,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.Referral}>
                                         <DappLayout>
+                                            <MetaData page={'Referral'} />
                                             <Referral />
                                         </DappLayout>
                                     </Route>
@@ -162,6 +168,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.Vaults}>
                                         <DappLayout>
+                                            <MetaData page={'Vaults'} />
                                             <Vaults />
                                         </DappLayout>
                                     </Route>
@@ -173,6 +180,7 @@ const App = () => {
                                         path={ROUTES.Options.Vault}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'Vaults'} />
                                                 <Vault {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -182,6 +190,7 @@ const App = () => {
                                 {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                                     <Route exact path={ROUTES.Options.LiquidityPool}>
                                         <DappLayout>
+                                            <MetaData page={'Vaults'} />
                                             <LiquidityPool />
                                         </DappLayout>
                                     </Route>
@@ -193,6 +202,7 @@ const App = () => {
                                         path={ROUTES.Options.MarketMatch}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'Markets'} />
                                                 <AMMTrading {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -205,6 +215,7 @@ const App = () => {
                                         path={ROUTES.Options.RangeMarketMatch}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'Markets'} />
                                                 <AMMTrading {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -216,6 +227,7 @@ const App = () => {
                                     path={ROUTES.Options.Home}
                                     render={(routeProps) => (
                                         <DappLayout>
+                                            <MetaData page={'Markets'} />
                                             <Markets {...routeProps} />
                                         </DappLayout>
                                     )}
@@ -227,6 +239,7 @@ const App = () => {
                                         path={ROUTES.Options.SpeedMarkets}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'SpeedMarkets'} />
                                                 <SpeedMarkets {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -238,6 +251,7 @@ const App = () => {
                                         path={ROUTES.Options.SpeedMarketsOverview}
                                         render={(routeProps) => (
                                             <DappLayout>
+                                                <MetaData page={'SpeedMarkets'} />
                                                 <SpeedMarketsOverview {...routeProps} />
                                             </DappLayout>
                                         )}
@@ -249,6 +263,7 @@ const App = () => {
                                     path={ROUTES.Options.RangeMarkets}
                                     render={(routeProps) => (
                                         <DappLayout>
+                                            <MetaData page={'Markets'} />
                                             <Markets {...routeProps} />
                                         </DappLayout>
                                     )}
