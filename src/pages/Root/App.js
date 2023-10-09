@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,38 +16,39 @@ import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import Loader from 'components/Loader';
 import MetaData from 'components/MetaData';
+import loadable from '@loadable/component';
 
-const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
-const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
+const DappLayout = loadable(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
+const MainLayout = loadable(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
-const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
-const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
-const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
-const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
-const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
+const CreateMarket = loadable(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
+const Home = loadable(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
+const Governance = loadable(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
+const Whitepaper = loadable(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
+const Token = loadable(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
 
-const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
+const GovernancePage = loadable(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 
-const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
-const SpeedMarkets = lazy(() => import(/* webpackChunkName: "SpeedMarkets" */ '../SpeedMarkets'));
-const SpeedMarketsOverview = lazy(() =>
+const Markets = loadable(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
+const SpeedMarkets = loadable(() => import(/* webpackChunkName: "SpeedMarkets" */ '../SpeedMarkets'));
+const SpeedMarketsOverview = loadable(() =>
     import(/* webpackChunkName: "SpeedMarketsOverview" */ '../SpeedMarketsOverview')
 );
-const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
-const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
+const AMMTrading = loadable(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
+const Wizard = loadable(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
-const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
-const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
+const Vaults = loadable(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
+const Vault = loadable(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 
-const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
+const TokenPage = loadable(() => import(/* webpackChunkName: "Token" */ '../Token'));
 
-const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
-const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
+const TaleOfThales = loadable(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
+const Profile = loadable(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
-const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
-const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
+const Referral = loadable(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
+const LiquidityPool = loadable(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
-const DappProvider = lazy(() => import(/* webpackChunkName: "DappProvider" */ 'pages/Root/Providers/DappProvider'));
+const DappProvider = loadable(() => import(/* webpackChunkName: "DappProvider" */ 'pages/Root/Providers/DappProvider'));
 
 const App = () => {
     const dispatch = useDispatch();

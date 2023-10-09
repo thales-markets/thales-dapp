@@ -1,13 +1,14 @@
 import Loader from 'components/Loader';
 import React, { Suspense } from 'react';
 import styled from 'styled-components';
+import loadable from '@loadable/component';
 
-const Banners = React.lazy(() => import('./components/Banners'));
-const GridLayout = React.lazy(() => import('./components/GridLayout'));
-const Integrations = React.lazy(() => import('./components/Integrations'));
-const Blog = React.lazy(() => import('./components/Blog'));
-const FAQ = React.lazy(() => import('./components/FAQ'));
-const Footer = React.lazy(() => import('./components/Footer'));
+const Banners = loadable(() => import('./components/Banners'));
+const GridLayout = loadable(() => import('./components/GridLayout'));
+const Integrations = loadable(() => import('./components/Integrations'));
+const Blog = loadable(() => import('./components/Blog'));
+const FAQ = loadable(() => import('./components/FAQ'));
+const Footer = loadable(() => import('./components/Footer'));
 
 const Home: React.FC = () => {
     return (
