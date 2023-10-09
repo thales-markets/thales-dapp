@@ -278,6 +278,7 @@ const App = () => {
 
                                 <Route exact path={ROUTES.Options.Wizard}>
                                     <DappLayout>
+                                        <MetaData page={'Wizard'} />
                                         <Wizard />
                                     </DappLayout>
                                 </Route>
@@ -285,17 +286,20 @@ const App = () => {
 
                             <Route exact path={ROUTES.Home}>
                                 <MainLayout>
+                                    <MetaData page={'Home'} />
                                     <Home />
                                 </MainLayout>
                             </Route>
 
                             <Route exact path={ROUTES.Article.Token}>
                                 <MainLayout>
+                                    <MetaData page={'Token'} />
                                     <Token />
                                 </MainLayout>
                             </Route>
                             <Route exact path={ROUTES.Article.Governance}>
                                 <MainLayout>
+                                    <MetaData page={'Governance'} />
                                     <Governance />
                                 </MainLayout>
                             </Route>
