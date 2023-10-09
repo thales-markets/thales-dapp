@@ -1570,5 +1570,47 @@
         "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
         "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!",
         "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!"
+    },
+    "seo": {
+        "home": {
+            "title": "Thales: Permissionless Parimutuel markets.",
+            "description": "Thales protocol allows the creation of on-chain, non-custodial Parimutuel markets. Enjoy AMM-based positional markets, gamified DeFi experiences, and more."
+        },
+        "markets": {
+            "title": "Thales Markets: Fully Decentralized, Transparent Defi Options",
+            "description": "Fully transparent defi options. Choose an asset, choose a strike price, select UP or DOWN, IN or OUT of a range. 100% visibility into ROI and bonuses."
+        },
+        "speed-markets": {
+            "title": "Speed Markets: Defi Options That Resolve in 1-24h",
+            "description":"The fastest of all defi options platforms. Choose ETH or BTC, choose UP or DOWN, choose the time range (1-24h). If your position wins, you 2x your buy-in!"
+        },
+        "vaults": {
+            "title": "Thales Vaults: Automated Trading with 3 Strategies",
+            "description": "Deposit assets into our vaults and choose one of the 3 automated trading strategies with fully transparent ROI. Let the vaults cook for you!"
+        },
+        "wizard": {
+            "title": "Thales Market: Onboarding Wizard",
+            "description": "Learn how to start trading on Thales Market with a video tutorial and key FAQs covering everything you need to know."
+        },
+        "referral": {
+            "title": "Refer Friends to Thales Market and Earn % of Their Trades",
+            "description": "Refer a friend to Thales and get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet."
+        },
+        "token": {
+            "title": "Start Staking THALES & Earn Gamified Staking Rewards",
+            "description": "The more you use Thales products, the better rewards you can earn staking THALES. Check out this page to start earning our gamified staking rewards."
+        },
+        "governance": {
+            "title": "Thales Governance: Council Voting and Proposal Progress",
+            "description": "Help decide the future of Thales by voting for council members and discussing product improvements. Your voting influence increases the more THALES you stake."
+        },
+        "taleofthales": {
+            "title": "Thale of Thales: Our Story in 8-bit Format",
+            "description": "Get to know Thales and the inspiration behind it through an 8-bit mini-game made with heart and passion. "
+        },
+        "profile": {
+            "title": "A Overview of Your Trading History and Vault Performance",
+            "description": "An overview of all your current and past positions on Thales Market, as well as the performance of assets you deposited in our vaults."
+        }
     }
 }
