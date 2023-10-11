@@ -66,19 +66,14 @@ const UserWallet: React.FC = () => {
                     onClick={async () => {
                         // create an instance of SocialLogin
                         const socialLogin = new SocialLogin();
-
                         // get signature that corresponds to your website domains
                         const signature1 = await socialLogin.whitelistUrl(
                             'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
-                        );
-                        const signature2 = await socialLogin.whitelistUrl(
-                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/markets'
                         );
                         // pass the signatures, you can pass one or many signatures you want to whitelist
                         await socialLogin.init({
                             whitelistUrls: {
                                 'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
-                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/markets': signature2,
                             },
                         });
 
