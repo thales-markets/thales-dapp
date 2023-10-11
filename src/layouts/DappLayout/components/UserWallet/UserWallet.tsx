@@ -68,14 +68,18 @@ const UserWallet: React.FC = () => {
                         const socialLogin = new SocialLogin();
                         // console.log(socialLogin);
                         // // get signature that corresponds to your website domains
-                        // const signature1 = await socialLogin.whitelistUrl(
-                        //     'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
-                        // );
+                        const signature1 = await socialLogin.whitelistUrl(
+                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
+                        );
                         // console.log('signature', signature1);
                         // // pass the signatures, you can pass one or many signatures you want to whitelist
                         socialLogin.clientId =
                             'BFLtcqZBy2h59MrF0ZZR5OYy0-R7jI7MnNq-shYpujtNkzalrYYpQVcpWH4Zijo_lErkOBKZgQf7La81emvHSl8';
-                        await socialLogin.init();
+                        await socialLogin.init({
+                            whitelistUrls: {
+                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
+                            },
+                        });
 
                         // pops up the UI widget
                         socialLogin.showWallet();
