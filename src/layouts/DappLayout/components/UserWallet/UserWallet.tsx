@@ -15,7 +15,7 @@ import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
 import { useSwitchNetwork } from 'wagmi';
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
 // import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster'
 // import { IBundler, Bundler } from '@biconomy/bundler'
 // import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account"
@@ -67,23 +67,23 @@ const UserWallet: React.FC = () => {
                     onClick={async () => {
                         // create an instance of SocialLogin
                         const socialLogin = new SocialLogin();
-                        socialLogin.clientId =
-                            'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
+                        // socialLogin.clientId =
+                        //     'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
                         // console.log(socialLogin);
                         // // get signature that corresponds to your website domains
-                        const signature1 = await socialLogin.whitelistUrl(
-                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
-                        );
+                        // const signature1 = await socialLogin.whitelistUrl(
+                        //     'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
+                        // );
                         // console.log('signature', signature1);
                         // // pass the signatures, you can pass one or many signatures you want to whitelist
 
-                        await socialLogin.init({
-                            chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
-                            network: 'testnet',
-                            whitelistUrls: {
-                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
-                            },
-                        });
+                        await socialLogin.init();
+                        // {
+                        // chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
+                        // network: 'testnet',
+                        // whitelistUrls: {
+                        //     'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
+                        // },
 
                         // pops up the UI widget
                         socialLogin.showWallet();
