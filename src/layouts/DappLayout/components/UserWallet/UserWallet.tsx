@@ -74,8 +74,8 @@ const UserWallet: React.FC = () => {
                         );
                         // console.log('signature', signature1);
                         // // pass the signatures, you can pass one or many signatures you want to whitelist
-                        // socialLogin.clientId =
-                        //     'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
+                        socialLogin.clientId =
+                            'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
 
                         await socialLogin.init({
                             chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
