@@ -67,6 +67,8 @@ const UserWallet: React.FC = () => {
                     onClick={async () => {
                         // create an instance of SocialLogin
                         const socialLogin = new SocialLogin();
+                        socialLogin.clientId =
+                            'BG4YqTg9eSy2gbFCAyYnt67Z7wW4fujkAQkpqLHBxbhRwGCzATNQy1wqFjbao4d03mY7ydSGucnHTo30exgM37M';
                         // console.log(socialLogin);
                         // // get signature that corresponds to your website domains
                         const signature1 = await socialLogin.whitelistUrl(
@@ -74,8 +76,6 @@ const UserWallet: React.FC = () => {
                         );
                         // console.log('signature', signature1);
                         // // pass the signatures, you can pass one or many signatures you want to whitelist
-                        socialLogin.clientId =
-                            'BG4YqTg9eSy2gbFCAyYnt67Z7wW4fujkAQkpqLHBxbhRwGCzATNQy1wqFjbao4d03mY7ydSGucnHTo30exgM37M';
 
                         await socialLogin.init({
                             chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
