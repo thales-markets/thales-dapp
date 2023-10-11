@@ -15,6 +15,13 @@ import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
 import { useSwitchNetwork } from 'wagmi';
+// import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster'
+// import { IBundler, Bundler } from '@biconomy/bundler'
+// import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account"
+// import { Wallet, providers, ethers } from 'ethers';
+// import { ChainId } from "@biconomy/core-types"
+import SocialLogin from '@biconomy/web3-auth';
+import '@biconomy/web3-auth/dist/src/style.css';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -56,7 +63,27 @@ const UserWallet: React.FC = () => {
                 <UserSwap />
                 <WalletContainer
                     connected={isWalletConnected}
-                    onClick={() => {
+                    onClick={async () => {
+                        // create an instance of SocialLogin
+                        const socialLogin = new SocialLogin();
+
+                        // get signature that corresponds to your website domains
+                        const signature1 = await socialLogin.whitelistUrl(
+                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
+                        );
+                        const signature2 = await socialLogin.whitelistUrl(
+                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/markets'
+                        );
+                        // pass the signatures, you can pass one or many signatures you want to whitelist
+                        await socialLogin.init({
+                            whitelistUrls: {
+                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
+                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/markets': signature2,
+                            },
+                        });
+
+                        // pops up the UI widget
+                        socialLogin.showWallet();
                         if (isWalletConnected) {
                             trackEvent({
                                 category: 'dAppHeader',
