@@ -68,7 +68,7 @@ const UserWallet: React.FC = () => {
                         // create an instance of SocialLogin
                         const socialLogin = new SocialLogin();
                         socialLogin.clientId =
-                            'BG4YqTg9eSy2gbFCAyYnt67Z7wW4fujkAQkpqLHBxbhRwGCzATNQy1wqFjbao4d03mY7ydSGucnHTo30exgM37M';
+                            'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
                         // console.log(socialLogin);
                         // // get signature that corresponds to your website domains
                         const signature1 = await socialLogin.whitelistUrl(
