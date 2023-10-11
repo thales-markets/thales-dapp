@@ -81,6 +81,7 @@ const UserWallet: React.FC = () => {
                             whitelistUrls: {
                                 'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
                             },
+                            network: 'testnet',
                         });
                         // chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
                         // network: 'testnet',
