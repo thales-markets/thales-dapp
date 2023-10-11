@@ -5,16 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+// import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { DEFAULT_NETWORK } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+// import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
 import { useSwitchNetwork } from 'wagmi';
+import { ethers } from 'ethers';
 // import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster'
 // import { IBundler, Bundler } from '@biconomy/bundler'
 // import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account"
@@ -27,8 +28,8 @@ const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
 const UserWallet: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
-    const { openAccountModal } = useAccountModal();
+    // const { openConnectModal } = useConnectModal();
+    // const { openAccountModal } = useAccountModal();
     const { switchNetwork } = useSwitchNetwork();
     const dispatch = useDispatch();
 
@@ -47,7 +48,7 @@ const UserWallet: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const isLedgerLive = isLedgerDappBrowserProvider();
 
-    const { trackEvent } = useMatomo();
+    // const { trackEvent } = useMatomo();
 
     // currently not supported network synchronization between browser without integrated wallet and wallet app on mobile
     const hideNetworkSwitcher =
@@ -73,25 +74,26 @@ const UserWallet: React.FC = () => {
                         );
                         // console.log('signature', signature1);
                         // // pass the signatures, you can pass one or many signatures you want to whitelist
-                        socialLogin.clientId =
-                            'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
+                        // socialLogin.clientId =
+                        //     'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
+
                         await socialLogin.init({
-                            chainId: '' + Network.OptimismGoerli,
+                            chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
+                            network: 'testnet',
                             whitelistUrls: {
                                 'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
                             },
-                            network: 'testnet',
                         });
 
                         // pops up the UI widget
                         socialLogin.showWallet();
-                        if (isWalletConnected) {
-                            trackEvent({
-                                category: 'dAppHeader',
-                                action: 'click-on-wallet-when-connected',
-                            });
-                        }
-                        isWalletConnected ? openAccountModal?.() : openConnectModal?.();
+                        // if (isWalletConnected) {
+                        //     trackEvent({
+                        //         category: 'dAppHeader',
+                        //         action: 'click-on-wallet-when-connected',
+                        //     });
+                        // }
+                        // isWalletConnected ? openAccountModal?.() : openConnectModal?.();
                     }}
                     onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
                     onMouseLeave={() => setWalletText('')}
