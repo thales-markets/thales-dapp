@@ -15,14 +15,49 @@ import UserSwap from '../UserSwap';
 import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
 import { useSwitchNetwork } from 'wagmi';
-// import { ethers } from 'ethers';
+import { ethers } from 'ethers';
 // import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster'
 // import { IBundler, Bundler } from '@biconomy/bundler'
 // import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account"
 // import { Wallet, providers, ethers } from 'ethers';
 // import { ChainId } from "@biconomy/core-types"
-import SocialLogin from '@biconomy/web3-auth';
+// import SocialLogin from '@biconomy/web3-auth';
 import '@biconomy/web3-auth/dist/src/style.css';
+import { ParticleAuthModule, ParticleProvider } from '@biconomy/particle-auth';
+// import { DEFAULT_ECDSA_OWNERSHIP_MODULE, ECDSAOwnershipValidationModule } from '@biconomy/modules';
+// import {  DEFAULT_ENTRYPOINT_ADDRESS } from '@biconomy/account';
+// import { ChainId } from '@biconomy/core-types';
+// import { Bundler, IBundler } from '@biconomy/bundler';
+// import Transak from '@biconomy/transak';
+
+const particle = new ParticleAuthModule.ParticleNetwork({
+    projectId: '2b8c8b75-cc7a-4111-923f-0043b9fa908b',
+    clientKey: 'cS3khABdBgfK4m8CzYcL1xcgVM6cuflmNY6dFxdY',
+    appId: 'aab773d8-c4e9-43ae-aa57-0d898f3dbf46',
+    chainName: 'optimism', //optional: current chain name, default Ethereum.
+    chainId: 10, //optional: current chain id, default 1.
+    wallet: {
+        //optional: by default, the wallet entry is displayed in the bottom right corner of the webpage.
+        displayWalletEntry: true, //show wallet entry when connect particle.
+        defaultWalletEntryPosition: ParticleAuthModule.WalletEntryPosition.TL, //wallet entry position: ;
+        uiMode: 'dark', //optional: light or dark, if not set, the default is the same as web auth.
+        supportChains: [
+            { id: 10, name: 'optimism' },
+            { id: 42161, name: 'arbitrum' },
+            { id: 137, name: 'polygon' },
+            { id: 420, name: 'optimism' },
+            { id: 84531, name: 'base' },
+        ], // optional: web wallet support chains.
+        customStyle: {}, //optional: custom wallet style
+    },
+});
+
+// const bundler: IBundler = new Bundler({
+//     // get from biconomy dashboard https://dashboard.biconomy.io/
+//     bundlerUrl: '',
+//     chainId: ChainId.OPTIMISM_MAINNET, // or any supported chain of your choice
+//     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+// });
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -47,6 +82,11 @@ const UserWallet: React.FC = () => {
     );
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const isLedgerLive = isLedgerDappBrowserProvider();
+    // const [socialLoginSDK, setSocialLoginSDK] = useState<SocialLogin | null>(null);
+
+    // useEffect(() => {
+    //     console.log(socialLoginSDK);
+    // }, [socialLoginSDK]);
 
     // const { trackEvent } = useMatomo();
 
@@ -65,36 +105,26 @@ const UserWallet: React.FC = () => {
                 <WalletContainer
                     connected={isWalletConnected}
                     onClick={async () => {
-                        // create an instance of SocialLogin
-                        const socialLogin = new SocialLogin();
-                        socialLogin.clientId =
-                            'BKN2xK7UeVaCFQYy8IkcyvOYk5bkGkWdN4iax1r2hVYap8qyopfqPYx9DuuJdwx7has_m2fls64iUqrGW9JS-Zs';
-                        // console.log(socialLogin);
-                        // // get signature that corresponds to your website domains
-                        const signature1 = await socialLogin.whitelistUrl(
-                            'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/'
-                        );
-                        // console.log('signature', signature1);
-                        // // pass the signatures, you can pass one or many signatures you want to whitelist
+                        await particle.auth.login();
+                        const particleProvider = new ParticleProvider(particle.auth);
+                        const ethersProvider = new ethers.providers.Web3Provider(particleProvider, 'any');
+                        const accounts = await ethersProvider.listAccounts();
+                        console.log('Logged in user:', accounts[0]);
+                        console.log('All accounts: ', accounts);
+                        // const web3Provider = new ethers.providers.Web3Provider(particleProvider, 'any');
 
-                        await socialLogin.init({
-                            whitelistUrls: {
-                                'https://thales-dapp-git-biconomy-test-thales-market.vercel.app/': signature1,
-                            },
-                            network: 'testnet',
-                        });
-                        // chainId: ethers.utils.hexValue(Network.OptimismGoerli).toString(),
-                        // network: 'testnet',
+                        // const module = await ECDSAOwnershipValidationModule.create({
+                        //     signer: web3Provider.getSigner(),
+                        //     moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+                        // });
 
-                        // pops up the UI widget
-                        socialLogin.showWallet();
-                        // if (isWalletConnected) {
-                        //     trackEvent({
-                        //         category: 'dAppHeader',
-                        //         action: 'click-on-wallet-when-connected',
-                        //     });
-                        // }
-                        // isWalletConnected ? openAccountModal?.() : openConnectModal?.();
+                        // const biconomySmartAccount = await BiconomySmartAccountV2.create({
+                        //     chainId: ChainId.OPTIMISM_MAINNET,
+                        //     bundler: bundler,
+                        //     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+                        //     defaultValidationModule: module,
+                        //     activeValidationModule: module,
+                        // });
                     }}
                     onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
                     onMouseLeave={() => setWalletText('')}

@@ -64,7 +64,9 @@
         "@biconomy/core-types": "^3.1.0",
         "@biconomy/paymaster": "^3.1.0",
         "@biconomy/modules": "^3.1.0",
-        "@biconomy/web3-auth": "^3.1.0"
+        "@biconomy/web3-auth": "^3.1.0",
+        "@biconomy/particle-auth": "^3.1.0",
+        "@biconomy/transak": "^3.1.0"
     },
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
