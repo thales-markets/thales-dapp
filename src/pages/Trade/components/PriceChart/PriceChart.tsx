@@ -2,7 +2,6 @@ import { CoinGeckoClient } from 'coingecko-api-v3';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import { format } from 'date-fns';
 import { Positions } from 'enums/options';
-import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -111,11 +110,6 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const [ticks, setTicks] = useState<number[]>();
     const [iv, setIV] = useState(0);
 
-    const priceData = usePriceDataQuery(
-        { currencyKey: asset, currencyVs: '', days: dateRange },
-        { refetchInterval: false }
-    );
-
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady && !explicitCurrentPrice,
     });
@@ -129,18 +123,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
     }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
     const processedPriceData = useMemo(() => {
-        if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
-            if (priceData?.data?.prices?.length) {
-                const processedPriceData = priceData.data.prices;
-                return calculatePercentageChange(
-                    processedPriceData[processedPriceData.length - 1][1],
-                    processedPriceData[0][1]
-                );
-            }
+        if (data) {
+            return calculatePercentageChange(data[data.length - 1].price, data[0].price);
         }
-
         return 0;
-    }, [priceData]);
+    }, [data]);
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);
@@ -187,7 +174,6 @@ const PriceChart: React.FC<PriceChartProps> = ({
             }
         };
         fetchData();
-        priceData.refetch();
     }, [asset, dateRange, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {

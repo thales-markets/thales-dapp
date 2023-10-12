@@ -33,9 +33,6 @@ const QUERY_KEYS = {
     Medium: {
         Posts: ['medium', 'posts'],
     },
-    PriceData: {
-        Currency: (currencyKey: string) => ['pricedata', currencyKey],
-    },
     BinaryOptions: {
         Markets: (networkId: Network) => ['markets', networkId],
         SpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
