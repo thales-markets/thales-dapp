@@ -118,7 +118,7 @@ const Wrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 50px 20px 0px 92px;
+    padding: 30px 20px 0px 92px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 10px 0 10px;
         padding-bottom: 50px !important;
