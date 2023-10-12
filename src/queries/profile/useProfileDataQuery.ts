@@ -6,6 +6,8 @@ import { UserProfileData } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import { SPEED_MARKETS_QUOTE } from 'constants/options';
+import { getFeesFromHistory } from 'utils/speedAmm';
+import { secondsToMilliseconds } from 'date-fns';
 
 const useProfileDataQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<UserProfileData>) => {
     return useQuery<UserProfileData>(
@@ -13,16 +15,9 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
         async () => {
             let [profit, volume, numberOfTrades, gain, investment] = [0, 0, 0, 0, 0];
 
-            const { speedMarketsAMMContract } = snxJSConnector;
+            const { speedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
-            const [
-                userMarketTransactions,
-                userTrades,
-                lpFee,
-                safeBoxImpact,
-                numActiveSpeedMarkets,
-                numMaturedSpeedMarkets,
-            ] = await Promise.all([
+            const [userMarketTransactions, userTrades, ammParams] = await Promise.all([
                 thalesData.binaryOptions.optionTransactions({
                     account: walletAddress,
                     network: networkId,
@@ -31,10 +26,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     taker: walletAddress,
                     network: networkId,
                 }),
-                speedMarketsAMMContract?.lpFee(),
-                speedMarketsAMMContract?.safeBoxImpact(),
-                speedMarketsAMMContract?.numActiveMarketsPerUser(walletAddress) || Promise.resolve(0),
-                speedMarketsAMMContract?.numMaturedMarketsPerUser(walletAddress) || Promise.resolve(0),
+                speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress),
             ]);
 
             userMarketTransactions.map((tx: any) => {
@@ -60,19 +52,27 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 }
             });
 
-            if (speedMarketsAMMContract) {
+            if (speedMarketsAMMContract && speedMarketsDataContract) {
                 const [activeSpeedMarkets, maturedSpeedMarkets] = await Promise.all([
-                    speedMarketsAMMContract.activeMarketsPerUser(0, numActiveSpeedMarkets, walletAddress),
-                    speedMarketsAMMContract.maturedMarketsPerUser(0, numMaturedSpeedMarkets, walletAddress),
+                    speedMarketsAMMContract.activeMarketsPerUser(0, ammParams.numActiveMarketsPerUser, walletAddress),
+                    speedMarketsAMMContract.maturedMarketsPerUser(0, ammParams.numMaturedMarketsPerUser, walletAddress),
                 ]);
                 const [activeSpeedMarketsData, maturedSpeedMarketsData] = await Promise.all([
-                    speedMarketsAMMContract.getMarketsData(activeSpeedMarkets),
-                    speedMarketsAMMContract.getMarketsData(maturedSpeedMarkets),
+                    speedMarketsDataContract.getMarketsData(activeSpeedMarkets),
+                    speedMarketsDataContract.getMarketsData(maturedSpeedMarkets),
                 ]);
 
-                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
-
                 activeSpeedMarketsData.concat(maturedSpeedMarketsData).forEach((marketData: any) => {
+                    const createdAt = !marketData.createdAt.isZero()
+                        ? secondsToMilliseconds(Number(marketData.createdAt))
+                        : secondsToMilliseconds(Number(marketData.strikeTime));
+                    const lpFee = !marketData.lpFee.isZero()
+                        ? bigNumberFormatter(marketData.lpFee)
+                        : getFeesFromHistory(createdAt).lpFee;
+                    const safeBoxImpact = !marketData.safeBoxImpact.isZero()
+                        ? bigNumberFormatter(marketData.safeBoxImpact)
+                        : getFeesFromHistory(createdAt).safeBoxImpact;
+                    const fees = lpFee + safeBoxImpact;
                     const paid = coinFormatter(marketData.buyinAmount, networkId) * (1 + fees);
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
                     if (marketData.isUserWinner) {
@@ -84,7 +84,8 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     volume += paid;
                 });
 
-                const numSpeedMarkets = Number(numActiveSpeedMarkets) + Number(numMaturedSpeedMarkets);
+                const numSpeedMarkets =
+                    Number(ammParams.numActiveMarketsPerUser) + Number(ammParams.numMaturedMarketsPerUser);
                 numberOfTrades += numSpeedMarkets;
             }
 

@@ -253,7 +253,9 @@ export type AmmSpeedMarketsLimits = {
     maxPriceDelayForResolvingSec: number;
     risksPerAsset: RiskPerAsset[];
     risksPerAssetAndDirection: RiskPerAssetAndPosition[];
-    lpFee: number;
+    timeThresholdsForFees: number[];
+    lpFees: number[];
+    defaultLPFee: number;
     safeBoxImpact: number;
     whitelistedAddress: boolean;
 };

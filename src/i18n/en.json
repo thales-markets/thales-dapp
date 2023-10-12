@@ -460,6 +460,7 @@
             }
         },
         "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+        "fee-info": "Fee varies per timeframe, longer timeframes have higher payouts",
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {

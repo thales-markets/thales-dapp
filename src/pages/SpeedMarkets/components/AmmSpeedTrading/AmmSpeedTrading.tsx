@@ -20,7 +20,7 @@ import {
     SPEED_MARKETS_QUOTE,
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
-import { secondsToMilliseconds } from 'date-fns';
+import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -70,7 +70,7 @@ import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getTransactionForSpeedAMM } from 'utils/speedAmm';
+import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { getReferralWallet } from 'utils/referral';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
@@ -209,11 +209,16 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     );
 
     const totalFee = useMemo(() => {
-        if (ammSpeedMarketsLimits) {
-            return ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact;
+        if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
+            const lpFee = getFeeByTimeThreshold(
+                deltaTimeSec ? deltaTimeSec : strikeTimeSec - millisecondsToSeconds(Date.now()),
+                ammSpeedMarketsLimits?.timeThresholdsForFees,
+                ammSpeedMarketsLimits?.lpFees
+            );
+            return lpFee ? lpFee + ammSpeedMarketsLimits?.safeBoxImpact : 0;
         }
         return 0;
-    }, [ammSpeedMarketsLimits]);
+    }, [ammSpeedMarketsLimits, deltaTimeSec, strikeTimeSec]);
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {
@@ -609,12 +614,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     {isMobile && getTradingDetails()}
                     {getSubmitButton()}
                     <PaymentInfo>
-                        {isStableCurrency(selectedCollateral)
+                        {!totalFee
+                            ? t('speed-markets.fee-info')
+                            : isStableCurrency(selectedCollateral)
                             ? t('speed-markets.total-pay', {
                                   amount: selectedStableBuyinAmount
                                       ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
-                                  fee: totalFee ? formatPercentage(totalFee, 0) : '...',
+                                  fee: formatPercentage(totalFee, 0),
                               })
                             : t('speed-markets.to-pay-with-conversion', {
                                   amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
@@ -623,11 +630,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                   fee: formatPercentage(totalFee, 0),
                               })}
-                        {isStableCurrency(selectedCollateral) && selectedCollateral !== defaultCollateral && (
-                            <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
-                        )}
+                        {!!totalFee &&
+                            isStableCurrency(selectedCollateral) &&
+                            selectedCollateral !== defaultCollateral && (
+                                <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
+                            )}
                     </PaymentInfo>
-                    {!isStableCurrency(selectedCollateral) && (
+                    {!!totalFee && !isStableCurrency(selectedCollateral) && (
                         <PaymentInfo>
                             {t('speed-markets.total-pay-with-conversion', {
                                 amount: formatCurrencyWithKey(selectedCollateral, totalPaidAmount),
