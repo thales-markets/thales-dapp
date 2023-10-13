@@ -175,7 +175,11 @@
         },
         "banner": {
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
-            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>"
+            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
+            "page-link": {
+                "markets": "Looking for markets with longer time frames (days, weeks, or months)? Try <bold>Thales Markets</bold>",
+                "speed-markets": "Looking for markets that resolve in hours and not days? Try"
+            }
         },
         "tooltip": {
             "open-market": "Go to Market page"
