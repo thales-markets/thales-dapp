@@ -104,14 +104,14 @@ const Wrapper = styled(FlexDiv)`
 const Title = styled.h2`
     font-size: 18px;
     font-weight: 600;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SubTitle = styled.h3`
     font-size: 13px;
     font-weight: 700;
     text-transform: capitalize;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 10px;
 `;
 
@@ -125,7 +125,7 @@ const Text = styled.p`
 
 const Divider = styled.hr`
     width: 100%;
-    border-top: 1px solid ${(_props) => _props.theme.borderColor.quaternary};
+    border-top: 1px solid ${(props) => props.theme.borderColor.quaternary};
 `;
 
 export default StakingStepsMobile;

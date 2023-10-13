@@ -107,18 +107,13 @@ const Container = styled(FlexDiv)`
     padding: 24px 30px;
     min-width: 300px;
     gap: 20px;
-    border: ${(_props) => `1px solid ${_props.theme.borderColor.tertiary}`};
+    border: ${(props) => `1px solid ${props.theme.borderColor.tertiary}`};
     border-radius: 8px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 5px 0px 30px 0px;
         width: 100%;
     }
 `;
-
-// const LastContainer = styled(Container)`
-//     max-width: calc((100% - 60px) / 3);
-//     margin: 30px auto;
-// `;
 
 const TextContainer = styled.div`
     display: flex;
@@ -129,14 +124,14 @@ const TextContainer = styled.div`
 
 const Label = styled.span`
     font-weight: 700;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
 `;
 
 const Value = styled.span`
     font-weight: 700;
     text-transform: uppercase;
-    color: ${(_props) => _props.theme.borderColor.tertiary};
+    color: ${(props) => props.theme.borderColor.tertiary};
 `;
 
 const Icon = styled.i`

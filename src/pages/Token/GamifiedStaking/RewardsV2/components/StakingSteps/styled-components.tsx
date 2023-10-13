@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const HighlightText = styled.span`
     font-size: 13px;
-    color: ${(_props) => _props.theme.textColor.quaternary};
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const BoldedText = styled.span`
@@ -11,7 +11,7 @@ export const BoldedText = styled.span`
 `;
 
 export const HighlightTextSecondary = styled(HighlightText)`
-    color: ${(_props) => _props.theme.tokenPage.border.secondary};
+    color: ${(props) => props.theme.tokenPage.border.secondary};
 `;
 
 export const HighlightTextBigger = styled(HighlightTextSecondary)`
