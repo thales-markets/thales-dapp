@@ -36,22 +36,23 @@ const useAmmSpeedMarketsLimitsQuery = (
             };
             const { speedMarketsDataContract } = snxJSConnector;
             if (speedMarketsDataContract) {
-                const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(
-                    walletAddress || ZERO_ADDRESS
-                );
-
-                const riskForETH = await speedMarketsDataContract.getRiskPerAsset(
-                    ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)
-                );
-                const riskForBTC = await speedMarketsDataContract.getRiskPerAsset(
-                    ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
-                );
-                const directionalRiskForETH = await speedMarketsDataContract.getDirectionalRiskPerAsset(
-                    ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)
-                );
-                const directionalRiskForBTC = await speedMarketsDataContract.getDirectionalRiskPerAsset(
-                    ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
-                );
+                const [
+                    ammParams,
+                    riskForETH,
+                    riskForBTC,
+                    directionalRiskForETH,
+                    directionalRiskForBTC,
+                ] = await Promise.all([
+                    speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress || ZERO_ADDRESS),
+                    speedMarketsDataContract.getRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)),
+                    speedMarketsDataContract.getRiskPerAsset(ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)),
+                    speedMarketsDataContract.getDirectionalRiskPerAsset(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.ETH)
+                    ),
+                    speedMarketsDataContract.getDirectionalRiskPerAsset(
+                        ethers.utils.formatBytes32String(CRYPTO_CURRENCY_MAP.BTC)
+                    ),
+                ]);
 
                 ammSpeedMarketsLimits.minBuyinAmount = coinFormatter(ammParams.minBuyinAmount, networkId);
                 ammSpeedMarketsLimits.maxBuyinAmount =

@@ -71,11 +71,10 @@ const Image = styled.img`
 `;
 
 const arrowRightStyle: CSSProperties = {
-    height: 30,
-    width: 30,
+    height: 257,
+    width: 145,
     position: 'absolute',
     right: 0,
-    // top: -12,
 };
 
 export default PageLinkBanner;
