@@ -4,7 +4,7 @@ import { getCurrencyPriority } from 'utils/currency';
 
 export const PRICE_SERVICE_ENDPOINTS = {
     testnet: 'https://xc-testnet.pyth.network',
-    mainnet: 'https://hermes.pyth.network',
+    mainnet: 'https://xc-mainnet.pyth.network',
 };
 
 // You can find the ids of prices at https://pyth.network/developers/price-feed-ids#pyth-evm-mainnet
