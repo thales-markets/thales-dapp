@@ -491,7 +491,7 @@ const WalletAddress = styled.a`
 `;
 
 const HeaderText = styled(TableText)<{ isRank?: boolean }>`
-    font-size: ${(_props) => (_props?.isRank ? '11px' : '13px')};
+    font-size: ${(props) => (props?.isRank ? '11px' : '13px')};
 `;
 
 const Rank = styled.div`

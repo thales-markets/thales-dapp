@@ -31,6 +31,7 @@ import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
 import { LINKS } from 'constants/links';
+import PageLinkBanner from 'components/PageLinkBanner';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = () => {
     const { t } = useTranslation();
@@ -188,6 +189,9 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                         currentPrice={currentPrices[currencyKey]}
                         resetData={resetData}
                     />
+                    <BannerWrapper>
+                        <PageLinkBanner rout={ROUTES.Options.Home} />
+                    </BannerWrapper>
                     {isWalletConnected && (
                         <>
                             <OpenPositions
@@ -311,6 +315,10 @@ const ArrowRight = styled.i`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 4px;
     }
+`;
+
+const BannerWrapper = styled.div`
+    margin-top: 40px;
 `;
 
 export default SpeedMarkets;

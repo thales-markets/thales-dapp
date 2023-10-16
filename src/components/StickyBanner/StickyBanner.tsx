@@ -30,8 +30,8 @@ const Container = styled(FlexDiv)`
     width: 100%;
     align-items: center;
     justify-content: center;
-    color: ${(_props) => _props.theme.button.textColor.primary};
-    background-color: ${(_props) => _props.theme.borderColor.tertiary};
+    color: ${(props) => props.theme.button.textColor.primary};
+    background-color: ${(props) => props.theme.borderColor.tertiary};
     min-height: 35px;
     z-index: 102;
     cursor: pointer;
@@ -42,7 +42,7 @@ const Container = styled(FlexDiv)`
 `;
 
 const Label = styled.span`
-    color: ${(_props) => _props.theme.button.textColor.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     font-size: 18px;
     padding: 9px 0px;
     font-style: normal;

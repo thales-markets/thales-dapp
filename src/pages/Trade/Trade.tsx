@@ -1,3 +1,4 @@
+import PageLinkBanner from 'components/PageLinkBanner';
 import Tooltip from 'components/Tooltip/Tooltip';
 import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
@@ -177,6 +178,9 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                         }
                         showBuyLiquidity
                     />
+                    <BannerWrapper>
+                        <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
+                    </BannerWrapper>
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
             ) : (
@@ -261,6 +265,10 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
         gap: 10px;
         order: 2;
     }
+`;
+
+const BannerWrapper = styled.div`
+    margin-top: 20px;
 `;
 
 export default TradePage;
