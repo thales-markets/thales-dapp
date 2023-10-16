@@ -2,8 +2,10 @@ import Button from 'components/Button';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import TimeInput from 'components/fields/TimeInput';
 import {
+    hoursToMinutes,
     hoursToSeconds,
     millisecondsToSeconds,
+    minutesToHours,
     minutesToSeconds,
     secondsToHours,
     secondsToMilliseconds,
@@ -56,9 +58,9 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const [errorMessage, setErrorMessage] = useState('');
 
     const deltaTimesMinutes: number[] = useMemo(() => {
-        const times = [];
+        let times: number[] = [];
         if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
-            times.push(secondsToMinutes(ammSpeedMarketsLimits.minimalTimeToMaturity));
+            times = ammSpeedMarketsLimits.timeThresholdsForFees.filter((time: number) => time < hoursToMinutes(1));
             setIsDeltaMinutesSelected(true);
         } else {
             setIsDeltaMinutesSelected(false);
@@ -68,21 +70,11 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     }, [ammSpeedMarketsLimits]);
 
     const deltaTimesHours: number[] = useMemo(() => {
-        const times = [];
+        let times: number[] = [];
         if (ammSpeedMarketsLimits) {
-            const minHours = secondsToHours(ammSpeedMarketsLimits.minimalTimeToMaturity);
-            const max = secondsToHours(ammSpeedMarketsLimits.maximalTimeToMaturity);
-
-            if (minHours !== 0) {
-                // no minutes
-                times.push(minHours);
-                times.push(minHours * 4);
-            } else {
-                times.push(1); // one hour
-            }
-
-            times.push(max / 2);
-            times.push(max);
+            times = ammSpeedMarketsLimits.timeThresholdsForFees
+                .filter((timeMinute: number) => timeMinute >= hoursToMinutes(1))
+                .map((timeMinute) => minutesToHours(timeMinute));
         }
 
         return times;
