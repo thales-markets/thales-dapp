@@ -6,47 +6,30 @@ import { bigNumberFormatter } from './formatters/ethers';
 import { generalConfig } from 'config/general';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
-    switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
-            return PRICE_SERVICE_ENDPOINTS.mainnet;
-        case Network.OptimismGoerli:
-            return PRICE_SERVICE_ENDPOINTS.testnet;
-
-        default:
-            return PRICE_SERVICE_ENDPOINTS.mainnet;
+    if (networkId === Network.OptimismGoerli) {
+        return PRICE_SERVICE_ENDPOINTS.testnet;
+    } else {
+        return PRICE_SERVICE_ENDPOINTS.mainnet;
     }
 };
 
 export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_MAP[number]) => {
-    switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
-            return PRICE_ID.mainnet[currency];
-        case Network.OptimismGoerli:
-            return PRICE_ID.testnet[currency];
-
-        default:
-            return PRICE_ID.mainnet[currency];
+    if (networkId === Network.OptimismGoerli) {
+        return PRICE_ID.testnet[currency];
+    } else {
+        return PRICE_ID.mainnet[currency];
     }
 };
 
 const getCurrencyByPriceId = (networkId: Network, priceId: string) => {
-    switch (networkId) {
-        case (Network.Mainnet, Network.OptimismMainnet, Network.PolygonMainnet, Network.Arbitrum):
-            return (
-                Object.keys(PRICE_ID.mainnet).find((key) => PRICE_ID.mainnet[key] === '0x' + priceId) ||
-                'currencyNotFound'
-            );
-        case Network.OptimismGoerli:
-            return (
-                Object.keys(PRICE_ID.testnet).find((key) => PRICE_ID.testnet[key] === '0x' + priceId) ||
-                'currencyNotFound'
-            );
-
-        default:
-            return (
-                Object.keys(PRICE_ID.mainnet).find((key) => PRICE_ID.mainnet[key] === '0x' + priceId) ||
-                'currencyNotFound'
-            );
+    if (networkId === Network.OptimismGoerli) {
+        return (
+            Object.keys(PRICE_ID.testnet).find((key) => PRICE_ID.testnet[key] === '0x' + priceId) || 'currencyNotFound'
+        );
+    } else {
+        return (
+            Object.keys(PRICE_ID.mainnet).find((key) => PRICE_ID.mainnet[key] === '0x' + priceId) || 'currencyNotFound'
+        );
     }
 };
 

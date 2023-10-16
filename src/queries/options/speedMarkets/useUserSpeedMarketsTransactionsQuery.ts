@@ -10,6 +10,7 @@ import { TradeWithMarket } from 'types/profile';
 import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import { getAPIKeyByNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getFeesFromHistory } from 'utils/speedAmm';
 
 const useUserSpeedMarketsTransactionsQuery = (
     networkId: Network,
@@ -21,24 +22,18 @@ const useUserSpeedMarketsTransactionsQuery = (
         async () => {
             const userTransactions: TradeWithMarket[] = [];
 
-            const { speedMarketsAMMContract } = snxJSConnector;
+            const { speedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
-            if (speedMarketsAMMContract) {
-                const [lpFee, safeBoxImpact, numActiveMarkets, numMaturedMarkets] = await Promise.all([
-                    speedMarketsAMMContract.lpFee(),
-                    speedMarketsAMMContract.safeBoxImpact(),
-                    speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress),
-                    speedMarketsAMMContract.numMaturedMarketsPerUser(walletAddress),
-                ]);
-                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+            if (speedMarketsAMMContract && speedMarketsDataContract) {
+                const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress);
 
                 const [activeMarkets, maturedMarkets] = await Promise.all([
-                    speedMarketsAMMContract.activeMarketsPerUser(0, numActiveMarkets, walletAddress),
-                    speedMarketsAMMContract.maturedMarketsPerUser(0, numMaturedMarkets, walletAddress),
+                    speedMarketsAMMContract.activeMarketsPerUser(0, ammParams.numActiveMarketsPerUser, walletAddress),
+                    speedMarketsAMMContract.maturedMarketsPerUser(0, ammParams.numMaturedMarketsPerUser, walletAddress),
                 ]);
                 const allMarkets: any[] = activeMarkets.concat(maturedMarkets);
 
-                const allMarketsDataArray = await speedMarketsAMMContract.getMarketsData(allMarkets);
+                const allMarketsDataArray = await speedMarketsDataContract.getMarketsData(allMarkets);
                 const filteredMarketsData = allMarketsDataArray
                     .map((marketData: any, index: number) => ({
                         ...marketData,
@@ -94,10 +89,22 @@ const useUserSpeedMarketsTransactionsQuery = (
                         );
 
                         if (transactionBlock) {
+                            const txTimestamp = secondsToMilliseconds(transactionBlock.timestamp);
+                            const createdAt = !marketData.createdAt.isZero()
+                                ? secondsToMilliseconds(Number(marketData.createdAt))
+                                : txTimestamp;
+                            const lpFee = !marketData.lpFee.isZero()
+                                ? bigNumberFormatter(marketData.lpFee)
+                                : getFeesFromHistory(createdAt).lpFee;
+                            const safeBoxImpact = !marketData.safeBoxImpact.isZero()
+                                ? bigNumberFormatter(marketData.safeBoxImpact)
+                                : getFeesFromHistory(createdAt).safeBoxImpact;
+                            const fees = lpFee + safeBoxImpact;
+
                             const userData: TradeWithMarket = {
                                 id: txHash,
                                 transactionHash: txHash,
-                                timestamp: secondsToMilliseconds(transactionBlock.timestamp),
+                                timestamp: txTimestamp,
                                 orderHash: txHash,
                                 maker: '', // not used
                                 taker: walletAddress,
@@ -111,7 +118,7 @@ const useUserSpeedMarketsTransactionsQuery = (
                                 optionSide: side,
                                 marketItem: {
                                     address: marketData.market,
-                                    timestamp: secondsToMilliseconds(transactionBlock.timestamp),
+                                    timestamp: txTimestamp,
                                     currencyKey: parseBytes32String(marketData.asset),
                                     strikePrice: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS),
                                     maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),

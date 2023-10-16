@@ -175,7 +175,11 @@
         },
         "banner": {
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
-            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>"
+            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
+            "page-link": {
+                "markets": "Looking for markets with longer time frames (days, weeks, or months)? Try <bold>Thales Markets</bold>",
+                "speed-markets": "Looking for markets that resolve in hours and not days? Try"
+            }
         },
         "tooltip": {
             "open-market": "Go to Market page"
@@ -460,6 +464,7 @@
             }
         },
         "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+        "fee-info": "Fee varies per timeframe, longer timeframes have higher payouts",
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
@@ -468,7 +473,8 @@
             "liquidity": "Current available liquidity for this Asset<br><br>Open Liquidity for UP {{liquidityPerUp}}<br>Open Liquidity for DOWN {{liquidityPerDown}}",
             "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
             "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
-            "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration"
+            "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration",
+            "fee-info": "{{firstPerc}} from {{firstTime}}min up to {{secondTime}}min<br>{{secondPerc}} from {{secondTime}}min up to {{thirdTime}}min<br>{{thirdPerc}} from {{thirdTime}}min up to {{fourthTime}}min<br>{{fourthPerc}} for above or equal {{fourthTime}}min"
         },
         "overview": {
             "title": "Overview",

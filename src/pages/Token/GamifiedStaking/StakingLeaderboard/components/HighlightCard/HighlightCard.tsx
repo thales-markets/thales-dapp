@@ -55,8 +55,8 @@ const Container = styled(FlexDiv)<{ highlightCard: boolean }>`
     align-items: center;
     width: 32%;
     height: 167px;
-    background-color: ${(_props) => `${_props.highlightCard ? _props.theme.borderColor.tertiary : ''}`};
-    border: ${(_props) => `1px solid ${_props.theme.borderColor.tertiary}`};
+    background-color: ${(props) => `${props.highlightCard ? props.theme.borderColor.tertiary : ''}`};
+    border: ${(props) => `1px solid ${props.theme.borderColor.tertiary}`};
     border-radius: 8px;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 5px 0px 30px 0px;
@@ -67,7 +67,7 @@ const Container = styled(FlexDiv)<{ highlightCard: boolean }>`
 const WalletAddress = styled.span<{ highlightCard: boolean }>`
     font-weight: 700;
     font-size: 18px;
-    color: ${(_props) => `${!_props.highlightCard ? _props.theme.textColor.primary : _props.theme.background.primary}`};
+    color: ${(props) => `${!props.highlightCard ? props.theme.textColor.primary : props.theme.background.primary}`};
     margin: 50px 0px 10px 0px;
 `;
 
@@ -81,15 +81,15 @@ const DataContainer = styled(FlexDivColumn)``;
 
 const Heading = styled.h3<{ highlightCard: boolean }>`
     font-weight: 700;
-    color: ${(_props) => `${!_props.highlightCard ? _props.theme.textColor.primary : _props.theme.background.primary}`};
+    color: ${(props) => `${!props.highlightCard ? props.theme.textColor.primary : props.theme.background.primary}`};
     text-transform: uppercase;
 `;
 
 const Amount = styled.span<{ highlightCard: boolean }>`
     font-weight: 700;
     text-transform: uppercase;
-    color: ${(_props) =>
-        `${!_props.highlightCard ? _props.theme.button.textColor.quaternary : _props.theme.background.primary}`};
+    color: ${(props) =>
+        `${!props.highlightCard ? props.theme.button.textColor.quaternary : props.theme.background.primary}`};
 `;
 
 const BadgeContainer = styled.div`

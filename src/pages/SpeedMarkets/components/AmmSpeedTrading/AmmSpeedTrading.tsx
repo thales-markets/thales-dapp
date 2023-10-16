@@ -20,7 +20,7 @@ import {
     SPEED_MARKETS_QUOTE,
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
-import { secondsToMilliseconds } from 'date-fns';
+import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -31,7 +31,7 @@ import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuer
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
@@ -70,10 +70,11 @@ import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getTransactionForSpeedAMM } from 'utils/speedAmm';
+import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { getReferralWallet } from 'utils/referral';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
+import useInterval from 'hooks/useInterval';
 
 type AmmSpeedTradingProps = {
     currencyKey: string;
@@ -116,6 +117,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     );
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
     const [finalStrikePrice, setFinalStrikePrice] = useState(0);
+    const [deltaFromStrikeTime, setDeltaFromStrikeTime] = useState(0);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessageKey, setErrorMessageKey] = useState('');
@@ -208,12 +210,24 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         [selectedCollateral, exchangeRates, ammSpeedMarketsLimits?.minBuyinAmount]
     );
 
+    // Recalculate delta from Strike Time on every 5 seconds
+    useInterval(async () => {
+        if (strikeTimeSec) {
+            setDeltaFromStrikeTime(strikeTimeSec - millisecondsToSeconds(Date.now()));
+        }
+    }, secondsToMilliseconds(5));
+
     const totalFee = useMemo(() => {
-        if (ammSpeedMarketsLimits) {
-            return ammSpeedMarketsLimits?.lpFee + ammSpeedMarketsLimits?.safeBoxImpact;
+        if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
+            const lpFee = getFeeByTimeThreshold(
+                deltaTimeSec ? deltaTimeSec : deltaFromStrikeTime,
+                ammSpeedMarketsLimits?.timeThresholdsForFees,
+                ammSpeedMarketsLimits?.lpFees
+            );
+            return lpFee ? lpFee + ammSpeedMarketsLimits?.safeBoxImpact : 0;
         }
         return 0;
-    }, [ammSpeedMarketsLimits]);
+    }, [ammSpeedMarketsLimits, deltaTimeSec, strikeTimeSec, deltaFromStrikeTime]);
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {
@@ -564,6 +578,20 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     const inputWrapperRef = useRef<HTMLDivElement>(null);
 
+    const dynamicFeesTooltipData =
+        ammSpeedMarketsLimits && ammSpeedMarketsLimits?.lpFees.length === 4
+            ? {
+                  firstPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[0], 0),
+                  firstTime: ammSpeedMarketsLimits?.timeThresholdsForFees[0],
+                  secondPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[1], 0),
+                  secondTime: ammSpeedMarketsLimits?.timeThresholdsForFees[1],
+                  thirdPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[2], 0),
+                  thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[2],
+                  fourthPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[3], 0),
+                  fourthTime: ammSpeedMarketsLimits?.timeThresholdsForFees[3],
+              }
+            : {};
+
     return (
         <Container>
             {!isMobile && getTradingDetails()}
@@ -609,12 +637,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     {isMobile && getTradingDetails()}
                     {getSubmitButton()}
                     <PaymentInfo>
-                        {isStableCurrency(selectedCollateral)
+                        {!totalFee
+                            ? t('speed-markets.fee-info')
+                            : isStableCurrency(selectedCollateral)
                             ? t('speed-markets.total-pay', {
                                   amount: selectedStableBuyinAmount
                                       ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
-                                  fee: totalFee ? formatPercentage(totalFee, 0) : '...',
+                                  fee: formatPercentage(totalFee, 0),
                               })
                             : t('speed-markets.to-pay-with-conversion', {
                                   amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
@@ -623,11 +653,30 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                   fee: formatPercentage(totalFee, 0),
                               })}
-                        {isStableCurrency(selectedCollateral) && selectedCollateral !== defaultCollateral && (
-                            <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
+                        {!totalFee ? (
+                            <Tooltip
+                                overlay={
+                                    Object.keys(dynamicFeesTooltipData).length ? (
+                                        <Trans
+                                            i18nKey="speed-markets.tooltips.fee-info"
+                                            components={{
+                                                br: <br />,
+                                            }}
+                                            values={{ ...dynamicFeesTooltipData }}
+                                        />
+                                    ) : (
+                                        t('common.progress')
+                                    )
+                                }
+                            />
+                        ) : (
+                            isStableCurrency(selectedCollateral) &&
+                            selectedCollateral !== defaultCollateral && (
+                                <Tooltip overlay={t('speed-markets.tooltips.paid-conversion')} />
+                            )
                         )}
                     </PaymentInfo>
-                    {!isStableCurrency(selectedCollateral) && (
+                    {!!totalFee && !isStableCurrency(selectedCollateral) && (
                         <PaymentInfo>
                             {t('speed-markets.total-pay-with-conversion', {
                                 amount: formatCurrencyWithKey(selectedCollateral, totalPaidAmount),

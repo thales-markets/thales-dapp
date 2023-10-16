@@ -201,7 +201,7 @@ const Label = styled.span<{ first?: boolean }>`
     text-transform: uppercase;
     line-height: 100%;
     margin-top: 0px;
-    margin-left: ${(_props) => (_props.first ? '45px' : '')};
+    margin-left: ${(props) => (props.first ? '45px' : '')};
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         align-self: center;
         text-align: center;

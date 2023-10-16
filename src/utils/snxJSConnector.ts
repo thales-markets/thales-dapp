@@ -1,9 +1,11 @@
+import { Provider } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
+import { Coins } from 'types/options';
 import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import liquidityPoolDataContract from 'utils/contracts/liquidityPoolDataContract';
-import sportLiquidityPoolContract from 'utils/contracts/sportLiquidityPoolContract';
 import parlayLiquidityPoolContract from 'utils/contracts/parlayLiquidityPoolContract';
+import sportLiquidityPoolContract from 'utils/contracts/sportLiquidityPoolContract';
 import stakingDataContract from 'utils/contracts/stakingDataContract';
 import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
@@ -17,15 +19,14 @@ import multipleCollateral from './contracts/multipleCollateralContract';
 import opThalesContract from './contracts/opThalesContract';
 import priceFeedContract from './contracts/priceFeedContract';
 import rangedMarketAMMContract from './contracts/rangedMarketsAMM';
+import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
+import speedMarketsDataContract from './contracts/speedMarketsAMMDataContract';
 import stakingThales from './contracts/stakingThales';
 import taleOfThalesNFT from './contracts/taleOfThalesNFT';
+import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
-import speedMarketsAMMContract from './contracts/speedMarketsAMMContract';
-import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusRewardsManager';
-import { Coins } from 'types/options';
-import { Provider } from '@wagmi/core';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -56,6 +57,7 @@ type SnxJSConnector = {
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
     speedMarketsAMMContract?: ethers.Contract;
+    speedMarketsDataContract?: ethers.Contract;
     stakingBonusRewardsManager?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
@@ -114,6 +116,7 @@ const snxJSConnector: SnxJSConnector = {
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
         this.speedMarketsAMMContract = conditionalInitializeContract(speedMarketsAMMContract, contractSettings);
+        this.speedMarketsDataContract = conditionalInitializeContract(speedMarketsDataContract, contractSettings);
         this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
     },
 };
