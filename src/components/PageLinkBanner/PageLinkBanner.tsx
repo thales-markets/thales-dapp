@@ -74,7 +74,7 @@ const arrowRightStyle: CSSProperties = {
     height: 257,
     width: 145,
     position: 'absolute',
-    right: 0,
+    right: 65,
 };
 
 export default PageLinkBanner;
