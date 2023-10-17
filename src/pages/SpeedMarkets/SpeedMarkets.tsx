@@ -316,6 +316,9 @@ const ArrowRight = styled.i`
 
 const BannerWrapper = styled.div`
     margin-top: 40px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-top: 20px;
+    }
 `;
 
 export default SpeedMarkets;
