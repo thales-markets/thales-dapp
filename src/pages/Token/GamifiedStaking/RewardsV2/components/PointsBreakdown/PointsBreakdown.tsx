@@ -505,7 +505,7 @@ const Row = styled.div`
 
 const BrakedownWrapper = styled(ColumnFlex)<{ active: boolean; transparent: boolean }>`
     position: relative;
-    background-color: ${(_props) => (_props?.active ? _props.theme.background.secondary : '')};
+    background-color: ${(props) => (props?.active ? props.theme.background.secondary : '')};
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     display: flex;
@@ -611,7 +611,7 @@ const TotalPoints = styled.div`
 
 const Arrow = styled.i`
     font-size: 16px;
-    color: ${(_props) => _props.theme.textColor.quaternary};
+    color: ${(props) => props.theme.textColor.quaternary};
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -638,7 +638,7 @@ const DropdownLabel = styled.span`
     font-size: 13px;
     font-style: normal;
     align-self: flex-start;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 20px;
     }
@@ -680,7 +680,7 @@ const LinkWrapper = styled.a`
 
 const LinkIcon = styled.i`
     font-size: 40px !important;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     padding: 10px 0px;
 `;
 
@@ -697,7 +697,7 @@ const LinkLabel = styled.span`
     display: flex;
     text-transform: uppercase;
     font-size: 13px;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     word-wrap: normal;
 `;
 
@@ -707,7 +707,7 @@ const ExternalIcon = styled.span`
     right: -15px;
     margin-left: 5px;
     font-size: 8px;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const VaultsWrapper = styled(FlexDivRow)`
@@ -720,7 +720,7 @@ const VaultsWrapper = styled(FlexDivRow)`
 
 const VaultsLabel = styled.div`
     font-size: 22px;
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     font-style: normal;
     font-weight: 700;
     text-transform: uppercase;

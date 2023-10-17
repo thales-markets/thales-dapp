@@ -1,5 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import banner from 'assets/images/speed-markets/competition-speed-markets-banner.png';
+import banner from 'assets/images/speed-markets/speed-markets-banner.png';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { secondsToMilliseconds } from 'date-fns';
@@ -30,7 +30,7 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 import SimpleLoader from 'components/SimpleLoader';
-import { LINKS } from 'constants/links';
+import PageLinkBanner from 'components/PageLinkBanner';
 
 const SpeedMarkets: React.FC<RouteComponentProps> = () => {
     const { t } = useTranslation();
@@ -123,9 +123,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                 <SimpleLoader />
             ) : (
                 <Container>
-                    <SPAAnchor href={LINKS.DuneSpeedMarketsCompetition}>
-                        <HeaderImage />
-                    </SPAAnchor>
+                    <HeaderImage />
                     <Info>
                         <Trans
                             i18nKey="speed-markets.info"
@@ -188,6 +186,9 @@ const SpeedMarkets: React.FC<RouteComponentProps> = () => {
                         currentPrice={currentPrices[currencyKey]}
                         resetData={resetData}
                     />
+                    <BannerWrapper>
+                        <PageLinkBanner rout={ROUTES.Options.Home} />
+                    </BannerWrapper>
                     {isWalletConnected && (
                         <>
                             <OpenPositions
@@ -310,6 +311,13 @@ const ArrowRight = styled.i`
     color: ${(props) => props.theme.textColor.primary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 4px;
+    }
+`;
+
+const BannerWrapper = styled.div`
+    margin-top: 40px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-top: 20px;
     }
 `;
 

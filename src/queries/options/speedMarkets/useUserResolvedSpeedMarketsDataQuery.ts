@@ -10,6 +10,7 @@ import { OptionSide, UserClosedPositions } from 'types/options';
 import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getFeesFromHistory } from 'utils/speedAmm';
 
 const useUserResolvedSpeedMarketsDataQuery = (
     networkId: Network,
@@ -20,21 +21,17 @@ const useUserResolvedSpeedMarketsDataQuery = (
         QUERY_KEYS.BinaryOptions.UserResolvedSpeedMarkets(networkId, walletAddress),
         async () => {
             const userClosedSpeedMarketsData: UserClosedPositions[] = [];
-            const { speedMarketsAMMContract } = snxJSConnector;
+            const { speedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
-            if (speedMarketsAMMContract) {
-                const [lpFee, safeBoxImpact, numMaturedMarkets] = await Promise.all([
-                    speedMarketsAMMContract.lpFee(),
-                    speedMarketsAMMContract.safeBoxImpact(),
-                    speedMarketsAMMContract.numMaturedMarketsPerUser(walletAddress),
-                ]);
-                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+            if (speedMarketsAMMContract && speedMarketsDataContract) {
+                const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress);
+
                 const maturedMarkets = await speedMarketsAMMContract.maturedMarketsPerUser(
                     0,
-                    numMaturedMarkets,
+                    ammParams.numMaturedMarketsPerUser,
                     walletAddress
                 );
-                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(maturedMarkets);
+                const marketsDataArray = await speedMarketsDataContract.getMarketsData(maturedMarkets);
                 const userResolvedMarkets = marketsDataArray.map((marketData: any, index: number) => ({
                     ...marketData,
                     market: maturedMarkets[index],
@@ -44,6 +41,18 @@ const useUserResolvedSpeedMarketsDataQuery = (
                     const marketData = userResolvedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const maturityDate = secondsToMilliseconds(Number(marketData.strikeTime));
+
+                    const createdAt = !marketData.createdAt.isZero()
+                        ? secondsToMilliseconds(Number(marketData.createdAt))
+                        : maturityDate;
+                    const lpFee = !marketData.lpFee.isZero()
+                        ? bigNumberFormatter(marketData.lpFee)
+                        : getFeesFromHistory(createdAt).lpFee;
+                    const safeBoxImpact = !marketData.safeBoxImpact.isZero()
+                        ? bigNumberFormatter(marketData.safeBoxImpact)
+                        : getFeesFromHistory(createdAt).safeBoxImpact;
+                    const fees = lpFee + safeBoxImpact;
 
                     const userData: UserClosedPositions = {
                         currencyKey: parseBytes32String(marketData.asset),
@@ -54,7 +63,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
                         strikePriceNum: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
+                        maturityDate,
                         market: marketData.market,
                         side: side,
                         paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),

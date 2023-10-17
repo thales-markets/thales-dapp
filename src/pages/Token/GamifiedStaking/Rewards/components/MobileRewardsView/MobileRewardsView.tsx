@@ -53,7 +53,7 @@ const Wrapper = styled.div`
 `;
 
 const Header = styled.h1`
-    color: ${(_props) => _props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -67,13 +67,13 @@ const Container = styled.div`
     align-items: center;
     justify-content: space-between;
     border-radius: 8px;
-    border: 1px solid ${(_props) => _props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     padding: 18px;
     margin-bottom: 10px;
 `;
 
 const LearnMoreLabel = styled.span`
-    color: ${(_props) => _props.theme.link.textColor.primary};
+    color: ${(props) => props.theme.link.textColor.primary};
     font-size: 13px;
     font-weight: 400;
     text-transform: capitalize;

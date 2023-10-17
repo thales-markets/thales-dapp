@@ -14,6 +14,7 @@ import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/for
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getBenchmarksPriceFeeds, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getFeesFromHistory } from 'utils/speedAmm';
 
 const useUserActiveSpeedMarketsDataQuery = (
     networkId: Network,
@@ -25,25 +26,20 @@ const useUserActiveSpeedMarketsDataQuery = (
         async () => {
             const userSpeedMarketsData: UserLivePositions[] = [];
 
-            const { speedMarketsAMMContract } = snxJSConnector;
+            const { speedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
             const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
                 timeout: CONNECTION_TIMEOUT_MS,
             });
 
-            if (speedMarketsAMMContract) {
-                const [lpFee, safeBoxImpact, numActiveMarkets] = await Promise.all([
-                    speedMarketsAMMContract.lpFee(),
-                    speedMarketsAMMContract.safeBoxImpact(),
-                    speedMarketsAMMContract.numActiveMarketsPerUser(walletAddress),
-                ]);
-                const fees = bigNumberFormatter(lpFee) + bigNumberFormatter(safeBoxImpact);
+            if (speedMarketsAMMContract && speedMarketsDataContract) {
+                const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress);
 
                 const activeMarkets = await speedMarketsAMMContract.activeMarketsPerUser(
                     0,
-                    numActiveMarkets,
+                    ammParams.numActiveMarketsPerUser,
                     walletAddress
                 );
-                const marketsDataArray = await speedMarketsAMMContract.getMarketsData(activeMarkets);
+                const marketsDataArray = await speedMarketsDataContract.getMarketsData(activeMarkets);
                 const userActiveMarkets = marketsDataArray.map((marketData: any, index: number) => ({
                     ...marketData,
                     market: activeMarkets[index],
@@ -100,10 +96,22 @@ const useUserActiveSpeedMarketsDataQuery = (
                         isClaimable =
                             !!price &&
                             ((side === Positions.UP &&
-                                price >= bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
+                                price > bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
                                 (side === Positions.DOWN &&
                                     price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)));
                     }
+
+                    const maturityDate = secondsToMilliseconds(Number(marketData.strikeTime));
+                    const createdAt = !marketData.createdAt.isZero()
+                        ? secondsToMilliseconds(Number(marketData.createdAt))
+                        : maturityDate;
+                    const lpFee = !marketData.lpFee.isZero()
+                        ? bigNumberFormatter(marketData.lpFee)
+                        : getFeesFromHistory(createdAt).lpFee;
+                    const safeBoxImpact = !marketData.safeBoxImpact.isZero()
+                        ? bigNumberFormatter(marketData.safeBoxImpact)
+                        : getFeesFromHistory(createdAt).safeBoxImpact;
+                    const fees = lpFee + safeBoxImpact;
 
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
@@ -115,7 +123,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                         strikePriceNum: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
-                        maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),
+                        maturityDate,
                         market: marketData.market,
                         side: side,
                         paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),
