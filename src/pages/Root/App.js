@@ -29,6 +29,13 @@ import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import Loader from 'components/Loader';
+import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from '@biconomy/account';
+import { Bundler } from '@biconomy/bundler';
+import { DEFAULT_ECDSA_OWNERSHIP_MODULE, ECDSAOwnershipValidationModule } from '@biconomy/modules';
+import { ethers } from 'ethers';
+import { ParticleNetwork } from '@particle-network/auth';
+import { ParticleProvider } from '@particle-network/provider';
+// import multipleCollateral from 'utils/contracts/multipleCollateralContract';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -59,6 +66,27 @@ const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
+
+const particle = new ParticleNetwork({
+    projectId: '2b8c8b75-cc7a-4111-923f-0043b9fa908b',
+    clientKey: 'cS3khABdBgfK4m8CzYcL1xcgVM6cuflmNY6dFxdY',
+    appId: 'aab773d8-c4e9-43ae-aa57-0d898f3dbf46',
+    chainName: 'optimism', //optional: current chain name, default Ethereum.
+    chainId: 10, //optional: current chain id, default 1.
+    wallet: {
+        //optional: by default, the wallet entry is displayed in the bottom right corner of the webpage.
+        displayWalletEntry: true, //show wallet entry when connect particle.
+        uiMode: 'dark', //optional: light or dark, if not set, the default is the same as web auth.
+        supportChains: [
+            { id: 10, name: 'optimism' },
+            { id: 42161, name: 'arbitrum' },
+            { id: 137, name: 'polygon' },
+            { id: 420, name: 'optimism' },
+            { id: 84531, name: 'base' },
+        ], // optional: web wallet support chains.
+        customStyle: {}, //optional: custom wallet style
+    },
+});
 
 const App = () => {
     const dispatch = useDispatch();
@@ -98,6 +126,7 @@ const App = () => {
     useEffect(() => {
         const init = async () => {
             let ledgerProvider = null;
+            let web3Provider = null;
             if (isLedgerLive) {
                 ledgerProvider = new IFrameEthereumProvider();
                 const accounts = await ledgerProvider.enable();
@@ -108,6 +137,37 @@ const App = () => {
                         dispatch(updateWallet({ walletAddress: accounts[0] }));
                     }
                 });
+            }
+
+            if (particle.auth.isLogin()) {
+                const eoaAddress = await particle.auth.getEVMAddress();
+                const particleProvider = new ParticleProvider(particle.auth);
+                const chainId = (await provider.getNetwork()).chainId;
+                const bundler = new Bundler({
+                    // get from biconomy dashboard https://dashboard.biconomy.io/
+                    bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
+                    chainId: (await provider.getNetwork()).chainId, // or any supported chain of your choice
+                    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+                });
+
+                web3Provider = new ethers.providers.Web3Provider(particleProvider, 'any');
+
+                const module = await ECDSAOwnershipValidationModule.create({
+                    signer: web3Provider.getSigner(),
+                    moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+                });
+
+                const wallet = await BiconomySmartAccountV2.create({
+                    chainId: chainId,
+                    bundler: bundler,
+                    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+                    defaultValidationModule: module,
+                    activeValidationModule: module,
+                });
+
+                const address = await wallet.getAccountAddress();
+
+                dispatch(updateWallet({ walletAddress: eoaAddress, swAddress: address }));
             }
 
             try {
@@ -121,7 +181,11 @@ const App = () => {
                 snxJSConnector.setContractSettings({
                     networkId: providerNetworkId,
                     provider,
-                    signer: isLedgerLive ? ledgerProvider.getSigner() : signer,
+                    signer: isLedgerLive
+                        ? ledgerProvider.getSigner()
+                        : particle.auth.isLogin()
+                        ? web3Provider.getSigner()
+                        : signer,
                 });
 
                 dispatch(

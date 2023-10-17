@@ -65,9 +65,10 @@
         "@biconomy/paymaster": "^3.1.0",
         "@biconomy/modules": "^3.1.0",
         "@biconomy/web3-auth": "^3.1.0",
-        "@biconomy/particle-auth": "^3.1.0",
         "@biconomy/transak": "^3.1.0",
         "@particle-network/rainbowkit-ext": "1.2.0",
+        "@particle-network/auth": "1.2.0",
+        "@particle-network/provider": "1.2.0",
         "viem": "^1.16.3"
     },
     "devDependencies": {

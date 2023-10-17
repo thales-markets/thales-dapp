@@ -3,11 +3,14 @@ import { getAddress } from 'utils/formatters/ethers';
 import { RootState } from 'redux/rootReducer';
 import { Network } from 'enums/network';
 import { DEFAULT_NETWORK } from 'constants/network';
+// import { BiconomyAccountModule } from '@biconomy/particle-auth';
 
 const sliceName = 'wallet';
 
 type WalletSliceState = {
     walletAddress: string | null;
+    swAddress: string | null;
+    // smartAccount: BiconomyAccountModule.SmartAccount | null;
     networkId: Network;
     networkName: string;
     switchToNetworkId: Network; // used to trigger manually network switch in App.js
@@ -16,6 +19,8 @@ type WalletSliceState = {
 
 const initialState: WalletSliceState = {
     walletAddress: null,
+    swAddress: null,
+    // smartAccount: null,
     networkId: DEFAULT_NETWORK.networkId,
     networkName: DEFAULT_NETWORK.name,
     switchToNetworkId: DEFAULT_NETWORK.networkId,
@@ -32,6 +37,7 @@ const walletDetailsSlice = createSlice({
                 ...state,
                 ...payload,
                 walletAddress: payload.walletAddress ? getAddress(payload.walletAddress) : null,
+                swAddress: payload.swAddress ?? null,
             };
 
             return newState;
@@ -71,6 +77,8 @@ export const getNetwork = (state: RootState) => ({
 });
 export const getSwitchToNetworkId = (state: RootState) => getWalletState(state).switchToNetworkId;
 export const getWalletAddress = (state: RootState) => getWalletState(state).walletAddress;
+export const getSmartAccountAddress = (state: RootState) => getWalletState(state).swAddress;
+// export const getSmartAccount = (state: RootState) => getWalletState(state).smartAccount;
 export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);
 
 export const getSelectedCollateralIndex = (state: RootState) => getWalletState(state).selectedCollateralIndex;

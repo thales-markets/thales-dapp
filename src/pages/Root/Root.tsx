@@ -30,7 +30,6 @@ import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 import { base } from 'constants/network';
 import { PLAUSIBLE } from 'constants/analytics';
-import { ParticleAuthModule } from '@biconomy/particle-auth';
 import { particleWallet } from '@particle-network/rainbowkit-ext';
 dotenv.config();
 
@@ -96,28 +95,6 @@ const particleWallets = [
     particleWallet({ chains, authType: 'apple' }),
     particleWallet({ chains }),
 ];
-
-new ParticleAuthModule.ParticleNetwork({
-    projectId: '2b8c8b75-cc7a-4111-923f-0043b9fa908b',
-    clientKey: 'cS3khABdBgfK4m8CzYcL1xcgVM6cuflmNY6dFxdY',
-    appId: 'aab773d8-c4e9-43ae-aa57-0d898f3dbf46',
-    chainName: 'optimism', //optional: current chain name, default Ethereum.
-    chainId: 10, //optional: current chain id, default 1.
-    wallet: {
-        //optional: by default, the wallet entry is displayed in the bottom right corner of the webpage.
-        displayWalletEntry: true, //show wallet entry when connect particle.
-        defaultWalletEntryPosition: ParticleAuthModule.WalletEntryPosition.TR, //wallet entry position: ;
-        uiMode: 'dark', //optional: light or dark, if not set, the default is the same as web auth.
-        supportChains: [
-            { id: 10, name: 'optimism' },
-            { id: 42161, name: 'arbitrum' },
-            { id: 137, name: 'polygon' },
-            { id: 420, name: 'optimism' },
-            { id: 84531, name: 'base' },
-        ], // optional: web wallet support chains.
-        customStyle: {}, //optional: custom wallet style
-    },
-});
 
 const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || '';
 const connectors = connectorsForWallets([
