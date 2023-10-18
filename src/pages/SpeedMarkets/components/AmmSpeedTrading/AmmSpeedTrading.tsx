@@ -581,13 +581,25 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const dynamicFeesTooltipData =
         ammSpeedMarketsLimits && ammSpeedMarketsLimits?.lpFees.length === 4
             ? {
-                  firstPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[0], 0),
+                  firstPerc: formatPercentage(
+                      ammSpeedMarketsLimits?.lpFees[0] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      0
+                  ),
                   firstTime: ammSpeedMarketsLimits?.timeThresholdsForFees[0],
-                  secondPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[1], 0),
+                  secondPerc: formatPercentage(
+                      ammSpeedMarketsLimits?.lpFees[1] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      0
+                  ),
                   secondTime: ammSpeedMarketsLimits?.timeThresholdsForFees[1],
-                  thirdPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[2], 0),
+                  thirdPerc: formatPercentage(
+                      ammSpeedMarketsLimits?.lpFees[2] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      0
+                  ),
                   thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[2],
-                  fourthPerc: formatPercentage(ammSpeedMarketsLimits?.lpFees[3], 0),
+                  fourthPerc: formatPercentage(
+                      ammSpeedMarketsLimits?.lpFees[3] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      0
+                  ),
                   fourthTime: ammSpeedMarketsLimits?.timeThresholdsForFees[3],
               }
             : {};
