@@ -3,6 +3,7 @@ export enum TokenTabEnum {
     LP_STAKING = 'lp-staking',
     MIGRATION = 'migration',
     STRATEGIC_INVESTORS = 'strategic-investors',
+    BRIDGE = 'bridge',
 }
 
 export enum TokenTabSectionIdEnum {

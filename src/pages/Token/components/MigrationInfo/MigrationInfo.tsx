@@ -1,4 +1,4 @@
-import NetworkSwitch from 'components/NetworkSwitch';
+import NetworkSwitch from 'pages/Token/components/MigrationInfo/NetworkSwitch';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { Trans } from 'react-i18next';

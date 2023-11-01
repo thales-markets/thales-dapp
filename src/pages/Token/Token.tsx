@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
-import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
+import { getIsBridgeSupported, getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
@@ -20,6 +20,7 @@ const TokenPage: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isLpStakingSupported = getIsLpStakingSupported(networkId);
     const isStakingSupported = getIsStakingSupported(networkId);
+    const isBridgeSupported = getIsBridgeSupported(networkId);
 
     const defaultTab = isStakingSupported ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
@@ -84,6 +85,13 @@ const TokenPage: React.FC = () => {
         tabs.push({
             id: TokenTabEnum.LP_STAKING,
             name: t('thales-token.lp-staking.tab-title'),
+        });
+    }
+
+    if (isBridgeSupported) {
+        tabs.push({
+            id: TokenTabEnum.BRIDGE,
+            name: t('thales-token.bridge.tab-title'),
         });
     }
 

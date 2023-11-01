@@ -22,6 +22,7 @@ import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard';
+import Bridge from 'pages/Token/Bridge';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -123,6 +124,7 @@ const Tab: React.FC<{
             )}
             {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
+            {selectedTab === TokenTabEnum.BRIDGE && <Bridge />}
         </Container>
     );
 };

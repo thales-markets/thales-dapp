@@ -837,6 +837,9 @@
                 "claimed": "Successfully claimed"
             }
         },
+        "bridge": {
+            "tab-title": "Bridge"
+        },
         "table": {
             "title": "Your activity",
             "date-time-col": "date | time",
