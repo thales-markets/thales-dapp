@@ -45,8 +45,8 @@ export const getCurrentPrices = async (
               (accumulator, priceFeed) => ({
                   ...accumulator,
                   [getCurrencyByPriceId(networkId, priceFeed.id)]:
-                      // Get the price if it is not older than 60 seconds from the current time
-                      priceFeed.getPriceNoOlderThan(60)?.getPriceAsNumberUnchecked() || 0,
+                      // Get the price if it is not older than 30 seconds from the current time
+                      priceFeed.getPriceNoOlderThan(30)?.getPriceAsNumberUnchecked() || 0,
               }),
               {}
           )

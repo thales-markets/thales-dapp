@@ -1,4 +1,4 @@
-import { EvmPriceServiceConnection, PriceFeed } from '@pythnetwork/pyth-evm-js';
+import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
 import { OPTIONS_POSITIONS_MAP, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
@@ -7,11 +7,11 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { UseQueryOptions, useQuery } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
-import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { getBenchmarksPriceFeeds, getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 
@@ -38,50 +38,11 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                     .map((marketData: any, index: number) => ({ ...marketData, market: activeMarkets[index] }))
                     .filter((market: any) => secondsToMilliseconds(Number(market.strikeTime)) > Date.now());
 
-                const unavailablePrices: { priceId: string; publishTime: number }[] = [];
-
-                // Fetch prices for all matured markets
-                const pricePromises = maturedMarkets.map((market: any) => {
-                    const priceId = getPriceId(networkId, parseBytes32String(market.asset));
-                    return priceConnection.getPriceFeed(priceId, Number(market.strikeTime)).catch((e) => {
-                        console.log('Pyth price feed error', e);
-                        unavailablePrices.push({
-                            priceId: priceId.replace('0x', ''),
-                            publishTime: Number(market.strikeTime),
-                        });
-                    });
-                });
-                const priceFeeds = await Promise.allSettled(pricePromises);
-
-                // Secondary API for fetching prices using Pyth benchmarks in case that primary fails
-                const benchmarksPriceFeeds = await getBenchmarksPriceFeeds(unavailablePrices);
-
                 // Matured markets - not resolved
                 for (let i = 0; i < maturedMarkets.length; i++) {
                     const marketData = maturedMarkets[i];
                     const side = OPTIONS_POSITIONS_MAP[SIDE[marketData.direction] as OptionSide] as Positions;
                     const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
-
-                    let isClaimable = false;
-                    const priceFeed: PromiseSettledResult<PriceFeed> = priceFeeds[i];
-                    let price = 0;
-                    if (priceFeed.status === 'fulfilled' && priceFeed.value) {
-                        price = priceFeed.value.getPriceUnchecked().getPriceAsNumberUnchecked();
-                    } else {
-                        const priceId = getPriceId(networkId, parseBytes32String(marketData.asset)).replace('0x', '');
-                        price =
-                            benchmarksPriceFeeds.find(
-                                (benchmarksPrice) =>
-                                    benchmarksPrice.priceId === priceId &&
-                                    benchmarksPrice.publishTime === Number(marketData.strikeTime)
-                            )?.price || 0;
-                    }
-
-                    isClaimable =
-                        (side === Positions.UP &&
-                            price > bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)) ||
-                        (side === Positions.DOWN &&
-                            price < bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS));
 
                     const maturityDate = secondsToMilliseconds(Number(marketData.strikeTime));
                     const createdAt = !marketData.createdAt.isZero()
@@ -98,10 +59,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
                         currencyKey: parseBytes32String(marketData.asset),
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
-                        ),
+                        strikePrice: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS).toString(),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
                         maturityDate,
@@ -109,8 +67,8 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                         side: side,
                         paid: coinFormatter(marketData.buyinAmount, networkId) * (1 + fees),
                         value: payout,
-                        claimable: isClaimable,
-                        finalPrice: price,
+                        claimable: undefined,
+                        finalPrice: undefined,
                         user: marketData.user,
                         isSpeedMarket: true,
                     };

@@ -10,6 +10,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,12 +22,11 @@ import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
+import { truncToDecimals } from 'utils/formatters/number';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
-import { truncToDecimals } from 'utils/formatters/number';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type OverviewPositionActionProps = {
     position: UserLivePositions;

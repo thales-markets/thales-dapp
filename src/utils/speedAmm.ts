@@ -71,7 +71,8 @@ export const getTransactionForSpeedAMM = async (
 export const getFeeByTimeThreshold = (
     deltaTimeSec: number,
     timeThresholds: number[], // in minutes - ascending order
-    fees: number[]
+    fees: number[],
+    defaultFee: number
 ): number => {
     let index = -1;
     // iterate backwards and find index
@@ -81,7 +82,7 @@ export const getFeeByTimeThreshold = (
             break;
         }
     }
-    return index !== -1 ? fees[index] : 0;
+    return index !== -1 ? fees[index] : defaultFee;
 };
 
 // when fees are missing from contract (for old markets) get hardcoded history fees

@@ -53,7 +53,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                 refetchUserSpeedMarkets(networkId, walletAddress);
             }
         }
-    }, secondsToMilliseconds(5));
+    }, secondsToMilliseconds(10));
 
     return (
         <Position>

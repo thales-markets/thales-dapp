@@ -222,7 +222,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             const lpFee = getFeeByTimeThreshold(
                 deltaTimeSec ? deltaTimeSec : deltaFromStrikeTime,
                 ammSpeedMarketsLimits?.timeThresholdsForFees,
-                ammSpeedMarketsLimits?.lpFees
+                ammSpeedMarketsLimits?.lpFees,
+                ammSpeedMarketsLimits?.defaultLPFee
             );
             return lpFee ? lpFee + ammSpeedMarketsLimits?.safeBoxImpact : 0;
         }

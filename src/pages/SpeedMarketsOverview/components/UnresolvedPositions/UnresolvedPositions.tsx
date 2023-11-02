@@ -1,3 +1,4 @@
+import * as pythEvmJs from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
@@ -8,10 +9,16 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { USD_SIGN } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
+import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
+import useInterval from 'hooks/useInterval';
 import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
+import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import React, { CSSProperties, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -22,17 +29,13 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
-import snxJSConnector from 'utils/snxJSConnector';
-import UnresolvedPosition from '../UnresolvedPosition';
-import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
-import { delay } from 'utils/timer';
-import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
-import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import { truncToDecimals } from 'utils/formatters/number';
-import useInterval from 'hooks/useInterval';
+import { formatCurrencyWithSign, truncToDecimals } from 'utils/formatters/number';
+import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import { delay } from 'utils/timer';
+import UnresolvedPosition from '../UnresolvedPosition';
 
 const SECTIONS = {
     userWinner: 'userWinner',
@@ -51,6 +54,7 @@ const UnresolvedPositions: React.FC = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmittingSection, setIsSubmittingSection] = useState('');
+    const [isLoadingEnabled, setIsLoadingEnabled] = useState(true);
 
     const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, walletAddress, {
         enabled: isAppReady,
@@ -72,22 +76,62 @@ const UnresolvedPositions: React.FC = () => {
         [activeSpeedMarketsDataQuery]
     );
 
-    const userWinnerSpeedMarketsData = activeSpeedMarketsData.filter(
-        (marketData) => marketData.maturityDate < Date.now() && marketData.claimable && !!marketData.finalPrice
+    const priceRequests = activeSpeedMarketsData
+        .filter((marketData) => marketData.maturityDate < Date.now())
+        .map((marketData) => ({
+            priceId: getPriceId(networkId, marketData.currencyKey),
+            publishTime: millisecondsToSeconds(marketData.maturityDate),
+        }));
+
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, {
+        enabled: activeSpeedMarketsDataQuery.isSuccess,
+    });
+
+    const maturedUnresolvedWithPrices = activeSpeedMarketsData
+        .filter((marketData) => marketData.maturityDate < Date.now())
+        .map((marketData, index) => {
+            const finalPrice = pythPricesQueries[index].data || 0;
+            const claimable =
+                finalPrice > 0 &&
+                ((marketData.side === Positions.UP && finalPrice > Number(marketData.strikePrice)) ||
+                    (marketData.side === Positions.DOWN && finalPrice < Number(marketData.strikePrice)));
+            return {
+                ...marketData,
+                claimable,
+                finalPrice,
+                strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
+            };
+        });
+
+    const userWinnerSpeedMarketsData = maturedUnresolvedWithPrices.filter(
+        (marketData) => marketData.claimable && !!marketData.finalPrice
     );
-    const ammWinnerSpeedMarketsData = activeSpeedMarketsData.filter(
-        (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !!marketData.finalPrice
+    const ammWinnerSpeedMarketsData = maturedUnresolvedWithPrices.filter(
+        (marketData) => !marketData.claimable && !!marketData.finalPrice
     );
-    const unknownPriceSpeedMarketsData = activeSpeedMarketsData.filter(
-        (marketData) => marketData.maturityDate < Date.now() && !marketData.claimable && !marketData.finalPrice
+    const unknownPriceSpeedMarketsData = maturedUnresolvedWithPrices.filter(
+        (marketData) => !marketData.claimable && !marketData.finalPrice
     );
     const openSpeedMarketsData = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate > Date.now());
 
-    // Check if there are new matured markets from open markets and refresh it
+    const isLoading =
+        isLoadingEnabled &&
+        (activeSpeedMarketsDataQuery.isLoading || pythPricesQueries.some((price) => price.isLoading));
+
     useInterval(async () => {
+        // Check if there are new matured markets from open markets and refresh it
         const openMatured = openSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
         if (openMatured.length) {
+            setIsLoadingEnabled(false);
             refetchActiveSpeedMarkets(networkId);
+        }
+        // Check if missing price is available
+        if (unknownPriceSpeedMarketsData.length) {
+            unknownPriceSpeedMarketsData.forEach((marketData) => {
+                const priceId = getPriceId(networkId, marketData.currencyKey);
+                const publishTime = millisecondsToSeconds(marketData.maturityDate);
+                refetchPythPrice(priceId, publishTime);
+            });
         }
     }, secondsToMilliseconds(10));
 
@@ -96,7 +140,7 @@ const UnresolvedPositions: React.FC = () => {
             return;
         }
 
-        const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
+        const priceConnection = new pythEvmJs.EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
             timeout: CONNECTION_TIMEOUT_MS,
         });
 
@@ -188,6 +232,7 @@ const UnresolvedPositions: React.FC = () => {
         const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && sectionName === SECTIONS.ammWinner;
 
         return (
+            !isLoading &&
             !!positions.length && (
                 <Button
                     {...getDefaultButtonProps(isMobile)}
@@ -232,7 +277,7 @@ const UnresolvedPositions: React.FC = () => {
                     <Title>{`${t(titleKey)} (${positions.length})`}</Title>
                     {[SECTIONS.userWinner, SECTIONS.ammWinner].includes(section) && getButton(positions, section)}
                 </Row>
-                {activeSpeedMarketsDataQuery.isLoading ? (
+                {isLoading ? (
                     <LoaderContainer>
                         <SimpleLoader />
                     </LoaderContainer>

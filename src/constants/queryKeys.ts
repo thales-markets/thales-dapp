@@ -30,6 +30,9 @@ const QUERY_KEYS = {
         ExchangeRates: (networkId: Network) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: Network) => ['rates', 'exchangeRatesMarketData', networkId],
     },
+    Prices: {
+        PythPrices: (priceId: string, publishTime: number) => ['prices', 'pythPrices', priceId, publishTime],
+    },
     Medium: {
         Posts: ['medium', 'posts'],
     },

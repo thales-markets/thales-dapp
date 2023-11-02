@@ -148,6 +148,10 @@ export const refetchActiveSpeedMarkets = (networkId: Network) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId));
 };
 
+export const refetchPythPrice = (priceId: string, publishTime: number) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Prices.PythPrices(priceId, publishTime));
+};
+
 export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, networkId, period)
