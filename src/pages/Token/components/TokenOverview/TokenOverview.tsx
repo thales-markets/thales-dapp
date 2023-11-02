@@ -18,8 +18,7 @@ import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { TokenInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
-import { getEtherscanTokenLink } from 'utils/etherscan';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { getEtherscanTokenLink, formatCurrencyWithKey, formatCurrencyWithSign } from 'thales-utils';
 
 const TokentOverview: React.FC = () => {
     const { t } = useTranslation();

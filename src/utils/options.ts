@@ -1,5 +1,5 @@
 import { Phase } from '../types/options';
-import { formatCurrency } from './formatters/number';
+import { formatCurrency } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
 import { Positions } from 'enums/options';
 import { MARKET_DURATION_IN_DAYS } from '../constants/options';

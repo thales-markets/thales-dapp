@@ -7,13 +7,12 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDateWithTime, formatCurrencyWithKey, formatCurrencyWithSign } from 'thales-utils';
+import useInterval from 'hooks/useInterval';
 import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
 import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
 import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
-import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip/Tooltip';
 
 type SpeedMarketsTrade = { address: string; strikePrice: number; positionType: Positions | undefined };

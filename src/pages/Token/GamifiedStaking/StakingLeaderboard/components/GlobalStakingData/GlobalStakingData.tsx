@@ -5,7 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 
 const GlobalStakingData: React.FC<{ stakingData: StakingData }> = ({ stakingData }) => {
     const { t } = useTranslation();

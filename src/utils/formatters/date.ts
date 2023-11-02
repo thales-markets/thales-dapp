@@ -1,10 +1,3 @@
-import format from 'date-fns/format';
-
-export const formatTxTimestamp = (timestamp: number | Date) => format(timestamp, 'MMM d, yy | HH:mm');
-export const formatShortDate = (date: Date | number) => format(date, 'd MMM yyyy');
-export const formatShortDateWithTime = (date: Date | number) => format(date, 'd MMM yyyy HH:mm');
-export const formatHoursAndMinutesFromTimestamp = (timestamp: number) => format(timestamp, 'HH:mm');
-
 // date-fns formatDuration does not let us customize the actual string, so we need to write this custom formatter.
 // TODO: support translations
 export const formattedDuration = (
@@ -85,18 +78,4 @@ export const formattedDurationFull = (
         formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     }
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
-};
-
-export const convertUTCToLocalDate = (date: Date) => {
-    return new Date(
-        date.getUTCFullYear(),
-        date.getUTCMonth(),
-        date.getUTCDate(),
-        date.getUTCHours(),
-        date.getUTCMinutes()
-    );
-};
-
-export const convertLocalToUTCDate = (date: Date) => {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
 };

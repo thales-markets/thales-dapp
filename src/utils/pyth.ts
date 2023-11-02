@@ -2,7 +2,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { PRICE_ID, PRICE_SERVICE_ENDPOINTS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { Network } from 'enums/network';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { bigNumberFormatter } from './formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import { generalConfig } from 'config/general';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {

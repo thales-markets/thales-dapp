@@ -1,15 +1,11 @@
 import { differenceInWeeks } from 'date-fns';
 import intervalToDuration from 'date-fns/intervalToDuration';
+import { formatShortDate, formatShortDateWithTime } from 'thales-utils';
 import useInterval from 'hooks/useInterval';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import {
-    formatShortDate,
-    formatShortDateWithTime,
-    formattedDuration,
-    formattedDurationFull,
-} from 'utils/formatters/date';
+import { formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 
 type MaturityDateProps = {
     maturityDateUnix: number;

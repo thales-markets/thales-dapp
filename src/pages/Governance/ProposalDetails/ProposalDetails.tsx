@@ -11,10 +11,14 @@ import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
 import { FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
-import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { truncateAddress } from 'utils/formatters/string';
+import {
+    getEtherscanAddressLink,
+    getEtherscanBlockLink,
+    formatShortDateWithTime,
+    formatCurrency,
+    formatCurrencyWithKey,
+    truncateAddress,
+} from 'thales-utils';
 import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
 import { Network } from 'enums/network';
 import snxJSConnector from 'utils/snxJSConnector';

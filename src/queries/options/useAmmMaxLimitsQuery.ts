@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
 import { BigNumber } from 'ethers';

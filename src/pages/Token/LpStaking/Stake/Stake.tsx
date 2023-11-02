@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ClaimMessage, EarnSection, SectionContentContainer } from '../../styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { useTranslation } from 'react-i18next';

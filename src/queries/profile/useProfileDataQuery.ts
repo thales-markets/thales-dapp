@@ -4,7 +4,7 @@ import { Network } from 'enums/network';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { SPEED_MARKETS_QUOTE } from 'constants/options';
 import { getFeesFromHistory } from 'utils/speedAmm';
 import { secondsToMilliseconds } from 'date-fns';

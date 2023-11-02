@@ -25,7 +25,7 @@ import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
-import { truncToDecimals } from 'utils/formatters/number';
+import { truncToDecimals } from 'thales-utils';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type OverviewPositionActionProps = {

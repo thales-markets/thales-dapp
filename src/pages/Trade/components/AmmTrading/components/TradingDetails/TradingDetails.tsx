@@ -9,12 +9,8 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import {
-    calculateAndFormatPercentage,
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    formatPercentage,
-} from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatCurrencyWithSign, formatPercentage } from 'thales-utils';
+import { calculateAndFormatPercentage } from 'utils/formatters/number';
 import { getFormattedBonus } from 'utils/options';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';
 import { getDefaultCollateral } from 'utils/currency';

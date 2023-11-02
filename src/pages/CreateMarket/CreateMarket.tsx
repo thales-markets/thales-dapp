@@ -8,7 +8,7 @@ import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { bytesFormatter } from 'utils/formatters/ethers';
+import { bytesFormatter, convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'thales-utils';
 import { checkAllowance } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
@@ -17,7 +17,6 @@ import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import { BigNumber, ethers } from 'ethers';
 import { FlexDivColumn, FlexDivCentered } from 'styles/common';
 import MarketSummary from './MarketSummary';
-import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
 import {
     ButtonContainer,
     Container,

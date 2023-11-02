@@ -12,7 +12,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { Coins } from 'types/options';
-import { bigNumberFormatter, coinParser } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinParser } from 'thales-utils';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;

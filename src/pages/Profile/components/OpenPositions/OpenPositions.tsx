@@ -4,7 +4,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign } from 'thales-utils';
+import useInterval from 'hooks/useInterval';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { getAmount, IconLink, TextLink } from '../styled-components';
 import { UserPosition } from 'types/profile';
@@ -26,7 +27,6 @@ import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { secondsToMilliseconds } from 'date-fns';
-import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip/Tooltip';
 import { orderBy } from 'lodash';
 
