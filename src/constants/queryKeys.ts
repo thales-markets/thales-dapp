@@ -217,6 +217,14 @@ const QUERY_KEYS = {
             networkId,
             period,
         ],
+        CelerBridgeData: (srcNetwork: Network, destNetwork: Network) => [
+            'token',
+            'celerBridge',
+            'data',
+            srcNetwork,
+            destNetwork,
+        ],
+        CelerBridgeHistory: (walletAddress: string) => ['token', 'celerBridge', 'history', walletAddress],
     },
     TaleOfThales: {
         NFTCollections: (walletAddress: string, networkId: Network) => [

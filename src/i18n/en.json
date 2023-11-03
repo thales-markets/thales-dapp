@@ -838,7 +838,39 @@
             }
         },
         "bridge": {
-            "tab-title": "Bridge"
+            "tab-title": "Bridge",
+            "header": "Celer cBridge",
+            "info": "Transfer THALES between chains using Celer cBridge.",
+            "from-label": "From",
+            "to-label": "To",
+            "send-label": "Send",
+            "estimated-receive-label": "Receive (estimated)",
+            "bridge-rate-label": "Bridge rate",
+            "fee-label": "Fee",
+            "base-fee-label": "Base fee",
+            "base-fee-info": "Base Fee is used to cover the gas cost for sending your transfer on the destination chain.",
+            "protocol-fee-label": "Protocol fee",
+            "protocol-fee-info": "Protocol Fee is charged proportionally to your transfer amount. Protocol Fee is paid to cBridge LPs and Celer SGN as economic incentives.",
+            "minimum-received-label": "Minimum received",
+            "minimum-received-tooltip": "You will receive at least {{minimum}} on {{network}} or the transfer won't go through.",
+            "estimated-time-of-arrival-label": "Estimated time of arrival",
+            "bridge-button": {
+                "label": "Transfer",
+                "progress-label": "Transfer in progress...",
+                "confirmation-message": "Tokens successfully bridged to L2"
+            },
+            "history": {
+                "title": "History",
+                "no-history": "No history associated with this wallet.",
+                "table": {
+                    "date-time-col": "date | time",
+                    "from-col": "from",
+                    "sent-col": "sent",
+                    "to-col": "to",
+                    "received-col": "received",
+                    "status-col": "status"
+                }
+            }
         },
         "table": {
             "title": "Your activity",

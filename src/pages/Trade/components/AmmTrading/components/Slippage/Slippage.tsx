@@ -9,19 +9,22 @@ type SlippageProps = {
     fixed: Array<number>;
     defaultValue?: number;
     onChangeHandler?: (value: number) => void;
+    maxValue?: number;
 };
 
 const MIN_VALUE = 0.01;
 const MAX_VALUE = 100;
 
-export const isSlippageValid = (value: number) => {
-    return value >= MIN_VALUE && value <= MAX_VALUE;
+export const isSlippageValid = (value: number, max?: number) => {
+    return value >= MIN_VALUE && value <= (max || MAX_VALUE);
 };
 
-const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler }) => {
+const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler, maxValue }) => {
     const { t } = useTranslation();
 
     const [slippage, setSlippage] = useState<number | string>(defaultValue || '');
+
+    const max = maxValue || MAX_VALUE;
 
     useEffect(() => {
         onChangeHandler && onChangeHandler(Number(slippage));
@@ -33,12 +36,12 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
             return;
         }
 
-        if (numValue >= 0 && numValue <= MAX_VALUE) {
+        if (numValue >= 0 && numValue <= max) {
             setSlippage(value);
         } else if (numValue < MIN_VALUE) {
             setSlippage(MIN_VALUE);
-        } else if (numValue > MAX_VALUE) {
-            setSlippage(MAX_VALUE);
+        } else if (numValue > max) {
+            setSlippage(max);
         }
     };
 
@@ -60,7 +63,7 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                     placeholder={t('markets.amm-trading.slippage.enter-value')}
                     onChange={(_, value) => onInputValueChange(value)}
                     currencyLabel="%"
-                    showValidation={slippage !== '' && !isSlippageValid(Number(slippage))}
+                    showValidation={slippage !== '' && !isSlippageValid(Number(slippage), max)}
                     validationMessage={t('markets.amm-trading.slippage.invalid-value')}
                     margin="0px"
                     inputPadding="5px 10px"

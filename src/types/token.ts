@@ -132,3 +132,20 @@ export type UserStakingData = {
     unstakeDurationPeriod: number;
     mergeAccountEnabled: boolean;
 };
+
+export type CelerBridgeData = {
+    transferLatencyInMinutes: number;
+};
+
+export type CelerBridgeTransaction = {
+    timestamp: number;
+    srcChainId?: number;
+    srcAmount?: number;
+    srcTx?: string;
+    dstChainId?: number;
+    dstAmount?: number;
+    dstTx?: string;
+    status?: number;
+};
+
+export type CelerBridgeHistory = CelerBridgeTransaction[];

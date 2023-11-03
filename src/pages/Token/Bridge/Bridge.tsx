@@ -7,19 +7,18 @@ import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { checkAllowance } from 'utils/network';
+import { SUPPORTED_NETWORK_IDS_MAP, checkAllowance } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';
 import { BRIDGE_SUPPORTED_NETWORKS, L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import InfoMessage from 'components/InfoMessage';
-import InfoWarningMessage from 'components/InfoWarningMessage';
 import {
     FlexDiv,
     FlexDivCentered,
     FlexDivColumn,
     FlexDivColumnCentered,
+    FlexDivRow,
     FlexDivSpaceBetween,
     FlexDivStart,
 } from 'styles/common';
@@ -36,18 +35,25 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { Network } from 'enums/network';
-import useThalesBalanceQuery from '../../../queries/walletBalances/useThalesBalanceQuery';
-import { ScreenSizeBreakpoint } from '../../../enums/ui';
-import NetworkSwitch from '../../../components/NetworkSwitch';
-
-// import getTransferConfig request message
-import { GetTransferConfigsRequest, EstimateAmtRequest, EstimateAmtResponse } from 'ts-proto/gateway/gateway_pb';
-// import grpc-web WebClient
+import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import NetworkSwitch from 'components/NetworkSwitch';
+import { EstimateAmtRequest, EstimateAmtResponse } from 'ts-proto/gateway/gateway_pb';
 import { WebClient } from 'ts-proto/gateway/GatewayServiceClientPb';
-import useDebouncedEffect from '../../../hooks/useDebouncedEffect';
-import { SLIPPAGE_PERCENTAGE } from '../../../constants/options';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import { BRIDGE_SLIPPAGE_PERCENTAGE } from 'constants/options';
 import Slippage from '../../Trade/components/AmmTrading/components/Slippage';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { isSlippageValid as getIsSlippageValid } from '../../Trade/components/AmmTrading/components/Slippage/Slippage';
+import FeeTooltip from './components/FeeTooltip';
+import Tooltip from 'components/Tooltip';
+import useCelerBridgeDataQuery from 'queries/token/useCelerBridgeDataQuery';
+import History from './History';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import InlineLoader from 'components/InlineLoader';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import NetworkIcon from './components/NetworkIcon';
+import { generalConfig } from '../../../config/general';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -66,14 +72,23 @@ const Bridge: React.FC = () => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [bridgeEstimation, setBridgeEstimation] = useState<EstimateAmtResponse.AsObject | undefined>(undefined);
-    const [slippage, setSlippage] = useState<number>(SLIPPAGE_PERCENTAGE[2]);
+    const [slippage, setSlippage] = useState<number>(BRIDGE_SLIPPAGE_PERCENTAGE[2]);
     const [isSlippageDropdownOpen, setIsSlippageDropdownOpen] = useState(false);
+    const [bridgeError, setBridgeError] = useState<string | undefined>(undefined);
+    const [isFetchingEstimation, setIsFetchingEstimation] = useState<boolean>(false);
 
     const isAmountEntered = Number(amount) > 0;
+    const isSlippageValid = getIsSlippageValid(Number(slippage));
     const insufficientBalance = Number(thalesBalance) < Number(amount) || Number(thalesBalance) === 0;
 
     const isButtonDisabled =
-        isSubmitting || !isWalletConnected || !isAmountEntered || insufficientBalance || !hasAllowance;
+        isSubmitting ||
+        !isWalletConnected ||
+        !isAmountEntered ||
+        insufficientBalance ||
+        !hasAllowance ||
+        !!bridgeError ||
+        !isSlippageValid;
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -92,6 +107,13 @@ const Bridge: React.FC = () => {
             setThalesBalance(Number(thalesBalanceQuery.data.balance));
         }
     }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+
+    const celerBridgeDataQuery = useCelerBridgeDataQuery(networkId, destNetwork, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const celerBridgeData =
+        celerBridgeDataQuery.isSuccess && celerBridgeDataQuery.data ? celerBridgeDataQuery.data : undefined;
 
     useEffect(() => {
         const { thalesTokenContract, celerBridgeContract } = snxJSConnector as any;
@@ -183,11 +205,17 @@ const Bridge: React.FC = () => {
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
+        if (bridgeError) {
+            return <Button disabled={true}>{t(`migration.bridge-button.label`)}</Button>;
+        }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
             return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
+        }
+        if (!isSlippageValid) {
+            return <Button disabled={true}>{t(`common.errors.enter-slippage`)}</Button>;
         }
         if (!hasAllowance) {
             return (
@@ -208,52 +236,80 @@ const Bridge: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(thalesBalance, 8));
+        setAmount(truncToDecimals(thalesBalance, 18));
     };
 
     useEffect(() => {
         setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= Number(thalesBalance)));
     }, [amount, thalesBalance]);
 
-    useEffect(() => {
-        const init = async () => {
-            const request = new GetTransferConfigsRequest();
-            const client = new WebClient(`https://cbridge-prod2.celer.app`, null, null);
-            const response = await client.getTransferConfigs(request, null);
-            console.log(response.toObject());
-        };
+    const fetchEstimation = async () => {
+        setIsFetchingEstimation(true);
+        if (Number(amount) > 0 && Number(slippage) > 0) {
+            const estimateRequest = new EstimateAmtRequest();
 
-        init();
-    }, []);
+            estimateRequest.setSrcChainId(networkId);
+            estimateRequest.setDstChainId(Number(destNetwork));
+            estimateRequest.setTokenSymbol(THALES_CURRENCY);
+            estimateRequest.setSlippageTolerance(Math.floor(slippage * 1000));
+            estimateRequest.setAmt(ethers.utils.parseEther(amount.toString()).toString());
 
-    const fetchEstimate = async () => {
-        const estimateRequest = new EstimateAmtRequest();
+            const client = new WebClient(generalConfig.CELER_BRIDGE_URL, null, null);
+            const res: EstimateAmtResponse = await client.estimateAmt(estimateRequest, null);
 
-        estimateRequest.setSrcChainId(networkId);
-        estimateRequest.setDstChainId(Number(destNetwork));
-        estimateRequest.setTokenSymbol('THALES');
-        estimateRequest.setSlippageTolerance(50000);
-        estimateRequest.setAmt(`${amount}000000000000000000`);
-
-        const client = new WebClient(`https://cbridge-prod2.celer.app`, null, null);
-        const res: EstimateAmtResponse = await client.estimateAmt(estimateRequest, null);
-
-        setBridgeEstimation(res.toObject());
+            const resObject = res.toObject();
+            setBridgeEstimation(resObject);
+            if (resObject.err) {
+                setBridgeError(resObject.err.msg);
+            } else {
+                if (Number(resObject.estimatedReceiveAmt) < 0) {
+                    setBridgeError('The received amount cannot cover fee');
+                } else {
+                    setBridgeError(undefined);
+                }
+            }
+        } else {
+            setBridgeEstimation(undefined);
+            setBridgeError(undefined);
+        }
+        setIsFetchingEstimation(false);
     };
     console.log(bridgeEstimation);
 
     useDebouncedEffect(() => {
-        fetchEstimate();
-    }, [amount, networkId, destNetwork, walletAddress]);
+        fetchEstimation();
+    }, [amount, slippage, networkId, destNetwork, walletAddress]);
+
+    console.log(isFetchingEstimation);
+
+    const getEstimationData = (value: any, isValidValue: boolean, isLoading?: boolean) => (
+        <EstimationData>
+            {isLoading ? <InlineLoader size={12} thickness={6} /> : isValidValue ? value : EMPTY_VALUE}
+        </EstimationData>
+    );
+
+    const bridgeRate = bridgeEstimation && bridgeEstimation.bridgeRate ? bridgeEstimation.bridgeRate : 0;
+    const estimatedReceiveAmt =
+        bridgeEstimation && Number(bridgeEstimation.estimatedReceiveAmt) > 0
+            ? bigNumberFormatter(bridgeEstimation.estimatedReceiveAmt)
+            : 0;
+    const baseFee = bridgeEstimation && bridgeEstimation.baseFee ? bigNumberFormatter(bridgeEstimation.baseFee) : 0;
+    const protocolFee = bridgeEstimation && bridgeEstimation.percFee ? bigNumberFormatter(bridgeEstimation.percFee) : 0;
+    const totalFee = baseFee + protocolFee;
+    const minimumReceivedAmt =
+        bridgeEstimation && Number(bridgeEstimation.estimatedReceiveAmt) > 0
+            ? bigNumberFormatter(bridgeEstimation.estimatedReceiveAmt) - (Number(amount) * slippage) / 100
+            : 0;
 
     return (
         <GridWrapper>
             <Wrapper>
                 <Container>
-                    <InfoSection>{t('migration.info-messages.bridge')}</InfoSection>
+                    <Header>{t('thales-token.bridge.header')}</Header>
+                    <InfoSection>{t('thales-token.bridge.info')}</InfoSection>
                     <FlexDivSpaceBetween>
                         <NetworkSwitchConatiner>
-                            <NetworkSwitchLabel>{t('migration.from-label')}:</NetworkSwitchLabel>
+                            <NetworkSwitchLabel>{t('thales-token.bridge.from-label')}:</NetworkSwitchLabel>
                             <NetworkSwitchWrapper>
                                 <NetworkSwitch supportedNetworks={BRIDGE_SUPPORTED_NETWORKS} />
                             </NetworkSwitchWrapper>
@@ -269,9 +325,10 @@ const Bridge: React.FC = () => {
                                 {isSlippageDropdownOpen && (
                                     <SlippageDropDown>
                                         <Slippage
-                                            fixed={SLIPPAGE_PERCENTAGE}
+                                            fixed={BRIDGE_SLIPPAGE_PERCENTAGE}
                                             defaultValue={slippage}
                                             onChangeHandler={setSlippage}
+                                            maxValue={10}
                                         />
                                     </SlippageDropDown>
                                 )}
@@ -285,12 +342,15 @@ const Bridge: React.FC = () => {
                             disabled={isSubmitting}
                             currencyLabel={THALES_CURRENCY}
                             placeholder={t('common.enter-amount')}
-                            label={`Send`}
+                            label={t('thales-token.bridge.send-label')}
                             onMaxButton={onMaxClick}
-                            showValidation={!isAmountValid}
-                            validationMessage={t(`common.errors.insufficient-balance-wallet`, {
-                                currencyKey: THALES_CURRENCY,
-                            })}
+                            showValidation={!isAmountValid || !!bridgeError}
+                            validationMessage={
+                                bridgeError ||
+                                t(`common.errors.insufficient-balance-wallet`, {
+                                    currencyKey: THALES_CURRENCY,
+                                })
+                            }
                             balance={
                                 isWalletConnected
                                     ? `${t('common.balance')}: ${formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}`
@@ -303,7 +363,7 @@ const Bridge: React.FC = () => {
                         <ArrowDown />
                     </ArrowContainer>
                     <NetworkSwitchConatiner>
-                        <NetworkSwitchLabel>{t('migration.to-label')}:</NetworkSwitchLabel>
+                        <NetworkSwitchLabel>{t('thales-token.bridge.to-label')}:</NetworkSwitchLabel>
                         <NetworkSwitchWrapper>
                             <NetworkSwitch
                                 selectedNetworkId={destNetwork}
@@ -314,50 +374,72 @@ const Bridge: React.FC = () => {
                     </NetworkSwitchConatiner>
                     <InputContainer mediaMarginBottom={10}>
                         <NumericInput
-                            value={
-                                bridgeEstimation && bridgeEstimation.estimatedReceiveAmt
-                                    ? Number(bridgeEstimation.estimatedReceiveAmt) / 1e18
-                                    : ''
-                            }
+                            value={isFetchingEstimation ? 0 : estimatedReceiveAmt}
                             onChange={() => {}}
                             disabled={true}
                             currencyLabel={THALES_CURRENCY}
-                            label={`Receive (estimated)`}
+                            label={t('thales-token.bridge.estimated-receive-label')}
                         />
                     </InputContainer>
                     <EstimationContainer>
                         <EstimationRow>
-                            <EstimationDataLabel>Bridge rate</EstimationDataLabel>
-                            <EstimationData>
-                                {bridgeEstimation && bridgeEstimation.bridgeRate ? bridgeEstimation.bridgeRate : '-'}
-                            </EstimationData>
+                            <EstimationDataLabel>{t('thales-token.bridge.bridge-rate-label')}</EstimationDataLabel>
+                            {getEstimationData(
+                                <FlexDivRow>
+                                    <span>{`1 ${THALES_CURRENCY} on `}</span>
+                                    <NetworkIcon networkId={networkId} size={14} margin="1px 4px 0px 4px" />
+                                    <span>{` ≈ ${bridgeRate} ${THALES_CURRENCY} on `}</span>
+                                    <NetworkIcon networkId={destNetwork} size={14} margin="1px 0px 0px 4px" />
+                                </FlexDivRow>,
+                                bridgeRate > 0,
+                                isFetchingEstimation
+                            )}
                         </EstimationRow>
                         <EstimationRow>
-                            <EstimationDataLabel>Fee</EstimationDataLabel>
-                            <EstimationData>
-                                {bridgeEstimation && bridgeEstimation.baseFee && bridgeEstimation.percFee
-                                    ? Number(bridgeEstimation.baseFee) / 1e18 + Number(bridgeEstimation.percFee) / 1e18
-                                    : '-'}
-                            </EstimationData>
+                            <EstimationDataLabel>
+                                {t('thales-token.bridge.fee-label')}
+                                <Tooltip
+                                    overlay={<FeeTooltip baseFee={baseFee} protocolFee={protocolFee} />}
+                                    iconFontSize={12}
+                                />
+                            </EstimationDataLabel>
+                            {getEstimationData(
+                                formatCurrencyWithKey(THALES_CURRENCY, totalFee),
+                                totalFee > 0,
+                                isFetchingEstimation
+                            )}
                         </EstimationRow>
                         <EstimationRow>
-                            <EstimationDataLabel>Minimum Received</EstimationDataLabel>
-                            <EstimationData>
-                                {bridgeEstimation && bridgeEstimation.estimatedReceiveAmt
-                                    ? Number(bridgeEstimation.estimatedReceiveAmt) / 1e18
-                                    : '-'}
-                            </EstimationData>
+                            <EstimationDataLabel>
+                                {t('thales-token.bridge.minimum-received-label')}
+                                <Tooltip
+                                    overlay={t('thales-token.bridge.minimum-received-label', {
+                                        minimum:
+                                            minimumReceivedAmt > 0
+                                                ? formatCurrencyWithKey(THALES_CURRENCY, minimumReceivedAmt)
+                                                : '-',
+                                        network: SUPPORTED_NETWORK_IDS_MAP[destNetwork].name,
+                                    })}
+                                    iconFontSize={12}
+                                />
+                            </EstimationDataLabel>
+                            {getEstimationData(
+                                formatCurrencyWithKey(THALES_CURRENCY, minimumReceivedAmt),
+                                minimumReceivedAmt > 0,
+                                isFetchingEstimation
+                            )}
+                        </EstimationRow>
+                        <EstimationRow>
+                            <EstimationDataLabel>
+                                {t('thales-token.bridge.estimated-time-of-arrival-label')}
+                            </EstimationDataLabel>
+                            {getEstimationData(
+                                `${celerBridgeData?.transferLatencyInMinutes} ${t('common.time-remaining.minutes')}`,
+                                !!celerBridgeData,
+                                celerBridgeDataQuery.isLoading
+                            )}
                         </EstimationRow>
                     </EstimationContainer>
-
-                    <MessageContainer>
-                        <InfoMessage message={t('migration.migration-delay-info')}></InfoMessage>
-                    </MessageContainer>
-                    <MessageContainer>
-                        <InfoWarningMessage
-                            message={t('migration.migration-multisig-contact-warning')}
-                        ></InfoWarningMessage>
-                    </MessageContainer>
                     <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                     {openApprovalModal && (
                         <ApprovalModal
@@ -371,12 +453,12 @@ const Bridge: React.FC = () => {
                     )}
                 </Container>
             </Wrapper>
+            <History />
         </GridWrapper>
     );
 };
 
 const GridWrapper = styled(FlexDivColumnCentered)`
-    grid-column: span 10;
     align-items: center;
 `;
 
@@ -384,10 +466,10 @@ const Wrapper = styled(FlexDivColumnCentered)`
     background: ${(props) => props.theme.borderColor.secondary};
     padding: 1px;
     border-radius: 15px;
-    margin: 60px 10px 50px 10px;
-    min-width: 550px;
+    margin: 40px 10px 40px 10px;
+    min-width: 600px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: 10px;
+        margin: 10px 0px;
         min-width: 200px;
     }
 `;
@@ -396,14 +478,18 @@ const Container = styled(FlexDivColumn)`
     background: ${(props) => props.theme.background.primary};
     border-radius: 15px;
     padding: 30px 60px 40px 60px;
-    max-width: 550px;
+    max-width: 600px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 30px 20px 40px 20px;
     }
 `;
 
-const MessageContainer = styled(FlexDiv)`
-    margin-top: 10px;
+const Header = styled(FlexDiv)`
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 0.5px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const InfoSection = styled.span`
@@ -430,9 +516,6 @@ const NetworkSwitchLabel = styled(FlexDivStart)`
 const NetworkSwitchWrapper = styled(FlexDivCentered)`
     border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
-    @media (max-width: 500px) {
-        height: 26px;
-    }
 `;
 
 const ArrowContainer = styled(FlexDivCentered)`
@@ -447,14 +530,15 @@ const EstimationContainer = styled(FlexDivColumnCentered)`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
     line-height: 18px;
-    margin-bottom: 20px;
 `;
 
 const EstimationRow = styled(FlexDivSpaceBetween)``;
 
 const EstimationDataLabel = styled(FlexDiv)``;
 
-const EstimationData = styled(FlexDiv)``;
+const EstimationData = styled(FlexDiv)`
+    font-weight: 700;
+`;
 
 const SubmitButtonContainer = styled(FlexDivColumnCentered)`
     margin-top: 40px;
