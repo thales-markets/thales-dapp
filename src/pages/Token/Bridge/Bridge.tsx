@@ -53,7 +53,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import InlineLoader from 'components/InlineLoader';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import NetworkIcon from './components/NetworkIcon';
-import { generalConfig } from '../../../config/general';
+import { generalConfig } from 'config/general';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -72,7 +72,7 @@ const Bridge: React.FC = () => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [bridgeEstimation, setBridgeEstimation] = useState<EstimateAmtResponse.AsObject | undefined>(undefined);
-    const [slippage, setSlippage] = useState<number>(BRIDGE_SLIPPAGE_PERCENTAGE[2]);
+    const [slippage, setSlippage] = useState<number>(BRIDGE_SLIPPAGE_PERCENTAGE[0]);
     const [isSlippageDropdownOpen, setIsSlippageDropdownOpen] = useState(false);
     const [bridgeError, setBridgeError] = useState<string | undefined>(undefined);
     const [isFetchingEstimation, setIsFetchingEstimation] = useState<boolean>(false);
@@ -190,7 +190,7 @@ const Bridge: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('migration.bridge-button.confirmation-message'), id));
+                toast.update(id, getSuccessToastOptions(t('tthales-token.bridge.button.confirmation-message'), id));
                 setIsSubmitting(false);
                 setAmount('');
             }
@@ -206,7 +206,7 @@ const Bridge: React.FC = () => {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (bridgeError) {
-            return <Button disabled={true}>{t(`migration.bridge-button.label`)}</Button>;
+            return <Button disabled={true}>{t(`thales-token.bridge.button.label`)}</Button>;
         }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
@@ -230,7 +230,7 @@ const Bridge: React.FC = () => {
         }
         return (
             <Button disabled={isButtonDisabled} onClick={handleSubmit}>
-                {!isSubmitting ? t('migration.bridge-button.label') : t('migration.bridge-button.progress-label')}
+                {!isSubmitting ? t('thales-token.bridge.button.label') : t('thales-token.bridge.button.progress-label')}
             </Button>
         );
     };
@@ -263,7 +263,7 @@ const Bridge: React.FC = () => {
                 setBridgeError(resObject.err.msg);
             } else {
                 if (Number(resObject.estimatedReceiveAmt) < 0) {
-                    setBridgeError('The received amount cannot cover fee');
+                    setBridgeError(t('thales-token.bridge.low-amount-error'));
                 } else {
                     setBridgeError(undefined);
                 }
@@ -329,6 +329,7 @@ const Bridge: React.FC = () => {
                                             defaultValue={slippage}
                                             onChangeHandler={setSlippage}
                                             maxValue={10}
+                                            tooltip={t('thales-token.bridge.slippage-tooltip')}
                                         />
                                     </SlippageDropDown>
                                 )}
@@ -379,6 +380,7 @@ const Bridge: React.FC = () => {
                             disabled={true}
                             currencyLabel={THALES_CURRENCY}
                             label={t('thales-token.bridge.estimated-receive-label')}
+                            tooltip={t('thales-token.bridge.estimated-receive-tooltip')}
                         />
                     </InputContainer>
                     <EstimationContainer>
@@ -560,6 +562,7 @@ const SlippageDropDown = styled(FlexDivCentered)`
     width: 280px;
     max-width: 280px;
     padding: 10px 15px;
+    user-select: none;
     @media (max-width: 500px) {
         width: 110px;
     }

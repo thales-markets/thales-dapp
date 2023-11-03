@@ -845,6 +845,8 @@
             "to-label": "To",
             "send-label": "Send",
             "estimated-receive-label": "Receive (estimated)",
+            "estimated-receive-tooltip": "This amount is estimated based on the current bridge rate and fees.",
+            "slippage-tooltip": "The transfer won’t go through if the bridge rate moves unfavorably by more than this percentage when the transfer is executed.",
             "bridge-rate-label": "Bridge rate",
             "fee-label": "Fee",
             "base-fee-label": "Base fee",
@@ -854,10 +856,11 @@
             "minimum-received-label": "Minimum received",
             "minimum-received-tooltip": "You will receive at least {{minimum}} on {{network}} or the transfer won't go through.",
             "estimated-time-of-arrival-label": "Estimated time of arrival",
-            "bridge-button": {
+            "low-amount-error": "The received amount cannot cover fee",
+            "button": {
                 "label": "Transfer",
-                "progress-label": "Transfer in progress...",
-                "confirmation-message": "Tokens successfully bridged to L2"
+                "progress-label": "Submitting transfer...",
+                "confirmation-message": "Transfer submitted"
             },
             "history": {
                 "title": "History",
@@ -869,6 +872,20 @@
                     "to-col": "to",
                     "received-col": "received",
                     "status-col": "status"
+                },
+                "status": {
+                    "0": "Unknown",
+                    "1": "Submitting",
+                    "2": "Failed",
+                    "3": "Waiting for SGN confirmation",
+                    "4": "Waiting for fund release",
+                    "5": "Completed",
+                    "6": "To be refunded",
+                    "7": "Requesting refund",
+                    "8": "Refund to be confirmed",
+                    "9": "Confirming your refund",
+                    "10": "Refunded",
+                    "11": "Delayed"
                 }
             }
         },

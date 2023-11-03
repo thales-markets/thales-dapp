@@ -4,12 +4,14 @@ import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { countDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
+import Tooltip from 'components/Tooltip';
 
 type SlippageProps = {
     fixed: Array<number>;
     defaultValue?: number;
     onChangeHandler?: (value: number) => void;
     maxValue?: number;
+    tooltip?: string;
 };
 
 const MIN_VALUE = 0.01;
@@ -19,7 +21,7 @@ export const isSlippageValid = (value: number, max?: number) => {
     return value >= MIN_VALUE && value <= (max || MAX_VALUE);
 };
 
-const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler, maxValue }) => {
+const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler, maxValue, tooltip }) => {
     const { t } = useTranslation();
 
     const [slippage, setSlippage] = useState<number | string>(defaultValue || '');
@@ -47,7 +49,10 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
 
     return (
         <Container>
-            <Text>{t('markets.amm-trading.slippage.label')}</Text>
+            <Text>
+                {t('markets.amm-trading.slippage.label')}
+                {tooltip && <Tooltip overlay={tooltip} iconFontSize={14} />}
+            </Text>
             <Row>
                 {fixed.length && (
                     <FlexDivRowCentered>
@@ -100,6 +105,9 @@ const Text = styled.span`
     font-size: 13px;
     line-height: 15px;
     color: ${(props) => props.theme.textColor.secondary};
+    i {
+        color: ${(props) => props.theme.textColor.secondary};
+    }
 `;
 
 export default Slippage;
