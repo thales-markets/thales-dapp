@@ -13,6 +13,7 @@ import { CelerBridgeHistory, CelerBridgeTransaction } from 'types/token';
 import NetworkIcon from '../components/NetworkIcon';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { TransferHistoryStatus } from 'ts-proto/sgn/cbridge/v1/query_pb';
+import ConfirmRefund from '../components/ConfirmRefund';
 
 type HistoryTableProps = {
     transactions: CelerBridgeHistory;
@@ -141,6 +142,9 @@ const HistoryTable: FC<HistoryTableProps> = memo(({ transactions, noResultsMessa
                             }
                         >
                             {t(`thales-token.bridge.history.status.${cellProps.cell.value}`)}
+                            {cellProps.cell.value === TransferHistoryStatus.TRANSFER_REFUND_TO_BE_CONFIRMED && (
+                                <ConfirmRefund transferId={cellProps.cell.row.original.transferId} />
+                            )}
                         </Text>
                     ),
                     sortable: true,

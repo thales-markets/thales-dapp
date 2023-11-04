@@ -154,4 +154,8 @@ export const refetchStakingLeaderboardData = (walletAddress: string, networkId: 
     );
 };
 
+export const refetchCelerBridgeHistory = (walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.CelerBridgeHistory(walletAddress));
+};
+
 export default queryConnector;

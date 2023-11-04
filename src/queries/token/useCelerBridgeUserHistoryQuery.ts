@@ -8,6 +8,8 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { THALES_CURRENCY } from 'constants/currency';
 import { orderBy } from 'lodash';
 
+const HISTORY_PAGE_SIZE = 100;
+
 const useCelerBridgeUserHistoryQuery = (
     walletAddress: string,
     options?: UseQueryOptions<CelerBridgeHistory | undefined>
@@ -18,7 +20,7 @@ const useCelerBridgeUserHistoryQuery = (
             try {
                 const request = new TransferHistoryRequest();
                 request.setAddr(walletAddress);
-                request.setPageSize(50);
+                request.setPageSize(HISTORY_PAGE_SIZE);
                 const client = new WebClient(generalConfig.CELER_BRIDGE_URL, null, null);
                 const response = await client.transferHistory(request, null);
                 const historyList = response.toObject().historyList;
@@ -32,6 +34,7 @@ const useCelerBridgeUserHistoryQuery = (
                     )
                     .map((historyItem) => {
                         const mappedItem: CelerBridgeTransaction = {
+                            transferId: historyItem.transferId,
                             timestamp: historyItem.ts,
                             srcChainId:
                                 historyItem.srcSendInfo && historyItem.srcSendInfo.chain

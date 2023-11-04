@@ -17,11 +17,11 @@ const FeeTooltip: React.FC<FeeTooltipProps> = ({ baseFee, protocolFee }) => {
         <Container>
             <ContentContainer>
                 <Label>{t('thales-token.bridge.base-fee-label')}:</Label>
-                <Value>{baseFee > 0 ? formatCurrencyWithKey(THALES_CURRENCY, baseFee, 2) : '-'}</Value>
+                <Value>{baseFee > 0 ? formatCurrencyWithKey(THALES_CURRENCY, baseFee) : '-'}</Value>
             </ContentContainer>
             <ContentContainer>
                 <Label>{t('thales-token.bridge.protocol-fee-label')}:</Label>
-                <Value>{baseFee > 0 ? formatCurrencyWithKey(THALES_CURRENCY, protocolFee, 2) : '-'}</Value>
+                <Value>{baseFee > 0 ? formatCurrencyWithKey(THALES_CURRENCY, protocolFee) : '-'}</Value>
             </ContentContainer>
             <Text>{t('thales-token.bridge.base-fee-label')}</Text>
             <Text>{t('thales-token.bridge.protocol-fee-info')}</Text>

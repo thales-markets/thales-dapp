@@ -139,6 +139,7 @@ export type CelerBridgeData = {
 };
 
 export type CelerBridgeTransaction = {
+    transferId: string;
     timestamp: number;
     srcChainId?: number;
     srcAmount?: number;

@@ -9,7 +9,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { TokenTabSection } from 'types/token';
-import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
+import { getIsBridgeSupported, getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import { history } from 'utils/routes';
 
 type TokenNavProps = {
@@ -30,6 +30,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isLpStakingSupported = getIsLpStakingSupported(networkId);
     const isStakingSupported = getIsStakingSupported(networkId);
+    const isBridgeSupported = getIsBridgeSupported(networkId);
 
     const [showNav, setShowNav] = useState(false);
 
@@ -145,6 +146,18 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 </Label>
                                 <IconContainer active={selectedSection == TokenTabSectionIdEnum.LP_STAKING}>
                                     {'LP'}
+                                </IconContainer>
+                            </ItemContainer>
+                        )}
+                        {isBridgeSupported && (
+                            <ItemContainer
+                                onClick={() => onItemClick(TokenTabEnum.BRIDGE, TokenTabSectionIdEnum.BRIDGE)}
+                            >
+                                <Label active={selectedSection == TokenTabSectionIdEnum.BRIDGE}>
+                                    {t('thales-token.bridge.tab-title')}
+                                </Label>
+                                <IconContainer active={selectedSection == TokenTabSectionIdEnum.BRIDGE}>
+                                    {'B'}
                                 </IconContainer>
                             </ItemContainer>
                         )}

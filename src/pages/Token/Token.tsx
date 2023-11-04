@@ -77,6 +77,13 @@ const TokenPage: React.FC = () => {
                 description: '',
                 isButton: false,
             },
+            {
+                tab: TokenTabEnum.BRIDGE,
+                id: TokenTabSectionIdEnum.BRIDGE,
+                title: t('thales-token.bridge.tab-title'),
+                description: '',
+                isButton: false,
+            },
         ],
         [t]
     );

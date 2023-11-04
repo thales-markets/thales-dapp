@@ -886,6 +886,11 @@
                     "9": "Confirming your refund",
                     "10": "Refunded",
                     "11": "Delayed"
+                },
+                "confirm-refund-button": {
+                    "label": "Confirm refund",
+                    "progress-label": "Confirming...",
+                    "confirmation-message": "Refund confirmed"
                 }
             }
         },

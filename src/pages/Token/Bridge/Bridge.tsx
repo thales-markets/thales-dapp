@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { SUPPORTED_NETWORK_IDS_MAP, checkAllowance } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';
-import { BRIDGE_SUPPORTED_NETWORKS, L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
+import { BRIDGE_SUPPORTED_NETWORKS } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
@@ -24,7 +24,6 @@ import {
 } from 'styles/common';
 import styled from 'styled-components';
 import ApprovalModal from 'components/ApprovalModal';
-import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button';
 import { toast } from 'react-toastify';
@@ -54,6 +53,7 @@ import InlineLoader from 'components/InlineLoader';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import NetworkIcon from './components/NetworkIcon';
 import { generalConfig } from 'config/general';
+import { refetchCelerBridgeHistory } from 'utils/queryConnector';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -88,7 +88,8 @@ const Bridge: React.FC = () => {
         insufficientBalance ||
         !hasAllowance ||
         !!bridgeError ||
-        !isSlippageValid;
+        !isSlippageValid ||
+        isFetchingEstimation;
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -159,6 +160,7 @@ const Bridge: React.FC = () => {
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                     setIsAllowing(false);
                 }
             } catch (e) {
@@ -170,34 +172,77 @@ const Bridge: React.FC = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-        setIsSubmitting(true);
+    const fetchEstimation = async () => {
+        setIsFetchingEstimation(true);
+        let resObject;
+        if (Number(amount) > 0 && Number(slippage) > 0) {
+            const estimateRequest = new EstimateAmtRequest();
 
-        try {
-            const { bridgeContract, opThalesTokenContract } = snxJSConnector as any;
-            const bridgeContractWithSigner = bridgeContract.connect((snxJSConnector as any).signer);
+            estimateRequest.setSrcChainId(networkId);
+            estimateRequest.setDstChainId(Number(destNetwork));
+            estimateRequest.setTokenSymbol(THALES_CURRENCY);
+            estimateRequest.setSlippageTolerance(Math.floor(slippage * 1000));
+            estimateRequest.setAmt(ethers.utils.parseEther(amount.toString()).toString());
 
-            const parsedAmount = ethers.utils.parseEther(amount.toString());
-            const tx = await bridgeContractWithSigner.depositERC20To(
-                opThalesTokenContract.address,
-                (thalesTokenContract as any).addresses[L1_TO_L2_NETWORK_MAPPER[networkId]],
-                walletAddress,
-                parsedAmount,
-                2000000,
-                '0x'
-            );
-            const txResult = await tx.wait();
+            const client = new WebClient(generalConfig.CELER_BRIDGE_URL, null, null);
+            const res: EstimateAmtResponse = await client.estimateAmt(estimateRequest, null);
 
-            if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t('tthales-token.bridge.button.confirmation-message'), id));
-                setIsSubmitting(false);
-                setAmount('');
+            resObject = res.toObject();
+            setBridgeEstimation(resObject);
+            if (resObject.err) {
+                setBridgeError(resObject.err.msg);
+            } else {
+                if (Number(resObject.estimatedReceiveAmt) < 0) {
+                    setBridgeError(t('thales-token.bridge.low-amount-error'));
+                } else {
+                    setBridgeError(undefined);
+                }
             }
-        } catch (e) {
-            console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-            setIsSubmitting(false);
+        } else {
+            setBridgeEstimation(undefined);
+            setBridgeError(undefined);
+        }
+        setIsFetchingEstimation(false);
+        return resObject;
+    };
+
+    useDebouncedEffect(() => {
+        fetchEstimation();
+    }, [amount, slippage, networkId, destNetwork, walletAddress]);
+
+    const handleSubmit = async () => {
+        const { thalesTokenContract, celerBridgeContract } = snxJSConnector as any;
+
+        const estimation = await fetchEstimation();
+        if (thalesTokenContract && celerBridgeContract && estimation) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+
+            try {
+                const celerBridgeContractWithSigner = celerBridgeContract.connect((snxJSConnector as any).signer);
+
+                const parsedAmount = ethers.utils.parseEther(amount.toString()).toString();
+                const tx = await celerBridgeContractWithSigner.send(
+                    walletAddress,
+                    thalesTokenContract.address,
+                    parsedAmount,
+                    destNetwork,
+                    new Date().getTime(),
+                    estimation.maxSlippage
+                );
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t('thales-token.bridge.button.confirmation-message'), id));
+                    refetchCelerBridgeHistory(walletAddress);
+                    setIsSubmitting(false);
+                    setAmount('');
+                }
+            } catch (e) {
+                console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+                setIsSubmitting(false);
+            }
         }
     };
 
@@ -236,51 +281,12 @@ const Bridge: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(thalesBalance, 18));
+        setAmount(truncToDecimals(thalesBalance, 8));
     };
 
     useEffect(() => {
         setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= Number(thalesBalance)));
     }, [amount, thalesBalance]);
-
-    const fetchEstimation = async () => {
-        setIsFetchingEstimation(true);
-        if (Number(amount) > 0 && Number(slippage) > 0) {
-            const estimateRequest = new EstimateAmtRequest();
-
-            estimateRequest.setSrcChainId(networkId);
-            estimateRequest.setDstChainId(Number(destNetwork));
-            estimateRequest.setTokenSymbol(THALES_CURRENCY);
-            estimateRequest.setSlippageTolerance(Math.floor(slippage * 1000));
-            estimateRequest.setAmt(ethers.utils.parseEther(amount.toString()).toString());
-
-            const client = new WebClient(generalConfig.CELER_BRIDGE_URL, null, null);
-            const res: EstimateAmtResponse = await client.estimateAmt(estimateRequest, null);
-
-            const resObject = res.toObject();
-            setBridgeEstimation(resObject);
-            if (resObject.err) {
-                setBridgeError(resObject.err.msg);
-            } else {
-                if (Number(resObject.estimatedReceiveAmt) < 0) {
-                    setBridgeError(t('thales-token.bridge.low-amount-error'));
-                } else {
-                    setBridgeError(undefined);
-                }
-            }
-        } else {
-            setBridgeEstimation(undefined);
-            setBridgeError(undefined);
-        }
-        setIsFetchingEstimation(false);
-    };
-    console.log(bridgeEstimation);
-
-    useDebouncedEffect(() => {
-        fetchEstimation();
-    }, [amount, slippage, networkId, destNetwork, walletAddress]);
-
-    console.log(isFetchingEstimation);
 
     const getEstimationData = (value: any, isValidValue: boolean, isLoading?: boolean) => (
         <EstimationData>
@@ -297,8 +303,9 @@ const Bridge: React.FC = () => {
     const protocolFee = bridgeEstimation && bridgeEstimation.percFee ? bigNumberFormatter(bridgeEstimation.percFee) : 0;
     const totalFee = baseFee + protocolFee;
     const minimumReceivedAmt =
-        bridgeEstimation && Number(bridgeEstimation.estimatedReceiveAmt) > 0
-            ? bigNumberFormatter(bridgeEstimation.estimatedReceiveAmt) - (Number(amount) * slippage) / 100
+        bridgeEstimation && Number(bridgeEstimation.estimatedReceiveAmt) > 0 && bridgeEstimation.bridgeRate
+            ? bigNumberFormatter(bridgeEstimation.estimatedReceiveAmt) -
+              (Number(amount) * bridgeEstimation.bridgeRate * slippage) / 100
             : 0;
 
     return (
@@ -563,9 +570,6 @@ const SlippageDropDown = styled(FlexDivCentered)`
     max-width: 280px;
     padding: 10px 15px;
     user-select: none;
-    @media (max-width: 500px) {
-        width: 110px;
-    }
 `;
 
 const DetailsIcon = styled.i`

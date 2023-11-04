@@ -13,6 +13,7 @@ export enum TokenTabSectionIdEnum {
     VESTING = 'vesting',
     MERGE_ACCOUNT = 'account-preferences',
     LP_STAKING = 'lp-staking',
+    BRIDGE = 'bridge',
 }
 
 export enum TransactionFilterEnum {

@@ -127,6 +127,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                 setIsAllowingStake(false);
             }
         } catch (e) {
