@@ -422,7 +422,7 @@ const Bridge: React.FC = () => {
                             <EstimationDataLabel>
                                 {t('thales-token.bridge.minimum-received-label')}
                                 <Tooltip
-                                    overlay={t('thales-token.bridge.minimum-received-label', {
+                                    overlay={t('thales-token.bridge.minimum-received-tooltip', {
                                         minimum:
                                             minimumReceivedAmt > 0
                                                 ? formatCurrencyWithKey(THALES_CURRENCY, minimumReceivedAmt)
