@@ -30,6 +30,7 @@ import MobileDropdownMenu from 'components/MobileDropdownMenu';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 
 const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE_NO_PAGINATION = 1000;
 
 type ColumnWithSorting<D extends Record<string, unknown>> = Column<D> & {
     sortType?: string | SortByFn<D> | DefaultSortTypes;
@@ -120,8 +121,8 @@ const Table: React.FC<TableProps> = ({
     };
 
     useEffect(() => {
-        setPageSize(defaultPageSize || DEFAULT_PAGE_SIZE);
-    }, [defaultPageSize, setPageSize]);
+        setPageSize(hidePagination ? DEFAULT_PAGE_SIZE_NO_PAGINATION : defaultPageSize || DEFAULT_PAGE_SIZE);
+    }, [defaultPageSize, setPageSize, hidePagination]);
 
     useEffect(() => {
         gotoPage(0);
