@@ -15,12 +15,14 @@ type NetworkSwitchProps = {
     selectedNetworkId?: number;
     setSelectedNetworkId?: any;
     supportedNetworks?: number[];
+    forceNetworkSwitch?: boolean;
 };
 
 const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
     selectedNetworkId,
     setSelectedNetworkId,
     supportedNetworks,
+    forceNetworkSwitch,
 }) => {
     const { switchNetwork } = useSwitchNetwork();
     const dispatch = useDispatch();
@@ -58,7 +60,8 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
         !window.ethereum?.isMetaMask &&
         !window.ethereum?.isBraveWallet &&
         !window.ethereum?.isCoinbaseWallet &&
-        !window.ethereum?.isTrust;
+        !window.ethereum?.isTrust &&
+        !forceNetworkSwitch;
 
     return (
         <NetworkInfoContainer>

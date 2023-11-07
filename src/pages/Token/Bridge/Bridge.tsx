@@ -317,7 +317,10 @@ const Bridge: React.FC = () => {
                         <NetworkSwitchConatiner>
                             <NetworkSwitchLabel>{t('thales-token.bridge.from-label')}:</NetworkSwitchLabel>
                             <NetworkSwitchWrapper>
-                                <NetworkSwitch supportedNetworks={BRIDGE_SUPPORTED_NETWORKS} />
+                                <NetworkSwitch
+                                    supportedNetworks={BRIDGE_SUPPORTED_NETWORKS}
+                                    forceNetworkSwitch={true}
+                                />
                             </NetworkSwitchWrapper>
                         </NetworkSwitchConatiner>
                         <SlippageContainer>
@@ -376,6 +379,7 @@ const Bridge: React.FC = () => {
                                 selectedNetworkId={destNetwork}
                                 setSelectedNetworkId={setDestNetwork}
                                 supportedNetworks={destSupportedNetworks}
+                                forceNetworkSwitch={true}
                             />
                         </NetworkSwitchWrapper>
                     </NetworkSwitchConatiner>
