@@ -891,7 +891,9 @@
                     "label": "Confirm refund",
                     "progress-label": "Confirming...",
                     "confirmation-message": "Refund confirmed"
-                }
+                },
+                "switch-message": "Please switch to {{network}} before requesting a refund",
+                "switch-label": "Switch"
             }
         },
         "table": {

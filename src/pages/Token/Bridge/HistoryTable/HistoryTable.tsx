@@ -142,7 +142,10 @@ const HistoryTable: FC<HistoryTableProps> = memo(({ transactions, noResultsMessa
                         >
                             {t(`thales-token.bridge.history.status.${cellProps.cell.value}`)}
                             {cellProps.cell.value === TransferHistoryStatus.TRANSFER_REFUND_TO_BE_CONFIRMED && (
-                                <ConfirmRefund transferId={cellProps.cell.row.original.transferId} />
+                                <ConfirmRefund
+                                    transferId={cellProps.cell.row.original.transferId}
+                                    srcChainId={cellProps.cell.row.original.srcChainId || 0}
+                                />
                             )}
                         </Text>
                     ),
