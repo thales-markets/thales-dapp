@@ -24,12 +24,16 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
-import { truncateAddress } from 'utils/formatters/string';
+import {
+    truncateAddress,
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    getEtherscanAddressLink,
+} from 'thales-utils';
 import Tooltip from 'components/Tooltip';
 import TimeRemaining from 'components/TimeRemaining';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { Rewards, emptyRewards } from 'types/rewards';
 import { getIsMobile } from 'redux/modules/ui';

@@ -18,13 +18,13 @@ import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { AccountMarketInfo, OptionsMarketInfo, RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { getEtherscanAddressLink } from 'utils/etherscan';
 import {
+    getEtherscanAddressLink,
     formatCurrency,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
-    formatPricePercentageDifference,
-} from 'utils/formatters/number';
+} from 'thales-utils';
+import { formatPricePercentageDifference } from 'utils/formatters/number';
 import { useMarketContext } from '../../contexts/MarketContext';
 import MaturityDate from '../MaturityDate';
 import {

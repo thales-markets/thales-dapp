@@ -4,7 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { RangedMarketData } from 'types/options';
 import { ethers } from 'ethers';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
 import { RANGE_SIDE } from 'constants/options';
 import { getPhaseAndEndDate } from 'utils/options';
 import { getSynthAsset } from 'utils/currency';

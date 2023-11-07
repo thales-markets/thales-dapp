@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { VaultPnls } from 'types/vault';
-import { formatPercentageWithSign } from 'utils/formatters/number';
+import { formatPercentageWithSign } from 'thales-utils';
 
 type PnlProps = {
     vaultAddress: string;

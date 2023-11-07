@@ -64,11 +64,6 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
     }
 };
 
-export const getDefaultDecimalsForNetwork = (networkId: Network) => {
-    if ([Network.Arbitrum, Network.PolygonMainnet, Network.Base].includes(networkId)) return 6;
-    return 18;
-};
-
 const changeNetwork = async (network?: NetworkParams, callback?: VoidFunction, chainId?: string): Promise<void> => {
     if (hasEthereumInjected()) {
         try {

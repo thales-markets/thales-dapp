@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatTxTimestamp, formatCurrency } from 'thales-utils';
 import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { formatCurrency } from 'utils/formatters/number';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';

@@ -1,10 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { UserVaultData } from 'types/vault';
 import { Network } from 'enums/network';
-import { getDefaultDecimalsForNetwork } from 'utils/network';
 
 const useUserVaultDataQuery = (
     vaultAddress: string,

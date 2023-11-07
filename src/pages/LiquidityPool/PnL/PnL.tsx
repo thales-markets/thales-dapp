@@ -23,7 +23,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { LiquidityPoolPnls } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
-import { formatPercentageWithSign } from 'utils/formatters/number';
+import { formatPercentageWithSign } from 'thales-utils';
 
 type PnlProps = {
     lifetimePnl: number;

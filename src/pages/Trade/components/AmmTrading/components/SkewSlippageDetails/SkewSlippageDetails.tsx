@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import { formatPercentage } from 'utils/formatters/number';
+import { formatPercentage } from 'thales-utils';
 import Slippage from '../Slippage';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';
 

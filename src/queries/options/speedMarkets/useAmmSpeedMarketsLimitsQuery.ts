@@ -7,7 +7,7 @@ import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { AmmSpeedMarketsLimits, OptionSide } from 'types/options';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 10;
