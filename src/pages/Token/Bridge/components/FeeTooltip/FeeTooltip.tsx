@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivStart } from 'styles/common';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 import { THALES_CURRENCY } from 'constants/currency';
 
 type FeeTooltipProps = {

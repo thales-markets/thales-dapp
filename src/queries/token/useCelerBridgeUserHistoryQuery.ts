@@ -4,7 +4,7 @@ import { TransferHistoryRequest } from 'ts-proto/gateway/gateway_pb';
 import { WebClient } from 'ts-proto/gateway/GatewayServiceClientPb';
 import { generalConfig } from 'config/general';
 import { CelerBridgeHistory, CelerBridgeTransaction } from 'types/token';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import { THALES_CURRENCY } from 'constants/currency';
 import { orderBy } from 'lodash';
 

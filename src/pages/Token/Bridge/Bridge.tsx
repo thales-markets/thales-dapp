@@ -12,7 +12,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { BRIDGE_SUPPORTED_NETWORKS } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals, bigNumberFormatter } from 'thales-utils';
 import {
     FlexDiv,
     FlexDivCentered,
@@ -48,7 +48,6 @@ import FeeTooltip from './components/FeeTooltip';
 import Tooltip from 'components/Tooltip';
 import useCelerBridgeDataQuery from 'queries/token/useCelerBridgeDataQuery';
 import History from './History';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
 import InlineLoader from 'components/InlineLoader';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import NetworkIcon from './components/NetworkIcon';
