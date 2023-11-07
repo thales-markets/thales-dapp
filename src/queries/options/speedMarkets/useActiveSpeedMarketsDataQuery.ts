@@ -1,5 +1,4 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
 import { OPTIONS_POSITIONS_MAP, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CURRENCY_DECIMALS, SUPPORTED_ASSETS } from 'constants/pyth';
@@ -10,7 +9,6 @@ import { Positions } from 'enums/options';
 import { UseQueryOptions, useQuery } from 'react-query';
 import { OptionSide, UserLivePositions } from 'types/options';
 import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'utils/formatters/ethers';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
@@ -101,10 +99,7 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                     const userData: UserLivePositions = {
                         positionAddress: ZERO_ADDRESS,
                         currencyKey: currencyKey,
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS)
-                        ),
+                        strikePrice: bigNumberFormatter(marketData.strikePrice, PYTH_CURRENCY_DECIMALS).toString(),
                         amount: payout,
                         amountBigNumber: marketData.buyinAmount,
                         maturityDate: secondsToMilliseconds(Number(marketData.strikeTime)),

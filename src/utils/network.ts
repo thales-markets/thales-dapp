@@ -159,15 +159,17 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
     switch (route) {
-        case ROUTES.Options.Home:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.RangeMarkets:
+        case (ROUTES.Options.Home,
+        ROUTES.Options.RangeMarkets,
+        ROUTES.Options.Referral,
+        ROUTES.Governance.Home,
+        ROUTES.Options.Game,
+        ROUTES.Options.Profile,
+        ROUTES.Options.CreateMarket,
+        ROUTES.Options.SpeedMarkets,
+        ROUTES.Options.ChainedSpeedMarkets,
+        ROUTES.Options.SpeedMarketsOverview,
+        ROUTES.Options.ChainedSpeedMarketsOverview):
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
@@ -179,56 +181,8 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
-        case ROUTES.Options.Referral:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
         case ROUTES.Options.Token:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
-        case ROUTES.Governance.Home:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.Game:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.Profile:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.CreateMarket:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.SpeedMarkets:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }

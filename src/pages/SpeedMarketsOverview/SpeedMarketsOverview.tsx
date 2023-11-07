@@ -1,21 +1,27 @@
-import React from 'react';
-import styled from 'styled-components';
-import UnresolvedPositions from './components/UnresolvedPositions';
-import { ScreenSizeBreakpoint } from 'enums/ui';
-import { RouteComponentProps } from 'react-router-dom';
 import SPAAnchor from 'components/SPAAnchor';
-import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { RouteComponentProps } from 'react-router-dom';
+import styled from 'styled-components';
 import { FlexDivStart } from 'styles/common';
+import { buildHref } from 'utils/routes';
+import UnresolvedPositions from './components/UnresolvedPositions';
 
-const SpeedMarketsOverview: React.FC<RouteComponentProps> = () => {
+const SpeedMarketsOverview: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
+
+    const isChainedMarkets = props.location?.pathname.includes(ROUTES.Options.ChainedSpeedMarkets);
 
     return (
         <Container>
             <Header>
-                <SPAAnchor href={buildHref(ROUTES.Options.SpeedMarkets)}>
+                <SPAAnchor
+                    href={buildHref(
+                        isChainedMarkets ? ROUTES.Options.ChainedSpeedMarkets : ROUTES.Options.SpeedMarkets
+                    )}
+                >
                     <BackLinkContainer>
                         <BackIcon className={`icon icon--left`} />
                         {t('speed-markets.title')}

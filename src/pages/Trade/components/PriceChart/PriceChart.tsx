@@ -311,7 +311,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             {!isMobile && data && (
-                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 323 : 266}>
+                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 326 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
                         <defs xHeight={1}>
@@ -335,7 +335,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             axisLine={false}
                             dataKey="date"
                             domain={['auto', 'auto']}
-                            padding={{ right: 45 }}
+                            padding={{ right: 75 }}
                         />
                         <YAxis
                             domain={['auto', 'auto']}
@@ -474,9 +474,9 @@ const getTicks = (prices: number[]) => {
 
 const CustomLabel = (props: any) => {
     return (
-        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 80}>
             <Rectangle rx={10} y={3}></Rectangle>
-            <Text x={8} y={14}>
+            <Text x={35} y={12}>
                 {props.price < 0.01
                     ? formatCurrencyWithSign(USD_SIGN, props.price)
                     : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
@@ -499,15 +499,17 @@ const Rectangle = styled.rect`
 `;
 
 const Text = styled.text`
+    text-anchor: middle;
+    dominant-baseline: middle;
     fill: ${(props) => props.theme.borderColor.tertiary};
     font-size: 10px;
 `;
 
 const CustomLabel2 = (props: any) => {
     return (
-        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 80}>
             <Rectangle2 rx={10} y={3}></Rectangle2>
-            <Text2 x={8} y={14}>
+            <Text2 x={35} y={12}>
                 {props.price < 0.01
                     ? formatCurrencyWithSign(USD_SIGN, props.price)
                     : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
@@ -516,23 +518,18 @@ const CustomLabel2 = (props: any) => {
     );
 };
 
-const Rectangle2 = styled.rect`
-    stroke-width: 1px;
-    width: 70px;
-    height: 16px;
+const Rectangle2 = styled(Rectangle)`
     stroke: ${(props) => props.theme.borderColor.quaternary};
     fill: ${(props) => props.theme.background.primary};
 `;
 
-const Text2 = styled.text`
+const Text2 = styled(Text)`
     fill: ${(props) => props.theme.textColor.quaternary};
-    font-size: 10px;
 `;
 
 const Wrapper = styled.div`
     width: 100%;
     height: 100%;
-    max-height: 300px;
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`

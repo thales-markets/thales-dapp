@@ -492,6 +492,13 @@
             "no-resolve-positions": "No positions for this section with price",
             "user": "User",
             "no-positions": "No positions for this section"
+        },
+        "single": "Single",
+        "chained": {
+            "label": "Chained",
+            "add-directions": "Click + to add directions",
+            "roi": "ROI: {{value}}",
+            "clear-all": "Clear all"
         }
     },
     "thales-token": {

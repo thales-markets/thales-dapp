@@ -1,4 +1,5 @@
 import * as pythEvmJs from '@pythnetwork/pyth-evm-js';
+import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
@@ -9,8 +10,8 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { USD_SIGN } from 'constants/currency';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
+import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -31,7 +32,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import { formatCurrencyWithSign, truncToDecimals } from 'utils/formatters/number';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
@@ -52,6 +53,10 @@ const UnresolvedPositions: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
+    const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
+        [CRYPTO_CURRENCY_MAP.BTC]: 0,
+        [CRYPTO_CURRENCY_MAP.ETH]: 0,
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmittingSection, setIsSubmittingSection] = useState('');
     const [isLoadingEnabled, setIsLoadingEnabled] = useState(true);
@@ -112,11 +117,23 @@ const UnresolvedPositions: React.FC = () => {
     const unknownPriceSpeedMarketsData = maturedUnresolvedWithPrices.filter(
         (marketData) => !marketData.claimable && !marketData.finalPrice
     );
-    const openSpeedMarketsData = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate > Date.now());
+    const openSpeedMarketsData = activeSpeedMarketsData
+        .filter((marketData) => marketData.maturityDate > Date.now())
+        .map((marketData) => ({
+            ...marketData,
+            strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
+            currentPrice: currentPrices[marketData.currencyKey]
+                ? currentPrices[marketData.currencyKey]
+                : marketData.currentPrice,
+        }));
 
     const isLoading =
         isLoadingEnabled &&
         (activeSpeedMarketsDataQuery.isLoading || pythPricesQueries.some((price) => price.isLoading));
+
+    const priceConnection = useMemo(() => {
+        return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
+    }, [networkId]);
 
     useInterval(async () => {
         // Check if there are new matured markets from open markets and refresh it
@@ -124,6 +141,16 @@ const UnresolvedPositions: React.FC = () => {
         if (openMatured.length) {
             setIsLoadingEnabled(false);
             refetchActiveSpeedMarkets(networkId);
+        }
+        // Refresh current prices
+        if (openSpeedMarketsData.length) {
+            const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
+            const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
+            setCurrentPrices({
+                ...currentPrices,
+                [CRYPTO_CURRENCY_MAP.BTC]: prices[CRYPTO_CURRENCY_MAP.BTC],
+                [CRYPTO_CURRENCY_MAP.ETH]: prices[CRYPTO_CURRENCY_MAP.ETH],
+            });
         }
         // Check if missing price is available
         if (unknownPriceSpeedMarketsData.length) {

@@ -242,6 +242,7 @@ export type UserClosedPositions = {
     isUserWinner: boolean;
 };
 
+export type Risk = { current: number; max: number };
 export type RiskPerAsset = { currency: string; current: number; max: number };
 export type RiskPerAssetAndPosition = RiskPerAsset & { position: Positions };
 
@@ -258,6 +259,17 @@ export type AmmSpeedMarketsLimits = {
     defaultLPFee: number;
     safeBoxImpact: number;
     whitelistedAddress: boolean;
+};
+
+export type AmmChainedSpeedMarketsLimits = {
+    minChainedMarkets: number;
+    maxChainedMarkets: number;
+    minBuyinAmount: number;
+    maxBuyinAmount: number;
+    minTimeFrame: number;
+    maxTimeFrame: number;
+    risk: Risk;
+    payoutMultiplier: number;
 };
 
 export type SpeedMarket = {

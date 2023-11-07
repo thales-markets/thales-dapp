@@ -3,7 +3,7 @@ import { CRYPTO_CURRENCY_MAP } from './currency';
 import { getCurrencyPriority } from 'utils/currency';
 
 export const PRICE_SERVICE_ENDPOINTS = {
-    testnet: 'https://xc-testnet.pyth.network',
+    testnet: 'https://hermes-beta.pyth.network',
     mainnet: 'https://hermes.pyth.network',
 };
 

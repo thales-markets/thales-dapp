@@ -43,6 +43,11 @@ const QUERY_KEYS = {
             networkId,
             walletAddress,
         ],
+        ChainedSpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
+            'chainedSpeedMarketsLimits',
+            networkId,
+            walletAddress,
+        ],
         UserSpeedMarkets: (networkId: Network, walletAddress: string) => ['userSpeedMarkets', networkId, walletAddress],
         UserSpeedMarketsTransactions: (networkId: Network, walletAddress: string) => [
             'userSpeedMarketsTransactions',
