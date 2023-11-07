@@ -54,7 +54,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                     ),
                 ]);
 
-                ammSpeedMarketsLimits.minBuyinAmount = coinFormatter(ammParams.minBuyinAmount, networkId);
+                ammSpeedMarketsLimits.minBuyinAmount = Math.ceil(coinFormatter(ammParams.minBuyinAmount, networkId));
                 ammSpeedMarketsLimits.maxBuyinAmount =
                     coinFormatter(ammParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
                 ammSpeedMarketsLimits.minimalTimeToMaturity = Number(ammParams.minimalTimeToMaturity);

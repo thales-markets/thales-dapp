@@ -556,7 +556,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isPositionSelected) {
-            return <Button disabled={true}>{t('markets.amm-trading.choose-direction')}</Button>;
+            return (
+                <Button disabled={true}>
+                    {isChained
+                        ? t('speed-markets.chained.errors.choose-directions')
+                        : t('markets.amm-trading.choose-direction')}
+                </Button>
+            );
         }
         if (!(strikeTimeSec || deltaTimeSec)) {
             return <Button disabled={true}>{t('markets.amm-trading.choose-time')}</Button>;
@@ -603,6 +609,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     };
 
     const getTradingDetails = () => {
+        const chainedQuote =
+            isChained && ammChainedSpeedMarketsLimits
+                ? ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length - 1
+                : 0;
         return (
             <TradingDetailsContainer>
                 <TradingDetailsSentence
@@ -612,11 +622,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     market={{
                         address: 'Any',
                         strikePrice: submittedStrikePrice ? submittedStrikePrice : currentPrice,
-                        positionType,
+                        positionType: isChained ? undefined : positionType,
+                        chainedPositions: isChained ? chainedPositions : undefined,
                     }}
                     isRangedMarket={false}
                     isFetchingQuote={false}
-                    priceProfit={SPEED_MARKETS_QUOTE - 1}
+                    priceProfit={(isChained ? chainedQuote : SPEED_MARKETS_QUOTE) - 1}
                     paidAmount={selectedStableBuyinAmount || convertToStable(Number(paidAmount))}
                     hasCollateralConversion={selectedCollateral !== defaultCollateral}
                     breakFirstLine={false}

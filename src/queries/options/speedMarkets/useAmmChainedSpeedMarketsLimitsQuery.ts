@@ -34,7 +34,9 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
 
                 ammChainedSpeedMarketsLimits.minChainedMarkets = Number(ammParams.minChainedMarkets);
                 ammChainedSpeedMarketsLimits.maxChainedMarkets = Number(ammParams.maxChainedMarkets);
-                ammChainedSpeedMarketsLimits.minBuyinAmount = coinFormatter(ammParams.minBuyinAmount, networkId);
+                ammChainedSpeedMarketsLimits.minBuyinAmount = Math.ceil(
+                    coinFormatter(ammParams.minBuyinAmount, networkId)
+                );
                 ammChainedSpeedMarketsLimits.maxBuyinAmount =
                     coinFormatter(ammParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
                 ammChainedSpeedMarketsLimits.minTimeFrame = Number(ammParams.minTimeFrame);

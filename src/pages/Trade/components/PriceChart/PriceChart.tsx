@@ -1,9 +1,13 @@
 import { CoinGeckoClient } from 'coingecko-api-v3';
+import TooltipInfo from 'components/Tooltip';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import { format } from 'date-fns';
 import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
     Area,
     AreaChart,
@@ -15,28 +19,24 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
+import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import {
     calculatePercentageChange,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
     formatPricePercentageGrowth,
 } from 'utils/formatters/number';
-import Toggle from './components/DateToggle';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
-import TooltipInfo from 'components/Tooltip';
-import { Trans, useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
-import { RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
-import { getIsMobile } from 'redux/modules/ui';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import Toggle from './components/DateToggle';
 
 type PriceChartProps = {
     asset: string;
@@ -46,6 +46,7 @@ type PriceChartProps = {
     isSpeedMarkets?: boolean;
     explicitCurrentPrice?: number;
     prevExplicitPrice?: number;
+    chainedRisk?: Risk;
     risksPerAsset?: RiskPerAsset[];
     risksPerAssetAndDirection?: RiskPerAssetAndPosition[];
 };
@@ -91,6 +92,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     isSpeedMarkets,
     explicitCurrentPrice,
     prevExplicitPrice,
+    chainedRisk,
     risksPerAsset,
     risksPerAssetAndDirection,
 }) => {
@@ -192,8 +194,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
         }
     }, [asset, isSpeedMarkets]);
 
-    const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
-    const liquidity = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
+    const risk = chainedRisk
+        ? chainedRisk
+        : risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
+    const liquidity = risk ? formatCurrencyWithSign(USD_SIGN, risk.max - risk.current) : 0;
 
     const riskPerDirectionUp = risksPerAssetAndDirection?.filter(
         (risk) => risk.currency === asset && risk.position === Positions.UP
@@ -290,7 +294,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             <TooltipInfo
                                 overlay={
                                     <Trans
-                                        i18nKey="speed-markets.tooltips.liquidity"
+                                        i18nKey={
+                                            chainedRisk
+                                                ? 'speed-markets.chained.tooltips.liquidity'
+                                                : 'speed-markets.tooltips.liquidity'
+                                        }
                                         components={{
                                             br: <br />,
                                         }}

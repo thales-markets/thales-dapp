@@ -34,6 +34,8 @@
         "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>.",
         "on": "on",
         "in": "in",
+        "starting": "starting",
+        "with": "with",
         "above": "Above",
         "below": "Below",
         "between": "Between",
@@ -498,7 +500,13 @@
             "label": "Chained",
             "add-directions": "Click + to add directions",
             "roi": "ROI: {{value}}",
-            "clear-all": "Clear all"
+            "clear-all": "Clear all",
+            "asset-price": "If {{asset}} price sequence follows",
+            "between-rounds": "between rounds",
+            "errors": {
+                "choose-directions": "Choose all directions"
+            },
+            "tooltips": { "liquidity": "Current available liquidity for all Assets" }
         }
     },
     "thales-token": {
