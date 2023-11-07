@@ -18,19 +18,14 @@ import {
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
-import {
-    calculatePercentageChange,
-    formatCurrencyWithPrecision,
-    formatCurrencyWithSign,
-    formatPricePercentageGrowth,
-} from 'utils/formatters/number';
+import { formatCurrencyWithPrecision, formatCurrencyWithSign, bigNumberFormatter, bytesFormatter } from 'thales-utils';
+import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import Toggle from './components/DateToggle';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import TooltipInfo from 'components/Tooltip';
 import { Trans, useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';

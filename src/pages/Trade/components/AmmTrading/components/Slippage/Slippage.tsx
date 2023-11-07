@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
-import { countDecimals } from 'utils/formatters/number';
+import { countDecimals } from 'thales-utils';
 import NumericInput from 'components/fields/NumericInput';
 
 type SlippageProps = {

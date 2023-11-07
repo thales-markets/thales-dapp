@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionsMarketInfo } from 'types/options';
-import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
 import { SIDE } from 'constants/options';
 import { getPhaseAndEndDate } from 'utils/options';
 import { getSynthAsset } from 'utils/currency';

@@ -31,7 +31,7 @@ import { delay } from 'utils/timer';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import { UserLivePositions } from 'types/options';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
-import { truncToDecimals } from 'utils/formatters/number';
+import { truncToDecimals } from 'thales-utils';
 import useInterval from 'hooks/useInterval';
 
 const SECTIONS = {

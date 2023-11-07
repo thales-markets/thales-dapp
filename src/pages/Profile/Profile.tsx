@@ -22,7 +22,7 @@ import {
     StatsValue,
     Title,
 } from './styled-components';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';

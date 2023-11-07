@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
-import { formatShortDateWithTime } from 'utils/formatters/date';
+import { formatShortDateWithTime } from 'thales-utils';
 
 type AssetDropdownProps = {
     date: number | undefined;

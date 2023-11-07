@@ -14,7 +14,7 @@ import { FlexDivColumnCentered } from 'styles/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
-import { isMetamask, isFirefox, isIos } from 'utils/device';
+import { isMetamask, isFirefox, isIos } from 'thales-utils';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';

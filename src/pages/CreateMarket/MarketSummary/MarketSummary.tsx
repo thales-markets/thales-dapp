@@ -16,7 +16,7 @@ import {
 } from 'styles/common';
 import { CurrencyKeyOptionType } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'thales-utils';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;

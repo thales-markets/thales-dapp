@@ -10,12 +10,16 @@ import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade, Trades }
 import { ThemeInterface } from 'types/ui';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatHoursAndMinutesFromTimestamp, formatShortDate, formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrency } from 'utils/formatters/number';
+import {
+    formatHoursAndMinutesFromTimestamp,
+    formatShortDate,
+    formatShortDateWithTime,
+    formatCurrency,
+    getEtherscanTxLink,
+} from 'thales-utils';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
 import { ArrowLink, getAmount } from '../styled-components';
-import { getEtherscanTxLink } from 'utils/etherscan';
 import { getIsMobile } from 'redux/modules/ui';
 import { TradeWithMarket } from 'types/profile';
 import useTradesQuery from 'queries/profile/useTradesQuery';

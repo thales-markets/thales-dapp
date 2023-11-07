@@ -1,11 +1,4 @@
-export enum Network {
-    Mainnet = 1,
-    OptimismMainnet = 10,
-    PolygonMainnet = 137,
-    OptimismGoerli = 420,
-    Base = 8453,
-    Arbitrum = 42161,
-}
+export { NetworkId as Network } from 'thales-utils';
 
 export enum OneInchLiquidityProtocol {
     UNISWAP = 'OPTIMISM_UNISWAP_V3',

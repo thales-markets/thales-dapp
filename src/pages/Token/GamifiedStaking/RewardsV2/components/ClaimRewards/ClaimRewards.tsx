@@ -6,7 +6,7 @@ import Button from 'components/Button/Button';
 
 import { THALES_CURRENCY } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import { useSelector } from 'react-redux';

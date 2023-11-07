@@ -16,7 +16,7 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'thales-utils';
 
 import { Line } from '../../styled-components';
 import Stake from './Stake';

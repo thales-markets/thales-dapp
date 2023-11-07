@@ -27,7 +27,7 @@ import {
     getDefaultStableIndexByBalance,
     getCoinBalance,
 } from 'utils/currency';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 import { getIsMultiCollateralSupported } from 'utils/network';
 import Swap from 'components/Swap';
 import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';

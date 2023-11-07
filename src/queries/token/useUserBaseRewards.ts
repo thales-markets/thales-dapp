@@ -1,9 +1,8 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, formatCurrencyWithKey, formatPercentage } from 'thales-utils';
 import { BALANCE_THRESHOLD } from 'constants/token';
-import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { Network } from 'enums/network';
 

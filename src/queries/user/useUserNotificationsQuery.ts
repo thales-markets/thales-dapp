@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { Network } from 'enums/network';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
