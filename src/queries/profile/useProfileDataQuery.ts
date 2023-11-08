@@ -1,13 +1,13 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { BATCH_NUMBER_OF_SPEED_MARKETS, SPEED_MARKETS_QUOTE } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
-import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
-import { SPEED_MARKETS_QUOTE } from 'constants/options';
+import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
-import { secondsToMilliseconds } from 'date-fns';
 
 const useProfileDataQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<UserProfileData>) => {
     return useQuery<UserProfileData>(
@@ -57,12 +57,16 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     speedMarketsAMMContract.activeMarketsPerUser(0, ammParams.numActiveMarketsPerUser, walletAddress),
                     speedMarketsAMMContract.maturedMarketsPerUser(0, ammParams.numMaturedMarketsPerUser, walletAddress),
                 ]);
-                const [activeSpeedMarketsData, maturedSpeedMarketsData] = await Promise.all([
-                    speedMarketsDataContract.getMarketsData(activeSpeedMarkets),
-                    speedMarketsDataContract.getMarketsData(maturedSpeedMarkets),
-                ]);
 
-                activeSpeedMarketsData.concat(maturedSpeedMarketsData).forEach((marketData: any) => {
+                const promises = [speedMarketsDataContract.getMarketsData(activeSpeedMarkets)];
+                for (let i = 0; i < Math.ceil(maturedSpeedMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
+                    const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
+                    const batchMarkets = maturedSpeedMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    promises.push(speedMarketsDataContract.getMarketsData(batchMarkets));
+                }
+                const allSpeedMarkets = await Promise.all(promises);
+
+                allSpeedMarkets.flat().forEach((marketData: any) => {
                     const createdAt = !marketData.createdAt.isZero()
                         ? secondsToMilliseconds(Number(marketData.createdAt))
                         : secondsToMilliseconds(Number(marketData.strikeTime));

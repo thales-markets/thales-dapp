@@ -1,5 +1,11 @@
 import { generalConfig } from 'config/general';
-import { MIN_MATURITY, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
+import {
+    BATCH_NUMBER_OF_SPEED_MARKETS,
+    MAX_NUMBER_OF_SPEED_MARKETS_TO_FETCH,
+    MIN_MATURITY,
+    SIDE,
+    SPEED_MARKETS_QUOTE,
+} from 'constants/options';
 import { PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
 import { secondsToMilliseconds } from 'date-fns';
@@ -27,14 +33,24 @@ const useUserSpeedMarketsTransactionsQuery = (
             if (speedMarketsAMMContract && speedMarketsDataContract) {
                 const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress);
 
+                const pageSize = Math.min(ammParams.numMaturedMarketsPerUser, MAX_NUMBER_OF_SPEED_MARKETS_TO_FETCH);
+                const index = Number(ammParams.numMaturedMarketsPerUser) - pageSize;
                 const [activeMarkets, maturedMarkets] = await Promise.all([
                     speedMarketsAMMContract.activeMarketsPerUser(0, ammParams.numActiveMarketsPerUser, walletAddress),
-                    speedMarketsAMMContract.maturedMarketsPerUser(0, ammParams.numMaturedMarketsPerUser, walletAddress),
+                    speedMarketsAMMContract.maturedMarketsPerUser(index, pageSize, walletAddress),
                 ]);
                 const allMarkets: any[] = activeMarkets.concat(maturedMarkets);
 
-                const allMarketsDataArray = await speedMarketsDataContract.getMarketsData(allMarkets);
+                const promises = [];
+                for (let i = 0; i < Math.ceil(allMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
+                    const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
+                    const batchMarkets = allMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    promises.push(speedMarketsDataContract.getMarketsData(batchMarkets));
+                }
+                const allMarketsDataArray = await Promise.all(promises);
+
                 const filteredMarketsData = allMarketsDataArray
+                    .flat()
                     .map((marketData: any, index: number) => ({
                         ...marketData,
                         market: allMarkets[index],

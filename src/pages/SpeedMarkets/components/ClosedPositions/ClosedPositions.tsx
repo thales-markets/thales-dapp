@@ -30,7 +30,7 @@ const ClosedPositions: React.FC = () => {
         () =>
             userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
                 ? userResolvedSpeedMarketsDataQuery.data
-                      .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
+                      .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
                 : [],
         [userResolvedSpeedMarketsDataQuery]
