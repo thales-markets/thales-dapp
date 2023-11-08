@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { parseBytes32String } from 'utils/formatters/ethers';
+import { parseBytes32String } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'enums/network';
 import { SynthsMap } from 'types/synthetix';

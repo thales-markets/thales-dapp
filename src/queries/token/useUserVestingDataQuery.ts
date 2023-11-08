@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { UserVestingData, VestingSchedule } from 'types/token';
 import { Network } from 'enums/network';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
 import addWeeks from 'date-fns/addWeeks';
 import getTime from 'date-fns/getTime';

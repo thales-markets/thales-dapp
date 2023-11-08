@@ -13,4 +13,5 @@ export const generalConfig = {
         [Network.Mainnet]: 'https://api.etherscan.io/',
     },
     PYTH_BENCHMARKS_API_URL: 'https://benchmarks.pyth.network/v1/updates/price/',
+    CELER_BRIDGE_URL: 'https://cbridge-prod2.celer.app',
 };

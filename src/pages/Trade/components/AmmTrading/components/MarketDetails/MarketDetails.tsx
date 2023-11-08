@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
 import { getSynthName } from 'utils/currency';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDateWithTime, formatCurrencyWithSign } from 'thales-utils';
 import { DetailsRow, TextLabel, TextValue } from '../../styled-components';
 
 type MarketDetailsProps = {

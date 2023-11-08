@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ClaimMessage, EarnSection, SectionContentContainer } from '../../styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
 import { useTranslation } from 'react-i18next';
@@ -127,6 +127,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                 setIsAllowingStake(false);
             }
         } catch (e) {

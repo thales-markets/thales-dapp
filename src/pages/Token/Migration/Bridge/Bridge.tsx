@@ -12,7 +12,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -107,6 +107,7 @@ const Bridge: React.FC = () => {
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                     setIsAllowing(false);
                 }
             } catch (e) {

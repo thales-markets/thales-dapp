@@ -64,11 +64,6 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
     }
 };
 
-export const getDefaultDecimalsForNetwork = (networkId: Network) => {
-    if ([Network.Arbitrum, Network.PolygonMainnet, Network.Base].includes(networkId)) return 6;
-    return 18;
-};
-
 const changeNetwork = async (network?: NetworkParams, callback?: VoidFunction, chainId?: string): Promise<void> => {
     if (hasEthereumInjected()) {
         try {
@@ -256,3 +251,6 @@ export const getIsStakingSupported = (networkId: Network): boolean =>
 
 export const getIsLpStakingSupported = (networkId: Network): boolean =>
     [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);
+
+export const getIsBridgeSupported = (networkId: Network): boolean =>
+    [Network.OptimismMainnet, Network.Arbitrum, Network.Base].includes(networkId);

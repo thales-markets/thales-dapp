@@ -20,7 +20,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ClaimMessage, EarnSection, SectionContentContainer } from '../../../styled-components';

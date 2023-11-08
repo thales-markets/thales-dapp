@@ -2,7 +2,7 @@ import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'thales-utils';
 
 type CurrentPriceProps = {
     asset: string;

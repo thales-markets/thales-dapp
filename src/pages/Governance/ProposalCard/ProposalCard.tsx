@@ -7,7 +7,7 @@ import { useTheme } from 'styled-components';
 import { FlexDivRowCentered } from 'styles/common';
 import { Proposal } from 'types/governance';
 import { ThemeInterface } from 'types/ui';
-import { truncateText } from 'utils/formatters/string';
+import { truncateText } from 'thales-utils';
 import { Body, Card, CardContainer, Result, ResultContainer, RightSection, Status, Title } from './styled-components';
 
 type ProposalCardProps = {

@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import NumericInput from 'components/fields/NumericInput';
 import { InputContainer } from 'pages/Token/components/styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';

@@ -9,9 +9,13 @@ import useBinaryOptionsUserTradesQuery from 'queries/options/useBinaryOptionsUse
 import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { orderBy } from 'lodash';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatHoursAndMinutesFromTimestamp,
+    formatShortDate,
+} from 'thales-utils';
 import { USD_SIGN } from 'constants/currency';
-import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';

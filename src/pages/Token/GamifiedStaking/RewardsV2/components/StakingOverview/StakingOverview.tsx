@@ -10,7 +10,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentage } from 'thales-utils';
 import { navigateTo } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 

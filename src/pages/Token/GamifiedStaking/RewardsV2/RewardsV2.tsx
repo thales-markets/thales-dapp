@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrency } from 'utils/formatters/number';
+import { formatCurrency } from 'thales-utils';
 import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters/TransactionsWithFilters';
 import { TransactionFilterEnum } from 'enums/token';
 

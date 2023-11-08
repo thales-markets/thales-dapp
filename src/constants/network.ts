@@ -124,3 +124,5 @@ export const base = {
         },
     },
 } as Chain;
+
+export const BRIDGE_SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.Arbitrum, Network.Base];

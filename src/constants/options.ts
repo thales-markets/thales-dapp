@@ -52,3 +52,5 @@ export const MIN_MATURITY = Math.round(
     new Date(new Date().setDate(TODAY.getDate() - MARKET_DURATION_IN_DAYS)).getTime() / 1000
 ); // show history for 90 days in the past
 export const MAX_MATURITY = Math.round(Number(TODAY.getTime() / 1000)); // show history until today
+
+export const BRIDGE_SLIPPAGE_PERCENTAGE = [0.3, 0.5, 1];

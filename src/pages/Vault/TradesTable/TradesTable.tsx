@@ -1,11 +1,10 @@
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
+import { formatShortDate, formatTxTimestamp, formatCurrency } from 'thales-utils';
 import Table from 'components/TableV2';
 import { buildOptionsMarketLink } from 'utils/routes';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
 import styled, { useTheme } from 'styled-components';

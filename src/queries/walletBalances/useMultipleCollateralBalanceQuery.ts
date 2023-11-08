@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import { Coins } from 'types/options';
 
 const useMultipleCollateralBalanceQuery = (
