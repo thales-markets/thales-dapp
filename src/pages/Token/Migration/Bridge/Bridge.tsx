@@ -107,6 +107,7 @@ const Bridge: React.FC = () => {
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                     setIsAllowing(false);
                 }
             } catch (e) {

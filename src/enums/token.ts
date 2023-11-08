@@ -3,6 +3,7 @@ export enum TokenTabEnum {
     LP_STAKING = 'lp-staking',
     MIGRATION = 'migration',
     STRATEGIC_INVESTORS = 'strategic-investors',
+    BRIDGE = 'bridge',
 }
 
 export enum TokenTabSectionIdEnum {
@@ -12,6 +13,7 @@ export enum TokenTabSectionIdEnum {
     VESTING = 'vesting',
     MERGE_ACCOUNT = 'account-preferences',
     LP_STAKING = 'lp-staking',
+    BRIDGE = 'bridge',
 }
 
 export enum TransactionFilterEnum {

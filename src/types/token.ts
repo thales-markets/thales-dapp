@@ -1,5 +1,6 @@
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'enums/token';
 import { ReactElement } from 'react';
+import { TransferHistoryStatus } from 'ts-proto/sgn/cbridge/v1/query_pb';
 
 export type VestingInfo = {
     startTime: number;
@@ -132,3 +133,21 @@ export type UserStakingData = {
     unstakeDurationPeriod: number;
     mergeAccountEnabled: boolean;
 };
+
+export type CelerBridgeData = {
+    transferLatencyInMinutes: number;
+};
+
+export type CelerBridgeTransaction = {
+    transferId: string;
+    timestamp: number;
+    srcChainId?: number;
+    srcAmount?: number;
+    srcTx?: string;
+    dstChainId?: number;
+    dstAmount?: number;
+    dstTx?: string;
+    status: TransferHistoryStatus;
+};
+
+export type CelerBridgeHistory = CelerBridgeTransaction[];

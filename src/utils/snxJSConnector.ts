@@ -27,6 +27,7 @@ import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusR
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
+import celerBridgeContract from './contracts/celerBridgeContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -59,6 +60,7 @@ type SnxJSConnector = {
     speedMarketsAMMContract?: ethers.Contract;
     speedMarketsDataContract?: ethers.Contract;
     stakingBonusRewardsManager?: ethers.Contract;
+    celerBridgeContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -118,6 +120,7 @@ const snxJSConnector: SnxJSConnector = {
         this.speedMarketsAMMContract = conditionalInitializeContract(speedMarketsAMMContract, contractSettings);
         this.speedMarketsDataContract = conditionalInitializeContract(speedMarketsDataContract, contractSettings);
         this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
+        this.celerBridgeContract = conditionalInitializeContract(celerBridgeContract, contractSettings);
     },
 };
 

@@ -1,103 +1,197 @@
-import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_PARAMS } from 'constants/network';
-import { ScreenSizeBreakpoint } from 'enums/ui';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
+import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
+import { DEFAULT_NETWORK } from 'constants/network';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
+import { useSwitchNetwork } from 'wagmi';
 
-const NetworkSwitch: React.FC = () => {
-    const { t } = useTranslation();
+type NetworkSwitchProps = {
+    selectedNetworkId?: number;
+    setSelectedNetworkId?: any;
+    supportedNetworks?: number[];
+    forceNetworkSwitch?: boolean;
+};
+
+const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
+    selectedNetworkId,
+    setSelectedNetworkId,
+    supportedNetworks,
+    forceNetworkSwitch,
+}) => {
+    const { switchNetwork } = useSwitchNetwork();
+    const dispatch = useDispatch();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const switchOrAddOptimismNetwork = async () => {
-        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network.OptimismMainnet;
-        const optimismNetworkParms = SUPPORTED_NETWORKS_PARAMS[switchTo];
+    const filteredSupportedNetworks: Record<number, any> = useMemo(
+        () =>
+            supportedNetworks
+                ? Object.keys(SUPPORTED_NETWORK_IDS_MAP)
+                      .filter((key) => supportedNetworks.includes(Number(key)))
+                      .reduce((obj, key) => {
+                          return Object.assign(obj, {
+                              [key]: SUPPORTED_NETWORK_IDS_MAP[Number(key)],
+                          });
+                      }, {})
+                : SUPPORTED_NETWORK_IDS_MAP,
+        [supportedNetworks]
+    );
 
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                await (window.ethereum as any).request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: optimismNetworkParms.chainId }],
-                });
-            } catch (switchError: any) {
-                if (switchError.code === 4902) {
-                    try {
-                        await (window.ethereum as any).request({
-                            method: 'wallet_addEthereumChain',
-                            params: [optimismNetworkParms],
-                        });
-                        await (window.ethereum as any).request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: optimismNetworkParms.chainId }],
-                        });
-                    } catch (addError) {
-                        console.log(addError);
-                    }
-                } else {
-                    console.log(switchError);
-                }
-            }
-        }
-    };
+    // TODO: add support for testnets
+    const selectedNetwork = useMemo(
+        () =>
+            filteredSupportedNetworks[selectedNetworkId || networkId] ||
+            filteredSupportedNetworks[DEFAULT_NETWORK.networkId],
+        [networkId, selectedNetworkId, filteredSupportedNetworks]
+    );
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const isLedgerLive = isLedgerDappBrowserProvider();
+
+    // currently not supported network synchronization between browser without integrated wallet and wallet app on mobile
+    const hideNetworkSwitcher =
+        isMobile &&
+        !window.ethereum?.isMetaMask &&
+        !window.ethereum?.isBraveWallet &&
+        !window.ethereum?.isCoinbaseWallet &&
+        !window.ethereum?.isTrust &&
+        !forceNetworkSwitch;
 
     return (
-        <FlexDivRowCentered>
-            <Container>
-                <OptimismButton onClick={switchOrAddOptimismNetwork}>
-                    <InnerButton>
-                        <FlexDiv>{t('common.switch-to-l2')}</FlexDiv>
-                    </InnerButton>
-                </OptimismButton>
-            </Container>
-        </FlexDivRowCentered>
+        <NetworkInfoContainer>
+            <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
+                <SelectedNetworkContainer cursor={isLedgerLive ? 'initial' : 'pointer'}>
+                    <NetworkItem
+                        selectedItem={true}
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen && !isLedgerLive)}
+                        noHover
+                    >
+                        {React.createElement(selectedNetwork.icon, {
+                            style: { marginRight: 5 },
+                        })}
+                        {selectedNetwork.name}
+                        {!hideNetworkSwitcher && (
+                            <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                        )}
+                    </NetworkItem>
+                    {!hideNetworkSwitcher && isDropdownOpen && (
+                        <NetworkDropDown>
+                            {Object.keys(filteredSupportedNetworks)
+                                .map((key) => {
+                                    return { id: Number(key), ...filteredSupportedNetworks[Number(key)] };
+                                })
+                                .sort((a, b) => a.order - b.order)
+                                .map((network, index) => (
+                                    <NetworkItem
+                                        key={index}
+                                        onClick={async () => {
+                                            setIsDropdownOpen(!isDropdownOpen);
+                                            if (setSelectedNetworkId) {
+                                                setSelectedNetworkId(Number(network.id));
+                                            } else {
+                                                await filteredSupportedNetworks[network.id].changeNetwork(
+                                                    network.id,
+                                                    () => {
+                                                        switchNetwork?.(network.id);
+                                                        // Trigger App.js init
+                                                        // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
+                                                        dispatch(
+                                                            switchToNetworkId({
+                                                                networkId: Number(network.id) as Network,
+                                                            })
+                                                        );
+                                                    }
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        {React.createElement(filteredSupportedNetworks[network.id].icon, {
+                                            height: '18px',
+                                            width: '18px',
+                                            style: { marginRight: 5 },
+                                        })}
+                                        {filteredSupportedNetworks[network.id].name}
+                                    </NetworkItem>
+                                ))}
+                        </NetworkDropDown>
+                    )}
+                </SelectedNetworkContainer>
+            </OutsideClickHandler>
+        </NetworkInfoContainer>
     );
 };
 
-const Container = styled(FlexDivColumnCentered)`
-    width: 170px;
-    margin-right: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        width: 100%;
-        margin-bottom: 20px;
-        margin-right: 0px;
-    }
-`;
-
-const OptimismButton = styled.button`
+const NetworkInfoContainer = styled.div`
     position: relative;
-    width: 170px;
-    height: 40px;
-    border: none;
-    background: ${(props) => props.theme.button.background.primary};
-    padding: 1px;
-    border-radius: 23px;
-    color: ${(props) => props.theme.button.textColor.primary};
-    path {
-        fill: ${(props) => props.theme.button.textColor.primary};
-    }
-    &:hover {
-        cursor: pointer;
-    }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const NetworkDropDown = styled.div`
+    z-index: 9999;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background: ${(props) => props.theme.background.secondary};
+    width: 130px;
+    max-width: 130px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    @media (max-width: 500px) {
+        width: 110px;
     }
 `;
 
-const InnerButton = styled(FlexDivRowCentered)`
-    background: ${(props) => props.theme.button.background.primary};
-    border-radius: 23px;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    height: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
+const SelectedNetworkContainer = styled.div<{ cursor: string }>`
+    display: flex;
+    align-items: center;
     justify-content: center;
+    max-width: 130px;
+    width: 130px;
+    color: ${(props) => props.theme.textColor.primary};
+    cursor: ${(props) => props.cursor};
+    flex-direction: column;
+    z-index: 1;
+    @media (max-width: 500px) {
+        width: 110px;
+    }
+`;
+
+const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: ${(props) => (props.selectedItem ? '4px 13px' : '6px')};
+    font-size: 13px;
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => (props.noHover ? '' : props.theme.background.primary)};
+    }
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+    @media (max-width: 500px) {
+        ${(props) => (props.selectedItem ? 'padding: 4px 7px' : '')}
+    }
+`;
+
+const Icon = styled.i`
+    margin-left: auto;
+    font-size: 10px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default NetworkSwitch;
