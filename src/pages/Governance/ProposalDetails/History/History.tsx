@@ -3,7 +3,7 @@ import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { Proposal, ProposalResults } from 'types/governance';
 import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';
-import { truncateAddress, truncateText } from 'utils/formatters/string';
+import { truncateAddress, truncateText, getEtherscanAddressLink } from 'thales-utils';
 import {
     Blockie,
     Percentage,
@@ -14,7 +14,6 @@ import {
     ViewMore,
 } from 'pages/Governance/styled-components';
 import makeBlockie from 'ethereum-blockies-base64';
-import { getEtherscanAddressLink } from 'utils/etherscan';
 import { Network } from 'enums/network';
 import { FIRST_COUNCIL_ELECTIONS_ID } from 'constants/governance';
 import { useTranslation } from 'react-i18next';

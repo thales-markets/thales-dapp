@@ -2,7 +2,7 @@ import { isNumber } from 'lodash';
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, YAxis, CartesianGrid, XAxis, Tooltip } from 'recharts';
 import format from 'date-fns/format';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'thales-utils';
 import { USD_SIGN } from 'constants/currency';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';

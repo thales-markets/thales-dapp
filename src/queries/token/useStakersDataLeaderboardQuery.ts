@@ -5,8 +5,7 @@ import { orderBy } from 'lodash';
 import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
 import { Staker, Stakers } from 'types/governance';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { bigNumberFormatter, formatCurrencyWithKey } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type StakerContractLeaderboardData = {

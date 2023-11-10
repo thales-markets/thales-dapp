@@ -5,7 +5,7 @@ import { Network } from 'enums/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 

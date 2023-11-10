@@ -36,7 +36,7 @@ import {
     getTokenForSwap,
     mapTokenByNetwork,
 } from './tokens';
-import { truncToDecimals } from 'utils/formatters/number';
+import { truncToDecimals } from 'thales-utils';
 import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {

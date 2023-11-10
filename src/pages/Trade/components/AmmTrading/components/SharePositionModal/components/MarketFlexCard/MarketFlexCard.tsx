@@ -14,8 +14,7 @@ import { useSelector } from 'react-redux';
 import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDateWithTime, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({

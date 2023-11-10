@@ -24,7 +24,6 @@ import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
-import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
@@ -56,15 +55,16 @@ import {
     getDefaultStableIndexByBalance,
     isStableCurrency,
 } from 'utils/currency';
-import { coinParser } from 'utils/formatters/ethers';
 import {
+    coinParser,
     formatCurrency,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     formatPercentage,
     roundNumberToDecimals,
     truncToDecimals,
-} from 'utils/formatters/number';
+} from 'thales-utils';
+import useInterval from 'hooks/useInterval';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
@@ -73,7 +73,7 @@ import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm
 import { delay } from 'utils/timer';
 import { getReferralWallet } from 'utils/referral';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import useInterval from 'hooks/useInterval';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { SelectedPosition } from '../SelectPosition/SelectPosition';
 
 type AmmSpeedTradingProps = {

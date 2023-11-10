@@ -2,8 +2,8 @@ import { ZERO_ADDRESS } from 'constants/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { UseQueryOptions, useQuery } from 'react-query';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits } from 'types/options';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 1;

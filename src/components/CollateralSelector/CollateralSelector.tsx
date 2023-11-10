@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { FlexDivSpaceBetween, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
 import { Coins } from 'types/options';
 import { isStableCurrency } from 'utils/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'thales-utils';
 
 type CollateralSelectorProps = {
     collateralArray: Array<string>;

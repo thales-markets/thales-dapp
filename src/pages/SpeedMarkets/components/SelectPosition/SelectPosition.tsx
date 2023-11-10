@@ -3,8 +3,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { roundNumberToDecimals } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits } from 'types/options';
-import { roundNumberToDecimals } from 'utils/formatters/number';
 
 export type SelectedPosition = Positions.UP | Positions.DOWN | undefined;
 

@@ -10,8 +10,7 @@ import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQ
 import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
 import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
-import { formatTxTimestamp } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatTxTimestamp, formatCurrency, formatCurrencyWithKey } from 'thales-utils';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';

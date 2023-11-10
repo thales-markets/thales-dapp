@@ -12,7 +12,7 @@ import { Network } from 'enums/network';
 import { UseQueryOptions, useQuery } from 'react-query';
 import { OptionSide } from 'types/options';
 import { TradeWithMarket } from 'types/profile';
-import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 

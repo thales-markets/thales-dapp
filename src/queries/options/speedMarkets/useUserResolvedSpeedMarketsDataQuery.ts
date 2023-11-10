@@ -14,8 +14,7 @@ import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { OptionSide, UserClosedPositions } from 'types/options';
-import { bigNumberFormatter, parseBytes32String, coinFormatter } from 'utils/formatters/ethers';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { bigNumberFormatter, parseBytes32String, coinFormatter, formatCurrencyWithSign } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 

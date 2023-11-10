@@ -1,8 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatCurrency } from 'utils/formatters/number';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { formatCurrency, bigNumberFormatter } from 'thales-utils';
 
 const LP_STAKING_WEEKLY_REWARDS = 20000;
 const LP_STAKING_WEEKLY_SECOND_REWARDS = 2000;

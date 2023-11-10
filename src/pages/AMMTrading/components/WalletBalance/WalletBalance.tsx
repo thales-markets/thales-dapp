@@ -16,7 +16,7 @@ import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { AccountMarketInfo, RangedMarketBalanceInfo } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getCollateral, getDefaultCollateral, getCoinBalance } from 'utils/currency';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 
 type WalletBalanceProps = {
     isRangedMarket: boolean;

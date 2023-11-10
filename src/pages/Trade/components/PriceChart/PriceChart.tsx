@@ -25,15 +25,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { bigNumberFormatter, bytesFormatter, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'thales-utils';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
-import {
-    calculatePercentageChange,
-    formatCurrencyWithPrecision,
-    formatCurrencyWithSign,
-    formatPricePercentageGrowth,
-} from 'utils/formatters/number';
+import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';

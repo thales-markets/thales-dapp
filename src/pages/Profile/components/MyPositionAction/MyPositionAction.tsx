@@ -41,9 +41,14 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { coinFormatter, coinParser } from 'utils/formatters/ethers';
-import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { checkAllowance, getDefaultDecimalsForNetwork, getIsMultiCollateralSupported } from 'utils/network';
+import {
+    coinFormatter,
+    coinParser,
+    formatCurrencyWithSign,
+    roundNumberToDecimals,
+    getDefaultDecimalsForNetwork,
+} from 'thales-utils';
+import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,

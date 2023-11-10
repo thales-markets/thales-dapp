@@ -6,8 +6,8 @@ import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { UseQueryOptions, useQuery } from 'react-query';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { ChainedSpeedMarket, OptionSide } from 'types/options';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useUserActiveChainedSpeedMarketsDataQuery = (
