@@ -7,7 +7,7 @@ import {
 } from 'constants/options';
 import { PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
-import { secondsToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { UseQueryOptions, useQuery } from 'react-query';
 import { OptionSide } from 'types/options';
@@ -62,7 +62,7 @@ const useUserSpeedMarketsTransactionsQuery = (
 
                     const createdAt = !marketData.createdAt.isZero()
                         ? secondsToMilliseconds(Number(marketData.createdAt))
-                        : secondsToMilliseconds(Number(marketData.strikeTime));
+                        : secondsToMilliseconds(Number(marketData.strikeTime)) - hoursToMilliseconds(1);
                     const lpFee = !marketData.lpFee.isZero()
                         ? bigNumberFormatter(marketData.lpFee)
                         : getFeesFromHistory(createdAt).lpFee;

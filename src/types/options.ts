@@ -283,3 +283,19 @@ export type SpeedMarket = {
     finalPrice?: number;
     isSpeedMarket: boolean;
 };
+
+export type ChainedSpeedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: string;
+    sides: (Positions.UP | Positions.DOWN)[];
+    strikePrices: number[];
+    strikeTimes: number[];
+    maturityDate: number;
+    amount: number;
+    paid: number;
+    finalPrices: number[];
+    isOpen: boolean;
+    canResolve: boolean;
+    claimable: boolean;
+};

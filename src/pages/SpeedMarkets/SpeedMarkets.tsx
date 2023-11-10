@@ -16,10 +16,11 @@ import OpenPositions from 'pages/Trade/components/OpenPositions';
 import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -27,7 +28,7 @@ import styled, { useTheme } from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { buildHref } from 'utils/routes';
+import { buildHref, history } from 'utils/routes';
 import AmmSpeedTrading from './components/AmmSpeedTrading';
 import ClosedPositions from './components/ClosedPositions';
 import SelectBuyin from './components/SelectBuyin';
@@ -37,15 +38,16 @@ import SelectTime from './components/SelectTime';
 
 const CHAINED_TIME_FRAME_MINUTES = 10;
 
-const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
+const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
+    const location = useLocation();
     const theme: ThemeInterface = useTheme();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const isChainedMarkets = props.location?.pathname.includes(ROUTES.Options.ChainedSpeedMarkets);
+    const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
 
     const [isChained, setIsChained] = useState(isChainedMarkets);
     const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
@@ -69,7 +71,7 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
     }, [ammSpeedMarketsLimitsQuery]);
 
     const ammChainedSpeedMarketsLimitsQuery = useAmmChainedSpeedMarketsLimitsQuery(networkId, undefined, {
-        enabled: isAppReady,
+        enabled: isAppReady && isChained,
     });
 
     const ammChainedSpeedMarketsLimitsData = useMemo(() => {
@@ -242,7 +244,15 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                                     firstLabelColor: isChained ? undefined : theme.textColor.quaternary,
                                     secondLabelColor: isChained ? theme.textColor.quaternary : undefined,
                                 }}
-                                handleClick={() => setIsChained(!isChained)}
+                                handleClick={() => {
+                                    setIsChained(!isChained);
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            isChained: !isChained,
+                                        }),
+                                    });
+                                }}
                             />
                             {/* Asset */}
                             {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
@@ -305,14 +315,19 @@ const SpeedMarkets: React.FC<RouteComponentProps> = (props) => {
                         <>
                             <OpenPositions
                                 isSpeedMarkets
+                                isChainedSpeedMarkets={isChained}
                                 maxPriceDelayForResolvingSec={ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec}
                                 currentPrices={currentPrices}
                             />
-                            <ClosedPositions />
+                            <ClosedPositions isChained={isChained} />
                         </>
                     )}
                     <OverviewLinkWrapper>
-                        <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}`)}>
+                        <SPAAnchor
+                            href={buildHref(
+                                `${ROUTES.Options.SpeedMarketsOverview}${isChained ? '?isChained=true' : ''}`
+                            )}
+                        >
                             <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
                             <ArrowRight className="icon icon--arrow" />
                         </SPAAnchor>

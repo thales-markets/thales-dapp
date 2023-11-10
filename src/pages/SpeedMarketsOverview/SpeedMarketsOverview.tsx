@@ -1,26 +1,26 @@
 import SPAAnchor from 'components/SPAAnchor';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import queryString from 'query-string';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { RouteComponentProps } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { FlexDivStart } from 'styles/common';
 import { buildHref } from 'utils/routes';
 import UnresolvedPositions from './components/UnresolvedPositions';
 
-const SpeedMarketsOverview: React.FC<RouteComponentProps> = (props) => {
+const SpeedMarketsOverview: React.FC = () => {
     const { t } = useTranslation();
+    const location = useLocation();
 
-    const isChainedMarkets = props.location?.pathname.includes(ROUTES.Options.ChainedSpeedMarkets);
+    const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
 
     return (
         <Container>
             <Header>
                 <SPAAnchor
-                    href={buildHref(
-                        isChainedMarkets ? ROUTES.Options.ChainedSpeedMarkets : ROUTES.Options.SpeedMarkets
-                    )}
+                    href={`${buildHref(ROUTES.Options.SpeedMarkets)}${isChainedMarkets ? '?isChained=true' : ''}`}
                 >
                     <BackLinkContainer>
                         <BackIcon className={`icon icon--left`} />

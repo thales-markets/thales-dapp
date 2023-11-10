@@ -167,9 +167,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         ROUTES.Options.Profile,
         ROUTES.Options.CreateMarket,
         ROUTES.Options.SpeedMarkets,
-        ROUTES.Options.ChainedSpeedMarkets,
-        ROUTES.Options.SpeedMarketsOverview,
-        ROUTES.Options.ChainedSpeedMarketsOverview):
+        ROUTES.Options.SpeedMarketsOverview):
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,

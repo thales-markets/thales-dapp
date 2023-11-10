@@ -14,7 +14,7 @@ import { UserClosedPositions } from 'types/options';
 import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
 import ClosedPosition from '../ClosedPosition';
 
-const ClosedPositions: React.FC = () => {
+const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -23,17 +23,19 @@ const ClosedPositions: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const userResolvedSpeedMarketsDataQuery = useUserResolvedSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isChained,
     });
 
     const lastTenUserResolvedPositions = useMemo(
         () =>
-            userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
+            isChained
+                ? []
+                : userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
                 ? userResolvedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
                 : [],
-        [userResolvedSpeedMarketsDataQuery]
+        [isChained, userResolvedSpeedMarketsDataQuery]
     );
 
     const noPositions = lastTenUserResolvedPositions.length === 0;

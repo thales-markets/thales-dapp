@@ -3,6 +3,9 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import ChainedOpenPosition from 'pages/SpeedMarkets/components/ChainedOpenPosition';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,18 +15,19 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { UserLivePositions } from 'types/options';
+import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
+    isChainedSpeedMarkets?: boolean;
     maxPriceDelayForResolvingSec?: number;
     currentPrices?: { [key: string]: number };
 };
 
 const OpenPositions: React.FC<OpenPositionsProps> = ({
     isSpeedMarkets,
+    isChainedSpeedMarkets,
     maxPriceDelayForResolvingSec,
     currentPrices,
 }) => {
@@ -43,7 +47,10 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     ]);
 
     const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+        enabled: isAppReady && isWalletConnected && !!isSpeedMarkets && !isChainedSpeedMarkets,
+    });
+    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !!isChainedSpeedMarkets,
     });
 
     const userOpenSpeedMarketsData = useMemo(
@@ -53,30 +60,57 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 : [],
         [userActiveSpeedMarketsDataQuery]
     );
+    const userOpenChainedSpeedMarketsData = useMemo(
+        () =>
+            userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
+                ? userActiveChainedSpeedMarketsDataQuery.data
+                : [],
+        [userActiveChainedSpeedMarketsDataQuery]
+    );
 
-    const noPositions = isSpeedMarkets ? userOpenSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const noPositions = isSpeedMarkets
+        ? isChainedSpeedMarkets
+            ? userOpenChainedSpeedMarketsData.length === 0
+            : userOpenSpeedMarketsData.length === 0
+        : livePositions.length === 0;
+
     const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
+    const chainedPositions = noPositions ? dummyChainedPositions : userOpenChainedSpeedMarketsData;
+
+    const isLoading =
+        positionsQuery.isLoading ||
+        userActiveSpeedMarketsDataQuery.isLoading ||
+        userActiveChainedSpeedMarketsDataQuery.isLoading;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-positions')}</Title>
-            {userActiveSpeedMarketsDataQuery.isLoading || positionsQuery.isLoading ? (
+            {isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {positions
-                            .sort((a, b) => a.maturityDate - b.maturityDate)
-                            .map((position, index) => (
-                                <OpenPosition
-                                    position={position}
-                                    key={`position${position.market}${position.positionAddress}${index}`}
-                                    maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                                    currentPrices={currentPrices}
-                                />
-                            ))}
+                        {isChainedSpeedMarkets
+                            ? chainedPositions
+                                  .sort((a, b) => a.maturityDate - b.maturityDate)
+                                  .map((position, index) => (
+                                      <ChainedOpenPosition
+                                          position={position}
+                                          key={`position${position.address}${index}`}
+                                      />
+                                  ))
+                            : positions
+                                  .sort((a, b) => a.maturityDate - b.maturityDate)
+                                  .map((position, index) => (
+                                      <OpenPosition
+                                          position={position}
+                                          key={`position${position.market}${position.positionAddress}${index}`}
+                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                          currentPrices={currentPrices}
+                                      />
+                                  ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>
@@ -113,6 +147,21 @@ const dummyPositions: UserLivePositions[] = [
         isSpeedMarket: false,
     },
 ];
+const dummyChainedPositions: ChainedSpeedMarket[] = Array(2).fill({
+    address: ZERO_ADDRESS,
+    timestamp: 0,
+    currencyKey: 'BTC',
+    sides: [Positions.UP, Positions.DOWN],
+    strikePrices: [35000, 35010],
+    strikeTimes: [1684482600000, 1684483200000],
+    maturityDate: 1684483200000,
+    amount: 10,
+    paid: 10.2,
+    finalPrices: [35002, 35015],
+    isOpen: true,
+    canResolve: false,
+    claimable: false,
+} as ChainedSpeedMarket);
 
 const Wrapper = styled.div`
     position: relative;
