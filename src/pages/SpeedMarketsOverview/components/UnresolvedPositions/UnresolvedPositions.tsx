@@ -81,32 +81,29 @@ const UnresolvedPositions: React.FC = () => {
         [activeSpeedMarketsDataQuery]
     );
 
-    const priceRequests = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate < Date.now())
-        .map((marketData) => ({
-            priceId: getPriceId(networkId, marketData.currencyKey),
-            publishTime: millisecondsToSeconds(marketData.maturityDate),
-        }));
+    const activeMatured = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
+    const priceRequests = activeMatured.map((marketData) => ({
+        priceId: getPriceId(networkId, marketData.currencyKey),
+        publishTime: millisecondsToSeconds(marketData.maturityDate),
+    }));
 
     const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, {
         enabled: activeSpeedMarketsDataQuery.isSuccess,
     });
 
-    const maturedUnresolvedWithPrices = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate < Date.now())
-        .map((marketData, index) => {
-            const finalPrice = pythPricesQueries[index].data || 0;
-            const claimable =
-                finalPrice > 0 &&
-                ((marketData.side === Positions.UP && finalPrice > Number(marketData.strikePrice)) ||
-                    (marketData.side === Positions.DOWN && finalPrice < Number(marketData.strikePrice)));
-            return {
-                ...marketData,
-                claimable,
-                finalPrice,
-                strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
-            };
-        });
+    const maturedUnresolvedWithPrices = activeMatured.map((marketData, index) => {
+        const finalPrice = pythPricesQueries[index].data || 0;
+        const claimable =
+            finalPrice > 0 &&
+            ((marketData.side === Positions.UP && finalPrice > Number(marketData.strikePrice)) ||
+                (marketData.side === Positions.DOWN && finalPrice < Number(marketData.strikePrice)));
+        return {
+            ...marketData,
+            claimable,
+            finalPrice,
+            strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
+        };
+    });
 
     const userWinnerSpeedMarketsData = maturedUnresolvedWithPrices.filter(
         (marketData) => marketData.claimable && !!marketData.finalPrice

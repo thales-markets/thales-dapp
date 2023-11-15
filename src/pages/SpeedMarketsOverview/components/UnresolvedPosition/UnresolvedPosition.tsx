@@ -1,17 +1,16 @@
+import Tooltip from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
-import { formatShortDateWithTime, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'thales-utils';
-import { formatNumberShort } from 'utils/formatters/number';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
+import { formatNumberShort } from 'utils/formatters/number';
 import { getColorPerPosition } from 'utils/options';
 import OverviewPositionAction from '../OverviewPositionAction';
 import { Label, Separator } from '../OverviewPositionAction/OverviewPositionAction';
-import Tooltip from 'components/Tooltip';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
@@ -50,7 +49,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                     <Value>
                         {position.maturityDate < Date.now() ? (
                             position.finalPrice ? (
-                                formatCurrencyWithPrecision(position.finalPrice)
+                                formatCurrencyWithSign(USD_SIGN, position.finalPrice)
                             ) : (
                                 <>
                                     {'. . .'}
@@ -58,7 +57,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                                 </>
                             )
                         ) : position.currentPrice ? (
-                            formatCurrencyWithPrecision(position.currentPrice)
+                            formatCurrencyWithSign(USD_SIGN, position.currentPrice)
                         ) : (
                             '. . .'
                         )}

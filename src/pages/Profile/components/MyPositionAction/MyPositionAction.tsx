@@ -449,7 +449,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                         <Separator />
                         <ResultsContainer>
                             <Label>{t('common.result')}</Label>
-                            <Value isUpperCase color={theme.error.borderColor.primary}>
+                            <Value isUpperCase color={theme.error.textColor.primary}>
                                 {t('common.loss')}
                             </Value>
                         </ResultsContainer>

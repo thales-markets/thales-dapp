@@ -257,6 +257,7 @@ export type AmmSpeedMarketsLimits = {
     timeThresholdsForFees: number[];
     lpFees: number[];
     defaultLPFee: number;
+    maxSkewImpact: number;
     safeBoxImpact: number;
     whitelistedAddress: boolean;
 };

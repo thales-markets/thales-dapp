@@ -75,6 +75,7 @@ import { getReferralWallet } from 'utils/referral';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { SelectedPosition } from '../SelectPosition/SelectPosition';
+import { Positions } from 'enums/options';
 
 type AmmSpeedTradingProps = {
     isChained: boolean;
@@ -88,6 +89,7 @@ type AmmSpeedTradingProps = {
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
     ammChainedSpeedMarketsLimits: AmmChainedSpeedMarketsLimits | null;
     currentPrice: number;
+    setSkewImpact: React.Dispatch<{ [Positions.UP]: number; [Positions.DOWN]: number }>;
     resetData: React.Dispatch<void>;
     showWalletBalance?: boolean;
 };
@@ -104,6 +106,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     ammSpeedMarketsLimits,
     ammChainedSpeedMarketsLimits,
     currentPrice,
+    setSkewImpact,
     resetData,
     showWalletBalance,
 }) => {
@@ -235,6 +238,52 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     }, secondsToMilliseconds(5));
 
+    const skewImpact = useMemo(() => {
+        const skewPerPosition = { [Positions.UP]: 0, [Positions.DOWN]: 0 };
+
+        const riskPerUp = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
+            (data) => data.currency === currencyKey && data.position === Positions.UP
+        )[0];
+        const riskPerDown = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
+            (data) => data.currency === currencyKey && data.position === Positions.DOWN
+        )[0];
+
+        if (riskPerUp && riskPerDown) {
+            const buyinAmount = isStableCurrency(selectedCollateral)
+                ? Number(paidAmount)
+                : convertToStable(Number(paidAmount));
+
+            // if user selects UP position calculate risk
+            const updatedRiskPerUp =
+                riskPerDown.current > buyinAmount
+                    ? riskPerUp.current
+                    : riskPerUp.current + buyinAmount - riskPerDown.current;
+            // if user selects DOWN position calculate risk
+            const updatedRiskPerDown =
+                riskPerUp.current > buyinAmount
+                    ? riskPerDown.current
+                    : riskPerDown.current + buyinAmount - riskPerUp.current;
+
+            skewPerPosition[Positions.UP] = roundNumberToDecimals(
+                (updatedRiskPerUp / riskPerUp.max) * ammSpeedMarketsLimits?.maxSkewImpact,
+                4
+            );
+            skewPerPosition[Positions.DOWN] = roundNumberToDecimals(
+                (updatedRiskPerDown / riskPerDown.max) * ammSpeedMarketsLimits?.maxSkewImpact,
+                4
+            );
+        }
+
+        return skewPerPosition;
+    }, [
+        ammSpeedMarketsLimits?.maxSkewImpact,
+        ammSpeedMarketsLimits?.risksPerAssetAndDirection,
+        convertToStable,
+        currencyKey,
+        paidAmount,
+        selectedCollateral,
+    ]);
+
     const totalFee = useMemo(() => {
         if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
             if (isChained) {
@@ -246,11 +295,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     ammSpeedMarketsLimits?.lpFees,
                     ammSpeedMarketsLimits?.defaultLPFee
                 );
-                return lpFee ? lpFee + ammSpeedMarketsLimits?.safeBoxImpact : 0;
+                const skew = positionType ? skewImpact[positionType] : 0;
+                return lpFee ? lpFee + skew + ammSpeedMarketsLimits?.safeBoxImpact : 0;
             }
         }
         return 0;
-    }, [isChained, ammSpeedMarketsLimits, deltaTimeSec, strikeTimeSec, deltaFromStrikeTime]);
+    }, [isChained, ammSpeedMarketsLimits, deltaTimeSec, strikeTimeSec, deltaFromStrikeTime, skewImpact, positionType]);
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {
@@ -298,7 +348,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         } else {
             setPaidAmount('');
         }
-    }, [selectedStableBuyinAmount, convertFromStable, totalFee, selectedCollateral]);
+    }, [selectedStableBuyinAmount, convertFromStable, selectedCollateral]);
+
+    // Update skew
+    useDebouncedEffect(() => {
+        setSkewImpact(skewImpact);
+    }, [skewImpact, setSkewImpact]);
 
     // Reset inputs
     useEffect(() => {
@@ -650,22 +705,23 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                       ammSpeedMarketsLimits?.lpFees[0] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
-                  firstTime: ammSpeedMarketsLimits?.timeThresholdsForFees[0],
                   secondPerc: formatPercentage(
                       ammSpeedMarketsLimits?.lpFees[1] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
-                  secondTime: ammSpeedMarketsLimits?.timeThresholdsForFees[1],
                   thirdPerc: formatPercentage(
                       ammSpeedMarketsLimits?.lpFees[2] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
-                  thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[2],
                   fourthPerc: formatPercentage(
                       ammSpeedMarketsLimits?.lpFees[3] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
+                  firstTime: ammSpeedMarketsLimits?.timeThresholdsForFees[0],
+                  secondTime: ammSpeedMarketsLimits?.timeThresholdsForFees[1],
+                  thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[2],
                   fourthTime: ammSpeedMarketsLimits?.timeThresholdsForFees[3],
+                  maxSkewImpact: formatPercentage(ammSpeedMarketsLimits?.maxSkewImpact, 0),
               }
             : {};
 
@@ -688,7 +744,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                             currencyKey: selectedCollateral,
                             minAmount: convertFromStable(minBuyinAmount),
                             maxAmount: convertFromStable(maxBuyinAmount),
-                            fee: totalFee ? formatPercentage(totalFee, 0) : '...',
+                            fee: totalFee ? formatPercentage(totalFee) : '...',
                         })}
                         balance={
                             showWalletBalance && isWalletConnected
@@ -717,18 +773,20 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         {!isChained && !totalFee
                             ? t('speed-markets.fee-info')
                             : isStableCurrency(selectedCollateral)
-                            ? t('speed-markets.total-pay', {
+                            ? t(`speed-markets${isChained ? '.chained' : ''}.total-pay`, {
                                   amount: selectedStableBuyinAmount
                                       ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
-                                  fee: formatPercentage(totalFee, 0),
+                                  fee: formatPercentage(totalFee),
+                                  skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
                               })
-                            : t('speed-markets.to-pay-with-conversion', {
+                            : t(`speed-markets${isChained ? '.chained' : ''}.to-pay-with-conversion`, {
                                   amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
                                   stableAmount: selectedStableBuyinAmount
                                       ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                       : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
-                                  fee: formatPercentage(totalFee, 0),
+                                  fee: formatPercentage(totalFee),
+                                  skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
                               })}
                         {!isChained && !totalFee ? (
                             <Tooltip
@@ -841,7 +899,7 @@ const ColumnSpaceBetween = styled(FlexDivColumn)`
 const PaymentInfo = styled.span`
     font-size: 13px;
     font-weight: 600;
-    line-height: 90%;
+    line-height: 110%;
     text-align: center;
     color: ${(props) => props.theme.textColor.secondary};
     margin-top: 6px;

@@ -1,26 +1,25 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import Tooltip from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
+import { secondsToMilliseconds } from 'date-fns';
+import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import useInterval from 'hooks/useInterval';
+import MyPositionAction from 'pages/Profile/components/MyPositionAction/MyPositionAction';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { UserLivePositions } from 'types/options';
-import { formatShortDateWithTime, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'thales-utils';
-import useInterval from 'hooks/useInterval';
-import { formatNumberShort } from 'utils/formatters/number';
-import MyPositionAction from 'pages/Profile/components/MyPositionAction/MyPositionAction';
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
-import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { Positions } from 'enums/options';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
 import { useSelector } from 'react-redux';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { getColorPerPosition } from 'utils/options';
-import Tooltip from 'components/Tooltip';
-import { secondsToMilliseconds } from 'date-fns';
-import { refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled, { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
+import { UserLivePositions } from 'types/options';
+import { ThemeInterface } from 'types/ui';
+import { formatNumberShort } from 'utils/formatters/number';
+import { getColorPerPosition } from 'utils/options';
+import { refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import SharePositionModal from '../AmmTrading/components/SharePositionModal';
 
 type OpenPositionProps = {
@@ -73,7 +72,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                             <Value>
                                 {isSpeedMarketMatured ? (
                                     position.finalPrice ? (
-                                        formatCurrencyWithPrecision(position.finalPrice)
+                                        formatCurrencyWithSign(USD_SIGN, position.finalPrice)
                                     ) : (
                                         <>
                                             {'. . .'}
@@ -81,7 +80,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                                         </>
                                     )
                                 ) : (
-                                    formatCurrencyWithPrecision(currentPrices ? currentPrices[position.currencyKey] : 0)
+                                    formatCurrencyWithSign(
+                                        USD_SIGN,
+                                        currentPrices ? currentPrices[position.currencyKey] : 0
+                                    )
                                 )}
                             </Value>
                         </FlexContainer>

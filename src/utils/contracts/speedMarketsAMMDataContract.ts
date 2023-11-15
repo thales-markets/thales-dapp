@@ -157,6 +157,11 @@ const speedMarketsDataContract = {
                             type: 'uint256',
                         },
                         {
+                            internalType: 'uint256',
+                            name: 'payout',
+                            type: 'uint256',
+                        },
+                        {
                             internalType: 'bool',
                             name: 'resolved',
                             type: 'bool',
@@ -511,6 +516,11 @@ const speedMarketsDataContract = {
                         {
                             internalType: 'uint256',
                             name: 'lpFee',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'maxSkewImpact',
                             type: 'uint256',
                         },
                         {

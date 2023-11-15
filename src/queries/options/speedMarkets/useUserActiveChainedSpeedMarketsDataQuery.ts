@@ -42,6 +42,8 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         (direction: number) => OPTIONS_POSITIONS_MAP[SIDE[direction] as OptionSide] as Positions
                     );
                     const maturityDate = secondsToMilliseconds(Number(marketData.strikeTime));
+                    const strikePrices = Array(sides.length).fill(0);
+                    strikePrices[0] = bigNumberFormatter(marketData.initialStrikePrice, PYTH_CURRENCY_DECIMALS);
                     const strikeTimes = Array(sides.length)
                         .fill(0)
                         .map((_, i) =>
@@ -57,12 +59,12 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         timestamp: secondsToMilliseconds(Number(marketData.createdAt)),
                         currencyKey: parseBytes32String(marketData.asset),
                         sides,
-                        strikePrices: [bigNumberFormatter(marketData.initialStrikePrice, PYTH_CURRENCY_DECIMALS)],
+                        strikePrices,
                         strikeTimes,
                         maturityDate,
-                        amount: buyinAmount,
+                        amount: coinFormatter(marketData.payout, networkId),
                         paid: buyinAmount * (1 + fee),
-                        finalPrices: [],
+                        finalPrices: Array(sides.length).fill(0),
                         isOpen: true,
                         canResolve: maturityDate < Date.now(),
                         claimable: false,

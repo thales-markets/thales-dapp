@@ -15,7 +15,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
+import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
 
 type OpenPositionsProps = {
@@ -75,7 +75,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
         : livePositions.length === 0;
 
     const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
-    const chainedPositions = noPositions ? dummyChainedPositions : userOpenChainedSpeedMarketsData;
 
     const isLoading =
         positionsQuery.isLoading ||
@@ -91,13 +90,14 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 </LoaderContainer>
             ) : (
                 <>
-                    <PositionsWrapper noPositions={noPositions}>
-                        {isChainedSpeedMarkets
-                            ? chainedPositions
+                    <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
+                        {isChainedSpeedMarkets && !noPositions
+                            ? userOpenChainedSpeedMarketsData
                                   .sort((a, b) => a.maturityDate - b.maturityDate)
                                   .map((position, index) => (
                                       <ChainedOpenPosition
                                           position={position}
+                                          currentPrices={currentPrices}
                                           key={`position${position.address}${index}`}
                                       />
                                   ))
@@ -106,9 +106,9 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                                   .map((position, index) => (
                                       <OpenPosition
                                           position={position}
-                                          key={`position${position.market}${position.positionAddress}${index}`}
                                           maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
                                           currentPrices={currentPrices}
+                                          key={`position${position.market}${position.positionAddress}${index}`}
                                       />
                                   ))}
                     </PositionsWrapper>
@@ -147,21 +147,6 @@ const dummyPositions: UserLivePositions[] = [
         isSpeedMarket: false,
     },
 ];
-const dummyChainedPositions: ChainedSpeedMarket[] = Array(2).fill({
-    address: ZERO_ADDRESS,
-    timestamp: 0,
-    currencyKey: 'BTC',
-    sides: [Positions.UP, Positions.DOWN],
-    strikePrices: [35000, 35010],
-    strikeTimes: [1684482600000, 1684483200000],
-    maturityDate: 1684483200000,
-    amount: 10,
-    paid: 10.2,
-    finalPrices: [35002, 35015],
-    isOpen: true,
-    canResolve: false,
-    claimable: false,
-} as ChainedSpeedMarket);
 
 const Wrapper = styled.div`
     position: relative;
@@ -171,10 +156,10 @@ const Wrapper = styled.div`
     padding-bottom: 20px;
 `;
 
-const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
+const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean }>`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: ${(props) => (props.isChained ? '16' : '6')}px;
     overflow-y: auto;
     max-height: 560px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}

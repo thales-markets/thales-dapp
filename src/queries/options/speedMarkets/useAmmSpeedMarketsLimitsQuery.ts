@@ -31,6 +31,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                 timeThresholdsForFees: [],
                 lpFees: [],
                 defaultLPFee: 0,
+                maxSkewImpact: 0,
                 safeBoxImpact: 0,
                 whitelistedAddress: false,
             };
@@ -93,6 +94,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                 );
                 ammSpeedMarketsLimits.lpFees = ammParams.lpFees.map((lpFee: BigNumber) => bigNumberFormatter(lpFee));
                 ammSpeedMarketsLimits.defaultLPFee = bigNumberFormatter(ammParams.lpFee);
+                ammSpeedMarketsLimits.maxSkewImpact = bigNumberFormatter(ammParams.maxSkewImpact);
                 ammSpeedMarketsLimits.safeBoxImpact = bigNumberFormatter(ammParams.safeBoxImpact);
                 ammSpeedMarketsLimits.whitelistedAddress = ammParams.isAddressWhitelisted;
             }

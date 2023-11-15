@@ -35,6 +35,7 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
+import { Positions } from 'enums/options';
 
 const CHAINED_TIME_FRAME_MINUTES = 10;
 
@@ -61,6 +62,7 @@ const SpeedMarkets: React.FC = () => {
     const [strikeTimeSec, setStrikeTimeSec] = useState(0);
     const [selectedStableBuyinAmount, setSelectedStableBuyinAmount] = useState(0);
     const [isResetTriggered, setIsResetTriggered] = useState(false);
+    const [skew, setSkew] = useState({ [Positions.UP]: 0, [Positions.DOWN]: 0 });
 
     const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, undefined, {
         enabled: isAppReady,
@@ -71,7 +73,7 @@ const SpeedMarkets: React.FC = () => {
     }, [ammSpeedMarketsLimitsQuery]);
 
     const ammChainedSpeedMarketsLimitsQuery = useAmmChainedSpeedMarketsLimitsQuery(networkId, undefined, {
-        enabled: isAppReady && isChained,
+        enabled: isAppReady,
     });
 
     const ammChainedSpeedMarketsLimitsData = useMemo(() => {
@@ -270,6 +272,7 @@ const SpeedMarkets: React.FC = () => {
                                 onChange={setPositionType}
                                 onChainedChange={setChainedPositions}
                                 ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
+                                skew={skew}
                             />
                             {/* Time */}
                             {!isChained && getStepLabel(3, t('speed-markets.steps.choose-time'))}
@@ -306,6 +309,7 @@ const SpeedMarkets: React.FC = () => {
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                         ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
                         currentPrice={currentPrices[currencyKey]}
+                        setSkewImpact={setSkew}
                         resetData={resetData}
                     />
                     <BannerWrapper>
