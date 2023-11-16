@@ -1,6 +1,6 @@
 import { USD_SIGN } from 'constants/currency';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import { setSelectedCollateralIndex } from 'redux/modules/wallet';
@@ -19,6 +19,7 @@ type CollateralSelectorProps = {
     collateralBalances?: any;
     exchangeRates?: Rates | null;
     dropDownWidth?: string;
+    additionalStyles?: CSSProperties;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -30,6 +31,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     collateralBalances,
     exchangeRates,
     dropDownWidth,
+    additionalStyles,
 }) => {
     const dispatch = useDispatch();
 
@@ -53,13 +55,16 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     }, [collateralArray, isDetailedView, getUSDForCollateral]);
 
     return (
-        <Container>
+        <Container margin={additionalStyles?.margin?.toString()}>
             <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
                 <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
                     <TextCollateralWrapper>
-                        <TextCollateral>{collateralArray[selectedItem]}</TextCollateral>
+                        <TextCollateral color={additionalStyles?.color}>{collateralArray[selectedItem]}</TextCollateral>
                     </TextCollateralWrapper>
-                    <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                    <Arrow
+                        color={additionalStyles?.color}
+                        className={open ? `icon icon--caret-up` : `icon icon--caret-down`}
+                    />
                 </SelectedCollateral>
                 {isDetailedView
                     ? open && (
@@ -123,8 +128,8 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     );
 };
 
-const Container = styled(FlexDivStart)`
-    margin: 0 7px;
+const Container = styled(FlexDivStart)<{ margin?: string }>`
+    margin: ${(props) => (props.margin ? props.margin : '0 7px')};
     align-items: center;
 `;
 
@@ -135,8 +140,8 @@ const Text = styled.span<{ fontWeight?: string }>`
     line-height: 20px;
 `;
 
-const TextCollateral = styled(Text)`
-    color: ${(props) => props.theme.textColor.primary};
+const TextCollateral = styled(Text)<{ color?: string }>`
+    color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -148,10 +153,10 @@ const TextCollateralWrapper = styled.div`
     min-width: 45px;
 `;
 
-const Arrow = styled.i`
+const Arrow = styled.i<{ color?: string }>`
     font-size: 10px;
     text-transform: none;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
 `;
 
 const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`

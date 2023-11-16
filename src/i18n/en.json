@@ -349,9 +349,9 @@
             "paid": "Paid",
             "cash-out": "Cash out",
             "tooltip-cash-out": "Sell your Open Position back to the AMM for current price per Position minus the Skew Impact premium.",
-            "cash-out-progress": "Cashing out...",
+            "cash-out-progress": "Cashing out",
             "claim-win": "Claim win",
-            "claim-win-progress": "Claiming win...",
+            "claim-win-progress": "Claiming win",
             "results": "Results in",
             "position-value": "Position value",
             "approve-swap-tooltip": "To get payout in {{currencyKey}}, you need to approve swap from {{defaultCurrency}} to {{currencyKey}}."

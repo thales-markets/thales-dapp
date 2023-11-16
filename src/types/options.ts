@@ -299,4 +299,5 @@ export type ChainedSpeedMarket = {
     isOpen: boolean;
     canResolve: boolean;
     claimable: boolean;
+    isUserWinner: boolean;
 };

@@ -66,7 +66,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
 
     const data: UserPosition[] = useMemo(() => {
         const speedMarketsOpenPositions: UserPosition[] = userOpenSpeedMarketsData
-            .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable)
+            .filter((marketData) => marketData.claimable)
             .map((marketData) => {
                 return {
                     positionAddress: marketData.positionAddress,

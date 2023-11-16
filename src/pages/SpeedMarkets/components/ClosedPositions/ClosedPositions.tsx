@@ -2,6 +2,7 @@ import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -11,8 +12,9 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserClosedPositions } from 'types/options';
-import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
+import ChainedPosition from '../ChainedPosition';
 import ClosedPosition from '../ClosedPosition';
+import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
 
 const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
     const { t } = useTranslation();
@@ -28,32 +30,54 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
 
     const lastTenUserResolvedPositions = useMemo(
         () =>
-            isChained
-                ? []
-                : userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
+            userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
                 ? userResolvedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
                 : [],
-        [isChained, userResolvedSpeedMarketsDataQuery]
+        [userResolvedSpeedMarketsDataQuery]
     );
 
-    const noPositions = lastTenUserResolvedPositions.length === 0;
+    const userResolvedChainedSpeedMarketsDataQuery = useUserResolvedChainedSpeedMarketsDataQuery(
+        networkId,
+        walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected && !!isChained,
+        }
+    );
+
+    const lastTenUserResolvedChainedPositions = useMemo(
+        () =>
+            userResolvedChainedSpeedMarketsDataQuery.isSuccess && userResolvedChainedSpeedMarketsDataQuery.data
+                ? userResolvedChainedSpeedMarketsDataQuery.data
+                      .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
+                      .slice(-10)
+                : [],
+        [userResolvedChainedSpeedMarketsDataQuery]
+    );
+
+    const noPositions = isChained
+        ? lastTenUserResolvedChainedPositions.length === 0
+        : lastTenUserResolvedPositions.length === 0;
     const positions = noPositions ? dummyPositions : lastTenUserResolvedPositions;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-closed-positions')}</Title>
-            {userResolvedSpeedMarketsDataQuery.isLoading ? (
+            {userResolvedSpeedMarketsDataQuery.isLoading || userResolvedChainedSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {positions.map((position, index) => (
-                            <ClosedPosition position={position} key={`closedPosition${index}`} />
-                        ))}
+                        {isChained && !noPositions
+                            ? lastTenUserResolvedChainedPositions.map((position, index) => (
+                                  <ChainedPosition position={position} key={`closedPosition${index}`} />
+                              ))
+                            : positions.map((position, index) => (
+                                  <ClosedPosition position={position} key={`closedPosition${index}`} />
+                              ))}
                     </PositionsWrapper>
                     {noPositions && (
                         <NoPositionsText>{t('speed-markets.user-positions.no-closed-positions')}</NoPositionsText>

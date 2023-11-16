@@ -12,17 +12,21 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import {
-    POSITIONS_TO_SIDE_MAP,
-    STABLECOIN_CONVERSION_BUFFER_PERCENTAGE,
     ALTCOIN_CONVERSION_BUFFER_PERCENTAGE,
+    POSITIONS_TO_SIDE_MAP,
     SPEED_MARKETS_QUOTE,
+    STABLECOIN_CONVERSION_BUFFER_PERCENTAGE,
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import useInterval from 'hooks/useInterval';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
 import TradingDetailsSentence from 'pages/Trade/components/AmmTrading/components/TradingDetailsSentence';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
@@ -44,6 +48,15 @@ import {
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
+import {
+    coinParser,
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    formatPercentage,
+    roundNumberToDecimals,
+    truncToDecimals,
+} from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -55,27 +68,14 @@ import {
     getDefaultStableIndexByBalance,
     isStableCurrency,
 } from 'utils/currency';
-import {
-    coinParser,
-    formatCurrency,
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    formatPercentage,
-    roundNumberToDecimals,
-    truncToDecimals,
-} from 'thales-utils';
-import useInterval from 'hooks/useInterval';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
-import { getReferralWallet } from 'utils/referral';
-import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { SelectedPosition } from '../SelectPosition/SelectPosition';
-import { Positions } from 'enums/options';
 
 type AmmSpeedTradingProps = {
     isChained: boolean;
@@ -538,7 +538,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 const priceId = getPriceId(networkId, currencyKey);
                 const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([priceId]);
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-
+                console.log(updateFee);
                 const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, [priceId]);
                 setSubmittedStrikePrice(prices[currencyKey]);
 
@@ -581,8 +581,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
-                    refetchUserSpeedMarkets(networkId, walletAddress);
-                    refetchSpeedMarketsLimits(networkId);
+                    refetchUserSpeedMarkets(isChained, networkId, walletAddress);
+                    refetchSpeedMarketsLimits(isChained, networkId);
                     PLAUSIBLE.trackEvent(
                         isChained ? PLAUSIBLE_KEYS.chainedSpeedMarketsBuy : PLAUSIBLE_KEYS.speedMarketsBuy,
                         {

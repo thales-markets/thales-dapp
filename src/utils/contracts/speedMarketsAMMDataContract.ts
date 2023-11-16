@@ -158,7 +158,7 @@ const speedMarketsDataContract = {
                         },
                         {
                             internalType: 'uint256',
-                            name: 'payout',
+                            name: 'payoutMultiplier',
                             type: 'uint256',
                         },
                         {

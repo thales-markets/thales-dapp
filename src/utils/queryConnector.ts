@@ -130,17 +130,27 @@ export const refetchLiquidityPoolData = (walletAddress: string, networkId: Netwo
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId));
 };
 
-export const refetchSpeedMarketsLimits = (networkId: Network, walletAddress?: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress));
-};
-
-export const refetchUserSpeedMarkets = (networkId: Network, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress));
-};
-
-export const refetchUserResolvedSpeedMarkets = (networkId: Network, walletAddress: string) => {
+export const refetchSpeedMarketsLimits = (isChained: boolean, networkId: Network, walletAddress?: string) => {
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.BinaryOptions.UserResolvedSpeedMarkets(networkId, walletAddress)
+        isChained
+            ? QUERY_KEYS.BinaryOptions.ChainedSpeedMarketsLimits(networkId, walletAddress)
+            : QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress)
+    );
+};
+
+export const refetchUserSpeedMarkets = (isChained: boolean, networkId: Network, walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(
+        isChained
+            ? QUERY_KEYS.BinaryOptions.UserChainedSpeedMarkets(networkId, walletAddress)
+            : QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress)
+    );
+};
+
+export const refetchUserResolvedSpeedMarkets = (isChained: boolean, networkId: Network, walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(
+        isChained
+            ? QUERY_KEYS.BinaryOptions.UserResolvedChainedSpeedMarkets(networkId, walletAddress)
+            : QUERY_KEYS.BinaryOptions.UserResolvedSpeedMarkets(networkId, walletAddress)
     );
 };
 

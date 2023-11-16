@@ -1,8 +1,12 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import Tooltip from 'components/Tooltip';
 import ROUTES from 'constants/routes';
+import { millisecondsToSeconds } from 'date-fns';
 import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +16,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
+import { getPriceId } from 'utils/pyth';
 import { buildHref } from 'utils/routes';
 
 const Notifications: React.FC = () => {
@@ -37,14 +42,60 @@ const Notifications: React.FC = () => {
     });
     const speedMarketsNotifications = useMemo(() => {
         if (userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data) {
-            return userActiveSpeedMarketsDataQuery.data.filter(
-                (marketData) => marketData.maturityDate < Date.now() && marketData.claimable
-            ).length;
+            return userActiveSpeedMarketsDataQuery.data.filter((marketData) => marketData.claimable).length;
         }
         return 0;
     }, [userActiveSpeedMarketsDataQuery]);
 
-    const totalNotifications = notifications + speedMarketsNotifications;
+    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const userActiveChainedSpeedMarketsData = useMemo(
+        () =>
+            userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
+                ? userActiveChainedSpeedMarketsDataQuery.data
+                : [],
+        [userActiveChainedSpeedMarketsDataQuery]
+    );
+
+    // Prepare chained speed markets that become matured to fetch Pyth prices
+    const maturedChainedMarkets = userActiveChainedSpeedMarketsData
+        .filter((marketData) => marketData.maturityDate < Date.now())
+        .map((marketData) => {
+            const strikeTimes = marketData.strikeTimes.map((strikeTime) => millisecondsToSeconds(strikeTime));
+            return {
+                ...marketData,
+                strikeTimes,
+                pythPriceId: getPriceId(networkId, marketData.currencyKey),
+            };
+        });
+
+    const priceRequests = maturedChainedMarkets
+        .map((data) => data.strikeTimes.map((strikeTime) => ({ priceId: data.pythPriceId, publishTime: strikeTime })))
+        .flat();
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
+
+    // Based on Pyth prices determine if chained position is claimable
+    const chainedSpeedMarketsNotifications = maturedChainedMarkets
+        .map((marketData, marketIndex) => {
+            const priceStartIndex = marketIndex > 0 ? maturedChainedMarkets[marketIndex - 1].strikeTimes.length - 1 : 0;
+            const finalPrices = marketData.strikeTimes.map((_, i) => pythPricesQueries[priceStartIndex + i]?.data || 0);
+            const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
+                i > 0 ? finalPrices[i - 1] : strikePrice
+            );
+            const userWonStatuses = marketData.sides.map((side, i) =>
+                finalPrices[i] > 0
+                    ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
+                      (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
+                    : undefined
+            );
+            const claimable = userWonStatuses.every((status) => status);
+
+            return { ...marketData, finalPrices, claimable };
+        })
+        .filter((marketData) => marketData.claimable).length;
+
+    const totalNotifications = notifications + speedMarketsNotifications + chainedSpeedMarketsNotifications;
 
     const hasNotifications = totalNotifications > 0;
 

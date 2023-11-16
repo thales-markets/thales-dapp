@@ -17,10 +17,15 @@ import { ThemeInterface } from 'types/ui';
 import { getPriceId } from 'utils/pyth';
 import { Icon, PositionSymbolDown, PositionSymbolUp } from '../SelectPosition/styled-components';
 import { formatNumberShort } from 'utils/formatters/number';
+import ChainedPositionAction from '../ChainedPositionAction';
 
-type ChainedOpenPositionProps = { position: ChainedSpeedMarket; currentPrices?: { [key: string]: number } };
+type ChainedPositionProps = {
+    position: ChainedSpeedMarket;
+    maxPriceDelayForResolvingSec?: number;
+    currentPrices?: { [key: string]: number };
+};
 
-const ChainedOpenPosition: React.FC<ChainedOpenPositionProps> = ({ position }) => {
+const ChainedPosition: React.FC<ChainedPositionProps> = ({ position, maxPriceDelayForResolvingSec }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -28,25 +33,32 @@ const ChainedOpenPosition: React.FC<ChainedOpenPositionProps> = ({ position }) =
 
     const maturedStrikeTimes = position.strikeTimes.filter((strikeTime) => strikeTime < Date.now());
 
-    const pythPriceId = getPriceId(networkId, position.currencyKey);
-    const priceRequests = maturedStrikeTimes.map((strikeTime) => ({
-        priceId: pythPriceId,
-        publishTime: millisecondsToSeconds(strikeTime),
-    }));
+    const pythPriceId = position.isOpen ? getPriceId(networkId, position.currencyKey) : '';
+    const priceRequests = position.isOpen
+        ? maturedStrikeTimes.map((strikeTime) => ({
+              priceId: pythPriceId,
+              publishTime: millisecondsToSeconds(strikeTime),
+          }))
+        : [];
 
-    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests);
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: position.isOpen });
 
-    const finalPrices = position.finalPrices.map((_, i) => pythPricesQueries[i]?.data || 0);
-    const strikePrices = position.strikePrices.map((strikePrice, i) => (i > 0 ? finalPrices[i - 1] : strikePrice));
+    const finalPrices = position.isOpen
+        ? position.finalPrices.map((_, i) => pythPricesQueries[i]?.data || 0)
+        : position.finalPrices;
+    const strikePrices = position.isOpen
+        ? position.strikePrices.map((strikePrice, i) => (i > 0 ? finalPrices[i - 1] : strikePrice))
+        : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
         finalPrices[i] > 0
             ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
               (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
             : undefined
     );
-    const canResolve =
-        userWonStatuses.some((status) => status === false) || userWonStatuses.every((status) => status !== undefined);
-    const claimable = userWonStatuses.every((status) => status);
+    const canResolve = position.isOpen
+        ? userWonStatuses.some((status) => status === false) || userWonStatuses.every((status) => status !== undefined)
+        : position.canResolve;
+    const claimable = position.isOpen ? userWonStatuses.every((status) => status) : position.claimable;
 
     const positionWithPrices = {
         ...position,
@@ -154,7 +166,10 @@ const ChainedOpenPosition: React.FC<ChainedOpenPositionProps> = ({ position }) =
                     </Text>
                 </BuyInfo>
                 <Result>
-                    <Text>TODO: Result</Text>
+                    <ChainedPositionAction
+                        position={positionWithPrices}
+                        maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                    />
                 </Result>
             </Summary>
         </Container>
@@ -217,7 +232,7 @@ const Postion = styled(FlexDivColumnCentered)`
 `;
 
 const Summary = styled(FlexDivColumn)`
-    width: 100%;
+    min-width: 235px;
 `;
 
 const BuyInfo = styled(FlexDivCentered)`
@@ -248,4 +263,4 @@ const Dash = styled.div`
     margin: 9px 0 8px 0;
 `;
 
-export default ChainedOpenPosition;
+export default ChainedPosition;

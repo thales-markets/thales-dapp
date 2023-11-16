@@ -49,7 +49,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                 setIsSpeedMarketMatured(true);
             }
             if (!position.finalPrice) {
-                refetchUserSpeedMarkets(networkId, walletAddress);
+                refetchUserSpeedMarkets(false, networkId, walletAddress);
             }
         }
     }, secondsToMilliseconds(10));
@@ -111,8 +111,9 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                     <Label>{t('markets.user-positions.paid')}</Label>
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
+                <Separator />
+                <MyPositionAction position={position} maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec} />
             </AlignedFlex>
-            <MyPositionAction position={position} maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec} />
             <ShareIcon
                 className="icon-home icon-home--twitter-x"
                 disabled={false}

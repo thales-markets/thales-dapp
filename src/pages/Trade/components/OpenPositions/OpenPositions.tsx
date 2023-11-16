@@ -3,7 +3,7 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
-import ChainedOpenPosition from 'pages/SpeedMarkets/components/ChainedOpenPosition';
+import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
@@ -49,9 +49,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!isSpeedMarkets && !isChainedSpeedMarkets,
     });
-    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !!isChainedSpeedMarkets,
-    });
 
     const userOpenSpeedMarketsData = useMemo(
         () =>
@@ -60,12 +57,17 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 : [],
         [userActiveSpeedMarketsDataQuery]
     );
+
+    const userChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !!isChainedSpeedMarkets,
+    });
+
     const userOpenChainedSpeedMarketsData = useMemo(
         () =>
-            userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
-                ? userActiveChainedSpeedMarketsDataQuery.data
+            userChainedSpeedMarketsDataQuery.isSuccess && userChainedSpeedMarketsDataQuery.data
+                ? userChainedSpeedMarketsDataQuery.data
                 : [],
-        [userActiveChainedSpeedMarketsDataQuery]
+        [userChainedSpeedMarketsDataQuery]
     );
 
     const noPositions = isSpeedMarkets
@@ -79,7 +81,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const isLoading =
         positionsQuery.isLoading ||
         userActiveSpeedMarketsDataQuery.isLoading ||
-        userActiveChainedSpeedMarketsDataQuery.isLoading;
+        userChainedSpeedMarketsDataQuery.isLoading;
 
     return (
         <Wrapper>
@@ -95,8 +97,9 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                             ? userOpenChainedSpeedMarketsData
                                   .sort((a, b) => a.maturityDate - b.maturityDate)
                                   .map((position, index) => (
-                                      <ChainedOpenPosition
+                                      <ChainedPosition
                                           position={position}
+                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
                                           currentPrices={currentPrices}
                                           key={`position${position.address}${index}`}
                                       />
@@ -161,7 +164,7 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean
     flex-direction: column;
     gap: ${(props) => (props.isChained ? '16' : '6')}px;
     overflow-y: auto;
-    max-height: 560px;
+    max-height: ${(props) => (props.isChained ? '624' : '560')}px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
