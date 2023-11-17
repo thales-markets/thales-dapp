@@ -1,5 +1,4 @@
 import * as pythEvmJs from '@pythnetwork/pyth-evm-js';
-import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
@@ -10,13 +9,13 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { SPEED_MARKETS_OVERVIEW_SECTIONS as SECTIONS } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS, SUPPORTED_ASSETS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import useInterval from 'hooks/useInterval';
+import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
 import {
     LoaderContainer,
     NoPositionsText,
@@ -27,8 +26,8 @@ import {
     getAdditionalButtonStyle,
     getDefaultButtonProps,
 } from 'pages/SpeedMarketsOverview/styled-components';
-import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
-import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
+import useActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveChainedSpeedMarketsDataQuery';
+import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,15 +37,14 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { formatCurrencyWithSign, truncToDecimals } from 'thales-utils';
-import { UserLivePositions } from 'types/options';
-import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { truncToDecimals } from 'thales-utils';
+import { ChainedSpeedMarket } from 'types/options';
+import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
-import UnresolvedPosition from '../UnresolvedPosition';
 
-const UnresolvedPositions: React.FC = () => {
+const UnresolvedChainedPositions: React.FC = () => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -54,113 +52,124 @@ const UnresolvedPositions: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
-        [CRYPTO_CURRENCY_MAP.BTC]: 0,
-        [CRYPTO_CURRENCY_MAP.ETH]: 0,
-    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmittingSection, setIsSubmittingSection] = useState('');
     const [isLoadingEnabled, setIsLoadingEnabled] = useState(true);
 
-    const ammSpeedMarketsLimitsQuery = useAmmSpeedMarketsLimitsQuery(networkId, walletAddress, {
+    const ammChainedSpeedMarketsLimitsQuery = useAmmChainedSpeedMarketsLimitsQuery(networkId, walletAddress, {
         enabled: isAppReady,
     });
 
-    const ammSpeedMarketsLimitsData = useMemo(() => {
-        return ammSpeedMarketsLimitsQuery.isSuccess ? ammSpeedMarketsLimitsQuery.data : null;
-    }, [ammSpeedMarketsLimitsQuery]);
+    const ammChainedSpeedMarketsLimitsData = useMemo(() => {
+        return ammChainedSpeedMarketsLimitsQuery.isSuccess ? ammChainedSpeedMarketsLimitsQuery.data : null;
+    }, [ammChainedSpeedMarketsLimitsQuery]);
 
-    const activeSpeedMarketsDataQuery = useActiveSpeedMarketsDataQuery(networkId, {
+    const activeChainedSpeedMarketsDataQuery = useActiveChainedSpeedMarketsDataQuery(networkId, {
         enabled: isAppReady,
     });
 
-    const activeSpeedMarketsData = useMemo(
+    const activeChainedSpeedMarketsData = useMemo(
         () =>
-            activeSpeedMarketsDataQuery.isSuccess && activeSpeedMarketsDataQuery.data
-                ? activeSpeedMarketsDataQuery.data
+            activeChainedSpeedMarketsDataQuery.isSuccess && activeChainedSpeedMarketsDataQuery.data
+                ? activeChainedSpeedMarketsDataQuery.data
                 : [],
-        [activeSpeedMarketsDataQuery]
+
+        [activeChainedSpeedMarketsDataQuery]
+    );
+    const now = useMemo(
+        () =>
+            activeChainedSpeedMarketsDataQuery.isSuccess && activeChainedSpeedMarketsDataQuery.data ? Date.now() : 0,
+        [activeChainedSpeedMarketsDataQuery]
     );
 
-    const activeMatured = activeSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
-    const priceRequests = activeMatured.map((marketData) => ({
-        priceId: getPriceId(networkId, marketData.currencyKey),
-        publishTime: millisecondsToSeconds(marketData.maturityDate),
-    }));
+    // Prepare chained speed markets that are partially matured to fetch Pyth prices
+    const partiallyMaturedChainedMarkets = activeChainedSpeedMarketsData
+        .filter((marketData) => marketData.strikeTimes.some((strikeTime) => strikeTime < now))
+        .map((marketData) => {
+            const strikeTimes = marketData.strikeTimes.filter((strikeTime) => strikeTime < now);
+            return {
+                ...marketData,
+                strikeTimes,
+                pythPriceId: getPriceId(networkId, marketData.currencyKey),
+            };
+        });
 
-    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, {
-        enabled: activeSpeedMarketsDataQuery.isSuccess,
+    const priceRequests = partiallyMaturedChainedMarkets
+        .map((data) =>
+            data.strikeTimes.map((strikeTime) => ({
+                priceId: data.pythPriceId,
+                publishTime: millisecondsToSeconds(strikeTime),
+            }))
+        )
+        .flat();
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
+
+    // Based on Pyth prices determine if chained position is claimable
+    const partiallyMaturedUnresolvedWithPrices = partiallyMaturedChainedMarkets.map((marketData, marketIndex) => {
+        const priceStartIndex =
+            marketIndex > 0 ? partiallyMaturedChainedMarkets[marketIndex - 1].strikeTimes.length - 1 : 0;
+        const finalPrices = marketData.strikeTimes.map((_, i) => pythPricesQueries[priceStartIndex + i]?.data || 0);
+        const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
+            i > 0 ? finalPrices[i - 1] : strikePrice
+        );
+        const userWonStatuses = marketData.sides.map((side, i) =>
+            finalPrices[i] > 0
+                ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
+                  (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
+                : undefined
+        );
+        const canResolve =
+            userWonStatuses.some((status) => status === false) ||
+            userWonStatuses.every((status) => status !== undefined);
+        const claimable = userWonStatuses.every((status) => status);
+        const isUnknownPrice = marketData.isMatured && userWonStatuses.some((status) => status === undefined);
+
+        return { ...marketData, strikePrices, finalPrices, canResolve, claimable, isUnknownPrice };
     });
 
-    const maturedUnresolvedWithPrices = activeMatured.map((marketData, index) => {
-        const finalPrice = pythPricesQueries[index].data || 0;
-        const claimable =
-            finalPrice > 0 &&
-            ((marketData.side === Positions.UP && finalPrice > Number(marketData.strikePrice)) ||
-                (marketData.side === Positions.DOWN && finalPrice < Number(marketData.strikePrice)));
-        return {
-            ...marketData,
-            claimable,
-            finalPrice,
-            strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
-        };
-    });
-
-    const userWinnerSpeedMarketsData = maturedUnresolvedWithPrices.filter(
-        (marketData) => marketData.claimable && !!marketData.finalPrice
+    const userWinnerSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
+        (marketData) => marketData.claimable
     );
-    const ammWinnerSpeedMarketsData = maturedUnresolvedWithPrices.filter(
-        (marketData) => !marketData.claimable && !!marketData.finalPrice
+    const ammWinnerSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
+        (marketData) => marketData.canResolve && !marketData.claimable
     );
-    const unknownPriceSpeedMarketsData = maturedUnresolvedWithPrices.filter(
-        (marketData) => !marketData.claimable && !marketData.finalPrice
+    const unknownPriceSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
+        (marketData) => marketData.isUnknownPrice
     );
-    const openSpeedMarketsData = activeSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate > Date.now())
-        .map((marketData) => ({
-            ...marketData,
-            strikePrice: formatCurrencyWithSign(USD_SIGN, Number(marketData.strikePrice)),
-            currentPrice: currentPrices[marketData.currencyKey]
-                ? currentPrices[marketData.currencyKey]
-                : marketData.currentPrice,
-        }));
+    const openSpeedMarketsData = activeChainedSpeedMarketsData.filter(
+        (marketData) =>
+            !partiallyMaturedChainedMarkets.some((maturedMarket) => maturedMarket.address === marketData.address) ||
+            (!userWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
+                !ammWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
+                !unknownPriceSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address))
+    );
 
     const isLoading =
         isLoadingEnabled &&
-        (activeSpeedMarketsDataQuery.isLoading || pythPricesQueries.some((price) => price.isLoading));
-
-    const priceConnection = useMemo(() => {
-        return new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), { timeout: CONNECTION_TIMEOUT_MS });
-    }, [networkId]);
+        (activeChainedSpeedMarketsDataQuery.isLoading || pythPricesQueries.some((price) => price.isLoading));
 
     useInterval(async () => {
         // Check if there are new matured markets from open markets and refresh it
         const openMatured = openSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
         if (openMatured.length) {
             setIsLoadingEnabled(false);
-            refetchActiveSpeedMarkets(false, networkId);
-        }
-        // Refresh current prices
-        if (openSpeedMarketsData.length) {
-            const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
-            const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
-            setCurrentPrices({
-                ...currentPrices,
-                [CRYPTO_CURRENCY_MAP.BTC]: prices[CRYPTO_CURRENCY_MAP.BTC],
-                [CRYPTO_CURRENCY_MAP.ETH]: prices[CRYPTO_CURRENCY_MAP.ETH],
-            });
+            refetchActiveSpeedMarkets(true, networkId);
         }
         // Check if missing price is available
         if (unknownPriceSpeedMarketsData.length) {
             unknownPriceSpeedMarketsData.forEach((marketData) => {
                 const priceId = getPriceId(networkId, marketData.currencyKey);
-                const publishTime = millisecondsToSeconds(marketData.maturityDate);
-                refetchPythPrice(priceId, publishTime);
+                marketData.finalPrices.forEach((finalPrice, i) => {
+                    if (finalPrice === 0) {
+                        const publishTime = millisecondsToSeconds(marketData.strikeTimes[i]);
+                        refetchPythPrice(priceId, publishTime);
+                    }
+                });
             });
         }
     }, secondsToMilliseconds(10));
 
-    const handleResolveAll = async (positions: UserLivePositions[], isAdmin: boolean) => {
+    const handleResolveAll = async (positions: ChainedSpeedMarket[], isAdmin: boolean) => {
         if (!positions.length) {
             return;
         }
@@ -169,29 +178,32 @@ const UnresolvedPositions: React.FC = () => {
             timeout: CONNECTION_TIMEOUT_MS,
         });
 
-        const { speedMarketsAMMContract, signer } = snxJSConnector as any;
-        if (speedMarketsAMMContract) {
+        const { chainedSpeedMarketsAMMContract, signer } = snxJSConnector as any;
+        if (chainedSpeedMarketsAMMContract) {
             setIsSubmitting(true);
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
-            const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
+            const chainedSpeedMarketsAMMContractWithSigner = chainedSpeedMarketsAMMContract.connect(signer);
 
             const marketsToResolve: string[] = isAdmin
-                ? positions.filter((position) => !!position.finalPrice).map((position) => position.market)
+                ? positions.filter((position) => position.canResolve).map((position) => position.address)
                 : [];
-            const manualFinalPrices: number[] = isAdmin
+            const manualFinalPrices: number[][] = isAdmin
                 ? positions
-                      .filter((position) => !!position.finalPrice)
+                      .filter((position) => position.canResolve)
                       .map((position) =>
-                          Number(
-                              ethers.utils.parseUnits(
-                                  truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
-                                  PYTH_CURRENCY_DECIMALS
+                          position.finalPrices.map((finalPrice) =>
+                              Number(
+                                  ethers.utils.parseUnits(
+                                      truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
+                                      PYTH_CURRENCY_DECIMALS
+                                  )
                               )
                           )
                       )
                 : [];
-            const priceUpdateDataArray: string[] = [];
+
+            const priceUpdateDataArray: string[][] = [];
             let totalUpdateFee = BigNumber.from(0);
 
             for (const position of positions) {
@@ -205,30 +217,41 @@ const UnresolvedPositions: React.FC = () => {
                         (snxJSConnector as any).provider
                     );
 
-                    const [priceFeedUpdateVaa] = await priceConnection.getVaa(
-                        getPriceId(networkId, position.currencyKey),
-                        millisecondsToSeconds(position.maturityDate)
+                    let promises = [];
+                    const pythPriceId = getPriceId(networkId, position.currencyKey);
+                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                        promises.push(
+                            priceConnection.getVaa(pythPriceId, millisecondsToSeconds(position.strikeTimes[i]))
+                        );
+                    }
+                    const priceFeedUpdateVaas = await Promise.all(promises);
+
+                    promises = [];
+                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                        const [priceFeedUpdateVaa] = priceFeedUpdateVaas[i];
+                        const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
+                        priceUpdateDataArray.push(priceUpdateData);
+                        promises.push(pythContract.getUpdateFee(priceUpdateData));
+                    }
+
+                    const updateFees = await Promise.all(promises);
+                    totalUpdateFee = totalUpdateFee.add(
+                        updateFees.reduce((a: BigNumber, b: BigNumber) => a.add(b), BigNumber.from(0))
                     );
-
-                    const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
-                    const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-
-                    marketsToResolve.push(position.market);
-                    priceUpdateDataArray.push(priceUpdateData[0]);
-                    totalUpdateFee = totalUpdateFee.add(updateFee);
+                    marketsToResolve.push(position.address);
                 } catch (e) {
-                    console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
+                    console.log(`Can't fetch VAA from Pyth API for marekt ${position.address}`, e);
                 }
             }
 
             if (marketsToResolve.length > 0) {
                 try {
                     const tx: ethers.ContractTransaction = isAdmin
-                        ? await speedMarketsAMMContractWithSigner.resolveMarketManuallyBatch(
+                        ? await chainedSpeedMarketsAMMContractWithSigner.resolveMarketManuallyBatch(
                               marketsToResolve,
                               manualFinalPrices
                           )
-                        : await speedMarketsAMMContractWithSigner.resolveMarketsBatch(
+                        : await chainedSpeedMarketsAMMContractWithSigner.resolveMarketsBatch(
                               marketsToResolve,
                               priceUpdateDataArray,
                               { value: totalUpdateFee }
@@ -238,7 +261,7 @@ const UnresolvedPositions: React.FC = () => {
 
                     if (txResult && txResult.transactionHash) {
                         toast.update(id, getSuccessToastOptions(t(`speed-markets.overview.confirmation-message`), id));
-                        refetchActiveSpeedMarkets(false, networkId);
+                        refetchActiveSpeedMarkets(true, networkId);
                     }
                 } catch (e) {
                     console.log(e);
@@ -254,7 +277,7 @@ const UnresolvedPositions: React.FC = () => {
     };
 
     const getButton = (
-        positions: UserLivePositions[],
+        positions: ChainedSpeedMarket[],
         sectionName: typeof SECTIONS[keyof typeof SECTIONS],
         isAdmin: boolean
     ) => {
@@ -280,7 +303,7 @@ const UnresolvedPositions: React.FC = () => {
         );
     };
 
-    const getSection = (section: typeof SECTIONS[keyof typeof SECTIONS], positions: UserLivePositions[]) => {
+    const getSection = (section: typeof SECTIONS[keyof typeof SECTIONS], positions: ChainedSpeedMarket[]) => {
         let titleKey = '';
         switch (section) {
             case SECTIONS.userWinner:
@@ -298,7 +321,7 @@ const UnresolvedPositions: React.FC = () => {
             default:
         }
 
-        const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && section === SECTIONS.ammWinner;
+        const isAdmin = !!ammChainedSpeedMarketsLimitsData?.whitelistedAddress && section === SECTIONS.ammWinner;
 
         return (
             <>
@@ -317,11 +340,12 @@ const UnresolvedPositions: React.FC = () => {
                             positions
                                 .sort((a, b) => a.maturityDate - b.maturityDate)
                                 .map((position, index) => (
-                                    <UnresolvedPosition
+                                    <ChainedPosition
                                         position={position}
                                         maxPriceDelayForResolvingSec={
-                                            ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec || 0
+                                            ammChainedSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
                                         }
+                                        isOverview
                                         isAdmin={isAdmin}
                                         isSubmittingBatch={isSubmitting}
                                         key={`${section}${index}`}
@@ -346,4 +370,4 @@ const UnresolvedPositions: React.FC = () => {
     );
 };
 
-export default UnresolvedPositions;
+export default UnresolvedChainedPositions;

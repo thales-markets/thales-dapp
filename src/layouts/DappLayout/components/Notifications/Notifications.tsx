@@ -58,9 +58,9 @@ const Notifications: React.FC = () => {
         [userActiveChainedSpeedMarketsDataQuery]
     );
 
-    // Prepare chained speed markets that become matured to fetch Pyth prices
+    // Prepare active chained speed markets that become matured to fetch Pyth prices
     const maturedChainedMarkets = userActiveChainedSpeedMarketsData
-        .filter((marketData) => marketData.maturityDate < Date.now())
+        .filter((marketData) => marketData.isMatured)
         .map((marketData) => {
             const strikeTimes = marketData.strikeTimes.map((strikeTime) => millisecondsToSeconds(strikeTime));
             return {

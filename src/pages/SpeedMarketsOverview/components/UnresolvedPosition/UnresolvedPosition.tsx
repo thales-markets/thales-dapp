@@ -5,7 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
-import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
+import { UserLivePositions } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatNumberShort } from 'utils/formatters/number';
 import { getColorPerPosition } from 'utils/options';
@@ -14,16 +14,16 @@ import { Label, Separator } from '../OverviewPositionAction/OverviewPositionActi
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
+    maxPriceDelayForResolvingSec: number;
+    isAdmin: boolean;
     isSubmittingBatch: boolean;
-    ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
-    isAmmWinnerSection: boolean;
 };
 
 const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
     position,
+    maxPriceDelayForResolvingSec,
+    isAdmin,
     isSubmittingBatch,
-    ammSpeedMarketsLimitsData,
-    isAmmWinnerSection,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -84,9 +84,9 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
             </AlignedFlex>
             <OverviewPositionAction
                 position={position}
+                maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                isAdmin={isAdmin}
                 isSubmittingBatch={isSubmittingBatch}
-                ammSpeedMarketsLimitsData={ammSpeedMarketsLimitsData}
-                isAmmWinnerSection={isAmmWinnerSection}
             />
         </Position>
     );

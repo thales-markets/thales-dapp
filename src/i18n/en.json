@@ -485,6 +485,8 @@
         "overview": {
             "title": "Overview",
             "navigate": "Speed Markets Overview page",
+            "navigate-chained": "Chained Speed Markets Overview page",
+            "back-chained": "Chained Speed Markets",
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
             "unknown-price-title": "Unresolved positions without final price",

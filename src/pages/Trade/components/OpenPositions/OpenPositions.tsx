@@ -100,7 +100,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                                       <ChainedPosition
                                           position={position}
                                           maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                                          currentPrices={currentPrices}
                                           key={`position${position.address}${index}`}
                                       />
                                   ))

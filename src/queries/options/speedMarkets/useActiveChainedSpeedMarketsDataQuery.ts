@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from 'constants/network';
 import { OPTIONS_POSITIONS_MAP, SIDE } from 'constants/options';
 import { PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
@@ -10,33 +11,28 @@ import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { ChainedSpeedMarket, OptionSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 
-const useUserActiveChainedSpeedMarketsDataQuery = (
-    networkId: Network,
-    walletAddress: string,
-    options?: UseQueryOptions<ChainedSpeedMarket[]>
-) => {
+const useActiveChainedSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOptions<ChainedSpeedMarket[]>) => {
     return useQuery<ChainedSpeedMarket[]>(
-        QUERY_KEYS.BinaryOptions.UserChainedSpeedMarkets(networkId, walletAddress),
+        QUERY_KEYS.BinaryOptions.ActiveChainedSpeedMarkets(networkId),
         async () => {
-            const userChainedSpeedMarketsData: ChainedSpeedMarket[] = [];
+            const chainedSpeedMarketsData: ChainedSpeedMarket[] = [];
             const { chainedSpeedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
             if (chainedSpeedMarketsAMMContract && speedMarketsDataContract) {
-                const ammParams = await speedMarketsDataContract.getChainedSpeedMarketsAMMParameters(walletAddress);
+                const ammParams = await speedMarketsDataContract.getChainedSpeedMarketsAMMParameters(ZERO_ADDRESS);
 
-                const activeMarkets = await chainedSpeedMarketsAMMContract.activeMarketsPerUser(
+                const activeMarketsAddresses = await chainedSpeedMarketsAMMContract.activeMarkets(
                     0,
-                    ammParams.numActiveMarketsPerUser,
-                    walletAddress
+                    ammParams.numActiveMarkets
                 );
-                const marketsDataArray = await speedMarketsDataContract.getChainedMarketsData(activeMarkets);
-                const userActiveMarkets = marketsDataArray.map((marketData: any, index: number) => ({
+                const marketsDataArray = await speedMarketsDataContract.getChainedMarketsData(activeMarketsAddresses);
+                const activeMarkets = marketsDataArray.map((marketData: any, index: number) => ({
                     ...marketData,
-                    market: activeMarkets[index],
+                    market: activeMarketsAddresses[index],
                 }));
 
-                for (let i = 0; i < userActiveMarkets.length; i++) {
-                    const marketData = userActiveMarkets[i];
+                for (let i = 0; i < activeMarkets.length; i++) {
+                    const marketData = activeMarkets[i];
 
                     const sides = marketData.directions.map(
                         (direction: number) => OPTIONS_POSITIONS_MAP[SIDE[direction] as OptionSide] as Positions
@@ -55,7 +51,7 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                     const fee = bigNumberFormatter(marketData.safeBoxImpact);
                     const payout = buyinAmount * bigNumberFormatter(marketData.payoutMultiplier) ** sides.length;
 
-                    const userData: ChainedSpeedMarket = {
+                    const chainedData: ChainedSpeedMarket = {
                         address: marketData.market,
                         timestamp: secondsToMilliseconds(Number(marketData.createdAt)),
                         currencyKey: parseBytes32String(marketData.asset),
@@ -74,11 +70,11 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         user: marketData.user,
                     };
 
-                    userChainedSpeedMarketsData.push(userData);
+                    chainedSpeedMarketsData.push(chainedData);
                 }
             }
 
-            return userChainedSpeedMarketsData;
+            return chainedSpeedMarketsData;
         },
         {
             ...options,
@@ -86,4 +82,4 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
     );
 };
 
-export default useUserActiveChainedSpeedMarketsDataQuery;
+export default useActiveChainedSpeedMarketsDataQuery;

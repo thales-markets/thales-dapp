@@ -22,16 +22,27 @@ import ChainedPositionAction from '../ChainedPositionAction';
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
     maxPriceDelayForResolvingSec?: number;
-    currentPrices?: { [key: string]: number };
+    isOverview?: boolean;
+    isAdmin?: boolean;
+    isSubmittingBatch?: boolean;
 };
 
-const ChainedPosition: React.FC<ChainedPositionProps> = ({ position, maxPriceDelayForResolvingSec }) => {
+const ChainedPosition: React.FC<ChainedPositionProps> = ({
+    position,
+    maxPriceDelayForResolvingSec,
+    isOverview,
+    isAdmin,
+    isSubmittingBatch,
+}) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const maturedStrikeTimes = position.strikeTimes.filter((strikeTime) => strikeTime < Date.now());
+    const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
+    const maturedStrikeTimes = isMissingPrices
+        ? position.strikeTimes.filter((strikeTime) => strikeTime < Date.now())
+        : [];
 
     const pythPriceId = position.isOpen ? getPriceId(networkId, position.currencyKey) : '';
     const priceRequests = position.isOpen
@@ -43,12 +54,14 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({ position, maxPriceDel
 
     const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: position.isOpen });
 
-    const finalPrices = position.isOpen
-        ? position.finalPrices.map((_, i) => pythPricesQueries[i]?.data || 0)
-        : position.finalPrices;
-    const strikePrices = position.isOpen
-        ? position.strikePrices.map((strikePrice, i) => (i > 0 ? finalPrices[i - 1] : strikePrice))
-        : position.strikePrices;
+    const finalPrices =
+        isMissingPrices && position.isOpen
+            ? position.finalPrices.map((_, i) => pythPricesQueries[i]?.data || 0)
+            : position.finalPrices;
+    const strikePrices =
+        isMissingPrices && position.isOpen
+            ? position.strikePrices.map((strikePrice, i) => (i > 0 ? finalPrices[i - 1] : strikePrice))
+            : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
         finalPrices[i] > 0
             ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
@@ -169,8 +182,19 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({ position, maxPriceDel
                     <ChainedPositionAction
                         position={positionWithPrices}
                         maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                        isOverview={isOverview}
+                        isAdmin={isAdmin}
+                        isSubmittingBatch={isSubmittingBatch}
                     />
                 </Result>
+                {isOverview && (
+                    <FlexDivCentered>
+                        <Text>
+                            {t('speed-markets.overview.user')}
+                            <Text isActiveColor>{` ${position.user}`}</Text>
+                        </Text>
+                    </FlexDivCentered>
+                )}
             </Summary>
         </Container>
     );

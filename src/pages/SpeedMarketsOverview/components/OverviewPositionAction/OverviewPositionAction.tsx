@@ -22,7 +22,7 @@ import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { truncToDecimals } from 'thales-utils';
-import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
+import { UserLivePositions } from 'types/options';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -30,16 +30,16 @@ import { delay } from 'utils/timer';
 
 type OverviewPositionActionProps = {
     position: UserLivePositions;
+    maxPriceDelayForResolvingSec: number;
+    isAdmin: boolean;
     isSubmittingBatch: boolean;
-    ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
-    isAmmWinnerSection: boolean;
 };
 
 const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
     position,
+    maxPriceDelayForResolvingSec,
+    isAdmin,
     isSubmittingBatch,
-    ammSpeedMarketsLimitsData,
-    isAmmWinnerSection,
 }) => {
     const { t } = useTranslation();
 
@@ -51,8 +51,6 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
     useEffect(() => {
         setIsSubmitting(isSubmittingBatch);
     }, [isSubmittingBatch]);
-
-    const isAdmin = !!ammSpeedMarketsLimitsData?.whitelistedAddress && isAmmWinnerSection;
 
     const handleResolve = async () => {
         const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
@@ -91,9 +89,9 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
 
                     // check if price feed is not too late
                     if (
-                        ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec &&
+                        maxPriceDelayForResolvingSec &&
                         differenceInSeconds(secondsToMilliseconds(publishTime), position.maturityDate) >
-                            ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
+                            maxPriceDelayForResolvingSec
                     ) {
                         await delay(800);
                         toast.update(
@@ -119,7 +117,7 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
                         id,
                         getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
                     );
-                    refetchActiveSpeedMarkets(networkId);
+                    refetchActiveSpeedMarkets(false, networkId);
                 }
             } catch (e) {
                 console.log(e);

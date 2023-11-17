@@ -90,9 +90,11 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         paid: buyinAmount * (1 + fee),
                         finalPrices,
                         isOpen: false,
+                        isMatured: true,
                         canResolve: false,
                         claimable: false,
                         isUserWinner: marketData.isUserWinner,
+                        user: marketData.user,
                     };
 
                     userChainedSpeedMarketsData.push(userData);

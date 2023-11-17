@@ -327,12 +327,12 @@ const SpeedMarkets: React.FC = () => {
                         </>
                     )}
                     <OverviewLinkWrapper>
-                        <SPAAnchor
-                            href={buildHref(
-                                `${ROUTES.Options.SpeedMarketsOverview}${isChained ? '?isChained=true' : ''}`
-                            )}
-                        >
-                            <OverviewLinkText>{t('speed-markets.overview.navigate')}</OverviewLinkText>
+                        <SPAAnchor href={buildHref(`${ROUTES.Options.SpeedMarketsOverview}?isChained=${isChained}`)}>
+                            <OverviewLinkText>
+                                {isChained
+                                    ? t('speed-markets.overview.navigate-chained')
+                                    : t('speed-markets.overview.navigate')}
+                            </OverviewLinkText>
                             <ArrowRight className="icon icon--arrow" />
                         </SPAAnchor>
                     </OverviewLinkWrapper>

@@ -70,6 +70,7 @@ const QUERY_KEYS = {
             walletAddress,
         ],
         ActiveSpeedMarkets: (networkId: Network) => ['activeSpeedMarkets', networkId],
+        ActiveChainedSpeedMarkets: (networkId: Network) => ['activeChainedSpeedMarkets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
         Market: (marketAddress: string) => ['market', marketAddress],

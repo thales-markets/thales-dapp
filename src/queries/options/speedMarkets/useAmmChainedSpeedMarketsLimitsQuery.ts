@@ -25,27 +25,34 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
                 maxTimeFrame: 0,
                 risk: { current: 0, max: 0 },
                 payoutMultiplier: 0,
+                maxPriceDelayForResolvingSec: 0,
+                whitelistedAddress: false,
             };
             const { speedMarketsDataContract } = snxJSConnector;
             if (speedMarketsDataContract) {
-                const ammParams = await speedMarketsDataContract.getChainedSpeedMarketsAMMParameters(
-                    walletAddress || ZERO_ADDRESS
-                );
+                const [chainedAmmParams, ammParams] = await Promise.all([
+                    speedMarketsDataContract.getChainedSpeedMarketsAMMParameters(walletAddress || ZERO_ADDRESS),
+                    speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress || ZERO_ADDRESS),
+                ]);
 
-                ammChainedSpeedMarketsLimits.minChainedMarkets = Number(ammParams.minChainedMarkets);
-                ammChainedSpeedMarketsLimits.maxChainedMarkets = Number(ammParams.maxChainedMarkets);
+                ammChainedSpeedMarketsLimits.minChainedMarkets = Number(chainedAmmParams.minChainedMarkets);
+                ammChainedSpeedMarketsLimits.maxChainedMarkets = Number(chainedAmmParams.maxChainedMarkets);
                 ammChainedSpeedMarketsLimits.minBuyinAmount = Math.ceil(
-                    coinFormatter(ammParams.minBuyinAmount, networkId)
+                    coinFormatter(chainedAmmParams.minBuyinAmount, networkId)
                 );
                 ammChainedSpeedMarketsLimits.maxBuyinAmount =
-                    coinFormatter(ammParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
-                ammChainedSpeedMarketsLimits.minTimeFrame = Number(ammParams.minTimeFrame);
-                ammChainedSpeedMarketsLimits.maxTimeFrame = Number(ammParams.maxTimeFrame);
+                    coinFormatter(chainedAmmParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
+                ammChainedSpeedMarketsLimits.minTimeFrame = Number(chainedAmmParams.minTimeFrame);
+                ammChainedSpeedMarketsLimits.maxTimeFrame = Number(chainedAmmParams.maxTimeFrame);
                 ammChainedSpeedMarketsLimits.risk = {
-                    current: coinFormatter(ammParams.risk.current, networkId),
-                    max: coinFormatter(ammParams.risk.max, networkId),
+                    current: coinFormatter(chainedAmmParams.risk.current, networkId),
+                    max: coinFormatter(chainedAmmParams.risk.max, networkId),
                 };
-                ammChainedSpeedMarketsLimits.payoutMultiplier = bigNumberFormatter(ammParams.payoutMultiplier);
+                ammChainedSpeedMarketsLimits.payoutMultiplier = bigNumberFormatter(chainedAmmParams.payoutMultiplier);
+                ammChainedSpeedMarketsLimits.maxPriceDelayForResolvingSec = Number(
+                    ammParams.maximumPriceDelayForResolving
+                );
+                ammChainedSpeedMarketsLimits.whitelistedAddress = ammParams.isAddressWhitelisted;
             }
 
             return ammChainedSpeedMarketsLimits;

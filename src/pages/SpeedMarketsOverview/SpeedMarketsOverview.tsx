@@ -1,14 +1,13 @@
 import SPAAnchor from 'components/SPAAnchor';
 import ROUTES from 'constants/routes';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import queryString from 'query-string';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import { FlexDivStart } from 'styles/common';
 import { buildHref } from 'utils/routes';
+import UnresolvedChainedPositions from './components/UnresolvedChainedPositions';
 import UnresolvedPositions from './components/UnresolvedPositions';
+import { NavigationIcon, LinkContainer, Container, Header } from './styled-components';
 
 const SpeedMarketsOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -19,47 +18,30 @@ const SpeedMarketsOverview: React.FC = () => {
     return (
         <Container>
             <Header>
-                <SPAAnchor
-                    href={`${buildHref(ROUTES.Options.SpeedMarkets)}${isChainedMarkets ? '?isChained=true' : ''}`}
-                >
-                    <BackLinkContainer>
-                        <BackIcon className={`icon icon--left`} />
-                        {t('speed-markets.title')}
-                    </BackLinkContainer>
-                </SPAAnchor>
-                &nbsp;/ {t(`speed-markets.overview.title`)}
+                <div>
+                    <SPAAnchor href={`${buildHref(ROUTES.Options.SpeedMarkets)}?isChained=${isChainedMarkets}`}>
+                        <LinkContainer>
+                            <NavigationIcon isLeft className={`icon icon--left`} />
+                            {isChainedMarkets ? t('speed-markets.overview.back-chained') : t('speed-markets.title')}
+                        </LinkContainer>
+                    </SPAAnchor>
+                    &nbsp;/&nbsp;{t(`speed-markets.overview.title`)}
+                </div>
+                <div>
+                    {t(`speed-markets.overview.title`)}&nbsp;/&nbsp;
+                    <SPAAnchor
+                        href={`${buildHref(ROUTES.Options.SpeedMarketsOverview)}?isChained=${!isChainedMarkets}`}
+                    >
+                        <LinkContainer>
+                            {isChainedMarkets ? t('speed-markets.title') : t('speed-markets.overview.back-chained')}
+                            <NavigationIcon isLeft={false} className={`icon icon--right`} />
+                        </LinkContainer>
+                    </SPAAnchor>
+                </div>
             </Header>
-            <UnresolvedPositions />
+            {isChainedMarkets ? <UnresolvedChainedPositions /> : <UnresolvedPositions />}
         </Container>
     );
 };
-
-const Container = styled.div`
-    width: 100%;
-`;
-
-const Header = styled(FlexDivStart)`
-    font-size: 18px;
-    line-height: 100%;
-    width: 100%;
-    color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
-`;
-
-const BackLinkContainer = styled.span`
-    :hover {
-        text-decoration: underline;
-    }
-`;
-
-const BackIcon = styled.i`
-    font-weight: 400;
-    font-size: 20px;
-    margin-right: 6px;
-    top: -2px;
-    position: relative;
-`;
 
 export default SpeedMarketsOverview;
