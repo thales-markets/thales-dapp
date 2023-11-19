@@ -1,6 +1,8 @@
 import { ZERO_ADDRESS } from 'constants/network';
 import { BigNumber, ethers } from 'ethers';
 import { secondsToMinutes } from 'date-fns';
+import { ChainedSpeedMarket } from 'types/options';
+import { Positions } from 'enums/options';
 
 export const getTransactionForSpeedAMM = async (
     speedMarketsAMMContractWithSigner: any, // speed or chained
@@ -135,4 +137,14 @@ export const getFeesFromHistory = (txTimestampMilis: number) => {
         lpFee = 0.05;
     }
     return { safeBoxImpact, lpFee };
+};
+
+export const getUserLostAtSideIndex = (position: ChainedSpeedMarket) => {
+    const userLostIndex = position.finalPrices.findIndex(
+        (finalPrice, i) =>
+            finalPrice > 0 &&
+            ((position.sides[i] === Positions.UP && finalPrice <= position.strikePrices[i]) ||
+                (position.sides[i] === Positions.DOWN && finalPrice >= position.strikePrices[i]))
+    );
+    return userLostIndex > -1 ? userLostIndex : position.sides.length - 1;
 };

@@ -42,6 +42,7 @@ import { ChainedSpeedMarket } from 'types/options';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getUserLostAtSideIndex } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 
 const UnresolvedChainedPositions: React.FC = () => {
@@ -107,7 +108,7 @@ const UnresolvedChainedPositions: React.FC = () => {
     // Based on Pyth prices determine if chained position is claimable
     const partiallyMaturedUnresolvedWithPrices = partiallyMaturedChainedMarkets.map((marketData, marketIndex) => {
         const priceStartIndex =
-            marketIndex > 0 ? partiallyMaturedChainedMarkets[marketIndex - 1].strikeTimes.length - 1 : 0;
+            marketIndex > 0 ? partiallyMaturedChainedMarkets[marketIndex - 1].strikeTimes.length : 0;
         const finalPrices = marketData.strikeTimes.map((_, i) => pythPricesQueries[priceStartIndex + i]?.data || 0);
         const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
             i > 0 ? finalPrices[i - 1] : strikePrice
@@ -188,28 +189,34 @@ const UnresolvedChainedPositions: React.FC = () => {
             const marketsToResolve: string[] = isAdmin
                 ? positions.filter((position) => position.canResolve).map((position) => position.address)
                 : [];
+
+            const fetchUntilFinalPriceEndIndexes = positions.map((position) => getUserLostAtSideIndex(position) + 1);
             const manualFinalPrices: number[][] = isAdmin
                 ? positions
                       .filter((position) => position.canResolve)
-                      .map((position) =>
-                          position.finalPrices.map((finalPrice) =>
-                              Number(
-                                  ethers.utils.parseUnits(
-                                      truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
-                                      PYTH_CURRENCY_DECIMALS
+                      .map((position, i) =>
+                          position.finalPrices
+                              .slice(0, fetchUntilFinalPriceEndIndexes[i])
+                              .map((finalPrice) =>
+                                  Number(
+                                      ethers.utils.parseUnits(
+                                          truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
+                                          PYTH_CURRENCY_DECIMALS
+                                      )
                                   )
                               )
-                          )
                       )
                 : [];
 
             const priceUpdateDataArray: string[][] = [];
             let totalUpdateFee = BigNumber.from(0);
 
-            for (const position of positions) {
+            // Fetch prices for non-admin resolve
+            for (let index = 0; index < positions.length; index++) {
                 if (isAdmin) {
                     break;
                 }
+                const position = positions[index];
                 try {
                     const pythContract = new ethers.Contract(
                         PYTH_CONTRACT_ADDRESS[networkId],
@@ -219,7 +226,11 @@ const UnresolvedChainedPositions: React.FC = () => {
 
                     let promises = [];
                     const pythPriceId = getPriceId(networkId, position.currencyKey);
-                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                    const strikeTimesToFetchPrice = position.strikeTimes.slice(
+                        0,
+                        fetchUntilFinalPriceEndIndexes[index]
+                    );
+                    for (let i = 0; i < strikeTimesToFetchPrice.length; i++) {
                         promises.push(
                             priceConnection.getVaa(pythPriceId, millisecondsToSeconds(position.strikeTimes[i]))
                         );
@@ -227,7 +238,7 @@ const UnresolvedChainedPositions: React.FC = () => {
                     const priceFeedUpdateVaas = await Promise.all(promises);
 
                     promises = [];
-                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                    for (let i = 0; i < strikeTimesToFetchPrice.length; i++) {
                         const [priceFeedUpdateVaa] = priceFeedUpdateVaas[i];
                         const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
                         priceUpdateDataArray.push(priceUpdateData);

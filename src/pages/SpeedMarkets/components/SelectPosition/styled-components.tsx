@@ -93,10 +93,11 @@ export const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean;
     ${(props) => (props.isSmaller ? 'height: 20px;' : '')};
 `;
 
-export const Icon = styled.i<{ isSmaller?: boolean; size?: number; color?: string }>`
+export const Icon = styled.i<{ isSmaller?: boolean; size?: number; padding?: string; color?: string }>`
     font-size: ${(props) => (props.size ? props.size : props.isSmaller ? '10' : '18')}px;
     line-height: 100%;
     color: ${(props) => (props.color ? props.color : 'inherit')};
+    ${(props) => (props.padding ? `padding: ${props.padding};` : '')};
 `;
 
 const Label = styled.span`

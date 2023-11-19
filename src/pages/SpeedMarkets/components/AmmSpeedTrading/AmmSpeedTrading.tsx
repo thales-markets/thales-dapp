@@ -538,7 +538,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 const priceId = getPriceId(networkId, currencyKey);
                 const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([priceId]);
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-                console.log(updateFee);
+
                 const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, [priceId]);
                 setSubmittedStrikePrice(prices[currencyKey]);
 

@@ -4,7 +4,7 @@ import { millisecondsToSeconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -18,6 +18,7 @@ import { getPriceId } from 'utils/pyth';
 import { Icon, PositionSymbolDown, PositionSymbolUp } from '../SelectPosition/styled-components';
 import { formatNumberShort } from 'utils/formatters/number';
 import ChainedPositionAction from '../ChainedPositionAction';
+import { refetchPythPrice } from 'utils/queryConnector';
 
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
@@ -39,9 +40,11 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const [fetchLastFinalPricetIndex, setFetchLastFinalPricetIndex] = useState(0);
+
     const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
     const maturedStrikeTimes = isMissingPrices
-        ? position.strikeTimes.filter((strikeTime) => strikeTime < Date.now())
+        ? position.strikeTimes.slice(0, fetchLastFinalPricetIndex + 1).filter((strikeTime) => strikeTime < Date.now())
         : [];
 
     const pythPriceId = position.isOpen ? getPriceId(networkId, position.currencyKey) : '';
@@ -56,11 +59,18 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
 
     const finalPrices =
         isMissingPrices && position.isOpen
-            ? position.finalPrices.map((_, i) => pythPricesQueries[i]?.data || 0)
+            ? position.finalPrices.map((_, i) => {
+                  if (!pythPricesQueries[i]?.data) {
+                      refetchPythPrice(pythPriceId, millisecondsToSeconds(maturedStrikeTimes[i]));
+                  }
+                  return pythPricesQueries[i]?.data || 0;
+              })
             : position.finalPrices;
     const strikePrices =
         isMissingPrices && position.isOpen
-            ? position.strikePrices.map((strikePrice, i) => (i > 0 ? finalPrices[i - 1] : strikePrice))
+            ? position.strikePrices.map((strikePrice, i) =>
+                  i > 0 && i < fetchLastFinalPricetIndex ? finalPrices[i - 1] : strikePrice
+              )
             : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
         finalPrices[i] > 0
@@ -75,13 +85,19 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
 
     const positionWithPrices = {
         ...position,
-        maturedStrikeTimes,
         strikePrices,
         finalPrices,
         canResolve,
         claimable,
-        userWonStatuses,
     };
+
+    const size = useMemo(() => position.sides.length, [position.sides]);
+
+    useEffect(() => {
+        if (position.isOpen && !canResolve) {
+            setFetchLastFinalPricetIndex((prevState) => (prevState < size ? prevState + 1 : prevState));
+        }
+    }, [canResolve, size, position.isOpen]);
 
     return (
         <Container>
@@ -102,7 +118,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             <PositionDetails>
                 {positionWithPrices.sides.map((side, index) => {
                     return (
-                        <Postion key={index}>
+                        <Postion isDisabled={!position.isOpen && index > fetchLastFinalPricetIndex} key={index}>
                             {index !== 0 && (
                                 <Chain>
                                     <Icon className="icon icon--chain" />
@@ -124,7 +140,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                                 {formatHoursAndMinutesFromTimestamp(positionWithPrices.strikeTimes[index])}
                             </Text>
                             {positionWithPrices.strikePrices[index] ? (
-                                <Text isActiveColor={!positionWithPrices.maturedStrikeTimes[index]}>
+                                <Text isActiveColor={!maturedStrikeTimes[index]}>
                                     {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[index])}
                                 </Text>
                             ) : (
@@ -132,7 +148,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                             )}
                             {positionWithPrices.finalPrices[index] ? (
                                 <Text>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[index])}</Text>
-                            ) : positionWithPrices.maturedStrikeTimes[index] ? (
+                            ) : position.isOpen && maturedStrikeTimes[index] ? (
                                 <Text fontSize={16}>
                                     <Tooltip
                                         marginLeft={0}
@@ -143,20 +159,17 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                             ) : (
                                 <Dash />
                             )}
-                            {positionWithPrices.userWonStatuses[index] !== undefined ? (
+                            {userWonStatuses[index] !== undefined ? (
                                 <Text lineHeight="100%">
                                     <Icon
-                                        size={20}
+                                        size={userWonStatuses[index] ? 20 : 18}
+                                        padding={userWonStatuses[index] ? undefined : '1px 0'}
                                         color={
-                                            positionWithPrices.userWonStatuses[index]
+                                            userWonStatuses[index]
                                                 ? theme.textColor.quaternary
                                                 : theme.error.textColor.primary
                                         }
-                                        className={
-                                            positionWithPrices.userWonStatuses[index]
-                                                ? 'icon icon--correct'
-                                                : 'icon icon--wrong'
-                                        }
+                                        className={userWonStatuses[index] ? 'icon icon--correct' : 'icon icon--wrong'}
                                     />
                                 </Text>
                             ) : (
@@ -249,10 +262,28 @@ const Chain = styled(FlexDivCentered)`
     color: ${(props) => props.theme.textColor.secondary};
 `;
 
-const Postion = styled(FlexDivColumnCentered)`
+const Dash = styled.div`
+    width: 14px;
+    height: 3px;
+    background: ${(props) => props.theme.background.tertiary};
+    border-radius: 3px;
+    margin: 9px 0 8px 0;
+`;
+
+const Postion = styled(FlexDivColumnCentered)<{ isDisabled: boolean }>`
     position: relative;
     max-width: 110px;
     align-items: center;
+
+    span,
+    div {
+        ${(props) => (props.isDisabled ? `color: ${props.theme.background.secondary};` : '')}
+        ${(props) => (props.isDisabled ? `border-color: ${props.theme.background.secondary};` : '')}
+    }
+
+    ${Dash} {
+        ${(props) => (props.isDisabled ? `background: ${props.theme.background.secondary};` : '')}
+    }
 `;
 
 const Summary = styled(FlexDivColumn)`
@@ -277,14 +308,6 @@ const Separator = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
-`;
-
-const Dash = styled.div`
-    width: 14px;
-    height: 3px;
-    background: ${(props) => props.theme.background.tertiary};
-    border-radius: 3px;
-    margin: 9px 0 8px 0;
 `;
 
 export default ChainedPosition;

@@ -58,6 +58,7 @@ import {
     refetchUserSpeedMarkets,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getUserLostAtSideIndex } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 
 type ChainedPositionActionProps = {
@@ -177,15 +178,19 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
             const chainedSpeedMarketsAMMContractWithSigner = chainedSpeedMarketsAMMContract.connect(signer);
             try {
                 let tx: ethers.ContractTransaction;
+                const fetchUntilFinalPriceEndIndex = getUserLostAtSideIndex(position) + 1;
                 if (isAdmin) {
-                    const manualFinalPrices: number[] = position.finalPrices.map((finalPrice) =>
-                        Number(
-                            ethers.utils.parseUnits(
-                                truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
-                                PYTH_CURRENCY_DECIMALS
+                    const manualFinalPrices: number[] = position.finalPrices
+                        .slice(0, fetchUntilFinalPriceEndIndex)
+                        .map((finalPrice) =>
+                            Number(
+                                ethers.utils.parseUnits(
+                                    truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
+                                    PYTH_CURRENCY_DECIMALS
+                                )
                             )
-                        )
-                    );
+                        );
+
                     tx = await chainedSpeedMarketsAMMContractWithSigner.resolveMarketManually(
                         position.address,
                         manualFinalPrices
@@ -199,7 +204,8 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
                     let promises = [];
                     const pythPriceId = getPriceId(networkId, position.currencyKey);
-                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                    const strikeTimesToFetchPrice = position.strikeTimes.slice(0, fetchUntilFinalPriceEndIndex);
+                    for (let i = 0; i < strikeTimesToFetchPrice.length; i++) {
                         promises.push(
                             priceConnection.getVaa(pythPriceId, millisecondsToSeconds(position.strikeTimes[i]))
                         );
@@ -208,7 +214,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
                     const priceUpdateDataArray: string[][] = [];
                     promises = [];
-                    for (let i = 0; i < position.strikeTimes.length; i++) {
+                    for (let i = 0; i < strikeTimesToFetchPrice.length; i++) {
                         const [priceFeedUpdateVaa, publishTime] = priceFeedUpdateVaas[i];
 
                         // check if price feed is not too late
