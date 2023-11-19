@@ -94,10 +94,15 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const size = useMemo(() => position.sides.length, [position.sides]);
 
     useEffect(() => {
-        if (position.isOpen && !canResolve) {
-            setFetchLastFinalPricetIndex((prevState) => (prevState < size ? prevState + 1 : prevState));
+        if (
+            position.isOpen &&
+            !canResolve &&
+            finalPrices[fetchLastFinalPricetIndex] &&
+            fetchLastFinalPricetIndex < size - 1
+        ) {
+            setFetchLastFinalPricetIndex(fetchLastFinalPricetIndex + 1);
         }
-    }, [canResolve, size, position.isOpen]);
+    }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPricetIndex]);
 
     return (
         <Container>

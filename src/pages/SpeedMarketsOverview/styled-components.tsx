@@ -60,12 +60,12 @@ export const Row = styled(FlexDivRow)`
     }
 `;
 
-export const PositionsWrapper = styled.div<{ hasPositions: boolean }>`
+export const PositionsWrapper = styled.div<{ hasPositions: boolean; isChained?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 6px;
     ${(props) => (props.hasPositions ? 'overflow-y: auto;' : '')}
-    max-height: 560px;
+    max-height: ${(props) => (props.isChained ? '624' : '560')}px;
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
