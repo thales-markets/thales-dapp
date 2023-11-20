@@ -778,24 +778,38 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     {isMobile && getTradingDetails()}
                     {getSubmitButton()}
                     <PaymentInfo>
-                        {!isChained && !totalFee
-                            ? t('speed-markets.fee-info')
-                            : isStableCurrency(selectedCollateral)
-                            ? t(`speed-markets${isChained ? '.chained' : ''}.total-pay`, {
-                                  amount: selectedStableBuyinAmount
-                                      ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
-                                      : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
-                                  fee: formatPercentage(totalFee),
-                                  skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
-                              })
-                            : t(`speed-markets${isChained ? '.chained' : ''}.to-pay-with-conversion`, {
-                                  amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
-                                  stableAmount: selectedStableBuyinAmount
-                                      ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
-                                      : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
-                                  fee: formatPercentage(totalFee),
-                                  skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
-                              })}
+                        {!isChained && !totalFee ? (
+                            t('speed-markets.fee-info')
+                        ) : isStableCurrency(selectedCollateral) ? (
+                            <Trans
+                                i18nKey={`speed-markets${isChained ? '.chained' : ''}.total-pay`}
+                                values={{
+                                    amount: selectedStableBuyinAmount
+                                        ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
+                                        : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
+                                    fee: formatPercentage(totalFee),
+                                    skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
+                                }}
+                                components={{
+                                    tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,
+                                }}
+                            />
+                        ) : (
+                            <Trans
+                                i18nKey={`speed-markets${isChained ? '.chained' : ''}.to-pay-with-conversion`}
+                                values={{
+                                    amount: formatCurrencyWithKey(selectedCollateral, Number(paidAmount)),
+                                    stableAmount: selectedStableBuyinAmount
+                                        ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
+                                        : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
+                                    fee: formatPercentage(totalFee),
+                                    skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
+                                }}
+                                components={{
+                                    tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,
+                                }}
+                            />
+                        )}
                         {!isChained && !totalFee ? (
                             <Tooltip
                                 overlay={

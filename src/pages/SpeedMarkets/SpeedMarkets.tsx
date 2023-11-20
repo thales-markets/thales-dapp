@@ -36,6 +36,7 @@ import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
 import { Positions } from 'enums/options';
+import { roundNumberToDecimals } from 'thales-utils';
 
 const CHAINED_TIME_FRAME_MINUTES = 10;
 
@@ -202,9 +203,20 @@ const SpeedMarkets: React.FC = () => {
                         <LeftSide>
                             <Info>
                                 <Trans
-                                    i18nKey="speed-markets.info"
+                                    i18nKey={isChained ? 'speed-markets.chained.info' : 'speed-markets.info'}
                                     components={{
                                         bold: <BoldText />,
+                                    }}
+                                    values={{
+                                        minMarkets: ammChainedSpeedMarketsLimitsData?.minChainedMarkets,
+                                        maxMarkets: ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
+                                        maxRoi: ammChainedSpeedMarketsLimitsData
+                                            ? roundNumberToDecimals(
+                                                  ammChainedSpeedMarketsLimitsData?.payoutMultiplier **
+                                                      ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
+                                                  0
+                                              )
+                                            : '...',
                                     }}
                                 />
                                 <Tooltip
