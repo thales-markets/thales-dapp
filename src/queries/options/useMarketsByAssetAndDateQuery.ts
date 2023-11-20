@@ -85,16 +85,18 @@ const useMarketsByAssetAndDateQuery = (
                 const allRangedMarkets = new Map();
 
                 rangedMarkets.map((rangedMarket, index: number) => {
-                    const indexCounter = Math.floor(index / BATCH_LIMIT);
-                    const item = allRangedMarkets.get(indexCounter);
-                    if (item) {
-                        item.push(rangedMarket.address);
-                        allRangedMarkets.set(indexCounter, item);
+                    const batchCounter = Math.floor(index / BATCH_LIMIT); // calculate batch counter for rangedMarket.
+                    const batch = allRangedMarkets.get(batchCounter); // get the batch for counter
+                    // if batch exist we push the market if it does not we initialize the batch with it.
+                    if (batch) {
+                        batch.push(rangedMarket.address);
+                        allRangedMarkets.set(batchCounter, batch);
                     } else {
-                        allRangedMarkets.set(indexCounter, [rangedMarket.address]);
+                        allRangedMarkets.set(batchCounter, [rangedMarket.address]);
                     }
                 });
 
+                //EXECUTE BATCH
                 const result: any = [];
                 const promises: any = [];
 
@@ -108,6 +110,8 @@ const useMarketsByAssetAndDateQuery = (
                     );
                 });
                 await Promise.all(promises);
+                // EXECUTE BATCH
+
                 const finalResult = result.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
