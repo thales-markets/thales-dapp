@@ -11,6 +11,8 @@ import { Positions } from 'enums/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { ZERO_ADDRESS } from 'constants/network';
 
+const BATCH_LIMIT = 30;
+
 const useMarketsByAssetAndDateQuery = (
     asset: string,
     date: number,
@@ -80,18 +82,33 @@ const useMarketsByAssetAndDateQuery = (
                     currencyKey: ethers.utils.formatBytes32String(asset),
                 });
 
-                const allRangedMarkets: string[] = [];
+                const allRangedMarkets = new Map();
 
-                rangedMarkets.map((rangedMarket) => {
-                    allRangedMarkets.push(rangedMarket.address);
+                rangedMarkets.map((rangedMarket, index: number) => {
+                    const indexCounter = Math.floor(index / BATCH_LIMIT);
+                    const item = allRangedMarkets.get(indexCounter);
+                    if (item) {
+                        item.push(rangedMarket.address);
+                        allRangedMarkets.set(indexCounter, item);
+                    } else {
+                        allRangedMarkets.set(indexCounter, [rangedMarket.address]);
+                    }
                 });
 
-                const rangedMarketsInfo = await (snxJSConnector as any).binaryOptionsMarketDataContract.getRangedActiveMarketsInfoPerPosition(
-                    allRangedMarkets,
-                    position === Positions.IN ? 0 : 1
-                );
+                const result: any = [];
+                const promises: any = [];
 
-                const finalResult = rangedMarketsInfo.filter(
+                Array.from(allRangedMarkets).map(async (markets) => {
+                    promises.push(
+                        (snxJSConnector as any).binaryOptionsMarketDataContract
+                            .getRangedActiveMarketsInfoPerPosition(markets[1], position === Positions.IN ? 0 : 1)
+                            .then((rangedMarketsInfo: any) => {
+                                result.push(...rangedMarketsInfo);
+                            })
+                    );
+                });
+                await Promise.all(promises);
+                const finalResult = result.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
                         coinFormatter(marketInfo.price, networkId) !== 0
