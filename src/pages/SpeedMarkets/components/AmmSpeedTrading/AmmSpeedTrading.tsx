@@ -54,6 +54,7 @@ import {
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     formatPercentage,
+    getDefaultDecimalsForNetwork,
     roundNumberToDecimals,
     truncToDecimals,
 } from 'thales-utils';
@@ -561,6 +562,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                               networkId,
                               selectedCollateral
                           );
+                const skewImpactBigNum = positionType
+                    ? ethers.utils.parseUnits(
+                          skewImpact[positionType].toString(),
+                          getDefaultDecimalsForNetwork(networkId)
+                      )
+                    : undefined;
                 const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
 
                 const tx: ethers.ContractTransaction = await getTransactionForSpeedAMM(
@@ -574,7 +581,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     priceUpdateData,
                     updateFee,
                     collateralAddress || '',
-                    referral
+                    referral,
+                    skewImpactBigNum
                 );
 
                 const txResult = await tx.wait();

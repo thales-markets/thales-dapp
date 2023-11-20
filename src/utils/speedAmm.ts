@@ -15,7 +15,8 @@ export const getTransactionForSpeedAMM = async (
     pythPriceUpdateData: string[],
     pythUpdateFee: any,
     collateralAddress: string,
-    referral: string | null
+    referral: string | null,
+    skewImpact?: BigNumber
 ) => {
     let tx: ethers.ContractTransaction;
     const isEth = collateralAddress === ZERO_ADDRESS;
@@ -45,6 +46,7 @@ export const getTransactionForSpeedAMM = async (
                     buyInAmount,
                     isEth,
                     referral ? referral : ZERO_ADDRESS,
+                    skewImpact,
                     { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
                 );
             }
@@ -58,6 +60,7 @@ export const getTransactionForSpeedAMM = async (
                 buyInAmount,
                 isEth,
                 referral ? referral : ZERO_ADDRESS,
+                skewImpact,
                 { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
             );
         }
@@ -81,6 +84,7 @@ export const getTransactionForSpeedAMM = async (
                     buyInAmount,
                     pythPriceUpdateData,
                     referral ? referral : ZERO_ADDRESS,
+                    skewImpact,
                     { value: pythUpdateFee }
                 );
             }
@@ -92,6 +96,7 @@ export const getTransactionForSpeedAMM = async (
                 buyInAmount,
                 pythPriceUpdateData,
                 referral ? referral : ZERO_ADDRESS,
+                skewImpact,
                 { value: pythUpdateFee }
             );
         }
