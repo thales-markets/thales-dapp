@@ -196,7 +196,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                         <Text isActiveColor>{` ${formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid)}`}</Text>
                     </Text>
                 </BuyInfo>
-                <Result>
+                <Result isSmaller={isOverview}>
                     <ChainedPositionAction
                         position={positionWithPrices}
                         maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
@@ -299,8 +299,8 @@ const BuyInfo = styled(FlexDivCentered)`
     height: 30px;
 `;
 
-const Result = styled(FlexDivCentered)`
-    height: 90px;
+const Result = styled(FlexDivCentered)<{ isSmaller?: boolean }>`
+    height: ${(props) => (props.isSmaller ? '70' : '90')}px;
 `;
 
 const Separator = styled.div`

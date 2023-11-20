@@ -154,7 +154,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     }
                 }
                 if (result) {
-                    const dateFormat = isSpeedMarkets ? 'dd/MM HH:mm' : 'dd/MM';
+                    const dateFormat = 'dd/MM HH:mm';
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), dateFormat),
                         price: Number(price[1]),

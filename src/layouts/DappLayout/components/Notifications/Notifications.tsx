@@ -71,15 +71,26 @@ const Notifications: React.FC = () => {
         });
 
     const priceRequests = maturedChainedMarkets
-        .map((data) => data.strikeTimes.map((strikeTime) => ({ priceId: data.pythPriceId, publishTime: strikeTime })))
+        .map((data) =>
+            data.strikeTimes.map((strikeTime) => ({
+                priceId: data.pythPriceId,
+                publishTime: strikeTime,
+                market: data.address,
+            }))
+        )
         .flat();
     const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
+    const pythPricesWithMarket = priceRequests.map((request, i) => ({
+        market: request.market,
+        price: pythPricesQueries[i]?.data || 0,
+    }));
 
     // Based on Pyth prices determine if chained position is claimable
     const chainedSpeedMarketsNotifications = maturedChainedMarkets
-        .map((marketData, marketIndex) => {
-            const priceStartIndex = marketIndex > 0 ? maturedChainedMarkets[marketIndex - 1].strikeTimes.length - 1 : 0;
-            const finalPrices = marketData.strikeTimes.map((_, i) => pythPricesQueries[priceStartIndex + i]?.data || 0);
+        .map((marketData) => {
+            const finalPrices = marketData.strikeTimes.map(
+                (_, i) => pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i].price
+            );
             const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
                 i > 0 ? finalPrices[i - 1] : strikePrice
             );
