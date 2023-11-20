@@ -11,6 +11,8 @@ import { Positions } from 'enums/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { ZERO_ADDRESS } from 'constants/network';
 
+const BATCH_LIMIT = 30;
+
 const useMarketsByAssetAndDateQuery = (
     asset: string,
     date: number,
@@ -80,18 +82,37 @@ const useMarketsByAssetAndDateQuery = (
                     currencyKey: ethers.utils.formatBytes32String(asset),
                 });
 
-                const allRangedMarkets: string[] = [];
+                const allRangedMarkets = new Map();
 
-                rangedMarkets.map((rangedMarket) => {
-                    allRangedMarkets.push(rangedMarket.address);
+                rangedMarkets.map((rangedMarket, index: number) => {
+                    const batchCounter = Math.floor(index / BATCH_LIMIT); // calculate batch counter for rangedMarket.
+                    const batch = allRangedMarkets.get(batchCounter); // get the batch for counter
+                    // if batch exist we push the market if it does not we initialize the batch with it.
+                    if (batch) {
+                        batch.push(rangedMarket.address);
+                        allRangedMarkets.set(batchCounter, batch);
+                    } else {
+                        allRangedMarkets.set(batchCounter, [rangedMarket.address]);
+                    }
                 });
 
-                const rangedMarketsInfo = await (snxJSConnector as any).binaryOptionsMarketDataContract.getRangedActiveMarketsInfoPerPosition(
-                    allRangedMarkets,
-                    position === Positions.IN ? 0 : 1
-                );
+                //EXECUTE BATCH
+                const result: any = [];
+                const promises: any = [];
 
-                const finalResult = rangedMarketsInfo.filter(
+                Array.from(allRangedMarkets).map(async (markets) => {
+                    promises.push(
+                        (snxJSConnector as any).binaryOptionsMarketDataContract
+                            .getRangedActiveMarketsInfoPerPosition(markets[1], position === Positions.IN ? 0 : 1)
+                            .then((rangedMarketsInfo: any) => {
+                                result.push(...rangedMarketsInfo);
+                            })
+                    );
+                });
+                await Promise.all(promises);
+                // EXECUTE BATCH
+
+                const finalResult = result.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
                         coinFormatter(marketInfo.price, networkId) !== 0
