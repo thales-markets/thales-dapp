@@ -40,11 +40,11 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const [fetchLastFinalPricetIndex, setFetchLastFinalPricetIndex] = useState(0);
+    const [fetchLastFinalPriceIndex, setFetchLastFinalPriceIndex] = useState(0);
 
     const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
     const maturedStrikeTimes = isMissingPrices
-        ? position.strikeTimes.slice(0, fetchLastFinalPricetIndex + 1).filter((strikeTime) => strikeTime < Date.now())
+        ? position.strikeTimes.slice(0, fetchLastFinalPriceIndex + 1).filter((strikeTime) => strikeTime < Date.now())
         : [];
 
     const pythPriceId = position.isOpen ? getPriceId(networkId, position.currencyKey) : '';
@@ -69,7 +69,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const strikePrices =
         isMissingPrices && position.isOpen
             ? position.strikePrices.map((strikePrice, i) =>
-                  i > 0 && i < fetchLastFinalPricetIndex ? finalPrices[i - 1] : strikePrice
+                  i > 0 && i <= fetchLastFinalPriceIndex ? finalPrices[i - 1] : strikePrice
               )
             : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
@@ -97,12 +97,12 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         if (
             position.isOpen &&
             !canResolve &&
-            finalPrices[fetchLastFinalPricetIndex] &&
-            fetchLastFinalPricetIndex < size - 1
+            finalPrices[fetchLastFinalPriceIndex] &&
+            fetchLastFinalPriceIndex < size
         ) {
-            setFetchLastFinalPricetIndex(fetchLastFinalPricetIndex + 1);
+            setFetchLastFinalPriceIndex(fetchLastFinalPriceIndex + 1);
         }
-    }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPricetIndex]);
+    }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
 
     return (
         <Container>
@@ -123,7 +123,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             <PositionDetails>
                 {positionWithPrices.sides.map((side, index) => {
                     return (
-                        <Postion isDisabled={!position.isOpen && index > fetchLastFinalPricetIndex} key={index}>
+                        <Postion isDisabled={!position.isOpen && index > fetchLastFinalPriceIndex} key={index}>
                             {index !== 0 && (
                                 <Chain>
                                     <Icon className="icon icon--chain" />

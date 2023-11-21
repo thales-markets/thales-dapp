@@ -156,8 +156,8 @@ export const refetchUserResolvedSpeedMarkets = (isChained: boolean, networkId: N
 
 export const refetchActiveSpeedMarkets = (isChained: boolean, networkId: Network) => {
     isChained
-        ? queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId))
-        : queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveChainedSpeedMarkets(networkId));
+        ? queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveChainedSpeedMarkets(networkId))
+        : queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId));
 };
 
 export const refetchPythPrice = (priceId: string, publishTime: number) => {

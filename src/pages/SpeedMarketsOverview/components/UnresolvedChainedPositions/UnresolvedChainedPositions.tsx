@@ -213,7 +213,7 @@ const UnresolvedChainedPositions: React.FC = () => {
                       )
                 : [];
 
-            const priceUpdateDataArray: string[][] = [];
+            const priceUpdateDataArray: string[][][] = [];
             let totalUpdateFee = BigNumber.from(0);
 
             // Fetch prices for non-admin resolve
@@ -243,12 +243,14 @@ const UnresolvedChainedPositions: React.FC = () => {
                     const priceFeedUpdateVaas = await Promise.all(promises);
 
                     promises = [];
+                    const priceUpdateDataPerMarket: string[][] = [];
                     for (let i = 0; i < strikeTimesToFetchPrice.length; i++) {
                         const [priceFeedUpdateVaa] = priceFeedUpdateVaas[i];
                         const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
-                        priceUpdateDataArray.push(priceUpdateData);
+                        priceUpdateDataPerMarket.push(priceUpdateData);
                         promises.push(pythContract.getUpdateFee(priceUpdateData));
                     }
+                    priceUpdateDataArray.push(priceUpdateDataPerMarket);
 
                     const updateFees = await Promise.all(promises);
                     totalUpdateFee = totalUpdateFee.add(

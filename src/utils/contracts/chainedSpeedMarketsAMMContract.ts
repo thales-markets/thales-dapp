@@ -157,6 +157,12 @@ const chainedSpeedMarketsAMMContract = {
                 {
                     indexed: false,
                     internalType: 'uint256',
+                    name: 'payoutMultiplier',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
                     name: 'safeBoxImpact',
                     type: 'uint256',
                 },
@@ -871,9 +877,9 @@ const chainedSpeedMarketsAMMContract = {
                     type: 'address[]',
                 },
                 {
-                    internalType: 'bytes[][]',
+                    internalType: 'bytes[][][]',
                     name: 'priceUpdateData',
-                    type: 'bytes[][]',
+                    type: 'bytes[][][]',
                 },
             ],
             name: 'resolveMarketsBatch',

@@ -303,9 +303,11 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                 {hasAllowance || isDefaultCollateral
                     ? `${
                           isSubmitting
-                              ? isOverview && !isSubmittingBatch
-                                  ? t(`speed-markets.overview.resolve-progress`)
-                                  : t('speed-markets.overview.resolve')
+                              ? isOverview
+                                  ? isSubmittingBatch
+                                      ? t('speed-markets.overview.resolve')
+                                      : t(`speed-markets.overview.resolve-progress`)
+                                  : t('markets.user-positions.claim-win-progress')
                               : isOverview
                               ? isAdmin
                                   ? `${t('common.admin')} ${t('speed-markets.overview.resolve')}`

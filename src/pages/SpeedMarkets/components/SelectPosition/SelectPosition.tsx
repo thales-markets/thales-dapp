@@ -74,24 +74,26 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                         </PositionSymbolUp>
                     </PositionWrapper>
                     <Separator>
-                        <TooltipWrapper>
-                            <Tooltip
-                                overlay={
-                                    <Trans
-                                        i18nKey="speed-markets.tooltips.skew-info"
-                                        components={{
-                                            br: <br />,
-                                        }}
-                                        values={{
-                                            skewUpPerc: formatPercentage(skew[Positions.UP]),
-                                            skewDownPerc: formatPercentage(skew[Positions.DOWN]),
-                                        }}
-                                    />
-                                }
-                                marginLeft={0}
-                                iconColor={theme.textColor.quaternary}
-                            />
-                        </TooltipWrapper>
+                        {(bonus[Positions.UP] > 0 || bonus[Positions.DOWN] > 0) && (
+                            <TooltipWrapper>
+                                <Tooltip
+                                    overlay={
+                                        <Trans
+                                            i18nKey="speed-markets.tooltips.skew-info"
+                                            components={{
+                                                br: <br />,
+                                            }}
+                                            values={{
+                                                skewUpPerc: formatPercentage(skew[Positions.UP]),
+                                                skewDownPerc: formatPercentage(skew[Positions.DOWN]),
+                                            }}
+                                        />
+                                    }
+                                    marginLeft={0}
+                                    iconColor={theme.textColor.quaternary}
+                                />
+                            </TooltipWrapper>
+                        )}
                     </Separator>
                     <PositionWrapper onClick={() => onChange(Positions.DOWN)}>
                         <PositionSymbolDown
