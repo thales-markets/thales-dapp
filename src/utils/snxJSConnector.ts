@@ -1,6 +1,6 @@
 import { Provider } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
-import { Coins } from 'types/options';
+import { Coins } from 'thales-utils';
 import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import liquidityPoolDataContract from 'utils/contracts/liquidityPoolDataContract';
@@ -11,6 +11,8 @@ import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import bridgeContract from './contracts/bridgeContract';
+import celerBridgeContract from './contracts/celerBridgeContract';
+import chainedSpeedMarketsAMMContract from './contracts/chainedSpeedMarketsAMMContract';
 import collateralContract from './contracts/collateralContract';
 import escrowThales from './contracts/escrowThales';
 import { gelatoContract } from './contracts/gelatoContract';
@@ -27,8 +29,6 @@ import stakingBonusRewardsManager from './contracts/thalesAMMStakingThalesBonusR
 import thalesContract from './contracts/thalesContract';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import vestingEscrow from './contracts/vestingEscrow';
-import celerBridgeContract from './contracts/celerBridgeContract';
-import chainedSpeedMarketsAMMContract from './contracts/chainedSpeedMarketsAMMContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -89,6 +89,7 @@ const snxJSConnector: SnxJSConnector = {
             DAI: conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
             USDC: conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
             USDCe: conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
+            USDbC: conditionalInitializeContract(multipleCollateral.USDbC, contractSettings),
             USDT: conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
             OP: conditionalInitializeContract(multipleCollateral.OP, contractSettings),
             WETH: conditionalInitializeContract(multipleCollateral.WETH, contractSettings),

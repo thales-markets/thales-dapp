@@ -70,7 +70,7 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
                 </LoaderContainer>
             ) : (
                 <>
-                    <PositionsWrapper noPositions={noPositions}>
+                    <PositionsWrapper noPositions={noPositions} isChained={isChained}>
                         {isChained && !noPositions
                             ? lastTenUserResolvedChainedPositions.map((position, index) => (
                                   <ChainedPosition position={position} key={`closedPosition${index}`} />
@@ -126,12 +126,12 @@ const Wrapper = styled.div`
     margin-top: 20px;
 `;
 
-const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
+const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean }>`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: ${(props) => (props.isChained ? '16' : '6')}px;
     overflow-y: auto;
-    max-height: 560px;
+    max-height: ${(props) => (props.isChained ? '624' : '560')}px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;

@@ -13,7 +13,7 @@ import {
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import {
     ALTCOIN_CONVERSION_BUFFER_PERCENTAGE,
     POSITIONS_TO_SIDE_MAP,
@@ -49,6 +49,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import {
+    COLLATERAL_DECIMALS,
     coinParser,
     formatCurrency,
     formatCurrencyWithKey,

@@ -5,10 +5,9 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
 import { setSelectedCollateralIndex } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import { FlexDivSpaceBetween, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
-import { Coins } from 'types/options';
+import { FlexDivColumnCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
+import { Coins, formatCurrencyWithSign } from 'thales-utils';
 import { isStableCurrency } from 'utils/currency';
-import { formatCurrencyWithSign } from 'thales-utils';
 
 type CollateralSelectorProps = {
     collateralArray: Array<string>;
