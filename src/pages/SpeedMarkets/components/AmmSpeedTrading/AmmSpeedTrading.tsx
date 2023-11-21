@@ -233,13 +233,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         [selectedCollateral, exchangeRates, minBuyinAmount]
     );
 
-    // Recalculate delta from Strike Time on every 5 seconds
-    useInterval(async () => {
-        if (strikeTimeSec) {
-            setDeltaFromStrikeTime(strikeTimeSec - millisecondsToSeconds(Date.now()));
-        }
-    }, secondsToMilliseconds(5));
-
     const skewImpact = useMemo(() => {
         const skewPerPosition = { [Positions.UP]: 0, [Positions.DOWN]: 0 };
 
@@ -303,6 +296,22 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
         return 0;
     }, [isChained, ammSpeedMarketsLimits, deltaTimeSec, strikeTimeSec, deltaFromStrikeTime, skewImpact, positionType]);
+
+    // Used for canceling asynchronous tasks
+    const mountedRef = useRef(true);
+    useEffect(() => {
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
+
+    // Recalculate delta from Strike Time on every 5 seconds
+    useInterval(async () => {
+        if (!mountedRef.current) return null;
+        if (strikeTimeSec) {
+            setDeltaFromStrikeTime(strikeTimeSec - millisecondsToSeconds(Date.now()));
+        }
+    }, secondsToMilliseconds(5));
 
     // If sUSD balance less than 1, select first stable with nonzero value as default
     useEffect(() => {

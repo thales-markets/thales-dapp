@@ -89,6 +89,7 @@ const SpeedMarkets: React.FC = () => {
     const fetchCurrentPrices = useCallback(async () => {
         const priceIds = SUPPORTED_ASSETS.map((asset) => getPriceId(networkId, asset));
         const prices: typeof currentPrices = await getCurrentPrices(priceConnection, networkId, priceIds);
+        if (!mountedRef.current) return null;
         setCurrentPrices((prev) => {
             if (prev[currencyKey] !== prices[currencyKey]) {
                 prevPrice.current = prev[currencyKey];
@@ -96,6 +97,14 @@ const SpeedMarkets: React.FC = () => {
             return prices;
         });
     }, [networkId, priceConnection, currencyKey]);
+
+    // Used for canceling asynchronous tasks
+    const mountedRef = useRef(true);
+    useEffect(() => {
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
 
     // Set initial current prices
     useEffect(() => {

@@ -377,7 +377,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         <>
             <FlexDivCentered>
                 {getButton()}
-                {isMultiCollateralSupported && position.claimable && (
+                {!isOverview && isMultiCollateralSupported && position.claimable && (
                     <CollateralSelectorContainer>
                         <InLabel color={theme.button.textColor.quaternary}>{t('common.in')}</InLabel>
                         <CollateralSelector

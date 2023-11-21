@@ -29,7 +29,7 @@ import {
 import useActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveChainedSpeedMarketsDataQuery';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -77,31 +77,26 @@ const UnresolvedChainedPositions: React.FC = () => {
 
         [activeChainedSpeedMarketsDataQuery]
     );
-    const now = useMemo(
-        () =>
-            activeChainedSpeedMarketsDataQuery.isSuccess && activeChainedSpeedMarketsDataQuery.data ? Date.now() : 0,
-        [activeChainedSpeedMarketsDataQuery]
-    );
 
     // Prepare chained speed markets that are partially matured to fetch Pyth prices
     const partiallyMaturedChainedMarkets = activeChainedSpeedMarketsData
-        .filter((marketData) => marketData.strikeTimes.some((strikeTime) => strikeTime < now))
+        .filter((marketData) => marketData.strikeTimes.some((strikeTime) => strikeTime < Date.now()))
         .map((marketData) => {
-            const strikeTimes = marketData.strikeTimes.filter((strikeTime) => strikeTime < now);
             return {
                 ...marketData,
-                strikeTimes,
                 pythPriceId: getPriceId(networkId, marketData.currencyKey),
             };
         });
 
     const priceRequests = partiallyMaturedChainedMarkets
         .map((data) =>
-            data.strikeTimes.map((strikeTime) => ({
-                priceId: data.pythPriceId,
-                publishTime: millisecondsToSeconds(strikeTime),
-                market: data.address,
-            }))
+            data.strikeTimes
+                .filter((strikeTime) => strikeTime < Date.now())
+                .map((strikeTime) => ({
+                    priceId: data.pythPriceId,
+                    publishTime: millisecondsToSeconds(strikeTime),
+                    market: data.address,
+                }))
         )
         .flat();
     const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
@@ -113,7 +108,7 @@ const UnresolvedChainedPositions: React.FC = () => {
     // Based on Pyth prices determine if chained position is claimable
     const partiallyMaturedUnresolvedWithPrices = partiallyMaturedChainedMarkets.map((marketData) => {
         const finalPrices = marketData.strikeTimes.map(
-            (_, i) => pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i].price
+            (_, i) => pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i]?.price || 0
         );
         const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
             i > 0 ? finalPrices[i - 1] : strikePrice
@@ -142,22 +137,41 @@ const UnresolvedChainedPositions: React.FC = () => {
     const unknownPriceSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
         (marketData) => marketData.isUnknownPrice
     );
-    const openSpeedMarketsData = activeChainedSpeedMarketsData.filter(
-        (marketData) =>
-            !partiallyMaturedChainedMarkets.some((maturedMarket) => maturedMarket.address === marketData.address) ||
-            (!userWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
-                !ammWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
-                !unknownPriceSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address))
-    );
+    const openSpeedMarketsData = activeChainedSpeedMarketsData
+        .filter(
+            (marketData) =>
+                !partiallyMaturedUnresolvedWithPrices.some(
+                    (maturedMarket) => maturedMarket.address === marketData.address
+                )
+        )
+        .concat(
+            partiallyMaturedUnresolvedWithPrices.filter(
+                (marketData) =>
+                    !userWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
+                    !ammWinnerSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address) &&
+                    !unknownPriceSpeedMarketsData.some((maturedMarket) => maturedMarket.address === marketData.address)
+            )
+        );
 
     const isLoading =
         isLoadingEnabled &&
         (activeChainedSpeedMarketsDataQuery.isLoading || pythPricesQueries.some((price) => price.isLoading));
 
+    // Used for canceling asynchronous tasks
+    const mountedRef = useRef(true);
+    useEffect(() => {
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
+
     useInterval(async () => {
         // Check if there are new matured markets from open markets and refresh it
-        const openMatured = openSpeedMarketsData.filter((marketData) => marketData.maturityDate < Date.now());
+        const openMatured = openSpeedMarketsData.filter((marketData) =>
+            marketData.strikeTimes.some((strikeTime, i) => !marketData.finalPrices[i] && strikeTime < Date.now())
+        );
         if (openMatured.length) {
+            if (!mountedRef.current) return null;
             setIsLoadingEnabled(false);
             refetchActiveSpeedMarkets(true, networkId);
         }
@@ -289,6 +303,7 @@ const UnresolvedChainedPositions: React.FC = () => {
             } else {
                 toast.update(id, getInfoToastOptions(t('speed-markets.overview.no-resolve-positions'), id));
             }
+            if (!mountedRef.current) return null;
             setIsSubmitting(false);
             setIsSubmittingSection('');
         }

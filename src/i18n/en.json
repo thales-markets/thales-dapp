@@ -503,7 +503,7 @@
         "single": "Single",
         "chained": {
             "label": "Chained",
-            "info": "Create a custom chain of {{minMarkets}} - {{maxMarkets}} Speed Markets for a maximum potential return of ~ <bold>{{maxRoi}}x</bold> !",
+            "info": "Create a custom chain of {{minMarkets}} - {{maxMarkets}} Speed Markets for a maximum potential return of ~ <bold>{{maxRoi}}x</bold>!",
             "add-directions": "Click + to add directions",
             "roi": "ROI: {{value}}",
             "clear-all": "Clear all",
