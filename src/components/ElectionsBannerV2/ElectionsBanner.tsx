@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import { SpaceKey } from 'enums/governance';
-import { VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
+import { TEMP_CHECK_PROPOSAL_ID } from 'constants/governance';
 import { navigateToGovernance } from 'utils/routes';
 
 const ElectionsBanner: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <Container onClick={() => navigateToGovernance(SpaceKey.COUNCIL, VOTING_COUNCIL_PROPOSAL_ID)}>
-            <Label>{t('banner.elections-banner-message')}</Label>
+        <Container onClick={() => navigateToGovernance(SpaceKey.COUNCIL, TEMP_CHECK_PROPOSAL_ID)}>
+            <Label>{t('banner.temp-check-banner-message')}</Label>
         </Container>
     );
 };
