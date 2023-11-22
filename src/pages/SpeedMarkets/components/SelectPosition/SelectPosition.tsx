@@ -54,7 +54,7 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
             {selected.length === 1 ? (
                 // Single
                 <>
-                    <PositionWrapper onClick={() => onChange(Positions.UP)}>
+                    <PositionWrapper onClick={() => onChange(selected[0] === Positions.UP ? undefined : Positions.UP)}>
                         <LabelUp isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}>
                             {Positions.UP}
                         </LabelUp>
@@ -84,7 +84,9 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             />
                         </TooltipWrapper>
                     </Separator>
-                    <PositionWrapper onClick={() => onChange(Positions.DOWN)}>
+                    <PositionWrapper
+                        onClick={() => onChange(selected[0] === Positions.DOWN ? undefined : Positions.DOWN)}
+                    >
                         <PositionSymbolDown
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}
                         >
@@ -100,7 +102,7 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                 // Chained
                 <FlexDivColumnCentered>
                     <ChainedHeader>
-                        <Roi>{t('speed-markets.chained.roi', { value: roi })}</Roi>
+                        <Roi>{t('speed-markets.chained.roi', { value: roi })}x</Roi>
                         <ClearAll
                             onClick={() =>
                                 onChainedChange(Array(ammChainedSpeedMarketsLimits?.minChainedMarkets).fill(undefined))
@@ -121,54 +123,46 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                                             <Icon className="icon icon--chain" />
                                         </Chain>
                                     )}
-                                    <PositionsWrapper isSelected={position !== undefined}>
+                                    <PositionsWrapper>
                                         <PositionWrapper
                                             isColumn
                                             onClick={() =>
                                                 onChainedChange(
-                                                    selected.map((pos, i) => (i === index ? Positions.UP : pos))
+                                                    selected.map((pos, i) =>
+                                                        i === index
+                                                            ? pos === Positions.UP
+                                                                ? undefined
+                                                                : Positions.UP
+                                                            : pos
+                                                    )
                                                 )
                                             }
                                         >
-                                            <LabelUp
-                                                isColumn
-                                                isSelected={isUpSelected}
-                                                isSmaller={isUpSelected === false}
-                                            >
+                                            <LabelUp isColumn isSelected={isUpSelected}>
                                                 {Positions.UP}
                                             </LabelUp>
-                                            <PositionSymbolUp
-                                                isSelected={isUpSelected}
-                                                isSmaller={isUpSelected === false}
-                                            >
-                                                <Icon
-                                                    isSmaller={isUpSelected === false}
-                                                    className="icon icon--caret-up"
-                                                />
+                                            <PositionSymbolUp isSelected={isUpSelected}>
+                                                <Icon className="icon icon--caret-up" />
                                             </PositionSymbolUp>
                                         </PositionWrapper>
                                         <PositionWrapper
                                             isColumn
                                             onClick={() =>
                                                 onChainedChange(
-                                                    selected.map((pos, i) => (i === index ? Positions.DOWN : pos))
+                                                    selected.map((pos, i) =>
+                                                        i === index
+                                                            ? pos === Positions.DOWN
+                                                                ? undefined
+                                                                : Positions.DOWN
+                                                            : pos
+                                                    )
                                                 )
                                             }
                                         >
-                                            <PositionSymbolDown
-                                                isSelected={isDownSelected}
-                                                isSmaller={isDownSelected === false}
-                                            >
-                                                <Icon
-                                                    isSmaller={isDownSelected === false}
-                                                    className="icon icon--caret-down"
-                                                />
+                                            <PositionSymbolDown isSelected={isDownSelected}>
+                                                <Icon className="icon icon--caret-down" />
                                             </PositionSymbolDown>
-                                            <LabelDown
-                                                isColumn
-                                                isSelected={isDownSelected}
-                                                isSmaller={isDownSelected === false}
-                                            >
+                                            <LabelDown isColumn isSelected={isDownSelected}>
                                                 {Positions.DOWN}
                                             </LabelDown>
                                         </PositionWrapper>

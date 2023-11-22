@@ -42,9 +42,9 @@ export const PositionsContainer = styled(FlexDivSpaceBetween)`
     height: 124px;
 `;
 
-export const PositionsWrapper = styled(FlexDivColumnCentered)<{ isSelected?: boolean }>`
+export const PositionsWrapper = styled(FlexDivColumnCentered)`
     width: 52px;
-    gap: ${(props) => (props.isSelected ? '5' : '10')}px;
+    gap: 10px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 44px;
     }
@@ -62,7 +62,7 @@ const PositionSymbol = styled(FlexDivCentered)<{ size?: number }>`
     border-radius: 50%;
 `;
 
-export const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean; isSmaller?: boolean }>`
+export const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean }>`
     border: 3px solid
         ${(props) =>
             props.isSelected === undefined
@@ -74,13 +74,9 @@ export const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean; i
         props.isSelected === undefined || props.isSelected
             ? props.theme.positionColor.up
             : props.theme.borderColor.primary};
-
-    ${(props) => (props.isSmaller ? 'width: 20px;' : '')};
-    ${(props) => (props.isSmaller ? 'height: 20px;' : '')};
-    ${(props) => (props.isSmaller ? 'padding-bottom: 2px;' : '')};
 `;
 
-export const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean; isSmaller?: boolean }>`
+export const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean }>`
     border: 3px solid
         ${(props) =>
             props.isSelected === undefined
@@ -92,13 +88,10 @@ export const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean;
         props.isSelected === undefined || props.isSelected
             ? props.theme.positionColor.down
             : props.theme.borderColor.primary};
-
-    ${(props) => (props.isSmaller ? 'width: 20px;' : '')};
-    ${(props) => (props.isSmaller ? 'height: 20px;' : '')};
 `;
 
-export const Icon = styled.i<{ isSmaller?: boolean; size?: number; padding?: string; color?: string }>`
-    font-size: ${(props) => (props.size ? props.size : props.isSmaller ? '10' : '18')}px;
+export const Icon = styled.i<{ size?: number; padding?: string; color?: string }>`
+    font-size: ${(props) => (props.size ? props.size : '18')}px;
     line-height: 100%;
     color: ${(props) => (props.color ? props.color : 'inherit')};
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')};
@@ -119,7 +112,7 @@ const Label = styled.span`
     text-transform: capitalize;
 `;
 
-export const LabelUp = styled(Label)<{ isSelected?: boolean; isColumn?: boolean; isSmaller?: boolean }>`
+export const LabelUp = styled(Label)<{ isSelected?: boolean; isColumn?: boolean }>`
     color: ${(props) =>
         props.isSelected === undefined
             ? props.theme.textColor.primary
@@ -127,11 +120,9 @@ export const LabelUp = styled(Label)<{ isSelected?: boolean; isColumn?: boolean;
             ? props.theme.positionColor.up
             : props.theme.borderColor.primary};
     ${(props) => (props.isColumn ? 'margin-bottom: 2px;' : 'margin-right: 7px;')}
-    ${(props) => (props.isSmaller ? 'font-size: 13px;' : '')};
-    ${(props) => (props.isColumn && props.isSelected ? 'padding-top: 20px;' : '')};
 `;
 
-export const LabelDown = styled(Label)<{ isSelected?: boolean; isColumn?: boolean; isSmaller?: boolean }>`
+export const LabelDown = styled(Label)<{ isSelected?: boolean; isColumn?: boolean }>`
     color: ${(props) =>
         props.isSelected === undefined
             ? props.theme.textColor.primary
@@ -139,8 +130,6 @@ export const LabelDown = styled(Label)<{ isSelected?: boolean; isColumn?: boolea
             ? props.theme.positionColor.down
             : props.theme.borderColor.primary};
     ${(props) => (props.isColumn ? 'margin-top: 2px;' : 'margin-left: 7px;')}
-    ${(props) => (props.isSmaller ? 'font-size: 13px;' : '')};
-    ${(props) => (props.isColumn && props.isSelected ? 'padding-bottom: 20px;' : '')};
 `;
 
 export const Separator = styled.div`
