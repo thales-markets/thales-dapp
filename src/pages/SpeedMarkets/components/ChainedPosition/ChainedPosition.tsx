@@ -131,12 +131,6 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                     </Text>
                 </FlexContainer>
                 <FlexContainer>
-                    <Text>{t('common.direction')}</Text>
-                    <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
-                        {positionWithPrices.sides[statusDecisionIndex]}
-                    </Text>
-                </FlexContainer>
-                <FlexContainer>
                     <Text>{t('profile.final-price')}</Text>
                     <Text isActiveColor>
                         {positionWithPrices.finalPrices[statusDecisionIndex] ? (
@@ -144,7 +138,9 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                         ) : (
                             <>
                                 {'. . .'}
-                                <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                {positionWithPrices.canResolve && (
+                                    <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                )}
                             </>
                         )}
                     </Text>
@@ -152,7 +148,17 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                 <FlexContainer>
                     <Text>{t('speed-markets.user-positions.end-time')}</Text>
                     <Text isActiveColor>
-                        {formatShortDateWithTime(positionWithPrices.strikeTimes[statusDecisionIndex])}
+                        {formatShortDateWithTime(
+                            positionWithPrices.canResolve
+                                ? positionWithPrices.strikeTimes[statusDecisionIndex]
+                                : positionWithPrices.maturityDate
+                        )}
+                    </Text>
+                </FlexContainer>
+                <FlexContainer>
+                    <Text>{t('common.direction')}</Text>
+                    <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
+                        {positionWithPrices.sides[statusDecisionIndex]}
                     </Text>
                 </FlexContainer>
                 <FlexContainer>
