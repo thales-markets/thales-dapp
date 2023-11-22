@@ -52,7 +52,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
     const maturedStrikeTimes = isMissingPrices
         ? position.strikeTimes.slice(0, fetchLastFinalPriceIndex + 1).filter((strikeTime) => strikeTime < Date.now())
-        : [];
+        : position.strikeTimes;
 
     const pythPriceId = position.isOpen ? getPriceId(networkId, position.currencyKey) : '';
     const priceRequests = position.isOpen
@@ -98,8 +98,15 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         claimable,
     };
 
-    const userLostIndex = userWonStatuses.findIndex((wonStatus) => !wonStatus);
     const size = useMemo(() => position.sides.length, [position.sides]);
+    const userFirstLostIndex = userWonStatuses.findIndex((wonStatus) => !wonStatus);
+    const userFirstLostOrWonIndex = userFirstLostIndex > -1 ? userFirstLostIndex : size - 1;
+
+    const statusDecisionIndex = positionWithPrices.claimable
+        ? size - 1
+        : position.isOpen
+        ? fetchLastFinalPriceIndex
+        : userFirstLostOrWonIndex;
 
     useEffect(() => {
         if (
@@ -117,22 +124,16 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
             <AlignedFlex>
                 <FlexContainer firstChildWidth="130px">
-                    <Text>{position.currencyKey}</Text>
+                    <Text>{positionWithPrices.currencyKey}</Text>
                     <Text isActiveColor>
-                        {formatCurrencyWithSign(
-                            USD_SIGN,
-                            position.strikePrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex]
-                        )}
+                        {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
                     </Text>
                 </FlexContainer>
                 <FlexContainer secondChildWidth="140px">
                     <Text>{t('profile.final-price')}</Text>
                     <Text isActiveColor>
-                        {position.finalPrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex] ? (
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                position.finalPrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex]
-                            )
+                        {positionWithPrices.finalPrices[statusDecisionIndex] ? (
+                            formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[statusDecisionIndex])
                         ) : (
                             <>
                                 {'. . .'}
@@ -143,15 +144,17 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                 </FlexContainer>
                 <FlexContainer>
                     <Text>{t('speed-markets.user-positions.end-time')}</Text>
-                    <Text isActiveColor>{formatShortDateWithTime(position.strikeTimes[fetchLastFinalPriceIndex])}</Text>
+                    <Text isActiveColor>
+                        {formatShortDateWithTime(positionWithPrices.strikeTimes[statusDecisionIndex])}
+                    </Text>
                 </FlexContainer>
                 <FlexContainer>
                     <Text>{t('markets.user-positions.size')}</Text>
-                    <Text isActiveColor>{formatNumberShort(position.amount)}</Text>
+                    <Text isActiveColor>{formatNumberShort(positionWithPrices.amount)}</Text>
                 </FlexContainer>
                 <FlexContainer>
                     <Text>{t('markets.user-positions.paid')}</Text>
-                    <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Text>
+                    <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid, 2)}</Text>
                 </FlexContainer>
                 <ChainedPositionAction
                     position={positionWithPrices}
@@ -181,10 +184,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             <PositionDetails>
                 {positionWithPrices.sides.map((side, index) => {
                     return (
-                        <Postion
-                            isDisabled={!position.isOpen && userLostIndex > -1 && index > userLostIndex}
-                            key={index}
-                        >
+                        <Postion isDisabled={!position.isOpen && index > userFirstLostOrWonIndex} key={index}>
                             {index !== 0 && (
                                 <Chain>
                                     <Icon className="icon icon--chain" />

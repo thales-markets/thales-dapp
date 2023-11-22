@@ -443,7 +443,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             return;
         }
         const erc20Instance = new ethers.Contract(collateralAddress, erc20Contract.abi, snxJSConnector.provider);
-        const addressToApprove = snxJSConnector.speedMarketsAMMContract?.address || '';
+        const addressToApprove =
+            (isChained
+                ? snxJSConnector.chainedSpeedMarketsAMMContract?.address
+                : snxJSConnector.speedMarketsAMMContract?.address) || '';
 
         const getAllowance = async () => {
             try {
@@ -489,7 +492,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             return;
         }
         const erc20Instance = new ethers.Contract(collateralAddress, erc20Contract.abi, snxJSConnector.signer);
-        const addressToApprove = snxJSConnector.speedMarketsAMMContract?.address || '';
+        const addressToApprove =
+            (isChained
+                ? snxJSConnector.chainedSpeedMarketsAMMContract?.address
+                : snxJSConnector.speedMarketsAMMContract?.address) || '';
 
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
@@ -518,7 +524,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         });
 
         const { speedMarketsAMMContract, chainedSpeedMarketsAMMContract, signer } = snxJSConnector as any;
-        if (speedMarketsAMMContract) {
+        if (speedMarketsAMMContract || (isChained && chainedSpeedMarketsAMMContract)) {
             setIsSubmitting(true);
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
 
