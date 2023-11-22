@@ -244,27 +244,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         )[0];
 
         if (riskPerUp && riskPerDown) {
-            const buyinAmount = isStableCurrency(selectedCollateral)
-                ? Number(paidAmount)
-                : convertToStable(Number(paidAmount));
-
-            // if user selects UP position calculate risk
-            const updatedRiskPerUp =
-                riskPerDown.current > buyinAmount
-                    ? riskPerUp.current
-                    : riskPerUp.current + buyinAmount - riskPerDown.current;
-            // if user selects DOWN position calculate risk
-            const updatedRiskPerDown =
-                riskPerUp.current > buyinAmount
-                    ? riskPerDown.current
-                    : riskPerDown.current + buyinAmount - riskPerUp.current;
-
             skewPerPosition[Positions.UP] = roundNumberToDecimals(
-                (updatedRiskPerUp / riskPerUp.max) * ammSpeedMarketsLimits?.maxSkewImpact,
+                (riskPerUp.current / riskPerUp.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
             skewPerPosition[Positions.DOWN] = roundNumberToDecimals(
-                (updatedRiskPerDown / riskPerDown.max) * ammSpeedMarketsLimits?.maxSkewImpact,
+                (riskPerDown.current / riskPerDown.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
         }
@@ -705,11 +690,13 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     hasCollateralConversion={selectedCollateral !== defaultCollateral}
                     breakFirstLine={false}
                 />
-                <ShareIcon
-                    className="icon-home icon-home--twitter-x"
-                    disabled={isButtonDisabled}
-                    onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
-                />
+                {!isChained && (
+                    <ShareIcon
+                        className="icon-home icon-home--twitter-x"
+                        disabled={isButtonDisabled}
+                        onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
+                    />
+                )}
             </TradingDetailsContainer>
         );
     };
@@ -798,7 +785,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                         ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                         : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
                                     fee: formatPercentage(totalFee),
-                                    skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
                                 }}
                                 components={{
                                     tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,
@@ -813,7 +799,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                         ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                         : formatCurrencyWithSign(USD_SIGN, convertToStable(Number(paidAmount))),
                                     fee: formatPercentage(totalFee),
-                                    skew: formatPercentage(positionType ? skewImpact[positionType] : 0),
                                 }}
                                 components={{
                                     tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,

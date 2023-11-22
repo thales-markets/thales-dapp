@@ -11,14 +11,20 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween } from 'styles/common';
-import { formatCurrencyWithSign, formatHoursAndMinutesFromTimestamp, formatShortDate } from 'thales-utils';
+import {
+    formatCurrencyWithSign,
+    formatHoursAndMinutesFromTimestamp,
+    formatShortDate,
+    formatShortDateWithTime,
+} from 'thales-utils';
 import { ChainedSpeedMarket } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { getPriceId } from 'utils/pyth';
-import { Icon, PositionSymbolDown, PositionSymbolUp } from '../SelectPosition/styled-components';
+import { AssetIcon, Icon, PositionSymbolDown, PositionSymbolUp } from '../SelectPosition/styled-components';
 import { formatNumberShort } from 'utils/formatters/number';
 import ChainedPositionAction from '../ChainedPositionAction';
 import { refetchPythPrice } from 'utils/queryConnector';
+import { getIsMobile } from 'redux/modules/ui';
 
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
@@ -39,6 +45,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [fetchLastFinalPriceIndex, setFetchLastFinalPriceIndex] = useState(0);
 
@@ -91,6 +98,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         claimable,
     };
 
+    const userLostIndex = userWonStatuses.findIndex((wonStatus) => !wonStatus);
     const size = useMemo(() => position.sides.length, [position.sides]);
 
     useEffect(() => {
@@ -104,7 +112,57 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
 
-    return (
+    return isMobile ? (
+        <Container>
+            <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
+            <AlignedFlex>
+                <FlexContainer firstChildWidth="130px">
+                    <Text>{position.currencyKey}</Text>
+                    <Text isActiveColor>
+                        {formatCurrencyWithSign(
+                            USD_SIGN,
+                            position.strikePrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex]
+                        )}
+                    </Text>
+                </FlexContainer>
+                <FlexContainer secondChildWidth="140px">
+                    <Text>{t('profile.final-price')}</Text>
+                    <Text isActiveColor>
+                        {position.finalPrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex] ? (
+                            formatCurrencyWithSign(
+                                USD_SIGN,
+                                position.finalPrices[position.claimable ? size - 1 : fetchLastFinalPriceIndex]
+                            )
+                        ) : (
+                            <>
+                                {'. . .'}
+                                <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                            </>
+                        )}
+                    </Text>
+                </FlexContainer>
+                <FlexContainer>
+                    <Text>{t('speed-markets.user-positions.end-time')}</Text>
+                    <Text isActiveColor>{formatShortDateWithTime(position.strikeTimes[fetchLastFinalPriceIndex])}</Text>
+                </FlexContainer>
+                <FlexContainer>
+                    <Text>{t('markets.user-positions.size')}</Text>
+                    <Text isActiveColor>{formatNumberShort(position.amount)}</Text>
+                </FlexContainer>
+                <FlexContainer>
+                    <Text>{t('markets.user-positions.paid')}</Text>
+                    <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Text>
+                </FlexContainer>
+                <ChainedPositionAction
+                    position={positionWithPrices}
+                    maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                    isOverview={isOverview}
+                    isAdmin={isAdmin}
+                    isSubmittingBatch={isSubmittingBatch}
+                />
+            </AlignedFlex>
+        </Container>
+    ) : (
         <Container>
             <AssetInfo>
                 <FlexDivCentered>
@@ -123,7 +181,10 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             <PositionDetails>
                 {positionWithPrices.sides.map((side, index) => {
                     return (
-                        <Postion isDisabled={!position.isOpen && index > fetchLastFinalPriceIndex} key={index}>
+                        <Postion
+                            isDisabled={!position.isOpen && userLostIndex > -1 && index > userLostIndex}
+                            key={index}
+                        >
                             {index !== 0 && (
                                 <Chain>
                                     <Icon className="icon icon--chain" />
@@ -253,6 +314,9 @@ const Text = styled.span<{
     color: ${(props) => (props.isActiveColor ? props.theme.textColor.primary : props.theme.textColor.secondary)};
     white-space: nowrap;
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')}
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        line-height: 100%;
+    }
 `;
 
 const PositionDetails = styled(FlexDivCentered)`
@@ -310,8 +374,28 @@ const Separator = styled.div`
     background: ${(props) => props.theme.background.secondary};
     border-radius: 3px;
     margin: 30px 10px 0 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
+`;
+
+const AlignedFlex = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    width: 100%;
+    flex-direction: column;
+`;
+
+const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string; secondChildWidth?: string }>`
+    gap: 4px;
+    flex: 1;
+    flex-direction: row;
+    justify-content: center;
+    &:first-child {
+        min-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
+        max-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
+    }
+    &:nth-child(3) {
+        ${(props) => (props.secondChildWidth ? `min-width: ${props.secondChildWidth};` : '')};
     }
 `;
 

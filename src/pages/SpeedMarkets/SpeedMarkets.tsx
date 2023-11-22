@@ -9,6 +9,7 @@ import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import ROUTES from 'constants/routes';
 import { minutesToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
@@ -22,10 +23,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
+import { roundNumberToDecimals } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { buildHref, history } from 'utils/routes';
@@ -35,8 +38,6 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
-import { Positions } from 'enums/options';
-import { roundNumberToDecimals } from 'thales-utils';
 
 const CHAINED_TIME_FRAME_MINUTES = 10;
 
@@ -48,6 +49,7 @@ const SpeedMarkets: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
 
@@ -201,6 +203,38 @@ const SpeedMarkets: React.FC = () => {
         );
     };
 
+    const getToggle = () => {
+        return (
+            <SwitchInput
+                active={isChained}
+                width="80px"
+                height="30px"
+                dotSize="20px"
+                dotBackground={theme.background.quaternary}
+                borderColor={theme.borderColor.primary}
+                borderWidth="2px"
+                borderRadius="50px"
+                margin={isMobile ? '0 0 10px 0' : undefined}
+                label={{
+                    firstLabel: t(`speed-markets.single`),
+                    secondLabel: t(`speed-markets.chained.label`),
+                    fontSize: '18px',
+                    firstLabelColor: isChained ? undefined : theme.textColor.quaternary,
+                    secondLabelColor: isChained ? theme.textColor.quaternary : undefined,
+                }}
+                handleClick={() => {
+                    setIsChained(!isChained);
+                    history.push({
+                        pathname: location.pathname,
+                        search: queryString.stringify({
+                            isChained: !isChained,
+                        }),
+                    });
+                }}
+            />
+        );
+    };
+
     return (
         <>
             {ammSpeedMarketsLimitsQuery.isLoading || ammChainedSpeedMarketsLimitsQuery.isLoading ? (
@@ -210,6 +244,7 @@ const SpeedMarkets: React.FC = () => {
                     <HeaderImage />
                     <ContentWrapper>
                         <LeftSide>
+                            {isMobile && getToggle()}
                             <Info>
                                 <Trans
                                     i18nKey={isChained ? 'speed-markets.chained.info' : 'speed-markets.info'}
@@ -251,32 +286,7 @@ const SpeedMarkets: React.FC = () => {
                             ></PriceChart>
                         </LeftSide>
                         <RightSide>
-                            <SwitchInput
-                                active={isChained}
-                                width="80px"
-                                height="30px"
-                                dotSize="20px"
-                                dotBackground={theme.background.quaternary}
-                                borderColor={theme.borderColor.primary}
-                                borderWidth="2px"
-                                borderRadius="50px"
-                                label={{
-                                    firstLabel: t(`speed-markets.single`),
-                                    secondLabel: t(`speed-markets.chained.label`),
-                                    fontSize: '18px',
-                                    firstLabelColor: isChained ? undefined : theme.textColor.quaternary,
-                                    secondLabelColor: isChained ? theme.textColor.quaternary : undefined,
-                                }}
-                                handleClick={() => {
-                                    setIsChained(!isChained);
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            isChained: !isChained,
-                                        }),
-                                    });
-                                }}
-                            />
+                            {!isMobile && getToggle()}
                             {/* Asset */}
                             {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
                             <AssetDropdown
@@ -389,6 +399,7 @@ const ContentWrapper = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
+        margin-top: 0;
     }
 `;
 
@@ -456,6 +467,9 @@ const AddRemove = styled.div<{ isDisabled: boolean }>`
 const AddRemoveLabel = styled(StepName)`
     padding: 0;
     text-transform: lowercase;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 13px;
+    }
 `;
 
 const Info = styled.span`

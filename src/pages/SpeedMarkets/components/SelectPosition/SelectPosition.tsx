@@ -6,7 +6,6 @@ import { FlexDivColumnCentered } from 'styles/common';
 import { formatPercentage, roundNumberToDecimals } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits } from 'types/options';
 import {
-    Bonus,
     Chain,
     ChainedHeader,
     ChainedPositions,
@@ -23,10 +22,9 @@ import {
     PositionsWrapper,
     Roi,
     Separator,
+    Skew,
     TooltipWrapper,
 } from './styled-components';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 export type SelectedPosition = Positions.UP | Positions.DOWN | undefined;
 
@@ -46,16 +44,10 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
     skew,
 }) => {
     const { t } = useTranslation();
-    const theme: ThemeInterface = useTheme();
 
     const roi = ammChainedSpeedMarketsLimits?.payoutMultiplier
         ? roundNumberToDecimals(ammChainedSpeedMarketsLimits?.payoutMultiplier ** selected.length)
         : 0;
-
-    const bonus = {
-        [Positions.UP]: skew[Positions.DOWN] - skew[Positions.UP],
-        [Positions.DOWN]: skew[Positions.UP] - skew[Positions.DOWN],
-    };
 
     return (
         <Container>
@@ -70,37 +62,34 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}
                         >
                             <Icon className="icon icon--caret-up" />
-                            {bonus[Positions.UP] > 0 && <Bonus>+{formatPercentage(bonus[Positions.UP])}</Bonus>}
+                            <Skew>{formatPercentage(skew[Positions.UP])}</Skew>
                         </PositionSymbolUp>
                     </PositionWrapper>
                     <Separator>
-                        {(bonus[Positions.UP] > 0 || bonus[Positions.DOWN] > 0) && (
-                            <TooltipWrapper>
-                                <Tooltip
-                                    overlay={
-                                        <Trans
-                                            i18nKey="speed-markets.tooltips.skew-info"
-                                            components={{
-                                                br: <br />,
-                                            }}
-                                            values={{
-                                                skewUpPerc: formatPercentage(skew[Positions.UP]),
-                                                skewDownPerc: formatPercentage(skew[Positions.DOWN]),
-                                            }}
-                                        />
-                                    }
-                                    marginLeft={0}
-                                    iconColor={theme.textColor.quaternary}
-                                />
-                            </TooltipWrapper>
-                        )}
+                        <TooltipWrapper>
+                            <Tooltip
+                                overlay={
+                                    <Trans
+                                        i18nKey="speed-markets.tooltips.skew-info"
+                                        components={{
+                                            br: <br />,
+                                        }}
+                                        values={{
+                                            skewUpPerc: formatPercentage(skew[Positions.UP]),
+                                            skewDownPerc: formatPercentage(skew[Positions.DOWN]),
+                                        }}
+                                    />
+                                }
+                                marginLeft={0}
+                            />
+                        </TooltipWrapper>
                     </Separator>
                     <PositionWrapper onClick={() => onChange(Positions.DOWN)}>
                         <PositionSymbolDown
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}
                         >
                             <Icon className="icon icon--caret-down" />
-                            {bonus[Positions.DOWN] > 0 && <Bonus>+{formatPercentage(bonus[Positions.DOWN])}</Bonus>}
+                            <Skew>{formatPercentage(skew[Positions.DOWN])}</Skew>
                         </PositionSymbolDown>
                         <LabelDown isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}>
                             {Positions.DOWN}

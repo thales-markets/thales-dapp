@@ -222,7 +222,6 @@ const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string; secondChil
 
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
-        gap: 4px;
     }
 `;
 

@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 
@@ -44,6 +45,9 @@ export const PositionsContainer = styled(FlexDivSpaceBetween)`
 export const PositionsWrapper = styled(FlexDivColumnCentered)<{ isSelected?: boolean }>`
     width: 52px;
     gap: ${(props) => (props.isSelected ? '5' : '10')}px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 44px;
+    }
 `;
 
 export const PositionWrapper = styled(FlexDivCentered)<{ isColumn?: boolean }>`
@@ -100,6 +104,14 @@ export const Icon = styled.i<{ isSmaller?: boolean; size?: number; padding?: str
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')};
 `;
 
+export const AssetIcon = styled(Icon)`
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 28px;
+        line-height: 100%;
+        color: ${(props) => props.theme.textColor.primary};
+    }
+`;
+
 const Label = styled.span`
     font-size: 18px;
     font-weight: 700;
@@ -140,14 +152,13 @@ export const Separator = styled.div`
     margin: 0 14px;
 `;
 
-export const Bonus = styled.div`
+export const Skew = styled.div`
     position: absolute;
     bottom: -21px;
-    color: ${(props) => props.theme.textColor.quaternary};
-    background: ${(props) => props.theme.background.primary};
-    border-radius: 50%;
+    color: ${(props) => props.theme.textColor.secondary};
     font-size: 13px;
     font-weight: 700;
+    white-space: nowrap;
 `;
 
 export const TooltipWrapper = styled.div`

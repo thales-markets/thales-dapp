@@ -14,6 +14,7 @@ import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
 import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
 import Tooltip from 'components/Tooltip/Tooltip';
+import { getIsMobile } from 'redux/modules/ui';
 
 type SpeedMarketsTrade = {
     address: string;
@@ -48,7 +49,9 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     hasCollateralConversion,
 }) => {
     const { t } = useTranslation();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [deltaDate, setDeltaDate] = useState(0);
 
@@ -133,15 +136,20 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     </TextLabel>
                     {market.address ? (
                         <>
-                            <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
-                                {isChainedSpeedMarket
-                                    ? isAllChainedMarketsSelected
-                                        ? getChainedPositions()
-                                        : `( ${t('speed-markets.chained.errors.choose-directions')} )`
-                                    : positionTypeFormatted
-                                    ? positionTypeFormatted
-                                    : `( ${t('markets.amm-trading.choose-direction')} )`}
-                            </SentanceTextValue>
+                            {(!isMobile || !isChainedSpeedMarket) && (
+                                <SentanceTextValue
+                                    uppercase={!!positionTypeFormatted}
+                                    lowercase={!positionTypeFormatted}
+                                >
+                                    {isChainedSpeedMarket
+                                        ? isAllChainedMarketsSelected
+                                            ? getChainedPositions()
+                                            : `( ${t('speed-markets.chained.errors.choose-directions')} )`
+                                        : positionTypeFormatted
+                                        ? positionTypeFormatted
+                                        : `( ${t('markets.amm-trading.choose-direction')} )`}
+                                </SentanceTextValue>
+                            )}
                             {isRangedMarket
                                 ? !breakFirstLine && (
                                       <>
@@ -173,6 +181,15 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     )}
                 </Text>
             </FlexDivCentered>
+            {isChainedSpeedMarket && isMobile && (
+                <FlexDivCentered>
+                    <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
+                        {isAllChainedMarketsSelected
+                            ? getChainedPositions()
+                            : `( ${t('speed-markets.chained.errors.choose-directions')} )`}
+                    </SentanceTextValue>
+                </FlexDivCentered>
+            )}
             {breakFirstLine && isRangedMarket && market.address && (
                 <FlexDivCentered>
                     <Text>
@@ -197,13 +214,20 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                         <>
                             <SentanceTextValue lowercase>{deltaTimeFormatted}</SentanceTextValue>
                             <TextLabel>{` ${t('speed-markets.chained.between-rounds')}`}</TextLabel>
-                            <SentanceTextValue lowercase>{fullDateFromDeltaTimeFormatted}</SentanceTextValue>
+                            {!isMobile && (
+                                <SentanceTextValue lowercase>{fullDateFromDeltaTimeFormatted}</SentanceTextValue>
+                            )}
                         </>
                     ) : (
                         <SentanceTextValue lowercase>{timeFormatted}</SentanceTextValue>
                     )}
                 </Text>
             </FlexDivCentered>
+            {isChainedSpeedMarket && isMobile && (
+                <FlexDivCentered>
+                    <SentanceTextValue lowercase>{fullDateFromDeltaTimeFormatted}</SentanceTextValue>
+                </FlexDivCentered>
+            )}
             <FlexDivCentered>
                 <Text>
                     <TextLabel>{t('markets.amm-trading.you-win')}</TextLabel>
