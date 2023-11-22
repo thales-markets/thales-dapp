@@ -29,5 +29,4 @@ export const EXCLUDED_PROPOSALS = [
     '0xbe858d9db6b9abc060bcf2c064f642a1dd3f8dd3ba396328938dee87c51dbd25',
 ];
 
-export const BLOCK_OPTIMISM = 108648155;
-export const BLOCK_ARBITRUM = 124559462;
+export const TEMP_CHECK_PROPOSAL_ID = '0x22ad5b531b6efa86e56bef8206bad55e441d9c9144afde854f7b15194dc89778';
