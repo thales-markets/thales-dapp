@@ -25,6 +25,7 @@ import { formatNumberShort } from 'utils/formatters/number';
 import ChainedPositionAction from '../ChainedPositionAction';
 import { refetchPythPrice } from 'utils/queryConnector';
 import { getIsMobile } from 'redux/modules/ui';
+import { getColorPerPosition } from 'utils/options';
 
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
@@ -123,13 +124,19 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         <Container>
             <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
             <AlignedFlex>
-                <FlexContainer firstChildWidth="130px">
+                <FlexContainer>
                     <Text>{positionWithPrices.currencyKey}</Text>
                     <Text isActiveColor>
                         {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
                     </Text>
                 </FlexContainer>
-                <FlexContainer secondChildWidth="140px">
+                <FlexContainer>
+                    <Text>{t('common.direction')}</Text>
+                    <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
+                        {positionWithPrices.sides[statusDecisionIndex]}
+                    </Text>
+                </FlexContainer>
+                <FlexContainer>
                     <Text>{t('profile.final-price')}</Text>
                     <Text isActiveColor>
                         {positionWithPrices.finalPrices[statusDecisionIndex] ? (
@@ -306,12 +313,18 @@ const Text = styled.span<{
     fontWeight?: number;
     lineHeight?: string;
     isActiveColor?: boolean;
+    color?: string;
     padding?: string;
 }>`
     font-size: ${(props) => (props.fontSize ? props.fontSize : '13')}px;
     font-weight: ${(props) => (props.fontWeight ? props.fontWeight : '600')};
     line-height: ${(props) => (props.lineHeight ? props.lineHeight : '20px')};
-    color: ${(props) => (props.isActiveColor ? props.theme.textColor.primary : props.theme.textColor.secondary)};
+    color: ${(props) =>
+        props.color
+            ? props.color
+            : props.isActiveColor
+            ? props.theme.textColor.primary
+            : props.theme.textColor.secondary};
     white-space: nowrap;
     ${(props) => (props.padding ? `padding: ${props.padding};` : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -385,18 +398,11 @@ const AlignedFlex = styled.div`
     flex-direction: column;
 `;
 
-const FlexContainer = styled(AlignedFlex)<{ firstChildWidth?: string; secondChildWidth?: string }>`
+const FlexContainer = styled(AlignedFlex)`
     gap: 4px;
     flex: 1;
     flex-direction: row;
     justify-content: center;
-    &:first-child {
-        min-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
-        max-width: ${(props) => (props.firstChildWidth ? props.firstChildWidth : '195px')};
-    }
-    &:nth-child(3) {
-        ${(props) => (props.secondChildWidth ? `min-width: ${props.secondChildWidth};` : '')};
-    }
 `;
 
 export default ChainedPosition;

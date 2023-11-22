@@ -255,14 +255,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
 
         return skewPerPosition;
-    }, [
-        ammSpeedMarketsLimits?.maxSkewImpact,
-        ammSpeedMarketsLimits?.risksPerAssetAndDirection,
-        convertToStable,
-        currencyKey,
-        paidAmount,
-        selectedCollateral,
-    ]);
+    }, [ammSpeedMarketsLimits?.maxSkewImpact, ammSpeedMarketsLimits?.risksPerAssetAndDirection, currencyKey]);
 
     const totalFee = useMemo(() => {
         if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
