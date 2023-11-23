@@ -194,7 +194,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
             ['maturityDate', 'value'],
             ['asc', 'desc']
         );
-    }, [claimablePositions, userOpenSpeedMarketsData]);
+    }, [claimablePositions, userOpenSpeedMarketsData, userOpenChainedSpeedMarketsDataWithPrices]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -327,7 +327,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
             return generateRows(filteredData);
         }
         return [];
-    }, [filteredData, isMobile, t, theme]);
+    }, [filteredData, isMobile, t, theme, userOpenChainedSpeedMarketsDataWithPrices]);
 
     return (
         <>

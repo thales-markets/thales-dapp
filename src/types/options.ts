@@ -283,6 +283,7 @@ export type SpeedMarket = {
     result: OptionSide | null;
     finalPrice?: number;
     isSpeedMarket: boolean;
+    isChainedSpeedMarket?: boolean;
 };
 
 export type ChainedSpeedMarket = {
