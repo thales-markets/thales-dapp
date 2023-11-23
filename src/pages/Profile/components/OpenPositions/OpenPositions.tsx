@@ -285,34 +285,32 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                             value: <MyPositionAction position={row} isProfileAction />,
                         },
                         {
-                            value: (
-                                <>
-                                    <ShareIcon
-                                        className="icon-home icon-home--twitter-x"
-                                        disabled={false}
-                                        onClick={() => {
-                                            setOpenTwitterShareModal(true);
-                                            setPositionShareData({
-                                                type:
-                                                    row.isSpeedMarket && row.claimable
-                                                        ? 'resolved-speed'
-                                                        : row.claimable
-                                                        ? 'resolved'
-                                                        : row.isSpeedMarket
-                                                        ? 'potential-speed'
-                                                        : 'potential',
-                                                position: row.side,
-                                                currencyKey: row.currencyKey,
-                                                strikePrice: row.strikePrice,
-                                                leftPrice: row.leftPrice,
-                                                rightPrice: row.rightPrice,
-                                                strikeDate: row.maturityDate,
-                                                buyIn: row.paid,
-                                                payout: row.amount,
-                                            });
-                                        }}
-                                    />
-                                </>
+                            value: !row.isChainedSpeedMarket && (
+                                <ShareIcon
+                                    className="icon-home icon-home--twitter-x"
+                                    disabled={false}
+                                    onClick={() => {
+                                        setOpenTwitterShareModal(true);
+                                        setPositionShareData({
+                                            type:
+                                                row.isSpeedMarket && row.claimable
+                                                    ? 'resolved-speed'
+                                                    : row.claimable
+                                                    ? 'resolved'
+                                                    : row.isSpeedMarket
+                                                    ? 'potential-speed'
+                                                    : 'potential',
+                                            position: row.side,
+                                            currencyKey: row.currencyKey,
+                                            strikePrice: row.strikePrice,
+                                            leftPrice: row.leftPrice,
+                                            rightPrice: row.rightPrice,
+                                            strikeDate: row.maturityDate,
+                                            buyIn: row.paid,
+                                            payout: row.amount,
+                                        });
+                                    }}
+                                />
                             ),
                             width: isMobile ? undefined : '20px',
                         },
