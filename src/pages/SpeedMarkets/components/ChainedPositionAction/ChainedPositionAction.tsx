@@ -67,6 +67,7 @@ type ChainedPositionActionProps = {
     isOverview?: boolean;
     isAdmin?: boolean;
     isSubmittingBatch?: boolean;
+    isWideClaim?: boolean;
 };
 
 const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
@@ -75,6 +76,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     isOverview,
     isAdmin,
     isSubmittingBatch,
+    isWideClaim,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -287,7 +289,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
     const getResolveButton = () => {
         const additionalButtonStyle: CSSProperties = {
-            minWidth: isOverview ? '180px' : '152px',
+            minWidth: isOverview || isWideClaim ? '180px' : '152px',
             lineHeight: '100%',
             border: 'none',
         };
