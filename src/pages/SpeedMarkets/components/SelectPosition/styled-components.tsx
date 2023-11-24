@@ -143,7 +143,7 @@ export const Separator = styled.div`
 
 export const Skew = styled.div<{ isDiscount?: boolean }>`
     position: absolute;
-    bottom: -21px;
+    ${(props) => (!props.isDiscount ? 'bottom: -21px;' : '')}
     color: ${(props) =>
         props.isDiscount === undefined
             ? props.theme.textColor.secondary
@@ -153,6 +153,21 @@ export const Skew = styled.div<{ isDiscount?: boolean }>`
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
+
+    ${(props) =>
+        props.isDiscount
+            ? `
+                top: -10px;
+                right: -30px;
+                background: ${props.theme.background.primary};
+                bottom: 0;
+                height: 17px;
+                padding: 2px;
+                border-radius: 50%;
+    `
+            : ''}
+
+}
 `;
 
 export const TooltipWrapper = styled.div`

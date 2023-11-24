@@ -64,34 +64,39 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}
                         >
                             <Icon className="icon icon--caret-up" />
-                            <Skew isDiscount={skew[Positions.UP] > 0 ? false : discount > 0 ? true : undefined}>
-                                {skew[Positions.UP] > 0 ? '-' : discount > 0 ? '+' : ''}
-                                {formatPercentage(skew[Positions.UP] || discount)}
-                            </Skew>
+                            {discount > 0 && (
+                                <Skew isDiscount={skew[Positions.UP] > 0 ? false : discount > 0 ? true : undefined}>
+                                    {skew[Positions.UP] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                    {formatPercentage(skew[Positions.UP] || discount)}
+                                </Skew>
+                            )}
                         </PositionSymbolUp>
                     </PositionWrapper>
                     <Separator>
-                        <TooltipWrapper>
-                            <Tooltip
-                                overlay={
-                                    <Trans
-                                        i18nKey="speed-markets.tooltips.skew-info"
-                                        components={{
-                                            br: <br />,
-                                        }}
-                                        values={{
-                                            skewDirection: skew[Positions.DOWN] > 0 ? Positions.DOWN : Positions.UP,
-                                            skewPerc: formatPercentage(
-                                                skew[Positions.UP] > 0 ? skew[Positions.UP] : skew[Positions.DOWN]
-                                            ),
-                                            discountDirection: skew[Positions.DOWN] > 0 ? Positions.UP : Positions.DOWN,
-                                            discountPerc: formatPercentage(discount),
-                                        }}
-                                    />
-                                }
-                                marginLeft={0}
-                            />
-                        </TooltipWrapper>
+                        {discount > 0 && (
+                            <TooltipWrapper>
+                                <Tooltip
+                                    overlay={
+                                        <Trans
+                                            i18nKey="speed-markets.tooltips.skew-info"
+                                            components={{
+                                                br: <br />,
+                                            }}
+                                            values={{
+                                                skewDirection: skew[Positions.DOWN] > 0 ? Positions.DOWN : Positions.UP,
+                                                skewPerc: formatPercentage(
+                                                    skew[Positions.UP] > 0 ? skew[Positions.UP] : skew[Positions.DOWN]
+                                                ),
+                                                discountDirection:
+                                                    skew[Positions.DOWN] > 0 ? Positions.UP : Positions.DOWN,
+                                                discountPerc: formatPercentage(discount),
+                                            }}
+                                        />
+                                    }
+                                    marginLeft={0}
+                                />
+                            </TooltipWrapper>
+                        )}
                     </Separator>
                     <PositionWrapper
                         onClick={() => onChange(selected[0] === Positions.DOWN ? undefined : Positions.DOWN)}
@@ -100,10 +105,12 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}
                         >
                             <Icon className="icon icon--caret-down" />
-                            <Skew isDiscount={skew[Positions.DOWN] > 0 ? false : discount > 0 ? true : undefined}>
-                                {skew[Positions.DOWN] > 0 ? '-' : discount > 0 ? '+' : ''}
-                                {formatPercentage(skew[Positions.DOWN] || discount)}
-                            </Skew>
+                            {discount > 0 && (
+                                <Skew isDiscount={skew[Positions.DOWN] > 0 ? false : discount > 0 ? true : undefined}>
+                                    {skew[Positions.DOWN] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                    {formatPercentage(skew[Positions.DOWN] || discount)}
+                                </Skew>
+                            )}
                         </PositionSymbolDown>
                         <LabelDown isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}>
                             {Positions.DOWN}

@@ -616,6 +616,11 @@ const speedMarketsAMMContract = {
                     type: 'uint64',
                 },
                 {
+                    internalType: 'uint64',
+                    name: 'delta',
+                    type: 'uint64',
+                },
+                {
                     internalType: 'enum SpeedMarket.Direction',
                     name: 'direction',
                     type: 'uint8',
@@ -655,50 +660,12 @@ const speedMarketsAMMContract = {
                 },
                 {
                     internalType: 'uint64',
-                    name: 'delta',
+                    name: 'strikeTime',
                     type: 'uint64',
                 },
                 {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'referrer',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'skewImpact',
-                    type: 'uint256',
-                },
-            ],
-            name: 'createNewMarketWithDelta',
-            outputs: [],
-            stateMutability: 'payable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
                     internalType: 'uint64',
-                    name: 'strikeTime',
+                    name: 'delta',
                     type: 'uint64',
                 },
                 {
@@ -738,59 +705,6 @@ const speedMarketsAMMContract = {
                 },
             ],
             name: 'createNewMarketWithDifferentCollateral',
-            outputs: [],
-            stateMutability: 'payable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint64',
-                    name: 'delta',
-                    type: 'uint64',
-                },
-                {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'collateral',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'collateralAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'isEth',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: 'referrer',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'skewImpact',
-                    type: 'uint256',
-                },
-            ],
-            name: 'createNewMarketWithDifferentCollateralAndDelta',
             outputs: [],
             stateMutability: 'payable',
             type: 'function',

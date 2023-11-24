@@ -23,37 +23,23 @@ export const getTransactionForSpeedAMM = async (
     const isChained = sides.length > 1;
 
     if (isNonDefaultCollateral) {
-        if (deltaTimeSec) {
-            if (isChained) {
-                tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
-                    asset,
-                    deltaTimeSec,
-                    sides,
-                    pythPriceUpdateData,
-                    collateralAddress,
-                    buyInAmount,
-                    isEth,
-                    referral ? referral : ZERO_ADDRESS,
-                    { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-                );
-            } else {
-                tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateralAndDelta(
-                    asset,
-                    deltaTimeSec,
-                    sides[0],
-                    pythPriceUpdateData,
-                    collateralAddress,
-                    buyInAmount,
-                    isEth,
-                    referral ? referral : ZERO_ADDRESS,
-                    skewImpact,
-                    { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-                );
-            }
+        if (isChained) {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
+                asset,
+                deltaTimeSec,
+                sides,
+                pythPriceUpdateData,
+                collateralAddress,
+                buyInAmount,
+                isEth,
+                referral ? referral : ZERO_ADDRESS,
+                { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
+            );
         } else {
             tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
                 asset,
                 strikeTimeSec,
+                deltaTimeSec,
                 sides[0],
                 pythPriceUpdateData,
                 collateralAddress,
@@ -65,33 +51,21 @@ export const getTransactionForSpeedAMM = async (
             );
         }
     } else {
-        if (deltaTimeSec) {
-            if (isChained) {
-                tx = await speedMarketsAMMContractWithSigner.createNewMarket(
-                    asset,
-                    deltaTimeSec,
-                    sides,
-                    buyInAmount,
-                    pythPriceUpdateData,
-                    referral ? referral : ZERO_ADDRESS,
-                    { value: pythUpdateFee }
-                );
-            } else {
-                tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDelta(
-                    asset,
-                    deltaTimeSec,
-                    sides[0],
-                    buyInAmount,
-                    pythPriceUpdateData,
-                    referral ? referral : ZERO_ADDRESS,
-                    skewImpact,
-                    { value: pythUpdateFee }
-                );
-            }
+        if (isChained) {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarket(
+                asset,
+                deltaTimeSec,
+                sides,
+                buyInAmount,
+                pythPriceUpdateData,
+                referral ? referral : ZERO_ADDRESS,
+                { value: pythUpdateFee }
+            );
         } else {
             tx = await speedMarketsAMMContractWithSigner.createNewMarket(
                 asset,
                 strikeTimeSec,
+                deltaTimeSec,
                 sides[0],
                 buyInAmount,
                 pythPriceUpdateData,
