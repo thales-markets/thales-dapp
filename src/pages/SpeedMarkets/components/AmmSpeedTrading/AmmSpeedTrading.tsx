@@ -269,7 +269,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     ammSpeedMarketsLimits?.defaultLPFee
                 );
                 const skew = positionType ? skewImpact[positionType] : 0;
-                return lpFee ? lpFee + skew + ammSpeedMarketsLimits?.safeBoxImpact : 0;
+                const oppositePositionSkew = positionType
+                    ? positionType === Positions.UP
+                        ? Positions.DOWN
+                        : Positions.UP
+                    : undefined;
+                const discount = oppositePositionSkew ? skewImpact[oppositePositionSkew] / 2 : 0;
+
+                return lpFee + skew - discount + Number(ammSpeedMarketsLimits?.safeBoxImpact);
             }
         }
         return 0;

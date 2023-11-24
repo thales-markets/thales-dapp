@@ -49,6 +49,8 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
         ? roundNumberToDecimals(ammChainedSpeedMarketsLimits?.payoutMultiplier ** selected.length)
         : 0;
 
+    const discount = skew[Positions.UP] > 0 ? skew[Positions.UP] / 2 : skew[Positions.DOWN] / 2;
+
     return (
         <Container>
             {selected.length === 1 ? (
@@ -62,7 +64,10 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}
                         >
                             <Icon className="icon icon--caret-up" />
-                            <Skew>{formatPercentage(skew[Positions.UP])}</Skew>
+                            <Skew isDiscount={skew[Positions.UP] > 0 ? false : discount > 0 ? true : undefined}>
+                                {skew[Positions.UP] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                {formatPercentage(skew[Positions.UP] || discount)}
+                            </Skew>
                         </PositionSymbolUp>
                     </PositionWrapper>
                     <Separator>
@@ -75,8 +80,12 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                                             br: <br />,
                                         }}
                                         values={{
-                                            skewUpPerc: formatPercentage(skew[Positions.UP]),
-                                            skewDownPerc: formatPercentage(skew[Positions.DOWN]),
+                                            skewDirection: skew[Positions.DOWN] > 0 ? Positions.DOWN : Positions.UP,
+                                            skewPerc: formatPercentage(
+                                                skew[Positions.UP] > 0 ? skew[Positions.UP] : skew[Positions.DOWN]
+                                            ),
+                                            discountDirection: skew[Positions.DOWN] > 0 ? Positions.UP : Positions.DOWN,
+                                            discountPerc: formatPercentage(discount),
                                         }}
                                     />
                                 }
@@ -91,7 +100,10 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                             isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}
                         >
                             <Icon className="icon icon--caret-down" />
-                            <Skew>{formatPercentage(skew[Positions.DOWN])}</Skew>
+                            <Skew isDiscount={skew[Positions.DOWN] > 0 ? false : discount > 0 ? true : undefined}>
+                                {skew[Positions.DOWN] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                {formatPercentage(skew[Positions.DOWN] || discount)}
+                            </Skew>
                         </PositionSymbolDown>
                         <LabelDown isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}>
                             {Positions.DOWN}

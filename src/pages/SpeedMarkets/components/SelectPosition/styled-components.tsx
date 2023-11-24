@@ -141,10 +141,15 @@ export const Separator = styled.div`
     margin: 0 14px;
 `;
 
-export const Skew = styled.div`
+export const Skew = styled.div<{ isDiscount?: boolean }>`
     position: absolute;
     bottom: -21px;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) =>
+        props.isDiscount === undefined
+            ? props.theme.textColor.secondary
+            : props.isDiscount
+            ? props.theme.textColor.quaternary
+            : props.theme.textColor.tertiary};
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;

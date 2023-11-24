@@ -480,7 +480,7 @@
             "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
             "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration",
             "fee-info": "{{firstPerc}} from {{firstTime}}min up to {{secondTime}}min<br>{{secondPerc}} from {{secondTime}}min up to {{thirdTime}}min<br>{{thirdPerc}} from {{thirdTime}}min up to {{fourthTime}}min<br>{{fourthPerc}} for above or equal {{fourthTime}}min<br>{{maxSkewImpact}} maximum skew impact",
-            "skew-info": "Skew impact for UP direction is {{skewUpPerc}}<br>Skew impact for DOWN direction is {{skewDownPerc}}",
+            "skew-info": "Skew impact for {{skewDirection}} direction is {{skewPerc}}<br>Discount for {{discountDirection}} direction is {{discountPerc}}",
             "skew-slippage": "Skew slippage is maximum 1%"
         },
         "overview": {
