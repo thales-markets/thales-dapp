@@ -1,4 +1,5 @@
 import { USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -19,6 +20,7 @@ type CollateralSelectorProps = {
     exchangeRates?: Rates | null;
     dropDownWidth?: string;
     additionalStyles?: CSSProperties;
+    isDropDownAbove?: boolean;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -31,6 +33,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     exchangeRates,
     dropDownWidth,
     additionalStyles,
+    isDropDownAbove,
 }) => {
     const dispatch = useDispatch();
 
@@ -54,7 +57,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     }, [collateralArray, isDetailedView, getUSDForCollateral]);
 
     return (
-        <Container margin={additionalStyles?.margin?.toString()}>
+        <Container isDropDownAbove={isDropDownAbove} margin={additionalStyles?.margin?.toString()}>
             <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
                 <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
                     <TextCollateralWrapper>
@@ -106,7 +109,11 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                           </DetailedDropdown>
                       )
                     : open && (
-                          <Dropdown width={dropDownWidth} onClick={() => setOpen(!open)}>
+                          <Dropdown
+                              isDropDownAbove={isDropDownAbove}
+                              width={dropDownWidth}
+                              onClick={() => setOpen(!open)}
+                          >
                               {collateralArray.map((collateral, index) => {
                                   return (
                                       <CollateralOption
@@ -127,7 +134,8 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     );
 };
 
-const Container = styled(FlexDivStart)<{ margin?: string }>`
+const Container = styled(FlexDivStart)<{ isDropDownAbove?: boolean; margin?: string }>`
+    ${(props) => (props.isDropDownAbove ? 'position: relative;' : '')}
     margin: ${(props) => (props.margin ? props.margin : '0 7px')};
     align-items: center;
 `;
@@ -162,9 +170,10 @@ const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `;
 
-const Dropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
+const Dropdown = styled(FlexDivColumnCentered)<{ isDropDownAbove?: boolean; width?: string }>`
     position: absolute;
-    margin-top: 10px;
+    ${(props) => (props.isDropDownAbove ? 'bottom: 24px;' : '')}
+    margin-top: 8px;
     margin-left: -10px;
     width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;

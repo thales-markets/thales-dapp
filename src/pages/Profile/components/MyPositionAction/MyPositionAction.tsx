@@ -562,6 +562,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                             onChangeCollateral={() => {}}
                             disabled={isSubmitting || isAllowing}
                             additionalStyles={{ color: theme.button.textColor.quaternary }}
+                            isDropDownAbove={isMobile && !isProfileAction}
                         />
                     </CollateralSelectorContainer>
                 )}

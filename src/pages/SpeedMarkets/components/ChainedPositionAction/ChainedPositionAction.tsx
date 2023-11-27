@@ -388,6 +388,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                             onChangeCollateral={() => {}}
                             disabled={isSubmitting || isAllowing}
                             additionalStyles={{ margin: '0 0 0 7px', color: theme.button.textColor.quaternary }}
+                            isDropDownAbove={isMobile}
                         />
                     </CollateralSelectorContainer>
                 )}
