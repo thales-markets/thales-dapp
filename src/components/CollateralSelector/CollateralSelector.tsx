@@ -1,5 +1,4 @@
 import { USD_SIGN } from 'constants/currency';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
