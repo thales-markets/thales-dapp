@@ -9,6 +9,7 @@ import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import ROUTES from 'constants/routes';
 import { minutesToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
@@ -51,7 +52,10 @@ const SpeedMarkets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
+    // TODO: remove after contarct deploy on all chains
+    const isChainedMarkets = [Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)
+        ? false
+        : queryString.parse(location.search).isChained === 'true';
 
     const [isChained, setIsChained] = useState(isChainedMarkets);
     const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
@@ -207,6 +211,7 @@ const SpeedMarkets: React.FC = () => {
         return (
             <SwitchInput
                 active={isChained}
+                disabled={[Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)} // TODO: remove after contarct deploy on all chains
                 width="80px"
                 height="30px"
                 dotSize="20px"

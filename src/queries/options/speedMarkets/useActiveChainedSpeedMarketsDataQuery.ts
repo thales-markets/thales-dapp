@@ -16,6 +16,10 @@ const useActiveChainedSpeedMarketsDataQuery = (networkId: Network, options?: Use
         QUERY_KEYS.BinaryOptions.ActiveChainedSpeedMarkets(networkId),
         async () => {
             const chainedSpeedMarketsData: ChainedSpeedMarket[] = [];
+            // TODO: remove after contarct deploy on all chains
+            if ([Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)) {
+                return chainedSpeedMarketsData;
+            }
             const { chainedSpeedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
             if (chainedSpeedMarketsAMMContract && speedMarketsDataContract) {

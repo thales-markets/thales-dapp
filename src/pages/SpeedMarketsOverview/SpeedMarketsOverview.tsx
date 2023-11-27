@@ -1,19 +1,28 @@
 import SPAAnchor from 'components/SPAAnchor';
 import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
 import queryString from 'query-string';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { buildHref } from 'utils/routes';
 import UnresolvedChainedPositions from './components/UnresolvedChainedPositions';
 import UnresolvedPositions from './components/UnresolvedPositions';
-import { NavigationIcon, LinkContainer, Container, Header } from './styled-components';
+import { Container, Header, LinkContainer, NavigationIcon } from './styled-components';
 
 const SpeedMarketsOverview: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
 
-    const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    // TODO: remove after contarct deploy on all chains
+    const isChainedMarkets = [Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)
+        ? false
+        : queryString.parse(location.search).isChained === 'true';
 
     return (
         <Container>

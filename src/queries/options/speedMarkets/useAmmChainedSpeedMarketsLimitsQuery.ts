@@ -28,6 +28,10 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
                 maxPriceDelayForResolvingSec: 0,
                 whitelistedAddress: false,
             };
+            // TODO: remove after contarct deploy on all chains
+            if ([Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)) {
+                return ammChainedSpeedMarketsLimits;
+            }
             const { speedMarketsDataContract } = snxJSConnector;
             if (speedMarketsDataContract) {
                 const [chainedAmmParams, ammParams] = await Promise.all([
