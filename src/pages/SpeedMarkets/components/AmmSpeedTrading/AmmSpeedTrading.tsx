@@ -793,7 +793,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     fee: formatPercentage(totalFee),
                                 }}
                                 components={{
-                                    tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,
+                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
+                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                    ) : (
+                                        <></>
+                                    ),
                                 }}
                             />
                         ) : (
@@ -807,7 +811,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     fee: formatPercentage(totalFee),
                                 }}
                                 components={{
-                                    tooltip: <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />,
+                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
+                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                    ) : (
+                                        <></>
+                                    ),
                                 }}
                             />
                         )}

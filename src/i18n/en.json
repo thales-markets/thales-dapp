@@ -468,9 +468,9 @@
                 "price-stale": "Can't resolve market with stale price"
             }
         },
-        "total-pay": "Total to pay {{amount}} + {{fee}} fee <tooltip/>",
+        "total-pay": "Total to pay {{amount}} + {{fee}} fee<tooltip/>",
         "fee-info": "Fee varies per direction liquidity and timeframe, longer timeframes have higher payouts",
-        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee <tooltip/>",
+        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee<tooltip/>",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
             "buyin-fees": "Excluding fees",
