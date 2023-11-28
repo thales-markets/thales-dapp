@@ -148,6 +148,10 @@ const SpeedMarkets: React.FC = () => {
 
     useEffect(() => {
         resetData();
+        // TODO: remove after contract deploy on all chains
+        if ([Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)) {
+            setIsChained(false);
+        }
     }, [networkId, resetData]);
 
     useEffect(() => {
