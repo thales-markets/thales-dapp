@@ -1203,6 +1203,24 @@ const speedMarketsAMMContract = {
                     type: 'int64',
                 },
             ],
+            name: 'resolveMarketAsOwner',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'int64',
+                    name: '_finalPrice',
+                    type: 'int64',
+                },
+            ],
             name: 'resolveMarketManually',
             outputs: [],
             stateMutability: 'nonpayable',
