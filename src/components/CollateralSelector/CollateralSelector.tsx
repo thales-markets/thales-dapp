@@ -56,7 +56,11 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     }, [collateralArray, isDetailedView, getUSDForCollateral]);
 
     return (
-        <Container isDropDownAbove={isDropDownAbove} margin={additionalStyles?.margin?.toString()}>
+        <Container
+            isDropDownAbove={isDropDownAbove}
+            margin={additionalStyles?.margin?.toString()}
+            position={additionalStyles?.position}
+        >
             <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
                 <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
                     <TextCollateralWrapper>
@@ -133,8 +137,8 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     );
 };
 
-const Container = styled(FlexDivStart)<{ isDropDownAbove?: boolean; margin?: string }>`
-    ${(props) => (props.isDropDownAbove ? 'position: relative;' : '')}
+const Container = styled(FlexDivStart)<{ isDropDownAbove?: boolean; margin?: string; position?: string }>`
+    ${(props) => (props.isDropDownAbove ? 'position: relative;' : props.position ? `position: ${props.position};` : '')}
     margin: ${(props) => (props.margin ? props.margin : '0 7px')};
     align-items: center;
 `;

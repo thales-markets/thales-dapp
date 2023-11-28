@@ -70,12 +70,14 @@ type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
     maxPriceDelayForResolvingSec?: number;
+    isMultipleContainerRows?: boolean;
 };
 
 const MyPositionAction: React.FC<MyPositionActionProps> = ({
     position,
     isProfileAction,
     maxPriceDelayForResolvingSec,
+    isMultipleContainerRows,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -561,7 +563,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                             selectedItem={selectedCollateralIndex}
                             onChangeCollateral={() => {}}
                             disabled={isSubmitting || isAllowing}
-                            additionalStyles={{ color: theme.button.textColor.quaternary }}
+                            additionalStyles={{
+                                color: theme.button.textColor.quaternary,
+                                position: !isMultipleContainerRows ? undefined : 'relative',
+                            }}
                             isDropDownAbove={isMobile && !isProfileAction}
                         />
                     </CollateralSelectorContainer>

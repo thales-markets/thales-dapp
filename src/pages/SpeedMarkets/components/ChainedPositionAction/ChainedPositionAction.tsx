@@ -67,7 +67,8 @@ type ChainedPositionActionProps = {
     isOverview?: boolean;
     isAdmin?: boolean;
     isSubmittingBatch?: boolean;
-    isWideClaim?: boolean;
+    isProfileAction?: boolean;
+    isMultipleContainerRows?: boolean;
 };
 
 const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
@@ -76,7 +77,8 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     isOverview,
     isAdmin,
     isSubmittingBatch,
-    isWideClaim,
+    isProfileAction,
+    isMultipleContainerRows,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -289,7 +291,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
     const getResolveButton = () => {
         const additionalButtonStyle: CSSProperties = {
-            minWidth: isOverview || isWideClaim ? '180px' : '152px',
+            minWidth: isOverview || isProfileAction ? '180px' : '152px',
             lineHeight: '100%',
             border: 'none',
         };
@@ -387,8 +389,12 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                             selectedItem={selectedCollateralIndex}
                             onChangeCollateral={() => {}}
                             disabled={isSubmitting || isAllowing}
-                            additionalStyles={{ margin: '0 0 0 7px', color: theme.button.textColor.quaternary }}
-                            isDropDownAbove={isMobile}
+                            additionalStyles={{
+                                position: isProfileAction || !isMultipleContainerRows ? undefined : 'relative',
+                                margin: '0 0 0 7px',
+                                color: theme.button.textColor.quaternary,
+                            }}
+                            isDropDownAbove={isMobile && !isProfileAction}
                         />
                     </CollateralSelectorContainer>
                 )}

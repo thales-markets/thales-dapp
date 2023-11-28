@@ -26,9 +26,15 @@ type OpenPositionProps = {
     position: UserLivePositions;
     maxPriceDelayForResolvingSec?: number;
     currentPrices?: { [key: string]: number };
+    isMultipleMarkets?: boolean;
 };
 
-const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForResolvingSec, currentPrices }) => {
+const OpenPosition: React.FC<OpenPositionProps> = ({
+    position,
+    maxPriceDelayForResolvingSec,
+    currentPrices,
+    isMultipleMarkets,
+}) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
@@ -112,7 +118,11 @@ const OpenPosition: React.FC<OpenPositionProps> = ({ position, maxPriceDelayForR
                     <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                 </FlexContainer>
                 <Separator />
-                <MyPositionAction position={position} maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec} />
+                <MyPositionAction
+                    position={position}
+                    maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                    isMultipleContainerRows={isMultipleMarkets}
+                />
             </AlignedFlex>
             <ShareIcon
                 className="icon-home icon-home--twitter-x"

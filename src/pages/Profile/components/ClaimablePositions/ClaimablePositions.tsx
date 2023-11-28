@@ -242,7 +242,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                     isOverview={false}
                                     isAdmin={false}
                                     isSubmittingBatch={false}
-                                    isWideClaim
+                                    isProfileAction
                                 />
                             ) : (
                                 <MyPositionAction position={row} isProfileAction />

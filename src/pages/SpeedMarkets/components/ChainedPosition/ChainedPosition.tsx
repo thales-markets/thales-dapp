@@ -33,6 +33,7 @@ type ChainedPositionProps = {
     isOverview?: boolean;
     isAdmin?: boolean;
     isSubmittingBatch?: boolean;
+    isMultipleMarkets?: boolean;
 };
 
 const ChainedPosition: React.FC<ChainedPositionProps> = ({
@@ -41,6 +42,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     isOverview,
     isAdmin,
     isSubmittingBatch,
+    isMultipleMarkets,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -277,6 +279,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                         isOverview={isOverview}
                         isAdmin={isAdmin}
                         isSubmittingBatch={isSubmittingBatch}
+                        isMultipleContainerRows={isMultipleMarkets}
                     />
                 </Result>
                 {isOverview && (
