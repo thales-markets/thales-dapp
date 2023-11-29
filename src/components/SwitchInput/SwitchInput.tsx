@@ -6,6 +6,8 @@ type LabelProps = {
     firstLabel?: string;
     secondLabel?: string;
     fontSize?: string;
+    firstLabelColor?: string;
+    secondLabelColor?: string;
 };
 
 type SwitchProps = {
@@ -16,6 +18,7 @@ type SwitchProps = {
     height?: string;
     borderWidth?: string;
     borderColor?: string;
+    borderRadius?: string;
     background?: string;
     backgroundGradient?: boolean;
     dotSize?: string;
@@ -32,6 +35,7 @@ type SwitchContainerProps = {
     handleClick?: () => void;
     borderWidth?: string;
     borderColor?: string;
+    borderRadius?: string;
     width?: string;
     height?: string;
     background?: string;
@@ -56,6 +60,7 @@ const SwitchInput: React.FC<SwitchProps> = ({
     height,
     borderWidth,
     borderColor,
+    borderRadius,
     background,
     backgroundGradient,
     dotSize,
@@ -68,11 +73,16 @@ const SwitchInput: React.FC<SwitchProps> = ({
 }) => {
     return (
         <Wrapper margin={margin} disabled={disabled} spanColumns={spanColumns}>
-            {label?.firstLabel && <Label fontSize={label?.fontSize}>{label.firstLabel}</Label>}
+            {label?.firstLabel && (
+                <Label fontSize={label?.fontSize} color={label?.firstLabelColor}>
+                    {label.firstLabel}
+                </Label>
+            )}
             <SwitchContainer
                 disabled={disabled}
                 borderWidth={borderWidth}
                 borderColor={borderColor}
+                borderRadius={borderRadius}
                 width={width}
                 height={height}
                 background={background}
@@ -87,7 +97,11 @@ const SwitchInput: React.FC<SwitchProps> = ({
                     circlePosition={circlePosition}
                 />
             </SwitchContainer>
-            {label?.secondLabel && <Label fontSize={label?.fontSize}>{label.secondLabel}</Label>}
+            {label?.secondLabel && (
+                <Label fontSize={label?.fontSize} color={label?.secondLabelColor}>
+                    {label.secondLabel}
+                </Label>
+            )}
         </Wrapper>
     );
 };
@@ -106,10 +120,10 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
     }
 `;
 
-const Label = styled.span<{ fontSize?: string }>`
+const Label = styled.span<{ fontSize?: string; color?: string }>`
     font-weight: 600;
     font-size: ${(props) => props.fontSize || '12px'};
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.color || props.theme.textColor.primary};
     margin-left: 5px;
     margin-right: 5px;
     text-transform: uppercase;
@@ -123,7 +137,7 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     border-width: ${(props: any) => props.borderWidth || '1px'};
     border-style: solid;
     border-color: ${(props: any) => props.borderColor || props.theme.textColor.primary};
-    border-radius: 30px;
+    border-radius: ${(props: any) => props.borderRadius || '30px'};
     width: ${(props: any) => props.width || defaultSwitchHeight * 2.18 + 'px'};
     height: ${(props: any) => props.height || defaultSwitchHeight + 'px'};
 `;

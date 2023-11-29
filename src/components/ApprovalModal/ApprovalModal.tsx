@@ -11,8 +11,7 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import { Coins } from 'types/options';
-import { bigNumberFormatter, coinParser } from 'thales-utils';
+import { bigNumberFormatter, coinParser, Coins } from 'thales-utils';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;

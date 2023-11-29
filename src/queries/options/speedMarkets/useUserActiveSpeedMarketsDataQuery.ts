@@ -4,7 +4,7 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { OPTIONS_POSITIONS_MAP, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
-import { secondsToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { reject } from 'lodash';
@@ -103,7 +103,7 @@ const useUserActiveSpeedMarketsDataQuery = (
                     const maturityDate = secondsToMilliseconds(Number(marketData.strikeTime));
                     const createdAt = !marketData.createdAt.isZero()
                         ? secondsToMilliseconds(Number(marketData.createdAt))
-                        : maturityDate;
+                        : maturityDate - hoursToMilliseconds(1);
                     const lpFee = !marketData.lpFee.isZero()
                         ? bigNumberFormatter(marketData.lpFee)
                         : getFeesFromHistory(createdAt).lpFee;

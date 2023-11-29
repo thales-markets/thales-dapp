@@ -13,8 +13,6 @@ export type RangedMarketPositionType = 'in' | 'out';
 
 type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
-export type Coins = 'sUSD' | 'DAI' | 'USDCe' | 'USDC' | 'USDT' | 'BUSD' | 'OP' | 'WETH' | 'ETH' | 'ARB';
-
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
@@ -242,6 +240,7 @@ export type UserClosedPositions = {
     isUserWinner: boolean;
 };
 
+export type Risk = { current: number; max: number };
 export type RiskPerAsset = { currency: string; current: number; max: number };
 export type RiskPerAssetAndPosition = RiskPerAsset & { position: Positions };
 
@@ -256,7 +255,21 @@ export type AmmSpeedMarketsLimits = {
     timeThresholdsForFees: number[];
     lpFees: number[];
     defaultLPFee: number;
+    maxSkewImpact: number;
     safeBoxImpact: number;
+    whitelistedAddress: boolean;
+};
+
+export type AmmChainedSpeedMarketsLimits = {
+    minChainedMarkets: number;
+    maxChainedMarkets: number;
+    minBuyinAmount: number;
+    maxBuyinAmount: number;
+    minTimeFrame: number;
+    maxTimeFrame: number;
+    risk: Risk;
+    payoutMultiplier: number;
+    maxPriceDelayForResolvingSec: number;
     whitelistedAddress: boolean;
 };
 
@@ -270,4 +283,24 @@ export type SpeedMarket = {
     result: OptionSide | null;
     finalPrice?: number;
     isSpeedMarket: boolean;
+    isChainedSpeedMarket?: boolean;
+};
+
+export type ChainedSpeedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: string;
+    sides: (Positions.UP | Positions.DOWN)[];
+    strikePrices: number[];
+    strikeTimes: number[];
+    maturityDate: number;
+    amount: number;
+    paid: number;
+    finalPrices: number[];
+    isOpen: boolean;
+    isMatured: boolean;
+    canResolve: boolean;
+    claimable: boolean;
+    isUserWinner: boolean;
+    user: string;
 };

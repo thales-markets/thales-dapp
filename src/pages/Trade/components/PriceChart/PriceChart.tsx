@@ -1,9 +1,13 @@
 import { CoinGeckoClient } from 'coingecko-api-v3';
+import TooltipInfo from 'components/Tooltip';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import { format } from 'date-fns';
 import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
     Area,
     AreaChart,
@@ -15,23 +19,19 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { bigNumberFormatter, bytesFormatter, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'thales-utils';
+import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithPrecision, formatCurrencyWithSign, bigNumberFormatter, bytesFormatter } from 'thales-utils';
 import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
-import Toggle from './components/DateToggle';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import snxJSConnector from 'utils/snxJSConnector';
-import TooltipInfo from 'components/Tooltip';
-import { Trans, useTranslation } from 'react-i18next';
 import CurrentPrice from './components/CurrentPrice';
-import { RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
-import { getIsMobile } from 'redux/modules/ui';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import Toggle from './components/DateToggle';
 
 type PriceChartProps = {
     asset: string;
@@ -41,6 +41,7 @@ type PriceChartProps = {
     isSpeedMarkets?: boolean;
     explicitCurrentPrice?: number;
     prevExplicitPrice?: number;
+    chainedRisk?: Risk;
     risksPerAsset?: RiskPerAsset[];
     risksPerAssetAndDirection?: RiskPerAssetAndPosition[];
 };
@@ -86,6 +87,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     isSpeedMarkets,
     explicitCurrentPrice,
     prevExplicitPrice,
+    chainedRisk,
     risksPerAsset,
     risksPerAssetAndDirection,
 }) => {
@@ -152,7 +154,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     }
                 }
                 if (result) {
-                    const dateFormat = isSpeedMarkets ? 'dd/MM HH:mm' : 'dd/MM';
+                    const dateFormat = 'dd/MM HH:mm';
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), dateFormat),
                         price: Number(price[1]),
@@ -187,8 +189,10 @@ const PriceChart: React.FC<PriceChartProps> = ({
         }
     }, [asset, isSpeedMarkets]);
 
-    const riskPerAsset = risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
-    const liquidity = riskPerAsset ? formatCurrencyWithSign(USD_SIGN, riskPerAsset.max - riskPerAsset.current) : 0;
+    const risk = chainedRisk
+        ? chainedRisk
+        : risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
+    const liquidity = risk ? formatCurrencyWithSign(USD_SIGN, risk.max - risk.current) : 0;
 
     const riskPerDirectionUp = risksPerAssetAndDirection?.filter(
         (risk) => risk.currency === asset && risk.position === Positions.UP
@@ -285,7 +289,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             <TooltipInfo
                                 overlay={
                                     <Trans
-                                        i18nKey="speed-markets.tooltips.liquidity"
+                                        i18nKey={
+                                            chainedRisk
+                                                ? 'speed-markets.chained.tooltips.liquidity'
+                                                : 'speed-markets.tooltips.liquidity'
+                                        }
                                         components={{
                                             br: <br />,
                                         }}
@@ -306,7 +314,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             {!isMobile && data && (
-                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 323 : 266}>
+                <ResponsiveContainer width="100%" height={isSpeedMarkets ? 326 : 266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         {getReferenceArea(ticks)}
                         <defs xHeight={1}>
@@ -330,7 +338,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             axisLine={false}
                             dataKey="date"
                             domain={['auto', 'auto']}
-                            padding={{ right: 45 }}
+                            padding={{ right: 75 }}
                         />
                         <YAxis
                             domain={['auto', 'auto']}
@@ -469,9 +477,9 @@ const getTicks = (prices: number[]) => {
 
 const CustomLabel = (props: any) => {
     return (
-        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 80}>
             <Rectangle rx={10} y={3}></Rectangle>
-            <Text x={8} y={14}>
+            <Text x={35} y={12}>
                 {props.price < 0.01
                     ? formatCurrencyWithSign(USD_SIGN, props.price)
                     : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
@@ -494,15 +502,17 @@ const Rectangle = styled.rect`
 `;
 
 const Text = styled.text`
+    text-anchor: middle;
+    dominant-baseline: middle;
     fill: ${(props) => props.theme.borderColor.tertiary};
     font-size: 10px;
 `;
 
 const CustomLabel2 = (props: any) => {
     return (
-        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 80}>
             <Rectangle2 rx={10} y={3}></Rectangle2>
-            <Text2 x={8} y={14}>
+            <Text2 x={35} y={12}>
                 {props.price < 0.01
                     ? formatCurrencyWithSign(USD_SIGN, props.price)
                     : formatCurrencyWithSign(USD_SIGN, props.price, 2)}
@@ -511,23 +521,18 @@ const CustomLabel2 = (props: any) => {
     );
 };
 
-const Rectangle2 = styled.rect`
-    stroke-width: 1px;
-    width: 70px;
-    height: 16px;
+const Rectangle2 = styled(Rectangle)`
     stroke: ${(props) => props.theme.borderColor.quaternary};
     fill: ${(props) => props.theme.background.primary};
 `;
 
-const Text2 = styled.text`
+const Text2 = styled(Text)`
     fill: ${(props) => props.theme.textColor.quaternary};
-    font-size: 10px;
 `;
 
 const Wrapper = styled.div`
     width: 100%;
     height: 100%;
-    max-height: 300px;
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`

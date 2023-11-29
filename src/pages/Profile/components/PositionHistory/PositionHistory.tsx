@@ -1,23 +1,31 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import TileTable from 'components/TileTable';
+import { USD_SIGN } from 'constants/currency';
+import { ZERO_ADDRESS } from 'constants/network';
+import { ethers } from 'ethers';
+import { orderBy } from 'lodash';
+import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
+import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
+import useClosedPositionsQuery from 'queries/profile/useClosedPositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatShortDate,
+    formatShortDateWithTime,
+    getDefaultDecimalsForNetwork,
+} from 'thales-utils';
+import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { formatShortDate, formatShortDateWithTime, formatCurrency, formatCurrencyWithSign } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
 import { IconLink, getAmount, getStatus } from '../styled-components';
-import { UserPosition } from 'types/profile';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useClosedPositionsQuery from 'queries/profile/useClosedPositionsQuery';
-import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
-import { orderBy } from 'lodash';
-import { ZERO_ADDRESS } from 'constants/network';
 
 type PositionHistoryProps = {
     searchAddress: string;
@@ -58,6 +66,22 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         [closedSpeedMarketsDataQuery]
     );
 
+    const closedChainedSpeedMarketsDataQuery = useUserResolvedChainedSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    const closedChainedSpeedMarketsData = useMemo(
+        () =>
+            closedChainedSpeedMarketsDataQuery.isSuccess && closedChainedSpeedMarketsDataQuery.data
+                ? closedChainedSpeedMarketsDataQuery.data
+                : [],
+        [closedChainedSpeedMarketsDataQuery]
+    );
+
     const data: UserPosition[] = useMemo(() => {
         const speedMarketsClosedPositions: UserPosition[] = closedSpeedMarketsData.map((marketData) => {
             return {
@@ -82,8 +106,43 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
             };
         });
 
-        return orderBy(closedPositions.concat(speedMarketsClosedPositions), ['maturityDate'], ['desc']);
-    }, [closedPositions, closedSpeedMarketsData]);
+        const chainedSpeedMarketsClosedPositions: UserPosition[] = closedChainedSpeedMarketsData.map((marketData) => {
+            const lastPositivePriceIndex =
+                marketData.strikePrices.length -
+                1 -
+                [...marketData.strikePrices].reverse().findIndex((strikePrice) => strikePrice);
+            return {
+                positionAddress: ZERO_ADDRESS,
+                currencyKey: marketData.currencyKey,
+                strikePrice: marketData.strikePrices[lastPositivePriceIndex],
+                leftPrice: 0,
+                rightPrice: 0,
+                finalPrice: marketData.finalPrices[lastPositivePriceIndex],
+                amount: marketData.amount,
+                amountBigNumber: ethers.utils.parseUnits(
+                    marketData.amount.toString(),
+                    getDefaultDecimalsForNetwork(networkId)
+                ),
+                maturityDate: marketData.strikeTimes[lastPositivePriceIndex],
+                expiryDate: marketData.maturityDate,
+                market: marketData.address,
+                side: marketData.sides[lastPositivePriceIndex],
+                paid: marketData.paid,
+                value: marketData.amount,
+                claimable: false,
+                claimed: marketData.isUserWinner,
+                isRanged: false,
+                isSpeedMarket: true,
+                isChainedSpeedMarket: true,
+            };
+        });
+
+        return orderBy(
+            closedPositions.concat(speedMarketsClosedPositions).concat(chainedSpeedMarketsClosedPositions),
+            ['maturityDate'],
+            ['desc']
+        );
+    }, [closedPositions, closedSpeedMarketsData, closedChainedSpeedMarketsData, networkId]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -105,8 +164,11 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                                 ? t('markets.market.ranged-markets.strike-range')
                                 : t(`profile.strike-price`),
                             value: row.isRanged
-                                ? `$${formatCurrency(row.leftPrice)} - $${formatCurrency(row.rightPrice)}`
-                                : `$${formatCurrency(row.strikePrice)}`,
+                                ? `${formatCurrencyWithSign(USD_SIGN, row.leftPrice)} - ${formatCurrencyWithSign(
+                                      USD_SIGN,
+                                      row.rightPrice
+                                  )}`
+                                : `${formatCurrencyWithSign(USD_SIGN, row.strikePrice)}`,
                         },
                         {
                             title: t('profile.final-price'),
@@ -114,7 +176,7 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                         },
                         {
                             title: t('profile.leaderboard.trades.table.amount-col'),
-                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
+                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme, row.isChainedSpeedMarket),
                         },
                         {
                             title: t('profile.history.expired'),

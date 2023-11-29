@@ -673,8 +673,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     </Tooltip>
                     <ShareIcon
                         className="icon-home icon-home--twitter-x"
-                        disabled={isDetailsIconDisabled}
-                        onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
+                        disabled={isButtonDisabled}
+                        onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
                     />
                 </TradingDetailsContainer>
             )}

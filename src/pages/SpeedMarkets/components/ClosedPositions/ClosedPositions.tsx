@@ -2,6 +2,7 @@ import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -11,10 +12,11 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserClosedPositions } from 'types/options';
-import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
+import ChainedPosition from '../ChainedPosition';
 import ClosedPosition from '../ClosedPosition';
+import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
 
-const ClosedPositions: React.FC = () => {
+const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -23,35 +25,59 @@ const ClosedPositions: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const userResolvedSpeedMarketsDataQuery = useUserResolvedSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isChained,
     });
 
     const lastTenUserResolvedPositions = useMemo(
         () =>
             userResolvedSpeedMarketsDataQuery.isSuccess && userResolvedSpeedMarketsDataQuery.data
                 ? userResolvedSpeedMarketsDataQuery.data
-                      .sort((a: any, b: any) => Number(a.strikeTime) - Number(b.strikeTime))
+                      .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
                 : [],
         [userResolvedSpeedMarketsDataQuery]
     );
 
-    const noPositions = lastTenUserResolvedPositions.length === 0;
+    const userResolvedChainedSpeedMarketsDataQuery = useUserResolvedChainedSpeedMarketsDataQuery(
+        networkId,
+        walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected && !!isChained,
+        }
+    );
+
+    const lastTenUserResolvedChainedPositions = useMemo(
+        () =>
+            userResolvedChainedSpeedMarketsDataQuery.isSuccess && userResolvedChainedSpeedMarketsDataQuery.data
+                ? userResolvedChainedSpeedMarketsDataQuery.data
+                      .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
+                      .slice(-10)
+                : [],
+        [userResolvedChainedSpeedMarketsDataQuery]
+    );
+
+    const noPositions = isChained
+        ? lastTenUserResolvedChainedPositions.length === 0
+        : lastTenUserResolvedPositions.length === 0;
     const positions = noPositions ? dummyPositions : lastTenUserResolvedPositions;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-closed-positions')}</Title>
-            {userResolvedSpeedMarketsDataQuery.isLoading ? (
+            {userResolvedSpeedMarketsDataQuery.isLoading || userResolvedChainedSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
-                    <PositionsWrapper noPositions={noPositions}>
-                        {positions.map((position, index) => (
-                            <ClosedPosition position={position} key={`closedPosition${index}`} />
-                        ))}
+                    <PositionsWrapper noPositions={noPositions} isChained={isChained}>
+                        {isChained && !noPositions
+                            ? lastTenUserResolvedChainedPositions.map((position, index) => (
+                                  <ChainedPosition position={position} key={`closedPosition${index}`} />
+                              ))
+                            : positions.map((position, index) => (
+                                  <ClosedPosition position={position} key={`closedPosition${index}`} />
+                              ))}
                     </PositionsWrapper>
                     {noPositions && (
                         <NoPositionsText>{t('speed-markets.user-positions.no-closed-positions')}</NoPositionsText>
@@ -100,12 +126,12 @@ const Wrapper = styled.div`
     margin-top: 20px;
 `;
 
-const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
+const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean }>`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: ${(props) => (props.isChained ? '16' : '6')}px;
     overflow-y: auto;
-    max-height: 560px;
+    max-height: ${(props) => (props.isChained ? '624' : '560')}px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;

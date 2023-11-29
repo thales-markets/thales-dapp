@@ -6,6 +6,7 @@ import { Positions } from 'enums/options';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { getColorPerPosition } from 'utils/options';
+import { Chain, Icon } from 'pages/SpeedMarkets/components/SelectPosition/styled-components';
 
 export type AssetInfoProps = {
     currencyKey: string;
@@ -16,6 +17,7 @@ export type AssetInfoProps = {
     displayInRowMobile?: boolean;
     hideFullName?: boolean;
     position?: Positions;
+    isChainedPosition?: boolean;
     width?: string;
 };
 
@@ -28,6 +30,7 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     hideFullName,
     displayInRowMobile,
     position,
+    isChainedPosition,
     width,
 }) => {
     const theme: ThemeInterface = useTheme();
@@ -44,10 +47,15 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
                     <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
                 )}
                 <CurrencyKey fontSize={currencyKeyFontSize}>{currencyKey}</CurrencyKey>
-                {position && (
+                {!isChainedPosition && position && (
                     <Position fontSize={currencyKeyFontSize} color={getColorPerPosition(position, theme)}>
                         {position}
                     </Position>
+                )}
+                {isChainedPosition && position && (
+                    <Chain isSelectedUp={position === Positions.UP}>
+                        <Icon className="icon icon--chain" />
+                    </Chain>
                 )}
             </AssetNameContainer>
         </AssetContainer>

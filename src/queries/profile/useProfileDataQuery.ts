@@ -1,13 +1,13 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { BATCH_NUMBER_OF_SPEED_MARKETS, SPEED_MARKETS_QUOTE } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
-import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
-import { SPEED_MARKETS_QUOTE } from 'constants/options';
+import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
-import { secondsToMilliseconds } from 'date-fns';
 
 const useProfileDataQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<UserProfileData>) => {
     return useQuery<UserProfileData>(
@@ -15,9 +15,13 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
         async () => {
             let [profit, volume, numberOfTrades, gain, investment] = [0, 0, 0, 0, 0];
 
-            const { speedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
+            const {
+                speedMarketsAMMContract,
+                speedMarketsDataContract,
+                chainedSpeedMarketsAMMContract,
+            } = snxJSConnector;
 
-            const [userMarketTransactions, userTrades, ammParams] = await Promise.all([
+            const [userMarketTransactions, userTrades, speedAmmParams, chainedAmmParams] = await Promise.all([
                 thalesData.binaryOptions.optionTransactions({
                     account: walletAddress,
                     network: networkId,
@@ -27,6 +31,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     network: networkId,
                 }),
                 speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress),
+                speedMarketsDataContract?.getChainedSpeedMarketsAMMParameters(walletAddress),
             ]);
 
             userMarketTransactions.map((tx: any) => {
@@ -52,29 +57,78 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 }
             });
 
-            if (speedMarketsAMMContract && speedMarketsDataContract) {
-                const [activeSpeedMarkets, maturedSpeedMarkets] = await Promise.all([
-                    speedMarketsAMMContract.activeMarketsPerUser(0, ammParams.numActiveMarketsPerUser, walletAddress),
-                    speedMarketsAMMContract.maturedMarketsPerUser(0, ammParams.numMaturedMarketsPerUser, walletAddress),
-                ]);
-                const [activeSpeedMarketsData, maturedSpeedMarketsData] = await Promise.all([
-                    speedMarketsDataContract.getMarketsData(activeSpeedMarkets),
-                    speedMarketsDataContract.getMarketsData(maturedSpeedMarkets),
+            if (speedMarketsAMMContract && speedMarketsDataContract && chainedSpeedMarketsAMMContract) {
+                const [
+                    activeSpeedMarkets,
+                    maturedSpeedMarkets,
+                    activeChainedSpeedMarkets,
+                    maturedChainedSpeedMarkets,
+                ] = await Promise.all([
+                    speedMarketsAMMContract.activeMarketsPerUser(
+                        0,
+                        speedAmmParams.numActiveMarketsPerUser,
+                        walletAddress
+                    ),
+                    speedMarketsAMMContract.maturedMarketsPerUser(
+                        0,
+                        speedAmmParams.numMaturedMarketsPerUser,
+                        walletAddress
+                    ),
+                    chainedSpeedMarketsAMMContract.activeMarketsPerUser(
+                        0,
+                        chainedAmmParams.numActiveMarketsPerUser,
+                        walletAddress
+                    ),
+                    chainedSpeedMarketsAMMContract.maturedMarketsPerUser(
+                        0,
+                        chainedAmmParams.numMaturedMarketsPerUser,
+                        walletAddress
+                    ),
                 ]);
 
-                activeSpeedMarketsData.concat(maturedSpeedMarketsData).forEach((marketData: any) => {
+                const promises = [
+                    speedMarketsDataContract.getMarketsData(activeSpeedMarkets),
+                    speedMarketsDataContract.getChainedMarketsData(activeChainedSpeedMarkets),
+                ];
+                // Speed markets
+                for (let i = 0; i < Math.ceil(maturedSpeedMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
+                    const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
+                    const batchMarkets = maturedSpeedMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    promises.push(speedMarketsDataContract.getMarketsData(batchMarkets));
+                }
+                // Chained speed markets
+                for (let i = 0; i < Math.ceil(maturedChainedSpeedMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
+                    const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
+                    const batchMarkets = maturedChainedSpeedMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    promises.push(speedMarketsDataContract.getChainedMarketsData(batchMarkets));
+                }
+                const allSpeedMarkets = await Promise.all(promises);
+
+                allSpeedMarkets.flat().forEach((marketData: any) => {
+                    const isChained = !!marketData.directions;
+
                     const createdAt = !marketData.createdAt.isZero()
                         ? secondsToMilliseconds(Number(marketData.createdAt))
-                        : secondsToMilliseconds(Number(marketData.strikeTime));
-                    const lpFee = !marketData.lpFee.isZero()
+                        : secondsToMilliseconds(Number(marketData.strikeTime)) - hoursToMilliseconds(1);
+                    const lpFee = isChained
+                        ? 0
+                        : !marketData.lpFee.isZero()
                         ? bigNumberFormatter(marketData.lpFee)
                         : getFeesFromHistory(createdAt).lpFee;
-                    const safeBoxImpact = !marketData.safeBoxImpact.isZero()
+                    const safeBoxImpact = isChained
+                        ? bigNumberFormatter(marketData.safeBoxImpact)
+                        : !marketData.safeBoxImpact.isZero()
                         ? bigNumberFormatter(marketData.safeBoxImpact)
                         : getFeesFromHistory(createdAt).safeBoxImpact;
                     const fees = lpFee + safeBoxImpact;
-                    const paid = coinFormatter(marketData.buyinAmount, networkId) * (1 + fees);
-                    const payout = coinFormatter(marketData.buyinAmount, networkId) * SPEED_MARKETS_QUOTE;
+                    const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
+                    const paid = buyinAmount * (1 + fees);
+                    const payout =
+                        buyinAmount *
+                        (isChained
+                            ? bigNumberFormatter(marketData.payoutMultiplier) ** marketData.directions.length
+                            : SPEED_MARKETS_QUOTE);
+
                     if (marketData.isUserWinner) {
                         profit += payout - paid;
                     } else {
@@ -85,7 +139,10 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 });
 
                 const numSpeedMarkets =
-                    Number(ammParams.numActiveMarketsPerUser) + Number(ammParams.numMaturedMarketsPerUser);
+                    Number(speedAmmParams.numActiveMarketsPerUser) +
+                    Number(speedAmmParams.numMaturedMarketsPerUser) +
+                    Number(chainedAmmParams.numActiveMarketsPerUser) +
+                    Number(chainedAmmParams.numMaturedMarketsPerUser);
                 numberOfTrades += numSpeedMarkets;
             }
 

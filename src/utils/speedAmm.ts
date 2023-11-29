@@ -1,67 +1,79 @@
 import { ZERO_ADDRESS } from 'constants/network';
 import { BigNumber, ethers } from 'ethers';
 import { secondsToMinutes } from 'date-fns';
+import { ChainedSpeedMarket } from 'types/options';
+import { Positions } from 'enums/options';
 
 export const getTransactionForSpeedAMM = async (
-    speedMarketsAMMContractWithSigner: any,
+    speedMarketsAMMContractWithSigner: any, // speed or chained
     isNonDefaultCollateral: boolean,
     asset: string,
     deltaTimeSec: number,
     strikeTimeSec: number,
-    side: number,
+    sides: number[],
     buyInAmount: BigNumber,
     pythPriceUpdateData: string[],
     pythUpdateFee: any,
     collateralAddress: string,
-    referral: string | null
+    referral: string | null,
+    skewImpact?: BigNumber
 ) => {
     let tx: ethers.ContractTransaction;
     const isEth = collateralAddress === ZERO_ADDRESS;
+    const isChained = sides.length > 1;
 
     if (isNonDefaultCollateral) {
-        tx = deltaTimeSec
-            ? await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateralAndDelta(
-                  asset,
-                  deltaTimeSec,
-                  side,
-                  pythPriceUpdateData,
-                  collateralAddress,
-                  buyInAmount,
-                  isEth,
-                  referral ? referral : ZERO_ADDRESS,
-                  { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-              )
-            : await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
-                  asset,
-                  strikeTimeSec,
-                  side,
-                  pythPriceUpdateData,
-                  collateralAddress,
-                  buyInAmount,
-                  isEth,
-                  referral ? referral : ZERO_ADDRESS,
-                  { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-              );
+        if (isChained) {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
+                asset,
+                deltaTimeSec,
+                sides,
+                pythPriceUpdateData,
+                collateralAddress,
+                buyInAmount,
+                isEth,
+                referral ? referral : ZERO_ADDRESS,
+                { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
+            );
+        } else {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
+                asset,
+                strikeTimeSec,
+                deltaTimeSec,
+                sides[0],
+                pythPriceUpdateData,
+                collateralAddress,
+                buyInAmount,
+                isEth,
+                referral ? referral : ZERO_ADDRESS,
+                skewImpact,
+                { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
+            );
+        }
     } else {
-        tx = deltaTimeSec
-            ? await speedMarketsAMMContractWithSigner.createNewMarketWithDelta(
-                  asset,
-                  deltaTimeSec,
-                  side,
-                  buyInAmount,
-                  pythPriceUpdateData,
-                  referral ? referral : ZERO_ADDRESS,
-                  { value: pythUpdateFee }
-              )
-            : await speedMarketsAMMContractWithSigner.createNewMarket(
-                  asset,
-                  strikeTimeSec,
-                  side,
-                  buyInAmount,
-                  pythPriceUpdateData,
-                  referral ? referral : ZERO_ADDRESS,
-                  { value: pythUpdateFee }
-              );
+        if (isChained) {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarket(
+                asset,
+                deltaTimeSec,
+                sides,
+                buyInAmount,
+                pythPriceUpdateData,
+                referral ? referral : ZERO_ADDRESS,
+                { value: pythUpdateFee }
+            );
+        } else {
+            tx = await speedMarketsAMMContractWithSigner.createNewMarket(
+                asset,
+                strikeTimeSec,
+                deltaTimeSec,
+                sides[0],
+                buyInAmount,
+                pythPriceUpdateData,
+                referral ? referral : ZERO_ADDRESS,
+                skewImpact,
+                { value: pythUpdateFee }
+            );
+        }
     }
 
     return tx;
@@ -71,7 +83,8 @@ export const getTransactionForSpeedAMM = async (
 export const getFeeByTimeThreshold = (
     deltaTimeSec: number,
     timeThresholds: number[], // in minutes - ascending order
-    fees: number[]
+    fees: number[],
+    defaultFee: number
 ): number => {
     let index = -1;
     // iterate backwards and find index
@@ -81,7 +94,7 @@ export const getFeeByTimeThreshold = (
             break;
         }
     }
-    return index !== -1 ? fees[index] : 0;
+    return index !== -1 ? fees[index] : defaultFee;
 };
 
 // when fees are missing from contract (for old markets) get hardcoded history fees
@@ -103,4 +116,14 @@ export const getFeesFromHistory = (txTimestampMilis: number) => {
         lpFee = 0.05;
     }
     return { safeBoxImpact, lpFee };
+};
+
+export const getUserLostAtSideIndex = (position: ChainedSpeedMarket) => {
+    const userLostIndex = position.finalPrices.findIndex(
+        (finalPrice, i) =>
+            finalPrice > 0 &&
+            ((position.sides[i] === Positions.UP && finalPrice <= position.strikePrices[i]) ||
+                (position.sides[i] === Positions.DOWN && finalPrice >= position.strikePrices[i]))
+    );
+    return userLostIndex > -1 ? userLostIndex : position.sides.length - 1;
 };

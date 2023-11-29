@@ -1,22 +1,22 @@
-import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
-import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
-import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { hexStripZeros } from '@ethersproject/bytes';
+import detectEthereumProvider from '@metamask/detect-provider';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
-import { FunctionComponent, SVGProps } from 'react';
-import { hexStripZeros } from '@ethersproject/bytes';
-import { BigNumber } from 'ethers';
-import detectEthereumProvider from '@metamask/detect-provider';
+import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
+import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
+import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
+    DEFAULT_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
     SUPPORTED_NETWORKS,
     SUPPORTED_NETWORKS_NAMES,
-    DEFAULT_NETWORK,
     SUPPORTED_NETWORKS_PARAMS,
 } from 'constants/network';
-import { Network } from 'enums/network';
 import ROUTES from 'constants/routes';
+import { Network } from 'enums/network';
+import { BigNumber } from 'ethers';
+import { FunctionComponent, SVGProps } from 'react';
 import { NetworkParams } from '../types/network';
 
 type EthereumProvider = {
@@ -154,15 +154,15 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
     switch (route) {
-        case ROUTES.Options.Home:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.RangeMarkets:
+        case (ROUTES.Options.Home,
+        ROUTES.Options.RangeMarkets,
+        ROUTES.Options.Referral,
+        ROUTES.Governance.Home,
+        ROUTES.Options.Game,
+        ROUTES.Options.Profile,
+        ROUTES.Options.CreateMarket,
+        ROUTES.Options.SpeedMarkets,
+        ROUTES.Options.SpeedMarketsOverview):
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
@@ -174,75 +174,10 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
-        case ROUTES.Options.Referral:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
         case ROUTES.Options.Token:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
-        case ROUTES.Governance.Home:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.Game:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.Profile:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.CreateMarket:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.SpeedMarkets:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
-    }
-};
-
-export const getAPIKeyByNetwork = (networkId: Network) => {
-    switch (networkId) {
-        case Network.OptimismMainnet:
-            return process.env.REACT_APP_OPTIMISM_API_KEY;
-        case Network.OptimismGoerli:
-            return process.env.REACT_APP_OPTIMISM_API_KEY;
-        case Network.Arbitrum:
-            return process.env.REACT_APP_ARBITRUM_API_KEY;
-        case Network.PolygonMainnet:
-            return process.env.REACT_APP_POLYGON_API_KEY;
-        case Network.Base:
-            return process.env.REACT_APP_BASE_API_KEY;
-        default:
-            return 'NOT SUPPORTED';
     }
 };
 

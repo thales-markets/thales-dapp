@@ -1,26 +1,33 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import TileTable from 'components/TileTable/TileTable';
 import { USD_SIGN } from 'constants/currency';
+import { millisecondsToSeconds } from 'date-fns';
+import { Positions } from 'enums/options';
+import { BigNumber } from 'ethers';
+import { orderBy } from 'lodash';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
+import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
-import { formatShortDate, formatShortDateWithTime, formatCurrency, formatCurrencyWithSign } from 'thales-utils';
-import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { getAmount, IconLink, TextLink } from '../styled-components';
-import { UserPosition } from 'types/profile';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
-import TileTable from 'components/TileTable/TileTable';
-import MyPositionAction from '../MyPositionAction';
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
-import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { formatCurrency, formatCurrencyWithSign, formatShortDate, formatShortDateWithTime } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
-import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import { orderBy } from 'lodash';
+import { UserPosition } from 'types/profile';
+import { ThemeInterface } from 'types/ui';
+import { getPriceId } from 'utils/pyth';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
+import MyPositionAction from '../MyPositionAction';
+import { IconLink, TextLink, getAmount } from '../styled-components';
+import ChainedPositionAction from 'pages/SpeedMarkets/components/ChainedPositionAction';
 
 type ClaimablePositionsProps = {
     searchAddress: string;
@@ -64,9 +71,75 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         [userActiveSpeedMarketsDataQuery]
     );
 
+    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    const userOpenChainedSpeedMarketsData = useMemo(
+        () =>
+            userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
+                ? userActiveChainedSpeedMarketsDataQuery.data
+                : [],
+        [userActiveChainedSpeedMarketsDataQuery]
+    );
+
+    // Prepare chained speed markets that are matured
+    const userMaturedChainedMarkets = userOpenChainedSpeedMarketsData
+        .filter((marketData) => marketData.isMatured)
+        .map((marketData) => {
+            return {
+                ...marketData,
+                pythPriceId: getPriceId(networkId, marketData.currencyKey),
+            };
+        });
+
+    const priceRequests = userMaturedChainedMarkets
+        .map((data) =>
+            data.strikeTimes.map((strikeTime) => ({
+                priceId: data.pythPriceId,
+                publishTime: millisecondsToSeconds(strikeTime),
+                market: data.address,
+            }))
+        )
+        .flat();
+
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
+    const pythPricesWithMarket = priceRequests.map((request, i) => ({
+        market: request.market,
+        price: pythPricesQueries[i]?.data || 0,
+    }));
+
+    // Based on Pyth prices populate strike prices
+    const userOpenChainedSpeedMarketsDataWithPrices = userMaturedChainedMarkets
+        .map((marketData) => {
+            const finalPrices = marketData.finalPrices.map(
+                (_, i) =>
+                    pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i]?.price || 0
+            );
+            const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
+                i === 0 ? strikePrice : finalPrices[i - 1]
+            );
+            const userWonStatuses = marketData.sides.map((side, i) =>
+                finalPrices[i] > 0
+                    ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
+                      (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
+                    : undefined
+            );
+            const canResolve =
+                userWonStatuses.some((status) => status === false) ||
+                userWonStatuses.every((status) => status !== undefined);
+            const claimable = userWonStatuses.every((status) => status);
+            return { ...marketData, strikePrices, finalPrices, canResolve, claimable };
+        })
+        .filter((marketData) => marketData.claimable);
+
     const data: UserPosition[] = useMemo(() => {
         const speedMarketsOpenPositions: UserPosition[] = userOpenSpeedMarketsData
-            .filter((marketData) => marketData.maturityDate < Date.now() && marketData.claimable)
+            .filter((marketData) => marketData.claimable)
             .map((marketData) => {
                 return {
                     positionAddress: marketData.positionAddress,
@@ -90,12 +163,38 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                 };
             });
 
+        const chainedSpeedMarketsOpenPositions: UserPosition[] = userOpenChainedSpeedMarketsDataWithPrices.map(
+            (marketData) => {
+                return {
+                    positionAddress: marketData.address,
+                    currencyKey: marketData.currencyKey,
+                    strikePrice: marketData.strikePrices[marketData.strikePrices.length - 1],
+                    leftPrice: 0,
+                    rightPrice: 0,
+                    finalPrice: marketData.finalPrices[marketData.finalPrices.length - 1],
+                    amount: marketData.amount,
+                    amountBigNumber: BigNumber.from(0), // won't be used
+                    maturityDate: marketData.maturityDate,
+                    expiryDate: marketData.maturityDate,
+                    market: marketData.address,
+                    side: marketData.sides[marketData.sides.length - 1],
+                    paid: marketData.paid,
+                    value: marketData.amount,
+                    claimable: marketData.claimable,
+                    claimed: false,
+                    isRanged: false,
+                    isSpeedMarket: true,
+                    isChainedSpeedMarket: true,
+                };
+            }
+        );
+
         return orderBy(
-            claimablePositions.concat(speedMarketsOpenPositions),
+            claimablePositions.concat(speedMarketsOpenPositions).concat(chainedSpeedMarketsOpenPositions),
             ['maturityDate', 'value'],
             ['asc', 'desc']
         );
-    }, [claimablePositions, userOpenSpeedMarketsData]);
+    }, [claimablePositions, userOpenSpeedMarketsData, userOpenChainedSpeedMarketsDataWithPrices]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -108,6 +207,11 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         const generateRows = (data: UserPosition[]) => {
             try {
                 return data.map((row: UserPosition) => {
+                    const chainedPosition = row.isChainedSpeedMarket
+                        ? userOpenChainedSpeedMarketsDataWithPrices.find(
+                              (marketData) => marketData.address === row.market
+                          )
+                        : undefined;
                     const cells: any = [
                         {
                             title: row.isRanged
@@ -123,7 +227,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                         },
                         {
                             title: t('profile.leaderboard.trades.table.amount-col'),
-                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
+                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme, row.isChainedSpeedMarket),
                         },
                         {
                             title: t('profile.history.expired'),
@@ -132,36 +236,44 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                 : formatShortDate(row.maturityDate),
                         },
                         {
-                            value: <MyPositionAction position={row} isProfileAction />,
+                            value: chainedPosition ? (
+                                <ChainedPositionAction
+                                    position={chainedPosition}
+                                    isOverview={false}
+                                    isAdmin={false}
+                                    isSubmittingBatch={false}
+                                    isProfileAction
+                                />
+                            ) : (
+                                <MyPositionAction position={row} isProfileAction />
+                            ),
                         },
                         {
-                            value: (
-                                <>
-                                    <ShareIcon
-                                        className="icon-home icon-home--twitter-x"
-                                        disabled={false}
-                                        onClick={() => {
-                                            setOpenTwitterShareModal(true);
-                                            setPositionShareData({
-                                                type: row.claimable
-                                                    ? row.isSpeedMarket
-                                                        ? 'resolved-speed'
-                                                        : 'resolved'
-                                                    : row.isSpeedMarket
-                                                    ? 'potential-speed'
-                                                    : 'potential',
-                                                position: row.side,
-                                                currencyKey: row.currencyKey,
-                                                strikePrice: row.strikePrice,
-                                                leftPrice: row.leftPrice,
-                                                rightPrice: row.rightPrice,
-                                                strikeDate: row.maturityDate,
-                                                buyIn: row.paid,
-                                                payout: row.amount,
-                                            });
-                                        }}
-                                    />
-                                </>
+                            value: !row.isChainedSpeedMarket && (
+                                <ShareIcon
+                                    className="icon-home icon-home--twitter-x"
+                                    disabled={false}
+                                    onClick={() => {
+                                        setOpenTwitterShareModal(true);
+                                        setPositionShareData({
+                                            type: row.claimable
+                                                ? row.isSpeedMarket
+                                                    ? 'resolved-speed'
+                                                    : 'resolved'
+                                                : row.isSpeedMarket
+                                                ? 'potential-speed'
+                                                : 'potential',
+                                            position: row.side,
+                                            currencyKey: row.currencyKey,
+                                            strikePrice: row.strikePrice,
+                                            leftPrice: row.leftPrice,
+                                            rightPrice: row.rightPrice,
+                                            strikeDate: row.maturityDate,
+                                            buyIn: row.paid,
+                                            payout: row.amount,
+                                        });
+                                    }}
+                                />
                             ),
                             width: isMobile ? undefined : '20px',
                         },
@@ -197,6 +309,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                         asset: {
                             currencyKey: row.currencyKey,
                             position: row.side,
+                            isChainedPosition: row.isChainedSpeedMarket,
                             width: '50px',
                             displayInRowMobile: true,
                         },
@@ -214,7 +327,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
             return generateRows(filteredData);
         }
         return [];
-    }, [filteredData, isMobile, t, theme]);
+    }, [filteredData, isMobile, t, theme, userOpenChainedSpeedMarketsDataWithPrices]);
 
     return (
         <>

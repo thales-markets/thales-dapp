@@ -3,6 +3,9 @@ import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,16 +17,17 @@ import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
+    isChainedSpeedMarkets?: boolean;
     maxPriceDelayForResolvingSec?: number;
     currentPrices?: { [key: string]: number };
 };
 
 const OpenPositions: React.FC<OpenPositionsProps> = ({
     isSpeedMarkets,
+    isChainedSpeedMarkets,
     maxPriceDelayForResolvingSec,
     currentPrices,
 }) => {
@@ -43,7 +47,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     ]);
 
     const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+        enabled: isAppReady && isWalletConnected && !!isSpeedMarkets && !isChainedSpeedMarkets,
     });
 
     const userOpenSpeedMarketsData = useMemo(
@@ -54,29 +58,63 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
         [userActiveSpeedMarketsDataQuery]
     );
 
-    const noPositions = isSpeedMarkets ? userOpenSpeedMarketsData.length === 0 : livePositions.length === 0;
+    const userChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !!isChainedSpeedMarkets,
+    });
+
+    const userOpenChainedSpeedMarketsData = useMemo(
+        () =>
+            userChainedSpeedMarketsDataQuery.isSuccess && userChainedSpeedMarketsDataQuery.data
+                ? userChainedSpeedMarketsDataQuery.data
+                : [],
+        [userChainedSpeedMarketsDataQuery]
+    );
+
+    const noPositions = isSpeedMarkets
+        ? isChainedSpeedMarkets
+            ? userOpenChainedSpeedMarketsData.length === 0
+            : userOpenSpeedMarketsData.length === 0
+        : livePositions.length === 0;
+
     const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
+
+    const isLoading =
+        positionsQuery.isLoading ||
+        userActiveSpeedMarketsDataQuery.isLoading ||
+        userChainedSpeedMarketsDataQuery.isLoading;
 
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-positions')}</Title>
-            {userActiveSpeedMarketsDataQuery.isLoading || positionsQuery.isLoading ? (
+            {isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
-                    <PositionsWrapper noPositions={noPositions}>
-                        {positions
-                            .sort((a, b) => a.maturityDate - b.maturityDate)
-                            .map((position, index) => (
-                                <OpenPosition
-                                    position={position}
-                                    key={`position${position.market}${position.positionAddress}${index}`}
-                                    maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                                    currentPrices={currentPrices}
-                                />
-                            ))}
+                    <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
+                        {isChainedSpeedMarkets && !noPositions
+                            ? userOpenChainedSpeedMarketsData
+                                  .sort((a, b) => a.maturityDate - b.maturityDate)
+                                  .map((position, index) => (
+                                      <ChainedPosition
+                                          position={position}
+                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                          isMultipleMarkets={userOpenChainedSpeedMarketsData.length > 1}
+                                          key={`position${position.address}${index}`}
+                                      />
+                                  ))
+                            : positions
+                                  .sort((a, b) => a.maturityDate - b.maturityDate)
+                                  .map((position, index) => (
+                                      <OpenPosition
+                                          position={position}
+                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                          currentPrices={currentPrices}
+                                          isMultipleMarkets={positions.length > 3}
+                                          key={`position${position.market}${position.positionAddress}${index}`}
+                                      />
+                                  ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>
@@ -122,12 +160,12 @@ const Wrapper = styled.div`
     padding-bottom: 20px;
 `;
 
-const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
+const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean }>`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: ${(props) => (props.isChained ? '16' : '6')}px;
     overflow-y: auto;
-    max-height: 560px;
+    max-height: ${(props) => (props.isChained ? '624' : '560')}px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;

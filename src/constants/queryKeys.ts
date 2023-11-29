@@ -30,6 +30,9 @@ const QUERY_KEYS = {
         ExchangeRates: (networkId: Network) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: Network) => ['rates', 'exchangeRatesMarketData', networkId],
     },
+    Prices: {
+        PythPrices: (priceId: string, publishTime: number) => ['prices', 'pythPrices', priceId, publishTime],
+    },
     Medium: {
         Posts: ['medium', 'posts'],
     },
@@ -40,9 +43,24 @@ const QUERY_KEYS = {
             networkId,
             walletAddress,
         ],
+        ChainedSpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
+            'chainedSpeedMarketsLimits',
+            networkId,
+            walletAddress,
+        ],
         UserSpeedMarkets: (networkId: Network, walletAddress: string) => ['userSpeedMarkets', networkId, walletAddress],
+        UserChainedSpeedMarkets: (networkId: Network, walletAddress: string) => [
+            'userChainedSpeedMarkets',
+            networkId,
+            walletAddress,
+        ],
         UserSpeedMarketsTransactions: (networkId: Network, walletAddress: string) => [
             'userSpeedMarketsTransactions',
+            networkId,
+            walletAddress,
+        ],
+        UserChainedSpeedMarketsTransactions: (networkId: Network, walletAddress: string) => [
+            'userChainedSpeedMarketsTransactions',
             networkId,
             walletAddress,
         ],
@@ -51,7 +69,13 @@ const QUERY_KEYS = {
             networkId,
             walletAddress,
         ],
+        UserResolvedChainedSpeedMarkets: (networkId: Network, walletAddress: string) => [
+            'userResolvedChainedSpeedMarkets',
+            networkId,
+            walletAddress,
+        ],
         ActiveSpeedMarkets: (networkId: Network) => ['activeSpeedMarkets', networkId],
+        ActiveChainedSpeedMarkets: (networkId: Network) => ['activeChainedSpeedMarkets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
         Market: (marketAddress: string) => ['market', marketAddress],
