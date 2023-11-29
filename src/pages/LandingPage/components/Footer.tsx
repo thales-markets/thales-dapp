@@ -1,7 +1,7 @@
 import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
-import footerW from 'assets/images/landing-page/footer-white.webp';
 import footerWMobile from 'assets/images/landing-page/footer-white-mobile.webp';
+import footerW from 'assets/images/landing-page/footer-white.webp';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
 import ROUTES from 'constants/routes';
 import React from 'react';
@@ -48,7 +48,7 @@ const Footer: React.FC<HeaderInput> = ({ className }) => {
                     <IconLink target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                         <FooterIcon className="icon-home icon-home--medium" />
                     </IconLink>
-                    <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
+                    <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
                         <FooterIcon className="icon-home icon-home--twitter-x" />
                     </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://t.me/thalesprotocol/">
