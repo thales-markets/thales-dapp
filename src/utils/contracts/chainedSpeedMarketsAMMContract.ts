@@ -7,7 +7,7 @@ const chainedSpeedMarketsAMMContract = {
         [Network.OptimismGoerli]: '0xe9FdD4717f9dDAa7e74e9a63B559F54A38f98613',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
-        [Network.Base]: 'TBD',
+        [Network.Base]: '0x6848F001ddDb4442d352C495c7B4a231e3889b70',
     },
     abi: [
         {
