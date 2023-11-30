@@ -23,10 +23,6 @@ const useUserChainedSpeedMarketsTransactionsQuery = (
         QUERY_KEYS.BinaryOptions.UserChainedSpeedMarketsTransactions(networkId, walletAddress),
         async () => {
             const userTransactions: TradeWithMarket[] = [];
-            // TODO: remove after contarct deploy on all chains
-            if ([Network.Arbitrum, Network.OptimismMainnet, Network.PolygonMainnet].includes(networkId)) {
-                return userTransactions;
-            }
 
             const { chainedSpeedMarketsAMMContract, speedMarketsDataContract } = snxJSConnector;
 
