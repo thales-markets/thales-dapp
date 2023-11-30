@@ -330,30 +330,22 @@ const App = () => {
                         />
 
                         {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                            <Route
-                                exact
-                                path={ROUTES.Options.SpeedMarkets}
-                                render={(routeProps) => (
-                                    <Suspense fallback={<Loader />}>
-                                        <DappLayout>
-                                            <SpeedMarkets {...routeProps} />
-                                        </DappLayout>
-                                    </Suspense>
-                                )}
-                            />
+                            <Route exact path={ROUTES.Options.SpeedMarkets}>
+                                <Suspense fallback={<Loader />}>
+                                    <DappLayout>
+                                        <SpeedMarkets />
+                                    </DappLayout>
+                                </Suspense>
+                            </Route>
                         )}
-                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                            <Route
-                                exact
-                                path={ROUTES.Options.SpeedMarketsOverview}
-                                render={(routeProps) => (
-                                    <Suspense fallback={<Loader />}>
-                                        <DappLayout>
-                                            <SpeedMarketsOverview {...routeProps} />
-                                        </DappLayout>
-                                    </Suspense>
-                                )}
-                            />
+                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarketsOverview).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.SpeedMarketsOverview}>
+                                <Suspense fallback={<Loader />}>
+                                    <DappLayout>
+                                        <SpeedMarketsOverview />
+                                    </DappLayout>
+                                </Suspense>
+                            </Route>
                         )}
 
                         <Route

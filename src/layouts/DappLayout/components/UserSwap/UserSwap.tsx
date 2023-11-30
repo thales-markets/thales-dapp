@@ -17,7 +17,6 @@ import {
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
-import { Coins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import {
     getAssetIcon,
@@ -27,7 +26,7 @@ import {
     getDefaultStableIndexByBalance,
     getCoinBalance,
 } from 'utils/currency';
-import { formatCurrencyWithKey } from 'thales-utils';
+import { Coins, formatCurrencyWithKey } from 'thales-utils';
 import { getIsMultiCollateralSupported } from 'utils/network';
 import Swap from 'components/Swap';
 import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';

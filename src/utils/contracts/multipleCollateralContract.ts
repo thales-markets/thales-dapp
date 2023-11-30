@@ -1137,6 +1137,17 @@ const multipleCollateral = {
         },
         abi,
     },
+    USDbC: {
+        addresses: {
+            [Network.Mainnet]: 'TBD',
+            [Network.OptimismMainnet]: 'TBD',
+            [Network.OptimismGoerli]: 'TBD',
+            [Network.PolygonMainnet]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
+            [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+        },
+        abi,
+    },
     USDC: {
         addresses: {
             [Network.Mainnet]: 'TBD',
@@ -1144,7 +1155,7 @@ const multipleCollateral = {
             [Network.OptimismGoerli]: 'TBD',
             [Network.PolygonMainnet]: POLYGON_USDC.address,
             [Network.Arbitrum]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-            [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+            [Network.Base]: 'TBD',
         },
         abi,
     },

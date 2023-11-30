@@ -30,9 +30,15 @@ export const UsingAmmLink: React.FC = () => {
     );
 };
 
-export const getAmount = (amount: number | string, position: Positions, theme: ThemeInterface) => (
+export const getAmount = (
+    amount: number | string,
+    position: Positions,
+    theme: ThemeInterface,
+    isChainedSpeedMarket?: boolean
+) => (
     <Value>
-        {amount} <Value color={getColorPerPosition(position, theme)}>{position}</Value>
+        {amount}
+        {!isChainedSpeedMarket && <Value color={getColorPerPosition(position, theme)}> {position}</Value>}
     </Value>
 );
 

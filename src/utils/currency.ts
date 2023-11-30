@@ -1,15 +1,15 @@
 import {
-    currencyKeyToAssetIconMap,
-    SYNTHS_MAP,
-    currencyKeyToNameMap,
-    CRYPTO_CURRENCY,
-    COMMODITY,
-    COLLATERALS,
     ADDITIONAL_COLLATERALS,
+    COLLATERALS,
+    COMMODITY,
+    CRYPTO_CURRENCY,
     STABLE_COINS,
+    SYNTHS_MAP,
+    currencyKeyToAssetIconMap,
+    currencyKeyToNameMap,
 } from 'constants/currency';
-import { Coins } from 'types/options';
 import { Network } from 'enums/network';
+import { Coins } from 'thales-utils';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
 const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
@@ -42,6 +42,7 @@ type StableBalances = {
     sUSD: number | null;
     DAI: number | null;
     USDCe: number | null;
+    USDbC: number | null;
     USDC: number | null;
     USDT: number | null;
 };

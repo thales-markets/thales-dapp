@@ -1,118 +1,199 @@
+import Tooltip from 'components/Tooltip';
 import { Positions } from 'enums/options';
 import React from 'react';
-import styled from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
+import { Trans, useTranslation } from 'react-i18next';
+import { FlexDivColumnCentered } from 'styles/common';
+import { formatPercentage, roundNumberToDecimals } from 'thales-utils';
+import { AmmChainedSpeedMarketsLimits } from 'types/options';
+import {
+    Chain,
+    ChainedHeader,
+    ChainedPositions,
+    ClearAll,
+    Container,
+    Icon,
+    IconWrong,
+    LabelDown,
+    LabelUp,
+    PositionSymbolDown,
+    PositionSymbolUp,
+    PositionWrapper,
+    PositionsContainer,
+    PositionsWrapper,
+    Roi,
+    Separator,
+    Skew,
+    TooltipWrapper,
+} from './styled-components';
+
+export type SelectedPosition = Positions.UP | Positions.DOWN | undefined;
 
 type SelectPositionProps = {
-    selected: Positions.UP | Positions.DOWN | undefined;
-    onChange: React.Dispatch<Positions.UP | Positions.DOWN>;
+    selected: SelectedPosition[];
+    onChange: React.Dispatch<SelectedPosition>;
+    onChainedChange: React.Dispatch<SelectedPosition[]>;
+    ammChainedSpeedMarketsLimits: AmmChainedSpeedMarketsLimits | null;
+    skew: { [Positions.UP]: number; [Positions.DOWN]: number };
 };
 
-const SelectPosition: React.FC<SelectPositionProps> = ({ selected, onChange }) => {
+const SelectPosition: React.FC<SelectPositionProps> = ({
+    selected,
+    onChange,
+    onChainedChange,
+    ammChainedSpeedMarketsLimits,
+    skew,
+}) => {
+    const { t } = useTranslation();
+
+    const roi = ammChainedSpeedMarketsLimits?.payoutMultiplier
+        ? roundNumberToDecimals(ammChainedSpeedMarketsLimits?.payoutMultiplier ** selected.length)
+        : 0;
+
+    const discount = skew[Positions.UP] > 0 ? skew[Positions.UP] / 2 : skew[Positions.DOWN] / 2;
+
     return (
         <Container>
-            <PositionWrapper onClick={() => onChange(Positions.UP)}>
-                <LabelUp isSelected={selected !== undefined ? selected === Positions.UP : undefined}>
-                    {Positions.UP}
-                </LabelUp>
-                <PositionSymbolUp isSelected={selected !== undefined ? selected === Positions.UP : undefined}>
-                    <Icon className="icon icon--caret-up" />
-                </PositionSymbolUp>
-            </PositionWrapper>
-            <Separator />
-            <PositionWrapper onClick={() => onChange(Positions.DOWN)}>
-                <PositionSymbolDown isSelected={selected !== undefined ? selected === Positions.DOWN : undefined}>
-                    <Icon className="icon icon--caret-down" />
-                </PositionSymbolDown>
-                <LabelDown isSelected={selected !== undefined ? selected === Positions.DOWN : undefined}>
-                    {Positions.DOWN}
-                </LabelDown>
-            </PositionWrapper>
+            {selected.length === 1 ? (
+                // Single
+                <>
+                    <PositionWrapper onClick={() => onChange(selected[0] === Positions.UP ? undefined : Positions.UP)}>
+                        <LabelUp isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}>
+                            {Positions.UP}
+                        </LabelUp>
+                        <PositionSymbolUp
+                            isSelected={selected[0] !== undefined ? selected[0] === Positions.UP : undefined}
+                        >
+                            <Icon className="icon icon--caret-up" />
+                            {discount > 0 && (
+                                <Skew isDiscount={skew[Positions.UP] > 0 ? false : discount > 0 ? true : undefined}>
+                                    {skew[Positions.UP] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                    {formatPercentage(skew[Positions.UP] || discount)}
+                                </Skew>
+                            )}
+                        </PositionSymbolUp>
+                    </PositionWrapper>
+                    <Separator>
+                        {discount > 0 && (
+                            <TooltipWrapper>
+                                <Tooltip
+                                    overlay={
+                                        <Trans
+                                            i18nKey="speed-markets.tooltips.skew-info"
+                                            components={{
+                                                br: <br />,
+                                            }}
+                                            values={{
+                                                skewDirection: skew[Positions.DOWN] > 0 ? Positions.DOWN : Positions.UP,
+                                                skewPerc: formatPercentage(
+                                                    skew[Positions.UP] > 0 ? skew[Positions.UP] : skew[Positions.DOWN]
+                                                ),
+                                                discountDirection:
+                                                    skew[Positions.DOWN] > 0 ? Positions.UP : Positions.DOWN,
+                                                discountPerc: formatPercentage(discount),
+                                            }}
+                                        />
+                                    }
+                                    marginLeft={0}
+                                />
+                            </TooltipWrapper>
+                        )}
+                    </Separator>
+                    <PositionWrapper
+                        onClick={() => onChange(selected[0] === Positions.DOWN ? undefined : Positions.DOWN)}
+                    >
+                        <PositionSymbolDown
+                            isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}
+                        >
+                            <Icon className="icon icon--caret-down" />
+                            {discount > 0 && (
+                                <Skew isDiscount={skew[Positions.DOWN] > 0 ? false : discount > 0 ? true : undefined}>
+                                    {skew[Positions.DOWN] > 0 ? '-' : discount > 0 ? '+' : ''}
+                                    {formatPercentage(skew[Positions.DOWN] || discount)}
+                                </Skew>
+                            )}
+                        </PositionSymbolDown>
+                        <LabelDown isSelected={selected[0] !== undefined ? selected[0] === Positions.DOWN : undefined}>
+                            {Positions.DOWN}
+                        </LabelDown>
+                    </PositionWrapper>
+                </>
+            ) : (
+                // Chained
+                <FlexDivColumnCentered>
+                    <ChainedHeader>
+                        <Roi>{t('speed-markets.chained.roi', { value: roi })}x</Roi>
+                        <ClearAll
+                            onClick={() =>
+                                onChainedChange(Array(ammChainedSpeedMarketsLimits?.minChainedMarkets).fill(undefined))
+                            }
+                        >
+                            {t('speed-markets.chained.clear-all')}
+                            <IconWrong className="icon icon--wrong" />
+                        </ClearAll>
+                    </ChainedHeader>
+                    <ChainedPositions>
+                        {selected.map((position, index) => {
+                            const isUpSelected = position !== undefined ? position === Positions.UP : undefined;
+                            const isDownSelected = position !== undefined ? position === Positions.DOWN : undefined;
+                            return (
+                                <PositionsContainer key={index}>
+                                    {index !== 0 && (
+                                        <Chain isSelectedUp={isUpSelected}>
+                                            <Icon className="icon icon--chain" />
+                                        </Chain>
+                                    )}
+                                    <PositionsWrapper>
+                                        <PositionWrapper
+                                            isColumn
+                                            onClick={() =>
+                                                onChainedChange(
+                                                    selected.map((pos, i) =>
+                                                        i === index
+                                                            ? pos === Positions.UP
+                                                                ? undefined
+                                                                : Positions.UP
+                                                            : pos
+                                                    )
+                                                )
+                                            }
+                                        >
+                                            <LabelUp isColumn isSelected={isUpSelected}>
+                                                {Positions.UP}
+                                            </LabelUp>
+                                            <PositionSymbolUp isSelected={isUpSelected}>
+                                                <Icon className="icon icon--caret-up" />
+                                            </PositionSymbolUp>
+                                        </PositionWrapper>
+                                        <PositionWrapper
+                                            isColumn
+                                            onClick={() =>
+                                                onChainedChange(
+                                                    selected.map((pos, i) =>
+                                                        i === index
+                                                            ? pos === Positions.DOWN
+                                                                ? undefined
+                                                                : Positions.DOWN
+                                                            : pos
+                                                    )
+                                                )
+                                            }
+                                        >
+                                            <PositionSymbolDown isSelected={isDownSelected}>
+                                                <Icon className="icon icon--caret-down" />
+                                            </PositionSymbolDown>
+                                            <LabelDown isColumn isSelected={isDownSelected}>
+                                                {Positions.DOWN}
+                                            </LabelDown>
+                                        </PositionWrapper>
+                                    </PositionsWrapper>
+                                </PositionsContainer>
+                            );
+                        })}
+                    </ChainedPositions>
+                </FlexDivColumnCentered>
+            )}
         </Container>
     );
 };
-
-const Container = styled(FlexDivCentered)``;
-
-const PositionWrapper = styled(FlexDivCentered)`
-    cursor: pointer;
-`;
-
-const PositionSymbol = styled(FlexDivCentered)`
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    padding-left: 1px;
-`;
-
-const PositionSymbolUp = styled(PositionSymbol)<{ isSelected?: boolean }>`
-    border: 3px solid
-        ${(props) =>
-            props.isSelected === undefined
-                ? props.theme.borderColor.primary
-                : props.isSelected
-                ? props.theme.positionColor.up
-                : props.theme.borderColor.primary};
-    color: ${(props) =>
-        props.isSelected === undefined || props.isSelected
-            ? props.theme.positionColor.up
-            : props.theme.borderColor.primary};
-`;
-
-const PositionSymbolDown = styled(PositionSymbol)<{ isSelected?: boolean }>`
-    border: 3px solid
-        ${(props) =>
-            props.isSelected === undefined
-                ? props.theme.borderColor.primary
-                : props.isSelected
-                ? props.theme.positionColor.down
-                : props.theme.borderColor.primary};
-    color: ${(props) =>
-        props.isSelected === undefined || props.isSelected
-            ? props.theme.positionColor.down
-            : props.theme.borderColor.primary};
-`;
-
-const Icon = styled.i`
-    font-size: 18px;
-    line-height: 100%;
-    color: inherit;
-`;
-
-const Label = styled.span`
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 100%;
-    text-transform: capitalize;
-`;
-
-const LabelUp = styled(Label)<{ isSelected?: boolean }>`
-    color: ${(props) =>
-        props.isSelected === undefined
-            ? props.theme.textColor.primary
-            : props.isSelected
-            ? props.theme.positionColor.up
-            : props.theme.borderColor.primary};
-    margin-right: 7px;
-`;
-
-const LabelDown = styled(Label)<{ isSelected?: boolean }>`
-    color: ${(props) =>
-        props.isSelected === undefined
-            ? props.theme.textColor.primary
-            : props.isSelected
-            ? props.theme.positionColor.down
-            : props.theme.borderColor.primary};
-    margin-left: 7px;
-`;
-
-const Separator = styled.div`
-    background: ${(props) => props.theme.background.secondary};
-    border-radius: 3px;
-    width: 3px;
-    height: 36px;
-    border-radius: 6px;
-    margin: 0 14px;
-`;
 
 export default SelectPosition;

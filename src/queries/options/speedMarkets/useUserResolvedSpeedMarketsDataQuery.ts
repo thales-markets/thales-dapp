@@ -1,8 +1,15 @@
 import { USD_SIGN } from 'constants/currency';
-import { OPTIONS_POSITIONS_MAP, SIDE, SPEED_MARKETS_QUOTE } from 'constants/options';
+import {
+    BATCH_NUMBER_OF_SPEED_MARKETS,
+    MAX_NUMBER_OF_SPEED_MARKETS_TO_FETCH,
+    MIN_MATURITY,
+    OPTIONS_POSITIONS_MAP,
+    SIDE,
+    SPEED_MARKETS_QUOTE,
+} from 'constants/options';
 import { PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import QUERY_KEYS from 'constants/queryKeys';
-import { secondsToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { useQuery, UseQueryOptions } from 'react-query';
@@ -25,16 +32,29 @@ const useUserResolvedSpeedMarketsDataQuery = (
             if (speedMarketsAMMContract && speedMarketsDataContract) {
                 const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(walletAddress);
 
-                const maturedMarkets = await speedMarketsAMMContract.maturedMarketsPerUser(
-                    0,
-                    ammParams.numMaturedMarketsPerUser,
+                const pageSize = Math.min(ammParams.numMaturedMarketsPerUser, MAX_NUMBER_OF_SPEED_MARKETS_TO_FETCH);
+                const index = Number(ammParams.numMaturedMarketsPerUser) - pageSize;
+                const maturedMarkets: [] = await speedMarketsAMMContract.maturedMarketsPerUser(
+                    index,
+                    pageSize,
                     walletAddress
                 );
-                const marketsDataArray = await speedMarketsDataContract.getMarketsData(maturedMarkets);
-                const userResolvedMarkets = marketsDataArray.map((marketData: any, index: number) => ({
-                    ...marketData,
-                    market: maturedMarkets[index],
-                }));
+
+                const promises = [];
+                for (let i = 0; i < Math.ceil(maturedMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
+                    const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
+                    const batchMarkets = maturedMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    promises.push(speedMarketsDataContract.getMarketsData(batchMarkets));
+                }
+                const marketsDataArray = await Promise.all(promises);
+
+                const userResolvedMarkets = marketsDataArray
+                    .flat()
+                    .map((marketData: any, index: number) => ({
+                        ...marketData,
+                        market: maturedMarkets[index],
+                    }))
+                    .filter((marketData: any) => Number(marketData.strikeTime) > MIN_MATURITY);
 
                 for (let i = 0; i < userResolvedMarkets.length; i++) {
                     const marketData = userResolvedMarkets[i];
@@ -44,7 +64,7 @@ const useUserResolvedSpeedMarketsDataQuery = (
 
                     const createdAt = !marketData.createdAt.isZero()
                         ? secondsToMilliseconds(Number(marketData.createdAt))
-                        : maturityDate;
+                        : maturityDate - hoursToMilliseconds(1);
                     const lpFee = !marketData.lpFee.isZero()
                         ? bigNumberFormatter(marketData.lpFee)
                         : getFeesFromHistory(createdAt).lpFee;

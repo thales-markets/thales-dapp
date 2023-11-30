@@ -1,9 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
 import errorIcon from 'assets/images/errorIcon.svg';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import Select from 'pages/CreateMarket/components/Select';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import Select from 'pages/CreateMarket/components/Select';
+import React from 'react';
+import styled, { useTheme } from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { ThemeInterface } from 'types/ui';
 
 export const Container = styled(FlexDiv)`
     padding: 50px 0;
@@ -111,13 +112,13 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     caret-color: transparent;
     > div:first-of-type {
         height: 64px;
-        background: #2b3139;
+        background: ${(props) => props.theme.background.secondary};
         > div:first-of-type div {
             font-weight: bold;
             font-size: 13px;
             line-height: 24px;
             letter-spacing: 0.4px;
-            color: #ffffff !important;
+            color: ${(props) => props.theme.textColor.primary} !important;
             padding: 15px 0px 0 11px;
         }
     }
@@ -126,8 +127,8 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         font-size: 13px;
         line-height: 24px;
         letter-spacing: 0.4px;
-        color: #ffffff !important;
-        background: #2b3139;
+        color: ${(props) => props.theme.textColor.primary} !important;
+        background: ${(props) => props.theme.background.secondary};
         border: none;
         border-radius: 12px;
         box-shadow: none;
@@ -141,15 +142,15 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         fill: #f6f6fe;
     }
     .react-select__option--is-selected {
-        border: 1px solid #03dac5;
+        border: 1px solid ${(props) => props.theme.borderColor.quaternary};
         box-sizing: border-box;
         border-radius: 10px;
-        background: #2b3139;
+        background: ${(props) => props.theme.background.secondary};
     }
     .react-select__option--is-focused {
-        background: #181a20;
+        background: ${(props) => props.theme.background.primary};
         border-radius: 10px;
-        color: #ffffff;
+        color: ${(props) => props.theme.textColor.primary};
         cursor: pointer;
     }
 
@@ -161,23 +162,23 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         padding: 0px 4px;
     }
     .react-select__control:hover {
-        border-color: #2b3139;
+        border-color: ${(props) => props.theme.borderColor.primary};
         cursor: pointer;
     }
     .react-select__control {
-        border: 2px solid #2b3139;
+        border: 2px solid ${(props) => props.theme.borderColor.primary};
         box-sizing: border-box;
     }
     .react-select__control--is-focused,
     .react-select__control--menu-is-open,
     .react-select__control--is-focused:hover,
     .react-select__control--menu-is-open:hover {
-        border: 2px solid #03dac5;
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
         box-sizing: border-box;
         cursor: pointer;
     }
     &.error .react-select__control {
-        border: 2px solid #de496d;
+        border: 2px solid ${(props) => props.theme.input.borderColor.error.primary};
     }
     &.disabled {
         opacity: 0.4;
@@ -215,10 +216,12 @@ const Image = styled.img`
 `;
 
 export const ErrorMessage: React.FC<{ text: string; show: boolean }> = ({ text, show }) => {
+    const theme: ThemeInterface = useTheme();
+
     return (
         <Wrapper className={show ? '' : 'hide'} style={{ background: '#E9BCBC', borderRadius: 5, zIndex: 3 }}>
             <Image style={{ width: 12, height: 12, margin: 6 }} src={errorIcon}></Image>
-            <Text style={{ color: '#DE496D', fontSize: 13 }}>{text}</Text>
+            <Text style={{ color: theme.textColor.tertiary, fontSize: 13 }}>{text}</Text>
         </Wrapper>
     );
 };

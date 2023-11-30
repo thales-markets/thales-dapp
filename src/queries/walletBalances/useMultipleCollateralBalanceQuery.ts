@@ -2,9 +2,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { COLLATERAL_DECIMALS, CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { bigNumberFormatter } from 'thales-utils';
-import { Coins } from 'types/options';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { bigNumberFormatter, Coins, COLLATERAL_DECIMALS } from 'thales-utils';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
@@ -22,6 +21,7 @@ const useMultipleCollateralBalanceQuery = (
                         sUSD: 0,
                         DAI: 0,
                         USDCe: 0,
+                        USDbC: 0,
                         USDT: 0,
                         OP: 0,
                         WETH: 0,
@@ -36,6 +36,7 @@ const useMultipleCollateralBalanceQuery = (
                     DAIBalance,
                     USDCBalance,
                     USDCeBalance,
+                    USDbCBalance,
                     USDTBalance,
                     OPBalance,
                     WETHBalance,
@@ -53,6 +54,9 @@ const useMultipleCollateralBalanceQuery = (
                         : undefined,
                     multipleCollateral
                         ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDCe as Coins]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral
+                        ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDbC as Coins]?.balanceOf(walletAddress)
                         : undefined,
                     multipleCollateral
                         ? multipleCollateral[CRYPTO_CURRENCY_MAP.USDT as Coins]?.balanceOf(walletAddress)
@@ -73,6 +77,7 @@ const useMultipleCollateralBalanceQuery = (
                     DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,
                     USDC: USDCBalance ? bigNumberFormatter(USDCBalance, COLLATERAL_DECIMALS.USDC) : 0,
                     USDCe: USDCeBalance ? bigNumberFormatter(USDCeBalance, COLLATERAL_DECIMALS.USDCe) : 0,
+                    USDbC: USDbCBalance ? bigNumberFormatter(USDbCBalance, COLLATERAL_DECIMALS.USDbC) : 0,
                     USDT: USDTBalance ? bigNumberFormatter(USDTBalance, COLLATERAL_DECIMALS.USDT) : 0,
                     OP: OPBalance ? bigNumberFormatter(OPBalance, COLLATERAL_DECIMALS.OP) : 0,
                     WETH: WETHBalance ? bigNumberFormatter(WETHBalance, COLLATERAL_DECIMALS.WETH) : 0,
@@ -85,6 +90,7 @@ const useMultipleCollateralBalanceQuery = (
                     sUSD: 0,
                     DAI: 0,
                     USDCe: 0,
+                    USDbC: 0,
                     USDT: 0,
                     OP: 0,
                     WETH: 0,

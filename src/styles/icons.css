@@ -202,6 +202,14 @@
     content: '\0041';
 }
 
+.icon--wrong:before {
+    content: '\0042';
+}
+
+.icon--chain:before {
+    content: '\0043';
+}
+
 .icon--thales-logo:before {
     content: '\0044';
 }
@@ -214,20 +222,88 @@
     content: '\0047';
 }
 
+.icon--correct:before {
+    content: '\0048';
+}
+
+.icon--hexagon:before {
+    content: '\0049';
+}
+
+.icon--controller:before {
+    content: '\004a';
+}
+
+.icon--lp-overtime:before {
+    content: '\004B';
+}
+
+.icon--safu-overtime:before {
+    content: '\004D';
+}
+
+.icon--degen-vault:before {
+    content: '\004E';
+}
+
+.icon--parlay-vault:before {
+    content: '\004F';
+}
+
+.icon--discount-sport-vault:before {
+    content: '\0050';
+}
+
+.icon--lp-thales:before {
+    content: '\0051';
+}
+
+.icon--degen-discount-vault:before {
+    content: '\0052';
+}
+
+.icon--discount-vault:before {
+    content: '\0053';
+}
+
 .icon--thunder:before {
     content: '\0054';
+}
+
+.icon--safu-thales-vault:before {
+    content: '\0056';
 }
 
 .icon--success:before {
     content: '\0057';
 }
 
+.icon--thales:before {
+    content: '\0059';
+}
+
 .icon--logo:before {
     content: '\005A';
 }
 
+.icon--arrow:before {
+    content: '\005C';
+}
+
+.icon--overtime:before {
+    content: '\005E';
+}
+
+.icon--external:before {
+    content: '\0061';
+}
+
 .icon--clock:before {
     content: '\0062';
+}
+
+.icon--network::before {
+    content: '\0063';
 }
 
 .icon--copy:before {
@@ -312,74 +388,6 @@
 
 .icon--right:before {
     content: '\007A';
-}
-
-.icon--controller:before {
-    content: '\004a';
-}
-
-.icon--hexagon:before {
-    content: '\0049';
-}
-
-.icon--lp-thales:before {
-    content: '\0051';
-}
-
-.icon--lp-overtime:before {
-    content: '\004B';
-}
-
-.icon--discount-sport-vault:before {
-    content: '\0050';
-}
-
-.icon--safu-thales-vault:before {
-    content: '\0056';
-}
-
-.icon--thales:before {
-    content: '\0059';
-}
-
-.icon--arrow:before {
-    content: '\005C';
-}
-
-.icon--overtime:before {
-    content: '\005E';
-}
-
-.icon__discount-vault:before {
-    content: '\0053';
-}
-
-.icon__degen-discount-vault:before {
-    content: '\0052';
-}
-
-.icon__degen-vault:before {
-    content: '\004E';
-}
-
-.icon__safu-overtime:before {
-    content: '\004D';
-}
-
-.icon__parlay-vault:before {
-    content: '\004F';
-}
-
-.icon__external:before {
-    content: '\0061';
-}
-
-.icon__arrow:before {
-    content: '\005C';
-}
-
-.icon__network::before {
-    content: '\0063';
 }
 
 @keyframes shake {
