@@ -104,7 +104,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     }, [isSubmittingBatch]);
 
     useEffect(() => {
-        if (isDefaultCollateral) {
+        if (isDefaultCollateral || isOverview) {
             return;
         }
 
