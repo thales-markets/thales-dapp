@@ -7,7 +7,7 @@ import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { UseQueryOptions, useQuery } from 'react-query';
-import { bigNumberFormatter, coinFormatter } from 'thales-utils';
+import { bigNumberFormatter, coinFormatter, roundNumberToDecimals } from 'thales-utils';
 import { ChainedSpeedMarket, OptionSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -50,8 +50,10 @@ const useActiveChainedSpeedMarketsDataQuery = (networkId: Network, options?: Use
                     strikePrices[0] = bigNumberFormatter(marketData.initialStrikePrice, PYTH_CURRENCY_DECIMALS);
                     const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
                     const fee = bigNumberFormatter(marketData.safeBoxImpact);
-                    const payout = buyinAmount * bigNumberFormatter(marketData.payoutMultiplier) ** sides.length;
-
+                    const payout =
+                        buyinAmount *
+                        roundNumberToDecimals(bigNumberFormatter(marketData.payoutMultiplier) ** sides.length, 8);
+                    console.log(payout);
                     const chainedData: ChainedSpeedMarket = {
                         address: marketData.market,
                         timestamp: secondsToMilliseconds(Number(marketData.createdAt)),

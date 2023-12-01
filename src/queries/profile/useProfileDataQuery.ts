@@ -5,7 +5,7 @@ import { Network } from 'enums/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import { UserProfileData } from 'types/profile';
-import { bigNumberFormatter, coinFormatter } from 'thales-utils';
+import { bigNumberFormatter, coinFormatter, roundNumberToDecimals } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 
@@ -126,7 +126,10 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     const payout =
                         buyinAmount *
                         (isChained
-                            ? bigNumberFormatter(marketData.payoutMultiplier) ** marketData.directions.length
+                            ? roundNumberToDecimals(
+                                  bigNumberFormatter(marketData.payoutMultiplier) ** marketData.directions.length,
+                                  8
+                              )
                             : SPEED_MARKETS_QUOTE);
 
                     if (marketData.isUserWinner) {
