@@ -9,7 +9,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { UseQueryOptions, useQuery } from 'react-query';
-import { bigNumberFormatter, coinFormatter, parseBytes32String } from 'thales-utils';
+import { bigNumberFormatter, coinFormatter, parseBytes32String, roundNumberToDecimals } from 'thales-utils';
 import { OptionSide, SpeedMarket } from 'types/options';
 import { TradeWithMarket } from 'types/profile';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -64,7 +64,9 @@ const useUserChainedSpeedMarketsTransactionsQuery = (
                     const sides = marketData.directions.map((direction: number) => SIDE[direction] as OptionSide);
                     const side = marketData.resolved ? sides[sides.length - 1] : sides[0];
                     const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
-                    const payout = buyinAmount * bigNumberFormatter(marketData.payoutMultiplier) ** sides.length;
+                    const payout =
+                        buyinAmount *
+                        roundNumberToDecimals(bigNumberFormatter(marketData.payoutMultiplier) ** sides.length, 8);
                     const createdAt = secondsToMilliseconds(Number(marketData.createdAt));
                     const safeBoxImpact = bigNumberFormatter(marketData.safeBoxImpact);
 
