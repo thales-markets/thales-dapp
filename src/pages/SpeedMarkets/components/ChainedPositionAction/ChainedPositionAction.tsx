@@ -27,16 +27,10 @@ import {
 } from 'pages/Profile/components/MyPositionAction/MyPositionAction';
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
-import {
-    getIsWalletConnected,
-    getNetworkId,
-    getSelectedCollateralIndex,
-    getWalletAddress,
-    setSelectedCollateralIndex,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
@@ -81,7 +75,6 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     isMultipleContainerRows,
 }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -109,10 +102,6 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     useEffect(() => {
         isSubmittingBatch !== undefined && setIsSubmitting(isSubmittingBatch);
     }, [isSubmittingBatch]);
-
-    useEffect(() => {
-        dispatch(setSelectedCollateralIndex(0));
-    }, [networkId, isWalletConnected, dispatch]);
 
     useEffect(() => {
         if (isDefaultCollateral) {
@@ -302,9 +291,11 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                 disabled={isSubmitting || (isOverview && !position.canResolve)}
                 additionalStyles={additionalButtonStyle}
                 backgroundColor={!isOverview ? theme.button.textColor.quaternary : undefined}
-                onClick={() => (hasAllowance || isDefaultCollateral ? handleResolve() : setOpenApprovalModal(true))}
+                onClick={() =>
+                    hasAllowance || isDefaultCollateral || isOverview ? handleResolve() : setOpenApprovalModal(true)
+                }
             >
-                {hasAllowance || isDefaultCollateral
+                {hasAllowance || isDefaultCollateral || isOverview
                     ? `${
                           isSubmitting
                               ? isOverview
