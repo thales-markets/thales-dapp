@@ -131,7 +131,16 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         if (isWalletConnected && erc20Instance.provider) {
             getAllowance();
         }
-    }, [position.amount, networkId, walletAddress, isWalletConnected, hasAllowance, isAllowing, isDefaultCollateral]);
+    }, [
+        position.amount,
+        networkId,
+        walletAddress,
+        isWalletConnected,
+        hasAllowance,
+        isAllowing,
+        isDefaultCollateral,
+        isOverview,
+    ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { chainedSpeedMarketsAMMContract, collateral } = snxJSConnector;
