@@ -53,7 +53,7 @@ const useActiveChainedSpeedMarketsDataQuery = (networkId: Network, options?: Use
                     const payout =
                         buyinAmount *
                         roundNumberToDecimals(bigNumberFormatter(marketData.payoutMultiplier) ** sides.length, 8);
-                    console.log(payout);
+
                     const chainedData: ChainedSpeedMarket = {
                         address: marketData.market,
                         timestamp: secondsToMilliseconds(Number(marketData.createdAt)),
