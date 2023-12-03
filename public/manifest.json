@@ -3,7 +3,7 @@
     "name": "Thalesmarkets",
     "short_name": "Thales",
     "description": "Novel on-chain, permissionless, and non-custodial Parimutuel Markets.",
-    "start_url": "/",
+    "start_url": "/markets",
     "background_color": "#181a20",
     "theme_color": "#181a20",
     "orientation": "any",
