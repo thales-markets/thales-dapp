@@ -38,7 +38,7 @@ import {
     refetchUserNotifications,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'thales-utils';
 import { toast } from 'react-toastify';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { ThemeInterface } from 'types/ui';

@@ -7,7 +7,7 @@ import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { AmmSpeedMarketsLimits, OptionSide } from 'types/options';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 10;
@@ -31,6 +31,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                 timeThresholdsForFees: [],
                 lpFees: [],
                 defaultLPFee: 0,
+                maxSkewImpact: 0,
                 safeBoxImpact: 0,
                 whitelistedAddress: false,
             };
@@ -54,7 +55,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                     ),
                 ]);
 
-                ammSpeedMarketsLimits.minBuyinAmount = coinFormatter(ammParams.minBuyinAmount, networkId);
+                ammSpeedMarketsLimits.minBuyinAmount = Math.ceil(coinFormatter(ammParams.minBuyinAmount, networkId));
                 ammSpeedMarketsLimits.maxBuyinAmount =
                     coinFormatter(ammParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
                 ammSpeedMarketsLimits.minimalTimeToMaturity = Number(ammParams.minimalTimeToMaturity);
@@ -93,6 +94,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                 );
                 ammSpeedMarketsLimits.lpFees = ammParams.lpFees.map((lpFee: BigNumber) => bigNumberFormatter(lpFee));
                 ammSpeedMarketsLimits.defaultLPFee = bigNumberFormatter(ammParams.lpFee);
+                ammSpeedMarketsLimits.maxSkewImpact = bigNumberFormatter(ammParams.maxSkewImpact);
                 ammSpeedMarketsLimits.safeBoxImpact = bigNumberFormatter(ammParams.safeBoxImpact);
                 ammSpeedMarketsLimits.whitelistedAddress = ammParams.isAddressWhitelisted;
             }

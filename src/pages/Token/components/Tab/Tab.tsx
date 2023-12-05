@@ -17,11 +17,12 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { TokenTabSection } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
+import { getIsBridgeSupported, getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
 import { history } from 'utils/routes';
 import MigrationInfo from '../MigrationInfo';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import StakingLeaderboard from 'pages/Token/GamifiedStaking/StakingLeaderboard';
+import Bridge from 'pages/Token/Bridge';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -34,6 +35,7 @@ const Tab: React.FC<{
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isLpStakingSupported = getIsLpStakingSupported(networkId);
     const isStakingSupported = getIsStakingSupported(networkId);
+    const isBridgeSupported = getIsBridgeSupported(networkId);
 
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
@@ -121,6 +123,7 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
+            {isBridgeSupported && selectedTab === TokenTabEnum.BRIDGE && <Bridge />}
             {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>

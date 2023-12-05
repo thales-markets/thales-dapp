@@ -19,7 +19,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import { getEtherscanAddressLink } from 'utils/etherscan';
+import { getEtherscanAddressLink } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import YourTransactions from './Transactions';
 import { toast } from 'react-toastify';

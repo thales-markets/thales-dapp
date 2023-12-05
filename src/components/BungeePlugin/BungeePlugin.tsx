@@ -8,11 +8,16 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import snxJSConnector from 'utils/snxJSConnector';
-import { hexToRGB } from 'utils/style';
+import { hexToRGB } from 'thales-utils';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 import { getDefaultCollateral } from 'utils/currency';
 
-const SUPPORTED_DESTINATION_NETWORKS = [Network.OptimismMainnet, Network.Arbitrum, Network.PolygonMainnet];
+const SUPPORTED_DESTINATION_NETWORKS = [
+    Network.OptimismMainnet,
+    Network.Arbitrum,
+    Network.PolygonMainnet,
+    Network.Base,
+];
 
 const BungeePlugin: React.FC = () => {
     const theme: ThemeInterface = useTheme();

@@ -4,13 +4,12 @@ import { FlexDiv, FlexDivColumn, FlexDivRow } from 'styles/common';
 import GoldBadge from 'assets/images/token/leaderboard/gold_badge.svg';
 import BronzeBadge from 'assets/images/token/leaderboard/bronze_badge.svg';
 import SilverBadge from 'assets/images/token/leaderboard/silver_badge.svg';
-import { truncateAddress } from 'utils/formatters/string';
+import { truncateAddress, formatCurrencyWithKey } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type HighlightCardProps = {
     rank: number;

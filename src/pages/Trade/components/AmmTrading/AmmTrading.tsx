@@ -19,8 +19,6 @@ import {
 } from 'constants/options';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
-import useDebouncedEffect from 'hooks/useDebouncedEffect';
-import useInterval from 'hooks/useInterval';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
@@ -49,13 +47,16 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCollateral, getCollaterals, getDefaultCollateral, getCoinBalance } from 'utils/currency';
-import { bigNumberFormatter, coinFormatter, coinParser } from 'utils/formatters/ethers';
 import {
+    bigNumberFormatter,
+    coinFormatter,
+    coinParser,
     formatCurrency,
     formatCurrencyWithSign,
     roundNumberToDecimals,
     truncToDecimals,
-} from 'utils/formatters/number';
+} from 'thales-utils';
+import useInterval from 'hooks/useInterval';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { convertPriceImpactToBonus } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
@@ -78,6 +79,7 @@ import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/Tooltip';
 import SharePositionModal from './components/SharePositionModal/SharePositionModal';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -671,8 +673,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     </Tooltip>
                     <ShareIcon
                         className="icon-home icon-home--twitter-x"
-                        disabled={isDetailsIconDisabled}
-                        onClick={() => !isDetailsIconDisabled && setOpenTwitterShareModal(true)}
+                        disabled={isButtonDisabled}
+                        onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
                     />
                 </TradingDetailsContainer>
             )}

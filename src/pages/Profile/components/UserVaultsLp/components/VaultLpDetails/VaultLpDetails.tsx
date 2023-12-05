@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRow, FlexDivStart } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithSign, formatPercentageWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentageWithSign } from 'thales-utils';
 
 type VaultLpDetailsProps = {
     icon: string;

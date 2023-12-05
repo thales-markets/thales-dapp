@@ -2,12 +2,11 @@ import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { UserClosedPositions } from 'types/options';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithPrecision, formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
+import { formatNumberShort } from 'utils/formatters/number';
 import { getColorPerPosition } from 'utils/options';
 
 type ClosedPositionProps = {
@@ -29,7 +28,7 @@ const ClosedPosition: React.FC<ClosedPositionProps> = ({ position }) => {
                 <Separator />
                 <FlexContainer secondChildWidth="140px">
                     <Label>{t('profile.final-price')}</Label>
-                    <Value>{formatCurrencyWithPrecision(position.finalPrice || 0)}</Value>
+                    <Value>{formatCurrencyWithSign(USD_SIGN, position.finalPrice || 0)}</Value>
                 </FlexContainer>
                 <Separator />
                 <FlexContainer>
@@ -54,7 +53,7 @@ const ClosedPosition: React.FC<ClosedPositionProps> = ({ position }) => {
                     <Label>{t('common.result')}</Label>
                     <Value
                         isUpperCase
-                        color={position.isUserWinner ? theme.borderColor.quaternary : theme.error.borderColor.primary}
+                        color={position.isUserWinner ? theme.textColor.quaternary : theme.error.textColor.primary}
                     >
                         {position.isUserWinner ? t('common.won') : t('common.loss')}
                     </Value>

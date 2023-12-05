@@ -22,7 +22,7 @@ import {
     StatsValue,
     Title,
 } from './styled-components';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { USD_SIGN } from 'constants/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
@@ -38,6 +38,11 @@ import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
+import { millisecondsToSeconds } from 'date-fns';
+import { getPriceId } from 'utils/pyth';
+import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
+import { Positions } from 'enums/options';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -72,12 +77,70 @@ const Profile: React.FC = () => {
     );
     const speedMarketsNotifications =
         userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
-            ? userActiveSpeedMarketsDataQuery.data.filter(
-                  (marketData) => marketData.maturityDate < Date.now() && marketData.claimable
-              ).length
+            ? userActiveSpeedMarketsDataQuery.data.filter((marketData) => marketData.claimable).length
             : 0;
 
-    const totalNotifications = notifications + speedMarketsNotifications;
+    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+    const userActiveChainedSpeedMarketsData =
+        userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
+            ? userActiveChainedSpeedMarketsDataQuery.data
+            : [];
+
+    // Prepare active chained speed markets that become matured to fetch Pyth prices
+    const maturedChainedMarkets = userActiveChainedSpeedMarketsData
+        .filter((marketData) => marketData.isMatured)
+        .map((marketData) => {
+            const strikeTimes = marketData.strikeTimes.map((strikeTime) => millisecondsToSeconds(strikeTime));
+            return {
+                ...marketData,
+                strikeTimes,
+                pythPriceId: getPriceId(networkId, marketData.currencyKey),
+            };
+        });
+
+    const priceRequests = maturedChainedMarkets
+        .map((data) =>
+            data.strikeTimes.map((strikeTime) => ({
+                priceId: data.pythPriceId,
+                publishTime: strikeTime,
+                market: data.address,
+            }))
+        )
+        .flat();
+    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
+    const pythPricesWithMarket = priceRequests.map((request, i) => ({
+        market: request.market,
+        price: pythPricesQueries[i]?.data || 0,
+    }));
+
+    // Based on Pyth prices determine if chained position is claimable
+    const chainedSpeedMarketsNotifications = maturedChainedMarkets
+        .map((marketData) => {
+            const finalPrices = marketData.strikeTimes.map(
+                (_, i) => pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i].price
+            );
+            const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
+                i > 0 ? finalPrices[i - 1] : strikePrice
+            );
+            const userWonStatuses = marketData.sides.map((side, i) =>
+                finalPrices[i] > 0
+                    ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
+                      (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
+                    : undefined
+            );
+            const claimable = userWonStatuses.every((status) => status);
+
+            return { ...marketData, finalPrices, claimable };
+        })
+        .filter((marketData) => marketData.claimable).length;
+
+    const totalNotifications = notifications + speedMarketsNotifications + chainedSpeedMarketsNotifications;
 
     const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,

@@ -7,16 +7,21 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDateWithTime, formatCurrencyWithKey, formatCurrencyWithSign } from 'thales-utils';
+import useInterval from 'hooks/useInterval';
 import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
 import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
 import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
-import useInterval from 'hooks/useInterval';
 import Tooltip from 'components/Tooltip/Tooltip';
+import { getIsMobile } from 'redux/modules/ui';
 
-type SpeedMarketsTrade = { address: string; strikePrice: number; positionType: Positions | undefined };
+type SpeedMarketsTrade = {
+    address: string;
+    strikePrice: number;
+    positionType?: Positions.UP | Positions.DOWN | undefined;
+    chainedPositions?: (Positions.UP | Positions.DOWN | undefined)[];
+};
 
 type TradingDetailsSentenceProps = {
     currencyKey: string;
@@ -44,7 +49,9 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     hasCollateralConversion,
 }) => {
     const { t } = useTranslation();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [deltaDate, setDeltaDate] = useState(0);
 
@@ -81,6 +88,9 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             ? t('common.not-between')
             : '';
 
+    const chainedPositions = (market as SpeedMarketsTrade).chainedPositions || [];
+    const isChainedSpeedMarket = chainedPositions.length > 1;
+
     const deltaTimeFormatted = deltaTimeSec
         ? `${secondsToHours(deltaTimeSec) !== 0 ? secondsToHours(deltaTimeSec) : secondsToMinutes(deltaTimeSec)} ${
               secondsToHours(deltaTimeSec) !== 0
@@ -88,58 +98,98 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                       ? t('common.time-remaining.hour')
                       : t('common.time-remaining.hours')
                   : t('common.time-remaining.minutes')
-          } (${formatShortDateWithTime(deltaDate)})`
+          }`
         : '';
 
+    const fullDateFromDeltaTimeFormatted = `(${
+        isChainedSpeedMarket ? t('common.starting') + ' ' : ''
+    }${formatShortDateWithTime(deltaDate)})`;
+
     const timeFormatted = deltaTimeSec
-        ? deltaTimeFormatted
+        ? `${deltaTimeFormatted} ${fullDateFromDeltaTimeFormatted}`
         : maturityDate
         ? formatShortDateWithTime(maturityDate)
         : `( ${t('markets.amm-trading.choose-time')} )`;
+
+    const getChainedPositions = () =>
+        chainedPositions.map((pos, index) => {
+            return (
+                <PositionText isUp={pos === Positions.UP} key={index}>{`${pos}${
+                    index !== chainedPositions.length - 1 ? ', ' : ''
+                }`}</PositionText>
+            );
+        });
+
+    const isAllChainedMarketsSelected = chainedPositions.every((pos) => pos !== undefined);
 
     return (
         <ColumnSpaceBetween>
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{t('markets.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
+                    <TextLabel>
+                        {t(
+                            isChainedSpeedMarket
+                                ? 'speed-markets.chained.asset-price'
+                                : 'markets.amm-trading.asset-price',
+                            { asset: currencyKey }
+                        )}
+                    </TextLabel>
                     {market.address ? (
                         <>
-                            <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
-                                {positionTypeFormatted
-                                    ? positionTypeFormatted
-                                    : `( ${t('markets.amm-trading.choose-direction')} )`}
-                            </SentanceTextValue>
-                            {isRangedMarket ? (
-                                !breakFirstLine && (
-                                    <>
-                                        <SentanceTextValue>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                (market as RangedMarketPerPosition).leftPrice
-                                            )}
-                                        </SentanceTextValue>
-                                        <Text>
-                                            <TextLabel>{' ' + t('common.and')}</TextLabel>
-                                        </Text>
-                                        <SentanceTextValue>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                (market as RangedMarketPerPosition).rightPrice
-                                            )}
-                                        </SentanceTextValue>
-                                    </>
-                                )
-                            ) : (
-                                <SentanceTextValue>
-                                    {formatCurrencyWithSign(USD_SIGN, (market as MarketInfo).strikePrice)}
+                            {(!isMobile || !isChainedSpeedMarket) && (
+                                <SentanceTextValue
+                                    uppercase={!!positionTypeFormatted}
+                                    lowercase={!positionTypeFormatted}
+                                >
+                                    {isChainedSpeedMarket
+                                        ? isAllChainedMarketsSelected
+                                            ? getChainedPositions()
+                                            : `( ${t('speed-markets.chained.errors.choose-directions')} )`
+                                        : positionTypeFormatted
+                                        ? positionTypeFormatted
+                                        : `( ${t('markets.amm-trading.choose-direction')} )`}
                                 </SentanceTextValue>
                             )}
+                            {isRangedMarket
+                                ? !breakFirstLine && (
+                                      <>
+                                          <SentanceTextValue>
+                                              {formatCurrencyWithSign(
+                                                  USD_SIGN,
+                                                  (market as RangedMarketPerPosition).leftPrice
+                                              )}
+                                          </SentanceTextValue>
+                                          <Text>
+                                              <TextLabel>{' ' + t('common.and')}</TextLabel>
+                                          </Text>
+                                          <SentanceTextValue>
+                                              {formatCurrencyWithSign(
+                                                  USD_SIGN,
+                                                  (market as RangedMarketPerPosition).rightPrice
+                                              )}
+                                          </SentanceTextValue>
+                                      </>
+                                  )
+                                : !isChainedSpeedMarket && (
+                                      <SentanceTextValue>
+                                          {formatCurrencyWithSign(USD_SIGN, (market as MarketInfo).strikePrice)}
+                                      </SentanceTextValue>
+                                  )}
                         </>
                     ) : (
                         <SentanceTextValue>{'( ' + t('markets.amm-trading.pick-price') + ' )'}</SentanceTextValue>
                     )}
                 </Text>
             </FlexDivCentered>
+            {isChainedSpeedMarket && isMobile && (
+                <FlexDivCentered>
+                    <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
+                        {isAllChainedMarketsSelected
+                            ? getChainedPositions()
+                            : `( ${t('speed-markets.chained.errors.choose-directions')} )`}
+                    </SentanceTextValue>
+                </FlexDivCentered>
+            )}
             {breakFirstLine && isRangedMarket && market.address && (
                 <FlexDivCentered>
                     <Text>
@@ -157,10 +207,27 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             )}
             <FlexDivCentered>
                 <Text>
-                    <TextLabel>{deltaTimeSec ? t('common.in') : t('common.on')}</TextLabel>
-                    <SentanceTextValue lowercase>{timeFormatted}</SentanceTextValue>
+                    <TextLabel>
+                        {isChainedSpeedMarket ? t('common.with') : deltaTimeSec ? t('common.in') : t('common.on')}
+                    </TextLabel>
+                    {isChainedSpeedMarket ? (
+                        <>
+                            <SentanceTextValue lowercase>{deltaTimeFormatted}</SentanceTextValue>
+                            <TextLabel>{` ${t('speed-markets.chained.between-rounds')}`}</TextLabel>
+                            {!isMobile && (
+                                <SentanceTextValue lowercase>{fullDateFromDeltaTimeFormatted}</SentanceTextValue>
+                            )}
+                        </>
+                    ) : (
+                        <SentanceTextValue lowercase>{timeFormatted}</SentanceTextValue>
+                    )}
                 </Text>
             </FlexDivCentered>
+            {isChainedSpeedMarket && isMobile && (
+                <FlexDivCentered>
+                    <SentanceTextValue lowercase>{fullDateFromDeltaTimeFormatted}</SentanceTextValue>
+                </FlexDivCentered>
+            )}
             <FlexDivCentered>
                 <Text>
                     <TextLabel>{t('markets.amm-trading.you-win')}</TextLabel>
@@ -181,6 +248,11 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
 
 const SentanceTextValue = styled(TextValue)`
     padding-left: 5px;
+`;
+
+const PositionText = styled(TextValue)<{ isUp: boolean }>`
+    color: ${(props) => (props.isUp ? props.theme.positionColor.up : props.theme.positionColor.down)};
+    text-transform: uppercase;
 `;
 
 export default TradingDetailsSentence;

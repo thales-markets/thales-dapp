@@ -41,9 +41,14 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { coinFormatter, coinParser } from 'utils/formatters/ethers';
-import { formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
-import { checkAllowance, getDefaultDecimalsForNetwork, getIsMultiCollateralSupported } from 'utils/network';
+import {
+    coinFormatter,
+    coinParser,
+    formatCurrencyWithSign,
+    roundNumberToDecimals,
+    getDefaultDecimalsForNetwork,
+} from 'thales-utils';
+import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
     refetchBalances,
@@ -65,12 +70,14 @@ type MyPositionActionProps = {
     position: UserPosition | UserLivePositions;
     isProfileAction?: boolean;
     maxPriceDelayForResolvingSec?: number;
+    isMultipleContainerRows?: boolean;
 };
 
 const MyPositionAction: React.FC<MyPositionActionProps> = ({
     position,
     isProfileAction,
     maxPriceDelayForResolvingSec,
+    isMultipleContainerRows,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -82,9 +89,9 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
-    const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
     const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, true), [
         networkId,
@@ -388,8 +395,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                         id,
                         getSuccessToastOptions(t(`speed-markets.user-positions.confirmation-message`), id)
                     );
-                    refetchUserSpeedMarkets(networkId, walletAddress);
-                    refetchUserResolvedSpeedMarkets(networkId, walletAddress);
+                    refetchUserSpeedMarkets(false, networkId, walletAddress);
+                    refetchUserResolvedSpeedMarkets(false, networkId, walletAddress);
                 }
             } catch (e) {
                 console.log(e);
@@ -440,30 +447,19 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 );
             } else if (position.finalPrice) {
                 return (
-                    <>
-                        <Separator />
-                        <ResultsContainer>
-                            <Label>{t('common.result')}</Label>
-                            <Value isUpperCase color={theme.error.borderColor.primary}>
-                                {t('common.loss')}
-                            </Value>
-                        </ResultsContainer>
-                    </>
+                    <ResultsContainer>
+                        <Label>{t('common.result')}</Label>
+                        <Value isUpperCase color={theme.error.textColor.primary}>
+                            {t('common.loss')}
+                        </Value>
+                    </ResultsContainer>
                 );
             } else {
                 return (
-                    <>
-                        {!isProfileAction && <Separator />}
-                        <ResultsContainer minWidth="180px">
-                            <Label>{t('markets.user-positions.results')}</Label>
-                            <TimeRemaining
-                                fontSize={13}
-                                end={position.maturityDate}
-                                showFullCounter
-                                showSecondsCounter
-                            />
-                        </ResultsContainer>
-                    </>
+                    <ResultsContainer minWidth="180px">
+                        <Label>{t('markets.user-positions.results')}</Label>
+                        <TimeRemaining fontSize={13} end={position.maturityDate} showFullCounter showSecondsCounter />
+                    </ResultsContainer>
                 );
             }
         }
@@ -561,12 +557,17 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 {getButton()}
                 {isMultiCollateralSupported && position.isSpeedMarket && position.claimable && (
                     <CollateralSelectorContainer>
-                        <InLabel>{t('common.in')}</InLabel>
+                        <InLabel color={theme.button.textColor.quaternary}>{t('common.in')}</InLabel>
                         <CollateralSelector
                             collateralArray={getCollaterals(networkId, true)}
                             selectedItem={selectedCollateralIndex}
                             onChangeCollateral={() => {}}
                             disabled={isSubmitting || isAllowing}
+                            additionalStyles={{
+                                color: theme.button.textColor.quaternary,
+                                position: !isMultipleContainerRows ? undefined : 'relative',
+                            }}
+                            isDropDownAbove={isMobile && !isProfileAction}
                         />
                     </CollateralSelectorContainer>
                 )}
@@ -588,7 +589,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     );
 };
 
-const getDefaultButtonProps = (isMobile: boolean) => ({
+export const getDefaultButtonProps = (isMobile: boolean) => ({
     height: isMobile ? '24px' : '27px',
     fontSize: isMobile ? '12px' : '13px',
     padding: '0px 5px',
@@ -609,7 +610,7 @@ const PositionValueContainer = styled(FlexDivColumnCentered)`
     text-align: center;
 `;
 
-const ResultsContainer = styled(FlexDivCentered)<{ minWidth?: string }>`
+export const ResultsContainer = styled(FlexDivCentered)<{ minWidth?: string }>`
     gap: 4px;
     font-weight: 700;
     font-size: 13px;
@@ -618,11 +619,11 @@ const ResultsContainer = styled(FlexDivCentered)<{ minWidth?: string }>`
     min-width: ${(props) => (props.minWidth ? props.minWidth : '174px')};
 `;
 
-const Label = styled.span`
-    color: ${(props) => props.theme.textColor.secondary};
+export const Label = styled.span<{ color?: string }>`
+    color: ${(props) => (props.color ? props.color : props.theme.textColor.secondary)};
 `;
 
-const Value = styled.span<{ color?: string; isUpperCase?: boolean }>`
+export const Value = styled.span<{ color?: string; isUpperCase?: boolean }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     ${(props) => (props.isUpperCase ? 'text-transform: uppercase;' : '')}
     font-weight: bold;
@@ -640,13 +641,13 @@ const Separator = styled.div`
     }
 `;
 
-const CollateralSelectorContainer = styled(FlexDivCentered)`
+export const CollateralSelectorContainer = styled(FlexDivCentered)`
     line-height: 15px;
     padding-right: 2px;
     text-transform: none;
 `;
 
-const InLabel = styled(Label)`
+export const InLabel = styled(Label)`
     font-size: 13px;
     font-weight: 600;
     line-height: 18px;

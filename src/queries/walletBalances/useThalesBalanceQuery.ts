@@ -3,7 +3,7 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { Network } from 'enums/network';
 import { BALANCE_THRESHOLD } from 'constants/token';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 
 const useThalesBalanceQuery = (
     walletAddress: string,

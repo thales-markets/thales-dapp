@@ -136,7 +136,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.trading'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                     <LinkWrapper
@@ -151,7 +151,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.speed-trading'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                     <LinkWrapper href={LINKS.Overtime.Markets} target="_blank" rel="noreferrer">
@@ -162,7 +162,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.overtime-trading'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                 </LinksContainer>
@@ -217,7 +217,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.lp-thales'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                     <LinkWrapper href={LINKS.Overtime.LiquidityPool} target="_blank" rel="noreferrer">
@@ -228,7 +228,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.lp-overtime'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                     <LinkWrapper
@@ -243,7 +243,7 @@ const PointsBreakdown: React.FC = () => {
                                                     'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.parlay-lp-overtime'
                                                 )}
                                             </LinkLabel>
-                                            <ExternalIcon className="icon icon__external" />
+                                            <ExternalIcon className="icon icon--external" />
                                         </LinkLabelContainer>
                                     </LinkWrapper>
                                 </LinksContainer>
@@ -307,14 +307,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__discount-vault" />
+                                                <LinkIcon className="icon icon--discount-vault" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -322,14 +322,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__degen-discount-vault" />
+                                                <LinkIcon className="icon icon--degen-discount-vault" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-discount-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -344,7 +344,7 @@ const PointsBreakdown: React.FC = () => {
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.safu-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                         </LinksContainer>
@@ -369,7 +369,7 @@ const PointsBreakdown: React.FC = () => {
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.discount-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -377,14 +377,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__degen-vault" />
+                                                <LinkIcon className="icon icon--degen-vault" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.degen-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -392,14 +392,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__safu-overtime" />
+                                                <LinkIcon className="icon icon--safu-overtime" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.safu-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -407,14 +407,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__safu-overtime" />
+                                                <LinkIcon className="icon icon--safu-overtime" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.upsettoor-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                             <LinkWrapper
@@ -422,14 +422,14 @@ const PointsBreakdown: React.FC = () => {
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                <LinkIcon className="icon icon__parlay-vault" />
+                                                <LinkIcon className="icon icon--parlay-vault" />
                                                 <LinkLabelContainer>
                                                     <LinkLabel>
                                                         {t(
                                                             'thales-token.gamified-staking.rewards.breakdown-section.volume-gathered.parlay-vault'
                                                         )}
                                                     </LinkLabel>
-                                                    <ExternalIcon className="icon icon__external" />
+                                                    <ExternalIcon className="icon icon--external" />
                                                 </LinkLabelContainer>
                                             </LinkWrapper>
                                         </LinksContainer>

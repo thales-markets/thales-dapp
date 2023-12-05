@@ -16,6 +16,31 @@ const speedMarketsAMMContract = {
                 {
                     indexed: false,
                     internalType: 'address',
+                    name: '_mastercopy',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'contract SpeedMarketsAMMUtils',
+                    name: '_speedMarketsAMMUtils',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_addressManager',
+                    type: 'address',
+                },
+            ],
+            name: 'AMMAddressesChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
                     name: '_whitelistAddress',
                     type: 'address',
                 },
@@ -27,6 +52,25 @@ const speedMarketsAMMContract = {
                 },
             ],
             name: 'AddedIntoWhitelist',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_destination',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'AmountTransfered',
             type: 'event',
         },
         {
@@ -54,55 +98,43 @@ const speedMarketsAMMContract = {
                 {
                     indexed: false,
                     internalType: 'address',
-                    name: 'market',
+                    name: '_market',
                     type: 'address',
                 },
                 {
                     indexed: false,
                     internalType: 'address',
-                    name: 'user',
+                    name: '_user',
                     type: 'address',
                 },
                 {
                     indexed: false,
                     internalType: 'bytes32',
-                    name: 'asset',
+                    name: '_asset',
                     type: 'bytes32',
                 },
                 {
                     indexed: false,
                     internalType: 'uint256',
-                    name: 'strikeTime',
+                    name: '_strikeTime',
                     type: 'uint256',
                 },
                 {
                     indexed: false,
                     internalType: 'int64',
-                    name: 'strikePrice',
+                    name: '_strikePrice',
                     type: 'int64',
                 },
                 {
                     indexed: false,
                     internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
+                    name: '_direction',
                     type: 'uint8',
                 },
                 {
                     indexed: false,
                     internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'safeBoxImpact',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'lpFee',
+                    name: '_buyinAmount',
                     type: 'uint256',
                 },
             ],
@@ -115,19 +147,80 @@ const speedMarketsAMMContract = {
                 {
                     indexed: false,
                     internalType: 'address',
-                    name: 'market',
+                    name: '_market',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_user',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'bytes32',
+                    name: '_asset',
+                    type: 'bytes32',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_strikeTime',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'int64',
+                    name: '_strikePrice',
+                    type: 'int64',
+                },
+                {
+                    indexed: false,
+                    internalType: 'enum SpeedMarket.Direction',
+                    name: '_direction',
+                    type: 'uint8',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_buyinAmount',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_safeBoxImpact',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_lpFee',
+                    type: 'uint256',
+                },
+            ],
+            name: 'MarketCreatedWithFees',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_market',
                     type: 'address',
                 },
                 {
                     indexed: false,
                     internalType: 'enum SpeedMarket.Direction',
-                    name: 'result',
+                    name: '_result',
                     type: 'uint8',
                 },
                 {
                     indexed: false,
                     internalType: 'bool',
-                    name: 'userIsWinner',
+                    name: '_userIsWinner',
                     type: 'bool',
                 },
             ],
@@ -139,12 +232,12 @@ const speedMarketsAMMContract = {
             inputs: [
                 {
                     indexed: false,
-                    internalType: 'address',
-                    name: 'mastercopy',
-                    type: 'address',
+                    internalType: 'bool',
+                    name: '_enabled',
+                    type: 'bool',
                 },
             ],
-            name: 'MastercopyChanged',
+            name: 'MultiCollateralOnOffRampEnabled',
             type: 'event',
         },
         {
@@ -228,37 +321,18 @@ const speedMarketsAMMContract = {
             inputs: [
                 {
                     indexed: false,
-                    internalType: 'contract SpeedMarketsAMMUtils',
-                    name: '_speedMarketsAMMUtils',
-                    type: 'address',
+                    internalType: 'uint256',
+                    name: '_safeBoxImpact',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_maxSkewImpact',
+                    type: 'uint256',
                 },
             ],
-            name: 'SetAMMUtils',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_pyth',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_referrals',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
-            ],
-            name: 'SetAddresses',
+            name: 'SafeBoxAndMaxSkewImpactChanged',
             type: 'event',
         },
         {
@@ -360,44 +434,6 @@ const speedMarketsAMMContract = {
                 },
             ],
             name: 'SetMaximumPriceDelays',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_onramper',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'SetMultiCollateralOnOffRamp',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: '_safeBox',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_safeBoxImpact',
-                    type: 'uint256',
-                },
-            ],
-            name: 'SetSafeBoxParams',
             type: 'event',
         },
         {
@@ -517,6 +553,19 @@ const speedMarketsAMMContract = {
             type: 'function',
         },
         {
+            inputs: [],
+            name: 'addressManager',
+            outputs: [
+                {
+                    internalType: 'contract IAddressManager',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [
                 {
                     internalType: 'bytes32',
@@ -567,39 +616,6 @@ const speedMarketsAMMContract = {
                     type: 'uint64',
                 },
                 {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'buyinAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'referrer',
-                    type: 'address',
-                },
-            ],
-            name: 'createNewMarket',
-            outputs: [],
-            stateMutability: 'payable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
                     internalType: 'uint64',
                     name: 'delta',
                     type: 'uint64',
@@ -624,8 +640,13 @@ const speedMarketsAMMContract = {
                     name: 'referrer',
                     type: 'address',
                 },
+                {
+                    internalType: 'uint256',
+                    name: 'skewImpact',
+                    type: 'uint256',
+                },
             ],
-            name: 'createNewMarketWithDelta',
+            name: 'createNewMarket',
             outputs: [],
             stateMutability: 'payable',
             type: 'function',
@@ -643,49 +664,6 @@ const speedMarketsAMMContract = {
                     type: 'uint64',
                 },
                 {
-                    internalType: 'enum SpeedMarket.Direction',
-                    name: 'direction',
-                    type: 'uint8',
-                },
-                {
-                    internalType: 'bytes[]',
-                    name: 'priceUpdateData',
-                    type: 'bytes[]',
-                },
-                {
-                    internalType: 'address',
-                    name: 'collateral',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'collateralAmount',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'isEth',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: 'referrer',
-                    type: 'address',
-                },
-            ],
-            name: 'createNewMarketWithDifferentCollateral',
-            outputs: [],
-            stateMutability: 'payable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'asset',
-                    type: 'bytes32',
-                },
-                {
                     internalType: 'uint64',
                     name: 'delta',
                     type: 'uint64',
@@ -720,8 +698,13 @@ const speedMarketsAMMContract = {
                     name: 'referrer',
                     type: 'address',
                 },
+                {
+                    internalType: 'uint256',
+                    name: 'skewImpact',
+                    type: 'uint256',
+                },
             ],
-            name: 'createNewMarketWithDifferentCollateralAndDelta',
+            name: 'createNewMarketWithDifferentCollateral',
             outputs: [],
             stateMutability: 'payable',
             type: 'function',
@@ -789,6 +772,47 @@ const speedMarketsAMMContract = {
             type: 'function',
         },
         {
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'asset',
+                    type: 'bytes32',
+                },
+            ],
+            name: 'getParams',
+            outputs: [
+                {
+                    components: [
+                        {
+                            internalType: 'bool',
+                            name: 'supportedAsset',
+                            type: 'bool',
+                        },
+                        {
+                            internalType: 'bytes32',
+                            name: 'pythId',
+                            type: 'bytes32',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'safeBoxImpact',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint64',
+                            name: 'maximumPriceDelay',
+                            type: 'uint64',
+                        },
+                    ],
+                    internalType: 'struct ISpeedMarketsAMM.Params',
+                    name: '',
+                    type: 'tuple',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'initNonReentrant',
             outputs: [],
@@ -805,11 +829,6 @@ const speedMarketsAMMContract = {
                 {
                     internalType: 'contract IERC20Upgradeable',
                     name: '_sUSD',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract IPyth',
-                    name: '_pyth',
                     type: 'address',
                 },
             ],
@@ -1012,6 +1031,19 @@ const speedMarketsAMMContract = {
         },
         {
             inputs: [],
+            name: 'maxSkewImpact',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
             name: 'maximalTimeToMaturity',
             outputs: [
                 {
@@ -1070,19 +1102,6 @@ const speedMarketsAMMContract = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'multiCollateralOnOffRamp',
-            outputs: [
-                {
-                    internalType: 'contract IMultiCollateralOnOffRamp',
-                    name: '',
-                    type: 'address',
                 },
             ],
             stateMutability: 'view',
@@ -1154,32 +1173,6 @@ const speedMarketsAMMContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'pyth',
-            outputs: [
-                {
-                    internalType: 'contract IPyth',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'referrals',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             inputs: [
                 {
                     internalType: 'address',
@@ -1195,6 +1188,24 @@ const speedMarketsAMMContract = {
             name: 'resolveMarket',
             outputs: [],
             stateMutability: 'payable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'int64',
+                    name: '_finalPrice',
+                    type: 'int64',
+                },
+            ],
+            name: 'resolveMarketAsOwner',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -1294,19 +1305,6 @@ const speedMarketsAMMContract = {
         },
         {
             inputs: [],
-            name: 'safeBox',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
             name: 'safeBoxImpact',
             outputs: [
                 {
@@ -1321,35 +1319,22 @@ const speedMarketsAMMContract = {
         {
             inputs: [
                 {
+                    internalType: 'address',
+                    name: '_mastercopy',
+                    type: 'address',
+                },
+                {
                     internalType: 'contract SpeedMarketsAMMUtils',
                     name: '_speedMarketsAMMUtils',
                     type: 'address',
                 },
-            ],
-            name: 'setAMMUtils',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
                 {
                     internalType: 'address',
-                    name: '_pyth',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_referrals',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_stakingThales',
+                    name: '_addressManager',
                     type: 'address',
                 },
             ],
-            name: 'setAddresses',
+            name: 'setAMMAddresses',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1416,19 +1401,6 @@ const speedMarketsAMMContract = {
         {
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_mastercopy',
-                    type: 'address',
-                },
-            ],
-            name: 'setMastercopy',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [
-                {
                     internalType: 'bytes32',
                     name: 'asset',
                     type: 'bytes32',
@@ -1483,17 +1455,12 @@ const speedMarketsAMMContract = {
         {
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_onramper',
-                    type: 'address',
-                },
-                {
                     internalType: 'bool',
-                    name: 'enabled',
+                    name: '_enabled',
                     type: 'bool',
                 },
             ],
-            name: 'setMultiCollateralOnOffRamp',
+            name: 'setMultiCollateralOnOffRampEnabled',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1527,17 +1494,17 @@ const speedMarketsAMMContract = {
         {
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_safeBox',
-                    type: 'address',
-                },
-                {
                     internalType: 'uint256',
                     name: '_safeBoxImpact',
                     type: 'uint256',
                 },
+                {
+                    internalType: 'uint256',
+                    name: '_maxSkewImpact',
+                    type: 'uint256',
+                },
             ],
-            name: 'setSafeBoxParams',
+            name: 'setSafeBoxAndMaxSkewImpact',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -1592,19 +1559,6 @@ const speedMarketsAMMContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'stakingThales',
-            outputs: [
-                {
-                    internalType: 'contract IStakingThales',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             inputs: [
                 {
                     internalType: 'bytes32',
@@ -1640,6 +1594,24 @@ const speedMarketsAMMContract = {
                 },
             ],
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_destination',
+                    type: 'address',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'transferAmount',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

@@ -15,8 +15,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { VestingInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatShortDateWithTime } from 'thales-utils';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import {

@@ -10,17 +10,22 @@ import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade, Trades }
 import { ThemeInterface } from 'types/ui';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatHoursAndMinutesFromTimestamp, formatShortDate, formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrency } from 'utils/formatters/number';
+import {
+    formatHoursAndMinutesFromTimestamp,
+    formatShortDate,
+    formatShortDateWithTime,
+    formatCurrency,
+    getEtherscanTxLink,
+} from 'thales-utils';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { Positions } from 'enums/options';
 import { ArrowLink, getAmount } from '../styled-components';
-import { getEtherscanTxLink } from 'utils/etherscan';
 import { getIsMobile } from 'redux/modules/ui';
 import { TradeWithMarket } from 'types/profile';
 import useTradesQuery from 'queries/profile/useTradesQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useUserSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserSpeedMarketsTransactionsQuery';
+import useUserChainedSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserChainedSpeedMarketsTransactionsQuery';
 
 type TransactionHistoryProps = {
     searchAddress: string;
@@ -72,6 +77,21 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         [speedMarketsDataQuery.isSuccess, speedMarketsDataQuery.data]
     );
 
+    const chainedSpeedMarketsDataQuery = useUserChainedSpeedMarketsTransactionsQuery(
+        networkId,
+        searchAddress || walletAddress,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+    const chainedSpeedMarketsData: TradeWithMarket[] = useMemo(
+        () =>
+            chainedSpeedMarketsDataQuery.isSuccess && chainedSpeedMarketsDataQuery.data
+                ? chainedSpeedMarketsDataQuery.data
+                : [],
+        [chainedSpeedMarketsDataQuery.isSuccess, chainedSpeedMarketsDataQuery.data]
+    );
+
     const data: TradeWithMarket[] = useMemo(() => {
         const marketsMap = keyBy(directionalAndRangedMarkets, 'address');
         const tradesWithMarket = trades.map((trade: Trade) => ({
@@ -79,8 +99,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
             marketItem: marketsMap[trade.market],
         }));
 
-        return [...tradesWithMarket, ...speedMarketsData];
-    }, [trades, directionalAndRangedMarkets, speedMarketsData]);
+        return [...tradesWithMarket, ...speedMarketsData, ...chainedSpeedMarketsData];
+    }, [trades, directionalAndRangedMarkets, speedMarketsData, chainedSpeedMarketsData]);
 
     const filteredData = useMemo(
         () =>
@@ -142,7 +162,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                             value: getAmount(
                                 formatCurrency(amount),
                                 OPTIONS_POSITIONS_MAP[row.optionSide] as Positions,
-                                theme
+                                theme,
+                                (row.marketItem as SpeedMarket).isChainedSpeedMarket
                             ),
                         },
                         {
@@ -192,7 +213,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
                 tradesQuery.isLoading ||
                 marketsQuery.isLoading ||
                 rangedMarketsQuery.isLoading ||
-                speedMarketsDataQuery.isLoading
+                speedMarketsDataQuery.isLoading ||
+                chainedSpeedMarketsDataQuery.isLoading
             }
         />
     );

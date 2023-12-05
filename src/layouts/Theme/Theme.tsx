@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import { ThemeMap } from 'constants/ui';
 import { getDefaultTheme } from 'utils/style';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import localStore from 'utils/localStore';
+import { localStore } from 'thales-utils';
 
 type ThemeProps = {
     children: React.ReactNode;

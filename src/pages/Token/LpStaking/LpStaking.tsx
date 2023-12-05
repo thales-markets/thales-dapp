@@ -15,7 +15,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'thales-utils';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ButtonContainer, Line } from '../styled-components';

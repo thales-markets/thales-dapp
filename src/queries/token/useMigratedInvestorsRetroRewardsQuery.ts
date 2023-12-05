@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from '../../utils/formatters/ethers';
+import { bigNumberFormatter } from 'thales-utils';
 import { MigratedRetroReward } from 'types/token';
 import unclaimedInvestorsRetroRewardsHashes from 'utils/json/airdrop-hashes-unclaimed-retro-investors.json';
 import { Network } from 'enums/network';

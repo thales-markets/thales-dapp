@@ -1,6 +1,6 @@
 import { Provider } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
-import { Coins } from 'types/options';
+import { Coins } from 'thales-utils';
 import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import liquidityPoolDataContract from 'utils/contracts/liquidityPoolDataContract';
@@ -11,6 +11,8 @@ import ammContract from './contracts/ammContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import bridgeContract from './contracts/bridgeContract';
+import celerBridgeContract from './contracts/celerBridgeContract';
+import chainedSpeedMarketsAMMContract from './contracts/chainedSpeedMarketsAMMContract';
 import collateralContract from './contracts/collateralContract';
 import escrowThales from './contracts/escrowThales';
 import { gelatoContract } from './contracts/gelatoContract';
@@ -57,8 +59,10 @@ type SnxJSConnector = {
     ammVaultDataContract?: ethers.Contract;
     stakingDataContract?: ethers.Contract;
     speedMarketsAMMContract?: ethers.Contract;
+    chainedSpeedMarketsAMMContract?: ethers.Contract;
     speedMarketsDataContract?: ethers.Contract;
     stakingBonusRewardsManager?: ethers.Contract;
+    celerBridgeContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -85,6 +89,7 @@ const snxJSConnector: SnxJSConnector = {
             DAI: conditionalInitializeContract(multipleCollateral.DAI, contractSettings),
             USDC: conditionalInitializeContract(multipleCollateral.USDC, contractSettings),
             USDCe: conditionalInitializeContract(multipleCollateral.USDCe, contractSettings),
+            USDbC: conditionalInitializeContract(multipleCollateral.USDbC, contractSettings),
             USDT: conditionalInitializeContract(multipleCollateral.USDT, contractSettings),
             OP: conditionalInitializeContract(multipleCollateral.OP, contractSettings),
             WETH: conditionalInitializeContract(multipleCollateral.WETH, contractSettings),
@@ -116,8 +121,13 @@ const snxJSConnector: SnxJSConnector = {
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
         this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
         this.speedMarketsAMMContract = conditionalInitializeContract(speedMarketsAMMContract, contractSettings);
+        this.chainedSpeedMarketsAMMContract = conditionalInitializeContract(
+            chainedSpeedMarketsAMMContract,
+            contractSettings
+        );
         this.speedMarketsDataContract = conditionalInitializeContract(speedMarketsDataContract, contractSettings);
         this.stakingBonusRewardsManager = conditionalInitializeContract(stakingBonusRewardsManager, contractSettings);
+        this.celerBridgeContract = conditionalInitializeContract(celerBridgeContract, contractSettings);
     },
 };
 

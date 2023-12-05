@@ -7,7 +7,7 @@ import { RootState } from 'redux/rootReducer';
 import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { formatCurrency } from 'utils/formatters/number';
+import { formatCurrency } from 'thales-utils';
 
 const StakingSteps: React.FC = () => {
     const { t } = useTranslation();

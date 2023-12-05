@@ -7,10 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/currency';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
-import { formatShortDateWithTime } from 'utils/formatters/date';
 import ZeusResolvedWinBackground from 'assets/images/flex-cards/resolved.png';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({

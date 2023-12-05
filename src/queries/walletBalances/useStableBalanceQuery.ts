@@ -1,10 +1,9 @@
 import snxJSConnector from 'utils/snxJSConnector';
 
-import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { Coins } from 'types/options';
-import { COLLATERAL_DECIMALS } from 'constants/currency';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { Coins, COLLATERAL_DECIMALS } from 'thales-utils';
 import { getDefaultCollateral } from 'utils/currency';
 
 const useStableBalanceQuery = (walletAddress: string, networkId: Network, options?: UseQueryOptions<any>) => {

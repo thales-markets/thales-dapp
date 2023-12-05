@@ -12,7 +12,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'styles/common';
 import { OptionsMarkets } from 'types/options';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'thales-utils';
 
 enum SortDirection {
     NONE,

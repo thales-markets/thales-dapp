@@ -1,5 +1,5 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { getAddress } from 'utils/formatters/ethers';
+import { getAddress } from 'thales-utils';
 import { RootState } from 'redux/rootReducer';
 import { Network } from 'enums/network';
 import { DEFAULT_NETWORK } from 'constants/network';

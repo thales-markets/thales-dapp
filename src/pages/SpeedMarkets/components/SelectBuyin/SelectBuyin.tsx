@@ -1,29 +1,59 @@
 import { USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
-import { AmmSpeedMarketsLimits } from 'types/options';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
 
 type SelectBuyinProps = {
     value: number;
     onChange: React.Dispatch<number>;
+    isChained: boolean;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
+    ammChainedSpeedMarketsLimits: AmmChainedSpeedMarketsLimits | null;
 };
 
-const SelectBuyin: React.FC<SelectBuyinProps> = ({ value, onChange, ammSpeedMarketsLimits }) => {
+const SelectBuyin: React.FC<SelectBuyinProps> = ({
+    value,
+    onChange,
+    isChained,
+    ammSpeedMarketsLimits,
+    ammChainedSpeedMarketsLimits,
+}) => {
     const [buyinAmount, setBuyinAmount] = useState(0);
 
     const buyinAmounts = useMemo(() => {
-        const first = ammSpeedMarketsLimits?.minBuyinAmount || 0;
-        const fifth = ammSpeedMarketsLimits?.maxBuyinAmount || 0;
+        const first =
+            (isChained ? ammChainedSpeedMarketsLimits?.minBuyinAmount : ammSpeedMarketsLimits?.minBuyinAmount) || 0;
+        const fifth =
+            (isChained ? ammChainedSpeedMarketsLimits?.maxBuyinAmount : ammSpeedMarketsLimits?.maxBuyinAmount) || 0;
 
-        const second = first === 1 ? first * 5 : first * 2;
-        const third = fifth > 100 ? second * 5 : second * 2;
-        const fourth = fifth / 2;
+        let second;
+        let third;
+        let fourth;
+        const range = fifth - first + 1;
+        if (range >= 100) {
+            second = first * 2;
+            third = second * 5;
+            fourth = fifth / 2;
+        } else if (range >= 10) {
+            second = first * 2;
+            third = second * 2;
+            fourth = fifth / 2;
+        } else {
+            second = first + 1;
+            third = second + 1;
+            fourth = third + 1;
+        }
 
         return [first, second, third, fourth, fifth];
-    }, [ammSpeedMarketsLimits?.minBuyinAmount, ammSpeedMarketsLimits?.maxBuyinAmount]);
+    }, [
+        isChained,
+        ammSpeedMarketsLimits?.minBuyinAmount,
+        ammSpeedMarketsLimits?.maxBuyinAmount,
+        ammChainedSpeedMarketsLimits?.minBuyinAmount,
+        ammChainedSpeedMarketsLimits?.maxBuyinAmount,
+    ]);
 
     useEffect(() => {
         setBuyinAmount(value);

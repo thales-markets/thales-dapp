@@ -23,7 +23,7 @@ const DappFooter: React.FC = () => {
                 <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                     <Trans i18nKey="common.footer.resources" />
                 </TextLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
+                <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
                     <FooterIcon className="icon-home icon-home--twitter-x" />
                 </IconLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">

@@ -7,7 +7,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { MigratedRetroReward } from 'types/token';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'thales-utils';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../components';

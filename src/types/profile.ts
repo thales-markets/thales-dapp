@@ -21,6 +21,7 @@ export type UserPosition = {
     claimed: boolean;
     isRanged: boolean;
     isSpeedMarket: boolean;
+    isChainedSpeedMarket?: boolean;
 };
 
 export type UserProfileData = {

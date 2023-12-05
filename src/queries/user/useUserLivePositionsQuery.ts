@@ -7,7 +7,7 @@ import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { bigNumberFormatter, coinFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';

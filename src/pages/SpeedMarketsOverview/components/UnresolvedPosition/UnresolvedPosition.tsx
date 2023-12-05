@@ -1,30 +1,29 @@
+import Tooltip from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { AmmSpeedMarketsLimits, UserLivePositions } from 'types/options';
-import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithPrecision, formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
+import styled, { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
+import { UserLivePositions } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
+import { formatNumberShort } from 'utils/formatters/number';
 import { getColorPerPosition } from 'utils/options';
 import OverviewPositionAction from '../OverviewPositionAction';
 import { Label, Separator } from '../OverviewPositionAction/OverviewPositionAction';
-import Tooltip from 'components/Tooltip';
 
 type UnresolvedPositionProps = {
     position: UserLivePositions;
+    maxPriceDelayForResolvingSec: number;
+    isAdmin: boolean;
     isSubmittingBatch: boolean;
-    ammSpeedMarketsLimitsData: AmmSpeedMarketsLimits | null;
-    isAmmWinnerSection: boolean;
 };
 
 const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
     position,
+    maxPriceDelayForResolvingSec,
+    isAdmin,
     isSubmittingBatch,
-    ammSpeedMarketsLimitsData,
-    isAmmWinnerSection,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -50,7 +49,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                     <Value>
                         {position.maturityDate < Date.now() ? (
                             position.finalPrice ? (
-                                formatCurrencyWithPrecision(position.finalPrice)
+                                formatCurrencyWithSign(USD_SIGN, position.finalPrice)
                             ) : (
                                 <>
                                     {'. . .'}
@@ -58,7 +57,7 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
                                 </>
                             )
                         ) : position.currentPrice ? (
-                            formatCurrencyWithPrecision(position.currentPrice)
+                            formatCurrencyWithSign(USD_SIGN, position.currentPrice)
                         ) : (
                             '. . .'
                         )}
@@ -85,9 +84,9 @@ const UnresolvedPosition: React.FC<UnresolvedPositionProps> = ({
             </AlignedFlex>
             <OverviewPositionAction
                 position={position}
+                maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                isAdmin={isAdmin}
                 isSubmittingBatch={isSubmittingBatch}
-                ammSpeedMarketsLimitsData={ammSpeedMarketsLimitsData}
-                isAmmWinnerSection={isAmmWinnerSection}
             />
         </Position>
     );

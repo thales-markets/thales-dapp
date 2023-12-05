@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
+import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'enums/network';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
@@ -20,9 +20,6 @@ const useExchangeRatesQuery = (networkId: Network, options?: UseQueryOptions<Rat
                 currencies.forEach((currency: string, idx: number) => {
                     const currencyName = parseBytes32String(currency);
                     exchangeRates[currencyName] = bigNumberFormatter(rates[idx]);
-                    if (currencyName === CRYPTO_CURRENCY_MAP.USDC) {
-                        exchangeRates[`${currencyName}e`] = bigNumberFormatter(rates[idx]);
-                    }
                     if (currencyName === 'SUSD') {
                         exchangeRates[`sUSD`] = bigNumberFormatter(rates[idx]);
                     } else {

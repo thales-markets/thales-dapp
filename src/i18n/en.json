@@ -34,6 +34,8 @@
         "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>.",
         "on": "on",
         "in": "in",
+        "starting": "starting",
+        "with": "with",
         "above": "Above",
         "below": "Below",
         "between": "Between",
@@ -45,6 +47,7 @@
         "end-date": "End date",
         "balance": "Balance",
         "result": "Result",
+        "status-label": "Status",
         "won": "Won",
         "loss": "Loss",
         "admin": "Admin",
@@ -346,9 +349,9 @@
             "paid": "Paid",
             "cash-out": "Cash out",
             "tooltip-cash-out": "Sell your Open Position back to the AMM for current price per Position minus the Skew Impact premium.",
-            "cash-out-progress": "Cashing out...",
+            "cash-out-progress": "Cashing out",
             "claim-win": "Claim win",
-            "claim-win-progress": "Claiming win...",
+            "claim-win-progress": "Claiming win",
             "results": "Results in",
             "position-value": "Position value",
             "approve-swap-tooltip": "To get payout in {{currencyKey}}, you need to approve swap from {{defaultCurrency}} to {{currencyKey}}."
@@ -465,9 +468,9 @@
                 "price-stale": "Can't resolve market with stale price"
             }
         },
-        "total-pay": "Total to pay {{amount}} + {{fee}} fee",
-        "fee-info": "Fee varies per timeframe, longer timeframes have higher payouts",
-        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
+        "total-pay": "Total to pay {{amount}} + {{fee}} fee<tooltip/>",
+        "fee-info": "Fee varies per direction liquidity and timeframe, longer timeframes have higher payouts",
+        "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee<tooltip/>",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
         "tooltips": {
             "buyin-fees": "Excluding fees",
@@ -476,11 +479,15 @@
             "payout-conversion": "Win amount can be slightly different due to conversion rate at execution time",
             "paid-conversion": "Amount in $ is estimated and can be slightly different due to conversion rate at execution time",
             "final-price-missing": "Oracle price snapshot for this market's timestamp is still being processed. Even if contract input is delayed by the Pyth oracles, the price snapshot will be true to the moment of market expiration",
-            "fee-info": "{{firstPerc}} from {{firstTime}}min up to {{secondTime}}min<br>{{secondPerc}} from {{secondTime}}min up to {{thirdTime}}min<br>{{thirdPerc}} from {{thirdTime}}min up to {{fourthTime}}min<br>{{fourthPerc}} for above or equal {{fourthTime}}min"
+            "fee-info": "{{firstPerc}} from {{firstTime}}min up to {{secondTime}}min<br>{{secondPerc}} from {{secondTime}}min up to {{thirdTime}}min<br>{{thirdPerc}} from {{thirdTime}}min up to {{fourthTime}}min<br>{{fourthPerc}} for above or equal {{fourthTime}}min<br>{{maxSkewImpact}} maximum skew impact",
+            "skew-info": "Reduced return for {{skewDirection}} is -{{skewPerc}}<br>Bonus return for {{discountDirection}} is +{{discountPerc}}",
+            "skew-slippage": "Skew slippage is maximum 1%"
         },
         "overview": {
             "title": "Overview",
             "navigate": "Speed Markets Overview page",
+            "navigate-chained": "Chained Speed Markets Overview page",
+            "back-chained": "Chained Speed Markets",
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
             "unknown-price-title": "Unresolved positions without final price",
@@ -492,6 +499,22 @@
             "no-resolve-positions": "No positions for this section with price",
             "user": "User",
             "no-positions": "No positions for this section"
+        },
+        "single": "Single",
+        "chained": {
+            "label": "Chained",
+            "info": "Create a custom chain of {{minMarkets}} - {{maxMarkets}} Speed Markets for a maximum potential return of ~ <bold>{{maxRoi}}x</bold>!",
+            "add-directions": "Click + to add directions",
+            "roi": "ROI: {{value}}",
+            "clear-all": "Clear all",
+            "asset-price": "If {{asset}} price sequence follows",
+            "between-rounds": "between rounds",
+            "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+            "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
+            "errors": {
+                "choose-directions": "Choose all directions"
+            },
+            "tooltips": { "liquidity": "Current available liquidity for all Assets" }
         }
     },
     "thales-token": {
@@ -835,6 +858,65 @@
                 "claim-rewards": "Claim rewards",
                 "claiming-rewards": "Claiming rewards",
                 "claimed": "Successfully claimed"
+            }
+        },
+        "bridge": {
+            "tab-title": "Bridge",
+            "header": "Celer cBridge",
+            "info": "Transfer THALES between chains using Celer cBridge.",
+            "from-label": "From",
+            "to-label": "To",
+            "send-label": "Send",
+            "estimated-receive-label": "Receive (estimated)",
+            "estimated-receive-tooltip": "This amount is estimated based on the current bridge rate and fees.",
+            "slippage-tooltip": "The transfer won’t go through if the bridge rate moves unfavorably by more than this percentage when the transfer is executed.",
+            "bridge-rate-label": "Bridge rate",
+            "fee-label": "Fee",
+            "base-fee-label": "Base fee",
+            "base-fee-info": "Base Fee is used to cover the gas cost for sending your transfer on the destination chain.",
+            "protocol-fee-label": "Protocol fee",
+            "protocol-fee-info": "Protocol Fee is charged proportionally to your transfer amount. Protocol Fee is paid to cBridge LPs and Celer SGN as economic incentives.",
+            "minimum-received-label": "Minimum received",
+            "minimum-received-tooltip": "You will receive at least {{minimum}} on {{network}} or the transfer won't go through.",
+            "estimated-time-of-arrival-label": "Estimated time of arrival",
+            "low-amount-error": "The received amount cannot cover fee",
+            "button": {
+                "label": "Transfer",
+                "progress-label": "Submitting transfer...",
+                "confirmation-message": "Transfer submitted"
+            },
+            "history": {
+                "title": "History",
+                "no-history": "No history associated with this wallet.",
+                "table": {
+                    "date-time-col": "date | time",
+                    "from-col": "from",
+                    "sent-col": "sent",
+                    "to-col": "to",
+                    "received-col": "received",
+                    "status-col": "status"
+                },
+                "status": {
+                    "0": "Unknown",
+                    "1": "Submitting",
+                    "2": "Failed",
+                    "3": "Waiting for SGN confirmation",
+                    "4": "Waiting for fund release",
+                    "5": "Completed",
+                    "6": "To be refunded",
+                    "7": "Requesting refund",
+                    "8": "Refund to be confirmed",
+                    "9": "Confirming your refund",
+                    "10": "Refunded",
+                    "11": "Delayed"
+                },
+                "confirm-refund-button": {
+                    "label": "Confirm refund",
+                    "progress-label": "Confirming...",
+                    "confirmation-message": "Refund confirmed"
+                },
+                "switch-message": "Please switch to {{network}} before requesting a refund",
+                "switch-label": "Switch"
             }
         },
         "table": {
@@ -1577,6 +1659,7 @@
     "banner": {
         "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
         "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!",
-        "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!"
+        "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!",
+        "temp-check-banner-message": "Tokenomics temp check. Cast your vote here!"
     }
 }
