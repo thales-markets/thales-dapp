@@ -3,6 +3,7 @@ import { BigNumber, ethers } from 'ethers';
 import { secondsToMinutes } from 'date-fns';
 import { ChainedSpeedMarket } from 'types/options';
 import { Positions } from 'enums/options';
+import { executeBiconomyTransaction } from './biconomy';
 
 export const getTransactionForSpeedAMM = async (
     speedMarketsAMMContractWithSigner: any, // speed or chained
@@ -16,67 +17,144 @@ export const getTransactionForSpeedAMM = async (
     pythUpdateFee: any,
     collateralAddress: string,
     referral: string | null,
-    skewImpact?: BigNumber
+    skewImpact?: BigNumber,
+    isAA?: boolean
 ) => {
-    let tx: ethers.ContractTransaction;
+    let tx: any;
     const isEth = collateralAddress === ZERO_ADDRESS;
     const isChained = sides.length > 1;
 
     if (isNonDefaultCollateral) {
         if (isChained) {
-            tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
-                asset,
-                deltaTimeSec,
-                sides,
-                pythPriceUpdateData,
-                collateralAddress,
-                buyInAmount,
-                isEth,
-                referral ? referral : ZERO_ADDRESS,
-                { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-            );
+            if (isAA) {
+                tx = (await executeBiconomyTransaction(
+                    collateralAddress,
+                    speedMarketsAMMContractWithSigner,
+                    'createNewMarketWithDifferentCollateral',
+                    [
+                        asset,
+                        deltaTimeSec,
+                        sides,
+                        pythPriceUpdateData,
+                        collateralAddress,
+                        buyInAmount,
+                        isEth,
+                        referral ? referral : ZERO_ADDRESS,
+                        { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee },
+                    ]
+                )) as ethers.providers.TransactionReceipt;
+            } else {
+                tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
+                    asset,
+                    deltaTimeSec,
+                    sides,
+                    pythPriceUpdateData,
+                    collateralAddress,
+                    buyInAmount,
+                    isEth,
+                    referral ? referral : ZERO_ADDRESS,
+                    { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
+                );
+            }
         } else {
-            tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
-                asset,
-                strikeTimeSec,
-                deltaTimeSec,
-                sides[0],
-                pythPriceUpdateData,
-                collateralAddress,
-                buyInAmount,
-                isEth,
-                referral ? referral : ZERO_ADDRESS,
-                skewImpact,
-                { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
-            );
+            if (isAA) {
+                tx = (await executeBiconomyTransaction(
+                    collateralAddress,
+                    speedMarketsAMMContractWithSigner,
+                    'createNewMarketWithDifferentCollateral',
+                    [
+                        asset,
+                        strikeTimeSec,
+                        deltaTimeSec,
+                        sides[0],
+                        pythPriceUpdateData,
+                        collateralAddress,
+                        buyInAmount,
+                        isEth,
+                        referral ? referral : ZERO_ADDRESS,
+                        skewImpact,
+                        { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee },
+                    ]
+                )) as ethers.providers.TransactionReceipt;
+            } else {
+                tx = await speedMarketsAMMContractWithSigner.createNewMarketWithDifferentCollateral(
+                    asset,
+                    strikeTimeSec,
+                    deltaTimeSec,
+                    sides[0],
+                    pythPriceUpdateData,
+                    collateralAddress,
+                    buyInAmount,
+                    isEth,
+                    referral ? referral : ZERO_ADDRESS,
+                    skewImpact,
+                    { value: isEth ? buyInAmount.add(pythUpdateFee) : pythUpdateFee }
+                );
+            }
         }
     } else {
         if (isChained) {
-            tx = await speedMarketsAMMContractWithSigner.createNewMarket(
-                asset,
-                deltaTimeSec,
-                sides,
-                buyInAmount,
-                pythPriceUpdateData,
-                referral ? referral : ZERO_ADDRESS,
-                { value: pythUpdateFee }
-            );
+            if (isAA) {
+                tx = (await executeBiconomyTransaction(
+                    collateralAddress,
+                    speedMarketsAMMContractWithSigner,
+                    'createNewMarket',
+                    [
+                        asset,
+                        deltaTimeSec,
+                        sides,
+                        buyInAmount,
+                        pythPriceUpdateData,
+                        referral ? referral : ZERO_ADDRESS,
+                        { value: pythUpdateFee },
+                    ]
+                )) as ethers.providers.TransactionReceipt;
+            } else {
+                tx = await speedMarketsAMMContractWithSigner.createNewMarket(
+                    asset,
+                    deltaTimeSec,
+                    sides,
+                    buyInAmount,
+                    pythPriceUpdateData,
+                    referral ? referral : ZERO_ADDRESS,
+                    { value: pythUpdateFee }
+                );
+            }
         } else {
-            tx = await speedMarketsAMMContractWithSigner.createNewMarket(
-                asset,
-                strikeTimeSec,
-                deltaTimeSec,
-                sides[0],
-                buyInAmount,
-                pythPriceUpdateData,
-                referral ? referral : ZERO_ADDRESS,
-                skewImpact,
-                { value: pythUpdateFee }
-            );
+            if (isAA) {
+                tx = (await executeBiconomyTransaction(
+                    collateralAddress,
+                    speedMarketsAMMContractWithSigner,
+                    'createNewMarket',
+                    [
+                        asset,
+                        strikeTimeSec,
+                        deltaTimeSec,
+                        sides[0],
+                        buyInAmount,
+                        pythPriceUpdateData,
+                        referral ? referral : ZERO_ADDRESS,
+                        skewImpact,
+                        { value: pythUpdateFee },
+                    ]
+                )) as ethers.providers.TransactionReceipt;
+            } else {
+                tx = await speedMarketsAMMContractWithSigner.createNewMarket(
+                    asset,
+                    strikeTimeSec,
+                    deltaTimeSec,
+                    sides[0],
+                    buyInAmount,
+                    pythPriceUpdateData,
+                    referral ? referral : ZERO_ADDRESS,
+                    skewImpact,
+                    { value: pythUpdateFee }
+                );
+            }
         }
     }
 
-    return tx;
+    return isAA ? tx : await (tx as ethers.ContractTransaction).wait();
 };
 
 // get dynamic LP fee based on time threshold and delta time to maturity

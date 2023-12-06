@@ -35,6 +35,8 @@ import { DEFAULT_ECDSA_OWNERSHIP_MODULE, ECDSAOwnershipValidationModule } from '
 import { ethers } from 'ethers';
 import { ParticleNetwork } from '@particle-network/auth';
 import { ParticleProvider } from '@particle-network/provider';
+import { BiconomyPaymaster } from '@biconomy/paymaster';
+import biconomyConnector from 'utils/biconomyWallet';
 // import multipleCollateral from 'utils/contracts/multipleCollateralContract';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
@@ -140,14 +142,19 @@ const App = () => {
             }
 
             if (particle.auth.isLogin()) {
-                const eoaAddress = await particle.auth.getEVMAddress();
                 const particleProvider = new ParticleProvider(particle.auth);
                 const chainId = (await provider.getNetwork()).chainId;
                 const bundler = new Bundler({
                     // get from biconomy dashboard https://dashboard.biconomy.io/
-                    bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
+                    bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/${process.env.REACT_APP_BICONOMY_BUNDLE_KEY}`,
                     chainId: (await provider.getNetwork()).chainId, // or any supported chain of your choice
                     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+                });
+
+                const paymaster = new BiconomyPaymaster({
+                    paymasterUrl: `https://paymaster.biconomy.io/api/v1/${chainId}/${
+                        process.env['REACT_APP_PAYMASTER_KEY_' + chainId]
+                    }`,
                 });
 
                 web3Provider = new ethers.providers.Web3Provider(particleProvider, 'any');
@@ -157,17 +164,19 @@ const App = () => {
                     moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
                 });
 
-                const wallet = await BiconomySmartAccountV2.create({
-                    chainId: chainId,
-                    bundler: bundler,
+                const account = await BiconomySmartAccountV2.create({
+                    chainId,
+                    bundler,
+                    provider,
+                    paymaster,
                     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
                     defaultValidationModule: module,
                     activeValidationModule: module,
                 });
 
-                const address = await wallet.getAccountAddress();
-
-                dispatch(updateWallet({ walletAddress: eoaAddress, swAddress: address }));
+                const swAddress = await account.getAccountAddress();
+                biconomyConnector.setWallet(account);
+                dispatch(updateWallet({ walletAddress: swAddress, isAA: true }));
             }
 
             try {

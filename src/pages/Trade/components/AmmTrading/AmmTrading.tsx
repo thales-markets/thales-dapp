@@ -33,7 +33,13 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
-import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getIsAA,
+    getIsWalletConnected,
+    getNetworkId,
+    getSelectedCollateralIndex,
+    getWalletAddress,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import {
     AccountMarketInfo,
@@ -80,6 +86,7 @@ import Tooltip from 'components/Tooltip';
 import SharePositionModal from './components/SharePositionModal/SharePositionModal';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import { executeBiconomyTransaction } from 'utils/biconomy';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -112,6 +119,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const selectedCollateralIndexSelector = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isBuy = useSelector((state: RootState) => getIsBuy(state)) || !isDetailsPage;
+    const isAA = useSelector((state: RootState) => getIsAA(state));
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -354,13 +362,25 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
-
-            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
-            setOpenApprovalModal(false);
-            const txResult = await tx.wait();
-            if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
-                setIsAllowing(false);
+            if (isAA) {
+                console.log('execute biconomy');
+                const txResult = await executeBiconomyTransaction(approvalCurrencyAddress, erc20Instance, 'approve', [
+                    addressToApprove,
+                    approveAmount,
+                ]);
+                setOpenApprovalModal(false);
+                if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
+                    setIsAllowing(false);
+                }
+            } else {
+                const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
+                setOpenApprovalModal(false);
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
+                    setIsAllowing(false);
+                }
             }
         } catch (e) {
             console.log(e);
@@ -489,10 +509,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 parsedSlippage,
                 collateralAddress,
                 referral,
-                networkId
+                networkId,
+                isAA
             );
 
-            const txResult = await tx.wait();
+            const txResult = isAA ? (tx as any) : await tx.wait();
 
             if (txResult && txResult.transactionHash) {
                 toast.update(

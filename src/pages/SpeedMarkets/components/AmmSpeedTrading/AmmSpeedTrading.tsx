@@ -39,6 +39,7 @@ import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import {
+    getIsAA,
     getIsWalletConnected,
     getNetworkId,
     getSelectedCollateralIndex,
@@ -77,6 +78,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { SelectedPosition } from '../SelectPosition/SelectPosition';
+import { executeBiconomyTransaction } from 'utils/biconomy';
 
 type AmmSpeedTradingProps = {
     isChained: boolean;
@@ -119,6 +121,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAA = useSelector((state: RootState) => getIsAA(state));
     const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
@@ -499,10 +502,19 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsAllowing(true);
+            let txResult;
+            if (isAA) {
+                txResult = await executeBiconomyTransaction(erc20Instance.address, erc20Instance, 'approve', [
+                    addressToApprove,
+                    approveAmount,
+                ]);
+            } else {
+                const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
+                txResult = await tx.wait();
+            }
 
-            const tx = (await erc20Instance.approve(addressToApprove, approveAmount)) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
-            const txResult = await tx.wait();
+
             if (txResult && txResult.transactionHash) {
                 toast.update(id, getSuccessToastOptions(t(`common.transaction.successful`), id));
                 setIsAllowing(false);
@@ -567,7 +579,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     : undefined;
                 const isNonDefaultCollateral = selectedCollateral !== defaultCollateral;
 
-                const tx: ethers.ContractTransaction = await getTransactionForSpeedAMM(
+                const txResult: ethers.ContractReceipt = await getTransactionForSpeedAMM(
                     speedMarketsAMMContractWithSigner,
                     isNonDefaultCollateral,
                     asset,
@@ -581,8 +593,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     referral,
                     skewImpactBigNum
                 );
-
-                const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.buy.confirmation-message`), id));
