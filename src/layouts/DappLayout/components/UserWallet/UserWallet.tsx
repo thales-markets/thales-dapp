@@ -1,44 +1,52 @@
+import { useAccountModal } from '@rainbow-me/rainbowkit';
+import ConnectWalletModal from 'components/ConnectWalletModal';
+import NetworkSwitch from 'components/NetworkSwitch';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    getIsWalletConnected,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { truncateAddress } from 'thales-utils';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import UserSwap from '../UserSwap';
-import NetworkSwitch from 'components/NetworkSwitch';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
 const UserWallet: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const { openAccountModal } = useAccountModal();
+    const dispatch = useDispatch();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
 
     const [walletText, setWalletText] = useState('');
 
-    const { trackEvent } = useMatomo();
-
+    console.log('USer wallet component');
+    console.log('isWalletConnected ', isWalletConnected);
     return (
         <Container>
             <Wrapper>
                 <UserSwap />
                 <WalletContainer
                     connected={isWalletConnected}
-                    onClick={() => {
-                        if (isWalletConnected) {
-                            trackEvent({
-                                category: 'dAppHeader',
-                                action: 'click-on-wallet-when-connected',
-                            });
-                        }
-                        isWalletConnected ? openAccountModal?.() : openConnectModal?.();
-                    }}
+                    onClick={
+                        isWalletConnected
+                            ? openAccountModal
+                            : () => {
+                                  dispatch(
+                                      setWalletConnectModalVisibility({
+                                          visibility: !connectWalletModalVisibility,
+                                      })
+                                  );
+                              }
+                    }
                     onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
                     onMouseLeave={() => setWalletText('')}
                 >
@@ -53,6 +61,16 @@ const UserWallet: React.FC = () => {
                 </WalletContainer>
                 <NetworkSwitch />
             </Wrapper>
+            <ConnectWalletModal
+                isOpen={connectWalletModalVisibility}
+                onClose={() => {
+                    dispatch(
+                        setWalletConnectModalVisibility({
+                            visibility: !connectWalletModalVisibility,
+                        })
+                    );
+                }}
+            />
         </Container>
     );
 };
