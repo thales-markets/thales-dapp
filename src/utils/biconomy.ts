@@ -1,6 +1,12 @@
-import { Contract, ethers } from 'ethers';
-import biconomyConnector from './biconomyWallet';
 import { IHybridPaymaster, PaymasterFeeQuote, PaymasterMode, SponsorUserOperationDto } from '@biconomy/paymaster';
+import { PARTICAL_LOGINS_CLASSNAMES } from 'constants/wallet';
+import { SupportedNetwork } from 'enums/network';
+import { Contract, ethers } from 'ethers';
+import { ParticalTypes } from 'types/wallet';
+import { Connector } from 'wagmi';
+import biconomyConnector from './biconomyWallet';
+import { getCollaterals } from './currency';
+import { getNetworkNameByNetworkId } from './network';
 
 export const executeBiconomyTransaction = async (
     collateral: string,
@@ -170,4 +176,34 @@ export const getGasFeesForTx = async (
 
         return feeQuotesBuy[0] ? feeQuotesBuy[0].maxGasFee : 0;
     }
+};
+
+export const getClassNameForParticalLogin = (socialId: ParticalTypes) => {
+    const label = PARTICAL_LOGINS_CLASSNAMES.find((item) => item.socialId == socialId)?.className;
+    return label ? label : '';
+};
+
+export const getOnRamperUrl = (
+    apiKey: string,
+    walletAddress: string,
+    networkId: SupportedNetwork,
+    selectedToken: number
+) => {
+    return `https://buy.onramper.com?apiKey=${apiKey}&mode=buy&onlyCryptos=${
+        getCollaterals(networkId, true)[selectedToken]
+    }_${getNetworkNameByNetworkId(networkId, true)}&networkWallets=${getNetworkNameByNetworkId(
+        networkId,
+        true
+    )}:${walletAddress}`;
+};
+
+export const getSpecificConnectorFromConnectorsArray = (
+    connectors: Connector[],
+    name: string,
+    particle?: boolean
+): Connector | undefined => {
+    if (particle) {
+        return connectors.find((connector: any) => connector?.options?.authType == name);
+    }
+    return connectors.find((connector: any) => connector.id == name);
 };

@@ -1,8 +1,8 @@
-import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { getAddress } from 'thales-utils';
-import { RootState } from 'redux/rootReducer';
-import { Network } from 'enums/network';
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_NETWORK } from 'constants/network';
+import { Network } from 'enums/network';
+import { RootState } from 'redux/rootReducer';
+import { getAddress } from 'thales-utils';
 
 const sliceName = 'wallet';
 
@@ -13,6 +13,10 @@ type WalletSliceState = {
     networkName: string;
     switchToNetworkId: Network; // used to trigger manually network switch in App.js
     selectedCollateralIndex: number;
+    walletConnectModal: {
+        visibility: boolean;
+        origin?: 'sign-up' | 'sign-in' | undefined;
+    };
 };
 
 const initialState: WalletSliceState = {
@@ -22,6 +26,10 @@ const initialState: WalletSliceState = {
     networkName: DEFAULT_NETWORK.name,
     switchToNetworkId: DEFAULT_NETWORK.networkId,
     selectedCollateralIndex: 0,
+    walletConnectModal: {
+        visibility: false,
+        origin: undefined,
+    },
 };
 
 const walletDetailsSlice = createSlice({
@@ -61,6 +69,13 @@ const walletDetailsSlice = createSlice({
         setSelectedCollateralIndex: (state, action: PayloadAction<number>) => {
             state.selectedCollateralIndex = action.payload;
         },
+        setWalletConnectModalVisibility: (
+            state,
+            action: PayloadAction<{ visibility: boolean; origin?: 'sign-up' | 'sign-in' | undefined }>
+        ) => {
+            state.walletConnectModal.visibility = action.payload.visibility;
+            state.walletConnectModal.origin = action.payload.origin;
+        },
     },
 });
 
@@ -76,12 +91,16 @@ export const getWalletAddress = (state: RootState) => getWalletState(state).wall
 export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);
 export const getIsAA = (state: RootState) => getWalletState(state).isAA;
 export const getSelectedCollateralIndex = (state: RootState) => getWalletState(state).selectedCollateralIndex;
+export const getWalletConnectModalOrigin = (state: RootState) => getWalletState(state).walletConnectModal.origin;
+export const getWalletConnectModalVisibility = (state: RootState) =>
+    getWalletState(state).walletConnectModal.visibility;
 
 export const {
     updateNetworkSettings,
     switchToNetworkId,
     updateWallet,
     setSelectedCollateralIndex,
+    setWalletConnectModalVisibility,
 } = walletDetailsSlice.actions;
 
 export default walletDetailsSlice.reducer;

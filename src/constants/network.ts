@@ -46,6 +46,7 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.OptimismMainnet]: {
         chainId: '0xA',
         chainName: 'Optimism',
+        shortChainName: 'Optimism',
         rpcUrls: ['https://mainnet.optimism.io'],
         blockExplorerUrls: ['https://optimistic.etherscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
@@ -57,6 +58,7 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
+        shortChainName: 'Arbitrum',
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://explorer.matic.network/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
@@ -68,6 +70,7 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.Arbitrum]: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
+        shortChainName: 'Arbitrum',
         rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
@@ -79,6 +82,7 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.Base]: {
         chainId: '0x2105',
         chainName: 'BASE',
+        shortChainName: 'Base',
         rpcUrls: ['https://mainnet.base.org'],
         blockExplorerUrls: ['https://basescan.org/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],

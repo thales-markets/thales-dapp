@@ -1,3 +1,4 @@
+import { NetworkId as Network } from 'thales-utils';
 export { NetworkId as Network } from 'thales-utils';
 
 export enum OneInchLiquidityProtocol {
@@ -7,3 +8,5 @@ export enum OneInchLiquidityProtocol {
     BALANCER = 'OPTIMISM_BALANCER_V2',
     CURVE = 'OPTIMISM_CURVE',
 }
+
+export type SupportedNetwork = Exclude<Network, Network.Mainnet | Network.PolygonMainnet>;

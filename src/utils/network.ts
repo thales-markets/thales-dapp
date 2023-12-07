@@ -189,3 +189,8 @@ export const getIsLpStakingSupported = (networkId: Network): boolean =>
 
 export const getIsBridgeSupported = (networkId: Network): boolean =>
     [Network.OptimismMainnet, Network.Arbitrum, Network.Base].includes(networkId);
+
+export const getNetworkNameByNetworkId = (networkId: Network, shortName = false): string | undefined => {
+    const network = SUPPORTED_NETWORKS_PARAMS[networkId];
+    return shortName ? network?.shortChainName : network?.chainName;
+};
