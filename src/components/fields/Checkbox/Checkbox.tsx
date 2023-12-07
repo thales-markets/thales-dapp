@@ -7,9 +7,18 @@ type CheckboxProps = {
     disabled?: boolean;
     checked: boolean;
     label?: string;
+    customCheckColor?: string;
 };
 
-const Checkbox: React.FC<CheckboxProps> = ({ value, onChange, disabled, checked, label, ...rest }) => {
+const Checkbox: React.FC<CheckboxProps> = ({
+    value,
+    onChange,
+    disabled,
+    checked,
+    label,
+    customCheckColor,
+    ...rest
+}) => {
     return (
         <CheckboxContainer className={disabled ? 'disabled' : ''}>
             {label}
@@ -21,7 +30,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ value, onChange, disabled, checked,
                 onChange={onChange}
                 disabled={disabled}
             />
-            <Checkmark className="checkmark" />
+            <Checkmark className="checkmark" customCheckColor={customCheckColor} />
         </CheckboxContainer>
     );
 };
@@ -56,14 +65,14 @@ const CheckboxContainer = styled.label`
     }
 `;
 
-const Checkmark = styled.span`
+const Checkmark = styled.span<{ customCheckColor?: string }>`
     position: absolute;
     top: 0;
     right: 0;
     height: 22px;
     width: 22px;
     border-radius: 5px;
-    border: 2px solid ${(props) => props.theme.textColor.primary};
+    border: 2px solid ${(props) => (props.customCheckColor ? props.customCheckColor : props.theme.textColor.primary)};
     background-color: transparent;
 
     :after {
@@ -74,7 +83,7 @@ const Checkmark = styled.span`
         top: -1px;
         width: 5px;
         height: 14px;
-        border: solid ${(props) => props.theme.textColor.primary};
+        border: solid ${(props) => (props.customCheckColor ? props.customCheckColor : props.theme.textColor.primary)};
         border-width: 0 2px 2px 0;
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);

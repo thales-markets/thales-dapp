@@ -190,4 +190,17 @@ export default {
         resolved: Colors.YELLOW_DARK,
         text: Colors.GRAY_BLUE,
     },
+    connectWalletModal: {
+        secondaryText: Colors.WHITE,
+        border: Colors.GRAY,
+        buttonBackground: Colors.GRAY,
+        modalBackground: Colors.GRAY_DARK,
+        hover: Colors.BLUE,
+        hoverText: Colors.GRAY_DARK,
+        errorMessage: Colors.RED,
+        warningBackground: Colors.RED,
+        warningText: Colors.WHITE,
+        totalBalanceBackground: Colors.WHITE,
+        checkMarkColor: Colors.GREEN,
+    },
 };
