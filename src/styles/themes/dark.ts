@@ -203,4 +203,8 @@ export default {
         totalBalanceBackground: Colors.WHITE,
         checkMarkColor: Colors.GREEN,
     },
+    progressBar: {
+        selected: Colors.BLUE_LIGHT,
+        unselected: Colors.BLUE_DARK,
+    },
 };

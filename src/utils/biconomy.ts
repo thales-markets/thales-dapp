@@ -1,6 +1,6 @@
 import { IHybridPaymaster, PaymasterFeeQuote, PaymasterMode, SponsorUserOperationDto } from '@biconomy/paymaster';
 import { PARTICAL_LOGINS_CLASSNAMES } from 'constants/wallet';
-import { SupportedNetwork } from 'enums/network';
+import { Network } from 'enums/network';
 import { Contract, ethers } from 'ethers';
 import { ParticalTypes } from 'types/wallet';
 import { Connector } from 'wagmi';
@@ -183,12 +183,7 @@ export const getClassNameForParticalLogin = (socialId: ParticalTypes) => {
     return label ? label : '';
 };
 
-export const getOnRamperUrl = (
-    apiKey: string,
-    walletAddress: string,
-    networkId: SupportedNetwork,
-    selectedToken: number
-) => {
+export const getOnRamperUrl = (apiKey: string, walletAddress: string, networkId: Network, selectedToken: number) => {
     return `https://buy.onramper.com?apiKey=${apiKey}&mode=buy&onlyCryptos=${
         getCollaterals(networkId, true)[selectedToken]
     }_${getNetworkNameByNetworkId(networkId, true)}&networkWallets=${getNetworkNameByNetworkId(

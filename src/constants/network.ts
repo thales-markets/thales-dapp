@@ -58,7 +58,7 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
     [Network.PolygonMainnet]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
-        shortChainName: 'Arbitrum',
+        shortChainName: 'Polygon',
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://explorer.matic.network/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],

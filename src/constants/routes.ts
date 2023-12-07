@@ -1,5 +1,7 @@
 const ROUTES = {
     Home: '/',
+    Deposit: '/deposit',
+    Withdraw: '/withdraw',
     Article: {
         Token: '/article/token',
         Governance: '/article/governance',

@@ -458,6 +458,23 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
 };
 
+export const COLLATERALS_AA: Record<Network, Coins[]> = {
+    [Network.Mainnet]: [],
+    [Network.OptimismMainnet]: [
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+        // CRYPTO_CURRENCY_MAP.sUSD as Coins,
+    ],
+    [Network.OptimismGoerli]: [CRYPTO_CURRENCY_MAP.sUSD as Coins],
+    [Network.Arbitrum]: [
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+        // CRYPTO_CURRENCY_MAP.USDCe as Coins,
+    ],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+};
+
 // TODO: merge with COLLATERALS when all pages will support these
 export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     [Network.Mainnet]: [],

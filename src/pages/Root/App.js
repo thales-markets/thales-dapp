@@ -6,6 +6,7 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { setAppReady } from 'redux/modules/app';
 import { setIsMobile } from 'redux/modules/ui';
 import {
+    getIsAA,
     getNetworkId,
     getSwitchToNetworkId,
     getWalletAddress,
@@ -69,6 +70,10 @@ const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
+const Deposit = lazy(() => import('pages/AARelatedPages/Deposit'));
+const Withdraw = lazy(() => import('pages/AARelatedPages/Withdraw'));
+const GetStarted = lazy(() => import('pages/AARelatedPages/GetStarted'));
+
 const particle = new ParticleNetwork({
     projectId: '2b8c8b75-cc7a-4111-923f-0043b9fa908b',
     clientKey: 'cS3khABdBgfK4m8CzYcL1xcgVM6cuflmNY6dFxdY',
@@ -95,7 +100,7 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
-
+    const isAA = useSelector((state) => getIsAA(state));
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { address } = useAccount();
@@ -420,6 +425,33 @@ const App = () => {
                                 </Suspense>
                             </Route>
                         )}
+
+                        {isAA && (
+                            <Route exact path={ROUTES.Deposit}>
+                                <Suspense fallback={<Loader />}>
+                                    <DappLayout>
+                                        <Deposit />
+                                    </DappLayout>
+                                </Suspense>
+                            </Route>
+                        )}
+                        {isAA && (
+                            <Route exact path={ROUTES.Withdraw}>
+                                <Suspense fallback={<Loader />}>
+                                    <DappLayout>
+                                        <Withdraw />
+                                    </DappLayout>
+                                </Suspense>
+                            </Route>
+                        )}
+                        <Route exact path={ROUTES.Wizard}>
+                            <Suspense fallback={<Loader />}>
+                                <DappLayout>
+                                    {isAA && <GetStarted />}
+                                    {!isAA && <Wizard />}
+                                </DappLayout>
+                            </Suspense>
+                        </Route>
 
                         <Route
                             exact
