@@ -1,4 +1,5 @@
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+import { particleWallet } from '@particle-network/rainbowkit-ext';
 import { RainbowKitProvider, connectorsForWallets, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/dist/index.css';
 import {
@@ -14,6 +15,8 @@ import {
     walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import WalletDisclaimer from 'components/WalletDisclaimer';
+import { PLAUSIBLE } from 'constants/analytics';
+import { base } from 'constants/network';
 import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
 import { Network } from 'enums/network';
@@ -28,9 +31,6 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { base } from 'constants/network';
-import { PLAUSIBLE } from 'constants/analytics';
-import { particleWallet } from '@particle-network/rainbowkit-ext';
 dotenv.config();
 
 type RpcProvider = {
@@ -91,9 +91,10 @@ const { chains, provider } = configureChains(
 
 const particleWallets = [
     particleWallet({ chains, authType: 'google' }),
-    particleWallet({ chains, authType: 'facebook' }),
+    particleWallet({ chains, authType: 'github' }),
     particleWallet({ chains, authType: 'apple' }),
-    particleWallet({ chains }),
+    particleWallet({ chains, authType: 'twitter' }),
+    particleWallet({ chains, authType: 'discord' }),
 ];
 
 const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || '';
