@@ -31,6 +31,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getCollateralsAA } from 'utils/currency';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useQueryParam, { getQueryStringVal } from 'utils/useQueryParams';
+import Modal from 'components/Modal';
 
 const Deposit: React.FC = () => {
     const { t } = useTranslation();
@@ -45,6 +46,7 @@ const Deposit: React.FC = () => {
     const [showQRModal, setShowQRModal] = useState<boolean>(false);
     const [totalValue, setTotalValue] = useState<number | undefined>(undefined);
     const [showSuccessfulDepositModal, setShowSuccessfulDepositModal] = useState<boolean>(false);
+    const [showOnramper, setShowOnramper] = useState<boolean>(false);
 
     const selectedTokenFromUrl = getQueryStringVal('coin-index');
 
@@ -180,23 +182,28 @@ const Deposit: React.FC = () => {
                             })}
                         </WarningContainer>
                     </DepositAddressFormContainer>
-                    <BalanceSection>
-                        <BalanceDetails />
-                    </BalanceSection>
+                    <BuyWithText>Or buy with</BuyWithText>
+                    <OnramperDiv
+                        onClick={() => {
+                            setShowOnramper(true);
+                        }}
+                    >
+                        <OnramperIcons className={`social-icon icon--visa`} />
+                        <OnramperIcons className={`social-icon icon--master`} />
+                        <OnramperIcons className={`social-icon icon--applepay`} />
+                        <OnramperIcons className={`social-icon icon--googlepay`} />
+                    </OnramperDiv>
                 </FormContainer>
-                <OnramperDiv
-                    onClick={() => {
-                        window.open(onramperUrl, '_blank');
-                    }}
-                >
-                    <iframe
-                        src={onramperUrl}
-                        title="Onramper Widget"
-                        height="630px"
-                        width="420px"
-                        allow="accelerometer; autoplay; camera; gyroscope; payment"
-                    />
-                </OnramperDiv>
+                <BalanceSection>
+                    <BalanceDetails />
+                    <TutorialLinksContainer>
+                        <SectionLabel>{'Tutorials'}</SectionLabel>
+                        <Link href={'#'}>{'Coinbase'}</Link>
+                        <Link href={'#'}>{'Coinbase'}</Link>
+                        <Link href={'#'}>{'Coinbase'}</Link>
+                        <Link href={'#'}>{'Coinbase'}</Link>
+                    </TutorialLinksContainer>
+                </BalanceSection>
             </Wrapper>
             {showQRModal && (
                 <QRCodeModal
@@ -209,6 +216,19 @@ const Deposit: React.FC = () => {
                 />
             )}
             {showSuccessfulDepositModal && <AllSetModal onClose={() => setShowSuccessfulDepositModal(false)} />}
+            {showOnramper && (
+                <Modal title={''} onClose={() => setShowOnramper(false)}>
+                    <ModalWrapper>
+                        <iframe
+                            src={onramperUrl}
+                            title="Onramper Widget"
+                            height="630px"
+                            width="420px"
+                            allow="accelerometer; autoplay; camera; gyroscope; payment"
+                        />
+                    </ModalWrapper>
+                </Modal>
+            )}
         </>
     );
 };
@@ -219,22 +239,22 @@ const DepositAddressFormContainer = styled(FlexDiv)`
     margin-top: 20px;
 `;
 
-// const BuyWithText = styled.span`
-//     font-size: 20px;
-//     font-style: normal;
-//     font-weight: 400;
-//     line-height: normal;
-//     text-transform: capitalize;
-//     margin: auto;
-//     margin-top: 80px;
-//     margin-bottom: 60px;
-//     color: ${(props) => props.theme.textColor.primary};
-// `;
+const BuyWithText = styled.span`
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: capitalize;
+    margin: auto;
+    margin-top: 80px;
+    margin-bottom: 60px;
+    color: ${(props) => props.theme.textColor.primary};
+`;
 
-// const OnramperIcons = styled.i`
-//     font-size: 100px;
-//     color: ${(props) => props.theme.textColor.primary};
-// `;
+const OnramperIcons = styled.i`
+    font-size: 100px;
+    color: ${(props) => props.theme.textColor.primary};
+`;
 
 const WalletAddressInputWrapper = styled(FlexDiv)`
     flex-direction: row;
@@ -248,10 +268,17 @@ const OnramperDiv = styled(FlexDiv)`
     justify-content: center;
     gap: 10px;
     cursor: pointer;
-    border-radius: 20px;
-    border: 2px solid ${(props) => props.theme.borderColor.primary};
+    transition: transform 0.3s ease-out;
+    :hover {
+        transform: scale(1.2);
+    }
+`;
+
+const ModalWrapper = styled(FlexDiv)`
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     width: 440px;
-    padding: 10px;
 `;
 
 const WalletAddressInput = styled.input`
@@ -291,31 +318,31 @@ const CopyButton = styled(FlexDiv)`
     background-color: ${(props) => props.theme.button.background.primary};
 `;
 
-// const SectionLabel = styled.span`
-//     font-size: 12px;
-//     font-weight: 700;
-//     text-transform: capitalize;
-//     letter-spacing: 3px;
-//     margin-bottom: 13px;
-// `;
+const SectionLabel = styled.span`
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 3px;
+    margin-bottom: 13px;
+`;
 
-// const TutorialLinksContainer = styled(FlexDiv)`
-//     flex-direction: column;
-//     border-radius: 5px;
-//     margin-bottom: 13px;
-//     padding: 19px;
-//     border: 1px ${(props) => props.theme.borderColor.primary} solid;
-// `;
+const TutorialLinksContainer = styled(FlexDiv)`
+    flex-direction: column;
+    border-radius: 5px;
+    margin-bottom: 13px;
+    padding: 19px;
+    border: 1px ${(props) => props.theme.borderColor.primary} solid;
+`;
 
-// const Link = styled.a`
-//     width: fit-content;
-//     font-size: 12px;
-//     font-weight: 700;
-//     text-decoration: underline;
-//     text-transform: capitalize;
-//     padding-bottom: 15px;
-//     :visited {
-//         color: ${(props) => props.theme.textColor.primary};
-//     }
-// `;
+const Link = styled.a`
+    width: fit-content;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-transform: capitalize;
+    padding-bottom: 15px;
+    :visited {
+        color: ${(props) => props.theme.textColor.primary};
+    }
+`;
 export default Deposit;
