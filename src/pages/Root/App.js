@@ -78,16 +78,16 @@ const particle = new ParticleNetwork({
     projectId: '2b8c8b75-cc7a-4111-923f-0043b9fa908b',
     clientKey: 'cS3khABdBgfK4m8CzYcL1xcgVM6cuflmNY6dFxdY',
     appId: 'aab773d8-c4e9-43ae-aa57-0d898f3dbf46',
-    chainName: 'optimism', //optional: current chain name, default Ethereum.
-    chainId: 10, //optional: current chain id, default 1.
+    chainName: 'polygon', //optional: current chain name, default Ethereum.
+    chainId: 137, //optional: current chain id, default 1.
     wallet: {
         //optional: by default, the wallet entry is displayed in the bottom right corner of the webpage.
-        displayWalletEntry: true, //show wallet entry when connect particle.
+        displayWalletEntry: false, //show wallet entry when connect particle.
         uiMode: 'dark', //optional: light or dark, if not set, the default is the same as web auth.
         supportChains: [
+            { id: 137, name: 'polygon' },
             { id: 10, name: 'optimism' },
             { id: 42161, name: 'arbitrum' },
-            { id: 137, name: 'polygon' },
             { id: 420, name: 'optimism' },
             { id: 84531, name: 'base' },
         ], // optional: web wallet support chains.
