@@ -1,6 +1,7 @@
 import {
     ADDITIONAL_COLLATERALS,
     COLLATERALS,
+    COLLATERALS_AA,
     COMMODITY,
     CRYPTO_CURRENCY,
     STABLE_COINS,
@@ -30,6 +31,9 @@ export const getCollateral = (networkId: Network, index: number, includeAddition
 
 export const getCollaterals = (networkId: Network, includeAdditional?: boolean) =>
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []);
+
+export const getCollateralsAA = (networkId: Network, isAA?: boolean) =>
+    isAA ? COLLATERALS_AA[networkId] : COLLATERALS[networkId];
 
 export const getCollateralIndexForNetwork = (networkId: Network, currencyKey: Coins) =>
     COLLATERALS[networkId].concat(ADDITIONAL_COLLATERALS[networkId]).indexOf(currencyKey);

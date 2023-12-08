@@ -35,6 +35,7 @@ export const PrimaryHeading = styled.h1`
     text-transform: uppercase;
     line-height: 20px;
     margin-bottom: 21px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const InputLabel = styled.span<{ marginTop?: string }>`
@@ -43,6 +44,7 @@ export const InputLabel = styled.span<{ marginTop?: string }>`
     text-transform: capitalize;
     margin-top: ${(props) => (props.marginTop ? props.marginTop : '')};
     margin-bottom: 5px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const InputContainer = styled(FlexDiv)`

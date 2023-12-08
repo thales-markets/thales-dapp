@@ -3,10 +3,17 @@ import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch } from 'react-redux';
-import { setSelectedCollateralIndex } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
+import {
+    FlexDivSpaceBetween,
+    FlexDivColumnCentered,
+    FlexDivRowCentered,
+    FlexDivStart,
+    FlexDivCentered,
+} from 'styles/common';
+
 import { Coins, formatCurrencyWithSign } from 'thales-utils';
+import { setSelectedCollateralIndex } from 'redux/modules/wallet';
 import { isStableCurrency } from 'utils/currency';
 
 type CollateralSelectorProps = {
@@ -15,11 +22,15 @@ type CollateralSelectorProps = {
     onChangeCollateral: (index: number) => void;
     disabled?: boolean;
     isDetailedView?: boolean;
+    hideCollateralNameOnInput?: boolean;
+    hideBalance?: boolean;
     collateralBalances?: any;
     exchangeRates?: Rates | null;
     dropDownWidth?: string;
     additionalStyles?: CSSProperties;
     isDropDownAbove?: boolean;
+    showCollateralImg?: boolean;
+    stretch?: boolean;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -28,14 +39,17 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     onChangeCollateral,
     disabled,
     isDetailedView,
+    hideCollateralNameOnInput,
+    hideBalance,
     collateralBalances,
     exchangeRates,
     dropDownWidth,
+    showCollateralImg,
+    stretch,
     additionalStyles,
     isDropDownAbove,
 }) => {
     const dispatch = useDispatch();
-
     const [open, setOpen] = useState(false);
 
     const getUSDForCollateral = useCallback(
@@ -60,11 +74,21 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
             isDropDownAbove={isDropDownAbove}
             margin={additionalStyles?.margin?.toString()}
             position={additionalStyles?.position}
+            stretch={stretch}
         >
-            <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
-                <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
-                    <TextCollateralWrapper>
-                        <TextCollateral color={additionalStyles?.color}>{collateralArray[selectedItem]}</TextCollateral>
+            <OutsideClickHandler display="contents" onOutsideClick={() => setOpen(false)}>
+                <SelectedCollateral stretch={stretch} disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
+                    <TextCollateralWrapper isDetailedView={isDetailedView}>
+                        {showCollateralImg && (
+                            <Icon
+                                className={`currency-icon currency-icon--${collateralArray[
+                                    selectedItem
+                                ].toLowerCase()}`}
+                            />
+                        )}
+                        <TextCollateral isDetailedView={isDetailedView} isSelectedCollateral={true}>
+                            {!hideCollateralNameOnInput && collateralArray[selectedItem]}
+                        </TextCollateral>
                     </TextCollateralWrapper>
                     <Arrow
                         color={additionalStyles?.color}
@@ -83,29 +107,33 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                                               dispatch(setSelectedCollateralIndex(collateral.index));
                                           }}
                                       >
-                                          <div>
+                                          <FlexDivCentered>
                                               <Icon
                                                   className={`currency-icon currency-icon--${collateral.name.toLowerCase()}`}
                                               />
-                                              <TextCollateral fontWeight="400">{collateral.name}</TextCollateral>
-                                          </div>
-                                          <div>
-                                              <TextCollateral fontWeight="400">
-                                                  {formatCurrencyWithSign(
-                                                      null,
-                                                      collateralBalances ? collateralBalances[collateral.name] : 0
-                                                  )}
+                                              <TextCollateral fontWeight="600" isDetailedView={true}>
+                                                  {collateral.name}
                                               </TextCollateral>
-                                              <TextCollateral fontWeight="800">
-                                                  {!exchangeRates?.[collateral.name] &&
-                                                  !isStableCurrency(collateral.name as Coins)
-                                                      ? '...'
-                                                      : ` (${formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            getUSDForCollateral(collateral.name as Coins)
-                                                        )})`}
-                                              </TextCollateral>
-                                          </div>
+                                          </FlexDivCentered>
+                                          {!hideBalance && (
+                                              <div>
+                                                  <TextCollateral fontWeight="400" isDetailedView={true}>
+                                                      {formatCurrencyWithSign(
+                                                          null,
+                                                          collateralBalances ? collateralBalances[collateral.name] : 0
+                                                      )}
+                                                  </TextCollateral>
+                                                  <TextCollateral fontWeight="600" isDetailedView={true}>
+                                                      {!exchangeRates?.[collateral.name] &&
+                                                      !isStableCurrency(collateral.name as Coins)
+                                                          ? '...'
+                                                          : ` (${formatCurrencyWithSign(
+                                                                USD_SIGN,
+                                                                getUSDForCollateral(collateral.name as Coins)
+                                                            )})`}
+                                                  </TextCollateral>
+                                              </div>
+                                          )}
                                       </DetailedCollateralOption>
                                   );
                               })}
@@ -126,7 +154,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                                               dispatch(setSelectedCollateralIndex(index));
                                           }}
                                       >
-                                          <TextCollateral>{collateral}</TextCollateral>
+                                          <TextCollateral fontWeight="600">{collateral}</TextCollateral>
                                       </CollateralOption>
                                   );
                               })}
@@ -137,21 +165,41 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     );
 };
 
-const Container = styled(FlexDivStart)<{ isDropDownAbove?: boolean; margin?: string; position?: string }>`
+const Container = styled(FlexDivStart)<{
+    stretch?: boolean;
+    isDropDownAbove?: boolean;
+    margin?: string;
+    position?: string;
+}>`
+    margin: 0 7px;
+    align-items: center;
+    width: ${(props) => (props.stretch ? '100%' : '')};
     ${(props) => (props.isDropDownAbove ? 'position: relative;' : props.position ? `position: ${props.position};` : '')}
     margin: ${(props) => (props.margin ? props.margin : '0 7px')};
-    align-items: center;
 `;
 
-const Text = styled.span<{ fontWeight?: string }>`
+const Text = styled.span<{
+    fontWeight?: string;
+    isDetailedView?: boolean;
+    isSelectedCollateral?: boolean;
+}>`
     font-style: normal;
     font-weight: ${(props) => (props.fontWeight ? props.fontWeight : '600')};
-    font-size: 13px;
-    line-height: 20px;
+    font-size: ${(props) => (props.isDetailedView ? '14px' : '12px')};
+    ${(props) => (props.isSelectedCollateral ? `line-height: ${props.isDetailedView ? '15px' : '12px'};` : '')}
+    @media (max-width: 768px) {
+        ${(props) => (!props.isDetailedView && props.isSelectedCollateral ? 'font-size: 10px;' : '')}
+        ${(props) => (!props.isDetailedView && props.isSelectedCollateral ? 'line-height: 10px;' : '')}
+    }
 `;
 
-const TextCollateral = styled(Text)<{ color?: string }>`
-    color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
+const TextCollateral = styled(Text)`
+    color: ${(props) =>
+        props.isDetailedView
+            ? props.theme.input.textColor.primary
+            : props.isSelectedCollateral
+            ? props.theme.textColor.quaternary
+            : props.theme.textColor.tertiary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -159,30 +207,38 @@ const TextCollateral = styled(Text)<{ color?: string }>`
     user-select: none;
 `;
 
-const TextCollateralWrapper = styled.div`
-    min-width: 45px;
+const TextCollateralWrapper = styled.div<{ isDetailedView?: boolean }>`
+    min-width: ${(props) => (props.isDetailedView ? '48px' : '45px')};
+    display: flex;
+    align-items: center;
+    @media (max-width: 768px) {
+        ${(props) => (!props.isDetailedView ? 'min-width: 35px;' : '')}
+    }
 `;
 
-const Arrow = styled.i<{ color?: string }>`
+const Arrow = styled.i`
     font-size: 10px;
     text-transform: none;
     color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
 `;
 
-const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
+const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean; stretch?: boolean }>`
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? 0.4 : 1)};
+    justify-content: ${(props) => (props.stretch ? 'space-between' : '')};
+    width: ${(props) => (props.stretch ? '100%' : '')}; ;
 `;
 
-const Dropdown = styled(FlexDivColumnCentered)<{ isDropDownAbove?: boolean; width?: string }>`
+const Dropdown = styled(FlexDivColumnCentered)<{ width?: string; isDropDownAbove?: boolean }>`
     position: absolute;
-    ${(props) => (props.isDropDownAbove ? 'bottom: 24px;' : '')}
-    margin-top: 8px;
-    margin-left: -10px;
+    margin-top: 6px;
+    margin-left: -16px;
     width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;
     border-radius: 8px;
-    background: ${(props) => props.theme.background.secondary};
+    background: ${(props) => props.theme.background.quaternary};
     z-index: 100;
+    border: 2px solid ${(props) => props.theme.input.borderColor.secondary};
 `;
 
 const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
@@ -192,8 +248,9 @@ const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     width: ${(props) => (props.width ? props.width : '350px')};
     padding: 5px 3px;
     border-radius: 8px;
-    background: ${(props) => props.theme.background.secondary};
+    background: ${(props) => props.theme.input.background.primary};
     z-index: 100;
+    border: 2px solid ${(props) => props.theme.input.borderColor.secondary};
 `;
 
 const CollateralOption = styled.div`
@@ -202,17 +259,18 @@ const CollateralOption = styled.div`
     padding: 5px 7px;
     border-radius: 8px;
     cursor: pointer;
+    border: 2px solid ${(props) => props.theme.background.quaternary};
     &:hover {
-        background: ${(props) => props.theme.background.primary};
+        background: rgb(80 183 215);
     }
 `;
 
 const DetailedCollateralOption = styled(FlexDivSpaceBetween)`
-    padding: 5px 24px;
+    padding: 5px 15px;
     border-radius: 8px;
     cursor: pointer;
     &:hover {
-        background: ${(props) => props.theme.background.primary};
+        background: rgb(95, 97, 128, 0.5);
     }
 `;
 
@@ -220,6 +278,7 @@ const Icon = styled.i`
     font-size: 25px;
     line-height: 100%;
     margin-right: 10px;
+    color: ${(props) => props.theme.input.textColor.primary};
 `;
 
 export default CollateralSelector;

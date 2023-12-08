@@ -28,7 +28,7 @@ import AllSetModal from './components/AllSetModal';
 import BalanceDetails from './components/BalanceDetails';
 import QRCodeModal from './components/QRCodeModal';
 import { getIsMobile } from 'redux/modules/ui';
-import { getCollaterals } from 'utils/currency';
+import { getCollateralsAA } from 'utils/currency';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useQueryParam, { getQueryStringVal } from 'utils/useQueryParams';
 
@@ -75,7 +75,7 @@ const Deposit: React.FC = () => {
         let total = 0;
         try {
             if (exchangeRates && multipleCollateralBalances.data) {
-                getCollaterals(networkId, isAA).forEach((token) => {
+                getCollateralsAA(networkId, isAA).forEach((token) => {
                     total += multipleCollateralBalances.data[token] * (exchangeRates[token] ? exchangeRates[token] : 1);
                 });
             }
@@ -140,14 +140,18 @@ const Deposit: React.FC = () => {
                                 collateralBalances={[multipleCollateralBalances.data]}
                                 exchangeRates={exchangeRates}
                                 dropDownWidth={inputRef.current?.getBoundingClientRect().width + 'px'}
+                                hideCollateralNameOnInput={false}
+                                hideBalance
                                 isDetailedView
+                                stretch
+                                showCollateralImg
                             />
                         </CollateralContainer>
                     </InputContainer>
                     <DepositAddressFormContainer>
                         <InputLabel>
                             {t('deposit.address-input-label', {
-                                token: getCollaterals(networkId, true)[selectedToken],
+                                token: getCollateralsAA(networkId, true)[selectedToken],
                                 network: getNetworkNameByNetworkId(networkId),
                             })}
                         </InputLabel>
@@ -171,7 +175,7 @@ const Deposit: React.FC = () => {
                         <WarningContainer>
                             <WarningIcon className={'icon icon--warning'} />
                             {t('deposit.send', {
-                                token: getCollaterals(networkId, true)[selectedToken],
+                                token: getCollateralsAA(networkId, true)[selectedToken],
                                 network: getNetworkNameByNetworkId(networkId),
                             })}
                         </WarningContainer>
@@ -204,7 +208,7 @@ const Deposit: React.FC = () => {
                     onClose={() => setShowQRModal(false)}
                     walletAddress={walletAddress}
                     title={t('deposit.qr-modal-title', {
-                        token: getCollaterals(networkId)[selectedToken],
+                        token: getCollateralsAA(networkId, true)[selectedToken],
                         network: getNetworkNameByNetworkId(networkId),
                     })}
                 />
@@ -229,10 +233,12 @@ const BuyWithText = styled.span`
     margin: auto;
     margin-top: 80px;
     margin-bottom: 60px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const OnramperIcons = styled.i`
     font-size: 100px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const WalletAddressInputWrapper = styled(FlexDiv)`
@@ -259,9 +265,9 @@ const WalletAddressInput = styled.input`
     cursor: pointer;
     width: 100%;
     padding: 5px;
-    opacity: 0.5;
+    opacity: 0.75;
     border-radius: 5px;
-    color: ${(props) => props.theme.input.textColor.secondary};
+    color: ${(props) => props.theme.input.textColor.primary};
     background-color: ${(props) => props.theme.input.background.primary};
     border: ${(props) => `1px ${props.theme.input.borderColor.secondary} solid`};
 `;
@@ -272,7 +278,7 @@ const QRIcon = styled.i`
     cursor: pointer;
     right: 5px;
     top: 5px;
-    color: ${(props) => props.theme.input.textColor.secondary};
+    color: ${(props) => props.theme.input.textColor.primary};
 `;
 
 const CopyButton = styled(FlexDiv)`
@@ -287,7 +293,7 @@ const CopyButton = styled(FlexDiv)`
     align-items: center;
     justify-content: center;
     color: ${(props) => props.theme.button.textColor.primary};
-    background-color: ${(props) => props.theme.button.background.quaternary};
+    background-color: ${(props) => props.theme.button.background.primary};
 `;
 
 const SectionLabel = styled.span`

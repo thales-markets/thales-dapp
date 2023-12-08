@@ -27,3 +27,8 @@
     font-family: 'Fira Sans';
     src: local('Fira Sans'), url(../assets/fonts/FiraSans/FiraSans-Regular.ttf) format('truetype');
 }
+
+@font-face {
+    font-family: 'SocialIcons';
+    src: local('SocialIcons'), url(../assets/fonts/SocialLogin/SocialIcons.ttf) format('truetype');
+}

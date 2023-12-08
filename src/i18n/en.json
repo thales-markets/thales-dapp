@@ -1132,6 +1132,47 @@
         "buy-button3": "Bridge to {{network}}",
         "buy-button4": "Send from Exchange"
     },
+    "get-started": {
+        "sign-up": "Sign Up",
+        "log-in": "Log in",
+        "sign-out": "Sign out",
+        "get-started": "Get started",
+        "title": "Get Started on Thalesmarkets",
+        "steps": {
+            "title": {
+                "sign-up": "Sign up",
+                "logged-in": "Logged in",
+                "deposit": "Deposit Funds",
+                "trade": "Start using Thalesmarkets!"
+            },
+            "description": {
+                "sign-up": "Click on the Sign Up button and choose your Log In method of choice.",
+                "logged-in": "You have successfully created your Thalesmarket Smart Account on the blockchain and are logged in.",
+                "deposit": "To start using Thalesmarkets, you have to fund your new account with USDT or USDC. Click on the Deposit Now button and choose between a Direct Deposit to Address or Buy With Credit Card",
+                "trade": "You Account is now funded and you are ready to place your positions on Thalesmarkets!"
+            },
+            "action": {
+                "connect-wallet": "Connect Wallet",
+                "connected": "Connected",
+                "deposit": "Deposit",
+                "logged-in": "Logged in",
+                "sign-up": "Sign up",
+                "trade": "Trade on Thalesmarkets"
+            }
+        }
+    },
+    "deposit": {
+        "deposit-crypto": "Deposit crypto",
+        "select-token": "Select token",
+        "address-input-label": "Your personal {{ token }} deposit address on {{ network }}",
+        "send": "Make sure you are depositing {{ network }} {{ token }} to the address above!",
+        "copying-address": "Please wait",
+        "copied": "Address copied!",
+        "qr-modal-title": "Send {{ token }} ({{ network }})",
+        "all-set": "You are all set!",
+        "ready-to-use": "Your account is now ready to start using Thalesmarkets!",
+        "go": "Let's go!"
+    },
     "governance": {
         "title": "Governance",
         "you": "You",

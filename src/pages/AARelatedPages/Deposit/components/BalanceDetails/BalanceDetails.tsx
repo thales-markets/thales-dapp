@@ -64,7 +64,7 @@ const BalanceDetails: React.FC = () => {
                         <IndividualTokenBalanceWrapper key={`ind-token-${index}`}>
                             <Token>
                                 <TokenIcon className={`currency-icon currency-icon--${token.toLowerCase()}`} />
-                                {token}
+                                <TokenName> {token}</TokenName>
                             </Token>
                             <IndividualTokenBalance>
                                 {multipleCollateralBalances.data
@@ -90,7 +90,7 @@ const BalanceWrapper = styled(FlexDiv)`
     border-radius: 5px;
     padding: 19px;
     margin-bottom: 20px;
-    background-color: ${(props) => props.theme.connectWalletModal.totalBalanceBackground};
+    background-color: ${(props) => props.theme.background.primary};
 `;
 
 const SectionLabel = styled.span`
@@ -99,6 +99,7 @@ const SectionLabel = styled.span`
     text-transform: capitalize;
     letter-spacing: 3px;
     margin-bottom: 13px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const TotalBalance = styled.span`
@@ -108,6 +109,7 @@ const TotalBalance = styled.span`
     border-bottom: 1px ${(props) => props.theme.borderColor.primary} solid;
     margin-bottom: 20px;
     padding-bottom: 20px;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const TokenBalancesWrapper = styled(FlexDiv)`
@@ -129,9 +131,13 @@ const IndividualTokenBalanceWrapper = styled(FlexDiv)`
 `;
 
 const Token = styled(FlexDiv)`
-    font-weight: 700;
     align-items: center;
+`;
+
+const TokenName = styled.span`
+    font-weight: 700;
     font-size: 12px;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const TokenIcon = styled.i`
@@ -145,6 +151,7 @@ const IndividualTokenBalance = styled.span`
     font-size: 12px;
     font-weight: 600;
     text-align: right;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default BalanceDetails;

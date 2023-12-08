@@ -204,7 +204,7 @@ export default {
         checkMarkColor: Colors.GREEN,
     },
     progressBar: {
-        selected: Colors.BLUE_LIGHT,
-        unselected: Colors.BLUE_DARK,
+        selected: Colors.GREEN,
+        unselected: Colors.GRAY_LIGHT,
     },
 };
