@@ -264,6 +264,8 @@ const App = () => {
         };
     }, [dispatch]);
 
+    console.log(history);
+
     return (
         <ThemeProvider>
             <QueryClientProvider client={queryConnector.queryClient}>
@@ -444,14 +446,6 @@ const App = () => {
                                 </Suspense>
                             </Route>
                         )}
-                        <Route exact path={ROUTES.Wizard}>
-                            <Suspense fallback={<Loader />}>
-                                <DappLayout>
-                                    {isAA && <GetStarted />}
-                                    {!isAA && <Wizard />}
-                                </DappLayout>
-                            </Suspense>
-                        </Route>
 
                         <Route
                             exact
@@ -465,19 +459,20 @@ const App = () => {
                             )}
                         ></Route>
 
-                        <Route exact path={ROUTES.Options.Wizard}>
-                            <Suspense fallback={<Loader />}>
-                                <DappLayout>
-                                    <Wizard />
-                                </DappLayout>
-                            </Suspense>
-                        </Route>
-
                         <Route exact path={ROUTES.Home}>
                             <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Home />
                                 </MainLayout>
+                            </Suspense>
+                        </Route>
+
+                        <Route exact path={ROUTES.Wizard}>
+                            <Suspense fallback={<Loader />}>
+                                <DappLayout>
+                                    {isAA && <GetStarted />}
+                                    {!isAA && <Wizard />}
+                                </DappLayout>
                             </Suspense>
                         </Route>
 
