@@ -1161,6 +1161,11 @@
             }
         }
     },
+    "my-portfolio": {
+        "estimated-balance": "Estimated balance",
+        "deposit": "Deposit",
+        "withdraw": "Withdraw"
+    },
     "deposit": {
         "deposit-crypto": "Deposit crypto",
         "select-token": "Select token",

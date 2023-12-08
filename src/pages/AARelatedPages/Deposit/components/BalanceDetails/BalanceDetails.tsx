@@ -10,7 +10,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import { Coins, formatCurrency, formatCurrencyWithSign } from 'thales-utils';
-import { getCollaterals, isStableCurrency } from 'utils/currency';
+import { getCollateralsAA, isStableCurrency } from 'utils/currency';
 
 const BalanceDetails: React.FC = () => {
     const { t } = useTranslation();
@@ -36,7 +36,7 @@ const BalanceDetails: React.FC = () => {
         let total = 0;
         try {
             if (exchangeRates && multipleCollateralBalances.data) {
-                getCollaterals(networkId, isAA).forEach((token) => {
+                getCollateralsAA(networkId, isAA).forEach((token) => {
                     total += multipleCollateralBalances.data[token] * (exchangeRates[token] ? exchangeRates[token] : 1);
                 });
             }
@@ -59,7 +59,7 @@ const BalanceDetails: React.FC = () => {
             <SectionLabel>{t('my-portfolio.estimated-balance')}</SectionLabel>
             <TotalBalance>{formatCurrencyWithSign(USD_SIGN, totalBalanceValue)}</TotalBalance>
             <TokenBalancesWrapper>
-                {getCollaterals(networkId, isAA).map((token, index) => {
+                {getCollateralsAA(networkId, isAA).map((token, index) => {
                     return (
                         <IndividualTokenBalanceWrapper key={`ind-token-${index}`}>
                             <Token>
@@ -87,7 +87,7 @@ const BalanceDetails: React.FC = () => {
 const BalanceWrapper = styled(FlexDiv)`
     flex-direction: column;
     border: 1px ${(props) => props.theme.borderColor.primary} solid;
-    border-radius: 5px;
+    border-radius: 20px;
     padding: 19px;
     margin-bottom: 20px;
     background-color: ${(props) => props.theme.background.primary};
@@ -99,17 +99,17 @@ const SectionLabel = styled.span`
     text-transform: capitalize;
     letter-spacing: 3px;
     margin-bottom: 13px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const TotalBalance = styled.span`
     font-size: 42px;
     font-weight: 700;
     width: 100%;
-    border-bottom: 1px ${(props) => props.theme.borderColor.primary} solid;
+    border-bottom: 2px ${(props) => props.theme.borderColor.secondary} solid;
     margin-bottom: 20px;
     padding-bottom: 20px;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const TokenBalancesWrapper = styled(FlexDiv)`

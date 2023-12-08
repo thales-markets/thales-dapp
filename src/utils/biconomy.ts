@@ -5,7 +5,7 @@ import { Contract, ethers } from 'ethers';
 import { ParticalTypes } from 'types/wallet';
 import { Connector } from 'wagmi';
 import biconomyConnector from './biconomyWallet';
-import { getCollaterals } from './currency';
+import { getCollateralsAA } from './currency';
 import { getNetworkNameByNetworkId } from './network';
 
 export const executeBiconomyTransaction = async (
@@ -185,11 +185,11 @@ export const getClassNameForParticalLogin = (socialId: ParticalTypes) => {
 
 export const getOnRamperUrl = (apiKey: string, walletAddress: string, networkId: Network, selectedToken: number) => {
     return `https://buy.onramper.com?apiKey=${apiKey}&mode=buy&onlyCryptos=${
-        getCollaterals(networkId, true)[selectedToken]
+        getCollateralsAA(networkId, true)[selectedToken]
     }_${getNetworkNameByNetworkId(networkId, true)}&networkWallets=${getNetworkNameByNetworkId(
         networkId,
         true
-    )}:${walletAddress}`;
+    )}:${walletAddress}'&themeName=dark&containerColor=181a20&primaryColor=1D976C&secondaryColor=2b3139&cardColor=2b3139&primaryTextColor=ffffff&secondaryTextColor=848e9c&borderRadius=0.5&wgBorderRadius=1'`;
 };
 
 export const getSpecificConnectorFromConnectorsArray = (

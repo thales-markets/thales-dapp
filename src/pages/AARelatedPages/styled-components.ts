@@ -4,6 +4,7 @@ import { FlexDiv } from 'styles/common';
 export const Wrapper = styled(FlexDiv)`
     align-items: flex-start;
     flex-direction: row;
+    gap: 20px;
     width: 100%;
     @media (max-width: 575px) {
         margin-top: 20px;
@@ -21,8 +22,9 @@ export const FormContainer = styled(FlexDiv)`
 
 export const BalanceSection = styled(FlexDiv)`
     flex-direction: column;
-    width: 40%;
-    padding: 0 20px;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
     @media (max-width: 575px) {
         padding: 0;
         width: 100%;
