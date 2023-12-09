@@ -82,6 +82,7 @@ const GetStarted: React.FC = () => {
                             stepType={step}
                             currentStep={currentStep}
                             setCurrentStep={setCurrentStep}
+                            hasFunds={totalBalanceValue > 0}
                         />
                         {!isMobile && stepNumber !== steps.length && <HorizontalLine />}
                     </React.Fragment>
@@ -126,7 +127,7 @@ const ProgressBar = styled(FlexDiv)<{ selected?: boolean }>`
 
 const HorizontalLine = styled.hr`
     width: 100%;
-    border: 1.5px solid ${(props) => props.theme.borderColor.primary};
+    border: 1.5px solid ${(props) => props.theme.borderColor.secondary};
     background: ${(props) => props.theme.background.tertiary};
     border-radius: 3px;
 `;

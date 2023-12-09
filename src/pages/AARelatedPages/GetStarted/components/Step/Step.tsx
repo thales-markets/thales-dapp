@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsAA, getIsWalletConnected, getNetworkId, setWalletConnectModalVisibility } from 'redux/modules/wallet';
+import { ReactComponent as InsertCard } from 'assets/images/wizard/insert-card.svg';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'styles/common';
@@ -17,9 +18,10 @@ type StepProps = {
     stepType: GetStartedStep;
     currentStep: GetStartedStep;
     setCurrentStep: (step: GetStartedStep) => void;
+    hasFunds: boolean;
 };
 
-const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurrentStep }) => {
+const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurrentStep, hasFunds }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
@@ -63,6 +65,21 @@ const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurre
         });
     }, [stepType, networkId, isAA, isWalletConnected, t]);
 
+    const showStepIcon = useMemo(() => {
+        if (isWalletConnected) {
+            switch (stepType) {
+                case GetStartedStep.LOG_IN:
+                    return isWalletConnected;
+
+                case GetStartedStep.DEPOSIT:
+                    return hasFunds;
+
+                case GetStartedStep.TRADE:
+                    return false;
+            }
+        }
+    }, [isWalletConnected, stepType, hasFunds]);
+
     const getStepAction = () => {
         let className = '';
         let transKey = 'get-started.steps.action';
@@ -76,22 +93,24 @@ const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurre
                 transKey += '.deposit';
                 break;
             case GetStartedStep.TRADE:
-                className = 'icon--logo';
+                className = 'icon--markets';
                 transKey += '.trade';
                 break;
         }
         return (
             <StepAction>
                 <StepActionIconWrapper isActive={isActive} pulsate={!isMobile}>
-                    <StepActionIcon
-                        className={`icon ${className}`}
-                        isDisabled={isDisabled}
-                        onClick={onStepActionClickHandler}
-                    />
+                    {stepType === GetStartedStep.DEPOSIT ? (
+                        <StyledInsertCard />
+                    ) : (
+                        <StepActionIcon className={`icon ${className}`} isDisabled={isDisabled} isActive={isActive} />
+                    )}
                 </StepActionIconWrapper>
                 <StepActionLabel isDisabled={isDisabled} onClick={onStepActionClickHandler}>
-                    <StepActionName>{t(transKey)}</StepActionName>
-                    {!isMobile && <LinkIcon className={`icon icon--arrow-external`} isActive={isActive} />}
+                    <StepActionName isActive={isActive} completed={showStepIcon}>
+                        {t(transKey)}
+                    </StepActionName>
+                    {!isMobile && <LinkIcon className={`icon icon--external`} isActive={isActive} />}
                 </StepActionLabel>
             </StepAction>
         );
@@ -125,7 +144,7 @@ const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurre
     const changeCurrentStep = () => (isDisabled ? null : setCurrentStep(stepType));
 
     return (
-        <Container>
+        <Container onClick={isActive ? onStepActionClickHandler : () => {}}>
             {isMobile ? (
                 <StepActionSection isActive={isActive} isDisabled={isDisabled}>
                     {getStepAction()}
@@ -133,17 +152,30 @@ const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurre
             ) : (
                 <>
                     <StepNumberSection>
-                        <StepNumberWrapper isActive={isActive} isDisabled={isDisabled} onClick={changeCurrentStep}>
-                            <StepNumber isActive={isActive}>{stepNumber}</StepNumber>
+                        <StepNumberWrapper
+                            completed={!isActive && showStepIcon}
+                            isActive={isActive}
+                            isDisabled={isDisabled}
+                            onClick={changeCurrentStep}
+                        >
+                            <StepNumber isActive={isActive}>
+                                {!isActive && showStepIcon ? (
+                                    <CorrectIcon className="icon icon--correct" />
+                                ) : (
+                                    stepNumber
+                                )}
+                            </StepNumber>
                         </StepNumberWrapper>
                     </StepNumberSection>
                     <StepDescriptionSection isActive={isActive} isDisabled={isDisabled} onClick={changeCurrentStep}>
-                        <StepTitle>{stepTitle}</StepTitle>
-                        <StepDescription>{stepDescription}</StepDescription>
+                        <StepTitle completed={!isActive && showStepIcon}>{stepTitle}</StepTitle>
+                        <StepDescription completed={!isActive && showStepIcon}>{stepDescription}</StepDescription>
                     </StepDescriptionSection>
-                    <StepActionSection isActive={isActive} isDisabled={isDisabled}>
-                        {getStepAction()}
-                    </StepActionSection>
+                    {stepType !== GetStartedStep.LOG_IN && (
+                        <StepActionSection isActive={isActive} isDisabled={isDisabled}>
+                            {getStepAction()}
+                        </StepActionSection>
+                    )}
                 </>
             )}
         </Container>
@@ -167,7 +199,7 @@ const StepNumberSection = styled(FlexDivCentered)`
 const StepDescriptionSection = styled(FlexDivColumn)<{ isActive: boolean; isDisabled?: boolean }>`
     width: 60%;
     color: ${(props) => (props.isActive ? props.theme.textColor.primary : props.theme.textColor.secondary)};
-    cursor: ${(props) => (props.isDisabled ? 'not-allowed' : props.isActive ? 'default' : 'pointer')};
+    cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
 `;
 
 const StepActionSection = styled(FlexDivCentered)<{ isActive: boolean; isDisabled?: boolean }>`
@@ -187,22 +219,23 @@ const StepAction = styled.div`
     }
 `;
 
-const StepTitle = styled.span`
+const StepTitle = styled.span<{ completed?: boolean }>`
     font-weight: 700;
     font-size: 20px;
     line-height: 27px;
-
+    color: ${(props) => (props.completed ? props.theme.background.quaternary : '')};
     margin-bottom: 10px;
 `;
 
-const StepDescription = styled.p`
+const StepDescription = styled.p<{ completed?: boolean }>`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
     text-align: justify;
+    color: ${(props) => (props.completed ? props.theme.background.quaternary : '')};
 `;
 
-const StepNumberWrapper = styled.div<{ isActive: boolean; isDisabled?: boolean }>`
+const StepNumberWrapper = styled.div<{ isActive: boolean; isDisabled?: boolean; completed?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,7 +243,10 @@ const StepNumberWrapper = styled.div<{ isActive: boolean; isDisabled?: boolean }
     height: 45px;
     border-radius: 50%;
     ${(props) => (props.isActive ? `border: 2px solid ${props.theme.borderColor.quaternary};` : '')}
-    ${(props) => (props.isActive ? '' : `background: ${props.theme.background.tertiary};`)}
+    ${(props) =>
+        props.isActive
+            ? ''
+            : `background: ${props.completed ? props.theme.background.quaternary : props.theme.background.tertiary};`}
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : props.isActive ? 'default' : 'pointer')};
 `;
 
@@ -224,6 +260,7 @@ const StepNumber = styled.span<{ isActive: boolean }>`
 `;
 
 const StepActionIconWrapper = styled.div<{ isActive: boolean; pulsate?: boolean }>`
+    text-align: center;
     animation: ${(props) => (props.pulsate && props.isActive ? 'pulsing 1s ease-in' : '')};
     animation-iteration-count: ${(props) => (props.pulsate && props.isActive ? 'infinite;' : '')};
 
@@ -254,13 +291,15 @@ const StepActionIconWrapper = styled.div<{ isActive: boolean; pulsate?: boolean 
     }
 `;
 
-const StepActionIcon = styled.i<{ isDisabled?: boolean }>`
+const StepActionIcon = styled.i<{ isDisabled?: boolean; isActive?: boolean }>`
     font-size: 35px;
     padding-bottom: 15px;
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
+    color: ${(props) => props.theme.textColor.quaternary};
+
     @media (max-width: 950px) {
         padding-bottom: 0;
-        color: ${(props) => props.theme.textColor.primary};
+        color: ${(props) => (props.isDisabled ? props.theme.textColor.secondary : props.theme.textColor.primary)};
         font-size: 30px;
     }
 `;
@@ -274,10 +313,11 @@ const StepActionLabel = styled.div<{ isDisabled?: boolean }>`
     }
 `;
 
-const StepActionName = styled.span`
+const StepActionName = styled.span<{ isActive?: boolean; completed?: boolean }>`
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;
+    color: ${(props) => props.theme.background.quaternary};
     @media (max-width: 950px) {
         font-size: 20px;
         line-height: 27px;
@@ -289,6 +329,21 @@ const LinkIcon = styled.i<{ isActive: boolean }>`
     margin-left: 10px;
     animation: ${(props) => (props.isActive ? 'pulsing 1s ease-in' : '')};
     animation-iteration-count: ${(props) => (props.isActive ? 'infinite;' : '')};
+    color: ${(props) => props.theme.textColor.quaternary};
+`;
+
+const CorrectIcon = styled.i`
+    font-size: 20px;
+    color: ${(props) => props.theme.background.primary};
+`;
+
+const StyledInsertCard = styled(InsertCard)`
+    width: 54px;
+    height: 44px;
+    margin-bottom: 4px;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+    }
 `;
 
 export default Step;

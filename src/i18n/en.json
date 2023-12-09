@@ -1154,7 +1154,7 @@
             "action": {
                 "connect-wallet": "Connect Wallet",
                 "connected": "Connected",
-                "deposit": "Deposit",
+                "deposit": "Deposit now",
                 "logged-in": "Logged in",
                 "sign-up": "Sign up",
                 "trade": "Trade on Thalesmarkets"
