@@ -145,38 +145,26 @@ const Step: React.FC<StepProps> = ({ stepNumber, stepType, currentStep, setCurre
 
     return (
         <Container onClick={isActive ? onStepActionClickHandler : () => {}}>
-            {isMobile ? (
+            <StepNumberSection>
+                <StepNumberWrapper
+                    completed={!isActive && showStepIcon}
+                    isActive={isActive}
+                    isDisabled={isDisabled}
+                    onClick={changeCurrentStep}
+                >
+                    <StepNumber isActive={isActive}>
+                        {!isActive && showStepIcon ? <CorrectIcon className="icon icon--correct" /> : stepNumber}
+                    </StepNumber>
+                </StepNumberWrapper>
+            </StepNumberSection>
+            <StepDescriptionSection isActive={isActive} isDisabled={isDisabled} onClick={changeCurrentStep}>
+                <StepTitle completed={!isActive && showStepIcon}>{stepTitle}</StepTitle>
+                <StepDescription completed={!isActive && showStepIcon}>{stepDescription}</StepDescription>
+            </StepDescriptionSection>
+            {stepType !== GetStartedStep.LOG_IN && (
                 <StepActionSection isActive={isActive} isDisabled={isDisabled}>
                     {getStepAction()}
                 </StepActionSection>
-            ) : (
-                <>
-                    <StepNumberSection>
-                        <StepNumberWrapper
-                            completed={!isActive && showStepIcon}
-                            isActive={isActive}
-                            isDisabled={isDisabled}
-                            onClick={changeCurrentStep}
-                        >
-                            <StepNumber isActive={isActive}>
-                                {!isActive && showStepIcon ? (
-                                    <CorrectIcon className="icon icon--correct" />
-                                ) : (
-                                    stepNumber
-                                )}
-                            </StepNumber>
-                        </StepNumberWrapper>
-                    </StepNumberSection>
-                    <StepDescriptionSection isActive={isActive} isDisabled={isDisabled} onClick={changeCurrentStep}>
-                        <StepTitle completed={!isActive && showStepIcon}>{stepTitle}</StepTitle>
-                        <StepDescription completed={!isActive && showStepIcon}>{stepDescription}</StepDescription>
-                    </StepDescriptionSection>
-                    {stepType !== GetStartedStep.LOG_IN && (
-                        <StepActionSection isActive={isActive} isDisabled={isDisabled}>
-                            {getStepAction()}
-                        </StepActionSection>
-                    )}
-                </>
             )}
         </Container>
     );
@@ -186,15 +174,13 @@ const Container = styled.div`
     display: flex;
     margin-top: 20px;
     margin-bottom: 20px;
-    @media (max-width: 950px) {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    gap: 30px;
+    @media (max-width: 600px) {
+        gap: 16px;
     }
 `;
 
-const StepNumberSection = styled(FlexDivCentered)`
-    width: 10%;
-`;
+const StepNumberSection = styled(FlexDivCentered)``;
 
 const StepDescriptionSection = styled(FlexDivColumn)<{ isActive: boolean; isDisabled?: boolean }>`
     width: 60%;
@@ -203,19 +189,14 @@ const StepDescriptionSection = styled(FlexDivColumn)<{ isActive: boolean; isDisa
 `;
 
 const StepActionSection = styled(FlexDivCentered)<{ isActive: boolean; isDisabled?: boolean }>`
-    width: 30%;
     text-align: center;
     color: ${(props) => (props.isActive ? props.theme.textColor.quaternary : props.theme.textColor.secondary)};
-    @media (max-width: 950px) {
-        width: 100%;
-        text-align: start;
-        justify-content: start;
-    }
 `;
 
 const StepAction = styled.div`
-    @media (max-width: 950px) {
-        display: flex;
+    width: 180px;
+    @media (max-width: 600px) {
+        width: 80px;
     }
 `;
 
@@ -248,11 +229,18 @@ const StepNumberWrapper = styled.div<{ isActive: boolean; isDisabled?: boolean; 
             ? ''
             : `background: ${props.completed ? props.theme.background.quaternary : props.theme.background.tertiary};`}
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : props.isActive ? 'default' : 'pointer')};
+    @media (max-width: 600px) {
+        width: 36px;
+        height: 36px;
+    }
 `;
 
 const StepNumber = styled.span<{ isActive: boolean }>`
     font-weight: 700;
     font-size: 29px;
+    @media (max-width: 600px) {
+        font-size: 20px;
+    }
     line-height: 43px;
     text-transform: uppercase;
     color: ${(props) =>
@@ -263,17 +251,6 @@ const StepActionIconWrapper = styled.div<{ isActive: boolean; pulsate?: boolean 
     text-align: center;
     animation: ${(props) => (props.pulsate && props.isActive ? 'pulsing 1s ease-in' : '')};
     animation-iteration-count: ${(props) => (props.pulsate && props.isActive ? 'infinite;' : '')};
-
-    @media (max-width: 950px) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        ${(props) => (props.isActive ? `border: 2px solid ${props.theme.borderColor.quaternary};` : '')}
-        ${(props) => (props.isActive ? '' : `background: ${props.theme.background.tertiary};`)}
-    }
 
     @keyframes pulsing {
         0% {
@@ -296,21 +273,10 @@ const StepActionIcon = styled.i<{ isDisabled?: boolean; isActive?: boolean }>`
     padding-bottom: 15px;
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
     color: ${(props) => props.theme.textColor.quaternary};
-
-    @media (max-width: 950px) {
-        padding-bottom: 0;
-        color: ${(props) => (props.isDisabled ? props.theme.textColor.secondary : props.theme.textColor.primary)};
-        font-size: 30px;
-    }
 `;
 
 const StepActionLabel = styled.div<{ isDisabled?: boolean }>`
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
-    @media (max-width: 950px) {
-        display: flex;
-        align-items: center;
-        margin-left: 20px;
-    }
 `;
 
 const StepActionName = styled.span<{ isActive?: boolean; completed?: boolean }>`
@@ -318,9 +284,8 @@ const StepActionName = styled.span<{ isActive?: boolean; completed?: boolean }>`
     font-size: 14px;
     line-height: 16px;
     color: ${(props) => props.theme.background.quaternary};
-    @media (max-width: 950px) {
-        font-size: 20px;
-        line-height: 27px;
+    @media (max-width: 600px) {
+        display: none;
     }
 `;
 

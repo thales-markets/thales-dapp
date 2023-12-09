@@ -10,12 +10,10 @@ import { FlexDiv, FlexDivColumn, FlexDivStart } from 'styles/common';
 import Step from './components/Step';
 import { useTranslation } from 'react-i18next';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
-import { getIsMobile } from 'redux/modules/ui';
 import { getCollaterals } from 'utils/currency';
 
 const GetStarted: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { t } = useTranslation();
     const isAA = useSelector((state: RootState) => getIsAA(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -84,7 +82,7 @@ const GetStarted: React.FC = () => {
                             setCurrentStep={setCurrentStep}
                             hasFunds={totalBalanceValue > 0}
                         />
-                        {!isMobile && stepNumber !== steps.length && <HorizontalLine />}
+                        {stepNumber !== steps.length && <HorizontalLine />}
                     </React.Fragment>
                 );
             })}
@@ -93,7 +91,6 @@ const GetStarted: React.FC = () => {
 };
 
 const Container = styled(FlexDivColumn)`
-    width: 80%;
     margin-bottom: 40px;
 `;
 
