@@ -165,7 +165,7 @@ const Withdraw: React.FC = () => {
                     </WarningContainer>
                     <ButtonContainer>
                         <Button
-                            backgroundColor={theme.button.background.quaternary}
+                            backgroundColor={theme.button.background.primary}
                             disabled={!validation.amount || !validation.walletAddress}
                             textColor={theme.button.textColor.primary}
                             borderColor={theme.button.borderColor.secondary}

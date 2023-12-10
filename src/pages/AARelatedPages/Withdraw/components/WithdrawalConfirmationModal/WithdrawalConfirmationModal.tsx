@@ -101,6 +101,7 @@ const WithdrawalConfirmationModal: React.FC<WithdrawalConfirmationModalProps> = 
                         <ItemLabel>{t('withdraw.amount')}:</ItemLabel>
                         <ItemDescription>
                             {<TokenIcon className={`currency-icon currency-icon--${token.toLowerCase()}`} />}
+
                             {formatCurrencyWithKey(token, amount)}
                             {` (${t('withdraw.confirmation-modal.withdrawal-fee')}: ${formatCurrencyWithKey(
                                 token,
@@ -127,7 +128,7 @@ const WithdrawalConfirmationModal: React.FC<WithdrawalConfirmationModalProps> = 
 };
 
 const MainContainer = styled(FlexDiv)`
-    padding: 30px 20px 10px 20px;
+    padding-top: 30px;
     flex-direction: column;
     max-width: 550px;
     align-items: center;
@@ -149,6 +150,9 @@ const List = styled.ol`
     list-style-type: decimal;
     line-height: 24px;
     list-style-position: inside;
+    li {
+        margin: 5px 0;
+    }
 `;
 
 const TokenIcon = styled.i`
@@ -162,10 +166,12 @@ const TokenIcon = styled.i`
 
 const DetailsContainer = styled(FlexDiv)`
     width: 100%;
-    margin-top: 10px;
+    margin-top: 24px;
     flex-direction: column;
-    background-color: ${(props) => props.theme.connectWalletModal.totalBalanceBackground};
+    gap: 20px;
+    background-color: ${(props) => props.theme.connectWalletModal.buttonBackground};
     padding: 18px;
+    border-radius: 5px;
 `;
 
 const ItemContainer = styled(FlexDiv)`
@@ -173,8 +179,7 @@ const ItemContainer = styled(FlexDiv)`
     flex-direction: row;
     align-items: center;
     width: 100%;
-    justify-content: space-between;
-    margin: 5px 0px;
+    justify-content: flex-start;
     color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 575px) {
         height: 50px;
@@ -183,6 +188,7 @@ const ItemContainer = styled(FlexDiv)`
 `;
 
 const ItemLabel = styled(FlexDiv)`
+    font-family: 'Roboto';
     align-items: center;
     font-size: 18px;
     font-weight: 700;
@@ -194,7 +200,7 @@ const ItemLabel = styled(FlexDiv)`
 `;
 
 const ItemDescription = styled.div`
-    display: block;
+    display: flex;
     align-items: center;
     overflow-wrap: break-word;
     width: fit-content;
@@ -217,7 +223,7 @@ const Button = styled(FlexDiv)`
     align-items: center;
     justify-content: center;
     color: ${(props) => props.theme.button.textColor.primary};
-    background-color: ${(props) => props.theme.button.background.quaternary};
+    background-color: ${(props) => props.theme.button.background.primary};
     font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;

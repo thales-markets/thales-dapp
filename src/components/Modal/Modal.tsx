@@ -92,11 +92,16 @@ const Header = styled(FlexDivRow)<{ mobileStyle?: CSSProperties }>`
 `;
 
 const Title = styled(FlexDiv)`
-    font-weight: bold;
+    font-family: Fira Sans;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
     font-size: 18px;
     line-height: 110%;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
+    text-transform: uppercase;
     text-align: center;
+    margin: auto;
 `;
 
 const CloseIcon = styled.i`

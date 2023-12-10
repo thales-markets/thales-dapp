@@ -322,17 +322,19 @@ const CopyButton = styled(FlexDiv)`
 `;
 
 const SectionLabel = styled.span`
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    text-transform: capitalize;
+    text-transform: uppercase;
     letter-spacing: 3px;
-    margin-bottom: 13px;
+    margin-bottom: 24px;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const TutorialLinksContainer = styled(FlexDiv)`
     flex-direction: column;
     border-radius: 5px;
     margin-bottom: 13px;
+
     padding: 19px;
     border: 1px ${(props) => props.theme.borderColor.primary} solid;
 `;
@@ -344,8 +346,6 @@ const Link = styled.a`
     text-decoration: underline;
     text-transform: capitalize;
     padding-bottom: 15px;
-    :visited {
-        color: ${(props) => props.theme.textColor.primary};
-    }
+    color: ${(props) => props.theme.textColor.primary};
 `;
 export default Deposit;
