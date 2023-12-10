@@ -47,20 +47,20 @@ const BannerCarousel: React.FC = () => {
 const Container = styled.div`
     position: relative;
     z-index: 0;
-    width: 974px;
+    max-width: 1080px;
+    width: 100%;
     height: 120px;
     border-radius: 11px;
     overflow: hidden;
     margin: 0 0 20px 0;
-    max-width: 100%;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
 const StyledDiv = styled.div<{ image: string; hasHref: boolean }>`
-    max-width: 100%;
-    width: 974px;
+    width: 100%;
+    max-width: 1080px;
     height: 120px;
     background-image: ${(props) => `url(${props.image})`};
     cursor: ${(props) => (props.hasHref ? 'pointer' : 'default')};

@@ -246,14 +246,16 @@ const BuyWithText = styled.span`
     line-height: normal;
     text-transform: capitalize;
     margin: auto;
-    margin-top: 80px;
-    margin-bottom: 60px;
+    margin-top: 55px;
+    margin-bottom: 30px;
     color: ${(props) => props.theme.textColor.primary};
 `;
 
 const OnramperIcons = styled.i`
     font-size: 100px;
     color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: 600px) {
+    }
 `;
 
 const WalletAddressInputWrapper = styled(FlexDiv)`

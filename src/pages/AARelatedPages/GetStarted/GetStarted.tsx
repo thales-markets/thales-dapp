@@ -92,6 +92,7 @@ const GetStarted: React.FC = () => {
 
 const Container = styled(FlexDivColumn)`
     margin-bottom: 40px;
+    max-width: 1080px;
 `;
 
 const Title = styled(FlexDivStart)`

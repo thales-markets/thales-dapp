@@ -47,6 +47,7 @@ const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width 
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     width: ${(props) => props.width || 100}%;
+    max-width: 1080px;
     padding-bottom: 10px;
     strong {
         font-weight: bold;

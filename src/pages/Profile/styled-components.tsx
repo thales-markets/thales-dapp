@@ -4,7 +4,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 
 export const Container = styled(FlexDivColumn)`
     width: 100%;
-    max-width: 974px;
+    max-width: 1080px;
 `;
 
 export const Header = styled(FlexDivRow)`

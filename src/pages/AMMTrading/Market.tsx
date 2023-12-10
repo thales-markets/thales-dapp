@@ -202,7 +202,7 @@ const MainContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    max-width: 974px;
+    max-width: 1080px;
     @media (max-width: 1024px) {
         flex-direction: column;
     }

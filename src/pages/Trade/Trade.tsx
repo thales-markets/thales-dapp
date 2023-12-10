@@ -194,7 +194,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
 const Wrapper = styled.div`
     width: 100%;
-    max-width: 974px;
+    max-width: 1080px;
 `;
 
 const UnsupportedNetworkWrapper = styled.div`

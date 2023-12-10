@@ -6,6 +6,7 @@ export const Wrapper = styled(FlexDiv)`
     flex-direction: row;
     gap: 20px;
     width: 100%;
+    max-width: 1080px;
     @media (max-width: 575px) {
         margin-top: 20px;
         flex-wrap: wrap-reverse;

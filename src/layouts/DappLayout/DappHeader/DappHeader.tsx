@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes';
 import UserWallet from '../components/UserWallet';
 import Notifications from '../components/Notifications';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -14,7 +13,7 @@ const DappHeader: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
-        <Container maxWidth={getMaxWidth()}>
+        <Container>
             <LeftContainer>
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
@@ -45,19 +44,9 @@ const sidebarMenuClickHandler = () => {
     }
 };
 
-const getMaxWidth = () => {
-    const splittedPathname = location.pathname.split('/');
-    if (`/${splittedPathname[1]}` === ROUTES.Options.Home || [ROUTES.Options.Profile].includes(location.pathname))
-        return '974px';
-
-    if (location.pathname === ROUTES.Options.Wizard) return '900px';
-    if (location.pathname === ROUTES.Options.SpeedMarkets) return '1080px';
-    return '1440px';
-};
-
-const Container = styled(FlexDivRowCentered)<{ maxWidth: string }>`
+const Container = styled(FlexDivRowCentered)`
     width: 100%;
-    max-width: ${(props) => props.maxWidth};
+    max-width: 1080px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 25px;
