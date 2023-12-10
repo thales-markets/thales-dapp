@@ -90,7 +90,7 @@ const BalanceWrapper = styled(FlexDiv)`
     border-radius: 20px;
     padding: 19px;
     margin-bottom: 20px;
-    background-color: ${(props) => props.theme.background.primary};
+    background-color: ${(props) => props.theme.background.secondary};
 `;
 
 const SectionLabel = styled.span`

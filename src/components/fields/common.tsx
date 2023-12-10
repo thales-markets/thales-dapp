@@ -5,6 +5,7 @@ export const FieldContainer = styled(FlexDivColumn)<{ margin?: string }>`
     flex: initial;
     position: relative;
     margin: ${(props) => props.margin || '0 0 10px 0'};
+    width: 100%;
 `;
 
 export const FieldLabel = styled.label`

@@ -183,7 +183,6 @@ const Container = styled.div`
 const StepNumberSection = styled(FlexDivCentered)``;
 
 const StepDescriptionSection = styled(FlexDivColumn)<{ isActive: boolean; isDisabled?: boolean }>`
-    width: 60%;
     color: ${(props) => (props.isActive ? props.theme.textColor.primary : props.theme.textColor.secondary)};
     cursor: ${(props) => (props.isDisabled ? 'not-allowed' : 'pointer')};
 `;

@@ -230,7 +230,7 @@ const PositionedWrapper = styled(FlexDivColumnCentered)`
 const LeftSide = styled.div`
     height: 100%;
     width: 100%;
-    max-width: 600px;
+    max-width: 640px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: grid;
         max-width: initial;
@@ -240,7 +240,7 @@ const LeftSide = styled.div`
 const RightSide = styled.div`
     width: 100%;
     height: 100%;
-    max-width: 350px;
+    max-width: 420px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }

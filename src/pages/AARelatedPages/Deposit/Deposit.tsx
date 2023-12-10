@@ -254,7 +254,8 @@ const BuyWithText = styled.span`
 const OnramperIcons = styled.i`
     font-size: 100px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 600px) {
+    @media (max-width: 500px) {
+        font-size: 75px;
     }
 `;
 

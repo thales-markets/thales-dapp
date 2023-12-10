@@ -13,7 +13,7 @@ export const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean }>`
 
 export const TradingDetailsContainer = styled(FlexDivRowCentered)`
     position: relative;
-    width: 600px;
+    width: 640px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
@@ -24,7 +24,7 @@ export const TradingDetailsContainer = styled(FlexDivRowCentered)`
 `;
 
 export const FinalizeTrade = styled(FlexDivCentered)<{ isDetailsPage?: boolean }>`
-    width: ${(props) => (props.isDetailsPage ? '100%' : '350px')};
+    width: ${(props) => (props.isDetailsPage ? '100%' : '420px')};
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {

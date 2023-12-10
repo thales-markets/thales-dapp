@@ -7,7 +7,7 @@ export const Wrapper = styled(FlexDiv)`
     gap: 20px;
     width: 100%;
     max-width: 1080px;
-    @media (max-width: 575px) {
+    @media (max-width: 600px) {
         margin-top: 20px;
         flex-wrap: wrap-reverse;
     }
@@ -15,8 +15,8 @@ export const Wrapper = styled(FlexDiv)`
 
 export const FormContainer = styled(FlexDiv)`
     flex-direction: column;
-    width: 60%;
-    @media (max-width: 575px) {
+    width: 100%;
+    @media (max-width: 600px) {
         width: 100%;
     }
 `;
@@ -24,11 +24,12 @@ export const FormContainer = styled(FlexDiv)`
 export const BalanceSection = styled(FlexDiv)`
     flex-direction: column;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     margin-top: 20px;
-    @media (max-width: 575px) {
+    @media (max-width: 600px) {
         padding: 0;
         width: 100%;
+        max-width: 100%;
     }
 `;
 
@@ -60,9 +61,10 @@ export const CollateralContainer = styled.div`
     position: relative;
     width: 100%;
     margin-left: auto;
-    border-radius: 5px;
-    padding: 8px;
-    max-height: 30px;
+    border-radius: 8px;
+    border: 1px solid ${(props) => props.theme.input.borderColor.secondary};
+    padding: 8px 0;
+    max-height: 34px;
     display: flex;
     justify-content: end;
     align-items: center;
@@ -81,7 +83,7 @@ export const WarningContainer = styled(FlexDiv)`
     font-size: 18px;
     border-radius: 5px;
     margin-top: 18px;
-    @media (max-width: 575px) {
+    @media (max-width: 600px) {
         font-size: 12px;
     }
 `;

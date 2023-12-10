@@ -1178,6 +1178,31 @@
         "ready-to-use": "Your account is now ready to start using Thalesmarkets!",
         "go": "Let's go!"
     },
+    "withdraw": {
+        "address-input-label": "Your personal {{ token }} withdrawal address on {{ network }}",
+        "amount": "Amount",
+        "heading-withdraw": "Withdraw crypto",
+        "paste-address": "Paste your wallet address here",
+        "button-label-withdraw": "Withdraw",
+        "confirmation-modal": {
+            "title": "Withdrawal Requested",
+            "correct-address": "Make sure the Address is correct and that it accepts [{{ network }}] [{{ token }}]",
+            "withdrawal-transaction-warning": "Withdraw transactions can not be cancelled",
+            "withdrawal-fee": "Withdrawal fee",
+            "address": "Address",
+            "network": "Network",
+            "confirm": "Confirm"
+        },
+        "toast-messages": {
+            "pending": "Transaction pending...",
+            "error": "Some error occurred while withdrawing funds.",
+            "success": "Successfully withdrawal"
+        },
+        "validation": {
+            "wallet-address": "Wallet address is not valid",
+            "amount": "Amount is not valid"
+        }
+    },
     "governance": {
         "title": "Governance",
         "you": "You",

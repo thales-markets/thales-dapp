@@ -171,7 +171,6 @@ const Container = styled(FlexDivStart)<{
     margin?: string;
     position?: string;
 }>`
-    margin: 0 7px;
     align-items: center;
     width: ${(props) => (props.stretch ? '100%' : '')};
     ${(props) => (props.isDropDownAbove ? 'position: relative;' : props.position ? `position: ${props.position};` : '')}
@@ -198,8 +197,8 @@ const TextCollateral = styled(Text)`
         props.isDetailedView
             ? props.theme.input.textColor.primary
             : props.isSelectedCollateral
-            ? props.theme.textColor.quaternary
-            : props.theme.textColor.tertiary};
+            ? props.theme.textColor.primary
+            : props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -235,9 +234,10 @@ const Dropdown = styled(FlexDivColumnCentered)<{ width?: string; isDropDownAbove
     margin-left: -16px;
     width: ${(props) => (props.width ? props.width : '71px')};
     padding: 5px 3px;
-    border-radius: 8px;
-    background: ${(props) => props.theme.background.quaternary};
+
+    background: ${(props) => props.theme.background.secondary};
     z-index: 100;
+    border-radius: 8px;
     border: 2px solid ${(props) => props.theme.input.borderColor.secondary};
 `;
 
@@ -248,7 +248,7 @@ const DetailedDropdown = styled(FlexDivColumnCentered)<{ width?: string }>`
     width: ${(props) => (props.width ? props.width : '350px')};
     padding: 5px 3px;
     border-radius: 8px;
-    background: ${(props) => props.theme.input.background.primary};
+    background: ${(props) => props.theme.background.secondary};
     z-index: 100;
     border: 2px solid ${(props) => props.theme.input.borderColor.secondary};
 `;
@@ -259,9 +259,8 @@ const CollateralOption = styled.div`
     padding: 5px 7px;
     border-radius: 8px;
     cursor: pointer;
-    border: 2px solid ${(props) => props.theme.background.quaternary};
     &:hover {
-        background: rgb(80 183 215);
+        background: ${(props) => props.theme.input.background.primary};
     }
 `;
 
@@ -275,9 +274,9 @@ const DetailedCollateralOption = styled(FlexDivSpaceBetween)`
 `;
 
 const Icon = styled.i`
-    font-size: 25px;
+    font-size: 22px;
     line-height: 100%;
-    margin-right: 10px;
+    margin-right: 6px;
     color: ${(props) => props.theme.input.textColor.primary};
 `;
 
