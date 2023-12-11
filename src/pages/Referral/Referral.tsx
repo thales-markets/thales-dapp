@@ -1,63 +1,63 @@
+import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
+import axios from 'axios';
+import Button from 'components/Button';
+import ElectionsBanner from 'components/ElectionsBanner';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import ReadMoreButton from 'components/ReadMoreButton';
+import SelectInput from 'components/SelectInput';
+import Table from 'components/TableV2';
+import ToastMessage from 'components/ToastMessage';
+import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import TextInput from 'components/fields/TextInput/TextInput';
+import { generalConfig } from 'config/general';
+import { USD_SIGN } from 'constants/currency';
+import ROUTES from 'constants/routes';
+import { orderBy } from 'lodash';
+import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
+import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
+import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
+import useReferrerQuery from 'queries/referral/useReferrerQuery';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatTxTimestamp, getEtherscanAddressLink, truncateAddress } from 'thales-utils';
+import { ThemeInterface } from 'types/ui';
+import { getIsOVM } from 'utils/network';
+import { buildReferrerLink } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
 import {
+    BoldText,
     DescriptionContainer,
+    FooterLink,
     FormWrapper,
     HeaderContainer,
     KeyValue,
     Label,
-    RowContrainer,
-    StatisticsWrapper,
-    StatLabel,
-    StatValue,
-    TableWrapper,
-    Text,
     MenuContainer,
     MenuItem,
-    Tab,
-    BoldText,
-    ViewsDropDownWrapper,
-    ViewButton,
-    ViewsDropDown,
-    ViewTitle,
-    ViewItem,
     ReferralFooter,
+    RowContrainer,
+    StatLabel,
+    StatValue,
+    StatisticsWrapper,
     StyledLink,
-    FooterLink,
+    Tab,
+    TableWrapper,
+    Text,
+    ViewButton,
+    ViewItem,
+    ViewTitle,
+    ViewsDropDown,
+    ViewsDropDownWrapper,
 } from './styled-components';
-import Button from 'components/Button';
-import { Trans, useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign, formatTxTimestamp, truncateAddress, getEtherscanAddressLink } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
-import Table from 'components/TableV2';
-import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
-import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
-import { buildReferrerLink } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import useReferrerQuery from 'queries/referral/useReferrerQuery';
-import { orderBy } from 'lodash';
-import SelectInput from 'components/SelectInput';
-import { toast } from 'react-toastify';
-import ReadMoreButton from 'components/ReadMoreButton';
-import Tooltip from 'components/Tooltip';
-import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
-import OpRewardsBanner from 'components/OpRewardsBanner';
-import { getIsOVM } from 'utils/network';
-import ElectionsBanner from 'components/ElectionsBanner';
-import OutsideClickHandler from 'react-outside-click-handler';
-import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
-import { generalConfig } from 'config/general';
-import axios from 'axios';
-import snxJSConnector from 'utils/snxJSConnector';
-import TextInput from 'components/fields/TextInput/TextInput';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMessage/ToastMessage';
-import ToastMessage from 'components/ToastMessage';
 
 const tabs = [
     {
