@@ -1,4 +1,3 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button/Button';
 import ElectionsBanner from 'components/ElectionsBanner';
@@ -6,17 +5,18 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import SimpleLoader from 'components/SimpleLoader';
 import Switch from 'components/SwitchInput/SwitchInput';
 import TimeRemaining from 'components/TimeRemaining';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import {
-    getDefaultToastContent,
-    getLoadingToastOptions,
-    getErrorToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
 import { Network } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
@@ -25,21 +25,28 @@ import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoo
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { FlexDivRow } from 'styles/common';
+import { formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { ThemeInterface } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getDefaultCollateral } from 'utils/currency';
-import { formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { checkAllowance } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { delay } from 'utils/timer';
 import PnL from './PnL';
 import Transactions from './Transactions';
 import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
@@ -80,13 +87,10 @@ import {
     Wrapper,
     defaultButtonProps,
 } from './styled-components';
-import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import { delay } from 'utils/timer';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const { openConnectModal } = useConnectModal();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -110,6 +114,9 @@ const LiquidityPool: React.FC = () => {
     const [withdrawalAmount, setWithdrawalAmount] = useState<number>(0);
 
     const collateral = getDefaultCollateral(networkId);
+
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+    const dispatch = useDispatch();
 
     const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -415,7 +422,16 @@ const LiquidityPool: React.FC = () => {
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                    {...defaultButtonProps}
+                >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
@@ -457,7 +473,16 @@ const LiquidityPool: React.FC = () => {
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                    {...defaultButtonProps}
+                >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

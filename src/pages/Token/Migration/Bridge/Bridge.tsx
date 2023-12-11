@@ -1,44 +1,53 @@
-import { BigNumber, ethers } from 'ethers';
-import { InputContainer } from 'pages/Token/components/styled-components';
-import NumericInput from 'components/fields/NumericInput';
-import React, { useEffect, useState } from 'react';
-import snxJSConnector from 'utils/snxJSConnector';
-import { useTranslation } from 'react-i18next';
-import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
-import { checkAllowance } from 'utils/network';
-import { THALES_CURRENCY } from 'constants/currency';
-import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
-import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
+import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
-import styled from 'styled-components';
-import ApprovalModal from 'components/ApprovalModal';
-import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
-import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/Button';
-import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import NumericInput from 'components/fields/NumericInput';
+import { THALES_CURRENCY } from 'constants/currency';
+import { L1_TO_L2_NETWORK_MAPPER, SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 import { Network } from 'enums/network';
+import { BigNumber, ethers } from 'ethers';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import {
+    getIsWalletConnected,
+    getNetwork,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
+import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
+import { checkAllowance } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const network = useSelector((state: RootState) => getNetwork(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [amount, setAmount] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [opThalesBalance, setOpThalesBalance] = useState<number | string>('');
@@ -152,7 +161,19 @@ const Bridge: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;

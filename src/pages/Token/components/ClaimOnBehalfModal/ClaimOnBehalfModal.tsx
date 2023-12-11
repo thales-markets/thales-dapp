@@ -1,28 +1,33 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Trans, useTranslation } from 'react-i18next';
-import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
-import { InputContainer } from '../styled-components';
-import { getAddress, isAddress } from 'ethers/lib/utils';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
-import { getIsAppReady } from 'redux/modules/app';
-import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
-import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
-import TextInput from 'components/fields/TextInput';
 import Modal from 'components/Modal';
-import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import TextInput from 'components/fields/TextInput';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { getAddress, isAddress } from 'ethers/lib/utils';
+import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/styled-components';
+import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
+import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import snxJSConnector from 'utils/snxJSConnector';
+import { InputContainer } from '../styled-components';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -30,11 +35,14 @@ type ClaimOnBehalfModalProps = {
 
 const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [account, setAccount] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const { stakingThalesContract } = snxJSConnector as any;
@@ -100,7 +108,16 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
         const width = '300px';
         if (!isWalletConnected) {
             return (
-                <Button width={width} onClick={openConnectModal}>
+                <Button
+                    width={width}
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

@@ -1,6 +1,11 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
 import TimeRemaining from 'components/TimeRemaining';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import Tooltip from 'components/Tooltip/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import { THALES_CURRENCY } from 'constants/currency';
@@ -11,26 +16,26 @@ import { InputContainer } from 'pages/Token/components/styled-components';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import { UserStakingData } from 'types/token';
 import { formattedDuration } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ClaimMessage, EarnSection, SectionContentContainer } from '../../../styled-components';
-import { toast } from 'react-toastify';
-import {
-    getDefaultToastContent,
-    getErrorToastOptions,
-    getLoadingToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -40,12 +45,14 @@ const addDurationPeriod = (date: Date, unstakeDurationPeriod: number) => {
 
 const Unstake: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
 
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
@@ -190,7 +197,19 @@ const Unstake: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (isUnstakingInContract) {
             return (

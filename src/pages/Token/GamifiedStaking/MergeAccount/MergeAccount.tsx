@@ -1,43 +1,51 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import Button from 'components/Button/Button';
-import TextInput from 'components/fields/TextInput/TextInput';
-import { ZERO_ADDRESS } from 'constants/network';
-import { TransactionFilterEnum } from 'enums/token';
-import { ScreenSizeBreakpoint } from 'enums/ui';
-import { getAddress, isAddress } from 'ethers/lib/utils';
-import { orderBy } from 'lodash';
-import { InputContainer } from 'pages/Token/components/styled-components';
-import useUserStakingDataQuery from 'queries/token/useUserStakingData';
-import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import { getEtherscanAddressLink } from 'thales-utils';
-import snxJSConnector from 'utils/snxJSConnector';
-import YourTransactions from './Transactions';
-import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import TextInput from 'components/fields/TextInput/TextInput';
+import { ZERO_ADDRESS } from 'constants/network';
+import { TransactionFilterEnum } from 'enums/token';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { getAddress, isAddress } from 'ethers/lib/utils';
+import { orderBy } from 'lodash';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { getEtherscanAddressLink } from 'thales-utils';
+import snxJSConnector from 'utils/snxJSConnector';
+import YourTransactions from './Transactions';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [destAddress, setDestAddress] = useState<string>('');
     const [delegateDestAddress, setDelegateDestAddress] = useState<string>('');
     const [isMerging, setIsMerging] = useState<boolean>(false);
@@ -200,7 +208,19 @@ const MergeAccount: React.FC = () => {
 
     const getMergeButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
             return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
@@ -219,7 +239,19 @@ const MergeAccount: React.FC = () => {
 
     const getDelegateButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
 
         if (delegatedVolumeAddress !== ZERO_ADDRESS) {

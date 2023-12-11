@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { EarnSection, SectionContentContainer } from '../../styled-components';
-import { FlexDivColumnCentered } from 'styles/common';
-import { useTranslation } from 'react-i18next';
-import snxJSConnector from 'utils/snxJSConnector';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import styled from 'styled-components';
-import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
-import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
-import { ethers } from 'ethers';
-import { LP_TOKEN } from 'constants/currency';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
-import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import NumericInput from 'components/fields/NumericInput';
+import { LP_TOKEN } from 'constants/currency';
+import { ethers } from 'ethers';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivColumnCentered } from 'styles/common';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
+import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import { EarnSection, SectionContentContainer } from '../../styled-components';
 
 type Properties = {
     staked: number;
@@ -29,10 +34,13 @@ type Properties = {
 
 const Unstake: React.FC<Properties> = ({ staked }) => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [amountToUnstake, setAmountToUnstake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
@@ -74,7 +82,19 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-staking-balance`)}</Button>;

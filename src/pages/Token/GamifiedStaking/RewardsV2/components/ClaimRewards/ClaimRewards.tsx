@@ -1,35 +1,41 @@
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
-import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import Button from 'components/Button/Button';
+import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 
-import { THALES_CURRENCY } from 'constants/currency';
-import { ScreenSizeBreakpoint } from 'enums/ui';
-import { formatCurrencyWithKey } from 'thales-utils';
-import { useTranslation } from 'react-i18next';
-import useStakingDataQuery from 'queries/token/useStakingDataQuery';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { StakingData, UserStakingData } from 'types/token';
-import { ThemeInterface } from 'types/ui';
-import snxJSConnector from 'utils/snxJSConnector';
-import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { toast } from 'react-toastify';
+import { THALES_CURRENCY } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { formatCurrencyWithKey } from 'thales-utils';
+import { StakingData, UserStakingData } from 'types/token';
+import { ThemeInterface } from 'types/ui';
 import { refetchTokenQueries } from 'utils/queryConnector';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const ClaimRewards: React.FC = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
@@ -37,12 +43,12 @@ const ClaimRewards: React.FC = () => {
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const theme: ThemeInterface = useTheme();
-    const { openConnectModal } = useConnectModal();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
 
     const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
@@ -155,7 +161,16 @@ const ClaimRewards: React.FC = () => {
     const getClaimButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button additionalStyles={ButtonStyle} onClick={openConnectModal}>
+                <Button
+                    additionalStyles={ButtonStyle}
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

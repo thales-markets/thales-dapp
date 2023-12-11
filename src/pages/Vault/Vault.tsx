@@ -1,92 +1,97 @@
+import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button/Button';
+import ElectionsBanner from 'components/ElectionsBanner';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import SimpleLoader from 'components/SimpleLoader';
+import Switch from 'components/SwitchInput/SwitchInput';
+import TimeRemaining from 'components/TimeRemaining';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip';
+import NumericInput from 'components/fields/NumericInput';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
+import { USD_SIGN } from 'constants/currency';
+import { LINKS } from 'constants/links';
+import { VAULT_MAP } from 'constants/vault';
+import { VaultTab } from 'enums/vault';
+import { BigNumber, ethers } from 'ethers';
+import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
+import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
 import {
-    Container,
-    Title,
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
+import { ThemeInterface } from 'types/ui';
+import { UserVaultData, VaultData } from 'types/vault';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
+import vaultContract from 'utils/contracts/ammVaultContract';
+import { getDefaultCollateral } from 'utils/currency';
+import { checkAllowance } from 'utils/network';
+import { refetchVaultData } from 'utils/queryConnector';
+import { navigateTo } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
+import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
+import ROUTES from '../../constants/routes';
+import { buildHref } from '../../utils/routes';
+import PnL from './PnL';
+import Transactions from './Transactions';
+import {
+    BackIcon,
+    BackLinkContainer,
+    BoldContent,
     ButtonContainer,
-    Wrapper,
-    ToggleContainer,
+    Container,
+    ContentInfo,
+    ContentInfoContainer,
     Description,
+    Header,
+    HeaderVaultIcon,
+    Info,
+    LeftContainer,
+    LeftLoaderContainer,
+    Link,
+    RightContainer,
+    RightLoaderContainer,
+    RoundAllocation,
+    RoundAllocationContainer,
+    RoundAllocationLabel,
+    RoundAllocationWrapper,
+    RoundEnd,
+    RoundEndContainer,
+    RoundEndLabel,
+    RoundInfo,
+    RoundInfoContainer,
+    RoundInfoWrapper,
+    Title,
+    TitleVaultIcon,
+    ToggleContainer,
+    UsersInVaultText,
+    Variables,
+    VariablesContainer,
+    VariablesTitle,
     VaultFilledGraphicContainer,
     VaultFilledGraphicPercentage,
     VaultFilledText,
-    RoundInfoWrapper,
-    RoundInfoContainer,
-    RoundInfo,
-    LeftContainer,
-    RightContainer,
-    ContentInfoContainer,
-    ContentInfo,
-    BoldContent,
     WarningContentInfo,
-    LeftLoaderContainer,
-    RightLoaderContainer,
-    RoundEndContainer,
-    RoundEndLabel,
-    RoundEnd,
-    RoundAllocationContainer,
-    RoundAllocationLabel,
-    RoundAllocation,
-    RoundAllocationWrapper,
-    UsersInVaultText,
-    TitleVaultIcon,
-    VariablesContainer,
-    Info,
-    Variables,
-    VariablesTitle,
-    Link,
-    BackLinkContainer,
-    BackIcon,
-    Header,
-    HeaderVaultIcon,
+    Wrapper,
 } from './styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { VAULT_MAP } from 'constants/vault';
-import { VaultTab } from 'enums/vault';
-import { getIsAppReady } from 'redux/modules/app';
-import { UserVaultData, VaultData } from 'types/vault';
-import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
-import { formatCurrencyWithSign, formatPercentage, formatCurrency, getDefaultDecimalsForNetwork } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
-import TimeRemaining from 'components/TimeRemaining';
-import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
-import snxJSConnector from 'utils/snxJSConnector';
-import { toast } from 'react-toastify';
-import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance } from 'utils/network';
-import { BigNumber, ethers } from 'ethers';
-import SimpleLoader from 'components/SimpleLoader';
-import Transactions from './Transactions';
-import PnL from './PnL';
-import { RouteComponentProps } from 'react-router-dom';
-import vaultContract from 'utils/contracts/ammVaultContract';
-import { getDefaultCollateral } from 'utils/currency';
-import { getCurrencyKeyStableBalance } from 'utils/balances';
-import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import Switch from 'components/SwitchInput/SwitchInput';
-import Tooltip from 'components/Tooltip';
-import OpRewardsBanner from 'components/OpRewardsBanner';
-import NumericInput from 'components/fields/NumericInput';
-import { LINKS } from 'constants/links';
-import ElectionsBanner from 'components/ElectionsBanner';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { refetchVaultData } from 'utils/queryConnector';
-import Button from 'components/Button/Button';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import {
-    getDefaultToastContent,
-    getLoadingToastOptions,
-    getErrorToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
-import SPAAnchor from '../../components/SPAAnchor/SPAAnchor';
-import { buildHref } from '../../utils/routes';
-import ROUTES from '../../constants/routes';
-import { navigateTo } from 'utils/routes';
-import { PLAUSIBLE_KEYS, PLAUSIBLE } from 'constants/analytics';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -95,11 +100,14 @@ type VaultProps = RouteComponentProps<{
 const Vault: React.FC<VaultProps> = (props) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [amount, setAmount] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
@@ -340,7 +348,19 @@ const Vault: React.FC<VaultProps> = (props) => {
 
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
@@ -370,7 +390,19 @@ const Vault: React.FC<VaultProps> = (props) => {
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         return (
             <Button disabled={isRequestWithdrawalButtonDisabled} onClick={handleWithdrawalRequest}>

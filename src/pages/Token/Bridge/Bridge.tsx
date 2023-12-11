@@ -1,18 +1,43 @@
-import { BigNumber, ethers } from 'ethers';
-import { InputContainer } from 'pages/Token/components/styled-components';
+import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
+import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button';
+import InlineLoader from 'components/InlineLoader';
+import NetworkSwitch from 'components/NetworkSwitch';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
-import React, { useEffect, useState } from 'react';
-import snxJSConnector from 'utils/snxJSConnector';
-import { useTranslation } from 'react-i18next';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
-import { SUPPORTED_NETWORK_IDS_MAP, checkAllowance } from 'utils/network';
+import { generalConfig } from 'config/general';
 import { THALES_CURRENCY } from 'constants/currency';
 import { BRIDGE_SUPPORTED_NETWORKS } from 'constants/network';
-import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
+import { BRIDGE_SLIPPAGE_PERCENTAGE } from 'constants/options';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import { Network } from 'enums/network';
+import { ScreenSizeBreakpoint } from 'enums/ui';
+import { BigNumber, ethers } from 'ethers';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import useCelerBridgeDataQuery from 'queries/token/useCelerBridgeDataQuery';
+import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
-import { formatCurrencyWithKey, truncToDecimals, bigNumberFormatter } from 'thales-utils';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import {
     FlexDiv,
     FlexDivCentered,
@@ -22,45 +47,28 @@ import {
     FlexDivSpaceBetween,
     FlexDivStart,
 } from 'styles/common';
-import styled from 'styled-components';
-import ApprovalModal from 'components/ApprovalModal';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import Button from 'components/Button';
-import { toast } from 'react-toastify';
-import {
-    getDefaultToastContent,
-    getErrorToastOptions,
-    getLoadingToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
-import { Network } from 'enums/network';
-import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
-import { ScreenSizeBreakpoint } from 'enums/ui';
-import NetworkSwitch from 'components/NetworkSwitch';
-import { EstimateAmtRequest, EstimateAmtResponse } from 'ts-proto/gateway/gateway_pb';
+import { bigNumberFormatter, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
 import { WebClient } from 'ts-proto/gateway/GatewayServiceClientPb';
-import useDebouncedEffect from 'hooks/useDebouncedEffect';
-import { BRIDGE_SLIPPAGE_PERCENTAGE } from 'constants/options';
-import Slippage from '../../Trade/components/AmmTrading/components/Slippage';
-import OutsideClickHandler from 'react-outside-click-handler';
-import { isSlippageValid as getIsSlippageValid } from '../../Trade/components/AmmTrading/components/Slippage/Slippage';
-import FeeTooltip from './components/FeeTooltip';
-import Tooltip from 'components/Tooltip';
-import useCelerBridgeDataQuery from 'queries/token/useCelerBridgeDataQuery';
-import History from './History';
-import InlineLoader from 'components/InlineLoader';
-import { EMPTY_VALUE } from 'constants/placeholder';
-import NetworkIcon from './components/NetworkIcon';
-import { generalConfig } from 'config/general';
+import { EstimateAmtRequest, EstimateAmtResponse } from 'ts-proto/gateway/gateway_pb';
+import { SUPPORTED_NETWORK_IDS_MAP, checkAllowance } from 'utils/network';
 import { refetchCelerBridgeHistory } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import Slippage from '../../Trade/components/AmmTrading/components/Slippage';
+import { isSlippageValid as getIsSlippageValid } from '../../Trade/components/AmmTrading/components/Slippage/Slippage';
+import History from './History';
+import FeeTooltip from './components/FeeTooltip';
+import NetworkIcon from './components/NetworkIcon';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [amount, setAmount] = useState<number | string>('');
     const [destNetwork, setDestNetwork] = useState<number>(Network.Arbitrum);
     const [destSupportedNetworks, setDestSupportedNetworks] = useState<number[]>(BRIDGE_SUPPORTED_NETWORKS);
@@ -247,7 +255,19 @@ const Bridge: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (bridgeError) {
             return <Button disabled={true}>{t(`thales-token.bridge.button.label`)}</Button>;

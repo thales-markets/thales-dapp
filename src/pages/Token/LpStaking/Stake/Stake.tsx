@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, SectionContentContainer } from '../../styled-components';
-import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
-import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/styled-components';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
-import { BigNumber, ethers } from 'ethers';
-import { checkAllowance } from 'utils/network';
-import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
-import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'styles/common';
-import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
-import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button/Button';
-import { toast } from 'react-toastify';
 import {
     getDefaultToastContent,
     getErrorToastOptions,
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import NumericInput from 'components/fields/NumericInput';
+import { LP_TOKEN } from 'constants/currency';
+import { BigNumber, ethers } from 'ethers';
+import { InputContainer } from 'pages/Token/components/styled-components';
+import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivColumnCentered } from 'styles/common';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'thales-utils';
+import { checkAllowance } from 'utils/network';
+import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
+import { ClaimMessage, EarnSection, SectionContentContainer } from '../../styled-components';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -33,11 +38,14 @@ type Properties = {
 
 const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+
     const [amountToStake, setAmountToStake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
@@ -140,7 +148,19 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
 
     const getStakeButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
             return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;

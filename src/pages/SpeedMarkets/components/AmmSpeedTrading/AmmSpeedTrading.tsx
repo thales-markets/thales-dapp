@@ -1,6 +1,5 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
 import CollateralSelector from 'components/CollateralSelector';
@@ -44,7 +43,9 @@ import {
     getNetworkId,
     getSelectedCollateralIndex,
     getWalletAddress,
+    getWalletConnectModalVisibility,
     setSelectedCollateralIndex,
+    setWalletConnectModalVisibility,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -61,6 +62,7 @@ import {
 } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
+import { executeBiconomyTransaction } from 'utils/biconomy';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import {
     getCoinBalance,
@@ -78,7 +80,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
 import { delay } from 'utils/timer';
 import { SelectedPosition } from '../SelectPosition/SelectPosition';
-import { executeBiconomyTransaction } from 'utils/biconomy';
 
 type AmmSpeedTradingProps = {
     isChained: boolean;
@@ -114,7 +115,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     showWalletBalance,
 }) => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const dispatch = useDispatch();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -124,6 +124,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const isAA = useSelector((state: RootState) => getIsAA(state));
     const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
 
     const [paidAmount, setPaidAmount] = useState<number | string>(
         selectedStableBuyinAmount ? selectedStableBuyinAmount : ''
@@ -623,7 +624,19 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (!isPositionSelected) {
             return (

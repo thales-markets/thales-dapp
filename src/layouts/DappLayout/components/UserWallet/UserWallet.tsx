@@ -28,8 +28,6 @@ const UserWallet: React.FC = () => {
 
     const [walletText, setWalletText] = useState('');
 
-    console.log('USer wallet component');
-    console.log('isWalletConnected ', isWalletConnected);
     return (
         <Container>
             <Wrapper>

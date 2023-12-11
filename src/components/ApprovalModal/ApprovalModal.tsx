@@ -1,4 +1,3 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/Button';
 import Checkbox from 'components/fields/Checkbox';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
@@ -6,8 +5,13 @@ import Modal from 'components/Modal';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletConnectModalVisibility,
+    setWalletConnectModalVisibility,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
@@ -36,8 +40,8 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const [amount, setAmount] = useState<number | string>(defaultAmount);
     const [approveAll, setApproveAll] = useState<boolean>(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-
-    const { openConnectModal } = useConnectModal();
+    const connectWalletModalVisibility = useSelector((state: RootState) => getWalletConnectModalVisibility(state));
+    const dispatch = useDispatch();
 
     const maxApproveAmount = bigNumberFormatter(ethers.constants.MaxUint256);
     const isAmountEntered = Number(amount) > 0;
@@ -49,7 +53,19 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={() => openConnectModal?.()}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setWalletConnectModalVisibility({
+                                visibility: !connectWalletModalVisibility,
+                            })
+                        )
+                    }
+                >
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (!approveAll && !isAmountEntered) {
             return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
