@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
+import { getIsAA, getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { DEFAULT_NETWORK } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -29,6 +29,7 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const isAA = useSelector((state: RootState) => getIsAA(state));
 
     const filteredSupportedNetworks: Record<number, any> = useMemo(
         () =>
@@ -61,6 +62,7 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
         !window.ethereum?.isBraveWallet &&
         !window.ethereum?.isCoinbaseWallet &&
         !window.ethereum?.isTrust &&
+        !isAA &&
         !forceNetworkSwitch;
 
     return (

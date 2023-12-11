@@ -8,9 +8,13 @@ import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { getIsMobile } from '../../../redux/modules/ui';
+import { navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
+import { useTranslation } from 'react-i18next';
 
 const DappHeader: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const { t } = useTranslation();
 
     return (
         <Container>
@@ -18,6 +22,9 @@ const DappHeader: React.FC = () => {
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
+                    <GetStartedButton onClick={() => navigateTo(ROUTES.Options.Wizard)}>
+                        {t('get-started.get-started')}
+                    </GetStartedButton>
                 </FlexDivRow>
                 {isMobile && <Notifications />}
             </LeftContainer>
@@ -52,6 +59,9 @@ const Container = styled(FlexDivRowCentered)`
     margin-bottom: 25px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 10px;
     }
 `;
 
@@ -66,6 +76,22 @@ const RightContainer = styled(FlexDivRowCentered)`
     @media (max-width: 500px) {
         width: 100%;
     }
+`;
+
+const GetStartedButton = styled.button`
+    margin-left: 20px;
+    width: 120px;
+    padding: 4px;
+    background-color: ${(props) => props.theme.background.primary};
+    color: ${(props) => props.theme.textColor.primary};
+    border-radius: 5px;
+    border: 1px solid ${(props) => props.theme.borderColor.quaternary};
+    cursor: pointer;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 13px */
+    text-transform: capitalize;
 `;
 
 const Icon = styled.i`

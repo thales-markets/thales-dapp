@@ -14,6 +14,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { truncateAddress } from 'thales-utils';
 import UserSwap from '../UserSwap';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -30,35 +31,54 @@ const UserWallet: React.FC = () => {
 
     return (
         <Container>
-            <Wrapper>
-                <UserSwap />
-                <WalletContainer
-                    connected={isWalletConnected}
-                    onClick={
-                        isWalletConnected
-                            ? openAccountModal
-                            : () => {
-                                  dispatch(
-                                      setWalletConnectModalVisibility({
-                                          visibility: !connectWalletModalVisibility,
-                                      })
-                                  );
-                              }
-                    }
-                    onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
-                    onMouseLeave={() => setWalletText('')}
-                >
-                    {walletAddress
-                        ? walletText ||
-                          truncateAddress(
-                              walletAddress,
-                              TRUNCATE_ADDRESS_NUMBER_OF_CHARS,
-                              TRUNCATE_ADDRESS_NUMBER_OF_CHARS
-                          )
-                        : t('common.wallet.connect-your-wallet')}
-                </WalletContainer>
-                <NetworkSwitch />
-            </Wrapper>
+            {isWalletConnected ? (
+                <Wrapper>
+                    <UserSwap />
+                    <WalletContainer
+                        connected={true}
+                        onClick={openAccountModal}
+                        onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}
+                        onMouseLeave={() => setWalletText('')}
+                    >
+                        {walletAddress
+                            ? walletText ||
+                              truncateAddress(
+                                  walletAddress,
+                                  TRUNCATE_ADDRESS_NUMBER_OF_CHARS,
+                                  TRUNCATE_ADDRESS_NUMBER_OF_CHARS
+                              )
+                            : t('common.wallet.connect-your-wallet')}
+                    </WalletContainer>
+                    <NetworkSwitch />
+                </Wrapper>
+            ) : (
+                <ButtonWrapper>
+                    <LoginButton
+                        onClick={() => {
+                            dispatch(
+                                setWalletConnectModalVisibility({
+                                    visibility: !connectWalletModalVisibility,
+                                })
+                            );
+                        }}
+                    >
+                        {t('common.wallet.login')}
+                    </LoginButton>
+                    <JoinUs
+                        onClick={() => {
+                            dispatch(
+                                setWalletConnectModalVisibility({
+                                    origin: 'sign-up',
+                                    visibility: !connectWalletModalVisibility,
+                                })
+                            );
+                        }}
+                    >
+                        {t('common.wallet.join-us')}
+                    </JoinUs>
+                </ButtonWrapper>
+            )}
+
             <ConnectWalletModal
                 isOpen={connectWalletModalVisibility}
                 onClose={() => {
@@ -72,6 +92,36 @@ const UserWallet: React.FC = () => {
         </Container>
     );
 };
+
+const LoginButton = styled.button`
+    width: 120px;
+    padding: 4px;
+    background-color: ${(props) => props.theme.background.primary};
+    color: ${(props) => props.theme.textColor.secondary};
+    border-radius: 5px;
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
+    cursor: pointer;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 13px */
+    text-transform: capitalize;
+`;
+
+const JoinUs = styled.button`
+    width: 120px;
+    padding: 4px;
+    background-color: ${(props) => props.theme.background.quaternary};
+    color: ${(props) => props.theme.button.textColor.primary};
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 13px */
+    text-transform: capitalize;
+`;
 
 const Container = styled.div`
     width: 400px;
@@ -88,6 +138,16 @@ const Wrapper = styled.div`
     border-radius: 8px;
     @media (max-width: 500px) {
         height: 26px;
+    }
+`;
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        justify-content: flex-start;
     }
 `;
 

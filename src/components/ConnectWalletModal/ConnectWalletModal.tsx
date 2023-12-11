@@ -14,7 +14,7 @@ import ROUTES from 'constants/routes';
 import { SUPPORTED_PARTICAL_CONNECTORS } from 'constants/wallet';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletConnectModalOrigin } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { ThemeInterface } from 'types/ui';
 import { getClassNameForParticalLogin, getSpecificConnectorFromConnectorsArray } from 'utils/biconomy';
@@ -63,7 +63,7 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, onClose
     const [termsAccepted, setTerms] = useState(false);
     const [isPartical, setIsPartical] = useState<boolean>(false);
 
-    // const modalOrigin = useSelector((state: RootState) => getWalletConnectModalOrigin(state));
+    const modalOrigin = useSelector((state: RootState) => getWalletConnectModalOrigin(state));
 
     useEffect(() => {
         if (isMobile) {
@@ -88,7 +88,7 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, onClose
 
     useEffect(() => {
         if (isSuccess) {
-            if (isPartical) navigateTo(ROUTES.Options.Wizard);
+            if (modalOrigin == 'sign-up') navigateTo(ROUTES.Options.Wizard);
             onClose();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
