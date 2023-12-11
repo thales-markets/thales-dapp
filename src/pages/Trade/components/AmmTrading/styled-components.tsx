@@ -2,8 +2,8 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 
-export const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean }>`
-    height: ${(props) => (props.isDetailsPage ? 'auto' : '78px')};
+export const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean; isAA?: boolean }>`
+    height: ${(props) => (props.isDetailsPage ? 'auto' : props.isAA ? '96px' : '78px')};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
@@ -75,4 +75,14 @@ export const ColumnSpaceBetween = styled(FlexDivColumn)`
     width: 100%;
     height: 100%;
     justify-content: space-between;
+`;
+
+export const GasFee = styled.span`
+    color: ${(props) => props.theme.textColor.secondary};
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 90%;
+    margin-bottom: 4px;
 `;

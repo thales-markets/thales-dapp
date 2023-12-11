@@ -66,7 +66,7 @@ import {
 } from 'types/options';
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { executeBiconomyTransaction } from 'utils/biconomy';
+import { executeBiconomyTransaction, getGasFeesForTx } from 'utils/biconomy';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
@@ -85,6 +85,7 @@ import {
     Container,
     DetailsIcon,
     FinalizeTrade,
+    GasFee,
     ShareIcon,
     TradingDetailsContainer,
 } from './styled-components';
@@ -144,6 +145,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
     const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
+    const [gasAA, setGas] = useState(0);
+
+    console.log(gasAA);
 
     // Still not supporting all collaterals
     const selectedCollateralIndex = useMemo(
@@ -444,13 +448,31 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
                 const ammPrice = formattedAmmQuote / suggestedAmount;
 
-                let calcAmount = totalToPay / ammPrice;
+                let gas = 0;
+
+                if (isAA) {
+                    const total = isBuy ? paidAmount : positionAmount;
+                    const parsedTotal = coinParser(total.toString(), networkId);
+
+                    const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
+                    gas =
+                        (await getGasFeesForTx(collateralAddress ?? '', contract, 'buyFromAMM', [
+                            market.address,
+                            POSITIONS_TO_SIDE_MAP[market.positionType],
+                            parsedAmount,
+                            parsedTotal,
+                            parsedSlippage,
+                        ])) ?? 0;
+                    setGas(gas);
+                }
+
+                let calcAmount = (totalToPay - gas) / ammPrice;
                 if (isBuy && isMax) {
                     if (calcAmount >= liquidity) {
                         calcAmount = Number(truncToDecimals(liquidity));
-                        setPaidAmount(truncToDecimals(calcAmount * ammPrice));
+                        setPaidAmount(truncToDecimals(calcAmount * ammPrice, 2));
                     } else {
-                        setPaidAmount(totalToPay);
+                        setPaidAmount(truncToDecimals(totalToPay - gas, 2));
                     }
                 }
 
@@ -680,7 +702,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     };
 
     return (
-        <Container isDetailsPage={isDetailsPage}>
+        <Container isAA={isAA} isDetailsPage={isDetailsPage}>
             {!isDetailsPage && (
                 <TradingDetailsContainer>
                     <TradingDetailsSentence
@@ -776,6 +798,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             />
                         </>
                     )}
+                    {isAA && <GasFee>Gas estimate: {formatCurrencyWithSign(USD_SIGN, gasAA, 2)}</GasFee>}
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
