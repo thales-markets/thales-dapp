@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
 import {
+    getIsAA,
     getIsWalletConnected,
     getNetworkId,
     getSelectedCollateralIndex,
@@ -88,6 +89,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAA = useSelector((state: RootState) => getIsAA(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const selectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
 
@@ -267,9 +269,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 position.amountBigNumber,
                 parsedTotal,
                 parsedSlippage,
-                undefined,
+                isAA ? collateralAddress : undefined,
                 '',
-                networkId
+                networkId,
+                isAA
             );
 
             const txResult = await tx.wait();
