@@ -38,6 +38,10 @@
     content: '\0048';
 }
 
+.v2-icon--wallet:before {
+    content: '\0061';
+}
+
 .v2-icon--in:before {
     content: '\0049';
 }

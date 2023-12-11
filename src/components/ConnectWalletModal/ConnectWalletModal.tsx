@@ -158,7 +158,7 @@ const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, onClose
                                     openConnectModal?.();
                                 }}
                             >
-                                <WalletIcon className={'social-icon icon--wallet'} />
+                                <WalletIcon className={'v2-icon v2-icon--wallet'} />
                                 <WalletName>{t('common.wallet.connect-with-wallet')}</WalletName>
                             </WalletIconContainer>
                         </WalletIconsWrapper>
@@ -213,8 +213,8 @@ const CloseIcon = styled.i`
     margin-top: 1px;
     cursor: pointer;
     &:before {
-        font-family: ExoticIcons !important;
-        content: '\\004F';
+        font-family: Icons !important;
+        content: '\\0042';
         color: ${(props) => props.theme.textColor.primary};
     }
     @media (max-width: 575px) {

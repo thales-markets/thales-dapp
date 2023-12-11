@@ -30,7 +30,7 @@
 }
 
 .icon--wallet::before {
-    content: '\0047';
+    content: '\0061';
 }
 
 .icon--visa::before {
