@@ -99,7 +99,16 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 // Chained speed markets
                 for (let i = 0; i < Math.ceil(maturedChainedSpeedMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
                     const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
-                    const batchMarkets = maturedChainedSpeedMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    const batchMarkets = maturedChainedSpeedMarkets
+                        .slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS)
+                        .map((market: string) =>
+                            // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
+                            networkId === Network.OptimismMainnet &&
+                            walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
+                            market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
+                                ? '0x6A01283c0F4579B55FB7214CaF619CFe72044b68' // some other market address of this user identical with required data
+                                : market
+                        );
                     promises.push(speedMarketsDataContract.getChainedMarketsData(batchMarkets));
                 }
                 const allSpeedMarkets = await Promise.all(promises);

@@ -44,7 +44,16 @@ const useUserChainedSpeedMarketsTransactionsQuery = (
                 const promises = [];
                 for (let i = 0; i < Math.ceil(allMarkets.length / BATCH_NUMBER_OF_SPEED_MARKETS); i++) {
                     const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
-                    const batchMarkets = allMarkets.slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS);
+                    const batchMarkets = allMarkets
+                        .slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS)
+                        .map((market: string) =>
+                            // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
+                            networkId === Network.OptimismMainnet &&
+                            walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
+                            market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
+                                ? '0x6A01283c0F4579B55FB7214CaF619CFe72044b68' // some other market address of this user
+                                : market
+                        );
                     promises.push(speedMarketsDataContract.getChainedMarketsData(batchMarkets));
                 }
                 const allMarketsDataArray = await Promise.all(promises);
@@ -114,6 +123,30 @@ const useUserChainedSpeedMarketsTransactionsQuery = (
                             isChainedSpeedMarket: true,
                         } as SpeedMarket,
                     };
+
+                    // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
+                    if (
+                        networkId === Network.OptimismMainnet &&
+                        userData.marketItem.address === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
+                    ) {
+                        userData.timestamp = 1702229901000;
+                        userData.makerAmount = 5 * roundNumberToDecimals(1.9 ** 6, 8);
+                        userData.takerAmount = 5.1;
+                        userData.optionSide = SIDE[0] as OptionSide;
+
+                        userData.marketItem = {
+                            address: userData.market,
+                            timestamp: 1702229901000,
+                            currencyKey: 'BTC',
+                            strikePrice: 43890.09284569,
+                            maturityDate: 1702233501000,
+                            isOpen: false,
+                            result: SIDE[0] as OptionSide,
+                            finalPrice: 43869.69322549,
+                            isSpeedMarket: true,
+                            isChainedSpeedMarket: true,
+                        } as SpeedMarket;
+                    }
 
                     userTransactions.push(userData);
                 }
