@@ -1,15 +1,17 @@
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
 import CollateralSelector from 'components/CollateralSelector';
 import {
     getDefaultToastContent,
-    getLoadingToastOptions,
     getErrorToastOptions,
+    getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
+import { USD_SIGN } from 'constants/currency';
 import {
     MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
@@ -19,6 +21,8 @@ import {
 } from 'constants/options';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import useInterval from 'hooks/useInterval';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
@@ -36,6 +40,15 @@ import { getIsBuy } from 'redux/modules/marketWidgets';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import {
+    bigNumberFormatter,
+    coinFormatter,
+    coinParser,
+    formatCurrency,
+    formatCurrencyWithSign,
+    roundNumberToDecimals,
+    truncToDecimals,
+} from 'thales-utils';
+import {
     AccountMarketInfo,
     MarketInfo,
     OptionsMarketInfo,
@@ -46,22 +59,13 @@ import {
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getCollateral, getCollaterals, getDefaultCollateral, getCoinBalance } from 'utils/currency';
-import {
-    bigNumberFormatter,
-    coinFormatter,
-    coinParser,
-    formatCurrency,
-    formatCurrencyWithSign,
-    roundNumberToDecimals,
-    truncToDecimals,
-} from 'thales-utils';
-import useInterval from 'hooks/useInterval';
+import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { convertPriceImpactToBonus } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
+import SharePositionModal from './components/SharePositionModal/SharePositionModal';
 import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
 import { isSlippageValid } from './components/Slippage/Slippage';
 import TradingDetails from './components/TradingDetails';
@@ -75,11 +79,6 @@ import {
     ShareIcon,
     TradingDetailsContainer,
 } from './styled-components';
-import { USD_SIGN } from 'constants/currency';
-import Tooltip from 'components/Tooltip';
-import SharePositionModal from './components/SharePositionModal/SharePositionModal';
-import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import useDebouncedEffect from 'hooks/useDebouncedEffect';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -103,7 +102,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const directMarket = useMarketContext();
     const contextMarket = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
-    const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -511,11 +509,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 setPaidAmount('');
 
                 if (isBuy) {
-                    trackEvent({
-                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
-                        action: `buy-with-${selectedCollateral}`,
-                        value: Number(paidAmount),
-                    });
                     PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
                         props: {
                             value: Number(paidAmount),
@@ -524,10 +517,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         },
                     });
                 } else {
-                    trackEvent({
-                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
-                        action: 'sell-to-amm',
-                    });
                     PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
                         props: {
                             value: Number(paidAmount),
@@ -588,11 +577,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     }, [positionAmount, paidAmount, liquidity, market.address, isBuy]);
 
     const onMaxClick = async () => {
-        trackEvent({
-            category: isRangedMarket ? 'RangeAMM' : 'AMM',
-            action: 'click-on-max-button',
-        });
-
         if (isBuy) {
             const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
             fetchAmmPriceData(maxPaidAmount, false, false, true);

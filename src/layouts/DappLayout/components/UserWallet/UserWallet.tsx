@@ -1,14 +1,13 @@
+import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import NetworkSwitch from 'components/NetworkSwitch';
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { truncateAddress } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { truncateAddress } from 'thales-utils';
 import UserSwap from '../UserSwap';
-import NetworkSwitch from 'components/NetworkSwitch';
 
 const TRUNCATE_ADDRESS_NUMBER_OF_CHARS = 5;
 
@@ -22,8 +21,6 @@ const UserWallet: React.FC = () => {
 
     const [walletText, setWalletText] = useState('');
 
-    const { trackEvent } = useMatomo();
-
     return (
         <Container>
             <Wrapper>
@@ -31,12 +28,6 @@ const UserWallet: React.FC = () => {
                 <WalletContainer
                     connected={isWalletConnected}
                     onClick={() => {
-                        if (isWalletConnected) {
-                            trackEvent({
-                                category: 'dAppHeader',
-                                action: 'click-on-wallet-when-connected',
-                            });
-                        }
                         isWalletConnected ? openAccountModal?.() : openConnectModal?.();
                     }}
                     onMouseOver={() => setWalletText(t('common.wallet.wallet-options'))}

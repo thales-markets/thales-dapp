@@ -1,4 +1,9 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
+import Loader from 'components/Loader';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
+import ROUTES from 'constants/routes';
+import ThemeProvider from 'layouts/Theme';
+import { Suspense, lazy, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,27 +13,18 @@ import { setIsMobile } from 'redux/modules/ui';
 import {
     getNetworkId,
     getSwitchToNetworkId,
-    getWalletAddress,
-    updateNetworkSettings,
     switchToNetworkId,
+    updateNetworkSettings,
     updateWallet,
 } from 'redux/modules/wallet';
+import { createGlobalStyle } from 'styled-components';
 import { isMobile } from 'utils/device';
-import { isNetworkSupported } from 'utils/network';
-import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { getSupportedNetworksByRoute, isNetworkSupported } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
-import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
-import { createGlobalStyle } from 'styled-components';
-import ThemeProvider from 'layouts/Theme';
-import { getDefaultTheme } from 'utils/style';
-import { getSupportedNetworksByRoute } from 'utils/network';
-import Loader from 'components/Loader';
+import { useAccount, useDisconnect, useNetwork, useProvider, useSigner } from 'wagmi';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -62,7 +58,6 @@ const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ 
 
 const App = () => {
     const dispatch = useDispatch();
-    const walletAddress = useSelector((state) => getWalletAddress(state));
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
 
@@ -74,26 +69,7 @@ const App = () => {
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
 
-    const { trackPageView } = useMatomo();
-
     queryConnector.setQueryClient();
-
-    useEffect(() => {
-        const theme = getDefaultTheme();
-
-        trackPageView({
-            customDimensions: [
-                {
-                    id: 3,
-                    value: theme,
-                },
-                {
-                    id: 4,
-                    value: walletAddress ? true : false,
-                },
-            ],
-        });
-    }, [walletAddress, trackPageView]);
 
     useEffect(() => {
         const init = async () => {

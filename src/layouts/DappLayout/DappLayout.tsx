@@ -1,24 +1,20 @@
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
 import { isAndroid, isMetamask } from 'thales-utils';
+import { ThemeInterface } from 'types/ui';
 import { isMobile } from 'utils/device';
-import { getReferralWallet, setReferralWallet } from 'utils/referral';
-import DappHeader from './DappHeader';
-import DappFooter from './DappFooter';
-import DappSidebar from './DappSidebar';
+import { setReferralWallet } from 'utils/referral';
 import { ScreenSizeBreakpoint } from '../../enums/ui';
+import DappFooter from './DappFooter';
+import DappHeader from './DappHeader';
+import DappSidebar from './DappSidebar';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -26,12 +22,9 @@ type DappLayoutProps = {
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const theme: ThemeInterface = useTheme();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
-
-    const { trackPageView } = useMatomo();
 
     const [preventDiscordWidgetLoad, setPreventDiscordWidgetLoad] = useState(true);
 
@@ -51,23 +44,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
             fetchIdAddress();
         }
     }, [queryParams?.referralId, queryParams?.referrerId]);
-
-    useEffect(() => {
-        const referralWallet = getReferralWallet();
-
-        trackPageView({
-            customDimensions: [
-                {
-                    id: 1,
-                    value: networkId ? networkId?.toString() : '',
-                },
-                {
-                    id: 2,
-                    value: referralWallet ? referralWallet : '',
-                },
-            ],
-        });
-    }, [rawParams, networkId, trackPageView]);
 
     useEffect(() => {
         const checkMetamaskBrowser = async () => {

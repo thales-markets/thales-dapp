@@ -1,24 +1,23 @@
 import {
-    getSuccessToastOptions,
     getErrorToastOptions,
+    getSuccessToastOptions,
     toastBasicProperties,
 } from 'components/ToastMessage/ToastMessage';
 import { LINKS } from 'constants/links';
 import { toPng } from 'html-to-image';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import ReactModal from 'react-modal';
-import { toast } from 'react-toastify';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
-import { isMetamask, isFirefox, isIos } from 'thales-utils';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { isFirefox, isIos, isMetamask } from 'thales-utils';
+import { SharePositionData } from 'types/flexCards';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
-import { SharePositionData } from 'types/flexCards';
 
 type SharePositionModalProps = SharePositionData & {
     onClose: () => void;
@@ -42,7 +41,6 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     onClose,
 }) => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const { trackEvent } = useMatomo();
     const { t } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -183,11 +181,6 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
 
     const onTwitterShareClick = () => {
         if (!isLoading) {
-            trackEvent({
-                category: 'share-ticket-modal',
-                action: 'click-on-share-tw-icon',
-            });
-
             if (isMetamaskBrowser) {
                 // Metamask dosn't support image download neither clipboard.write
                 toast.error(t('market.toast-message.metamask-not-supported'), toastBasicProperties);
