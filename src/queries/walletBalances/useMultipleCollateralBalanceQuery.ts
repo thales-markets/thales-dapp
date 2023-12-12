@@ -1,9 +1,9 @@
-import snxJSConnector from 'utils/snxJSConnector';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { bigNumberFormatter, Coins, COLLATERAL_DECIMALS } from 'thales-utils';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
@@ -100,7 +100,7 @@ const useMultipleCollateralBalanceQuery = (
                 };
             }
         },
-        options
+        { ...options }
     );
 };
 

@@ -21,6 +21,7 @@ export default {
         secondary: Colors.GRAY_LIGHT,
         tertiary: Colors.ORANGE,
         quaternary: Colors.GREEN,
+        quinary: Colors.WHITE,
     },
     button: {
         background: {
@@ -34,6 +35,7 @@ export default {
             secondary: Colors.WHITE,
             tertiary: Colors.GRAY_LIGHT,
             quaternary: Colors.ORANGE,
+            quinary: Colors.GREEN,
         },
         borderColor: {
             primary: Colors.GREEN,

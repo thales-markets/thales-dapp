@@ -41,3 +41,9 @@ export const buildLiquidityPoolLink = (excludeSlash = false) =>
 
 export const buildOvertimeVaultsLink = (vaultId: string) => `${LINKS.SportMarkets}#/vaults/${vaultId}`;
 export { history };
+
+export const buildDepositOrWithdrawLink = (language: string, page: string, coinIndex: number, excludeSlash = false) => {
+    return `${ifIpfsDeployment && !excludeSlash ? '#' : ''}${
+        page == 'withdraw' ? ROUTES.Withdraw : ROUTES.Deposit
+    }?lang=${language}&coin-index=${coinIndex}`;
+};
