@@ -30,7 +30,7 @@ import {
 import useActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useActiveSpeedMarketsDataQuery';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -159,6 +159,10 @@ const UnresolvedPositions: React.FC = () => {
             });
         }
     }, secondsToMilliseconds(10));
+
+    useEffect(() => {
+        setIsLoadingEnabled(true);
+    }, [networkId]);
 
     const handleResolveAll = async (positions: UserLivePositions[], isAdmin: boolean) => {
         if (!positions.length) {

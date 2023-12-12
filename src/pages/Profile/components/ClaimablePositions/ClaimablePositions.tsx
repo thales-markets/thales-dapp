@@ -124,7 +124,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                 i === 0 ? strikePrice : finalPrices[i - 1]
             );
             const userWonStatuses = marketData.sides.map((side, i) =>
-                finalPrices[i] > 0
+                finalPrices[i] > 0 && strikePrices[i] > 0
                     ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
                       (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
                     : undefined

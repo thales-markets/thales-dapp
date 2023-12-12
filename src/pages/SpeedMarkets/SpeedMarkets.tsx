@@ -322,6 +322,7 @@ const SpeedMarkets: React.FC = () => {
                                 value={selectedStableBuyinAmount}
                                 onChange={setSelectedStableBuyinAmount}
                                 isChained={isChained}
+                                chainedPositions={chainedPositions}
                                 ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
                                 ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
                             />

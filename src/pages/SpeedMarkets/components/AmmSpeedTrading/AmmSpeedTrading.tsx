@@ -34,17 +34,11 @@ import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipl
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import {
-    getIsWalletConnected,
-    getNetworkId,
-    getSelectedCollateralIndex,
-    getWalletAddress,
-    setSelectedCollateralIndex,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
@@ -61,14 +55,7 @@ import {
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import {
-    getCoinBalance,
-    getCollateral,
-    getCollaterals,
-    getDefaultCollateral,
-    getDefaultStableIndexByBalance,
-    isStableCurrency,
-} from 'utils/currency';
+import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
@@ -113,7 +100,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 }) => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
-    const dispatch = useDispatch();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -152,14 +138,28 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         !!errorMessageKey ||
         outOfLiquidity;
 
+    const chainedQuote =
+        isChained && ammChainedSpeedMarketsLimits
+            ? ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length
+            : 0;
+
     const minBuyinAmount = useMemo(
         () => (isChained ? ammChainedSpeedMarketsLimits?.minBuyinAmount : ammSpeedMarketsLimits?.minBuyinAmount) || 0,
         [isChained, ammChainedSpeedMarketsLimits?.minBuyinAmount, ammSpeedMarketsLimits?.minBuyinAmount]
     );
     const maxBuyinAmount = useMemo(
-        () => (isChained ? ammChainedSpeedMarketsLimits?.maxBuyinAmount : ammSpeedMarketsLimits?.maxBuyinAmount) || 0,
-        [isChained, ammChainedSpeedMarketsLimits?.maxBuyinAmount, ammSpeedMarketsLimits?.maxBuyinAmount]
+        () =>
+            (isChained
+                ? Math.floor((ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket || 0) / chainedQuote)
+                : ammSpeedMarketsLimits?.maxBuyinAmount) || 0,
+        [
+            isChained,
+            ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket,
+            ammSpeedMarketsLimits?.maxBuyinAmount,
+            chainedQuote,
+        ]
     );
+
     const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
     const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, true), [
         networkId,
@@ -297,32 +297,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     }, secondsToMilliseconds(5));
 
-    // If sUSD balance less than 1, select first stable with nonzero value as default
-    useEffect(() => {
-        if (
-            isStableCurrency(selectedCollateral) &&
-            multipleCollateralBalances?.data &&
-            multipleCollateralBalances?.isSuccess &&
-            selectedCollateral === defaultCollateral &&
-            isMultiCollateralSupported
-        ) {
-            const defaultStableIndex = getDefaultStableIndexByBalance(
-                multipleCollateralBalances?.data,
-                networkId,
-                selectedCollateral
-            );
-            dispatch(setSelectedCollateralIndex(defaultStableIndex));
-        }
-    }, [
-        dispatch,
-        multipleCollateralBalances?.isSuccess,
-        multipleCollateralBalances?.data,
-        isMultiCollateralSupported,
-        networkId,
-        selectedCollateral,
-        defaultCollateral,
-    ]);
-
     useEffect(() => {
         if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
             // add half percent to amount to take into account collateral conversion
@@ -353,8 +327,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     // Reset inputs
     useEffect(() => {
         setPaidAmount('');
-        dispatch(setSelectedCollateralIndex(0));
-    }, [networkId, isWalletConnected, dispatch]);
+    }, [networkId, isWalletConnected]);
 
     // Input field validations
     useEffect(() => {
@@ -669,10 +642,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     };
 
     const getTradingDetails = () => {
-        const chainedQuote =
-            isChained && ammChainedSpeedMarketsLimits
-                ? ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length - 1
-                : 0;
         return (
             <TradingDetailsContainer>
                 <TradingDetailsSentence
