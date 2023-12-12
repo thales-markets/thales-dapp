@@ -1672,6 +1672,10 @@
             "in-wallet": "in wallet",
             "claimable": "Claimable"
         },
+        "main-tabs": {
+            "trading-profile": "Trading profile",
+            "my-portfolio": "My Portfolio"
+        },
         "winnings-are-forfeit": "* Winnings not claimed within {{days}} days of a market being resolved are forfeit.",
         "history-limit": "* Showing only markets with expiry date not older than {{days}} days.",
         "tabs": {
