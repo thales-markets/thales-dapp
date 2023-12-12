@@ -3,9 +3,12 @@ import SearchInput from 'components/SearchInput/SearchInput';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAA } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import MyPortfolio from './components/MyPortfolio';
 import TradingProfile from './components/TradingProfile/TradingProfile';
-import { Container, Header, MainContainer, Tab, TabContainer } from './styled-components';
+import { Container, Header, MainContainer, Tab, TabContainer, Title } from './styled-components';
 
 const TABS = [
     {
@@ -23,6 +26,7 @@ const Profile: React.FC = () => {
 
     const [searchText, setSearchText] = useState<string>('');
     const [tabIndex, setTabIndex] = useState<number>(1);
+    const isAA = useSelector((state: RootState) => getIsAA(state));
 
     return (
         <>
@@ -30,19 +34,23 @@ const Profile: React.FC = () => {
             <BannerCarousel />
             <Container>
                 <Header>
-                    <TabContainer>
-                        {TABS.map((item, index) => {
-                            return (
-                                <Tab
-                                    key={`tab-${index}`}
-                                    onClick={() => setTabIndex(item.id)}
-                                    active={item.id == tabIndex}
-                                >
-                                    {t(item.labelKey)}
-                                </Tab>
-                            );
-                        })}
-                    </TabContainer>
+                    {isAA ? (
+                        <TabContainer>
+                            {TABS.map((item, index) => {
+                                return (
+                                    <Tab
+                                        key={`tab-${index}`}
+                                        onClick={() => setTabIndex(item.id)}
+                                        active={item.id == tabIndex}
+                                    >
+                                        {t(item.labelKey)}
+                                    </Tab>
+                                );
+                            })}
+                        </TabContainer>
+                    ) : (
+                        <Title>{t('profile.title')}</Title>
+                    )}
                     <SearchInput
                         placeholder={t('profile.search-placeholder')}
                         text={searchText}
