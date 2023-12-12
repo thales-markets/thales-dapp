@@ -135,7 +135,7 @@ const UnresolvedChainedPositions: React.FC = () => {
         (marketData) => marketData.canResolve && !marketData.claimable
     );
     const unknownPriceSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
-        (marketData) => marketData.isUnknownPrice
+        (marketData) => !marketData.canResolve && marketData.isUnknownPrice
     );
     const openSpeedMarketsData = activeChainedSpeedMarketsData
         .filter(
