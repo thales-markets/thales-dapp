@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 
 export const Container = styled(FlexDivColumn)`
     width: 100%;
@@ -111,4 +111,22 @@ export const StatsLabel = styled.label`
 export const StatsValue = styled.span<{ color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     font-weight: 700;
+`;
+
+export const TabContainer = styled(FlexDiv)`
+    flex-direction: row;
+`;
+
+export const Tab = styled(FlexDiv)<{ active?: boolean }>`
+    color: ${(props) => props.theme.textColor.primary};
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 22px;
+    text-align: left;
+    padding-right: 15px;
+    margin-right: 40px;
+    padding-bottom: 5px;
+    border-bottom: ${(props) => (props.active ? `2px solid ${props.theme.textColor.primary}` : ``)};
 `;
