@@ -101,14 +101,29 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
                     const batchMarkets = maturedChainedSpeedMarkets
                         .slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS)
-                        .map((market: string) =>
-                            // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
-                            networkId === Network.OptimismMainnet &&
-                            walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
-                            market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
-                                ? '0x6A01283c0F4579B55FB7214CaF619CFe72044b68' // some other market address of this user identical with required data
-                                : market
-                        );
+                        .map((market: string) => {
+                            let marketAddresss;
+                            // Hot fix for 2 markets when resolved with final price 0 and fetching data for that market is failing
+                            if (
+                                networkId === Network.OptimismMainnet &&
+                                walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
+                                market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
+                            ) {
+                                // some other market address of this user
+                                marketAddresss = '0x6A01283c0F4579B55FB7214CaF619CFe72044b68';
+                            } else if (
+                                networkId === Network.PolygonMainnet &&
+                                walletAddress === '0x8AAcec3D7077D04F19aC924d2743fc0DE1456941' &&
+                                market === '0x1e195Ea2ABf23C1A793F01c934692A230bb5Fc40'
+                            ) {
+                                // some other market address of this user
+                                marketAddresss = '0x9c5e5c979dbcab721336ad3ed6eac76650f7eb2c';
+                            } else {
+                                marketAddresss = market;
+                            }
+
+                            return marketAddresss;
+                        });
                     promises.push(speedMarketsDataContract.getChainedMarketsData(batchMarkets));
                 }
                 const allSpeedMarkets = await Promise.all(promises);
@@ -132,14 +147,13 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     const fees = lpFee + safeBoxImpact;
                     const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
                     const paid = buyinAmount * (1 + fees);
-                    const payout =
-                        buyinAmount *
-                        (isChained
-                            ? roundNumberToDecimals(
+                    const payout = isChained
+                        ? roundNumberToDecimals(
+                              buyinAmount *
                                   bigNumberFormatter(marketData.payoutMultiplier) ** marketData.directions.length,
-                                  8
-                              )
-                            : SPEED_MARKETS_QUOTE);
+                              8
+                          )
+                        : buyinAmount * SPEED_MARKETS_QUOTE;
 
                     if (marketData.isUserWinner) {
                         profit += payout - paid;

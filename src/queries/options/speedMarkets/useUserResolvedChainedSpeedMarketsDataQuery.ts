@@ -43,14 +43,29 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                     const start = i * BATCH_NUMBER_OF_SPEED_MARKETS;
                     const batchMarkets = maturedMarkets
                         .slice(start, start + BATCH_NUMBER_OF_SPEED_MARKETS)
-                        .map((market: string) =>
-                            // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
-                            networkId === Network.OptimismMainnet &&
-                            walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
-                            market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
-                                ? '0x6A01283c0F4579B55FB7214CaF619CFe72044b68' // some other market address of this user
-                                : market
-                        );
+                        .map((market: string) => {
+                            let marketAddresss;
+                            // Hot fix for 2 markets when resolved with final price 0 and fetching data for that market is failing
+                            if (
+                                networkId === Network.OptimismMainnet &&
+                                walletAddress === '0x5ef88d0a93e5773DB543bd421864504618A18de4' &&
+                                market === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
+                            ) {
+                                // some other market address of this user
+                                marketAddresss = '0x6A01283c0F4579B55FB7214CaF619CFe72044b68';
+                            } else if (
+                                networkId === Network.PolygonMainnet &&
+                                walletAddress === '0x8AAcec3D7077D04F19aC924d2743fc0DE1456941' &&
+                                market === '0x1e195Ea2ABf23C1A793F01c934692A230bb5Fc40'
+                            ) {
+                                // some other market address of this user
+                                marketAddresss = '0x9c5e5c979dbcab721336ad3ed6eac76650f7eb2c';
+                            } else {
+                                marketAddresss = market;
+                            }
+
+                            return marketAddresss;
+                        });
 
                     promises.push(speedMarketsDataContract.getChainedMarketsData(batchMarkets));
                 }
@@ -87,9 +102,10 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                     );
                     const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
                     const fee = bigNumberFormatter(marketData.safeBoxImpact);
-                    const payout =
-                        buyinAmount *
-                        roundNumberToDecimals(bigNumberFormatter(marketData.payoutMultiplier) ** sides.length, 8);
+                    const payout = roundNumberToDecimals(
+                        buyinAmount * bigNumberFormatter(marketData.payoutMultiplier) ** sides.length,
+                        8
+                    );
 
                     const userData: ChainedSpeedMarket = {
                         address: marketData.market,
@@ -110,7 +126,7 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         user: marketData.user,
                     };
 
-                    // Hot fix for one market when resolved with final price 0 and fetching data for that market is failing
+                    // Hot fix for 3 markets when resolved with final price 0 and fetching data for that market is failing
                     if (
                         networkId === Network.OptimismMainnet &&
                         userData.address === '0x79F6f48410fC659a274c0A236e19e581373bf2f9'
@@ -150,7 +166,40 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                             1702233501000,
                         ];
                         userData.maturityDate = 1702233501000;
-                        userData.amount = 5 * roundNumberToDecimals(1.9 ** 6, 8);
+                        userData.amount = roundNumberToDecimals(5 * 1.9 ** 6, 8);
+                        userData.paid = 5.1;
+                        userData.isUserWinner = false;
+                    } else if (
+                        networkId === Network.PolygonMainnet &&
+                        userData.address === '0x9C5e5C979DbCaB721336AD3eD6eac76650F7eB2C'
+                    ) {
+                        userData.finalPrices = [38830.08275709];
+                    } else if (
+                        networkId === Network.PolygonMainnet &&
+                        userData.address === '0x1e195Ea2ABf23C1A793F01c934692A230bb5Fc40'
+                    ) {
+                        userData.timestamp = 1701461351000;
+                        userData.currencyKey = 'BTC';
+                        userData.sides = [
+                            Positions.UP,
+                            Positions.DOWN,
+                            Positions.DOWN,
+                            Positions.DOWN,
+                            Positions.DOWN,
+                            Positions.DOWN,
+                        ];
+                        userData.strikePrices = [38744.38018425, 38770.95500499];
+                        userData.finalPrices = [38770.95500499, 38797.0925];
+                        userData.strikeTimes = [
+                            1701461951000,
+                            1701462551000,
+                            1701463151000,
+                            1701463751000,
+                            1701464351000,
+                            1701464951000,
+                        ];
+                        userData.maturityDate = 1701464951000;
+                        userData.amount = roundNumberToDecimals(5 * 1.9 ** 6, 8);
                         userData.paid = 5.1;
                         userData.isUserWinner = false;
                     }
