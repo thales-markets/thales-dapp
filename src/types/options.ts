@@ -265,6 +265,7 @@ export type AmmChainedSpeedMarketsLimits = {
     maxChainedMarkets: number;
     minBuyinAmount: number;
     maxBuyinAmount: number;
+    maxProfitPerIndividualMarket: number;
     minTimeFrame: number;
     maxTimeFrame: number;
     risk: Risk;

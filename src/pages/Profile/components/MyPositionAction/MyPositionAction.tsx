@@ -3,6 +3,7 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import ApprovalModal from 'components/ApprovalModal/ApprovalModal';
 import Button from 'components/Button/Button';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import {
     getDefaultToastContent,
@@ -21,19 +22,20 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
-import {
-    getIsWalletConnected,
-    getNetworkId,
-    getSelectedCollateralIndex,
-    getWalletAddress,
-    setSelectedCollateralIndex,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import {
+    coinFormatter,
+    coinParser,
+    formatCurrencyWithSign,
+    getDefaultDecimalsForNetwork,
+    roundNumberToDecimals,
+} from 'thales-utils';
 import { UserLivePositions } from 'types/options';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
@@ -41,13 +43,7 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import {
-    coinFormatter,
-    coinParser,
-    formatCurrencyWithSign,
-    roundNumberToDecimals,
-    getDefaultDecimalsForNetwork,
-} from 'thales-utils';
+import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
@@ -61,8 +57,6 @@ import {
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 import { UsingAmmLink } from '../styled-components';
-import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
-import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
@@ -80,7 +74,6 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     isMultipleContainerRows,
 }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(position.side);
@@ -106,10 +99,6 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasAllowance, setAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
-
-    useEffect(() => {
-        dispatch(setSelectedCollateralIndex(0));
-    }, [networkId, isWalletConnected, dispatch]);
 
     useEffect(() => {
         if (

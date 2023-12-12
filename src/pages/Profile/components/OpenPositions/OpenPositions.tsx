@@ -164,7 +164,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
         const lastStrikePrice = [...strikePrices].reverse().find((strikePrice) => strikePrice);
         const currentSide = marketData.sides[marketData.strikeTimes.findIndex((strikeTime) => strikeTime < Date.now())];
         const userWonStatuses = marketData.sides.map((side, i) =>
-            finalPrices[i] > 0
+            finalPrices[i] > 0 && strikePrices[i] > 0
                 ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
                   (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
                 : undefined

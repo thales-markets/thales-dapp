@@ -83,7 +83,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
               )
             : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
-        finalPrices[i] > 0
+        finalPrices[i] > 0 && strikePrices[i] > 0
             ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
               (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
             : undefined
