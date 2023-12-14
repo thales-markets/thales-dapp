@@ -238,7 +238,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                     {openTwitterShareModal && claimablePosition && (
                         <SharePositionModal
                             type={'resolved'}
-                            position={position as Positions}
+                            positions={[position as Positions]}
                             currencyKey={claimablePosition.currencyKey}
                             strikeDate={claimablePosition.maturityDate}
                             strikePrice={claimablePosition.strikePrice}

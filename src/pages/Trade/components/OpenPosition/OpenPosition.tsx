@@ -60,6 +60,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
         }
     }, secondsToMilliseconds(10));
 
+    const displayShare =
+        !position.isSpeedMarket ||
+        (position.isSpeedMarket && (position.claimable || (!position.claimable && !position.finalPrice)));
+
     return (
         <Position>
             <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
@@ -124,11 +128,15 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
                     isMultipleContainerRows={isMultipleMarkets}
                 />
             </AlignedFlex>
-            <ShareIcon
-                className="icon-home icon-home--twitter-x"
-                disabled={false}
-                onClick={() => setOpenTwitterShareModal(true)}
-            />
+            <ShareDiv>
+                {displayShare && (
+                    <ShareIcon
+                        className="icon-home icon-home--twitter-x"
+                        disabled={false}
+                        onClick={() => setOpenTwitterShareModal(true)}
+                    />
+                )}
+            </ShareDiv>
             {!position.isSpeedMarket && (
                 <SPAAnchor
                     href={
@@ -165,12 +173,10 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
                             ? 'potential-speed'
                             : 'potential'
                     }
-                    position={position.side}
+                    positions={[position.side]}
                     currencyKey={position.currencyKey}
                     strikeDate={position.maturityDate}
                     strikePrice={position.strikePrice}
-                    leftPrice={undefined}
-                    rightPrice={undefined}
                     buyIn={position.paid}
                     payout={position.amount}
                     onClose={() => setOpenTwitterShareModal(false)}
@@ -195,7 +201,7 @@ const Position = styled.div`
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 172px;
+        min-height: 203px;
         padding: 10px 10px;
         margin-bottom: 10px;
         gap: 6px;
@@ -275,6 +281,10 @@ const IconLink = styled.i<{ color?: string; fontSize?: string; marginTop?: strin
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
     margin-top: ${(props) => props.marginTop || '0px'};
+`;
+
+const ShareDiv = styled.div`
+    height: 20px;
 `;
 
 export const ShareIcon = styled.i<{ disabled: boolean }>`

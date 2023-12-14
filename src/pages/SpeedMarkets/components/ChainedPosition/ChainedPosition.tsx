@@ -26,6 +26,8 @@ import ChainedPositionAction from '../ChainedPositionAction';
 import { refetchPythPrice } from 'utils/queryConnector';
 import { getIsMobile } from 'redux/modules/ui';
 import { getColorPerPosition } from 'utils/options';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
 
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
@@ -51,6 +53,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [fetchLastFinalPriceIndex, setFetchLastFinalPriceIndex] = useState(0);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
     const maturedStrikeTimes = isMissingPrices
@@ -121,6 +124,8 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             setFetchLastFinalPriceIndex(fetchLastFinalPriceIndex + 1);
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
+
+    const displayShare = !isOverview && (!position.isMatured || position.isUserWinner);
 
     return isMobile ? (
         <Container>
@@ -272,7 +277,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                         <Text isActiveColor>{` ${formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid)}`}</Text>
                     </Text>
                 </BuyInfo>
-                <Result isSmaller={isOverview}>
+                <Result isSmaller={isOverview || displayShare}>
                     <ChainedPositionAction
                         position={positionWithPrices}
                         maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
@@ -290,7 +295,27 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                         </Text>
                     </FlexDivCentered>
                 )}
+                {displayShare && (
+                    <FlexDivCentered>
+                        <ShareIcon
+                            className="icon-home icon-home--twitter-x"
+                            disabled={false}
+                            onClick={() => setOpenTwitterShareModal(true)}
+                        />
+                    </FlexDivCentered>
+                )}
             </Summary>
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={position.claimable ? 'resolved-chained-speed' : 'potential-chained-speed'}
+                    positions={position.sides}
+                    currencyKey={position.currencyKey}
+                    strikeDate={position.maturityDate}
+                    buyIn={position.paid}
+                    payout={position.amount}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
         </Container>
     );
 };

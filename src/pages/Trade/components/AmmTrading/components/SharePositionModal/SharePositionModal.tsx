@@ -19,6 +19,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
 import { SharePositionData } from 'types/flexCards';
+import ChainedSpeedMarketFlexCard from './components/ChainedSpeedMarketFlexCard';
 
 type SharePositionModalProps = SharePositionData & {
     onClose: () => void;
@@ -31,7 +32,7 @@ const TWITTER_MESSAGE_CHECKOUT = `Check out my position on%0A`;
 
 const SharePositionModal: React.FC<SharePositionModalProps> = ({
     type,
-    position,
+    positions,
     currencyKey,
     strikePrice,
     leftPrice,
@@ -233,7 +234,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     <MarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
-                        position={position}
+                        positions={positions}
                         strikeDate={strikeDate}
                         strikePrice={strikePrice}
                         leftPrice={leftPrice}
@@ -246,10 +247,19 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     <SpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
-                        position={position}
+                        positions={positions}
                         strikeDate={strikeDate}
                         strikePrice={strikePrice}
-                        marketDuration={12}
+                        buyIn={buyIn}
+                        payout={payout}
+                    />
+                )}
+                {(type == 'potential-chained-speed' || type == 'resolved-chained-speed') && (
+                    <ChainedSpeedMarketFlexCard
+                        type={type}
+                        currencyKey={currencyKey}
+                        positions={positions}
+                        strikeDate={strikeDate}
                         buyIn={buyIn}
                         payout={payout}
                     />
@@ -263,14 +273,10 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     );
 };
 
-// Aspect ratio is important for Twitter: horizontal (Simple View) 2:1 and vertical min 3:4
+// Aspect ratio is important for Twitter: horizontal 2:1 and vertical min 3:4
 const Container = styled(FlexDivColumnCentered)`
     width: 386px;
     max-height: 515px;
-    /* padding: 15px; */
-    /* flex: none; */
-    /* background: linear-gradient(180deg, #303656 0%, #1a1c2b 100%); */
-    /* border-radius: 15px; */
     @media (max-width: 950px) {
         width: 357px;
         max-height: 476px;

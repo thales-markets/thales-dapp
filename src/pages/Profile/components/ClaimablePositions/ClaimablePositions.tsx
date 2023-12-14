@@ -263,7 +263,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                                 : row.isSpeedMarket
                                                 ? 'potential-speed'
                                                 : 'potential',
-                                            position: row.side,
+                                            positions: [row.side],
                                             currencyKey: row.currencyKey,
                                             strikePrice: row.strikePrice,
                                             leftPrice: row.leftPrice,
@@ -339,7 +339,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
             {positionsShareData !== null && openTwitterShareModal && (
                 <SharePositionModal
                     type={positionsShareData.type}
-                    position={positionsShareData.position}
+                    positions={positionsShareData.positions}
                     currencyKey={positionsShareData.currencyKey}
                     strikeDate={positionsShareData.strikeDate}
                     strikePrice={positionsShareData.strikePrice}

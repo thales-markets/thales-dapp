@@ -19,7 +19,7 @@ import { SharePositionData, SharePositionType } from 'types/flexCards';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
-    position,
+    positions,
     currencyKey,
     strikePrice,
     leftPrice,
@@ -57,7 +57,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
             <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
-                <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
+                <Position>{`${currencyKey.toUpperCase()} ${positions[0]}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
                 <PotentialWinHeading type={type}>
@@ -93,7 +93,7 @@ const Container = styled.div<{ type?: SharePositionType }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 383px;
+    width: 386px;
     height: 510px;
     padding: 10px 10px;
     background: url(${(props) => (props.type == 'potential' ? ZeusPotentialWinBackground : ZeusResolvedWinBackground)})

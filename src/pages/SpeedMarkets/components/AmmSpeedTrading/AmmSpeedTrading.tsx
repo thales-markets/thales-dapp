@@ -661,13 +661,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     hasCollateralConversion={selectedCollateral !== defaultCollateral}
                     breakFirstLine={false}
                 />
-                {!isChained && (
-                    <ShareIcon
-                        className="icon-home icon-home--twitter-x"
-                        disabled={isButtonDisabled}
-                        onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
-                    />
-                )}
+                <ShareIcon
+                    className="icon-home icon-home--twitter-x"
+                    disabled={isButtonDisabled}
+                    onClick={() => !isButtonDisabled && setOpenTwitterShareModal(true)}
+                />
             </TradingDetailsContainer>
         );
     };
@@ -822,20 +820,33 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     )}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
-            {openTwitterShareModal && positionType && (
-                <SharePositionModal
-                    type="potential-speed"
-                    position={positionType}
-                    currencyKey={currencyKey}
-                    strikeDate={
-                        secondsToMilliseconds(strikeTimeSec) || Date.now() + secondsToMilliseconds(deltaTimeSec)
-                    }
-                    strikePrice={currentPrice ?? 0}
-                    buyIn={convertToStable(Number(paidAmount))}
-                    payout={(1 + Number(SPEED_MARKETS_QUOTE - 1)) * Number(paidAmount)}
-                    onClose={() => setOpenTwitterShareModal(false)}
-                />
-            )}
+            {openTwitterShareModal &&
+                (isChained ? (
+                    <SharePositionModal
+                        type="potential-chained-speed"
+                        positions={chainedPositions as Positions[]}
+                        currencyKey={currencyKey}
+                        strikeDate={Date.now() + secondsToMilliseconds(deltaTimeSec) * chainedPositions.length}
+                        buyIn={convertToStable(Number(paidAmount))}
+                        payout={roundNumberToDecimals(chainedQuote * Number(paidAmount))}
+                        onClose={() => setOpenTwitterShareModal(false)}
+                    />
+                ) : (
+                    positionType && (
+                        <SharePositionModal
+                            type="potential-speed"
+                            positions={[positionType]}
+                            currencyKey={currencyKey}
+                            strikeDate={
+                                secondsToMilliseconds(strikeTimeSec) || Date.now() + secondsToMilliseconds(deltaTimeSec)
+                            }
+                            strikePrice={currentPrice ?? 0}
+                            buyIn={convertToStable(Number(paidAmount))}
+                            payout={SPEED_MARKETS_QUOTE * Number(paidAmount)}
+                            onClose={() => setOpenTwitterShareModal(false)}
+                        />
+                    )
+                ))}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={
