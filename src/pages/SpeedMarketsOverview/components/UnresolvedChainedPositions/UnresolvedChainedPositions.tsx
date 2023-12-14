@@ -114,7 +114,7 @@ const UnresolvedChainedPositions: React.FC = () => {
             i > 0 ? finalPrices[i - 1] : strikePrice
         );
         const userWonStatuses = marketData.sides.map((side, i) =>
-            finalPrices[i] > 0
+            finalPrices[i] > 0 && strikePrices[i] > 0
                 ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
                   (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
                 : undefined
@@ -135,7 +135,7 @@ const UnresolvedChainedPositions: React.FC = () => {
         (marketData) => marketData.canResolve && !marketData.claimable
     );
     const unknownPriceSpeedMarketsData = partiallyMaturedUnresolvedWithPrices.filter(
-        (marketData) => marketData.isUnknownPrice
+        (marketData) => !marketData.canResolve && marketData.isUnknownPrice
     );
     const openSpeedMarketsData = activeChainedSpeedMarketsData
         .filter(

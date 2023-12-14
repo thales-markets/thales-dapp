@@ -11,14 +11,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
 import { isAndroid, isMetamask } from 'thales-utils';
+import { ThemeInterface } from 'types/ui';
 import { isMobile } from 'utils/device';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
-import DappHeader from './DappHeader';
-import DappFooter from './DappFooter';
-import DappSidebar from './DappSidebar';
 import { ScreenSizeBreakpoint } from '../../enums/ui';
+import DappFooter from './DappFooter';
+import DappHeader from './DappHeader';
+import DappSidebar from './DappSidebar';
 import ElectionsBanner from 'components/ElectionsBannerV2';
 
 type DappLayoutProps = {
@@ -43,7 +43,11 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
         if (queryParams?.referrerId) {
             const fetchIdAddress = async () => {
                 const response = await axios.get(
-                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(queryParams.referrerId)}`
+                    // passing an encoded string to encodeURIComponent causes an error in some cases
+                    // reffererId is already encoded so we have to decode it
+                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(
+                        decodeURIComponent(queryParams.referrerId)
+                    )}`
                 );
                 if (response.data) {
                     setReferralWallet(response.data);

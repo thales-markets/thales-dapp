@@ -6,8 +6,6 @@ import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 
-const MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER = 1;
-
 const useChainedAmmSpeedMarketsLimitsQuery = (
     networkId: Network,
     walletAddress?: string,
@@ -21,6 +19,7 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
                 maxChainedMarkets: 0,
                 minBuyinAmount: 0,
                 maxBuyinAmount: 0,
+                maxProfitPerIndividualMarket: 0,
                 minTimeFrame: 0,
                 maxTimeFrame: 0,
                 risk: { current: 0, max: 0 },
@@ -38,11 +37,17 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
 
                 ammChainedSpeedMarketsLimits.minChainedMarkets = Number(chainedAmmParams.minChainedMarkets);
                 ammChainedSpeedMarketsLimits.maxChainedMarkets = Number(chainedAmmParams.maxChainedMarkets);
+
                 ammChainedSpeedMarketsLimits.minBuyinAmount = Math.ceil(
                     coinFormatter(chainedAmmParams.minBuyinAmount, networkId)
                 );
-                ammChainedSpeedMarketsLimits.maxBuyinAmount =
-                    coinFormatter(chainedAmmParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
+                ammChainedSpeedMarketsLimits.maxBuyinAmount = coinFormatter(chainedAmmParams.maxBuyinAmount, networkId);
+
+                ammChainedSpeedMarketsLimits.maxProfitPerIndividualMarket = coinFormatter(
+                    chainedAmmParams.maxProfitPerIndividualMarket,
+                    networkId
+                );
+
                 ammChainedSpeedMarketsLimits.minTimeFrame = Number(chainedAmmParams.minTimeFrame);
                 ammChainedSpeedMarketsLimits.maxTimeFrame = Number(chainedAmmParams.maxTimeFrame);
                 ammChainedSpeedMarketsLimits.risk = {
