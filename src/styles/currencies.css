@@ -121,3 +121,11 @@
 .currency-icon--susd::before {
     content: '\0072';
 }
+
+.currency-icon--tia::before {
+    content: '\0073';
+}
+
+.currency-icon--bonk::before {
+    content: '\0074';
+}
