@@ -20,6 +20,7 @@ import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
 import { SharePositionData } from 'types/flexCards';
 import ChainedSpeedMarketFlexCard from './components/ChainedSpeedMarketFlexCard';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type SharePositionModalProps = SharePositionData & {
     onClose: () => void;
@@ -44,9 +45,10 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     payoutMultiplier,
     onClose,
 }) => {
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { trackEvent } = useMatomo();
     const { t } = useTranslation();
+
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isLoading, setIsLoading] = useState(false);
     const [toastId, setToastId] = useState<string | number>(0);
@@ -208,7 +210,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 }
             }
         },
-        [isLoading, useDownloadImage, isMobile, t, onClose]
+        [isLoading, useDownloadImage, isMobile, t, onClose, isRegularMarkets, isSpeedMarkets]
     );
 
     const onTwitterShareClick = () => {
@@ -309,7 +311,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
 const Container = styled(FlexDivColumnCentered)`
     width: 383px;
     max-height: 510px;
-    @media (max-width: 950px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 357px;
         max-height: 476px;
     }
@@ -322,7 +324,7 @@ const CloseIcon = styled.i`
     font-size: 20px;
     cursor: pointer;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 950px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         top: 10px;
         right: 10px;
     }

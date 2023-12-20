@@ -2,9 +2,13 @@ import ChainedLostBackground from 'assets/images/flex-cards/chained-lost.png';
 import ChainedWonBackground from 'assets/images/flex-cards/chained-won.png';
 import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { Positions } from 'enums/options';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { Icon } from 'pages/SpeedMarkets/components/SelectPosition/styled-components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivEnd, FlexDivRow } from 'styles/common';
 import { formatCurrency, formatCurrencyWithSign, roundNumberToDecimals } from 'thales-utils';
@@ -24,6 +28,8 @@ const ChainedSpeedMarketFlexCard: React.FC<SharePositionData> = ({
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const isUserWinner = type === 'chained-speed-won';
 
@@ -50,9 +56,11 @@ const ChainedSpeedMarketFlexCard: React.FC<SharePositionData> = ({
                     <AssetLabel isBold>{currencyKey}</AssetLabel>
                 </AssetDiv>
                 <FlexDivEnd>
-                    <DirectionsHeaderLabel width={94}>{t('common.direction')}</DirectionsHeaderLabel>
-                    <DirectionsHeaderLabel width={100}>{t('common.strike-price')}</DirectionsHeaderLabel>
-                    <DirectionsHeaderLabel width={84}>{t('profile.final-price')}</DirectionsHeaderLabel>
+                    <DirectionsHeaderLabel width={isMobile ? 88 : 94}>{t('common.direction')}</DirectionsHeaderLabel>
+                    <DirectionsHeaderLabel width={isMobile ? 94 : 100}>
+                        {t('common.strike-price')}
+                    </DirectionsHeaderLabel>
+                    <DirectionsHeaderLabel width={isMobile ? 78 : 84}>{t('profile.final-price')}</DirectionsHeaderLabel>
                     <DirectionsHeaderLabel width={38}>{t('common.result')}</DirectionsHeaderLabel>
                 </FlexDivEnd>
                 {positions.map((position, index) => {
@@ -119,6 +127,11 @@ const Container = styled(FlexDivCentered)<{ isWon: boolean }>`
     height: 510px;
     padding: 10px 20px;
     background: ${(props) => `url(${props.isWon ? ChainedWonBackground : ChainedLostBackground})`};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 357px;
+        height: 476px;
+        background-size: cover;
+    }
 `;
 
 const HeaderWrapper = styled(FlexDivColumn)<{ isWon: boolean }>`

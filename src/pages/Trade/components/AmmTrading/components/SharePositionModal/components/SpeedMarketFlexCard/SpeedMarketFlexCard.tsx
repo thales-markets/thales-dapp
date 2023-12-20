@@ -11,6 +11,7 @@ import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import ZeusResolvedWinBackground from 'assets/images/flex-cards/resolved.png';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
@@ -85,7 +86,7 @@ const Container = styled.div<{ position: Positions; type: SharePositionType }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 386px;
+    width: 383px;
     height: 510px;
     padding: 10px 10px;
     background: ${(props) =>
@@ -96,6 +97,12 @@ const Container = styled.div<{ position: Positions; type: SharePositionType }>`
                 ? DownBackground
                 : UpBackground
         }), lightgray 50% / cover no-repeat`};
+
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 357px;
+        height: 476px;
+        background-size: cover;
+    }
 `;
 
 const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`

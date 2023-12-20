@@ -16,6 +16,7 @@ import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDateWithTime, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
@@ -94,11 +95,17 @@ const Container = styled.div<{ type?: SharePositionType }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 386px;
+    width: 383px;
     height: 510px;
     padding: 10px 10px;
     background: url(${(props) => (props.type == 'potential' ? ZeusPotentialWinBackground : ZeusResolvedWinBackground)})
         lightgray 50% / cover no-repeat;
+
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 357px;
+        height: 476px;
+        background-size: cover;
+    }
 `;
 
 const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`
