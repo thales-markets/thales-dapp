@@ -52,6 +52,10 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     const [toastId, setToastId] = useState<string | number>(0);
     const [isMetamaskBrowser, setIsMetamaskBrowser] = useState(false);
 
+    const isRegularMarkets = ['potential', 'resolved'].includes(type);
+    const isSpeedMarkets = ['potential-speed', 'resolved-speed'].includes(type);
+    const isChainedMarkets = ['chained-speed-won', 'chained-speed-lost'].includes(type);
+
     const ref = useRef<HTMLDivElement>(null);
 
     const customStyles = {
@@ -95,6 +99,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 }
 
                 const IOS_DOWNLOAD_DELAY = 10 * 1000; // 10 seconds
+                const MOBILE_TWITTER_TOAST_AUTO_CLOSE = 15 * 1000; // 15 seconds
                 try {
                     // In order to improve image quality enlarge image by 2.
                     // Twitter is trying to fit into 504 x 510 with the same aspect ratio, so when image is smaller than 504 x 510, there is quality loss.
@@ -139,7 +144,11 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     const twitterLinkWithStatusMessage =
                         LINKS.TwitterTweetStatus +
                         TWITTER_MESSAGE_CHECKOUT +
-                        LINKS.Markets.Home +
+                        (isRegularMarkets
+                            ? LINKS.Markets.Home
+                            : isSpeedMarkets
+                            ? LINKS.Markets.Speed
+                            : LINKS.Markets.ChainedSpeed) +
                         (useDownloadImage ? TWITTER_MESSAGE_UPLOAD : TWITTER_MESSAGE_PASTE);
 
                     // Mobile requires user action in order to open new window, it can't open in async call, so adding <a>
@@ -148,19 +157,37 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                             ? setTimeout(() => {
                                   toast.update(
                                       toastIdParam,
-                                      getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
+                                      getSuccessToastOptions(
+                                          <a onClick={() => window.open(twitterLinkWithStatusMessage)}>
+                                              {t('common.flex-card.click-open-twitter')}
+                                          </a>,
+                                          toastIdParam,
+                                          { autoClose: MOBILE_TWITTER_TOAST_AUTO_CLOSE }
+                                      )
                                   );
                               }, IOS_DOWNLOAD_DELAY)
                             : toast.update(
                                   toastIdParam,
-                                  getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
+                                  getSuccessToastOptions(
+                                      <a onClick={() => window.open(twitterLinkWithStatusMessage)}>
+                                          {t('common.flex-card.click-open-twitter')}
+                                      </a>,
+                                      toastIdParam,
+                                      { autoClose: MOBILE_TWITTER_TOAST_AUTO_CLOSE }
+                                  )
                               )
                         : toast.update(
                               toastIdParam,
                               getSuccessToastOptions(
-                                  !useDownloadImage
-                                      ? t('common.flex-card.image-in-clipboard')
-                                      : t('common.flex-card.open-twitter'),
+                                  <>
+                                      {!useDownloadImage && (
+                                          <>
+                                              {t('common.flex-card.image-in-clipboard')}
+                                              <br />
+                                          </>
+                                      )}
+                                      {t('common.flex-card.open-twitter')}
+                                  </>,
                                   toastIdParam
                               )
                           );
@@ -232,7 +259,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
-                {['potential', 'resolved'].includes(type) && (
+                {isRegularMarkets && (
                     <MarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
@@ -245,7 +272,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         payout={payout}
                     />
                 )}
-                {['potential-speed', 'resolved-speed'].includes(type) && (
+                {isSpeedMarkets && (
                     <SpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
@@ -256,7 +283,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                         payout={payout}
                     />
                 )}
-                {['chained-speed-won', 'chained-speed-lost'].includes(type) && (
+                {isChainedMarkets && (
                     <ChainedSpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}

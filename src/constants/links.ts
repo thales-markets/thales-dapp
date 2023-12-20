@@ -63,6 +63,8 @@ export const LINKS = {
     },
     Markets: {
         Home: 'https://thalesmarket.io/markets',
+        Speed: 'https://thalesmarket.io/speed-markets',
+        ChainedSpeed: 'https://thalesmarket.io/speed-markets?isChained=true',
     },
     TradingIncentives: {
         TIP53:

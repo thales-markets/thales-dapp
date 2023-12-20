@@ -125,7 +125,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
 
-    const displayShare = !isOverview && position.isMatured;
+    const displayShare = !isOverview && (positionWithPrices.canResolve || positionWithPrices.isMatured);
 
     return isMobile ? (
         <Container>
@@ -316,15 +316,19 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             </Summary>
             {openTwitterShareModal && (
                 <SharePositionModal
-                    type={position.isUserWinner ? 'chained-speed-won' : 'chained-speed-lost'}
-                    positions={position.sides}
-                    currencyKey={position.currencyKey}
-                    strikeDate={position.maturityDate}
-                    strikePrices={position.strikePrices}
-                    finalPrices={position.finalPrices}
-                    buyIn={position.paid}
-                    payout={position.amount}
-                    payoutMultiplier={position.payoutMultiplier}
+                    type={
+                        positionWithPrices.claimable || positionWithPrices.isUserWinner
+                            ? 'chained-speed-won'
+                            : 'chained-speed-lost'
+                    }
+                    positions={positionWithPrices.sides}
+                    currencyKey={positionWithPrices.currencyKey}
+                    strikeDate={positionWithPrices.maturityDate}
+                    strikePrices={positionWithPrices.strikePrices}
+                    finalPrices={positionWithPrices.finalPrices}
+                    buyIn={positionWithPrices.paid}
+                    payout={positionWithPrices.amount}
+                    payoutMultiplier={positionWithPrices.payoutMultiplier}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}

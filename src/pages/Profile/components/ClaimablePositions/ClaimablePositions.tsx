@@ -249,29 +249,37 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                             ),
                         },
                         {
-                            value: !row.isChainedSpeedMarket && (
+                            value: (
                                 <ShareIcon
                                     className="icon-home icon-home--twitter-x"
                                     disabled={false}
                                     onClick={() => {
                                         setOpenTwitterShareModal(true);
-                                        setPositionShareData({
-                                            type: row.claimable
-                                                ? row.isSpeedMarket
-                                                    ? 'resolved-speed'
-                                                    : 'resolved'
-                                                : row.isSpeedMarket
-                                                ? 'potential-speed'
-                                                : 'potential',
-                                            positions: [row.side],
-                                            currencyKey: row.currencyKey,
-                                            strikePrices: [row.strikePrice],
-                                            leftPrice: row.leftPrice,
-                                            rightPrice: row.rightPrice,
-                                            strikeDate: row.maturityDate,
-                                            buyIn: row.paid,
-                                            payout: row.amount,
-                                        });
+                                        if (row.isChainedSpeedMarket && chainedPosition) {
+                                            setPositionShareData({
+                                                type: 'chained-speed-won',
+                                                positions: chainedPosition.sides,
+                                                currencyKey: chainedPosition.currencyKey,
+                                                strikeDate: chainedPosition.maturityDate,
+                                                strikePrices: chainedPosition.strikePrices,
+                                                finalPrices: chainedPosition.finalPrices,
+                                                buyIn: chainedPosition.paid,
+                                                payout: chainedPosition.amount,
+                                                payoutMultiplier: chainedPosition.payoutMultiplier,
+                                            });
+                                        } else {
+                                            setPositionShareData({
+                                                type: row.isSpeedMarket ? 'resolved-speed' : 'resolved',
+                                                positions: [row.side],
+                                                currencyKey: row.currencyKey,
+                                                strikePrices: [row.strikePrice],
+                                                leftPrice: row.leftPrice,
+                                                rightPrice: row.rightPrice,
+                                                strikeDate: row.maturityDate,
+                                                buyIn: row.paid,
+                                                payout: row.amount,
+                                            });
+                                        }
                                     }}
                                 />
                             ),
@@ -343,10 +351,12 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                     currencyKey={positionsShareData.currencyKey}
                     strikeDate={positionsShareData.strikeDate}
                     strikePrices={positionsShareData.strikePrices}
+                    finalPrices={positionsShareData.finalPrices}
                     leftPrice={positionsShareData.leftPrice}
                     rightPrice={positionsShareData.rightPrice}
                     buyIn={positionsShareData.buyIn}
                     payout={positionsShareData.payout}
+                    payoutMultiplier={positionsShareData.payoutMultiplier}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}
