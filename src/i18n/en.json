@@ -468,7 +468,7 @@
                 "price-stale": "Can't resolve market with stale price"
             }
         },
-        "total-pay": "Total to pay {{amount}} + {{fee}} fee<tooltip/>",
+        "total-pay": "Total to pay {{amount}} + {{fee}} fee<tooltip/> (= {{totalAmount}})",
         "fee-info": "Fee varies per direction liquidity and timeframe, longer timeframes have higher payouts",
         "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee<tooltip/>",
         "total-pay-with-conversion": "Total {{amount}} ({{stableAmount}})",
@@ -509,7 +509,7 @@
             "clear-all": "Clear all",
             "asset-price": "If {{asset}} price sequence follows",
             "between-rounds": "between rounds",
-            "total-pay": "Total to pay {{amount}} + {{fee}} fee",
+            "total-pay": "Total to pay {{amount}} + {{fee}} fee (= {{totalAmount}})",
             "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",
             "errors": {
                 "choose-directions": "Choose all directions"
