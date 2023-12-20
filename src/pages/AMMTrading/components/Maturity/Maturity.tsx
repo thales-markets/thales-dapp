@@ -241,7 +241,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             positions={[position as Positions]}
                             currencyKey={claimablePosition.currencyKey}
                             strikeDate={claimablePosition.maturityDate}
-                            strikePrice={claimablePosition.strikePrice}
+                            strikePrices={[claimablePosition.strikePrice]}
                             leftPrice={claimablePosition.leftPrice}
                             rightPrice={claimablePosition.rightPrice}
                             buyIn={claimablePosition.paid}

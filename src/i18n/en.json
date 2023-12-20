@@ -487,7 +487,6 @@
             "title": "Overview",
             "navigate": "Speed Markets Overview page",
             "navigate-chained": "Chained Speed Markets Overview page",
-            "back-chained": "Chained Speed Markets",
             "user-title": "Unresolved user winner positions",
             "amm-title": "Unresolved AMM winner positions",
             "unknown-price-title": "Unresolved positions without final price",
@@ -503,6 +502,7 @@
         "single": "Single",
         "chained": {
             "label": "Chained",
+            "name": "Chained Speed Markets",
             "info": "Create a custom chain of {{minMarkets}} - {{maxMarkets}} Speed Markets for a maximum potential return of ~ <bold>{{maxRoi}}x</bold>!",
             "add-directions": "Click + to add directions",
             "roi": "ROI: {{value}}",

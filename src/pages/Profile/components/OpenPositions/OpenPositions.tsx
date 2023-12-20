@@ -302,7 +302,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                                                     : 'potential',
                                             positions: [row.side],
                                             currencyKey: row.currencyKey,
-                                            strikePrice: row.strikePrice,
+                                            strikePrices: [row.strikePrice],
                                             leftPrice: row.leftPrice,
                                             rightPrice: row.rightPrice,
                                             strikeDate: row.maturityDate,
@@ -385,7 +385,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                     positions={positionsShareData.positions}
                     currencyKey={positionsShareData.currencyKey}
                     strikeDate={positionsShareData.strikeDate}
-                    strikePrice={positionsShareData.strikePrice}
+                    strikePrices={positionsShareData.strikePrices}
                     leftPrice={positionsShareData.leftPrice}
                     rightPrice={positionsShareData.rightPrice}
                     buyIn={positionsShareData.buyIn}

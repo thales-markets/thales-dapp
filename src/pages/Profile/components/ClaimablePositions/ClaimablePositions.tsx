@@ -265,7 +265,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                                 : 'potential',
                                             positions: [row.side],
                                             currencyKey: row.currencyKey,
-                                            strikePrice: row.strikePrice,
+                                            strikePrices: [row.strikePrice],
                                             leftPrice: row.leftPrice,
                                             rightPrice: row.rightPrice,
                                             strikeDate: row.maturityDate,
@@ -342,7 +342,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                     positions={positionsShareData.positions}
                     currencyKey={positionsShareData.currencyKey}
                     strikeDate={positionsShareData.strikeDate}
-                    strikePrice={positionsShareData.strikePrice}
+                    strikePrices={positionsShareData.strikePrices}
                     leftPrice={positionsShareData.leftPrice}
                     rightPrice={positionsShareData.rightPrice}
                     buyIn={positionsShareData.buyIn}

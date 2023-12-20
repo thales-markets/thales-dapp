@@ -176,7 +176,7 @@ const OpenPosition: React.FC<OpenPositionProps> = ({
                     positions={[position.side]}
                     currencyKey={position.currencyKey}
                     strikeDate={position.maturityDate}
-                    strikePrice={position.strikePrice}
+                    strikePrices={[position.strikePrice]}
                     buyIn={position.paid}
                     payout={position.amount}
                     onClose={() => setOpenTwitterShareModal(false)}

@@ -34,12 +34,14 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     type,
     positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
+    finalPrices,
     leftPrice,
     rightPrice,
     strikeDate,
     buyIn,
     payout,
+    payoutMultiplier,
     onClose,
 }) => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
@@ -230,38 +232,41 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
-                {(type == 'potential' || type == 'resolved') && (
+                {['potential', 'resolved'].includes(type) && (
                     <MarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
                         positions={positions}
                         strikeDate={strikeDate}
-                        strikePrice={strikePrice}
+                        strikePrices={strikePrices}
                         leftPrice={leftPrice}
                         rightPrice={rightPrice}
                         buyIn={buyIn}
                         payout={payout}
                     />
                 )}
-                {(type == 'potential-speed' || type == 'resolved-speed') && (
+                {['potential-speed', 'resolved-speed'].includes(type) && (
                     <SpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
                         positions={positions}
                         strikeDate={strikeDate}
-                        strikePrice={strikePrice}
+                        strikePrices={strikePrices}
                         buyIn={buyIn}
                         payout={payout}
                     />
                 )}
-                {(type == 'potential-chained-speed' || type == 'resolved-chained-speed') && (
+                {['chained-speed-won', 'chained-speed-lost'].includes(type) && (
                     <ChainedSpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
                         positions={positions}
                         strikeDate={strikeDate}
+                        strikePrices={strikePrices}
+                        finalPrices={finalPrices}
                         buyIn={buyIn}
                         payout={payout}
+                        payoutMultiplier={payoutMultiplier}
                     />
                 )}
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
@@ -275,8 +280,8 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
 
 // Aspect ratio is important for Twitter: horizontal 2:1 and vertical min 3:4
 const Container = styled(FlexDivColumnCentered)`
-    width: 386px;
-    max-height: 515px;
+    width: 383px;
+    max-height: 510px;
     @media (max-width: 950px) {
         width: 357px;
         max-height: 476px;

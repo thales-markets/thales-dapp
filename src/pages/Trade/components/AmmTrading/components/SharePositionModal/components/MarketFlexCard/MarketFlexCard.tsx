@@ -21,7 +21,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
     positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
     leftPrice,
     rightPrice,
     strikeDate,
@@ -36,6 +36,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
 
     const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
 
+    const strikePrice = strikePrices ? strikePrices[0] : 0;
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice

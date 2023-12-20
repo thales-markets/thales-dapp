@@ -125,7 +125,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
 
-    const displayShare = !isOverview && (!position.isMatured || position.isUserWinner);
+    const displayShare = !isOverview && position.isMatured;
 
     return isMobile ? (
         <Container>
@@ -183,6 +183,15 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                     isAdmin={isAdmin}
                     isSubmittingBatch={isSubmittingBatch}
                 />
+                <ShareDiv>
+                    {displayShare && (
+                        <ShareIcon
+                            className="icon-home icon-home--twitter-x"
+                            disabled={false}
+                            onClick={() => setOpenTwitterShareModal(true)}
+                        />
+                    )}
+                </ShareDiv>
             </AlignedFlex>
         </Container>
     ) : (
@@ -307,12 +316,15 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             </Summary>
             {openTwitterShareModal && (
                 <SharePositionModal
-                    type={position.claimable ? 'resolved-chained-speed' : 'potential-chained-speed'}
+                    type={position.isUserWinner ? 'chained-speed-won' : 'chained-speed-lost'}
                     positions={position.sides}
                     currencyKey={position.currencyKey}
                     strikeDate={position.maturityDate}
+                    strikePrices={position.strikePrices}
+                    finalPrices={position.finalPrices}
                     buyIn={position.paid}
                     payout={position.amount}
+                    payoutMultiplier={position.payoutMultiplier}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}
@@ -437,6 +449,11 @@ const FlexContainer = styled(AlignedFlex)`
     flex: 1;
     flex-direction: row;
     justify-content: center;
+`;
+
+const ShareDiv = styled(FlexDivCentered)`
+    width: 20px;
+    height: 20px;
 `;
 
 export default ChainedPosition;

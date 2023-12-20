@@ -16,13 +16,14 @@ const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
     positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
     strikeDate,
     buyIn,
     payout,
 }) => {
     const { t } = useTranslation();
 
+    const strikePrice = strikePrices ? strikePrices[0] : 0;
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice

@@ -5,17 +5,19 @@ export type SharePositionType =
     | 'resolved'
     | 'resolved-speed'
     | 'potential-speed'
-    | 'resolved-chained-speed'
-    | 'potential-chained-speed';
+    | 'chained-speed-won'
+    | 'chained-speed-lost';
 
 export type SharePositionData = {
     type: SharePositionType;
     positions: Positions[];
     currencyKey: string;
-    strikePrice?: number | string;
+    strikePrices?: (number | string)[];
+    finalPrices?: (number | string)[];
     leftPrice?: number;
     rightPrice?: number;
     strikeDate: number;
     buyIn: number;
     payout: number;
+    payoutMultiplier?: number;
 };
