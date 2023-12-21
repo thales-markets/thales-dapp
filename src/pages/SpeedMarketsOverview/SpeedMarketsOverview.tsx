@@ -22,7 +22,7 @@ const SpeedMarketsOverview: React.FC = () => {
                     <SPAAnchor href={`${buildHref(ROUTES.Options.SpeedMarkets)}?isChained=${isChainedMarkets}`}>
                         <LinkContainer>
                             <NavigationIcon isLeft className={`icon icon--left`} />
-                            {isChainedMarkets ? t('speed-markets.overview.back-chained') : t('speed-markets.title')}
+                            {isChainedMarkets ? t('speed-markets.chained.name') : t('speed-markets.title')}
                         </LinkContainer>
                     </SPAAnchor>
                     &nbsp;/&nbsp;{t(`speed-markets.overview.title`)}
@@ -33,7 +33,7 @@ const SpeedMarketsOverview: React.FC = () => {
                         href={`${buildHref(ROUTES.Options.SpeedMarketsOverview)}?isChained=${!isChainedMarkets}`}
                     >
                         <LinkContainer>
-                            {isChainedMarkets ? t('speed-markets.title') : t('speed-markets.overview.back-chained')}
+                            {isChainedMarkets ? t('speed-markets.title') : t('speed-markets.chained.name')}
                             <NavigationIcon isLeft={false} className={`icon icon--right`} />
                         </LinkContainer>
                     </SPAAnchor>

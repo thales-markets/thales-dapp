@@ -781,10 +781,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             {openTwitterShareModal && (
                 <SharePositionModal
                     type="potential"
-                    position={market.positionType}
+                    positions={[market.positionType]}
                     currencyKey={currencyKey}
                     strikeDate={maturityDate}
-                    strikePrice={(market as MarketInfo)?.strikePrice ?? 0}
+                    strikePrices={[(market as MarketInfo)?.strikePrice ?? 0]}
                     leftPrice={(market as RangedMarketPerPosition).leftPrice}
                     rightPrice={(market as RangedMarketPerPosition).rightPrice}
                     buyIn={Number(paidAmount)}
