@@ -194,7 +194,7 @@ export const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
 
 const FIAT_CURRENCY = ['USD'];
-const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
+export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
 const FIAT_CURRENCY_SIGN = {
     [FIAT_CURRENCY_MAP.USD]: '$',
 };

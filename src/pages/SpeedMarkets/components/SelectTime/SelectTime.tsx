@@ -11,6 +11,7 @@ import {
     secondsToMilliseconds,
     secondsToMinutes,
 } from 'date-fns';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,6 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type SelectTimeProps = {
     selectedDeltaSec: number;
@@ -30,7 +30,11 @@ type SelectTimeProps = {
     onExactTimeChange: React.Dispatch<number>;
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
     isResetTriggered: boolean;
+    isChained: boolean;
 };
+
+const CHAINED_FIRST_TIMEFRAME_MINUTES = 5;
+const CHAINED_SECOND_TIMEFRAME_MINUTES = 10;
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
@@ -38,6 +42,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     onExactTimeChange,
     ammSpeedMarketsLimits,
     isResetTriggered,
+    isChained,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -59,15 +64,19 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     const deltaTimesMinutes: number[] = useMemo(() => {
         let times: number[] = [];
-        if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
-            times = ammSpeedMarketsLimits.timeThresholdsForFees.filter((time: number) => time < hoursToMinutes(1));
-            setIsDeltaMinutesSelected(true);
+        if (isChained) {
+            times = [CHAINED_FIRST_TIMEFRAME_MINUTES, CHAINED_SECOND_TIMEFRAME_MINUTES];
         } else {
-            setIsDeltaMinutesSelected(false);
+            if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
+                times = ammSpeedMarketsLimits.timeThresholdsForFees.filter((time: number) => time < hoursToMinutes(1));
+                setIsDeltaMinutesSelected(true);
+            } else {
+                setIsDeltaMinutesSelected(false);
+            }
         }
 
         return times;
-    }, [ammSpeedMarketsLimits]);
+    }, [ammSpeedMarketsLimits, isChained]);
 
     const deltaTimesHours: number[] = useMemo(() => {
         let times: number[] = [];
@@ -166,7 +175,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     // Validations for delta time
     useEffect(() => {
-        if (isDeltaSelected) {
+        if (isDeltaSelected && !isChained) {
             if (ammSpeedMarketsLimits && customDeltaTime !== '') {
                 const customDeltaTimeSec = isDeltaMinutesSelected
                     ? minutesToSeconds(Number(customDeltaTime))
@@ -204,7 +213,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
             setErrorMessage('');
         }
-    }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t, isDeltaSelected]);
+    }, [ammSpeedMarketsLimits, customDeltaTime, isDeltaMinutesSelected, t, isDeltaSelected, isChained]);
 
     const resetData = useCallback(() => {
         setIsDeltaSelected(true);
@@ -224,6 +233,10 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             resetData();
         }
     }, [isWalletConnected, resetData, isResetTriggered]);
+
+    useEffect(() => {
+        resetData();
+    }, [isChained, resetData]);
 
     const onDeltaTimeClickHandler = (deltaHours: number, deltaMinutes: number) => {
         setIsDeltaSelected(true);
@@ -262,131 +275,160 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     return (
         <Container>
-            <Row>
-                {deltaTimesMinutes.map((deltaMinutes, index) => (
-                    <DeltaTime
-                        key={'minutes' + index}
-                        isSelected={isDeltaSelected && selectedDeltaSec === minutesToSeconds(deltaMinutes)}
-                        onClick={() => onDeltaTimeClickHandler(0, deltaMinutes)}
-                    >{`${deltaMinutes}m`}</DeltaTime>
-                ))}
-                {deltaTimesHours.map((deltaHours, index) => (
-                    <DeltaTime
-                        key={'hours' + index}
-                        isSelected={isDeltaSelected && selectedDeltaSec === hoursToSeconds(deltaHours)}
-                        onClick={() => onDeltaTimeClickHandler(deltaHours, 0)}
-                    >{`${deltaHours}h`}</DeltaTime>
-                ))}
-                <Time isSelected={!isDeltaSelected} onClick={onSwitchTimeClickHandler}>
-                    <Icon className="icon icon--clock" />
-                </Time>
-            </Row>
-
-            {isDeltaSelected ? (
-                <Row>
-                    <InputWrapper>
-                        <NumericInput
-                            value={customDeltaTime}
-                            placeholder={isDeltaMinutesSelected ? t('common.enter-minutes') : t('common.enter-hours')}
-                            onChange={(_, value) => onDeltaTimeInputChange(value)}
-                            showValidation={!!errorMessage}
-                            validationMessage={errorMessage}
-                            margin="0"
-                            inputPadding="5px 40px 5px 10px"
-                        />
-                    </InputWrapper>
-                    <Column>
-                        <Button
-                            height="13px"
-                            width={isMobile ? '60px' : '70px'}
-                            padding="0 29px"
-                            fontSize="13px"
-                            backgroundColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
-                            additionalStyles={{ borderRadius: '4px' }}
-                            onClick={onMinutesButtonClikHandler}
-                        >
-                            {t('common.time-remaining.minutes')}
-                        </Button>
-                        <Button
-                            height="13px"
-                            width={isMobile ? '60px' : '70px'}
-                            padding="0 29px"
-                            fontSize="13px"
-                            backgroundColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            borderColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
-                            textColor={isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
-                            additionalStyles={{ borderRadius: '4px' }}
-                            onClick={onHoursButtonClikHandler}
-                        >
-                            {t('common.time-remaining.hours')}
-                        </Button>
-                    </Column>
-                </Row>
+            {isChained ? (
+                // Chained
+                <ChainedRow>
+                    {deltaTimesMinutes.map((deltaMinutes, index) => (
+                        <DeltaTime
+                            key={'minutes' + index}
+                            isSelected={isDeltaSelected && selectedDeltaSec === minutesToSeconds(deltaMinutes)}
+                            onClick={() => onDeltaTimeClickHandler(0, deltaMinutes)}
+                        >{`${deltaMinutes}m`}</DeltaTime>
+                    ))}
+                </ChainedRow>
             ) : (
-                <Row>
-                    <TimeInput
-                        value={exactTimeHours}
-                        onChange={(_, value) => setExactTimeHours(value)}
-                        showValidation={!!errorMessage}
-                        validationMessage={errorMessage}
-                        min="1"
-                        max="12"
-                        margin="0"
-                        inputPadding="5px 10px"
-                        validationMargin={isMobile ? '-10px 0 0 5px' : '-10px 0 0 150px'}
-                    />
-                    <TimeSeparator>:</TimeSeparator>
-                    <TimeInput
-                        value={exactTimeMinutes}
-                        onChange={(_, value) => setExactTimeMinutes(value)}
-                        showValidation={!!errorMessage}
-                        min="0"
-                        max="59"
-                        margin="0"
-                        inputPadding="5px 10px"
-                    />
-                    <Column>
-                        <Button
-                            height="13px"
-                            width={isMobile ? '60px' : '70px'}
-                            padding="0 29px"
-                            fontSize="13px"
-                            backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
-                            borderColor={!isAM ? theme.button.background.tertiary : undefined}
-                            textColor={!isAM ? theme.button.textColor.tertiary : undefined}
-                            additionalStyles={{ borderRadius: '4px' }}
-                            onClick={() => setIsAM(true)}
-                        >
-                            {'AM'}
-                        </Button>
-                        <Button
-                            height="13px"
-                            width={isMobile ? '60px' : '70px'}
-                            padding="0 29px"
-                            fontSize="13px"
-                            backgroundColor={isAM ? theme.button.background.tertiary : undefined}
-                            borderColor={isAM ? theme.button.background.tertiary : undefined}
-                            textColor={isAM ? theme.button.textColor.tertiary : undefined}
-                            additionalStyles={{ borderRadius: '4px' }}
-                            onClick={() => setIsAM(false)}
-                        >
-                            {'PM'}
-                        </Button>
-                    </Column>
-                </Row>
+                // Single
+                <>
+                    <Row>
+                        {deltaTimesMinutes.map((deltaMinutes, index) => (
+                            <DeltaTime
+                                key={'minutes' + index}
+                                isSelected={isDeltaSelected && selectedDeltaSec === minutesToSeconds(deltaMinutes)}
+                                onClick={() => onDeltaTimeClickHandler(0, deltaMinutes)}
+                            >{`${deltaMinutes}m`}</DeltaTime>
+                        ))}
+                        {deltaTimesHours.map((deltaHours, index) => (
+                            <DeltaTime
+                                key={'hours' + index}
+                                isSelected={isDeltaSelected && selectedDeltaSec === hoursToSeconds(deltaHours)}
+                                onClick={() => onDeltaTimeClickHandler(deltaHours, 0)}
+                            >{`${deltaHours}h`}</DeltaTime>
+                        ))}
+                        <Time isSelected={!isDeltaSelected} onClick={onSwitchTimeClickHandler}>
+                            <Icon className="icon icon--clock" />
+                        </Time>
+                    </Row>
+
+                    {isDeltaSelected ? (
+                        <Row>
+                            <InputWrapper>
+                                <NumericInput
+                                    value={customDeltaTime}
+                                    placeholder={
+                                        isDeltaMinutesSelected ? t('common.enter-minutes') : t('common.enter-hours')
+                                    }
+                                    onChange={(_, value) => onDeltaTimeInputChange(value)}
+                                    showValidation={!!errorMessage}
+                                    validationMessage={errorMessage}
+                                    margin="0"
+                                    inputPadding="5px 40px 5px 10px"
+                                />
+                            </InputWrapper>
+                            <Column>
+                                <Button
+                                    height="13px"
+                                    width={isMobile ? '60px' : '70px'}
+                                    padding="0 29px"
+                                    fontSize="13px"
+                                    backgroundColor={
+                                        !isDeltaMinutesSelected ? theme.button.background.tertiary : undefined
+                                    }
+                                    borderColor={!isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                                    textColor={!isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                                    additionalStyles={{ borderRadius: '4px' }}
+                                    onClick={onMinutesButtonClikHandler}
+                                >
+                                    {t('common.time-remaining.minutes')}
+                                </Button>
+                                <Button
+                                    height="13px"
+                                    width={isMobile ? '60px' : '70px'}
+                                    padding="0 29px"
+                                    fontSize="13px"
+                                    backgroundColor={
+                                        isDeltaMinutesSelected ? theme.button.background.tertiary : undefined
+                                    }
+                                    borderColor={isDeltaMinutesSelected ? theme.button.background.tertiary : undefined}
+                                    textColor={isDeltaMinutesSelected ? theme.button.textColor.tertiary : undefined}
+                                    additionalStyles={{ borderRadius: '4px' }}
+                                    onClick={onHoursButtonClikHandler}
+                                >
+                                    {t('common.time-remaining.hours')}
+                                </Button>
+                            </Column>
+                        </Row>
+                    ) : (
+                        <Row>
+                            <TimeInput
+                                value={exactTimeHours}
+                                onChange={(_, value) => setExactTimeHours(value)}
+                                showValidation={!!errorMessage}
+                                validationMessage={errorMessage}
+                                min="1"
+                                max="12"
+                                margin="0"
+                                inputPadding="5px 10px"
+                                validationMargin={isMobile ? '-10px 0 0 5px' : '-10px 0 0 150px'}
+                            />
+                            <TimeSeparator>:</TimeSeparator>
+                            <TimeInput
+                                value={exactTimeMinutes}
+                                onChange={(_, value) => setExactTimeMinutes(value)}
+                                showValidation={!!errorMessage}
+                                min="0"
+                                max="59"
+                                margin="0"
+                                inputPadding="5px 10px"
+                            />
+                            <Column>
+                                <Button
+                                    height="13px"
+                                    width={isMobile ? '60px' : '70px'}
+                                    padding="0 29px"
+                                    fontSize="13px"
+                                    backgroundColor={!isAM ? theme.button.background.tertiary : undefined}
+                                    borderColor={!isAM ? theme.button.background.tertiary : undefined}
+                                    textColor={!isAM ? theme.button.textColor.tertiary : undefined}
+                                    additionalStyles={{ borderRadius: '4px' }}
+                                    onClick={() => setIsAM(true)}
+                                >
+                                    {'AM'}
+                                </Button>
+                                <Button
+                                    height="13px"
+                                    width={isMobile ? '60px' : '70px'}
+                                    padding="0 29px"
+                                    fontSize="13px"
+                                    backgroundColor={isAM ? theme.button.background.tertiary : undefined}
+                                    borderColor={isAM ? theme.button.background.tertiary : undefined}
+                                    textColor={isAM ? theme.button.textColor.tertiary : undefined}
+                                    additionalStyles={{ borderRadius: '4px' }}
+                                    onClick={() => setIsAM(false)}
+                                >
+                                    {'PM'}
+                                </Button>
+                            </Column>
+                        </Row>
+                    )}
+                </>
             )}
         </Container>
     );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+    width: 100%;
+`;
 
 const Row = styled(FlexDivRow)`
     :first-child {
         margin-bottom: 11px;
     }
+`;
+
+const ChainedRow = styled(FlexDivCentered)`
+    gap: 15px;
+    padding-right: 85px;
 `;
 
 const Column = styled(FlexDivColumnCentered)`

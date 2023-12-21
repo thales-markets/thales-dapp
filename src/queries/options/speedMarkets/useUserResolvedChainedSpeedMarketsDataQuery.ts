@@ -117,6 +117,7 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         maturityDate,
                         amount: payout,
                         paid: buyinAmount * (1 + fee),
+                        payoutMultiplier: bigNumberFormatter(marketData.payoutMultiplier),
                         finalPrices,
                         isOpen: false,
                         isMatured: true,

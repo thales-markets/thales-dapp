@@ -16,12 +16,13 @@ import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDateWithTime, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
-    position,
+    positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
     leftPrice,
     rightPrice,
     strikeDate,
@@ -36,6 +37,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
 
     const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
 
+    const strikePrice = strikePrices ? strikePrices[0] : 0;
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice
@@ -57,7 +59,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
             <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
-                <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
+                <Position>{`${currencyKey.toUpperCase()} ${positions[0]}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
                 <PotentialWinHeading type={type}>
@@ -98,6 +100,12 @@ const Container = styled.div<{ type?: SharePositionType }>`
     padding: 10px 10px;
     background: url(${(props) => (props.type == 'potential' ? ZeusPotentialWinBackground : ZeusResolvedWinBackground)})
         lightgray 50% / cover no-repeat;
+
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 357px;
+        height: 476px;
+        background-size: cover;
+    }
 `;
 
 const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`

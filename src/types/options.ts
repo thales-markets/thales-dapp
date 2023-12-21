@@ -297,6 +297,7 @@ export type ChainedSpeedMarket = {
     maturityDate: number;
     amount: number;
     paid: number;
+    payoutMultiplier: number;
     finalPrices: number[];
     isOpen: boolean;
     isMatured: boolean;
