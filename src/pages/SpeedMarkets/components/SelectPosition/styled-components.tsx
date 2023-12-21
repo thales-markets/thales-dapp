@@ -33,8 +33,7 @@ export const IconWrong = styled(FlexDivCentered)`
 `;
 
 export const ChainedPositions = styled(FlexDivCentered)`
-    padding-top: 10px;
-    padding-bottom: 20px;
+    padding-top: 5px;
 `;
 
 export const PositionsContainer = styled(FlexDivSpaceBetween)`
