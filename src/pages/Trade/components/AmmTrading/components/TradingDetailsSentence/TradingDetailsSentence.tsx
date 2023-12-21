@@ -53,11 +53,11 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [deltaDate, setDeltaDate] = useState(0);
+    const [dateFromDelta, setDateFromDelta] = useState(0);
 
     useEffect(() => {
         if (deltaTimeSec) {
-            setDeltaDate(Date.now() + secondsToMilliseconds(deltaTimeSec));
+            setDateFromDelta(Date.now() + secondsToMilliseconds(deltaTimeSec));
         }
     }, [deltaTimeSec]);
 
@@ -68,7 +68,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
             const maturityMinute = new Date(maturityDate).getMinutes() - secondsToMinutes(deltaTimeSec);
 
             if (currentMinute !== maturityMinute) {
-                setDeltaDate(Date.now() + secondsToMilliseconds(deltaTimeSec));
+                setDateFromDelta(Date.now() + secondsToMilliseconds(deltaTimeSec));
             }
         }
     }, secondsToMilliseconds(5));
@@ -99,11 +99,11 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                       : t('common.time-remaining.hours')
                   : t('common.time-remaining.minutes')
           }`
-        : '';
+        : `... ${t('common.time-remaining.minutes')}`;
 
-    const fullDateFromDeltaTimeFormatted = `(${
-        isChainedSpeedMarket ? t('common.starting') + ' ' : ''
-    }${formatShortDateWithTime(deltaDate)})`;
+    const fullDateFromDeltaTimeFormatted = deltaTimeSec
+        ? `(${isChainedSpeedMarket ? t('common.starting') + ' ' : ''}${formatShortDateWithTime(dateFromDelta)})`
+        : `( ${t('markets.amm-trading.choose-time')} )`;
 
     const timeFormatted = deltaTimeSec
         ? `${deltaTimeFormatted} ${fullDateFromDeltaTimeFormatted}`
