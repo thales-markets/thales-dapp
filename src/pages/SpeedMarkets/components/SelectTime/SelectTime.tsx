@@ -20,7 +20,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivEnd, FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 
@@ -426,9 +426,9 @@ const Row = styled(FlexDivRow)`
     }
 `;
 
-const ChainedRow = styled(FlexDivEnd)`
+const ChainedRow = styled(FlexDivCentered)`
     gap: 15px;
-    padding-right: 85px; // Time width (70px) + gap (15px)
+    padding-right: 85px;
 `;
 
 const Column = styled(FlexDivColumnCentered)`
