@@ -756,13 +756,17 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                         ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                         : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
                                     fee: formatPercentage(totalFee),
+                                    totalAmount: selectedStableBuyinAmount
+                                        ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount * (1 + totalFee))
+                                        : formatCurrencyWithSign(USD_SIGN, Number(paidAmount) * (1 + totalFee)),
                                 }}
                                 components={{
-                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
-                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
-                                    ) : (
-                                        <></>
-                                    ),
+                                    tooltip:
+                                        positionType && skewImpact[positionType] ? (
+                                            <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                        ) : (
+                                            <></>
+                                        ),
                                 }}
                             />
                         ) : (
@@ -776,11 +780,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     fee: formatPercentage(totalFee),
                                 }}
                                 components={{
-                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
-                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
-                                    ) : (
-                                        <></>
-                                    ),
+                                    tooltip:
+                                        positionType && skewImpact[positionType] ? (
+                                            <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                        ) : (
+                                            <></>
+                                        ),
                                 }}
                             />
                         )}
@@ -825,14 +830,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             {openTwitterShareModal && positionType && (
                 <SharePositionModal
                     type="potential-speed"
-                    position={positionType}
+                    positions={[positionType]}
                     currencyKey={currencyKey}
                     strikeDate={
                         secondsToMilliseconds(strikeTimeSec) || Date.now() + secondsToMilliseconds(deltaTimeSec)
                     }
-                    strikePrice={currentPrice ?? 0}
+                    strikePrices={[currentPrice ?? 0]}
                     buyIn={convertToStable(Number(paidAmount))}
-                    payout={(1 + Number(SPEED_MARKETS_QUOTE - 1)) * Number(paidAmount)}
+                    payout={SPEED_MARKETS_QUOTE * Number(paidAmount)}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}

@@ -11,24 +11,28 @@ import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { Positions } from 'enums/options';
 import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import ZeusResolvedWinBackground from 'assets/images/flex-cards/resolved.png';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,
-    position,
+    positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
     strikeDate,
     buyIn,
     payout,
 }) => {
     const { t } = useTranslation();
 
+    const strikePrice = strikePrices ? strikePrices[0] : 0;
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice
             : strikePrice
             ? formatCurrencyWithSign(USD_SIGN, strikePrice ?? 0)
             : 0;
+
+    const position = positions[0];
 
     return (
         <Container position={position} type={type}>
@@ -93,6 +97,12 @@ const Container = styled.div<{ position: Positions; type: SharePositionType }>`
                 ? DownBackground
                 : UpBackground
         }), lightgray 50% / cover no-repeat`};
+
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 357px;
+        height: 476px;
+        background-size: cover;
+    }
 `;
 
 const MarketDetailsContainer = styled(FlexDiv)<{ type: SharePositionType }>`

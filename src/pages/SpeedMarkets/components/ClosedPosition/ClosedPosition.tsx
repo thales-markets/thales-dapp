@@ -1,6 +1,8 @@
 import { USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import React from 'react';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
@@ -16,6 +18,8 @@ type ClosedPositionProps = {
 const ClosedPosition: React.FC<ClosedPositionProps> = ({ position }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     return (
         <Position>
@@ -59,6 +63,27 @@ const ClosedPosition: React.FC<ClosedPositionProps> = ({ position }) => {
                     </Value>
                 </FlexContainer>
             </AlignedFlex>
+            <ShareDiv>
+                {position.isUserWinner && (
+                    <ShareIcon
+                        className="icon-home icon-home--twitter-x"
+                        disabled={false}
+                        onClick={() => setOpenTwitterShareModal(true)}
+                    />
+                )}
+            </ShareDiv>
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={'resolved-speed'}
+                    positions={[position.side]}
+                    currencyKey={position.currencyKey}
+                    strikeDate={position.maturityDate}
+                    strikePrices={[position.strikePrice]}
+                    buyIn={position.paid}
+                    payout={position.amount}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
         </Position>
     );
 };
@@ -78,7 +103,7 @@ const Position = styled.div`
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 172px;
+        min-height: 203px;
         padding: 10px 10px;
         margin-bottom: 10px;
         gap: 6px;
@@ -143,6 +168,11 @@ const Separator = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
+`;
+
+const ShareDiv = styled.div`
+    width: 20px;
+    height: 20px;
 `;
 
 export default ClosedPosition;
