@@ -257,10 +257,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     }, [ammSpeedMarketsLimits?.maxSkewImpact, ammSpeedMarketsLimits?.risksPerAssetAndDirection, currencyKey]);
 
     const totalFee = useMemo(() => {
-        if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
+        if (ammSpeedMarketsLimits) {
             if (isChained) {
                 return ammSpeedMarketsLimits.safeBoxImpact;
-            } else {
+            } else if (deltaTimeSec || strikeTimeSec) {
                 const lpFee = getFeeByTimeThreshold(
                     deltaTimeSec ? deltaTimeSec : deltaFromStrikeTime,
                     ammSpeedMarketsLimits?.timeThresholdsForFees,
