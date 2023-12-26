@@ -223,14 +223,14 @@ const speedMarketsDataContract = {
                             type: 'uint256',
                         },
                         {
-                            internalType: 'uint256',
+                            internalType: 'uint8',
                             name: 'minChainedMarkets',
-                            type: 'uint256',
+                            type: 'uint8',
                         },
                         {
-                            internalType: 'uint256',
+                            internalType: 'uint8',
                             name: 'maxChainedMarkets',
-                            type: 'uint256',
+                            type: 'uint8',
                         },
                         {
                             internalType: 'uint64',
@@ -275,9 +275,9 @@ const speedMarketsDataContract = {
                             type: 'tuple',
                         },
                         {
-                            internalType: 'uint256',
-                            name: 'payoutMultiplier',
-                            type: 'uint256',
+                            internalType: 'uint256[]',
+                            name: 'payoutMultipliers',
+                            type: 'uint256[]',
                         },
                     ],
                     internalType: 'struct SpeedMarketsAMMData.ChainedSpeedMarketsAMMParameters',

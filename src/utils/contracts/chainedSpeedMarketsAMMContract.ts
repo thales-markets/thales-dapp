@@ -95,9 +95,9 @@ const chainedSpeedMarketsAMMContract = {
                 },
                 {
                     indexed: false,
-                    internalType: 'uint256',
-                    name: '_payoutMultiplier',
-                    type: 'uint256',
+                    internalType: 'uint256[]',
+                    name: '_payoutMultipliers',
+                    type: 'uint256[]',
                 },
             ],
             name: 'LimitParamsChanged',
@@ -775,8 +775,14 @@ const chainedSpeedMarketsAMMContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'payoutMultiplier',
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            name: 'payoutMultipliers',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -974,9 +980,9 @@ const chainedSpeedMarketsAMMContract = {
                     type: 'uint256',
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_payoutMultiplier',
-                    type: 'uint256',
+                    internalType: 'uint256[]',
+                    name: '_payoutMultipliers',
+                    type: 'uint256[]',
                 },
             ],
             name: 'setLimitParams',
