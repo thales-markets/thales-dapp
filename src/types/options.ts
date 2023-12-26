@@ -269,7 +269,7 @@ export type AmmChainedSpeedMarketsLimits = {
     minTimeFrame: number;
     maxTimeFrame: number;
     risk: Risk;
-    payoutMultiplier: number;
+    payoutMultipliers: number[];
     maxPriceDelayForResolvingSec: number;
     whitelistedAddress: boolean;
 };

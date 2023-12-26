@@ -28,11 +28,18 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({
 }) => {
     const [buyinAmount, setBuyinAmount] = useState(0);
 
+    const payoutMultiplier = useMemo(
+        () =>
+            ammChainedSpeedMarketsLimits
+                ? ammChainedSpeedMarketsLimits.payoutMultipliers[
+                      chainedPositions.length - ammChainedSpeedMarketsLimits.minChainedMarkets
+                  ]
+                : 0,
+        [chainedPositions.length, ammChainedSpeedMarketsLimits]
+    );
+
     const buyinAmounts = useMemo(() => {
-        const chainedQuote =
-            isChained && ammChainedSpeedMarketsLimits?.payoutMultiplier
-                ? roundNumberToDecimals(ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length)
-                : 0;
+        const chainedQuote = isChained ? roundNumberToDecimals(payoutMultiplier ** chainedPositions.length) : 0;
 
         const first =
             (isChained ? ammChainedSpeedMarketsLimits?.minBuyinAmount : ammSpeedMarketsLimits?.minBuyinAmount) || 0;
@@ -75,7 +82,7 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({
         ammSpeedMarketsLimits?.maxBuyinAmount,
         ammChainedSpeedMarketsLimits?.minBuyinAmount,
         ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket,
-        ammChainedSpeedMarketsLimits?.payoutMultiplier,
+        payoutMultiplier,
         chainedPositions.length,
     ]);
 

@@ -140,7 +140,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 
     const chainedQuote =
         isChained && ammChainedSpeedMarketsLimits
-            ? ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length
+            ? ammChainedSpeedMarketsLimits?.payoutMultipliers[
+                  chainedPositions.length - ammChainedSpeedMarketsLimits.minChainedMarkets
+              ] ** chainedPositions.length
             : 0;
 
     const minBuyinAmount = useMemo(
