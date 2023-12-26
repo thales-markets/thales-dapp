@@ -1,6 +1,7 @@
 import { ZERO_ADDRESS } from 'constants/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
+import { BigNumber } from 'ethers';
 import { UseQueryOptions, useQuery } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits } from 'types/options';
@@ -23,7 +24,7 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
                 minTimeFrame: 0,
                 maxTimeFrame: 0,
                 risk: { current: 0, max: 0 },
-                payoutMultiplier: 0,
+                payoutMultipliers: [],
                 maxPriceDelayForResolvingSec: 0,
                 whitelistedAddress: false,
             };
@@ -54,7 +55,9 @@ const useChainedAmmSpeedMarketsLimitsQuery = (
                     current: coinFormatter(chainedAmmParams.risk.current, networkId),
                     max: coinFormatter(chainedAmmParams.risk.max, networkId),
                 };
-                ammChainedSpeedMarketsLimits.payoutMultiplier = bigNumberFormatter(chainedAmmParams.payoutMultiplier);
+                ammChainedSpeedMarketsLimits.payoutMultipliers = chainedAmmParams.payoutMultipliers.map(
+                    (payoutMultiplier: BigNumber) => bigNumberFormatter(payoutMultiplier)
+                );
                 ammChainedSpeedMarketsLimits.maxPriceDelayForResolvingSec = Number(
                     ammParams.maximumPriceDelayForResolving
                 );

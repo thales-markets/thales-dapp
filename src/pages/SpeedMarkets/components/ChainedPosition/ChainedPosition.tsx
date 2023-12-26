@@ -188,15 +188,17 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                             isAdmin={isAdmin}
                             isSubmittingBatch={isSubmittingBatch}
                         />
-                        <ShareDiv>
-                            {displayShare && (
-                                <ShareIcon
-                                    className="icon-home icon-home--twitter-x"
-                                    disabled={false}
-                                    onClick={() => setOpenTwitterShareModal(true)}
-                                />
-                            )}
-                        </ShareDiv>
+                        {!isOverview && (
+                            <ShareDiv>
+                                {displayShare && (
+                                    <ShareIcon
+                                        className="icon-home icon-home--twitter-x"
+                                        disabled={false}
+                                        onClick={() => setOpenTwitterShareModal(true)}
+                                    />
+                                )}
+                            </ShareDiv>
+                        )}
                     </AlignedFlex>
                 </>
             ) : (

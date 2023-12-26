@@ -309,8 +309,10 @@ const SpeedMarkets: React.FC = () => {
                                         maxMarkets: ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
                                         maxRoi: ammChainedSpeedMarketsLimitsData
                                             ? roundNumberToDecimals(
-                                                  ammChainedSpeedMarketsLimitsData?.payoutMultiplier **
-                                                      ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
+                                                  ammChainedSpeedMarketsLimitsData?.payoutMultipliers[
+                                                      ammChainedSpeedMarketsLimitsData.maxChainedMarkets -
+                                                          ammChainedSpeedMarketsLimitsData.minChainedMarkets
+                                                  ] ** ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
                                                   0
                                               )
                                             : '...',
