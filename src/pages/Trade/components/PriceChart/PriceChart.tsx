@@ -409,6 +409,13 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 }
                 onChange={handleDateRangeChange}
             />
+            {isSpeedMarkets && (
+                <PythIconWrap>
+                    <a target="_blank" rel="noreferrer" href="https://pyth.network/benchmarks">
+                        <i className="icon icon--pyth" />
+                    </a>
+                </PythIconWrap>
+            )}
         </Wrapper>
     );
 };
@@ -531,6 +538,7 @@ const Text2 = styled(Text)`
 `;
 
 const Wrapper = styled.div`
+    position: relative;
     width: 100%;
     height: 100%;
 `;
@@ -552,6 +560,18 @@ const Value = styled.span<{ margin?: string }>`
     line-height: 100%;
     color: ${(props) => props.theme.textColor.primary};
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')};
+`;
+
+const PythIconWrap = styled.div`
+    position: absolute;
+    height: 20px;
+    right: 70px;
+    bottom: 38px;
+    i {
+        font-size: 40px;
+        line-height: 10px;
+        color: ${(props) => props.theme.textColor.primary};
+    }
 `;
 
 export default PriceChart;
