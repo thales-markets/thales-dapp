@@ -130,77 +130,76 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     return (
         <Container>
             {isMobile ? (
-                <>
+                <AlignedFlex>
+                    <FlexContainer>
+                        <Text>{t('speed-markets.overview.user')}</Text>
+                        <Text isActiveColor>{positionWithPrices.user}</Text>
+                    </FlexContainer>
                     <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
-                    <AlignedFlex>
-                        <FlexContainer>
-                            <Text>{positionWithPrices.currencyKey}</Text>
-                            <Text isActiveColor>
-                                {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
-                            </Text>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <Text>{t('profile.final-price')}</Text>
-                            <Text isActiveColor>
-                                {positionWithPrices.finalPrices[statusDecisionIndex] ? (
-                                    formatCurrencyWithSign(
-                                        USD_SIGN,
-                                        positionWithPrices.finalPrices[statusDecisionIndex]
-                                    )
-                                ) : (
-                                    <>
-                                        {'. . .'}
-                                        {positionWithPrices.canResolve && (
-                                            <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
-                                        )}
-                                    </>
-                                )}
-                            </Text>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <Text>{t('speed-markets.user-positions.end-time')}</Text>
-                            <Text isActiveColor>
-                                {formatShortDateWithTime(
-                                    positionWithPrices.canResolve
-                                        ? positionWithPrices.strikeTimes[statusDecisionIndex]
-                                        : positionWithPrices.maturityDate
-                                )}
-                            </Text>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <Text>{t('common.direction')}</Text>
-                            <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
-                                {positionWithPrices.sides[statusDecisionIndex]}
-                            </Text>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <Text>{t('markets.user-positions.size')}</Text>
-                            <Text isActiveColor>{formatNumberShort(positionWithPrices.amount)}</Text>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <Text>{t('markets.user-positions.paid')}</Text>
-                            <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid, 2)}</Text>
-                        </FlexContainer>
-                        <ChainedPositionAction
-                            position={positionWithPrices}
-                            maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                            isOverview={isOverview}
-                            isAdmin={isAdmin}
-                            isSubmittingBatch={isSubmittingBatch}
-                        />
-                        {!isOverview && (
-                            <ShareDiv>
-                                {displayShare && (
-                                    <ShareIcon
-                                        className="icon-home icon-home--twitter-x"
-                                        disabled={false}
-                                        onClick={() => setOpenTwitterShareModal(true)}
-                                    />
-                                )}
-                            </ShareDiv>
-                        )}
-                    </AlignedFlex>
-                </>
+                    <FlexContainer>
+                        <Text>{positionWithPrices.currencyKey}</Text>
+                        <Text isActiveColor>
+                            {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('profile.final-price')}</Text>
+                        <Text isActiveColor>
+                            {positionWithPrices.finalPrices[statusDecisionIndex] ? (
+                                formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[statusDecisionIndex])
+                            ) : (
+                                <>
+                                    {'. . .'}
+                                    {positionWithPrices.canResolve && (
+                                        <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                    )}
+                                </>
+                            )}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('speed-markets.user-positions.end-time')}</Text>
+                        <Text isActiveColor>
+                            {formatShortDateWithTime(
+                                positionWithPrices.canResolve
+                                    ? positionWithPrices.strikeTimes[statusDecisionIndex]
+                                    : positionWithPrices.maturityDate
+                            )}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('common.direction')}</Text>
+                        <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
+                            {positionWithPrices.sides[statusDecisionIndex]}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('markets.user-positions.size')}</Text>
+                        <Text isActiveColor>{formatNumberShort(positionWithPrices.amount)}</Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('markets.user-positions.paid')}</Text>
+                        <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid, 2)}</Text>
+                    </FlexContainer>
+                    <ChainedPositionAction
+                        position={positionWithPrices}
+                        maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                        isOverview={isOverview}
+                        isAdmin={isAdmin}
+                        isSubmittingBatch={isSubmittingBatch}
+                    />
+                    {!isOverview && (
+                        <ShareDiv>
+                            {displayShare && (
+                                <ShareIcon
+                                    className="icon-home icon-home--twitter-x"
+                                    disabled={false}
+                                    onClick={() => setOpenTwitterShareModal(true)}
+                                />
+                            )}
+                        </ShareDiv>
+                    )}
+                </AlignedFlex>
             ) : (
                 <>
                     <AssetInfo>
