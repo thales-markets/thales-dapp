@@ -29,8 +29,8 @@ function numberWithCommas(x: string | number) {
 
 function getNumberLabel(label: number) {
     const labelValue = Number(label.toFixed(2));
-    // Nine Zeroes for Billions
     return numberWithCommas(
+        // Nine Zeroes for Billions
         Math.abs(labelValue) >= 1.0e9
             ? Math.round(Math.abs(labelValue) / 1.0e9) + 'B'
             : // Six Zeroes for Millions
@@ -99,7 +99,6 @@ const Staking: React.FC = () => {
     const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
     const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
     const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
-    const maxBonusRewardsPercentage = stakingData ? stakingData.maxBonusRewardsPercentage : 0;
 
     const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
     const escrowedBalance = userStakingData ? userStakingData.escrowedBalance : 0;
@@ -158,7 +157,6 @@ const Staking: React.FC = () => {
                                                 'thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip'
                                             }
                                             components={[<span key="1" />, <Tip135Link key="2" />]}
-                                            values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
                                     iconColor={theme.textColor.quaternary}
@@ -246,7 +244,6 @@ const Staking: React.FC = () => {
                                         <Trans
                                             i18nKey="thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip"
                                             components={[<span key="1" />, <Tip135Link key="2" />]}
-                                            values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
                                     iconColor={theme.textColor.quaternary}
