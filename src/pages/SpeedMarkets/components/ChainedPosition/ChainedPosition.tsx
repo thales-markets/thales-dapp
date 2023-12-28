@@ -131,10 +131,12 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         <Container>
             {isMobile ? (
                 <AlignedFlex>
-                    <FlexContainer>
-                        <Text>{t('speed-markets.overview.user')}</Text>
-                        <Text isActiveColor>{positionWithPrices.user}</Text>
-                    </FlexContainer>
+                    {isOverview && (
+                        <FlexContainer>
+                            <Text>{t('speed-markets.overview.user')}</Text>
+                            <Text isActiveColor>{positionWithPrices.user}</Text>
+                        </FlexContainer>
+                    )}
                     <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
                     <FlexContainer>
                         <Text>{positionWithPrices.currencyKey}</Text>
@@ -169,9 +171,11 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
                     </FlexContainer>
                     <FlexContainer>
                         <Text>{t('common.direction')}</Text>
-                        <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
-                            {positionWithPrices.sides[statusDecisionIndex]}
-                        </Text>
+                        {positionWithPrices.sides.map((side, i) => (
+                            <Text key={i} color={getColorPerPosition(side, theme)}>
+                                {side + (i !== positionWithPrices.sides.length - 1 ? ',' : '')}
+                            </Text>
+                        ))}
                     </FlexContainer>
                     <FlexContainer>
                         <Text>{t('markets.user-positions.size')}</Text>
