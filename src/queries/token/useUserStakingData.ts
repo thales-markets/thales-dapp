@@ -26,16 +26,6 @@ const useUserStakingDataQuery = (
                 rewards: 0,
                 baseRewards: 0,
                 totalBonus: 0,
-                snxBonus: 0,
-                ammBonus: 0,
-                maxSnxBonus: 0,
-                maxAmmBonus: 0,
-                maxThalesRoyaleBonus: 0,
-                snxStaked: 0,
-                ammVolume: 0,
-                thalesAmmVolume: 0,
-                rangedAmmVolume: 0,
-                sportsAmmVolume: 0,
                 escrowedBalance: 0,
                 claimable: 0,
                 rawClaimable: '0',
@@ -72,25 +62,6 @@ const useUserStakingDataQuery = (
                     userStakingData.rewards = bigNumberFormatter(contractUserStakingData.rewards);
                     userStakingData.baseRewards = bigNumberFormatter(contractUserStakingData.baseRewards);
                     userStakingData.totalBonus = bigNumberFormatter(contractUserStakingData.totalBonus);
-                    userStakingData.snxBonus = bigNumberFormatter(contractUserStakingData.snxBonus);
-                    userStakingData.ammBonus = bigNumberFormatter(contractUserStakingData.ammBonus);
-                    userStakingData.maxSnxBonus =
-                        (bigNumberFormatter(contractUserStakingData.baseRewards) *
-                            Number(contractStakingData.maxSNXRewardsPercentage)) /
-                        100;
-                    userStakingData.maxAmmBonus =
-                        (bigNumberFormatter(contractUserStakingData.baseRewards) *
-                            Number(contractStakingData.maxAMMVolumeRewardsPercentage)) /
-                        100;
-                    userStakingData.maxThalesRoyaleBonus =
-                        (bigNumberFormatter(contractUserStakingData.baseRewards) *
-                            Number(contractStakingData.maxThalesRoyaleRewardsPercentage)) /
-                        100;
-                    userStakingData.snxStaked = bigNumberFormatter(contractUserStakingData.snxStaked);
-                    userStakingData.ammVolume = bigNumberFormatter(contractUserStakingData.ammVolume);
-                    userStakingData.thalesAmmVolume = bigNumberFormatter(contractUserStakingData.thalesAmmVolume);
-                    userStakingData.rangedAmmVolume = bigNumberFormatter(contractUserStakingData.rangedAmmVolume);
-                    userStakingData.sportsAmmVolume = bigNumberFormatter(contractUserStakingData.sportsAmmVolume);
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
