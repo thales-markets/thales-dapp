@@ -33,6 +33,8 @@ type SelectTimeProps = {
     isChained: boolean;
 };
 
+const SPEED_NUMBER_OF_BUTTONS = 4;
+
 const CHAINED_FIRST_TIMEFRAME_MINUTES = 5;
 const CHAINED_SECOND_TIMEFRAME_MINUTES = 10;
 
@@ -68,7 +70,9 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             times = [CHAINED_FIRST_TIMEFRAME_MINUTES, CHAINED_SECOND_TIMEFRAME_MINUTES];
         } else {
             if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
-                times = ammSpeedMarketsLimits.timeThresholdsForFees.filter((time: number) => time < hoursToMinutes(1));
+                times = ammSpeedMarketsLimits.timeThresholdsForFees
+                    .filter((time: number) => time < hoursToMinutes(1))
+                    .slice(0, SPEED_NUMBER_OF_BUTTONS);
                 setIsDeltaMinutesSelected(true);
             } else {
                 setIsDeltaMinutesSelected(false);
@@ -80,14 +84,16 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
     const deltaTimesHours: number[] = useMemo(() => {
         let times: number[] = [];
-        if (ammSpeedMarketsLimits) {
+        const numberOfButtonsLeft = SPEED_NUMBER_OF_BUTTONS - deltaTimesMinutes.length;
+        if (ammSpeedMarketsLimits && numberOfButtonsLeft > 0) {
             times = ammSpeedMarketsLimits.timeThresholdsForFees
                 .filter((timeMinute: number) => timeMinute >= hoursToMinutes(1))
+                .slice(0, numberOfButtonsLeft)
                 .map((timeMinute) => minutesToHours(timeMinute));
         }
 
         return times;
-    }, [ammSpeedMarketsLimits]);
+    }, [ammSpeedMarketsLimits, deltaTimesMinutes]);
 
     const isValidExactTime = useCallback(
         (exactTime: Date | undefined) => {

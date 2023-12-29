@@ -839,7 +839,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     }
                     strikePrices={[currentPrice ?? 0]}
                     buyIn={convertToStable(Number(paidAmount))}
-                    payout={SPEED_MARKETS_QUOTE * Number(paidAmount)}
+                    payout={SPEED_MARKETS_QUOTE * convertToStable(Number(paidAmount))}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}
