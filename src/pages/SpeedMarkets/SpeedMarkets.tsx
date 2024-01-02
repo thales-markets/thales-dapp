@@ -8,7 +8,7 @@ import Tooltip from 'components/Tooltip';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import ROUTES from 'constants/routes';
-import { minutesToSeconds, secondsToMilliseconds } from 'date-fns';
+import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
@@ -27,7 +27,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { BoldText, FlexDivCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
+import { BoldText, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
 import { roundNumberToDecimals } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
@@ -38,8 +38,6 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
-
-const CHAINED_TIME_FRAME_MINUTES = 10;
 
 const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
@@ -156,50 +154,105 @@ const SpeedMarkets: React.FC = () => {
         setSelectedStableBuyinAmount(0);
     }, [isChained]);
 
-    const getStepLabel = (stepNumber: number, name: string) => {
+    const getStep = (stepNumber: number, name: string) => {
+        const isAssetStep = stepNumber === 1;
         const isDirectionsStep = stepNumber === 2;
+        const isTimeStep = stepNumber === 3;
+        const isBuyinStep = stepNumber === 4;
         return (
-            <Step>
-                <StepNumber>{stepNumber}</StepNumber>
-                <StepName>{name}</StepName>
-                {isChained && isDirectionsStep && (
-                    <>
-                        <AddRemoveWrapper>
-                            <AddRemove
-                                isDisabled={
-                                    chainedPositions.length ===
-                                    (ammChainedSpeedMarketsLimitsData?.minChainedMarkets || 0)
-                                }
-                                onClick={() => {
-                                    if (
-                                        chainedPositions.length >
+            <>
+                <Step>
+                    <FlexDivRowCentered>
+                        <StepNumber>{stepNumber}</StepNumber>
+                        <StepName>{name}</StepName>
+                    </FlexDivRowCentered>
+                    {isChained && isDirectionsStep && (
+                        <>
+                            <AddRemoveWrapper>
+                                <AddRemove
+                                    isDisabled={
+                                        chainedPositions.length ===
                                         (ammChainedSpeedMarketsLimitsData?.minChainedMarkets || 0)
-                                    ) {
-                                        setChainedPositions(chainedPositions.slice(0, -1));
                                     }
-                                }}
-                            >
-                                {'-'}
-                            </AddRemove>
-                            <Separator />
-                            <AddRemove
-                                isDisabled={chainedPositions.length === 6}
-                                onClick={() => {
-                                    if (
-                                        chainedPositions.length <
-                                        (ammChainedSpeedMarketsLimitsData?.maxChainedMarkets || 0)
-                                    ) {
-                                        setChainedPositions([...chainedPositions, undefined]);
-                                    }
-                                }}
-                            >
-                                {'+'}
-                            </AddRemove>
-                        </AddRemoveWrapper>
-                        <AddRemoveLabel>{t('speed-markets.chained.add-directions')}</AddRemoveLabel>
-                    </>
+                                    onClick={() => {
+                                        if (
+                                            chainedPositions.length >
+                                            (ammChainedSpeedMarketsLimitsData?.minChainedMarkets || 0)
+                                        ) {
+                                            setChainedPositions(chainedPositions.slice(0, -1));
+                                        }
+                                    }}
+                                >
+                                    {'-'}
+                                </AddRemove>
+                                <Separator />
+                                <AddRemove
+                                    isDisabled={chainedPositions.length === 6}
+                                    onClick={() => {
+                                        if (
+                                            chainedPositions.length <
+                                            (ammChainedSpeedMarketsLimitsData?.maxChainedMarkets || 0)
+                                        ) {
+                                            setChainedPositions([...chainedPositions, undefined]);
+                                        }
+                                    }}
+                                >
+                                    {'+'}
+                                </AddRemove>
+                            </AddRemoveWrapper>
+                            <AddRemoveLabel>{t('speed-markets.chained.add-directions')}</AddRemoveLabel>
+                        </>
+                    )}
+                    {isChained && isTimeStep && (
+                        <SelectTime
+                            selectedDeltaSec={deltaTimeSec}
+                            onDeltaChange={setDeltaTimeSec}
+                            onExactTimeChange={setStrikeTimeSec}
+                            ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                            isResetTriggered={isResetTriggered}
+                            isChained={isChained}
+                        />
+                    )}
+                </Step>
+                {isAssetStep && (
+                    <AssetDropdown
+                        asset={currencyKey}
+                        setAsset={setCurrencyKey}
+                        allAssets={SUPPORTED_ASSETS}
+                        showAssetIcon={true}
+                        type="center"
+                    />
                 )}
-            </Step>
+                {isDirectionsStep && (
+                    <SelectPosition
+                        selected={isChained ? chainedPositions : [positionType]}
+                        onChange={setPositionType}
+                        onChainedChange={setChainedPositions}
+                        ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
+                        skew={skew}
+                    />
+                )}
+                {isTimeStep && !isChained && (
+                    <SelectTime
+                        selectedDeltaSec={deltaTimeSec}
+                        onDeltaChange={setDeltaTimeSec}
+                        onExactTimeChange={setStrikeTimeSec}
+                        ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                        isResetTriggered={isResetTriggered}
+                        isChained={isChained}
+                    />
+                )}
+                {isBuyinStep && (
+                    <SelectBuyin
+                        value={selectedStableBuyinAmount}
+                        onChange={setSelectedStableBuyinAmount}
+                        isChained={isChained}
+                        chainedPositions={chainedPositions}
+                        ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
+                        ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
+                    />
+                )}
+            </>
         );
     };
 
@@ -256,8 +309,10 @@ const SpeedMarkets: React.FC = () => {
                                         maxMarkets: ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
                                         maxRoi: ammChainedSpeedMarketsLimitsData
                                             ? roundNumberToDecimals(
-                                                  ammChainedSpeedMarketsLimitsData?.payoutMultiplier **
-                                                      ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
+                                                  ammChainedSpeedMarketsLimitsData?.payoutMultipliers[
+                                                      ammChainedSpeedMarketsLimitsData.maxChainedMarkets -
+                                                          ammChainedSpeedMarketsLimitsData.minChainedMarkets
+                                                  ] ** ammChainedSpeedMarketsLimitsData?.maxChainedMarkets,
                                                   0
                                               )
                                             : '...',
@@ -288,43 +343,13 @@ const SpeedMarkets: React.FC = () => {
                         <RightSide>
                             {!isMobile && getToggle()}
                             {/* Asset */}
-                            {getStepLabel(1, t('speed-markets.steps.choose-asset'))}
-                            <AssetDropdown
-                                asset={currencyKey}
-                                setAsset={setCurrencyKey}
-                                allAssets={SUPPORTED_ASSETS}
-                                showAssetIcon={true}
-                                type="center"
-                            />
+                            {getStep(1, t('speed-markets.steps.choose-asset'))}
                             {/* Direction */}
-                            {getStepLabel(2, t('speed-markets.steps.choose-direction'))}
-                            <SelectPosition
-                                selected={isChained ? chainedPositions : [positionType]}
-                                onChange={setPositionType}
-                                onChainedChange={setChainedPositions}
-                                ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
-                                skew={skew}
-                            />
+                            {getStep(2, t('speed-markets.steps.choose-direction'))}
                             {/* Time */}
-                            {!isChained && getStepLabel(3, t('speed-markets.steps.choose-time'))}
-                            {!isChained && (
-                                <SelectTime
-                                    selectedDeltaSec={deltaTimeSec}
-                                    onDeltaChange={setDeltaTimeSec}
-                                    onExactTimeChange={setStrikeTimeSec}
-                                    ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                                    isResetTriggered={isResetTriggered}
-                                />
-                            )}
+                            {getStep(3, t('speed-markets.steps.choose-time'))}
                             {/* Buyin */}
-                            {getStepLabel(isChained ? 3 : 4, t('speed-markets.steps.enter-buyin'))}
-                            <SelectBuyin
-                                value={selectedStableBuyinAmount}
-                                onChange={setSelectedStableBuyinAmount}
-                                isChained={isChained}
-                                ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
-                                ammChainedSpeedMarketsLimits={ammChainedSpeedMarketsLimitsData}
-                            />
+                            {getStep(4, t('speed-markets.steps.enter-buyin'))}
                         </RightSide>
                     </ContentWrapper>
 
@@ -334,7 +359,7 @@ const SpeedMarkets: React.FC = () => {
                         positionType={positionType}
                         chainedPositions={chainedPositions}
                         strikeTimeSec={strikeTimeSec}
-                        deltaTimeSec={isChained ? minutesToSeconds(CHAINED_TIME_FRAME_MINUTES) : deltaTimeSec}
+                        deltaTimeSec={deltaTimeSec}
                         selectedStableBuyinAmount={selectedStableBuyinAmount}
                         setSelectedStableBuyinAmount={setSelectedStableBuyinAmount}
                         ammSpeedMarketsLimits={ammSpeedMarketsLimitsData}
@@ -510,7 +535,7 @@ const Separator = styled.div`
 `;
 
 const BannerWrapper = styled.div`
-    margin-top: 40px;
+    margin-top: 46px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
     }

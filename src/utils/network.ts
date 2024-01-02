@@ -154,15 +154,15 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
     switch (route) {
-        case (ROUTES.Options.Home,
-        ROUTES.Options.RangeMarkets,
-        ROUTES.Options.Referral,
-        ROUTES.Governance.Home,
-        ROUTES.Options.Game,
-        ROUTES.Options.Profile,
-        ROUTES.Options.CreateMarket,
-        ROUTES.Options.SpeedMarkets,
-        ROUTES.Options.SpeedMarketsOverview):
+        case ROUTES.Options.Home:
+        case ROUTES.Options.RangeMarkets:
+        case ROUTES.Options.Referral:
+        case ROUTES.Governance.Home:
+        case ROUTES.Options.Game:
+        case ROUTES.Options.Profile:
+        case ROUTES.Options.CreateMarket:
+        case ROUTES.Options.SpeedMarkets:
+        case ROUTES.Options.SpeedMarketsOverview:
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,

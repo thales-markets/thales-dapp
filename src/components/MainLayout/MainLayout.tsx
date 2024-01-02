@@ -1,15 +1,15 @@
+import { useMatomo } from '@datapunt/matomo-tracker-react';
+import axios from 'axios';
+import Loader from 'components/Loader';
+import { generalConfig } from 'config/general';
+import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
-import Loader from 'components/Loader';
 import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { getReferralWallet, setReferralWallet } from 'utils/referral';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import axios from 'axios';
-import { generalConfig } from 'config/general';
+import { RootState } from 'redux/rootReducer';
+import { getReferralWallet, setReferralWallet } from 'utils/referral';
 
 type MainLayoutProps = {
     children: React.ReactNode;
@@ -30,7 +30,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         if (queryParams?.referrerId) {
             const fetchIdAddress = async () => {
                 const response = await axios.get(
-                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(queryParams.referrerId)}`
+                    // passing an encoded string to encodeURIComponent causes an error in some cases
+                    // reffererId is already encoded so we have to decode it
+                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(
+                        decodeURIComponent(queryParams.referrerId)
+                    )}`
                 );
                 if (response.data) {
                     setReferralWallet(response.data);

@@ -200,6 +200,7 @@ export const getUserLostAtSideIndex = (position: ChainedSpeedMarket) => {
     const userLostIndex = position.finalPrices.findIndex(
         (finalPrice, i) =>
             finalPrice > 0 &&
+            position.strikePrices[i] > 0 &&
             ((position.sides[i] === Positions.UP && finalPrice <= position.strikePrices[i]) ||
                 (position.sides[i] === Positions.DOWN && finalPrice >= position.strikePrices[i]))
     );

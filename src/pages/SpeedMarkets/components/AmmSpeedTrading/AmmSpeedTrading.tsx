@@ -44,7 +44,6 @@ import {
     getSelectedCollateralIndex,
     getWalletAddress,
     getWalletConnectModalVisibility,
-    setSelectedCollateralIndex,
     setWalletConnectModalVisibility,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -64,14 +63,7 @@ import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/optio
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { executeBiconomyTransaction } from 'utils/biconomy';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import {
-    getCoinBalance,
-    getCollateral,
-    getCollaterals,
-    getDefaultCollateral,
-    getDefaultStableIndexByBalance,
-    isStableCurrency,
-} from 'utils/currency';
+import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
@@ -156,14 +148,30 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         !!errorMessageKey ||
         outOfLiquidity;
 
+    const chainedQuote =
+        isChained && ammChainedSpeedMarketsLimits
+            ? ammChainedSpeedMarketsLimits?.payoutMultipliers[
+                  chainedPositions.length - ammChainedSpeedMarketsLimits.minChainedMarkets
+              ] ** chainedPositions.length
+            : 0;
+
     const minBuyinAmount = useMemo(
         () => (isChained ? ammChainedSpeedMarketsLimits?.minBuyinAmount : ammSpeedMarketsLimits?.minBuyinAmount) || 0,
         [isChained, ammChainedSpeedMarketsLimits?.minBuyinAmount, ammSpeedMarketsLimits?.minBuyinAmount]
     );
     const maxBuyinAmount = useMemo(
-        () => (isChained ? ammChainedSpeedMarketsLimits?.maxBuyinAmount : ammSpeedMarketsLimits?.maxBuyinAmount) || 0,
-        [isChained, ammChainedSpeedMarketsLimits?.maxBuyinAmount, ammSpeedMarketsLimits?.maxBuyinAmount]
+        () =>
+            (isChained
+                ? Math.floor((ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket || 0) / chainedQuote)
+                : ammSpeedMarketsLimits?.maxBuyinAmount) || 0,
+        [
+            isChained,
+            ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket,
+            ammSpeedMarketsLimits?.maxBuyinAmount,
+            chainedQuote,
+        ]
     );
+
     const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
     const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, true), [
         networkId,
@@ -261,10 +269,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     }, [ammSpeedMarketsLimits?.maxSkewImpact, ammSpeedMarketsLimits?.risksPerAssetAndDirection, currencyKey]);
 
     const totalFee = useMemo(() => {
-        if (ammSpeedMarketsLimits && (deltaTimeSec || strikeTimeSec)) {
+        if (ammSpeedMarketsLimits) {
             if (isChained) {
                 return ammSpeedMarketsLimits.safeBoxImpact;
-            } else {
+            } else if (deltaTimeSec || strikeTimeSec) {
                 const lpFee = getFeeByTimeThreshold(
                     deltaTimeSec ? deltaTimeSec : deltaFromStrikeTime,
                     ammSpeedMarketsLimits?.timeThresholdsForFees,
@@ -301,32 +309,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     }, secondsToMilliseconds(5));
 
-    // If sUSD balance less than 1, select first stable with nonzero value as default
-    useEffect(() => {
-        if (
-            isStableCurrency(selectedCollateral) &&
-            multipleCollateralBalances?.data &&
-            multipleCollateralBalances?.isSuccess &&
-            selectedCollateral === defaultCollateral &&
-            isMultiCollateralSupported
-        ) {
-            const defaultStableIndex = getDefaultStableIndexByBalance(
-                multipleCollateralBalances?.data,
-                networkId,
-                selectedCollateral
-            );
-            dispatch(setSelectedCollateralIndex(defaultStableIndex));
-        }
-    }, [
-        dispatch,
-        multipleCollateralBalances?.isSuccess,
-        multipleCollateralBalances?.data,
-        isMultiCollateralSupported,
-        networkId,
-        selectedCollateral,
-        defaultCollateral,
-    ]);
-
     useEffect(() => {
         if (selectedCollateral !== defaultCollateral && isStableCurrency(selectedCollateral)) {
             // add half percent to amount to take into account collateral conversion
@@ -357,8 +339,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     // Reset inputs
     useEffect(() => {
         setPaidAmount('');
-        dispatch(setSelectedCollateralIndex(0));
-    }, [networkId, isWalletConnected, dispatch]);
+    }, [networkId, isWalletConnected]);
 
     // Input field validations
     useEffect(() => {
@@ -692,10 +673,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     };
 
     const getTradingDetails = () => {
-        const chainedQuote =
-            isChained && ammChainedSpeedMarketsLimits
-                ? ammChainedSpeedMarketsLimits?.payoutMultiplier ** chainedPositions.length - 1
-                : 0;
         return (
             <TradingDetailsContainer>
                 <TradingDetailsSentence
@@ -810,13 +787,17 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                         ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount)
                                         : formatCurrencyWithSign(USD_SIGN, Number(paidAmount)),
                                     fee: formatPercentage(totalFee),
+                                    totalAmount: selectedStableBuyinAmount
+                                        ? formatCurrencyWithSign(USD_SIGN, selectedStableBuyinAmount * (1 + totalFee))
+                                        : formatCurrencyWithSign(USD_SIGN, Number(paidAmount) * (1 + totalFee)),
                                 }}
                                 components={{
-                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
-                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
-                                    ) : (
-                                        <></>
-                                    ),
+                                    tooltip:
+                                        positionType && skewImpact[positionType] ? (
+                                            <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                        ) : (
+                                            <></>
+                                        ),
                                 }}
                             />
                         ) : (
@@ -830,11 +811,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                                     fee: formatPercentage(totalFee),
                                 }}
                                 components={{
-                                    tooltip: ammSpeedMarketsLimits?.maxSkewImpact ? (
-                                        <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
-                                    ) : (
-                                        <></>
-                                    ),
+                                    tooltip:
+                                        positionType && skewImpact[positionType] ? (
+                                            <Tooltip overlay={t('speed-markets.tooltips.skew-slippage')} />
+                                        ) : (
+                                            <></>
+                                        ),
                                 }}
                             />
                         )}
@@ -879,14 +861,14 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             {openTwitterShareModal && positionType && (
                 <SharePositionModal
                     type="potential-speed"
-                    position={positionType}
+                    positions={[positionType]}
                     currencyKey={currencyKey}
                     strikeDate={
                         secondsToMilliseconds(strikeTimeSec) || Date.now() + secondsToMilliseconds(deltaTimeSec)
                     }
-                    strikePrice={currentPrice ?? 0}
+                    strikePrices={[currentPrice ?? 0]}
                     buyIn={convertToStable(Number(paidAmount))}
-                    payout={(1 + Number(SPEED_MARKETS_QUOTE - 1)) * Number(paidAmount)}
+                    payout={SPEED_MARKETS_QUOTE * convertToStable(Number(paidAmount))}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}

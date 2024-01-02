@@ -26,6 +26,8 @@ import ChainedPositionAction from '../ChainedPositionAction';
 import { refetchPythPrice } from 'utils/queryConnector';
 import { getIsMobile } from 'redux/modules/ui';
 import { getColorPerPosition } from 'utils/options';
+import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
 
 type ChainedPositionProps = {
     position: ChainedSpeedMarket;
@@ -51,6 +53,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [fetchLastFinalPriceIndex, setFetchLastFinalPriceIndex] = useState(0);
+    const [openTwitterShareModal, setOpenTwitterShareModal] = useState(false);
 
     const isMissingPrices = position.finalPrices.some((finalPrice) => !finalPrice);
     const maturedStrikeTimes = isMissingPrices
@@ -83,7 +86,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
               )
             : position.strikePrices;
     const userWonStatuses = position.sides.map((side, i) =>
-        finalPrices[i] > 0
+        finalPrices[i] > 0 && strikePrices[i] > 0
             ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
               (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
             : undefined
@@ -122,175 +125,232 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
 
-    return isMobile ? (
+    const displayShare = !isOverview && (positionWithPrices.canResolve || positionWithPrices.isMatured);
+
+    return (
         <Container>
-            <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
-            <AlignedFlex>
-                <FlexContainer>
-                    <Text>{positionWithPrices.currencyKey}</Text>
-                    <Text isActiveColor>
-                        {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
-                    </Text>
-                </FlexContainer>
-                <FlexContainer>
-                    <Text>{t('profile.final-price')}</Text>
-                    <Text isActiveColor>
-                        {positionWithPrices.finalPrices[statusDecisionIndex] ? (
-                            formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[statusDecisionIndex])
-                        ) : (
-                            <>
-                                {'. . .'}
-                                {positionWithPrices.canResolve && (
-                                    <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
-                                )}
-                            </>
-                        )}
-                    </Text>
-                </FlexContainer>
-                <FlexContainer>
-                    <Text>{t('speed-markets.user-positions.end-time')}</Text>
-                    <Text isActiveColor>
-                        {formatShortDateWithTime(
-                            positionWithPrices.canResolve
-                                ? positionWithPrices.strikeTimes[statusDecisionIndex]
-                                : positionWithPrices.maturityDate
-                        )}
-                    </Text>
-                </FlexContainer>
-                <FlexContainer>
-                    <Text>{t('common.direction')}</Text>
-                    <Text color={getColorPerPosition(positionWithPrices.sides[statusDecisionIndex], theme)}>
-                        {positionWithPrices.sides[statusDecisionIndex]}
-                    </Text>
-                </FlexContainer>
-                <FlexContainer>
-                    <Text>{t('markets.user-positions.size')}</Text>
-                    <Text isActiveColor>{formatNumberShort(positionWithPrices.amount)}</Text>
-                </FlexContainer>
-                <FlexContainer>
-                    <Text>{t('markets.user-positions.paid')}</Text>
-                    <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid, 2)}</Text>
-                </FlexContainer>
-                <ChainedPositionAction
-                    position={positionWithPrices}
-                    maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                    isOverview={isOverview}
-                    isAdmin={isAdmin}
-                    isSubmittingBatch={isSubmittingBatch}
-                />
-            </AlignedFlex>
-        </Container>
-    ) : (
-        <Container>
-            <AssetInfo>
-                <FlexDivCentered>
-                    <Icon
-                        size={30}
-                        color={theme.textColor.primary}
-                        className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`}
-                    />
-                </FlexDivCentered>
-                <Text lineHeight="30px">{t('speed-markets.user-positions.end-time')}</Text>
-                <Text>{t('common.strike-price')}</Text>
-                <Text>{t('profile.final-price')}</Text>
-                <Text>{t('common.status-label')}</Text>
-            </AssetInfo>
-            <Separator />
-            <PositionDetails>
-                {positionWithPrices.sides.map((side, index) => {
-                    return (
-                        <Postion isDisabled={!position.isOpen && index > userFirstLostOrWonIndex} key={index}>
-                            {index !== 0 && (
-                                <Chain>
-                                    <Icon className="icon icon--chain" />
-                                </Chain>
-                            )}
-                            {side === Positions.UP ? (
-                                <PositionSymbolUp size={30} isSelected>
-                                    <Icon size={16} className="icon icon--caret-up" />
-                                </PositionSymbolUp>
+            {isMobile ? (
+                <AlignedFlex>
+                    {isOverview && (
+                        <FlexContainer>
+                            <Text>{t('speed-markets.overview.user')}</Text>
+                            <Text isActiveColor>{positionWithPrices.user}</Text>
+                        </FlexContainer>
+                    )}
+                    <AssetIcon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
+                    <FlexContainer>
+                        <Text>{positionWithPrices.currencyKey}</Text>
+                        <Text isActiveColor>
+                            {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[statusDecisionIndex])}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('profile.final-price')}</Text>
+                        <Text isActiveColor>
+                            {positionWithPrices.finalPrices[statusDecisionIndex] ? (
+                                formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[statusDecisionIndex])
                             ) : (
-                                <PositionSymbolDown size={30} isSelected>
-                                    <Icon size={16} className="icon icon--caret-down" />
-                                </PositionSymbolDown>
+                                <>
+                                    {'. . .'}
+                                    {positionWithPrices.canResolve && (
+                                        <Tooltip overlay={t('speed-markets.tooltips.final-price-missing')} />
+                                    )}
+                                </>
                             )}
-                            <Text fontWeight={400} lineHeight="14px" padding="1px 0 0 0">
-                                {formatShortDate(positionWithPrices.strikeTimes[index])}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('speed-markets.user-positions.end-time')}</Text>
+                        <Text isActiveColor>
+                            {formatShortDateWithTime(
+                                positionWithPrices.canResolve
+                                    ? positionWithPrices.strikeTimes[statusDecisionIndex]
+                                    : positionWithPrices.maturityDate
+                            )}
+                        </Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('common.direction')}</Text>
+                        {positionWithPrices.sides.map((side, i) => (
+                            <Text key={i} color={getColorPerPosition(side, theme)}>
+                                {side + (i !== positionWithPrices.sides.length - 1 ? ',' : '')}
                             </Text>
-                            <Text lineHeight="14px" padding="0 0 1px 0">
-                                {formatHoursAndMinutesFromTimestamp(positionWithPrices.strikeTimes[index])}
-                            </Text>
-                            {positionWithPrices.strikePrices[index] ? (
-                                <Text isActiveColor={!maturedStrikeTimes[index]}>
-                                    {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[index])}
-                                </Text>
-                            ) : (
-                                <Dash />
-                            )}
-                            {positionWithPrices.finalPrices[index] ? (
-                                <Text>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[index])}</Text>
-                            ) : position.isOpen && maturedStrikeTimes[index] ? (
-                                <Text fontSize={16}>
-                                    <Tooltip
-                                        marginLeft={0}
-                                        iconFontSize={16}
-                                        overlay={t('speed-markets.tooltips.final-price-missing')}
-                                    />
-                                </Text>
-                            ) : (
-                                <Dash />
-                            )}
-                            {userWonStatuses[index] !== undefined ? (
-                                <Text lineHeight="100%">
-                                    <Icon
-                                        size={userWonStatuses[index] ? 20 : 18}
-                                        padding={userWonStatuses[index] ? undefined : '1px 0'}
-                                        color={
-                                            userWonStatuses[index]
-                                                ? theme.textColor.quaternary
-                                                : theme.error.textColor.primary
-                                        }
-                                        className={userWonStatuses[index] ? 'icon icon--correct' : 'icon icon--wrong'}
-                                    />
-                                </Text>
-                            ) : (
-                                <Dash />
-                            )}
-                        </Postion>
-                    );
-                })}
-            </PositionDetails>
-            <Separator />
-            <Summary>
-                <BuyInfo>
-                    <Text>
-                        {t('markets.user-positions.size')}
-                        <Text isActiveColor>{` ${formatNumberShort(positionWithPrices.amount)}`}</Text>
-                    </Text>
-                    <Text padding="0 0 0 30px">
-                        {t('markets.user-positions.paid')}
-                        <Text isActiveColor>{` ${formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid)}`}</Text>
-                    </Text>
-                </BuyInfo>
-                <Result isSmaller={isOverview}>
+                        ))}
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('markets.user-positions.size')}</Text>
+                        <Text isActiveColor>{formatNumberShort(positionWithPrices.amount)}</Text>
+                    </FlexContainer>
+                    <FlexContainer>
+                        <Text>{t('markets.user-positions.paid')}</Text>
+                        <Text isActiveColor>{formatCurrencyWithSign(USD_SIGN, positionWithPrices.paid, 2)}</Text>
+                    </FlexContainer>
                     <ChainedPositionAction
                         position={positionWithPrices}
                         maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
                         isOverview={isOverview}
                         isAdmin={isAdmin}
                         isSubmittingBatch={isSubmittingBatch}
-                        isMultipleContainerRows={isMultipleMarkets}
                     />
-                </Result>
-                {isOverview && (
-                    <FlexDivCentered>
-                        <Text>
-                            {t('speed-markets.overview.user')}
-                            <Text isActiveColor>{` ${position.user}`}</Text>
-                        </Text>
-                    </FlexDivCentered>
-                )}
-            </Summary>
+                    {!isOverview && (
+                        <ShareDiv>
+                            {displayShare && (
+                                <ShareIcon
+                                    className="icon-home icon-home--twitter-x"
+                                    disabled={false}
+                                    onClick={() => setOpenTwitterShareModal(true)}
+                                />
+                            )}
+                        </ShareDiv>
+                    )}
+                </AlignedFlex>
+            ) : (
+                <>
+                    <AssetInfo>
+                        <FlexDivCentered>
+                            <Icon
+                                size={30}
+                                color={theme.textColor.primary}
+                                className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`}
+                            />
+                        </FlexDivCentered>
+                        <Text lineHeight="30px">{t('speed-markets.user-positions.end-time')}</Text>
+                        <Text>{t('common.strike-price')}</Text>
+                        <Text>{t('profile.final-price')}</Text>
+                        <Text>{t('common.status-label')}</Text>
+                    </AssetInfo>
+                    <Separator />
+                    <PositionDetails>
+                        {positionWithPrices.sides.map((side, index) => {
+                            return (
+                                <Postion isDisabled={!position.isOpen && index > userFirstLostOrWonIndex} key={index}>
+                                    {index !== 0 && (
+                                        <Chain>
+                                            <Icon className="icon icon--chain" />
+                                        </Chain>
+                                    )}
+                                    {side === Positions.UP ? (
+                                        <PositionSymbolUp size={30} isSelected>
+                                            <Icon size={16} className="icon icon--caret-up" />
+                                        </PositionSymbolUp>
+                                    ) : (
+                                        <PositionSymbolDown size={30} isSelected>
+                                            <Icon size={16} className="icon icon--caret-down" />
+                                        </PositionSymbolDown>
+                                    )}
+                                    <Text fontWeight={400} lineHeight="14px" padding="1px 0 0 0">
+                                        {formatShortDate(positionWithPrices.strikeTimes[index])}
+                                    </Text>
+                                    <Text lineHeight="14px" padding="0 0 1px 0">
+                                        {formatHoursAndMinutesFromTimestamp(positionWithPrices.strikeTimes[index])}
+                                    </Text>
+                                    {positionWithPrices.strikePrices[index] ? (
+                                        <Text isActiveColor={!maturedStrikeTimes[index]}>
+                                            {formatCurrencyWithSign(USD_SIGN, positionWithPrices.strikePrices[index])}
+                                        </Text>
+                                    ) : (
+                                        <Dash />
+                                    )}
+                                    {positionWithPrices.finalPrices[index] ? (
+                                        <Text>
+                                            {formatCurrencyWithSign(USD_SIGN, positionWithPrices.finalPrices[index])}
+                                        </Text>
+                                    ) : position.isOpen && maturedStrikeTimes[index] ? (
+                                        <Text fontSize={16}>
+                                            <Tooltip
+                                                marginLeft={0}
+                                                iconFontSize={16}
+                                                overlay={t('speed-markets.tooltips.final-price-missing')}
+                                            />
+                                        </Text>
+                                    ) : (
+                                        <Dash />
+                                    )}
+                                    {userWonStatuses[index] !== undefined ? (
+                                        <Text lineHeight="100%">
+                                            <Icon
+                                                size={userWonStatuses[index] ? 20 : 18}
+                                                padding={userWonStatuses[index] ? undefined : '1px 0'}
+                                                color={
+                                                    userWonStatuses[index]
+                                                        ? theme.textColor.quaternary
+                                                        : theme.error.textColor.primary
+                                                }
+                                                className={
+                                                    userWonStatuses[index] ? 'icon icon--correct' : 'icon icon--wrong'
+                                                }
+                                            />
+                                        </Text>
+                                    ) : (
+                                        <Dash />
+                                    )}
+                                </Postion>
+                            );
+                        })}
+                    </PositionDetails>
+                    <Separator />
+                    <Summary>
+                        <BuyInfo>
+                            <Text>
+                                {t('markets.user-positions.size')}
+                                <Text isActiveColor>{` ${formatNumberShort(positionWithPrices.amount)}`}</Text>
+                            </Text>
+                            <Text padding="0 0 0 30px">
+                                {t('markets.user-positions.paid')}
+                                <Text isActiveColor>{` ${formatCurrencyWithSign(
+                                    USD_SIGN,
+                                    positionWithPrices.paid
+                                )}`}</Text>
+                            </Text>
+                        </BuyInfo>
+                        <Result isSmaller={isOverview || displayShare}>
+                            <ChainedPositionAction
+                                position={positionWithPrices}
+                                maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                isOverview={isOverview}
+                                isAdmin={isAdmin}
+                                isSubmittingBatch={isSubmittingBatch}
+                                isMultipleContainerRows={isMultipleMarkets}
+                            />
+                        </Result>
+                        {isOverview && (
+                            <FlexDivCentered>
+                                <Text>
+                                    {t('speed-markets.overview.user')}
+                                    <Text isActiveColor>{` ${position.user}`}</Text>
+                                </Text>
+                            </FlexDivCentered>
+                        )}
+                        {displayShare && (
+                            <FlexDivCentered>
+                                <ShareIcon
+                                    className="icon-home icon-home--twitter-x"
+                                    disabled={false}
+                                    onClick={() => setOpenTwitterShareModal(true)}
+                                />
+                            </FlexDivCentered>
+                        )}
+                    </Summary>
+                </>
+            )}
+            {openTwitterShareModal && (
+                <SharePositionModal
+                    type={
+                        positionWithPrices.claimable || positionWithPrices.isUserWinner
+                            ? 'chained-speed-won'
+                            : 'chained-speed-lost'
+                    }
+                    positions={positionWithPrices.sides}
+                    currencyKey={positionWithPrices.currencyKey}
+                    strikeDate={positionWithPrices.maturityDate}
+                    strikePrices={positionWithPrices.strikePrices}
+                    finalPrices={positionWithPrices.finalPrices}
+                    buyIn={positionWithPrices.paid}
+                    payout={positionWithPrices.amount}
+                    payoutMultiplier={positionWithPrices.payoutMultiplier}
+                    onClose={() => setOpenTwitterShareModal(false)}
+                />
+            )}
         </Container>
     );
 };
@@ -412,6 +472,11 @@ const FlexContainer = styled(AlignedFlex)`
     flex: 1;
     flex-direction: row;
     justify-content: center;
+`;
+
+const ShareDiv = styled(FlexDivCentered)`
+    width: 20px;
+    height: 20px;
 `;
 
 export default ChainedPosition;

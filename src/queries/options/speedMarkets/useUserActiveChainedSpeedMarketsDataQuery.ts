@@ -54,9 +54,10 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                     strikePrices[0] = bigNumberFormatter(marketData.initialStrikePrice, PYTH_CURRENCY_DECIMALS);
                     const buyinAmount = coinFormatter(marketData.buyinAmount, networkId);
                     const fee = bigNumberFormatter(marketData.safeBoxImpact);
-                    const payout =
-                        buyinAmount *
-                        roundNumberToDecimals(bigNumberFormatter(marketData.payoutMultiplier) ** sides.length, 8);
+                    const payout = roundNumberToDecimals(
+                        buyinAmount * bigNumberFormatter(marketData.payoutMultiplier) ** sides.length,
+                        8
+                    );
 
                     const userData: ChainedSpeedMarket = {
                         address: marketData.market,
@@ -68,6 +69,7 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
                         maturityDate,
                         amount: payout,
                         paid: buyinAmount * (1 + fee),
+                        payoutMultiplier: bigNumberFormatter(marketData.payoutMultiplier),
                         finalPrices: Array(sides.length).fill(0),
                         isOpen: true,
                         isMatured: maturityDate < Date.now(),

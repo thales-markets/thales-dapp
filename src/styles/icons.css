@@ -162,6 +162,10 @@
     content: '\0025';
 }
 
+.icon--pyth:before {
+    content: '\002A';
+}
+
 .icon--unverified:before {
     content: '\0030';
 }

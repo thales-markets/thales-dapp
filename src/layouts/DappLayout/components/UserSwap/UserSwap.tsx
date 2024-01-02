@@ -119,6 +119,8 @@ const UserSwap: React.FC = () => {
 
             setCollateral(positiveCollateral);
             dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+        } else {
+            dispatch(setSelectedCollateralIndex(0));
         }
     }, [
         multipleStableBalances.data,

@@ -45,9 +45,11 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
 }) => {
     const { t } = useTranslation();
 
-    const roi = ammChainedSpeedMarketsLimits?.payoutMultiplier
-        ? roundNumberToDecimals(ammChainedSpeedMarketsLimits?.payoutMultiplier ** selected.length)
-        : 0;
+    const payoutMultiplier =
+        ammChainedSpeedMarketsLimits?.payoutMultipliers[
+            selected.length - ammChainedSpeedMarketsLimits.minChainedMarkets
+        ];
+    const roi = payoutMultiplier ? roundNumberToDecimals(payoutMultiplier ** selected.length) : 0;
 
     const discount = skew[Positions.UP] > 0 ? skew[Positions.UP] / 2 : skew[Positions.DOWN] / 2;
 

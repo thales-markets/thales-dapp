@@ -59,6 +59,14 @@ const TradingProfile: React.FC<TradingProfileProps> = ({ searchText }) => {
 
     const [searchAddress, setSearchAddress] = useState<string>('');
 
+    useEffect(() => {
+        if (searchText.startsWith('0x') && searchText?.length == 42) {
+            setSearchAddress(searchText.toLowerCase());
+        } else {
+            setSearchAddress('');
+        }
+    }, [searchText]);
+
     const notificationsQuery = useUserNotificationsQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
@@ -125,7 +133,7 @@ const TradingProfile: React.FC<TradingProfileProps> = ({ searchText }) => {
                 i > 0 ? finalPrices[i - 1] : strikePrice
             );
             const userWonStatuses = marketData.sides.map((side, i) =>
-                finalPrices[i] > 0
+                finalPrices[i] > 0 && strikePrices[i] > 0
                     ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
                       (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
                     : undefined
@@ -157,14 +165,6 @@ const TradingProfile: React.FC<TradingProfileProps> = ({ searchText }) => {
         Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
     );
 
-    const onTabClickHandler = (tab: NavItems) => {
-        history.push({
-            pathname: location.pathname,
-            search: queryString.stringify({ tab }),
-        });
-        setView(tab);
-    };
-
     useEffect(() => {
         if (searchText.startsWith('0x') && searchText?.length == 42) {
             setSearchAddress(searchText.toLowerCase());
@@ -172,6 +172,14 @@ const TradingProfile: React.FC<TradingProfileProps> = ({ searchText }) => {
             setSearchAddress('');
         }
     }, [searchText]);
+
+    const onTabClickHandler = (tab: NavItems) => {
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({ tab }),
+        });
+        setView(tab);
+    };
 
     return (
         <>

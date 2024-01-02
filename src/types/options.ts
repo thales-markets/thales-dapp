@@ -265,10 +265,11 @@ export type AmmChainedSpeedMarketsLimits = {
     maxChainedMarkets: number;
     minBuyinAmount: number;
     maxBuyinAmount: number;
+    maxProfitPerIndividualMarket: number;
     minTimeFrame: number;
     maxTimeFrame: number;
     risk: Risk;
-    payoutMultiplier: number;
+    payoutMultipliers: number[];
     maxPriceDelayForResolvingSec: number;
     whitelistedAddress: boolean;
 };
@@ -296,6 +297,7 @@ export type ChainedSpeedMarket = {
     maturityDate: number;
     amount: number;
     paid: number;
+    payoutMultiplier: number;
     finalPrices: number[];
     isOpen: boolean;
     isMatured: boolean;

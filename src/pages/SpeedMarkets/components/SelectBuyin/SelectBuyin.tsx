@@ -4,46 +4,75 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'styles/common';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
+import { SelectedPosition } from '../SelectPosition/SelectPosition';
+import { roundNumberToDecimals } from 'thales-utils';
 
 type SelectBuyinProps = {
     value: number;
     onChange: React.Dispatch<number>;
     isChained: boolean;
+    chainedPositions: SelectedPosition[];
     ammSpeedMarketsLimits: AmmSpeedMarketsLimits | null;
     ammChainedSpeedMarketsLimits: AmmChainedSpeedMarketsLimits | null;
 };
+
+const roundMaxBuyin = (maxBuyin: number) => Math.floor(maxBuyin / 10) * 10;
 
 const SelectBuyin: React.FC<SelectBuyinProps> = ({
     value,
     onChange,
     isChained,
+    chainedPositions,
     ammSpeedMarketsLimits,
     ammChainedSpeedMarketsLimits,
 }) => {
     const [buyinAmount, setBuyinAmount] = useState(0);
 
+    const payoutMultiplier = useMemo(
+        () =>
+            ammChainedSpeedMarketsLimits
+                ? ammChainedSpeedMarketsLimits.payoutMultipliers[
+                      chainedPositions.length - ammChainedSpeedMarketsLimits.minChainedMarkets
+                  ]
+                : 0,
+        [chainedPositions.length, ammChainedSpeedMarketsLimits]
+    );
+
     const buyinAmounts = useMemo(() => {
+        const chainedQuote = isChained ? roundNumberToDecimals(payoutMultiplier ** chainedPositions.length) : 0;
+
         const first =
             (isChained ? ammChainedSpeedMarketsLimits?.minBuyinAmount : ammSpeedMarketsLimits?.minBuyinAmount) || 0;
-        const fifth =
-            (isChained ? ammChainedSpeedMarketsLimits?.maxBuyinAmount : ammSpeedMarketsLimits?.maxBuyinAmount) || 0;
+        const fifth = isChained
+            ? roundMaxBuyin((ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket || 0) / chainedQuote)
+            : ammSpeedMarketsLimits?.maxBuyinAmount || 0;
 
         let second;
         let third;
         let fourth;
         const range = fifth - first + 1;
-        if (range >= 100) {
+        if (range >= 150) {
             second = first * 2;
             third = second * 5;
             fourth = fifth / 2;
-        } else if (range >= 10) {
+        } else if (range >= 50) {
             second = first * 2;
             third = second * 2;
-            fourth = fifth / 2;
+            fourth = roundMaxBuyin(fifth / 2);
+        } else if (range >= 25) {
+            second = first * 2;
+            third = second + (second - first);
+            fourth = third + (second - first);
+        } else if (range >= 10) {
+            const step = 4;
+            second = first + step;
+            third = second + step;
+            fourth = third + step;
         } else {
-            second = first + 1;
-            third = second + 1;
-            fourth = third + 1;
+            const step = 1;
+            second = first + step;
+            third = second + step;
+            fourth = third + step;
         }
 
         return [first, second, third, fourth, fifth];
@@ -52,7 +81,9 @@ const SelectBuyin: React.FC<SelectBuyinProps> = ({
         ammSpeedMarketsLimits?.minBuyinAmount,
         ammSpeedMarketsLimits?.maxBuyinAmount,
         ammChainedSpeedMarketsLimits?.minBuyinAmount,
-        ammChainedSpeedMarketsLimits?.maxBuyinAmount,
+        ammChainedSpeedMarketsLimits?.maxProfitPerIndividualMarket,
+        payoutMultiplier,
+        chainedPositions.length,
     ]);
 
     useEffect(() => {

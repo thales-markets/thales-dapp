@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ToastPosition, TypeOptions, toast } from 'react-toastify';
+import { ToastOptions, ToastPosition, TypeOptions, toast } from 'react-toastify';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivRowCentered } from 'styles/common';
 
@@ -71,13 +71,13 @@ export const toastBasicProperties = {
     closeButton: false,
 };
 
-export const getSuccessToastOptions = (message: string, id: ReactText) => {
+export const getSuccessToastOptions = (message: string | React.ReactNode, id: ReactText, options?: ToastOptions) => {
     return {
-        ...toastBasicProperties,
+        ...{ ...toastBasicProperties, ...options },
         toastId: id,
         className: 'success',
         progressClassName: 'success',
-        render: <ToastMessage id={id} type={'success'} message={message} />, // not relevant on ToastOptions, only on UpdateOptions
+        render: typeof message === 'string' ? <ToastMessage id={id} type={'success'} message={message} /> : message, // not relevant on ToastOptions, only on UpdateOptions
     };
 };
 

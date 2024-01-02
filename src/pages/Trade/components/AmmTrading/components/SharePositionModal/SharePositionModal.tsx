@@ -19,6 +19,8 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
 import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
 import { SharePositionData } from 'types/flexCards';
+import ChainedSpeedMarketFlexCard from './components/ChainedSpeedMarketFlexCard';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 
 type SharePositionModalProps = SharePositionData & {
     onClose: () => void;
@@ -31,23 +33,30 @@ const TWITTER_MESSAGE_CHECKOUT = `Check out my position on%0A`;
 
 const SharePositionModal: React.FC<SharePositionModalProps> = ({
     type,
-    position,
+    positions,
     currencyKey,
-    strikePrice,
+    strikePrices,
+    finalPrices,
     leftPrice,
     rightPrice,
     strikeDate,
     buyIn,
     payout,
+    payoutMultiplier,
     onClose,
 }) => {
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { trackEvent } = useMatomo();
     const { t } = useTranslation();
+
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [isLoading, setIsLoading] = useState(false);
     const [toastId, setToastId] = useState<string | number>(0);
     const [isMetamaskBrowser, setIsMetamaskBrowser] = useState(false);
+
+    const isRegularMarkets = ['potential', 'resolved'].includes(type);
+    const isSpeedMarkets = ['potential-speed', 'resolved-speed'].includes(type);
+    const isChainedMarkets = ['chained-speed-won', 'chained-speed-lost'].includes(type);
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -92,6 +101,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 }
 
                 const IOS_DOWNLOAD_DELAY = 10 * 1000; // 10 seconds
+                const MOBILE_TWITTER_TOAST_AUTO_CLOSE = 15 * 1000; // 15 seconds
                 try {
                     // In order to improve image quality enlarge image by 2.
                     // Twitter is trying to fit into 504 x 510 with the same aspect ratio, so when image is smaller than 504 x 510, there is quality loss.
@@ -136,7 +146,11 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                     const twitterLinkWithStatusMessage =
                         LINKS.TwitterTweetStatus +
                         TWITTER_MESSAGE_CHECKOUT +
-                        LINKS.Markets.Home +
+                        (isRegularMarkets
+                            ? LINKS.Markets.Home
+                            : isSpeedMarkets
+                            ? LINKS.Markets.Speed
+                            : LINKS.Markets.ChainedSpeed) +
                         (useDownloadImage ? TWITTER_MESSAGE_UPLOAD : TWITTER_MESSAGE_PASTE);
 
                     // Mobile requires user action in order to open new window, it can't open in async call, so adding <a>
@@ -145,19 +159,37 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                             ? setTimeout(() => {
                                   toast.update(
                                       toastIdParam,
-                                      getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
+                                      getSuccessToastOptions(
+                                          <a onClick={() => window.open(twitterLinkWithStatusMessage)}>
+                                              {t('common.flex-card.click-open-twitter')}
+                                          </a>,
+                                          toastIdParam,
+                                          { autoClose: MOBILE_TWITTER_TOAST_AUTO_CLOSE }
+                                      )
                                   );
                               }, IOS_DOWNLOAD_DELAY)
                             : toast.update(
                                   toastIdParam,
-                                  getSuccessToastOptions(t('common.flex-card.click-open-twitter'), toastIdParam)
+                                  getSuccessToastOptions(
+                                      <a onClick={() => window.open(twitterLinkWithStatusMessage)}>
+                                          {t('common.flex-card.click-open-twitter')}
+                                      </a>,
+                                      toastIdParam,
+                                      { autoClose: MOBILE_TWITTER_TOAST_AUTO_CLOSE }
+                                  )
                               )
                         : toast.update(
                               toastIdParam,
                               getSuccessToastOptions(
-                                  !useDownloadImage
-                                      ? t('common.flex-card.image-in-clipboard')
-                                      : t('common.flex-card.open-twitter'),
+                                  <>
+                                      {!useDownloadImage && (
+                                          <>
+                                              {t('common.flex-card.image-in-clipboard')}
+                                              <br />
+                                          </>
+                                      )}
+                                      {t('common.flex-card.open-twitter')}
+                                  </>,
                                   toastIdParam
                               )
                           );
@@ -178,7 +210,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
                 }
             }
         },
-        [isLoading, useDownloadImage, isMobile, t, onClose]
+        [isLoading, useDownloadImage, isMobile, t, onClose, isRegularMarkets, isSpeedMarkets]
     );
 
     const onTwitterShareClick = () => {
@@ -229,29 +261,41 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         >
             <Container ref={ref}>
                 {!isMobile && <CloseIcon className={`icon icon--x-sign`} onClick={onClose} />}
-                {(type == 'potential' || type == 'resolved') && (
+                {isRegularMarkets && (
                     <MarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
-                        position={position}
+                        positions={positions}
                         strikeDate={strikeDate}
-                        strikePrice={strikePrice}
+                        strikePrices={strikePrices}
                         leftPrice={leftPrice}
                         rightPrice={rightPrice}
                         buyIn={buyIn}
                         payout={payout}
                     />
                 )}
-                {(type == 'potential-speed' || type == 'resolved-speed') && (
+                {isSpeedMarkets && (
                     <SpeedMarketFlexCard
                         type={type}
                         currencyKey={currencyKey}
-                        position={position}
+                        positions={positions}
                         strikeDate={strikeDate}
-                        strikePrice={strikePrice}
-                        marketDuration={12}
+                        strikePrices={strikePrices}
                         buyIn={buyIn}
                         payout={payout}
+                    />
+                )}
+                {isChainedMarkets && (
+                    <ChainedSpeedMarketFlexCard
+                        type={type}
+                        currencyKey={currencyKey}
+                        positions={positions}
+                        strikeDate={strikeDate}
+                        strikePrices={strikePrices}
+                        finalPrices={finalPrices}
+                        buyIn={buyIn}
+                        payout={payout}
+                        payoutMultiplier={payoutMultiplier}
                     />
                 )}
                 <TwitterShare disabled={isLoading} onClick={onTwitterShareClick}>
@@ -263,15 +307,11 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
     );
 };
 
-// Aspect ratio is important for Twitter: horizontal (Simple View) 2:1 and vertical min 3:4
+// Aspect ratio is important for Twitter: horizontal 2:1 and vertical min 3:4
 const Container = styled(FlexDivColumnCentered)`
-    width: 386px;
-    max-height: 515px;
-    /* padding: 15px; */
-    /* flex: none; */
-    /* background: linear-gradient(180deg, #303656 0%, #1a1c2b 100%); */
-    /* border-radius: 15px; */
-    @media (max-width: 950px) {
+    width: 383px;
+    max-height: 510px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 357px;
         max-height: 476px;
     }
@@ -284,7 +324,7 @@ const CloseIcon = styled.i`
     font-size: 20px;
     cursor: pointer;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 950px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         top: 10px;
         right: 10px;
     }
