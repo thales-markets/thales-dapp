@@ -3,16 +3,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
-import { SpaceKey } from 'enums/governance';
-import { VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
-import { navigateToGovernance } from 'utils/routes';
+import SPAAnchor from '../SPAAnchor';
 
 const ElectionsBanner: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <Container onClick={() => navigateToGovernance(SpaceKey.COUNCIL, VOTING_COUNCIL_PROPOSAL_ID)}>
-            <Label>{t('banner.elections-banner-message')}</Label>
-        </Container>
+        <SPAAnchor href={'https://dune.com/leifu/arb-incentive-program-dashboard'}>
+            <Container>
+                <Label>{t('banner.arb-distribution-message')}</Label>
+            </Container>
+        </SPAAnchor>
     );
 };
 
