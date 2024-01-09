@@ -117,16 +117,16 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         );
         const addressToApprove = chainedSpeedMarketsAMMContract?.address || '';
 
-        const parsedAmount: BigNumber = coinParser(
-            isStableCurrency(selectedCollateral)
-                ? truncToDecimals(position.amount)
-                : truncToDecimals(position.amount, COLLATERAL_DECIMALS[selectedCollateral]),
-            networkId,
-            selectedCollateral
-        );
-
         const getAllowance = async () => {
             try {
+                const parsedAmount: BigNumber = coinParser(
+                    isStableCurrency(selectedCollateral)
+                        ? truncToDecimals(position.amount)
+                        : truncToDecimals(position.amount, COLLATERAL_DECIMALS[selectedCollateral]),
+                    networkId,
+                    selectedCollateral
+                );
+
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
                 setAllowance(allowance);
             } catch (e) {
