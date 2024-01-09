@@ -105,7 +105,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     }, [isSubmittingBatch]);
 
     useEffect(() => {
-        if (isDefaultCollateral || isOverview) {
+        if (!position.isOpen || !position.claimable || isDefaultCollateral || isOverview) {
             return;
         }
 
@@ -138,6 +138,8 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         }
     }, [
         position.amount,
+        position.isOpen,
+        position.claimable,
         networkId,
         walletAddress,
         isWalletConnected,
