@@ -1,7 +1,7 @@
 import { CoinGeckoClient } from 'coingecko-api-v3';
 import TooltipInfo from 'components/Tooltip';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
-import { format } from 'date-fns';
+import { differenceInMinutes, format, parse } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
@@ -32,6 +32,7 @@ import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/fo
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
+import { LINKS } from 'constants/links';
 
 type PriceChartProps = {
     asset: string;
@@ -78,6 +79,10 @@ const SpeedMarketsToggleButtons = [
     { label: '1M', value: 30 },
 ];
 const DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX = 0;
+
+const DATE_FORMAT = 'dd/MM HH:mm';
+
+const CHART_PRICES_TIMEFRAME_MINUTES = 5;
 
 const PriceChart: React.FC<PriceChartProps> = ({
     asset,
@@ -128,50 +133,76 @@ const PriceChart: React.FC<PriceChartProps> = ({
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);
-        // fetch data based on new date range here...
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            if (currentPrice) {
-                let result;
+            let result;
+            try {
+                result = await coinGeckoClientPublic.coinIdMarketChart({
+                    id: currencyKeyToCoinGeckoIndexMap[asset],
+                    vs_currency: 'usd',
+                    days: dateRange,
+                });
+            } catch (e) {
+                console.log('Switching to private: ', e);
                 try {
-                    result = await coinGeckoClientPublic.coinIdMarketChart({
+                    result = await coinGeckoClientPrivate.coinIdMarketChart({
                         id: currencyKeyToCoinGeckoIndexMap[asset],
                         vs_currency: 'usd',
                         days: dateRange,
                     });
                 } catch (e) {
-                    console.log('Switching to private: ', e);
-                    try {
-                        result = await coinGeckoClientPrivate.coinIdMarketChart({
-                            id: currencyKeyToCoinGeckoIndexMap[asset],
-                            vs_currency: 'usd',
-                            days: dateRange,
-                        });
-                    } catch (e) {
-                        console.log('Private failed: ', e);
-                    }
-                }
-                if (result) {
-                    const dateFormat = 'dd/MM HH:mm';
-                    const priceData = result.prices.map((price) => ({
-                        date: format(new Date(price[0]), dateFormat),
-                        price: Number(price[1]),
-                    }));
-
-                    priceData.push({ date: format(new Date(), dateFormat), price: currentPrice });
-
-                    setData(priceData);
-
-                    setTicks(getTicks(priceData.map(({ price }) => price)));
-                } else {
-                    console.log('COINGECKO API failed');
+                    console.log('Private failed: ', e);
                 }
             }
+            if (result) {
+                const priceData = result.prices.map((price) => ({
+                    date: format(new Date(price[0]), DATE_FORMAT),
+                    price: Number(price[1]),
+                }));
+
+                setData(priceData);
+
+                setTicks(getTicks(priceData.map(({ price }) => price)));
+            } else {
+                console.log('COINGECKO API failed');
+            }
         };
+
         fetchData();
-    }, [asset, dateRange, currentPrice, isSpeedMarkets]);
+    }, [asset, dateRange]);
+
+    useEffect(() => {
+        if (currentPrice) {
+            setData((prevData) => {
+                if (prevData) {
+                    const priceData = [...prevData];
+                    const beforeLastPriceTime = parse(prevData[prevData.length - 2].date, DATE_FORMAT, Date.now());
+                    const date = format(Date.now(), DATE_FORMAT);
+                    // on every 5min add new price, otherwise just update last one
+                    if (differenceInMinutes(Date.now(), beforeLastPriceTime) >= CHART_PRICES_TIMEFRAME_MINUTES) {
+                        // final update last price and add new current price
+                        priceData[priceData.length - 1] = {
+                            date,
+                            price: currentPrice,
+                        };
+                        priceData.push({ date, price: currentPrice });
+                    } else {
+                        // update last current price until it becomes final
+                        priceData[priceData.length - 1] = {
+                            date,
+                            price: currentPrice,
+                        };
+                    }
+
+                    setTicks(getTicks(priceData.map(({ price }) => price)));
+                    return priceData;
+                }
+                return prevData;
+            });
+        }
+    }, [currentPrice]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -262,7 +293,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 <FlexDivRowCentered>
                     <CurrentPrice
                         asset={asset}
-                        currentPrice={isSpeedMarkets ? currentPrice : data ? currentPrice : undefined}
+                        currentPrice={isSpeedMarkets || data ? currentPrice : undefined}
                         animatePrice={isSpeedMarkets}
                         isPriceUp={isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined}
                     />
@@ -377,11 +408,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         />
 
                         <ReferenceLine
-                            y={data[data?.length - 1].price}
+                            y={currentPrice}
                             stroke={theme.borderColor.tertiary}
                             strokeDasharray="3 3"
                             xHeight={2}
-                            label={<CustomLabel price={data[data?.length - 1].price} />}
+                            label={<CustomLabel price={currentPrice} />}
                         />
 
                         {selectedPrice && (
@@ -411,7 +442,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
             />
             {isSpeedMarkets && (
                 <PythIconWrap>
-                    <a target="_blank" rel="noreferrer" href="https://pyth.network/benchmarks">
+                    <a target="_blank" rel="noreferrer" href={LINKS.Pyth}>
                         <i className="icon icon--pyth" />
                     </a>
                 </PythIconWrap>
@@ -571,6 +602,9 @@ const PythIconWrap = styled.div`
         font-size: 40px;
         line-height: 10px;
         color: ${(props) => props.theme.textColor.primary};
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
     }
 `;
 
