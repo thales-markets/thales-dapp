@@ -35,15 +35,16 @@ import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import {
+    COLLATERAL_DECIMALS,
+    coinParser,
     formatCurrencyWithSign,
-    getDefaultDecimalsForNetwork,
     roundNumberToDecimals,
     truncToDecimals,
 } from 'thales-utils';
 import { ChainedSpeedMarket } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
+import { getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
@@ -115,9 +116,13 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
             snxJSConnector.provider
         );
         const addressToApprove = chainedSpeedMarketsAMMContract?.address || '';
-        const parsedAmount = ethers.utils.parseUnits(
-            position.amount.toString(),
-            getDefaultDecimalsForNetwork(networkId)
+
+        const parsedAmount: BigNumber = coinParser(
+            isStableCurrency(selectedCollateral)
+                ? truncToDecimals(position.amount)
+                : truncToDecimals(position.amount, COLLATERAL_DECIMALS[selectedCollateral]),
+            networkId,
+            selectedCollateral
         );
 
         const getAllowance = async () => {
@@ -140,6 +145,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         isAllowing,
         isDefaultCollateral,
         isOverview,
+        selectedCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
