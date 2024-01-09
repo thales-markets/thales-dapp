@@ -66,11 +66,15 @@ const { chains, provider } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain) => ({
-                http: !!CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
-                    ? `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
-                          process.env.REACT_APP_CHAINNODE_PROJECT_ID
-                      }`
-                    : chain.rpcUrls.default.http[0],
+                http:
+                    // For Polygon always use Infura as Chainnode is having issues
+                    chain.id === Network.PolygonMainnet
+                        ? 'https://polygon-mainnet.infura.io/v3/166d35de5cb34db18246d68a79320b1d'
+                        : !!CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
+                        ? `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
+                              process.env.REACT_APP_CHAINNODE_PROJECT_ID
+                          }`
+                        : chain.rpcUrls.default.http[0],
             }),
             stallTimeout: STALL_TIMEOUT,
             priority: 1,
