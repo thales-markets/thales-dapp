@@ -425,9 +425,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         const getAllowance = async () => {
             try {
                 const parsedAmount: BigNumber = coinParser(
-                    selectedCollateral === defaultCollateral
-                        ? truncToDecimals(totalPaidAmount)
-                        : isStableCurrency(selectedCollateral)
+                    isStableCurrency(selectedCollateral)
                         ? truncToDecimals(totalPaidAmount)
                         : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]),
                     networkId,
@@ -458,7 +456,6 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         hasAllowance,
         isAllowing,
         selectedCollateral,
-        defaultCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
