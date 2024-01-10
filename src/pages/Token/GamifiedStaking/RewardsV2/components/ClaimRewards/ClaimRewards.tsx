@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components';
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import Button from 'components/Button/Button';
 
-import { THALES_CURRENCY } from 'constants/currency';
+import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { formatCurrencyWithKey } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
@@ -243,10 +243,16 @@ const ClaimRewards: React.FC = () => {
                         {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.totalBonus : 0, 2)}
                     </Value>
                 </FlexDiv>
-                <FlexDiv>
+                <FlexDiv marginBottom={'12px'}>
                     <Label>{t('thales-token.gamified-staking.rewards.claim.base-rewards')}</Label>
                     <Value>
                         {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.baseRewards : 0, 2)}
+                    </Value>
+                </FlexDiv>
+                <FlexDiv>
+                    <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
+                    <Value>
+                        {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0, 2)}
                     </Value>
                 </FlexDiv>
             </ClaimSection>

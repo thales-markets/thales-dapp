@@ -58,11 +58,11 @@ const PointsBreakdown: React.FC = () => {
     }, [query.isSuccess, query.data]);
 
     const stakingData: PointsData | undefined = useMemo(() => {
-        if (stakingData) {
+        if (query.isSuccess) {
             return query.data;
         }
         return lastValidStakingData;
-    }, [query.data, lastValidStakingData]);
+    }, [query.data, query.isSuccess, lastValidStakingData]);
 
     const onTabClick = (type: TabType) => {
         const _tabs = tabs.map((item) => {

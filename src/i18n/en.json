@@ -646,6 +646,7 @@
                     "your-rewards": "Your current claimable rewards",
                     "gamified-rewards": "Gamified staking rewards",
                     "base-rewards": "Base rewards as THALES Staker",
+                    "fee-rewards": "Fee rewards",
                     "claim": "Claim rewards",
                     "claiming": "Claiming",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",

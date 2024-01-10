@@ -61,6 +61,7 @@ const Vesting: React.FC = () => {
     const scheduleData = userVestingData ? userVestingData.vestingSchedule : [];
     const claimable = userVestingData ? userVestingData.claimable : 0;
     const rawClaimable = userVestingData ? userVestingData.rawClaimable : '0';
+    const paused = userVestingData ? userVestingData.paused : false;
 
     const generateRows = (data: any[]) => {
         const sortedData = data.sort((a, b) => a.date - b.date);
@@ -105,7 +106,7 @@ const Vesting: React.FC = () => {
     };
 
     const getVestButton = () => {
-        const disabled = isClaiming || !+claimable;
+        const disabled = isClaiming || !+claimable || paused;
         return (
             <Button onClick={handleVest} disabled={disabled} width="auto">
                 {!isClaiming

@@ -18,14 +18,18 @@ const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<Staki
                 bonusRewardsPool: 0,
                 totalStakedAmount: 0,
                 canClosePeriod: false,
+                closingPeriodInProgress: false,
                 mergeAccountEnabled: true,
                 totalEscrowBalanceNotIncludedInStaking: 0,
                 totalEscrowedRewards: 0,
             };
             try {
-                const { stakingDataContract } = snxJSConnector;
-                if (stakingDataContract) {
-                    const contractStakingData = await stakingDataContract.getStakingData();
+                const { stakingDataContract, stakingThalesContract } = snxJSConnector;
+                if (stakingDataContract && stakingThalesContract) {
+                    const [contractStakingData, closingPeriodInProgress] = await Promise.all([
+                        stakingDataContract.getStakingData(),
+                        stakingThalesContract.closingPeriodInProgress(),
+                    ]);
 
                     stakingData.period = contractStakingData.periodsOfStaking;
                     stakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
@@ -42,6 +46,7 @@ const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<Staki
                         contractStakingData.totalEscrowBalanceNotIncludedInStaking
                     );
                     stakingData.totalEscrowedRewards = bigNumberFormatter(contractStakingData.totalEscrowedRewards);
+                    stakingData.closingPeriodInProgress = closingPeriodInProgress;
 
                     return stakingData;
                 }

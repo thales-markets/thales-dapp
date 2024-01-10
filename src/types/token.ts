@@ -60,6 +60,7 @@ export type UserVestingData = {
     claimable: number;
     rawClaimable: string;
     vestingSchedule: VestingSchedule;
+    paused: boolean;
 };
 
 export type TokenInfo = {
@@ -93,6 +94,7 @@ export type StakingData = {
     bonusRewardsPool: number;
     totalStakedAmount: number;
     canClosePeriod: boolean;
+    closingPeriodInProgress: boolean;
     mergeAccountEnabled: boolean;
     totalEscrowBalanceNotIncludedInStaking: number;
     totalEscrowedRewards: number;
@@ -108,6 +110,7 @@ export type UserStakingData = {
     delegatedVolume: string;
     rewards: number;
     baseRewards: number;
+    feeRewards: number;
     totalBonus: number;
     escrowedBalance: number;
     claimable: number;
