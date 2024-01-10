@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from 'thales-utils';
+import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
 import { UserStakingData } from 'types/token';
@@ -71,7 +71,10 @@ const useUserStakingDataQuery = (
                     userStakingData.rewards = bigNumberFormatter(contractUserStakingData.rewards);
                     userStakingData.baseRewards = bigNumberFormatter(contractUserStakingData.baseRewards);
                     userStakingData.totalBonus = bigNumberFormatter(contractUserStakingData.totalBonus);
-                    userStakingData.feeRewards = bigNumberFormatter(feeRewards);
+                    userStakingData.feeRewards = bigNumberFormatter(
+                        feeRewards,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
