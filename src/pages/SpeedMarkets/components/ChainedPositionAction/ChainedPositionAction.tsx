@@ -34,17 +34,11 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWall
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import {
-    COLLATERAL_DECIMALS,
-    coinParser,
-    formatCurrencyWithSign,
-    roundNumberToDecimals,
-    truncToDecimals,
-} from 'thales-utils';
+import { coinParser, formatCurrencyWithSign, roundNumberToDecimals, truncToDecimals } from 'thales-utils';
 import { ChainedSpeedMarket } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
+import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import {
@@ -105,7 +99,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     }, [isSubmittingBatch]);
 
     useEffect(() => {
-        if (!position.isOpen || !position.claimable || isDefaultCollateral || isOverview) {
+        if (!position.claimable || isDefaultCollateral || isOverview) {
             return;
         }
 
@@ -119,13 +113,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
         const getAllowance = async () => {
             try {
-                const parsedAmount: BigNumber = coinParser(
-                    isStableCurrency(selectedCollateral)
-                        ? truncToDecimals(position.amount)
-                        : truncToDecimals(position.amount, COLLATERAL_DECIMALS[selectedCollateral]),
-                    networkId,
-                    selectedCollateral
-                );
+                const parsedAmount = coinParser(position.amount.toString(), networkId);
 
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
                 setAllowance(allowance);
