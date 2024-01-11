@@ -61,7 +61,8 @@ export const Notification = styled.span`
     border-radius: 30px;
     color: ${(props) => props.theme.button.textColor.primary};
     margin-left: 8px;
-    width: 24px;
+    min-width: 24px;
+    padding: 0 5px;
     text-align: center;
     font-size: 18px;
     line-height: 24px;
