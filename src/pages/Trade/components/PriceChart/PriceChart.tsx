@@ -103,7 +103,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const [data, setData] = useState<{ date: string; price: number }[]>();
+    const [data, setData] = useState<{ date: string; price: number; asset: string }[]>();
     const [dateRange, setDateRange] = useState(
         isSpeedMarkets
             ? SpeedMarketsToggleButtons[DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX].value
@@ -160,6 +160,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 const priceData = result.prices.map((price) => ({
                     date: format(new Date(price[0]), DATE_FORMAT),
                     price: Number(price[1]),
+                    asset,
                 }));
 
                 setData(priceData);
@@ -173,10 +174,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
         fetchData();
     }, [asset, dateRange]);
 
+    // Add current prices to data (mostly for pyth prices on speed markets) on every 5 min and in the meantime refresh last price
     useEffect(() => {
         if (currentPrice) {
             setData((prevData) => {
-                if (prevData) {
+                if (prevData && prevData[0].asset === asset) {
                     const priceData = [...prevData];
                     const beforeLastPriceTime = parse(prevData[prevData.length - 2].date, DATE_FORMAT, Date.now());
                     const date = format(Date.now(), DATE_FORMAT);
@@ -186,13 +188,15 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         priceData[priceData.length - 1] = {
                             date,
                             price: currentPrice,
+                            asset,
                         };
-                        priceData.push({ date, price: currentPrice });
+                        priceData.push({ date, price: currentPrice, asset });
                     } else {
                         // update last current price until it becomes final
                         priceData[priceData.length - 1] = {
                             date,
                             price: currentPrice,
+                            asset,
                         };
                     }
 
@@ -202,7 +206,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 return prevData;
             });
         }
-    }, [currentPrice]);
+    }, [currentPrice, asset]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -408,11 +412,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
                         />
 
                         <ReferenceLine
-                            y={currentPrice}
+                            y={data[data?.length - 1].price}
                             stroke={theme.borderColor.tertiary}
                             strokeDasharray="3 3"
                             xHeight={2}
-                            label={<CustomLabel price={currentPrice} />}
+                            label={<CustomLabel price={data[data?.length - 1].price} />}
                         />
 
                         {selectedPrice && (
