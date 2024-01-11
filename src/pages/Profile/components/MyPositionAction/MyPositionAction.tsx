@@ -29,13 +29,7 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWall
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
-import {
-    coinFormatter,
-    coinParser,
-    formatCurrencyWithSign,
-    getDefaultDecimalsForNetwork,
-    roundNumberToDecimals,
-} from 'thales-utils';
+import { coinFormatter, coinParser, formatCurrencyWithSign, roundNumberToDecimals } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
@@ -121,12 +115,12 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({
                 ? rangedMarketAMMContract?.address
                 : ammContract?.address) || '';
 
-        const parsedAmount = position.isSpeedMarket
-            ? ethers.utils.parseUnits(Number(position.value).toString(), getDefaultDecimalsForNetwork(networkId))
-            : position.amountBigNumber;
-
         const getAllowance = async () => {
             try {
+                const parsedAmount = position.isSpeedMarket
+                    ? coinParser(position.value.toString(), networkId)
+                    : position.amountBigNumber;
+
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
                 setAllowance(allowance);
             } catch (e) {
