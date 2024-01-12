@@ -83,4 +83,7 @@ export const LINKS = {
     TwitterTweetStatus: 'https://twitter.com/intent/tweet?text=',
     DuneSpeedMarketsCompetition: 'https://dune.com/leifu/thales-speed-markets-competition',
     Pyth: 'https://pyth.network/benchmarks',
+    Discord: {
+        Help: 'https://discord.com/channels/906484044915687464/906723153349316638',
+    },
 };
