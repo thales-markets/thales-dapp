@@ -52,6 +52,8 @@
         "loss": "Loss",
         "admin": "Admin",
         "liquidity": "Liquidity",
+        "support-contact": "Please contact <anchor>Thales support</anchor>",
+        "try-again": "Try again",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -106,7 +108,8 @@
             "max-limit-exceeded": "Amount exceeded the amount available on AMM",
             "user-rejected-tx": "User rejected transaction",
             "enter-percentage": "Enter percentage",
-            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}"
+            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}",
+            "something-went-wrong": "Something went wrong!"
         },
         "enable-wallet-access": {
             "approve": "Approve",

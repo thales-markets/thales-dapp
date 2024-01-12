@@ -2,6 +2,7 @@ import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import TileTable from 'components/TileTable';
 import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
+import { ethers } from 'ethers';
 import { orderBy } from 'lodash';
 import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
 import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
@@ -15,11 +16,11 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import {
-    coinParser,
     formatCurrency,
     formatCurrencyWithSign,
     formatShortDate,
     formatShortDateWithTime,
+    getDefaultDecimalsForNetwork,
 } from 'thales-utils';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
@@ -118,7 +119,10 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                 rightPrice: 0,
                 finalPrice: marketData.finalPrices[lastPositivePriceIndex],
                 amount: marketData.amount,
-                amountBigNumber: coinParser(marketData.amount.toString(), networkId),
+                amountBigNumber: ethers.utils.parseUnits(
+                    marketData.amount.toString(),
+                    getDefaultDecimalsForNetwork(networkId)
+                ),
                 maturityDate: marketData.strikeTimes[lastPositivePriceIndex],
                 expiryDate: marketData.maturityDate,
                 market: marketData.address,
