@@ -68,6 +68,9 @@ const TextContainer = styled.div`
 const CCIPMessage = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 28px;
+    @media (max-width: 512px) {
+        font-size: 22px;
+    }
 `;
 
 const DotFlashing = styled.div`

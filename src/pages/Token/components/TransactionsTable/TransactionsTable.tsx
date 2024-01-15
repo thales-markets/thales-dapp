@@ -91,7 +91,6 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
 });
 
 const getAmount = (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => {
-    console.log('cellProps: ', cellProps);
     if (cellProps.cell.row.original.feeRewards > 0) {
         return formatCurrencyWithKey(USD_SIGN, cellProps.cell.row.original.feeRewards);
     } else {
