@@ -67,13 +67,13 @@ const TextContainer = styled.div`
 
 const CCIPMessage = styled.span`
     color: ${(props) => props.theme.textColor.primary};
-    font-size: 32px;
+    font-size: 28px;
 `;
 
 const DotFlashing = styled.div`
     position: relative;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: ${(props) => props.theme.textColor.primary};
     color: ${(props) => props.theme.textColor.primary};
@@ -91,8 +91,8 @@ const DotFlashing = styled.div`
     }
     &::before {
         left: -15px;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 5px;
         background-color: ${(props) => props.theme.textColor.primary};
         color: ${(props) => props.theme.textColor.primary};
@@ -101,8 +101,8 @@ const DotFlashing = styled.div`
     }
     &::after {
         left: 15px;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 5px;
         background-color: ${(props) => props.theme.textColor.primary};
         color: ${(props) => props.theme.textColor.primary};
