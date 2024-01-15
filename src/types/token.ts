@@ -112,7 +112,6 @@ export type UserStakingData = {
     escrowedBalance: number;
     claimable: number;
     rawClaimable: string;
-    isUserLPing: boolean;
     isPaused: boolean;
     unstakeDurationPeriod: number;
     mergeAccountEnabled: boolean;
