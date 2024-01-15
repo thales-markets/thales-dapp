@@ -3,8 +3,7 @@ import styled, { useTheme } from 'styled-components';
 
 import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import Button from 'components/Button/Button';
-import ccipAnimation from 'assets/lotties/ccip.json';
-import Lottie from 'lottie-react';
+
 import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { formatCurrencyWithKey } from 'thales-utils';
@@ -190,7 +189,7 @@ const ClaimRewards: React.FC = () => {
     const getClaimMessage = () => {
         if (isClaimed)
             return <ClaimMessage>{t('thales-token.gamified-staking.rewards.claim.claimed-message')}</ClaimMessage>;
-        if (!isPaused)
+        if (isPaused)
             return <ClaimMessage>{t('thales-token.gamified-staking.rewards.claim.paused-message')}</ClaimMessage>;
     };
 
@@ -214,71 +213,46 @@ const ClaimRewards: React.FC = () => {
             <ClaimSection>
                 {getClaimMessage()}
                 <FlexDiv>
-                    {isPaused ? (
-                        <>
-                            <ColumnDiv>
-                                <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
-                                <Value>
-                                    {formatCurrencyWithKey(
-                                        THALES_CURRENCY,
-                                        userStakingData ? userStakingData.rewards : 0,
-                                        2
-                                    )}{' '}
-                                    +{' '}
-                                    {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
-                                </Value>
-                            </ColumnDiv>
-                            {canClosePeriod ? (
-                                <ButtonWrapperTooltip>
-                                    <Button
-                                        additionalStyles={ButtonStyle}
-                                        onClick={handleClosePeriod}
-                                        disabled={!isClosingPeriodAvailable}
-                                    >
-                                        {isClosingPeriod
-                                            ? t(
-                                                  'thales-token.gamified-staking.rewards.claim.close-period.progress-label'
-                                              )
-                                            : t('thales-token.gamified-staking.rewards.claim.close-period.label')}
-                                    </Button>
-                                </ButtonWrapperTooltip>
-                            ) : (
-                                getClaimButton()
-                            )}
-                            <Line />
-
-                            <FlexDiv marginBottom={'12px'}>
-                                <Label>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</Label>
-                                <Value>
-                                    {formatCurrencyWithKey(
-                                        THALES_CURRENCY,
-                                        userStakingData ? userStakingData.totalBonus : 0,
-                                        2
-                                    )}
-                                </Value>
-                            </FlexDiv>
-                            <FlexDiv marginBottom={'12px'}>
-                                <Label>{t('thales-token.gamified-staking.rewards.claim.base-rewards')}</Label>
-                                <Value>
-                                    {formatCurrencyWithKey(
-                                        THALES_CURRENCY,
-                                        userStakingData ? userStakingData.baseRewards : 0,
-                                        2
-                                    )}
-                                </Value>
-                            </FlexDiv>
-                            <FlexDiv>
-                                <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
-                                <Value>
-                                    {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
-                                </Value>
-                            </FlexDiv>
-                        </>
+                    <ColumnDiv>
+                        <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
+                        <Value>
+                            {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.rewards : 0, 2)} +{' '}
+                            {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
+                        </Value>
+                    </ColumnDiv>
+                    {canClosePeriod ? (
+                        <ButtonWrapperTooltip>
+                            <Button
+                                additionalStyles={ButtonStyle}
+                                onClick={handleClosePeriod}
+                                disabled={!isClosingPeriodAvailable}
+                            >
+                                {isClosingPeriod
+                                    ? t('thales-token.gamified-staking.rewards.claim.close-period.progress-label')
+                                    : t('thales-token.gamified-staking.rewards.claim.close-period.label')}
+                            </Button>
+                        </ButtonWrapperTooltip>
                     ) : (
-                        <LottieContainer>
-                            <Lottie animationData={ccipAnimation} style={CCIPAnimationStyle} />
-                        </LottieContainer>
+                        getClaimButton()
                     )}
+                </FlexDiv>
+                <Line />
+
+                <FlexDiv marginBottom={'12px'}>
+                    <Label>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</Label>
+                    <Value>
+                        {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.totalBonus : 0, 2)}
+                    </Value>
+                </FlexDiv>
+                <FlexDiv marginBottom={'12px'}>
+                    <Label>{t('thales-token.gamified-staking.rewards.claim.base-rewards')}</Label>
+                    <Value>
+                        {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.baseRewards : 0, 2)}
+                    </Value>
+                </FlexDiv>
+                <FlexDiv>
+                    <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
+                    <Value>{formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}</Value>
                 </FlexDiv>
             </ClaimSection>
         </>
@@ -346,8 +320,6 @@ const FlexDiv = styled.div<{ marginBottom?: string }>`
     align-items: center;
     padding: 0 8px;
     margin-bottom: ${(props) => props.marginBottom ?? 0};
-    position: relative;
-    width: 100%;
 `;
 
 const ButtonWrapperTooltip = styled.div`
@@ -375,19 +347,5 @@ const ClaimMessage = styled.span`
     width: 100%;
     text-align: center;
 `;
-
-const LottieContainer = styled.div`
-    height: 100px;
-    position: relative;
-    width: 100%;
-`;
-
-const CCIPAnimationStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: -120,
-    height: 350,
-    width: '100%',
-    margin: 'auto',
-};
 
 export default ClaimRewards;
