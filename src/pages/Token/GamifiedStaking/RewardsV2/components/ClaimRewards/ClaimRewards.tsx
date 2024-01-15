@@ -216,7 +216,8 @@ const ClaimRewards: React.FC = () => {
                     <ColumnDiv>
                         <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
                         <Value>
-                            {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.rewards : 0, 2)}
+                            {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.rewards : 0, 2)} +{' '}
+                            {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
                         </Value>
                     </ColumnDiv>
                     {canClosePeriod ? (
@@ -251,9 +252,7 @@ const ClaimRewards: React.FC = () => {
                 </FlexDiv>
                 <FlexDiv>
                     <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
-                    <Value>
-                        {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0, 2)}
-                    </Value>
+                    <Value>{formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}</Value>
                 </FlexDiv>
             </ClaimSection>
         </>
