@@ -1,5 +1,7 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import queryString from 'query-string';
+import ccipAnimation from 'assets/lotties/ccip.json';
+import Lottie from 'lottie-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -152,6 +154,9 @@ const TokenPage: React.FC = () => {
                 <FlexDivColumn>
                     <TokenOverview />
                     {!isStakingSupported && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
+                    <LottieContainer>
+                        <Lottie animationData={ccipAnimation} style={CCIPAnimationStyle} />
+                    </LottieContainer>
 
                     <MainContentContainer>
                         <TabContainer
@@ -190,5 +195,18 @@ const Container = styled.div`
 const MainContentContainer = styled.div`
     padding-top: 5px;
 `;
+
+const LottieContainer = styled.div`
+    height: 100px;
+    position: relative;
+`;
+
+const CCIPAnimationStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: -120,
+    height: 350,
+    width: '100%',
+    margin: 'auto',
+};
 
 export default TokenPage;
