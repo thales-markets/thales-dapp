@@ -13,12 +13,16 @@ import {
     trustWallet,
     walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import UnexpectedError from 'components/UnexpectedError';
 import WalletDisclaimer from 'components/WalletDisclaimer';
+import { PLAUSIBLE } from 'constants/analytics';
+import { base } from 'constants/network';
 import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
 import { Network } from 'enums/network';
 import { merge } from 'lodash';
 import React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { getDefaultTheme } from 'utils/style';
@@ -28,8 +32,6 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { base } from 'constants/network';
-import { PLAUSIBLE } from 'constants/analytics';
 dotenv.config();
 
 type RpcProvider = {
@@ -66,11 +68,15 @@ const { chains, provider } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain) => ({
-                http: !!CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
-                    ? `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
-                          process.env.REACT_APP_CHAINNODE_PROJECT_ID
-                      }`
-                    : chain.rpcUrls.default.http[0],
+                http:
+                    // For Polygon always use Infura as Chainnode is having issues
+                    chain.id === Network.PolygonMainnet
+                        ? `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
+                        : !!CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
+                        ? `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
+                              process.env.REACT_APP_CHAINNODE_PROJECT_ID
+                          }`
+                        : chain.rpcUrls.default.http[0],
             }),
             stallTimeout: STALL_TIMEOUT,
             priority: 1,
@@ -140,22 +146,24 @@ const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[the
 const Root: React.FC<RootProps> = ({ store }) => {
     PLAUSIBLE.enableAutoPageviews();
     return (
-        <Provider store={store}>
-            <MatomoProvider value={instance}>
-                <WagmiConfig client={wagmiClient}>
-                    <RainbowKitProvider
-                        chains={chains}
-                        theme={customTheme}
-                        appInfo={{
-                            appName: 'Overtime',
-                            disclaimer: WalletDisclaimer,
-                        }}
-                    >
-                        <App />
-                    </RainbowKitProvider>
-                </WagmiConfig>
-            </MatomoProvider>
-        </Provider>
+        <ErrorBoundary fallback={<UnexpectedError theme={ThemeMap[theme]} />} onError={() => {}}>
+            <Provider store={store}>
+                <MatomoProvider value={instance}>
+                    <WagmiConfig client={wagmiClient}>
+                        <RainbowKitProvider
+                            chains={chains}
+                            theme={customTheme}
+                            appInfo={{
+                                appName: 'Overtime',
+                                disclaimer: WalletDisclaimer,
+                            }}
+                        >
+                            <App />
+                        </RainbowKitProvider>
+                    </WagmiConfig>
+                </MatomoProvider>
+            </Provider>
+        </ErrorBoundary>
     );
 };
 

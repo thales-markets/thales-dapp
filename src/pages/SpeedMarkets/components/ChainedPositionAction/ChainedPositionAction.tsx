@@ -14,7 +14,7 @@ import Tooltip from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
 import { ONE_HUNDRED_AND_THREE_PERCENT } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { BigNumber, ethers } from 'ethers';
 import {
@@ -34,18 +34,13 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWall
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import {
-    formatCurrencyWithSign,
-    getDefaultDecimalsForNetwork,
-    roundNumberToDecimals,
-    truncToDecimals,
-} from 'thales-utils';
+import { coinParser, formatCurrencyWithSign, roundNumberToDecimals } from 'thales-utils';
 import { ChainedSpeedMarket } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getPriceId, getPriceServiceEndpoint, priceParser } from 'utils/pyth';
 import {
     refetchActiveSpeedMarkets,
     refetchUserResolvedSpeedMarkets,
@@ -104,7 +99,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
     }, [isSubmittingBatch]);
 
     useEffect(() => {
-        if (isDefaultCollateral || isOverview) {
+        if (!position.claimable || isDefaultCollateral || isOverview) {
             return;
         }
 
@@ -115,13 +110,11 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
             snxJSConnector.provider
         );
         const addressToApprove = chainedSpeedMarketsAMMContract?.address || '';
-        const parsedAmount = ethers.utils.parseUnits(
-            position.amount.toString(),
-            getDefaultDecimalsForNetwork(networkId)
-        );
 
         const getAllowance = async () => {
             try {
+                const parsedAmount = coinParser(position.amount.toString(), networkId);
+
                 const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
                 setAllowance(allowance);
             } catch (e) {
@@ -133,6 +126,8 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         }
     }, [
         position.amount,
+        position.isOpen,
+        position.claimable,
         networkId,
         walletAddress,
         isWalletConnected,
@@ -140,6 +135,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
         isAllowing,
         isDefaultCollateral,
         isOverview,
+        selectedCollateral,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -184,14 +180,7 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                 if (isAdmin) {
                     const manualFinalPrices: number[] = position.finalPrices
                         .slice(0, fetchUntilFinalPriceEndIndex)
-                        .map((finalPrice) =>
-                            Number(
-                                ethers.utils.parseUnits(
-                                    truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
-                                    PYTH_CURRENCY_DECIMALS
-                                )
-                            )
-                        );
+                        .map((finalPrice) => Number(priceParser(finalPrice)));
 
                     tx = await chainedSpeedMarketsAMMContractWithSigner.resolveMarketManually(
                         position.address,

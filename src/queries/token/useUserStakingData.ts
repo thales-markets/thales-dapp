@@ -30,19 +30,12 @@ const useUserStakingDataQuery = (
                 escrowedBalance: 0,
                 claimable: 0,
                 rawClaimable: '0',
-                isUserLPing: false,
                 isPaused: false,
                 unstakeDurationPeriod: 7 * 24 * 60 * 60, // one week
                 mergeAccountEnabled: true,
             };
             try {
-                const {
-                    stakingDataContract,
-                    sportLiquidityPoolContract,
-                    liquidityPoolContract,
-                    parlayLiquidityPoolContract,
-                    stakingThalesContract,
-                } = snxJSConnector;
+                const { stakingDataContract, stakingThalesContract } = snxJSConnector;
                 if (stakingDataContract && stakingThalesContract) {
                     const [
                         contractStakingData,
@@ -78,15 +71,6 @@ const useUserStakingDataQuery = (
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
-
-                    if (sportLiquidityPoolContract && liquidityPoolContract && parlayLiquidityPoolContract) {
-                        const [isUserSportLPing, isUserParlayLPing, isUserLPing] = await Promise.all([
-                            sportLiquidityPoolContract.isUserLPing(walletAddress),
-                            parlayLiquidityPoolContract.isUserLPing(walletAddress),
-                            liquidityPoolContract.isUserLPing(walletAddress),
-                        ]);
-                        userStakingData.isUserLPing = isUserSportLPing || isUserLPing || isUserParlayLPing;
-                    }
 
                     userStakingData.isPaused = contractStakingData.paused || closingPeriodInProgress;
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;

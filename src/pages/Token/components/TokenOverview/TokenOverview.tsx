@@ -15,10 +15,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
+import { formatCurrencyWithKey, formatCurrencyWithSign, getEtherscanTokenLink } from 'thales-utils';
 import { TokenInfo } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import thalesContract from 'utils/contracts/thalesContract';
-import { getEtherscanTokenLink, formatCurrencyWithKey, formatCurrencyWithSign } from 'thales-utils';
 
 const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -111,16 +111,6 @@ const TokentOverview: React.FC = () => {
                         : EMPTY_VALUE}
                 </Content>
             </ItemContainer>
-            <ItemContainer>
-                <FlexDivCentered>
-                    <Tooltip overlay={t('thales-token.overview.celer-bridge-tooltip')}>
-                        <StyledLink href={getCelerBridgeUrl(networkId)} target="_blank" rel="noreferrer">
-                            <CryptoName>{t('thales-token.overview.celer-bridge')}</CryptoName>
-                            <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
-                        </StyledLink>
-                    </Tooltip>
-                </FlexDivCentered>
-            </ItemContainer>
         </Container>
     );
 };
@@ -135,17 +125,6 @@ const getUrlForSwap = (networkId: Network) => {
             return 'https://app.uniswap.org/#/swap?outputCurrency=0xf34e0cff046e154cafcae502c7541b9e5fd8c249&chain=base';
         default:
             return 'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5';
-    }
-};
-
-const getCelerBridgeUrl = (networkId: Network) => {
-    switch (networkId) {
-        case Network.Arbitrum:
-            return 'https://cbridge.celer.network/10/42161/THALES';
-        case Network.Base:
-            return 'https://cbridge.celer.network/10/8453/THALES';
-        default:
-            return 'https://cbridge.celer.network/1/10/THALES';
     }
 };
 

@@ -10,7 +10,7 @@ import {
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
 import { SPEED_MARKETS_OVERVIEW_SECTIONS as SECTIONS } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
@@ -37,9 +37,8 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { truncToDecimals } from 'thales-utils';
 import { ChainedSpeedMarket } from 'types/options';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getPriceId, getPriceServiceEndpoint, priceParser } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getUserLostAtSideIndex } from 'utils/speedAmm';
@@ -216,14 +215,7 @@ const UnresolvedChainedPositions: React.FC = () => {
                       .map((position, i) =>
                           position.finalPrices
                               .slice(0, fetchUntilFinalPriceEndIndexes[i])
-                              .map((finalPrice) =>
-                                  Number(
-                                      ethers.utils.parseUnits(
-                                          truncToDecimals(finalPrice, PYTH_CURRENCY_DECIMALS),
-                                          PYTH_CURRENCY_DECIMALS
-                                      )
-                                  )
-                              )
+                              .map((finalPrice) => Number(priceParser(finalPrice)))
                       )
                 : [];
 
