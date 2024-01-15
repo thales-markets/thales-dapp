@@ -656,7 +656,7 @@
                     "confirmation-message": "Tokens successfully claimed",
                     "period": "Time left to claim:",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
-                    "paused-message": "Claiming is paused.",
+                    "paused-message": "Claiming is paused. Calculating rewards in progress.",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "close-period": {
                         "label": "Close period",
