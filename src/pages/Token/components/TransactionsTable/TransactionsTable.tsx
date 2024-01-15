@@ -1,7 +1,7 @@
 import React, { FC, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithKey, formatShortDateWithTime } from 'thales-utils';
 import Table from 'components/TableV2';
 import { TokenTransaction, TokenTransactions } from 'types/token';
@@ -66,25 +66,9 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
                     {
                         Header: <>{t('thales-token.table.amount-col')}</>,
                         accessor: 'amount',
-                        Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
-                            <p>
-                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE &&
-                                cellProps.cell.row.original.type !== TransactionFilterEnum.MERGE_ACCOUNT &&
-                                cellProps.cell.row.original.type !== TransactionFilterEnum.DELEGATE_VOLUME &&
-                                cellProps.cell.row.original.type !== TransactionFilterEnum.REMOVE_DELEGATION
-                                    ? formatCurrencyWithKey(
-                                          cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
-                                              cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE
-                                              ? LP_TOKEN
-                                              : cellProps.cell.row.original.type ===
-                                                TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
-                                              ? CRYPTO_CURRENCY_MAP.OP
-                                              : THALES_CURRENCY,
-                                          cellProps.cell.value
-                                      )
-                                    : EMPTY_VALUE}
-                            </p>
-                        ),
+                        Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => {
+                            return <p>{getAmount(cellProps)}</p>;
+                        },
                         sortable: true,
                         sortType: amountSort,
                     },
@@ -105,5 +89,27 @@ const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noRe
         </>
     );
 });
+
+const getAmount = (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => {
+    console.log('cellProps: ', cellProps);
+    if (cellProps.cell.row.original.feeRewards > 0) {
+        return formatCurrencyWithKey(USD_SIGN, cellProps.cell.row.original.feeRewards);
+    } else {
+        return cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE &&
+            cellProps.cell.row.original.type !== TransactionFilterEnum.MERGE_ACCOUNT &&
+            cellProps.cell.row.original.type !== TransactionFilterEnum.DELEGATE_VOLUME &&
+            cellProps.cell.row.original.type !== TransactionFilterEnum.REMOVE_DELEGATION
+            ? formatCurrencyWithKey(
+                  cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
+                      cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE
+                      ? LP_TOKEN
+                      : cellProps.cell.row.original.type === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
+                      ? CRYPTO_CURRENCY_MAP.OP
+                      : THALES_CURRENCY,
+                  cellProps.cell.value
+              )
+            : EMPTY_VALUE;
+    }
+};
 
 export default TransactionsTable;
