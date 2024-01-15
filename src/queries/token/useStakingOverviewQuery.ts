@@ -36,7 +36,7 @@ const useStakingOverviewQuery = (
                 ] = await Promise.all([
                     stakingThalesContract?.periodsOfStaking(),
                     stakingThalesContract?.periodExtraReward(),
-                    stakingThalesContract?.fixedPeriodReward(),
+                    stakingThalesContract?.currentPeriodRewards(),
                     stakingBonusRewardsManager?.maxStakingMultiplier(),
                     stakingBonusRewardsManager?.vaultsMultiplier(),
                     stakingBonusRewardsManager?.lpMultiplier(),
