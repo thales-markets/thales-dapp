@@ -24,26 +24,6 @@ import YourTransactions from './Transactions';
 import Unstake from './Unstake';
 import useGlobalStakingDataQuery from 'queries/token/useGlobalStakingDataQuery';
 
-function numberWithCommas(x: string | number) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-function getNumberLabel(label: number) {
-    const labelValue = Number(label.toFixed(2));
-    return numberWithCommas(
-        // Nine Zeroes for Billions
-        Math.abs(labelValue) >= 1.0e9
-            ? Math.round(Math.abs(labelValue) / 1.0e9) + 'B'
-            : // Six Zeroes for Millions
-            Math.abs(labelValue) >= 1.0e6
-            ? Math.round(Math.abs(labelValue) / 1.0e6) + 'M'
-            : Math.abs(labelValue)
-    );
-}
-
-const APR_FREQUENCY = 52;
-const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** APR_FREQUENCY - 1) * 100;
-
 const Staking: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -116,33 +96,12 @@ const Staking: React.FC = () => {
 
     const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
     const totalStakedAmountGlobal = globalStakingData ? globalStakingData.totalStakedAmount : 0;
-    const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
-    const bonusRewardsPool = stakingData ? stakingData.bonusRewardsPool : 0;
     const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
     const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
 
     const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
     const escrowedBalance = userStakingData ? userStakingData.escrowedBalance : 0;
     const unstakingAmount = userStakingData ? userStakingData.unstakingAmount : 0;
-
-    const APR = useMemo(
-        () =>
-            totalStakedAmount === 0
-                ? 0
-                : ((Number(baseRewardsPool) + Number(bonusRewardsPool)) * 52 * 100) /
-                  (Number(totalStakedAmount) +
-                      Number(totalEscrowedRewards) -
-                      Number(totalEscrowBalanceNotIncludedInStaking)),
-        [
-            baseRewardsPool,
-            totalStakedAmount,
-            bonusRewardsPool,
-            totalEscrowedRewards,
-            totalEscrowBalanceNotIncludedInStaking,
-        ]
-    );
-
-    const formattedAPY = useMemo(() => getNumberLabel(aprToApy(APR)), [APR]);
 
     const totalThalesStaked = useMemo(
         () => totalStakedAmount + totalEscrowedRewards - totalEscrowBalanceNotIncludedInStaking,
@@ -173,7 +132,7 @@ const Staking: React.FC = () => {
                     {getSectionLabel('thales-token.gamified-staking.staking.apy', 'APY')}
                     <SectionValue>
                         <SectionValueContent>
-                            {formattedAPY}%
+                            {globalStakingData?.thalesApy}%
                             <BonusInfo>
                                 <Tooltip
                                     overlay={

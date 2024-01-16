@@ -89,6 +89,7 @@ export type MigratedRetroReward = {
 export type GlobalStakingData = {
     totalStakedAmount: number;
     feeApy: number;
+    thalesApy: number;
 };
 
 export type StakingData = {
