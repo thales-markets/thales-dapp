@@ -8,8 +8,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import styled from 'styled-components';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import { StakingData } from 'types/token';
+import { useTranslation } from 'react-i18next';
 
 const CCIPAnimation: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
@@ -31,11 +33,11 @@ const CCIPAnimation: React.FC = () => {
         return lastValidStakingData;
     }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
 
-    return !stakingData?.closingPeriodInProgress ? (
+    return stakingData?.closingPeriodInProgress ? (
         <LottieContainer>
             <Lottie animationData={ccipAnimation} style={CCIPAnimationStyle} />
             <TextContainer>
-                <CCIPMessage>CCIP synchronization in progress</CCIPMessage>
+                <CCIPMessage>{t('thales-token.gamified-staking.ccip-msg')}</CCIPMessage>
                 <DotFlashing />
             </TextContainer>
         </LottieContainer>

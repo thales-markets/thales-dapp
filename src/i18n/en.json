@@ -560,6 +560,7 @@
         },
         "gamified-staking": {
             "tab-title": "Gamified Staking",
+            "ccip-msg": "CCIP synchronization in progress",
             "staking": {
                 "section-title": "Staking",
                 "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
@@ -783,7 +784,8 @@
                     "confirmation-message": "Tokens successfully vested"
                 },
                 "schedule-label": "Vesting schedule",
-                "schedule-no-results": "No vesting schedule found."
+                "schedule-no-results": "No vesting schedule found.",
+                "paused": "Vesting is paused."
             },
             "merge-account": {
                 "section-title": "Account Preferences",
@@ -811,7 +813,8 @@
                     "user-lping": "You can't merge account while providing liquidity for Thales or Overtime.",
                     "src-unstaking": "Cancel ustaking from the source account.",
                     "dest-claim": "Claim the staking rewards from the destination account.",
-                    "dest-unstaking": "Cancel ustaking from the destination account."
+                    "dest-unstaking": "Cancel ustaking from the destination account.",
+                    "ccip-in-progress": "Merge is blocked while CCIP is in progress"
                 },
                 "merge-button": {
                     "label": "Merge",

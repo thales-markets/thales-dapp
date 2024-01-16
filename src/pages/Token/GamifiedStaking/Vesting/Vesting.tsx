@@ -4,7 +4,7 @@ import { TileRow } from 'components/TileTable/TileTable';
 import { THALES_CURRENCY } from 'constants/currency';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
-import { ButtonContainer } from 'pages/Token/styled-components';
+import { ButtonContainer, ClaimMessage } from 'pages/Token/styled-components';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -133,6 +133,7 @@ const Vesting: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
+                    {paused && <ClaimMessage>{t('thales-token.gamified-staking.vesting.paused')}</ClaimMessage>}
                 </SectionContentWrapper>
             </SectionWrapper>
 

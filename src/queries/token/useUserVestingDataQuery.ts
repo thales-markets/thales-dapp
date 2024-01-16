@@ -32,6 +32,8 @@ const useUserVestingDataQuery = (
                         stakingThalesContract.closingPeriodInProgress(),
                     ]);
 
+                    console.log(closingPeriodInProgress);
+
                     const lastPeriodDateTime = new Date(Number(contractUserVestingData.lastPeriodTimeStamp) * 1000);
                     const diffInWeeksCurrentDate = differenceInCalendarWeeks(new Date(), lastPeriodDateTime);
 
@@ -52,7 +54,7 @@ const useUserVestingDataQuery = (
                     userVestingData.claimable = bigNumberFormatter(contractUserVestingData.claimable);
                     userVestingData.rawClaimable = contractUserVestingData.claimable;
                     userVestingData.vestingSchedule = orderBy(vestingSchedule, 'date', 'asc');
-                    userVestingData.paused = closingPeriodInProgress;
+                    userVestingData.paused = true;
 
                     return userVestingData;
                 }
