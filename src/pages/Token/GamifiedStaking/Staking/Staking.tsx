@@ -3,7 +3,7 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import { THALES_CURRENCY } from 'constants/currency';
 import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { Tip135Link } from 'pages/Token/styled-components';
+import { Tip135Link, Tip182Link } from 'pages/Token/styled-components';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -14,7 +14,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { StakingData, UserStakingData } from 'types/token';
+import { GlobalStakingData, StakingData, UserStakingData } from 'types/token';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'thales-utils';
 
@@ -22,6 +22,7 @@ import { Line } from '../../styled-components';
 import Stake from './Stake';
 import YourTransactions from './Transactions';
 import Unstake from './Unstake';
+import useGlobalStakingDataQuery from 'queries/token/useGlobalStakingDataQuery';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -53,6 +54,9 @@ const Staking: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
+    const [lastValidGlobalStakingData, setLastValidGlobalStakingData] = useState<GlobalStakingData | undefined>(
+        undefined
+    );
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const stakeOptions = {
@@ -65,11 +69,19 @@ const Staking: React.FC = () => {
         enabled: isAppReady,
     });
 
+    const globalStakingDataQuery = useGlobalStakingDataQuery({ enabled: isAppReady });
+
     useEffect(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
             setLastValidStakingData(stakingDataQuery.data);
         }
     }, [stakingDataQuery.isSuccess, stakingDataQuery.data]);
+
+    useEffect(() => {
+        if (globalStakingDataQuery.isSuccess && globalStakingDataQuery.data) {
+            setLastValidGlobalStakingData(globalStakingDataQuery.data);
+        }
+    }, [globalStakingDataQuery.isSuccess, globalStakingDataQuery.data]);
 
     const stakingData: StakingData | undefined = useMemo(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
@@ -77,6 +89,13 @@ const Staking: React.FC = () => {
         }
         return lastValidStakingData;
     }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
+
+    const globalStakingData: GlobalStakingData | undefined = useMemo(() => {
+        if (globalStakingDataQuery.isSuccess && globalStakingDataQuery.data) {
+            return globalStakingDataQuery.data;
+        }
+        return lastValidGlobalStakingData;
+    }, [globalStakingDataQuery.isSuccess, globalStakingDataQuery.data, lastValidGlobalStakingData]);
 
     const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -96,7 +115,9 @@ const Staking: React.FC = () => {
     }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
 
     const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
+    const totalStakedAmountGlobal = globalStakingData ? globalStakingData.totalStakedAmount : 0;
     const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
+    const bonusRewardsPool = stakingData ? stakingData.bonusRewardsPool : 0;
     const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
     const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
 
@@ -108,11 +129,17 @@ const Staking: React.FC = () => {
         () =>
             totalStakedAmount === 0
                 ? 0
-                : (Number(baseRewardsPool) * 52 * 100) /
+                : ((Number(baseRewardsPool) + Number(bonusRewardsPool)) * 52 * 100) /
                   (Number(totalStakedAmount) +
                       Number(totalEscrowedRewards) -
                       Number(totalEscrowBalanceNotIncludedInStaking)),
-        [baseRewardsPool, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+        [
+            baseRewardsPool,
+            totalStakedAmount,
+            bonusRewardsPool,
+            totalEscrowedRewards,
+            totalEscrowBalanceNotIncludedInStaking,
+        ]
     );
 
     const formattedAPY = useMemo(() => getNumberLabel(aprToApy(APR)), [APR]);
@@ -136,8 +163,6 @@ const Staking: React.FC = () => {
         );
     };
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare, baseRewardsPool]);
-
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
     return (
@@ -157,6 +182,21 @@ const Staking: React.FC = () => {
                                                 'thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip'
                                             }
                                             components={[<span key="1" />, <Tip135Link key="2" />]}
+                                        />
+                                    }
+                                    iconColor={theme.textColor.quaternary}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
+                                />
+                            </BonusInfo>{' '}
+                            + {globalStakingData?.feeApy}%
+                            <BonusInfo>
+                                <Tooltip
+                                    overlay={
+                                        <Trans
+                                            i18nKey={'thales-token.gamified-staking.staking.fee-rewards-tooltip'}
+                                            components={[<span key="1" />, <Tip182Link key="2" />]}
                                         />
                                     }
                                     iconColor={theme.textColor.quaternary}
@@ -224,34 +264,20 @@ const Staking: React.FC = () => {
             {/* Second row */}
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('thales-token.gamified-staking.staking.total-thales-staked')}
+                    {getSectionLabel('thales-token.gamified-staking.staking.global-staked-amount', '', true)}
                     <SectionValue>
                         <SectionValueContent>
-                            {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
+                            {formatCurrencyWithKey(THALES_CURRENCY, totalStakedAmountGlobal)}
                         </SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('thales-token.gamified-staking.staking.estimated-rewards', '', true)}
+                    {getSectionLabel('thales-token.gamified-staking.staking.total-thales-staked')}
                     <SectionValue>
                         <SectionValueContent>
-                            {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
-                            <BonusInfo>
-                                <Tooltip
-                                    overlay={
-                                        <Trans
-                                            i18nKey="thales-token.gamified-staking.staking.bonus-estimated-rewards-tooltip"
-                                            components={[<span key="1" />, <Tip135Link key="2" />]}
-                                        />
-                                    }
-                                    iconColor={theme.textColor.quaternary}
-                                    iconFontSize={22}
-                                    mobileIconFontSize={12}
-                                    top={-1}
-                                />
-                            </BonusInfo>
+                            {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
                         </SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>

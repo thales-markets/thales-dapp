@@ -48,7 +48,6 @@ const useUserStakingDataQuery = (
                         stakingThalesContract.getRewardFeesAvailable(walletAddress),
                         stakingThalesContract.closingPeriodInProgress(),
                     ]);
-                    console.log(closingPeriodInProgress);
                     userStakingData.thalesStaked =
                         bigNumberFormatter(contractUserStakingData.thalesStaked) < BALANCE_THRESHOLD
                             ? 0
@@ -72,7 +71,7 @@ const useUserStakingDataQuery = (
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
 
-                    userStakingData.isPaused = contractStakingData.paused || true;
+                    userStakingData.isPaused = contractStakingData.paused || closingPeriodInProgress;
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     userStakingData.mergeAccountEnabled = contractStakingData.mergeAccountEnabled;
 

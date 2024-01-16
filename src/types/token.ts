@@ -86,6 +86,11 @@ export type MigratedRetroReward = {
     reward?: RetroReward;
 };
 
+export type GlobalStakingData = {
+    totalStakedAmount: number;
+    feeApy: number;
+};
+
 export type StakingData = {
     period: number;
     unstakeDurationPeriod: number;

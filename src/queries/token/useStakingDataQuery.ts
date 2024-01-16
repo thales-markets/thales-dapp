@@ -31,14 +31,12 @@ const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<Staki
                         stakingThalesContract.closingPeriodInProgress(),
                     ]);
 
-                    console.log(closingPeriodInProgress);
-
                     stakingData.period = contractStakingData.periodsOfStaking;
                     stakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     stakingData.closingDate =
                         Number(contractStakingData.lastPeriodTimeStamp) * 1000 +
                         Number(contractStakingData.durationPeriod) * 1000;
-                    stakingData.isPaused = contractStakingData.paused || true;
+                    stakingData.isPaused = contractStakingData.paused || closingPeriodInProgress;
                     stakingData.baseRewardsPool = bigNumberFormatter(contractStakingData.baseRewardsPool);
                     stakingData.bonusRewardsPool = bigNumberFormatter(contractStakingData.bonusRewardsPool);
                     stakingData.totalStakedAmount = bigNumberFormatter(contractStakingData.totalStakedAmount);
@@ -48,7 +46,7 @@ const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<Staki
                         contractStakingData.totalEscrowBalanceNotIncludedInStaking
                     );
                     stakingData.totalEscrowedRewards = bigNumberFormatter(contractStakingData.totalEscrowedRewards);
-                    stakingData.closingPeriodInProgress = true;
+                    stakingData.closingPeriodInProgress = closingPeriodInProgress;
 
                     return stakingData;
                 }
