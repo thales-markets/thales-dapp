@@ -211,7 +211,6 @@ const ClaimRewards: React.FC = () => {
                 </Value>
             </WrapperBorder>
             <ClaimSection>
-                {getClaimMessage()}
                 <FlexDiv>
                     <ColumnDiv>
                         <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
@@ -237,23 +236,37 @@ const ClaimRewards: React.FC = () => {
                     )}
                 </FlexDiv>
                 <Line />
-
-                <FlexDiv marginBottom={'12px'}>
-                    <Label>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</Label>
-                    <Value>
-                        {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.totalBonus : 0, 2)}
-                    </Value>
-                </FlexDiv>
-                <FlexDiv marginBottom={'12px'}>
-                    <Label>{t('thales-token.gamified-staking.rewards.claim.base-rewards')}</Label>
-                    <Value>
-                        {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.baseRewards : 0, 2)}
-                    </Value>
-                </FlexDiv>
-                <FlexDiv>
-                    <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
-                    <Value>{formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}</Value>
-                </FlexDiv>
+                {getClaimMessage()}
+                {!isClaimed && !isPaused && (
+                    <>
+                        <FlexDiv marginBottom={'12px'}>
+                            <Label>{t('thales-token.gamified-staking.rewards.claim.gamified-rewards')}</Label>
+                            <Value>
+                                {formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    userStakingData ? userStakingData.totalBonus : 0,
+                                    2
+                                )}
+                            </Value>
+                        </FlexDiv>
+                        <FlexDiv marginBottom={'12px'}>
+                            <Label>{t('thales-token.gamified-staking.rewards.claim.base-rewards')}</Label>
+                            <Value>
+                                {formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    userStakingData ? userStakingData.baseRewards : 0,
+                                    2
+                                )}
+                            </Value>
+                        </FlexDiv>
+                        <FlexDiv>
+                            <Label>{t('thales-token.gamified-staking.rewards.claim.fee-rewards')}</Label>
+                            <Value>
+                                {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
+                            </Value>
+                        </FlexDiv>
+                    </>
+                )}
             </ClaimSection>
         </>
     );
@@ -342,10 +355,17 @@ const ClaimMessage = styled.span`
     margin-bottom: 10px;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 22px;
+    @media (max-width: 512px) {
+        font-size: 20px;
+    }
+    white-space: pre-wrap;
+    line-height: 110%;
+    text-transform: uppercase;
     color: ${(props) => props.theme.warning.textColor.primary};
     width: 100%;
     text-align: center;
+    padding: 10px 0;
 `;
 
 export default ClaimRewards;
