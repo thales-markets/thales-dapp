@@ -569,7 +569,7 @@
                 "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
                 "bonus-estimated-rewards-tooltip": "<0>Additional rewards are to be distributed per </0><1 />.",
                 "fee-rewards-tooltip": "<0>Additional rewards in stable coins are to be distributed per </0><1 />.",
-                "total-thales-staked": "Total THALES Staked",
+                "total-thales-staked": "THALES Staked on {{ defaultValue }}",
                 "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract on this chain.",
                 "staked-share": "My Staked Share",
                 "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked on this chain.",

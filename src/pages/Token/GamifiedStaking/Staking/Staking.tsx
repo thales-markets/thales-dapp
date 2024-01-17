@@ -23,6 +23,7 @@ import Stake from './Stake';
 import YourTransactions from './Transactions';
 import Unstake from './Unstake';
 import useGlobalStakingDataQuery from 'queries/token/useGlobalStakingDataQuery';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
 
 const Staking: React.FC = () => {
     const { t } = useTranslation();
@@ -233,7 +234,10 @@ const Staking: React.FC = () => {
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
-                    {getSectionLabel('thales-token.gamified-staking.staking.total-thales-staked')}
+                    {getSectionLabel(
+                        'thales-token.gamified-staking.staking.total-thales-staked',
+                        SUPPORTED_NETWORKS_NAMES[networkId]
+                    )}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
