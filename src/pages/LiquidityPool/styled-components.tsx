@@ -230,6 +230,7 @@ export const ExternalButton = styled.a`
 
 export const ButtonContainer = styled(FlexDivColumnCentered)`
     width: 100%;
+    max-width: 310px;
 `;
 
 export const LoaderContainer = styled(FlexDivCentered)`
