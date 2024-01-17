@@ -3,7 +3,7 @@ import { ThemeInterface } from 'types/ui';
 
 const useWidgetBotScript = (preventWidgetLoad: boolean, theme: ThemeInterface) => {
     useEffect(() => {
-        if (preventWidgetLoad) {
+        if (preventWidgetLoad || (window as any).crate) {
             return;
         }
 

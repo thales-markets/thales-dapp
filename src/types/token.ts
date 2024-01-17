@@ -36,6 +36,7 @@ export type TokenTransaction = {
     amount: number | string;
     blockNumber: number;
     destAccount?: string;
+    feeRewards: number;
 };
 
 export type TokenTabSection = {
@@ -60,6 +61,7 @@ export type UserVestingData = {
     claimable: number;
     rawClaimable: string;
     vestingSchedule: VestingSchedule;
+    paused: boolean;
 };
 
 export type TokenInfo = {
@@ -84,6 +86,14 @@ export type MigratedRetroReward = {
     reward?: RetroReward;
 };
 
+export type GlobalStakingData = {
+    totalStakedAmount: number;
+    feeApy: number;
+    thalesApy: number;
+    baseRewards: number;
+    extraRewards: number;
+};
+
 export type StakingData = {
     period: number;
     unstakeDurationPeriod: number;
@@ -93,6 +103,7 @@ export type StakingData = {
     bonusRewardsPool: number;
     totalStakedAmount: number;
     canClosePeriod: boolean;
+    closingPeriodInProgress: boolean;
     mergeAccountEnabled: boolean;
     totalEscrowBalanceNotIncludedInStaking: number;
     totalEscrowedRewards: number;
@@ -108,11 +119,11 @@ export type UserStakingData = {
     delegatedVolume: string;
     rewards: number;
     baseRewards: number;
+    feeRewards: number;
     totalBonus: number;
     escrowedBalance: number;
     claimable: number;
     rawClaimable: string;
-    isUserLPing: boolean;
     isPaused: boolean;
     unstakeDurationPeriod: number;
     mergeAccountEnabled: boolean;

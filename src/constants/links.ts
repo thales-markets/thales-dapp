@@ -33,6 +33,8 @@ export const LINKS = {
             'https://thalesmarket.io/governance/thalesgov.eth/0xd37a8547ae32607f4f7eba2624bfc9ac2fb223408dd12e4e51158e45a3b52e0e',
         TIP135:
             'https://thalesmarket.io/governance/thalesgov.eth/0xa325f4a86ec37dd81b29e7dd1b509a27317cb0c67f814ec989e3671717ee1777',
+        TIP182:
+            'https://thalesmarket.io/governance/thalesgov.eth/0xd8fb36c23bc63ee639cbaba7969caae3c2c9e129dcbbe0554f566be779feb3fb',
         ClaimOnBehalfGuide:
             'https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide/automate-staking-rewards-claiming-using-gelato-guide',
         OpRewardsPage: 'https://thalesmarket.io/op-rewards',
@@ -83,4 +85,7 @@ export const LINKS = {
     TwitterTweetStatus: 'https://twitter.com/intent/tweet?text=',
     DuneSpeedMarketsCompetition: 'https://dune.com/leifu/thales-speed-markets-competition',
     Pyth: 'https://pyth.network/benchmarks',
+    Discord: {
+        Help: 'https://discord.com/channels/906484044915687464/906723153349316638',
+    },
 };
