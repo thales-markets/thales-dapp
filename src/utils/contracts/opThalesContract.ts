@@ -8,6 +8,7 @@ const opThalesContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

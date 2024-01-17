@@ -8,6 +8,7 @@ const chainedSpeedMarketsAMMContract = {
         [Network.PolygonMainnet]: '0x14D2d7f64D6F10f8eF06372c2e5E36850661a537',
         [Network.Arbitrum]: '0xe92B4c614b04c239d30c31A7ea1290AdDCb8217D',
         [Network.Base]: '0x6848F001ddDb4442d352C495c7B4a231e3889b70',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

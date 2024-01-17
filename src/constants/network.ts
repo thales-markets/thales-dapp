@@ -15,6 +15,7 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
     [Network.Base]: 'BASE',
+    [Network.ZkSync]: 'ZKSYNC',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
@@ -24,6 +25,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
+    [Network.ZkSync]: 'ZKSYNC',
 };
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
@@ -87,6 +89,17 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
             decimals: 18,
         },
     },
+    [Network.ZkSync]: {
+        chainId: '0x144',
+        chainName: 'zkSync',
+        rpcUrls: ['https://mainnet.era.zksync.io'],
+        blockExplorerUrls: ['https://explorer.zksync.io/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'ETH',
+            decimals: 18,
+        },
+    },
 };
 
 // configuration for wagmi
@@ -94,7 +107,7 @@ export const base = {
     id: 8453,
     network: 'base',
     name: 'Base',
-    nativeCurrency: { name: 'Base', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
         default: {
             http: ['https://mainnet.base.org'],

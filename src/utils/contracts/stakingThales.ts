@@ -8,6 +8,7 @@ const stakingThales = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x160Ca569999601bca06109D42d561D85D6Bb4b57',
         [Network.Base]: '0x84aB38e42D8Da33b480762cCa543eEcA6135E040',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

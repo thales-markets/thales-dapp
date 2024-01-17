@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
+import Loader from 'components/Loader';
+import UnsupportedNetwork from 'components/UnsupportedNetwork';
+import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
+import ROUTES from 'constants/routes';
+import ThemeProvider from 'layouts/Theme';
+import { Suspense, lazy, useEffect } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,26 +16,19 @@ import {
     getNetworkId,
     getSwitchToNetworkId,
     getWalletAddress,
-    updateNetworkSettings,
     switchToNetworkId,
+    updateNetworkSettings,
     updateWallet,
 } from 'redux/modules/wallet';
+import { createGlobalStyle } from 'styled-components';
 import { isMobile } from 'utils/device';
-import { isNetworkSupported } from 'utils/network';
-import { SUPPORTED_NETWORKS_NAMES } from 'constants/network';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { getSupportedNetworksByRoute, isNetworkSupported } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
-import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
-import { createGlobalStyle } from 'styled-components';
-import ThemeProvider from 'layouts/Theme';
 import { getDefaultTheme } from 'utils/style';
-import { getSupportedNetworksByRoute } from 'utils/network';
-import Loader from 'components/Loader';
+import { useAccount, useDisconnect, useNetwork, useProvider, useSigner } from 'wagmi';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -317,17 +317,19 @@ const App = () => {
                             />
                         )}
 
-                        <Route
-                            exact
-                            path={ROUTES.Options.Home}
-                            render={(routeProps) => (
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <Markets {...routeProps} />
-                                    </DappLayout>
-                                </Suspense>
-                            )}
-                        />
+                        {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.Home}
+                                render={(routeProps) => (
+                                    <Suspense fallback={<Loader />}>
+                                        <DappLayout>
+                                            <Markets {...routeProps} />
+                                        </DappLayout>
+                                    </Suspense>
+                                )}
+                            />
+                        )}
 
                         {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                             <Route exact path={ROUTES.Options.SpeedMarkets}>
@@ -399,10 +401,16 @@ const App = () => {
                         </Route>
 
                         <Route>
-                            <Redirect to={ROUTES.Options.Home} />
+                            <Redirect to={ROUTES.Options.SpeedMarkets} />
                             <Suspense fallback={<Loader />}>
                                 <DappLayout>
-                                    <Markets />
+                                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) ? (
+                                        <SpeedMarkets />
+                                    ) : (
+                                        <UnsupportedNetwork
+                                            supportedNetworks={getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets)}
+                                        />
+                                    )}
                                 </DappLayout>
                             </Suspense>
                         </Route>

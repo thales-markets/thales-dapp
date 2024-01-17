@@ -8,6 +8,7 @@ const binaryOptionsMarketManagerContract = {
         [Network.PolygonMainnet]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
         [Network.Arbitrum]: '0x95d93c88c1b5190fA7FA4350844e0663e5a11fF0',
         [Network.Base]: '0xc62E56E756a3D14ffF838e820F38d845a16D49dE',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

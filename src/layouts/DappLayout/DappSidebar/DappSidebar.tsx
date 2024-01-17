@@ -29,6 +29,10 @@ const DappSidebar: React.FC = () => {
         isWalletConnected && getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId);
     const showProfileDivider = showGamePage || showProfilePage;
 
+    const showTokenPage = getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId);
+    const showGovernancePage = getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId);
+    const showTokenDivider = showGamePage || showProfilePage;
+
     return (
         <OutsideClickHandler
             onOutsideClick={(e) => {
@@ -46,12 +50,14 @@ const DappSidebar: React.FC = () => {
                         <LogoIcon height="42" src={logoIcon} />
                     </SPAAnchor>
 
-                    <DappHeaderItem
-                        className={`${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Home)}
-                        iconName="markets"
-                        label={t('common.sidebar.markets')}
-                    />
+                    {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
+                        <DappHeaderItem
+                            className={`${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
+                            href={buildHref(ROUTES.Options.Home)}
+                            iconName="markets"
+                            label={t('common.sidebar.markets')}
+                        />
+                    )}
 
                     {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                         <DappHeaderItem
@@ -104,9 +110,9 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    <Divider />
+                    {showTokenDivider && <Divider />}
 
-                    {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
+                    {showTokenPage && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Token)}
@@ -115,7 +121,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
+                    {showGovernancePage && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Governance.Home)}

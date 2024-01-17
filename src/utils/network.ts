@@ -5,6 +5,7 @@ import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { ReactComponent as ZkSyncLogo } from 'assets/images/zksync-circle-logo.svg';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     DEFAULT_NETWORK,
@@ -150,6 +151,15 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 3,
     },
+    [Network.ZkSync]: {
+        name: 'ZkSync',
+        icon: ZkSyncLogo,
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
+            const baseNetworkParams = SUPPORTED_NETWORKS_PARAMS[networkId];
+            await changeNetwork(baseNetworkParams, callback);
+        },
+        order: 5,
+    },
 };
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
@@ -161,6 +171,13 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.Game:
         case ROUTES.Options.Profile:
         case ROUTES.Options.CreateMarket:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                Network.Base,
+                Network.PolygonMainnet,
+            ];
         case ROUTES.Options.SpeedMarkets:
         case ROUTES.Options.SpeedMarketsOverview:
             return [
@@ -169,6 +186,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 Network.Base,
                 Network.PolygonMainnet,
+                Network.ZkSync,
             ];
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];

@@ -8,6 +8,7 @@ export const thalesContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xe85b662fe97e8562f4099d8a1d5a92d4b453bf30',
         [Network.Base]: '0xf34e0cff046e154cafcae502c7541b9e5fd8c249',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

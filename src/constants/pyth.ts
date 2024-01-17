@@ -29,6 +29,7 @@ export const PYTH_CONTRACT_ADDRESS = {
     [Network.OptimismGoerli]: '0xDd24F84d36BF92C65F92307595335bdFab5Bbd21',
     [Network.Arbitrum]: '0xff1a0f4744e8582DF1aE09D5611b887B6a12925C',
     [Network.Base]: '0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a',
+    [Network.ZkSync]: '0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834',
 };
 
 export const PYTH_CURRENCY_DECIMALS = 8;

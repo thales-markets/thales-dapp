@@ -8,6 +8,7 @@ const ammContract = {
         [Network.PolygonMainnet]: '0xd52B865584c25FEBfcB676B9A87F32683356A063',
         [Network.Arbitrum]: '0x2b89275efB9509c33d9AD92A4586bdf8c4d21505',
         [Network.Base]: '0xe41cD3A25CBdeDA0BC46D48C380393D953bD2034',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

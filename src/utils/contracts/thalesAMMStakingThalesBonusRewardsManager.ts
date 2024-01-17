@@ -8,6 +8,7 @@ const stakingBonusRewardsManager = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x6535F4cCC70E0CCb192a8A224d5eBA420DDF9e3f',
         [Network.Base]: '0xA851554aA5f97b3DcA6486683b2da02d5a6a75dd',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

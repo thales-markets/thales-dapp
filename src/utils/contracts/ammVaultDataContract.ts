@@ -8,6 +8,7 @@ const sportVaultDataContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x4A096E1d719A2087F5CAfB0839aa25B6dd6dB324',
         [Network.Base]: 'TBD',
+        [Network.ZkSync]: 'TBD',
     },
     abi: [
         {

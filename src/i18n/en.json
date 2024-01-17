@@ -153,7 +153,8 @@
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "base": "Switch to Base"
+                "base": "Switch to Base",
+                "zkSync": "Switch to ZkSync"
             }
         },
         "swap": {
