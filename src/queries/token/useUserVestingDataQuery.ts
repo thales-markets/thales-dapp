@@ -29,7 +29,8 @@ const useUserVestingDataQuery = (
                 if (stakingDataContract && stakingThalesContract) {
                     const [contractUserVestingData, closingPeriodInProgress] = await Promise.all([
                         stakingDataContract.getUserVestingData(walletAddress),
-                        stakingThalesContract.closingPeriodInProgress(),
+                        // stakingThalesContract.closingPeriodInProgress(),
+                        true,
                     ]);
 
                     const lastPeriodDateTime = new Date(Number(contractUserVestingData.lastPeriodTimeStamp) * 1000);
