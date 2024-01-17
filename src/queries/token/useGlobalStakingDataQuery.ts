@@ -21,7 +21,7 @@ const useGlobalStakingDataQuery = (options?: UseQueryOptions<GlobalStakingData |
             try {
                 // Thales staked - Base
                 const baseAnkrProvider = new ethers.providers.JsonRpcProvider(
-                    `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`,
+                    `https://base-mainnet.chainnodes.org/${process.env.REACT_APP_CHAINNODE_PROJECT_ID}`,
                     Network.Base
                 );
 
@@ -51,16 +51,16 @@ const useGlobalStakingDataQuery = (options?: UseQueryOptions<GlobalStakingData |
                 const revShare = period <= 3 ? 30000 : bigNumberFormatter(calculatedRevenueForPeriod);
                 const thalesTokenPrice = Number(await price.text());
 
-                stakingData.feeApy =
+                const feeAPR =
                     (revShare * 52 * 100) /
                     ((bigNumberFormatter(stakedAmount) + bigNumberFormatter(escrowedAmount)) * thalesTokenPrice);
 
-                const thalesRewardsAPY =
+                const thalesRewardsAPR =
                     ((bigNumberFormatter(baseRewardsPool) + bigNumberFormatter(bonusRewardsPool)) * 52 * 100) /
                     (bigNumberFormatter(stakedAmount) + bigNumberFormatter(escrowedAmount));
 
-                stakingData.feeApy = aprToApy(stakingData.feeApy);
-                stakingData.thalesApy = aprToApy(thalesRewardsAPY);
+                stakingData.feeApy = aprToApy(feeAPR);
+                stakingData.thalesApy = aprToApy(thalesRewardsAPR);
 
                 stakingData.feeApy = Number((Math.round(stakingData.feeApy * 100) / 100).toFixed(2));
                 stakingData.thalesApy = Number((Math.round(stakingData.thalesApy * 100) / 100).toFixed(2));
