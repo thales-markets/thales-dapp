@@ -21,12 +21,16 @@ const useUserVestingDataQuery = (
                 claimable: 0,
                 rawClaimable: '0',
                 vestingSchedule: [],
+                paused: false,
             };
 
             try {
-                const { stakingDataContract } = snxJSConnector;
-                if (stakingDataContract) {
-                    const contractUserVestingData = await stakingDataContract.getUserVestingData(walletAddress);
+                const { stakingDataContract, stakingThalesContract } = snxJSConnector;
+                if (stakingDataContract && stakingThalesContract) {
+                    const [contractUserVestingData, closingPeriodInProgress] = await Promise.all([
+                        stakingDataContract.getUserVestingData(walletAddress),
+                        stakingThalesContract.closingPeriodInProgress(),
+                    ]);
 
                     const lastPeriodDateTime = new Date(Number(contractUserVestingData.lastPeriodTimeStamp) * 1000);
                     const diffInWeeksCurrentDate = differenceInCalendarWeeks(new Date(), lastPeriodDateTime);
@@ -48,6 +52,7 @@ const useUserVestingDataQuery = (
                     userVestingData.claimable = bigNumberFormatter(contractUserVestingData.claimable);
                     userVestingData.rawClaimable = contractUserVestingData.claimable;
                     userVestingData.vestingSchedule = orderBy(vestingSchedule, 'date', 'asc');
+                    userVestingData.paused = closingPeriodInProgress;
 
                     return userVestingData;
                 }

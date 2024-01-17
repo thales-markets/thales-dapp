@@ -43,6 +43,7 @@ import PnL from './PnL';
 import Transactions from './Transactions';
 import {
     BoldContent,
+    ButtonContainer,
     Container,
     ContentContainer,
     ContentInfo,
@@ -596,7 +597,7 @@ const LiquidityPool: React.FC = () => {
                                             ) as string
                                         }
                                     />
-                                    {getDepositSubmitButton()}
+                                    <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
                                 </>
                             )}
                             {selectedTab === LiquidityPoolTab.WITHDRAW && (
@@ -746,7 +747,7 @@ const LiquidityPool: React.FC = () => {
                                                     )}
                                                 </>
                                             )}
-                                            {getWithdrawSubmitButton()}
+                                            <ButtonContainer> {getWithdrawSubmitButton()}</ButtonContainer>
                                         </>
                                     )}
                                     {liquidityPoolData &&

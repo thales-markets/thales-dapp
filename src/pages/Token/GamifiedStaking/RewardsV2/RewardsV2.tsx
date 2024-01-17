@@ -7,24 +7,23 @@ import PointsBreakdown from './components/PointsBreakdown/PointsBreakdown';
 import BaseRewards from './components/BaseRewards/BaseRewards';
 import ClaimRewards from './components/ClaimRewards/ClaimRewards';
 import { BoldedText, HighlightText } from './components/StakingSteps/styled-components';
-import useStakingOverviewQuery, { OverviewData } from 'queries/token/useStakingOverviewQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrency } from 'thales-utils';
 import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters/TransactionsWithFilters';
 import { TransactionFilterEnum } from 'enums/token';
+import useGlobalStakingDataQuery from 'queries/token/useGlobalStakingDataQuery';
+import { GlobalStakingData } from 'types/token';
 
 const RewardsV2: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletconnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const [stakingData, setStakingData] = useState<OverviewData | null>(null);
+    const [stakingData, setStakingData] = useState<GlobalStakingData | null>(null);
 
-    const query = useStakingOverviewQuery(walletAddress, networkId, {
+    const query = useGlobalStakingDataQuery({
         enabled: isAppReady,
     });
 
@@ -38,6 +37,15 @@ const RewardsV2: React.FC = () => {
         <Wrapper>
             <Header>
                 <Div>
+                    <Text>
+                        <Trans
+                            i18nKey="thales-token.gamified-staking.rewards.section-description-intro"
+                            components={{
+                                bold: <BoldedText />,
+                                highlight: <HighlightText />,
+                            }}
+                        />
+                    </Text>
                     <Text>
                         <Trans
                             i18nKey="thales-token.gamified-staking.rewards.section-description"
@@ -55,7 +63,8 @@ const RewardsV2: React.FC = () => {
                                 highlight: <HighlightText />,
                             }}
                             values={{
-                                fixedPeriodReward: formatCurrency(stakingData?.fixedPeriodReward ?? 0),
+                                fixedPeriodReward: formatCurrency(stakingData?.baseRewards ?? 0),
+                                bonusRewards: formatCurrency(stakingData?.extraRewards ?? 0),
                             }}
                         />
                     </Text>
@@ -65,9 +74,6 @@ const RewardsV2: React.FC = () => {
                             components={{
                                 bold: <BoldedText />,
                                 highlight: <HighlightText />,
-                            }}
-                            values={{
-                                bonusRewards: formatCurrency(stakingData?.bonusRewards ?? 0),
                             }}
                         />
                     </Text>
