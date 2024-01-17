@@ -1,5 +1,6 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import queryString from 'query-string';
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -14,6 +15,7 @@ import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
+import CCIPAnimation from './GamifiedStaking/RewardsV2/components/CCIPAnimation';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -150,6 +152,7 @@ const TokenPage: React.FC = () => {
             <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
+                    <CCIPAnimation />
                     <TokenOverview />
                     {!isStakingSupported && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
 

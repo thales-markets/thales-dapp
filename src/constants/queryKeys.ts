@@ -185,6 +185,7 @@ const QUERY_KEYS = {
             networkId,
         ],
         StakingData: (networkId: Network) => ['token', 'staking', 'data', networkId],
+        GlobalStakingData: () => ['token', 'global', 'staking'],
         UserStakingData: (walletAddress: string, networkId: Network) => [
             'token',
             'staking',

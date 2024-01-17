@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from 'thales-utils';
+import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
 import { UserStakingData } from 'types/token';
@@ -26,6 +26,7 @@ const useUserStakingDataQuery = (
                 rewards: 0,
                 baseRewards: 0,
                 totalBonus: 0,
+                feeRewards: 0,
                 escrowedBalance: 0,
                 claimable: 0,
                 rawClaimable: '0',
@@ -34,13 +35,19 @@ const useUserStakingDataQuery = (
                 mergeAccountEnabled: true,
             };
             try {
-                const { stakingDataContract } = snxJSConnector;
-                if (stakingDataContract) {
-                    const [contractStakingData, contractUserStakingData] = await Promise.all([
+                const { stakingDataContract, stakingThalesContract } = snxJSConnector;
+                if (stakingDataContract && stakingThalesContract) {
+                    const [
+                        contractStakingData,
+                        contractUserStakingData,
+                        feeRewards,
+                        closingPeriodInProgress,
+                    ] = await Promise.all([
                         stakingDataContract.getStakingData(),
                         stakingDataContract.getUserStakingData(walletAddress),
+                        stakingThalesContract.getRewardFeesAvailable(walletAddress),
+                        stakingThalesContract.closingPeriodInProgress(),
                     ]);
-
                     userStakingData.thalesStaked =
                         bigNumberFormatter(contractUserStakingData.thalesStaked) < BALANCE_THRESHOLD
                             ? 0
@@ -56,11 +63,15 @@ const useUserStakingDataQuery = (
                     userStakingData.rewards = bigNumberFormatter(contractUserStakingData.rewards);
                     userStakingData.baseRewards = bigNumberFormatter(contractUserStakingData.baseRewards);
                     userStakingData.totalBonus = bigNumberFormatter(contractUserStakingData.totalBonus);
+                    userStakingData.feeRewards = bigNumberFormatter(
+                        feeRewards,
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
 
-                    userStakingData.isPaused = contractStakingData.paused;
+                    userStakingData.isPaused = contractStakingData.paused || closingPeriodInProgress;
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     userStakingData.mergeAccountEnabled = contractStakingData.mergeAccountEnabled;
 
