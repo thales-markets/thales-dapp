@@ -28,8 +28,7 @@ const useStakingDataQuery = (networkId: Network, options?: UseQueryOptions<Staki
                 if (stakingDataContract && stakingThalesContract) {
                     const [contractStakingData, closingPeriodInProgress] = await Promise.all([
                         stakingDataContract.getStakingData(),
-                        // stakingThalesContract.closingPeriodInProgress(),
-                        true,
+                        stakingThalesContract.closingPeriodInProgress(),
                     ]);
 
                     stakingData.period = contractStakingData.periodsOfStaking;
