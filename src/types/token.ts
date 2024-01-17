@@ -90,6 +90,8 @@ export type GlobalStakingData = {
     totalStakedAmount: number;
     feeApy: number;
     thalesApy: number;
+    baseRewards: number;
+    extraRewards: number;
 };
 
 export type StakingData = {

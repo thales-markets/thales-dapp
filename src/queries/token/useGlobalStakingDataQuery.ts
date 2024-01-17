@@ -15,6 +15,8 @@ const useGlobalStakingDataQuery = (options?: UseQueryOptions<GlobalStakingData |
                 totalStakedAmount: 0,
                 thalesApy: 0,
                 feeApy: 0,
+                baseRewards: 0,
+                extraRewards: 0,
             };
             try {
                 // Thales staked - Base
@@ -57,10 +59,15 @@ const useGlobalStakingDataQuery = (options?: UseQueryOptions<GlobalStakingData |
                     ((bigNumberFormatter(baseRewardsPool) + bigNumberFormatter(bonusRewardsPool)) * 52 * 100) /
                     (bigNumberFormatter(stakedAmount) + bigNumberFormatter(escrowedAmount));
 
+                stakingData.feeApy = aprToApy(stakingData.feeApy);
+                stakingData.thalesApy = aprToApy(thalesRewardsAPY);
+
                 stakingData.feeApy = Number((Math.round(stakingData.feeApy * 100) / 100).toFixed(2));
-                stakingData.thalesApy = Number((Math.round(thalesRewardsAPY * 100) / 100).toFixed(2));
+                stakingData.thalesApy = Number((Math.round(stakingData.thalesApy * 100) / 100).toFixed(2));
 
                 stakingData.totalStakedAmount = bigNumberFormatter(stakedAmount) + bigNumberFormatter(escrowedAmount);
+                stakingData.baseRewards = bigNumberFormatter(baseRewardsPool);
+                stakingData.extraRewards = bigNumberFormatter(bonusRewardsPool);
 
                 return stakingData;
             } catch (e) {
@@ -74,5 +81,8 @@ const useGlobalStakingDataQuery = (options?: UseQueryOptions<GlobalStakingData |
         }
     );
 };
+
+const APR_FREQUENCY = 52;
+const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** APR_FREQUENCY - 1) * 100;
 
 export default useGlobalStakingDataQuery;

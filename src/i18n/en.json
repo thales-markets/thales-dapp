@@ -612,9 +612,10 @@
                 },
                 "section-title": "Rewards",
                 "section-title-staking": "Thales Staking Rewards",
-                "section-description": "<bold>Staking rewards</bold> are main inflationary rewards of the THALES tokens, allocated to THALES token stakers once a week. Your <bold>base staking rewards</bold> amount depend on your My Staked Share percentage value at the time of the weekly snapshot. <highlight>Staking rewards have to be claimed weekly or they expire on next week's snapshot time.</highlight>",
-                "section-base-rewards": "Base inflationary rewards of {{fixedPeriodReward}} THALES per week are shared among all THALES tokens staked proportionally.",
-                "section-bonus-rewards": "Additionally, there are {{ bonusRewards }} THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
+                "section-description-intro": "By staking THALES on Optimism, Arbitrum or Base, every week you earn two types of rewards: <bold>Staking rewards</bold> in THALES tokens and <bold>Protocol Rewards</bold> in stablecoins. These rewards are synchronised and equal across all supported networks.",
+                "section-description": "<bold>Staking Rewards</bold> are the main inflationary rewards distributed to all stakers once a week proportional to their <bold>My Staked Share</bold> percentage value and proportional to their % of Total Global Points of Gamified Staking.",
+                "section-base-rewards": "Base inflationary rewards are currently {{fixedPeriodReward}} THALES per week for all stakers. Additional rewards in form of Gamified Staking are a bonus of {{bonusREwards}} THALES per week for all stakers that drive Trading Volume during the week, have deposits in any of the AMM LP pools or have deposits in any of the Thales Protocol Vaults (Sports Vaults and Thales Vaults).",
+                "section-bonus-rewards": "<bold>Protocol Rewards</bold> are distributed in stablecoins to all THALES stakers from the SafeBox contract that accrues fees from trading activity across all Thales Protocol contracts.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
