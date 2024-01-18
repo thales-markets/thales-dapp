@@ -352,9 +352,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     </PriceChange>
                 )}
             </FlexDivSpaceBetween>
-            {!isMobile && data && (
+            {!isMobile && (
                 <ResponsiveContainer width="100%" height={isSpeedMarkets ? 326 : 266}>
-                    {isLoading ? (
+                    {isLoading || !data ? (
                         <SimpleLoader />
                     ) : (
                         <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
