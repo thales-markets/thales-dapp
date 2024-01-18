@@ -3,8 +3,8 @@ import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { formatCurrency, bigNumberFormatter } from 'thales-utils';
 
-const LP_STAKING_WEEKLY_REWARDS = 20000;
-const LP_STAKING_WEEKLY_SECOND_REWARDS = 2000;
+const LP_STAKING_WEEKLY_REWARDS = 18500;
+const LP_STAKING_WEEKLY_SECOND_REWARDS = 1000;
 
 interface Balance {
     priceInUSD: number;

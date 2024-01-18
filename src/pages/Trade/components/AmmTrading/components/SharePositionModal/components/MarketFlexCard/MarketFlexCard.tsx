@@ -1,22 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
-import ZeusPotentialWinBackground from 'assets/images/flex-cards/potential.png';
 import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
-import Footer from '../Footer/Footer';
-import { FlexDiv } from 'styles/common';
-import { useTranslation } from 'react-i18next';
-import { getSynthName } from 'utils/currency';
-import QRCode from 'react-qr-code';
+import ZeusPotentialWinBackground from 'assets/images/flex-cards/potential.png';
+import { USD_SIGN } from 'constants/currency';
+import ROUTES from 'constants/routes';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import QRCode from 'react-qr-code';
+import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
-import { buildReferrerLink } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import { USD_SIGN } from 'constants/currency';
-import { formatShortDateWithTime, formatCurrencyWithSign } from 'thales-utils';
+import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import { getSynthName } from 'utils/currency';
+import { buildReferrerLink } from 'utils/routes';
+import Footer from '../Footer';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
