@@ -52,6 +52,8 @@
         "loss": "Loss",
         "admin": "Admin",
         "liquidity": "Liquidity",
+        "support-contact": "Please contact <anchor>Thales support</anchor>",
+        "try-again": "Try again",
         "time-remaining": {
             "ended": "ended",
             "years": "years",
@@ -111,7 +113,8 @@
             "max-limit-exceeded": "Amount exceeded the amount available on AMM",
             "user-rejected-tx": "User rejected transaction",
             "enter-percentage": "Enter percentage",
-            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}"
+            "invalid-percentage-range": "The percentage must be between {{min}} and {{max}}",
+            "something-went-wrong": "Something went wrong!"
         },
         "enable-wallet-access": {
             "approve": "Approve",
@@ -562,23 +565,26 @@
         },
         "gamified-staking": {
             "tab-title": "Gamified Staking",
+            "ccip-msg": "CCIP synchronization in progress",
             "staking": {
                 "section-title": "Staking",
                 "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
-                "apy-tooltip": "This is an estimation of the Annual Percentage Yield in THALES tokens from Staking THALES tokens to be distributed at the end of the current epoch.",
+                "apy-tooltip": "These are estimations of Annual Percentage Yields for THALES token rewards and stablecoin Protocol Rewards",
                 "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
                 "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
-                "bonus-estimated-rewards-tooltip": "<0>Additional rewards are to be distributed per </0><1 />.",
-                "total-thales-staked": "Total THALES Staked",
-                "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
+                "bonus-estimated-rewards-tooltip": "Annual Percentage Yield estimation for THALES token rewards",
+                "fee-rewards-tooltip": "Annual Percentage Yield estimation for Protocol Rewards in stablecoins",
+                "total-thales-staked": "THALES Staked on {{ defaultValue }}",
+                "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract on this chain.",
                 "staked-share": "My Staked Share",
-                "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked.",
+                "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked on this chain.",
                 "staked-balance": "My Staked Balance",
                 "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
                 "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
                 "staked-directly": "Staked directly",
                 "escrow-balance": "Escrowed balance",
                 "estimated-rewards": "Estimated rewards for this period",
+                "global-staked-amount": "THALES staked accross all chains",
                 "stake": {
                     "name": "Stake",
                     "staking": "Staking",
@@ -611,9 +617,10 @@
                 },
                 "section-title": "Rewards",
                 "section-title-staking": "Thales Staking Rewards",
-                "section-description": "<bold>Staking rewards</bold> are main inflationary rewards of the THALES tokens, allocated to THALES token stakers once a week. Your <bold>base staking rewards</bold> amount depend on your My Staked Share percentage value at the time of the weekly snapshot. <highlight>Staking rewards have to be claimed weekly or they expire on next week's snapshot time.</highlight>",
-                "section-base-rewards": "Base inflationary rewards of {{fixedPeriodReward}} THALES per week are shared among all THALES tokens staked proportionally.",
-                "section-bonus-rewards": "Additionally, there are {{ bonusRewards }} THALES bonus weekly rewards for all THALES stakers that have driven Trading Volume during the current week, have AMM LP pool deposits or have deposits in any of the Vaults across Thales and Overtime. All of these activities accrue a specific amount of points that determine your share of total bonus rewards. Your <bold>Gamified Staking Bonus Rewards</bold> amount depends on your % of Total Global Points.",
+                "section-description-intro": "By staking THALES on Optimism, Arbitrum or Base, every week you earn two types of rewards: <bold>Staking rewards</bold> in THALES tokens and <bold>Protocol Rewards</bold> in stablecoins. These rewards are synchronised and equal across all supported networks.",
+                "section-description": "<bold>Staking Rewards</bold> are the main inflationary rewards distributed to all stakers once a week proportional to their <bold>My Staked Share</bold> percentage value and proportional to their % of Total Global Points of Gamified Staking.",
+                "section-base-rewards": "Base inflationary rewards are currently {{fixedPeriodReward}} THALES per week for all stakers. Additional rewards in form of Gamified Staking are a bonus of {{ bonusRewards }} THALES per week for all stakers that drive Trading Volume during the week, have deposits in any of the AMM LP pools or have deposits in any of the Thales Protocol Vaults (Sports Vaults and Thales Vaults).",
+                "section-bonus-rewards": "<bold>Protocol Rewards</bold> are distributed in stablecoins to all THALES stakers from trading activity fees across all Thales Protocol contracts.",
                 "section-warning": "Unclaimed weekly rewards are forfeited!",
                 "info": {
                     "base": "As base rewards",
@@ -651,13 +658,14 @@
                     "your-rewards": "Your current claimable rewards",
                     "gamified-rewards": "Gamified staking rewards",
                     "base-rewards": "Base rewards as THALES Staker",
+                    "fee-rewards": "Fee rewards",
                     "claim": "Claim rewards",
                     "claiming": "Claiming",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
                     "confirmation-message": "Tokens successfully claimed",
                     "period": "Time left to claim:",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
-                    "paused-message": "Claiming is paused.",
+                    "paused-message": "Claiming is paused.\n Calculating rewards in progress.",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "close-period": {
                         "label": "Close period",
@@ -784,7 +792,8 @@
                     "confirmation-message": "Tokens successfully vested"
                 },
                 "schedule-label": "Vesting schedule",
-                "schedule-no-results": "No vesting schedule found."
+                "schedule-no-results": "No vesting schedule found.",
+                "paused": "Vesting is paused."
             },
             "merge-account": {
                 "section-title": "Account Preferences",
@@ -812,7 +821,8 @@
                     "user-lping": "You can't merge account while providing liquidity for Thales or Overtime.",
                     "src-unstaking": "Cancel ustaking from the source account.",
                     "dest-claim": "Claim the staking rewards from the destination account.",
-                    "dest-unstaking": "Cancel ustaking from the destination account."
+                    "dest-unstaking": "Cancel ustaking from the destination account.",
+                    "ccip-in-progress": "Merge is blocked while CCIP is in progress"
                 },
                 "merge-button": {
                     "label": "Merge",
@@ -1586,7 +1596,7 @@
     },
     "liquidity-pool": {
         "title": "Provide Liquidity",
-        "description": "<h1>Description</h1><p>Liquidity providing involves users depositing stablecoin collateral into a smart contract-based liquidity pool for Thales markets trading. The collateral deposited is used to facilitate trading on Thales' AMM.</p><p>To be able to provide liquidity you'll need to be staking THALES. There's no maximum cap per wallet and you may deposit a maximum of 1 {{currency}} per {{thalesStakedAmount}} THALES staked until the liquidity pool is filled.</p><p>At the end of each round, the proportional share of that round's PnL will be added to your deposited balance.</p><p>If you wish to withdraw, you can signal that at any time during the ongoing round, and at the end of the round the amount you signaled for withdrawal (inclusive of that round's PnL) is sent to you. The minimum amount to be withdrawn is set to 10%.</p><p>If you decide to unstake THALES while providing liquidity, please be aware that you'll need to signal a withdrawal from the liquidity pool first.</p><p>Providing liquidity exposes you to various risks including potential losses due to users winning in trading as well as smart contract security risks. Please make sure you understand these risks before depositing.</p><p><tipLink>TIP-139</tipLink> has more details on the technical implementation of Thales AMM liquidity providing.</p>",
+        "description": "<h1>Description</h1><p>Liquidity providing involves users depositing stablecoin collateral into a smart contract-based liquidity pool for Thales markets trading. The collateral deposited is used to facilitate trading on Thales' AMM.</p><p>At the end of each round, the proportional share of that round's PnL will be added to your deposited balance.</p><p>If you wish to withdraw, you can signal that at any time during the ongoing round, and at the end of the round the amount you signaled for withdrawal (inclusive of that round's PnL) is sent to you. The minimum amount to be withdrawn is set to 10%.</p><p>Providing liquidity exposes you to various risks including potential losses due to users winning in trading as well as smart contract security risks. Please make sure you understand these risks before depositing.</p><p><tipLink>TIP-139</tipLink> has more details on the technical implementation of Thales AMM liquidity providing.</p>",
         "variables": "<h1>Variables</h1><ul><li>Max total deposit: {{maxAllowedDeposit}}</li><li>Max users in the pool: {{maxAllowedUsers}}</li><li>Minimum deposit: {{minDepositAmount}}</li><li>Round duration: {{roundLength}} days</li></ul>",
         "liquidity-pool-not-started-message": "The liquidity pool has not started",
         "liquidity-pool-paused-message": "The liquidity pool is paused",
@@ -1740,6 +1750,7 @@
         "main-paragraph": "New gamified staking bonus system is live! Check your rank and rewards here!",
         "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker here!",
         "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!",
-        "temp-check-banner-message": "Tokenomics temp check. Cast your vote here!"
+        "temp-check-banner-message": "Tokenomics temp check. Cast your vote here!",
+        "arb-distribution-message": "ARB distribution has started. Earn ARB tokens by using Thales products. Checkout the details here."
     }
 }

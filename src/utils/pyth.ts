@@ -2,8 +2,9 @@ import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import { PRICE_ID, PRICE_SERVICE_ENDPOINTS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { Network } from 'enums/network';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { bigNumberFormatter } from 'thales-utils';
+import { bigNumberFormatter, floorNumberToDecimals } from 'thales-utils';
 import { generalConfig } from 'config/general';
+import { ethers } from 'ethers';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
     if (networkId === Network.OptimismGoerli) {
@@ -102,3 +103,6 @@ export const getBenchmarksPriceFeeds = async (priceFeeds: { priceId: string; pub
 
     return benchmarksPriceFeeds;
 };
+
+export const priceParser = (value: number) =>
+    ethers.utils.parseUnits(floorNumberToDecimals(value, PYTH_CURRENCY_DECIMALS).toString(), PYTH_CURRENCY_DECIMALS);

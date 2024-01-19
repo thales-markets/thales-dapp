@@ -1,17 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
-import UpBackground from 'assets/images/flex-cards/up-background.png';
 import DownBackground from 'assets/images/flex-cards/down-background.png';
-import { FlexDiv } from 'styles/common';
-import { useTranslation } from 'react-i18next';
-import { getSynthName } from 'utils/currency';
-import { SharePositionData, SharePositionType } from 'types/flexCards';
-import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
-import { Positions } from 'enums/options';
-import SpeedMarketsFooter from '../SpeedMarketsFooter/SpeedMarketsFooter';
 import ZeusResolvedWinBackground from 'assets/images/flex-cards/resolved.png';
+import UpBackground from 'assets/images/flex-cards/up-background.png';
+import { USD_SIGN } from 'constants/currency';
+import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
+import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
+import { SharePositionData, SharePositionType } from 'types/flexCards';
+import { getSynthName } from 'utils/currency';
+import SpeedMarketsFooter from '../SpeedMarketsFooter';
 
 const SpeedMarketFlexCard: React.FC<SharePositionData> = ({
     type,

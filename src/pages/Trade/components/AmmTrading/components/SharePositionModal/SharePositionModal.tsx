@@ -1,26 +1,26 @@
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import {
-    getSuccessToastOptions,
     getErrorToastOptions,
+    getSuccessToastOptions,
     toastBasicProperties,
 } from 'components/ToastMessage/ToastMessage';
 import { LINKS } from 'constants/links';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { toPng } from 'html-to-image';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import ReactModal from 'react-modal';
-import { toast } from 'react-toastify';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'styles/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsMobile } from 'redux/modules/ui';
-import { isMetamask, isFirefox, isIos } from 'thales-utils';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
-import MarketFlexCard from './components/MarketFlexCard/MarketFlexCard';
-import SpeedMarketFlexCard from './components/SpeedMarketFlexCard/SpeedMarketFlexCard';
+import { isFirefox, isIos, isMetamask } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
 import ChainedSpeedMarketFlexCard from './components/ChainedSpeedMarketFlexCard';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import MarketFlexCard from './components/MarketFlexCard';
+import SpeedMarketFlexCard from './components/SpeedMarketFlexCard';
 
 type SharePositionModalProps = SharePositionData & {
     onClose: () => void;

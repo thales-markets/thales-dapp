@@ -8,7 +8,7 @@ import {
     getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { differenceInSeconds, millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { ethers } from 'ethers';
@@ -21,9 +21,8 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { truncToDecimals } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
-import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getPriceId, getPriceServiceEndpoint, priceParser } from 'utils/pyth';
 import { refetchActiveSpeedMarkets } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
@@ -68,12 +67,7 @@ const OverviewPositionAction: React.FC<OverviewPositionActionProps> = ({
                 if (isAdmin) {
                     tx = await speedMarketsAMMContractWithSigner.resolveMarketManually(
                         position.market,
-                        Number(
-                            ethers.utils.parseUnits(
-                                truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
-                                PYTH_CURRENCY_DECIMALS
-                            )
-                        )
+                        Number(priceParser(position.finalPrice || 0))
                     );
                 } else {
                     const pythContract = new ethers.Contract(

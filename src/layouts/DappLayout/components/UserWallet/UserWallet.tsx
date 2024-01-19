@@ -125,6 +125,7 @@ const JoinUs = styled.button`
 
 const Container = styled.div`
     width: 400px;
+    z-index: 1;
     @media (max-width: 500px) {
         width: 100%;
     }

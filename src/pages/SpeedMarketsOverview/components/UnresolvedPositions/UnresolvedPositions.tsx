@@ -12,7 +12,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { SPEED_MARKETS_OVERVIEW_SECTIONS as SECTIONS } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS, SUPPORTED_ASSETS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { BigNumber, ethers } from 'ethers';
@@ -38,9 +38,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { formatCurrencyWithSign, truncToDecimals } from 'thales-utils';
+import { formatCurrencyWithSign } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
-import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint, priceParser } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
@@ -186,14 +186,7 @@ const UnresolvedPositions: React.FC = () => {
             const manualFinalPrices: number[] = isAdmin
                 ? positions
                       .filter((position) => !!position.finalPrice)
-                      .map((position) =>
-                          Number(
-                              ethers.utils.parseUnits(
-                                  truncToDecimals(position.finalPrice || 0, PYTH_CURRENCY_DECIMALS),
-                                  PYTH_CURRENCY_DECIMALS
-                              )
-                          )
-                      )
+                      .map((position) => Number(priceParser(position.finalPrice || 0)))
                 : [];
             const priceUpdateDataArray: string[] = [];
             let totalUpdateFee = BigNumber.from(0);

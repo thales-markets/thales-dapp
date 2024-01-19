@@ -18,7 +18,6 @@ import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
-import { Network } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
@@ -49,7 +48,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
 import PnL from './PnL';
 import Transactions from './Transactions';
-import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
 import {
     BoldContent,
     ButtonContainer,
@@ -59,8 +57,6 @@ import {
     ContentInfoContainer,
     CopyContainer,
     Description,
-    ExternalButton,
-    GetStakeThalesIcon,
     LiquidityPoolFilledGraphicContainer,
     LiquidityPoolFilledGraphicPercentage,
     LiquidityPoolFilledText,
@@ -179,7 +175,6 @@ const LiquidityPool: React.FC = () => {
 
     const exceededLiquidityPoolCap =
         liquidityPoolData && liquidityPoolData.availableAllocationNextRound < Number(amount);
-    const exceededMaxAllowance = userLiquidityPoolData && userLiquidityPoolData.availableToDeposit < Number(amount);
     const isMaximumAmountOfUsersReached =
         liquidityPoolData &&
         liquidityPoolData.usersCurrentlyInLiquidityPool === liquidityPoolData.maxAllowedUsers &&
@@ -207,7 +202,6 @@ const LiquidityPool: React.FC = () => {
         isSubmitting ||
         isWithdrawalRequested ||
         exceededLiquidityPoolCap ||
-        exceededMaxAllowance ||
         isMaximumAmountOfUsersReached ||
         invalidAmount ||
         liquidityPoolPaused ||
@@ -500,13 +494,8 @@ const LiquidityPool: React.FC = () => {
 
     const infoGraphicPercentages = getInfoGraphicPercentages(
         userLiquidityPoolData ? userLiquidityPoolData.balanceCurrentRound : 0,
-        userLiquidityPoolData ? userLiquidityPoolData.balanceTotal : 0,
-        userLiquidityPoolData ? userLiquidityPoolData.maxDeposit : 0
+        userLiquidityPoolData ? userLiquidityPoolData.balanceTotal : 0
     );
-
-    const setMaxAmount = () => {
-        setAmount(Math.trunc(userLiquidityPoolData ? userLiquidityPoolData.availableToDeposit * 100 : 0) / 100);
-    };
 
     useEffect(
         () =>
@@ -611,13 +600,9 @@ const LiquidityPool: React.FC = () => {
                                         disabled={isDepositAmountInputDisabled}
                                         onChange={(_, value) => setAmount(value)}
                                         currencyLabel={collateral}
-                                        onMaxButton={setMaxAmount}
                                         placeholder={t('common.enter-amount')}
                                         showValidation={
-                                            insufficientBalance ||
-                                            !!exceededLiquidityPoolCap ||
-                                            !!exceededMaxAllowance ||
-                                            !!invalidAmount
+                                            insufficientBalance || !!exceededLiquidityPoolCap || !!invalidAmount
                                         }
                                         validationMessage={
                                             t(
@@ -626,8 +611,6 @@ const LiquidityPool: React.FC = () => {
                                                         ? 'common.errors.insufficient-balance'
                                                         : exceededLiquidityPoolCap
                                                         ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
-                                                        : exceededMaxAllowance
-                                                        ? 'liquidity-pool.deposit-staked-thales-error'
                                                         : 'liquidity-pool.deposit-min-amount-error'
                                                 }`,
                                                 {
@@ -639,7 +622,7 @@ const LiquidityPool: React.FC = () => {
                                             ) as string
                                         }
                                     />
-                                    {getDepositSubmitButton()}
+                                    <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
                                 </>
                             )}
                             {selectedTab === LiquidityPoolTab.WITHDRAW && (
@@ -789,7 +772,7 @@ const LiquidityPool: React.FC = () => {
                                                     )}
                                                 </>
                                             )}
-                                            {getWithdrawSubmitButton()}
+                                            <ButtonContainer> {getWithdrawSubmitButton()}</ButtonContainer>
                                         </>
                                     )}
                                     {liquidityPoolData &&
@@ -834,18 +817,6 @@ const LiquidityPool: React.FC = () => {
                                         )}
                                 </>
                             )}
-                        </ContentContainer>
-                        <ContentContainer>
-                            <ButtonContainer>
-                                <ExternalButton target="_blank" rel="noreferrer" href={getUniswapLink(networkId)}>
-                                    {t('liquidity-pool.button.get-thales-label')}
-                                    <GetStakeThalesIcon className={`icon icon--get-thales`} />
-                                </ExternalButton>
-                                <ExternalButton target="_blank" rel="noreferrer" href={LINKS.ThalesStaking}>
-                                    {t('liquidity-pool.button.stake-thales-label')}
-                                    <GetStakeThalesIcon className={`icon icon--stake-thales`} />
-                                </ExternalButton>
-                            </ButtonContainer>
                         </ContentContainer>
                     </Container>
                 )}
@@ -990,39 +961,6 @@ const LiquidityPool: React.FC = () => {
                                                 )}
                                         </LiquidityPoolInfo>
                                     </LiquidityPoolInfoContainer>
-                                    <LiquidityPoolInfoContainer>
-                                        <LiquidityPoolInfoLabel>
-                                            {t('liquidity-pool.max-allowance-label')}:
-                                        </LiquidityPoolInfoLabel>
-                                        <LiquidityPoolInfoGraphic
-                                            background={'linear-gradient(270deg, #3AECD3 0%, #017F9C 100%)'}
-                                            widthPercentage={infoGraphicPercentages.maxAllowancePercenatage}
-                                        />
-                                        <LiquidityPoolInfo>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                userLiquidityPoolData ? userLiquidityPoolData.maxDeposit : 0
-                                            )}
-                                            <Tooltip
-                                                overlay={
-                                                    <MaxAllowanceTooltip
-                                                        stakedThales={
-                                                            userLiquidityPoolData
-                                                                ? userLiquidityPoolData.stakedThales
-                                                                : 0
-                                                        }
-                                                        stakedThalesMultiplier={
-                                                            liquidityPoolData.stakedThalesMultiplier
-                                                        }
-                                                    />
-                                                }
-                                                overlayClassName="lp-max-allowance"
-                                                iconFontSize={14}
-                                                marginLeft={2}
-                                                top={-1}
-                                            />
-                                        </LiquidityPoolInfo>
-                                    </LiquidityPoolInfoContainer>
                                     {isWithdrawalRequested && (
                                         <WarningContentInfo>
                                             <Trans
@@ -1093,37 +1031,23 @@ const LiquidityPool: React.FC = () => {
     );
 };
 
-const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: number, maxAllowance: number) => {
+const getInfoGraphicPercentages = (currentBalance: number, nextRoundBalance: number) => {
     let currentBalancePercenatage = 1;
     let nextRoundBalancePercenatage = 1;
-    let maxAllowancePercenatage = 1;
 
-    if (maxAllowance > currentBalance && maxAllowance > nextRoundBalance) {
-        currentBalancePercenatage = currentBalance / maxAllowance;
-        nextRoundBalancePercenatage = nextRoundBalance / maxAllowance;
-    } else if (currentBalance > nextRoundBalance) {
-        maxAllowancePercenatage = maxAllowance / currentBalance;
+    if (currentBalance > nextRoundBalance) {
         nextRoundBalancePercenatage = nextRoundBalance / currentBalance;
     } else if (nextRoundBalance === 0) {
         currentBalancePercenatage = 0;
         nextRoundBalancePercenatage = 0;
-        maxAllowancePercenatage = 0;
     } else {
-        maxAllowancePercenatage = maxAllowance / nextRoundBalance;
         currentBalancePercenatage = currentBalance / nextRoundBalance;
     }
 
     return {
         currentBalancePercenatage,
         nextRoundBalancePercenatage,
-        maxAllowancePercenatage,
     };
-};
-
-const getUniswapLink = (networkId: Network) => {
-    if (networkId === Network.Arbitrum) return LINKS.UniswapBuyThalesArbitrum;
-    if (networkId === Network.Base) return LINKS.UniswapBuyThalesBase;
-    return LINKS.UniswapBuyThalesOp;
 };
 
 export default LiquidityPool;
