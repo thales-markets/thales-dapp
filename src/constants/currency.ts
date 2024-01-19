@@ -459,10 +459,17 @@ export const COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.USDC as Coins,
         CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
+    [Network.OptimismSepolia]: [
+        SYNTHS_MAP.sUSD as Coins,
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+    ],
     [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.ZkSync]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.ZkSyncSepolia]: [SYNTHS_MAP.sUSD as Coins],
 };
 
 // TODO: merge with COLLATERALS when all pages will support these
@@ -474,6 +481,7 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.ETH as Coins,
     ],
     [Network.OptimismGoerli]: [],
+    [Network.OptimismSepolia]: [],
     [Network.PolygonMainnet]: [],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.WETH as Coins, CRYPTO_CURRENCY_MAP.ETH as Coins],
     [Network.Arbitrum]: [
@@ -485,4 +493,5 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.ETH as Coins,
     ],
     [Network.ZkSync]: [],
+    [Network.ZkSyncSepolia]: [],
 };

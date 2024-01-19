@@ -5,10 +5,12 @@ const liquidityPoolDataContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0x1E95fAcA5F99dCC8e517fEA193a3C3B0AAc1E0a1',
         [Network.OptimismGoerli]: '0x265F42a1F5dBEef66C514764766588a549610499',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xc7909cdc3B54bA28c2bAcc096ac6D7e83d9fd00c',
         [Network.Base]: '0x33bf0378242c7C814942197ea4AE584b52681197',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

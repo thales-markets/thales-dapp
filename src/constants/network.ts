@@ -13,9 +13,11 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.OptimismMainnet]: 'OPTIMISTIC',
     [Network.PolygonMainnet]: 'POLYGON-MAINNET',
     [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
+    [Network.OptimismSepolia]: 'SEPOLIA-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
     [Network.Base]: 'BASE',
     [Network.ZkSync]: 'ZKSYNC',
+    [Network.ZkSyncSepolia]: 'ZKSYNC-SEPOLIA',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
@@ -23,9 +25,11 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
     [Network.PolygonMainnet]: 'POLYGON',
     [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
+    [Network.OptimismSepolia]: 'OPTIMISM SEPOLIA',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
     [Network.ZkSync]: 'ZKSYNC',
+    [Network.ZkSyncSepolia]: 'ZKSYNC SEPOLIA',
 };
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
@@ -136,6 +140,62 @@ export const base = {
             blockCreated: 5022,
         },
     },
+} as Chain;
+export const optimismSepolia = {
+    id: 11155420,
+    network: 'optimism-sepolia',
+    name: 'Optimism Sepolia',
+    nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://sepolia.optimism.io'],
+        },
+        public: {
+            http: ['https://sepolia.optimism.io'],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: 'Blockscout',
+            url: 'https://optimism-sepolia.blockscout.com',
+            apiUrl: 'https://optimism-sepolia.blockscout.com/api',
+        },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 1620204,
+        },
+    },
+    testnet: true,
+} as Chain;
+export const zkSyncSepolia = {
+    id: 300,
+    network: 'zksync-sepolia-testnet',
+    name: 'zkSync Sepolia Testnet',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://sepolia.era.zksync.dev'],
+            webSocket: ['wss://sepolia.era.zksync.dev/ws'],
+        },
+        public: {
+            http: ['https://sepolia.era.zksync.dev'],
+            webSocket: ['wss://sepolia.era.zksync.dev/ws'],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: 'zkExplorer',
+            url: 'https://sepolia.explorer.zksync.io/',
+        },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xF9cda624FBC7e059355ce98a31693d299FACd963',
+        },
+    },
+    testnet: true,
 } as Chain;
 
 export const BRIDGE_SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.Arbitrum, Network.Base];

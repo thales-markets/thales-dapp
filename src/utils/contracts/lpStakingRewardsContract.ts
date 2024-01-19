@@ -5,10 +5,12 @@ const lpStakingRewardsContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0x31a20E5b7b1b067705419D57Ab4F72E81cC1F6Bf',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

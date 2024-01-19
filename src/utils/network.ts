@@ -53,7 +53,7 @@ export const getIsMultiCollateralSupported = (networkId: Network, includeAdditio
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
 
 export const getIsOVM = (networkId: number): boolean =>
-    [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);
+    [Network.OptimismMainnet, Network.OptimismGoerli, Network.OptimismSepolia].includes(networkId);
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {
@@ -189,6 +189,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Base,
                 Network.PolygonMainnet,
                 Network.ZkSync,
+                Network.ZkSyncSepolia,
             ];
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];

@@ -5,10 +5,12 @@ const bridgeContract = {
         [Network.Mainnet]: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
         [Network.OptimismMainnet]: 'TBD',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

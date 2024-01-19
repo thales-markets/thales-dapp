@@ -5,10 +5,12 @@ const speedMarketsAMMContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0xE16B8a01490835EC1e76bAbbB3Cadd8921b32001',
         [Network.OptimismGoerli]: '0x05cD078cECB32d62b304e9028C147bBCdef5Ba24',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: '0x4B1aED25f1877E1E9fBECBd77EeE95BB1679c361',
         [Network.Arbitrum]: '0x02D0123a89Ae6ef27419d5EBb158d1ED4Cf24FA3',
         [Network.Base]: '0x85b827d133FEDC36B844b20f4a198dA583B25BAA',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: '0xe506fB7d7D2983Ab088Eaa13F4F3F4e14cAc527C',
     },
     abi: [
         {

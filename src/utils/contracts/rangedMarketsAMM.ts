@@ -5,10 +5,12 @@ const rangedMarketAMMContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0x2d356b114cbCA8DEFf2d8783EAc2a5A5324fE1dF',
         [Network.OptimismGoerli]: '0x618D7aeab71f1C5E2264982c0C35DCbE62600ad9',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: '0xe8e022405505a9F2b0B7452C844F1e64423849fC',
         [Network.Arbitrum]: '0x5cf3b1882357BB66Cf3cd2c85b81AbBc85553962',
         [Network.Base]: '0xB8109ac56EE572990e6d2C6b4648042bB1C33317',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

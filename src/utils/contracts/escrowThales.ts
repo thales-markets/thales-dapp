@@ -5,10 +5,12 @@ const escrowThales = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0xa25816b9605009aa446d4d597F0AA46FD828f056',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x391a45F31c1837E3d837c23e05F42A098329D50d',
         [Network.Base]: '0x29dfc5fee05578CD913c75fF1C7A0d315595939A',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

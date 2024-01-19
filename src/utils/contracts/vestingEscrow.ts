@@ -5,10 +5,12 @@ const vestingEscrowContract = {
         [Network.Mainnet]: '0x088c6Ad16ba124F1d40fD2A3EDe63ef2E8dAe39f',
         [Network.OptimismMainnet]: 'TBD',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

@@ -5,10 +5,12 @@ const airdrop = {
         [Network.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
         [Network.OptimismMainnet]: 'TBD',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

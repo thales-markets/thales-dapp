@@ -5,10 +5,12 @@ const stakingThales = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
         [Network.OptimismGoerli]: '0x28D25990f7Dec7c606551c28A7A82B9D116dcb67',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x160Ca569999601bca06109D42d561D85D6Bb4b57',
         [Network.Base]: '0x84aB38e42D8Da33b480762cCa543eEcA6135E040',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

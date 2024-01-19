@@ -1,5 +1,7 @@
 import Modal from 'components/Modal';
+import Swap from 'components/Swap';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
@@ -17,19 +19,17 @@ import {
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
+import { Coins, formatCurrencyWithKey } from 'thales-utils';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import {
     getAssetIcon,
+    getCoinBalance,
     getCollateral,
     getCollateralIndexForNetwork,
     getDefaultCollateral,
     getDefaultStableIndexByBalance,
-    getCoinBalance,
 } from 'utils/currency';
-import { Coins, formatCurrencyWithKey } from 'thales-utils';
 import { getIsMultiCollateralSupported } from 'utils/network';
-import Swap from 'components/Swap';
-import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 type SwapCollateral = {
     type: Coins;

@@ -5,10 +5,12 @@ const celerBridgeContract = {
         [Network.Mainnet]: '0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820',
         [Network.OptimismMainnet]: '0x9D39Fc627A6d9d9F8C831c16995b209548cc3401',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: '0x88DCDC47D2f83a99CF0000FDF667A468bB958a78',
         [Network.Arbitrum]: '0x1619DE6B6B20eD217a58d00f37B9d47C7663feca',
         [Network.Base]: '0x7d43aabc515c356145049227cee54b608342c0ad',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

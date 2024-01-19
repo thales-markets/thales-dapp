@@ -5,10 +5,12 @@ const speedMarketsDataContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0x467e14ac025499d60c417D7F00A7D9E83293F43c',
         [Network.OptimismGoerli]: '0x39d1a205F72eC54aca01013c682A1A5C1625f4f6',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: '0xA30200A8eD9655d7096814D0cC1f76639aa42AED',
         [Network.Arbitrum]: '0xbbE161Bf57799104eFd6524133e305BBcB7C07EA',
         [Network.Base]: '0xD6155E7C948458D6Ab58f9D63E1566493b9304C1',
         [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: '0x69bfa99D3763b95bF16CDC4Bbb6BE145f2c07bDf',
     },
     abi: [
         {

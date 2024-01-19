@@ -27,7 +27,10 @@ const Notifications: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const notificationsQuery = useUserNotificationsQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && ![Network.Mainnet, Network.ZkSync].includes(networkId),
+        enabled:
+            isAppReady &&
+            isWalletConnected &&
+            ![Network.Mainnet, Network.ZkSync, Network.ZkSyncSepolia].includes(networkId),
     });
 
     const notifications = useMemo(() => {
@@ -48,7 +51,10 @@ const Notifications: React.FC = () => {
     }, [userActiveSpeedMarketsDataQuery]);
 
     const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && ![Network.Mainnet, Network.ZkSync].includes(networkId),
+        enabled:
+            isAppReady &&
+            isWalletConnected &&
+            ![Network.Mainnet, Network.ZkSync, Network.ZkSyncSepolia].includes(networkId),
     });
     const userActiveChainedSpeedMarketsData = useMemo(
         () =>
