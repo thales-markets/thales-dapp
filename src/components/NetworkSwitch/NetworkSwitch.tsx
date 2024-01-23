@@ -1,34 +1,30 @@
-import React, { useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
-import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { DEFAULT_NETWORK } from 'constants/network';
-import OutsideClickHandler from 'react-outside-click-handler';
-import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { getIsMobile } from 'redux/modules/ui';
 import { Network } from 'enums/network';
+import React, { useMemo, useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { useSwitchNetwork } from 'wagmi';
 
 type NetworkSwitchProps = {
     selectedNetworkId?: number;
     setSelectedNetworkId?: any;
     supportedNetworks?: number[];
-    forceNetworkSwitch?: boolean;
 };
 
 const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
     selectedNetworkId,
     setSelectedNetworkId,
     supportedNetworks,
-    forceNetworkSwitch,
 }) => {
     const { switchNetwork } = useSwitchNetwork();
     const dispatch = useDispatch();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const filteredSupportedNetworks: Record<number, any> = useMemo(
         () =>
@@ -54,15 +50,6 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const isLedgerLive = isLedgerDappBrowserProvider();
 
-    // currently not supported network synchronization between browser without integrated wallet and wallet app on mobile
-    const hideNetworkSwitcher =
-        isMobile &&
-        !window.ethereum?.isMetaMask &&
-        !window.ethereum?.isBraveWallet &&
-        !window.ethereum?.isCoinbaseWallet &&
-        !window.ethereum?.isTrust &&
-        !forceNetworkSwitch;
-
     return (
         <NetworkInfoContainer>
             <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
@@ -76,11 +63,9 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
                             style: { marginRight: 5 },
                         })}
                         {selectedNetwork.name}
-                        {!hideNetworkSwitcher && (
-                            <Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />
-                        )}
+                        {<Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                     </NetworkItem>
-                    {!hideNetworkSwitcher && isDropdownOpen && (
+                    {isDropdownOpen && (
                         <NetworkDropDown>
                             {Object.keys(filteredSupportedNetworks)
                                 .map((key) => {
