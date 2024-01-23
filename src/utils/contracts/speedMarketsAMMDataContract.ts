@@ -9,7 +9,7 @@ const speedMarketsDataContract = {
         [Network.PolygonMainnet]: '0xA30200A8eD9655d7096814D0cC1f76639aa42AED',
         [Network.Arbitrum]: '0xbbE161Bf57799104eFd6524133e305BBcB7C07EA',
         [Network.Base]: '0xD6155E7C948458D6Ab58f9D63E1566493b9304C1',
-        [Network.ZkSync]: 'TBD',
+        [Network.ZkSync]: '0x6356454D76642c72edb9170EF1102418D656887d',
         [Network.ZkSyncSepolia]: '0x69bfa99D3763b95bF16CDC4Bbb6BE145f2c07bDf',
     },
     abi: [
