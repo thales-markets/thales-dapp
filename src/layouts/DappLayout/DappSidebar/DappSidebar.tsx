@@ -31,7 +31,7 @@ const DappSidebar: React.FC = () => {
 
     const showTokenPage = getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId);
     const showGovernancePage = getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId);
-    const showTokenDivider = showGamePage || showProfilePage;
+    const showTokenDivider = showGamePage || showGovernancePage;
 
     return (
         <OutsideClickHandler

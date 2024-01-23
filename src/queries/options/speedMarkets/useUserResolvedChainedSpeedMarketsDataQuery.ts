@@ -15,7 +15,7 @@ import { bigNumberFormatter, coinFormatter, roundNumberToDecimals } from 'thales
 import { ChainedSpeedMarket, OptionSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 
-const useUserActiveChainedSpeedMarketsDataQuery = (
+const useUserResolvedChainedSpeedMarketsDataQuery = (
     networkId: Network,
     walletAddress: string,
     options?: UseQueryOptions<ChainedSpeedMarket[]>
@@ -217,4 +217,4 @@ const useUserActiveChainedSpeedMarketsDataQuery = (
     );
 };
 
-export default useUserActiveChainedSpeedMarketsDataQuery;
+export default useUserResolvedChainedSpeedMarketsDataQuery;
