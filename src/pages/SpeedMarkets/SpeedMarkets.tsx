@@ -371,9 +371,9 @@ const SpeedMarkets: React.FC = () => {
                         setSkewImpact={setSkew}
                         resetData={resetData}
                     />
-                    <BannerWrapper>
+                    {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
                         <PageLinkBanner rout={ROUTES.Options.Home} />
-                    </BannerWrapper>
+                    )}
                     {isWalletConnected && (
                         <>
                             <OpenPositions
@@ -535,13 +535,6 @@ const Separator = styled.div`
     width: 2px;
     height: 23px;
     border-radius: 6px;
-`;
-
-const BannerWrapper = styled.div`
-    margin-top: 46px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-top: 20px;
-    }
 `;
 
 export default SpeedMarkets;

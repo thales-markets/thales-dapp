@@ -862,9 +862,11 @@ const Container = styled(FlexDivRow)`
     position: relative;
     z-index: 4;
     height: 78px;
+    margin-bottom: 46px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
+        margin-bottom: 20px;
         flex-direction: column;
     }
 `;

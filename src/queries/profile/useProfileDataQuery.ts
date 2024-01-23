@@ -26,6 +26,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 chainedAmmParams = [];
 
             const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
+
             if (isZkSync) {
                 speedAmmParams = await speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress);
             } else {
@@ -66,34 +67,54 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 }
             });
 
-            if (speedMarketsAMMContract && speedMarketsDataContract && chainedSpeedMarketsAMMContract) {
-                const [
-                    activeSpeedMarkets,
-                    maturedSpeedMarkets,
-                    activeChainedSpeedMarkets,
-                    maturedChainedSpeedMarkets,
-                ] = await Promise.all([
-                    speedMarketsAMMContract.activeMarketsPerUser(
-                        0,
-                        speedAmmParams.numActiveMarketsPerUser,
-                        walletAddress
-                    ),
-                    speedMarketsAMMContract.maturedMarketsPerUser(
-                        0,
-                        speedAmmParams.numMaturedMarketsPerUser,
-                        walletAddress
-                    ),
-                    chainedSpeedMarketsAMMContract.activeMarketsPerUser(
-                        0,
-                        chainedAmmParams.numActiveMarketsPerUser,
-                        walletAddress
-                    ),
-                    chainedSpeedMarketsAMMContract.maturedMarketsPerUser(
-                        0,
-                        chainedAmmParams.numMaturedMarketsPerUser,
-                        walletAddress
-                    ),
-                ]);
+            if (speedMarketsAMMContract && speedMarketsDataContract) {
+                let activeSpeedMarkets = [],
+                    maturedSpeedMarkets = [],
+                    activeChainedSpeedMarkets = [],
+                    maturedChainedSpeedMarkets = [];
+
+                if (isZkSync) {
+                    [activeSpeedMarkets, maturedSpeedMarkets] = await Promise.all([
+                        speedMarketsAMMContract.activeMarketsPerUser(
+                            0,
+                            speedAmmParams.numActiveMarketsPerUser,
+                            walletAddress
+                        ),
+                        speedMarketsAMMContract.maturedMarketsPerUser(
+                            0,
+                            speedAmmParams.numMaturedMarketsPerUser,
+                            walletAddress
+                        ),
+                    ]);
+                } else if (chainedSpeedMarketsAMMContract) {
+                    [
+                        activeSpeedMarkets,
+                        maturedSpeedMarkets,
+                        activeChainedSpeedMarkets,
+                        maturedChainedSpeedMarkets,
+                    ] = await Promise.all([
+                        speedMarketsAMMContract.activeMarketsPerUser(
+                            0,
+                            speedAmmParams.numActiveMarketsPerUser,
+                            walletAddress
+                        ),
+                        speedMarketsAMMContract.maturedMarketsPerUser(
+                            0,
+                            speedAmmParams.numMaturedMarketsPerUser,
+                            walletAddress
+                        ),
+                        chainedSpeedMarketsAMMContract.activeMarketsPerUser(
+                            0,
+                            chainedAmmParams.numActiveMarketsPerUser,
+                            walletAddress
+                        ),
+                        chainedSpeedMarketsAMMContract.maturedMarketsPerUser(
+                            0,
+                            chainedAmmParams.numMaturedMarketsPerUser,
+                            walletAddress
+                        ),
+                    ]);
+                }
 
                 const promises = [];
                 if (activeSpeedMarkets.length) {
@@ -187,8 +208,10 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 const numSpeedMarkets =
                     Number(speedAmmParams.numActiveMarketsPerUser) +
                     Number(speedAmmParams.numMaturedMarketsPerUser) +
-                    Number(chainedAmmParams.numActiveMarketsPerUser) +
-                    Number(chainedAmmParams.numMaturedMarketsPerUser);
+                    (isZkSync
+                        ? 0
+                        : Number(chainedAmmParams.numActiveMarketsPerUser) +
+                          Number(chainedAmmParams.numMaturedMarketsPerUser));
                 numberOfTrades += numSpeedMarkets;
             }
 
