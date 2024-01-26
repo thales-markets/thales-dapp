@@ -1,3 +1,4 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import axios from 'axios';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
@@ -13,7 +14,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
@@ -33,9 +34,11 @@ enum Pages {
 
 const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const [referralPage, setReferralPage] = useState(Pages.Markets);
     const [referrerID, setReferrerID] = useState('');
@@ -102,11 +105,6 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
     }, [referrerIDQuery.isSuccess, referrerIDQuery.data, referralPage]);
 
     const generateLinkHandler = useCallback(async () => {
-        if (!walletAddress) {
-            alert('Connect your wallet first.');
-            return;
-        }
-
         const signature = await (snxJSConnector as any).signer.signMessage(referrerID);
         const response = await axios.post(`${generalConfig.API_URL}/update-refferer-id`, {
             walletAddress,
@@ -184,10 +182,10 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
                 <RowWrapper marginBottom="20px">
                     <Button
                         width="100%"
-                        disabled={!referrerID || savedReferrerID === referrerID}
-                        onClick={generateLinkHandler}
+                        disabled={isWalletConnected && (!referrerID || savedReferrerID === referrerID)}
+                        onClick={isWalletConnected ? generateLinkHandler : openConnectModal}
                     >
-                        {t('referral-page.generate.link-btn')}
+                        {walletAddress ? t('referral-page.generate.link-btn') : t('common.wallet.connect-your-wallet')}
                     </Button>
                 </RowWrapper>
                 <RowWrapper>
