@@ -40,7 +40,7 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const [referralPage, setReferralPage] = useState(Pages.Markets);
+    const [referralPage, setReferralPage] = useState<number>(Pages.Markets);
     const [referrerID, setReferrerID] = useState('');
     const [savedReferrerID, setSavedReferrerID] = useState('');
     const [referralLink, setReferralLink] = useState('');

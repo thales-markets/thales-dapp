@@ -6,15 +6,16 @@ import Select, {
     MenuProps,
     OptionProps,
     OptionTypeBase,
+    ValueType,
     components,
 } from 'react-select';
 import styled, { CSSObject, useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
-type SelectOptions = Array<{ value: number | string; label: string }>;
+type SelectOption = { value: number | string; label: string };
 
 type SelectInputProps = {
-    options: SelectOptions;
+    options: Array<SelectOption>;
     handleChange: (value: number | undefined | null) => void;
     defaultValue?: number;
     width?: number | string;
@@ -55,8 +56,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         option: (base: CSSObject, props: OptionProps<OptionTypeBase, boolean, GroupTypeBase<OptionTypeBase>>) => ({
             ...base,
             color: theme.textColor.primary,
-            backgroundColor: props?.isFocused || props.isSelected ? theme.background.primary : 'transparent',
-            opacity: props.isSelected && !props?.isFocused ? 0.7 : 1,
+            backgroundColor: props?.isFocused ? theme.background.primary : 'transparent',
             cursor: 'pointer',
             borderRadius: 8,
         }),
@@ -105,9 +105,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
             value={defaultOption}
             options={options}
             styles={customStyled}
-            onChange={(value) => {
-                handleChange(Number(value));
-            }}
+            onChange={(props: ValueType<OptionTypeBase, boolean>) =>
+                handleChange(Number((props as SelectOption).value))
+            }
             defaultValue={defaultOption}
             isSearchable={false}
             isDisabled={isDisabled}
