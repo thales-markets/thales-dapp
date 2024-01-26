@@ -1,17 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
+import Button from 'components/Button';
 import ROUTES from 'constants/routes';
-import UserWallet from '../components/UserWallet';
-import Notifications from '../components/Notifications';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import Logo from '../components/Logo';
-import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/rootReducer';
+import styled from 'styled-components';
 import { getIsMobile } from '../../../redux/modules/ui';
+import { RootState } from '../../../redux/rootReducer';
+import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
+import Logo from '../components/Logo';
+import Notifications from '../components/Notifications';
+import UserWallet from '../components/UserWallet';
+import { useTranslation } from 'react-i18next';
+import ReferralModal from '../components/ReferralModal';
 
 const DappHeader: React.FC = () => {
+    const { t } = useTranslation();
+
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
+    const [openReferralModal, setOpenReferralModal] = useState(false);
 
     return (
         <Container maxWidth={getMaxWidth()}>
@@ -19,6 +26,16 @@ const DappHeader: React.FC = () => {
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
+                    <Button
+                        width="117px"
+                        height="21px"
+                        padding="0 15px"
+                        margin="0 0 0 15px"
+                        fontSize="13px"
+                        onClick={() => setOpenReferralModal(true)}
+                    >
+                        {t('common.header.refer-earn')}
+                    </Button>
                 </FlexDivRow>
                 {isMobile && <Notifications />}
             </LeftContainer>
@@ -26,6 +43,7 @@ const DappHeader: React.FC = () => {
                 <UserWallet />
                 {!isMobile && <Notifications />}
             </RightContainer>
+            {openReferralModal && <ReferralModal onClose={() => setOpenReferralModal(false)} />}
         </Container>
     );
 };

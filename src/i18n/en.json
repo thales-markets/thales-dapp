@@ -121,6 +121,7 @@
             "approve-swap": "Approve swap to {{currencyKey}}"
         },
         "header": {
+            "refer-earn": "Refer & earn",
             "notification": { "tooltip": "You have {{count}} claimable position(s)" }
         },
         "footer": {
@@ -173,6 +174,11 @@
             "from": "From",
             "to": "To",
             "stablecoin": "stablecoin"
+        },
+        "referral": {
+            "title": "Refer and earn",
+            "choose-page": "Choose page you want to refer",
+            "referral-id": "Create your referral ID"
         },
         "status": {
             "success": "Success",
