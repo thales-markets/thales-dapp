@@ -34,7 +34,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
-export const TEST_NETWORKS = [Network.OptimismGoerli];
+export const TEST_NETWORKS = [Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia];
 
 export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
