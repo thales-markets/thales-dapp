@@ -108,7 +108,7 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         const signature = await (snxJSConnector as any).signer.signMessage(referrerID);
         const response = await axios.post(`${generalConfig.API_URL}/update-refferer-id`, {
             walletAddress,
-            referrerID,
+            reffererID: referrerID,
             signature,
             previousReffererID: savedReferrerID,
         });
