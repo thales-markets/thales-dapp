@@ -362,13 +362,15 @@ const App = () => {
                             )}
                         ></Route>
 
-                        <Route exact path={ROUTES.Options.Wizard}>
-                            <Suspense fallback={<Loader />}>
-                                <DappLayout>
-                                    <Wizard />
-                                </DappLayout>
-                            </Suspense>
-                        </Route>
+                        {getSupportedNetworksByRoute(ROUTES.Options.Wizard).includes(networkId) && (
+                            <Route exact path={ROUTES.Options.Wizard}>
+                                <Suspense fallback={<Loader />}>
+                                    <DappLayout>
+                                        <Wizard />
+                                    </DappLayout>
+                                </Suspense>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Home}>
                             <Suspense fallback={<Loader />}>

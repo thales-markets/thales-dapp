@@ -11,13 +11,13 @@ import ROUTES from 'constants/routes';
 import { Network } from 'enums/network';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
+import { BoldText, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
 import { buildReferrerLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -150,6 +150,9 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
             customStyle={{ overlay: { zIndex: 2000 } }}
         >
             <Container>
+                <Info>
+                    <Trans i18nKey={'common.referral.info'} components={{ bold: <BoldText /> }} />
+                </Info>
                 <Step>
                     <FlexDivRowCentered>
                         <StepNumber>1</StepNumber>
@@ -200,8 +203,15 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
 const Container = styled(FlexDivColumnCentered)`
     width: 340px;
     @media (max-width: 575px) {
-        width: auto;
+        width: 325px;
     }
+`;
+
+const Info = styled.p`
+    font-size: 13px;
+    line-height: 110%;
+    color: ${(props) => props.theme.textColor.primary};
+    text-align: justify;
 `;
 
 const Step = styled(FlexDivStart)`

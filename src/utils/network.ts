@@ -182,7 +182,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.SpeedMarkets:
         case ROUTES.Options.SpeedMarketsOverview:
         case ROUTES.Options.Profile:
-        case ROUTES.Options.Wizard:
             return [
                 Network.OptimismMainnet,
                 Network.OptimismGoerli,
@@ -198,6 +197,17 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
         case ROUTES.Options.Token:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
+        case ROUTES.Options.Wizard:
+            return [
+                Network.OptimismMainnet,
+                Network.OptimismGoerli,
+                Network.Arbitrum,
+                Network.Base,
+                Network.PolygonMainnet,
+                Network.ZkSync,
+                Network.ZkSyncSepolia,
+                Network.Mainnet,
+            ];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }
