@@ -12,7 +12,6 @@ import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
-import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
 import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
@@ -30,15 +29,16 @@ import styled, { useTheme } from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
 import { roundNumberToDecimals } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { buildHref, history } from 'utils/routes';
 import AmmSpeedTrading from './components/AmmSpeedTrading';
 import ClosedPositions from './components/ClosedPositions';
+import SelectAsset from './components/SelectAsset';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
-import { getSupportedNetworksByRoute } from 'utils/network';
 
 const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
@@ -217,13 +217,7 @@ const SpeedMarkets: React.FC = () => {
                     )}
                 </Step>
                 {isAssetStep && (
-                    <AssetDropdown
-                        asset={currencyKey}
-                        setAsset={setCurrencyKey}
-                        allAssets={SUPPORTED_ASSETS}
-                        showAssetIcon={true}
-                        type="center"
-                    />
+                    <SelectAsset selectedAsset={currencyKey} allAssets={SUPPORTED_ASSETS} onChange={setCurrencyKey} />
                 )}
                 {isDirectionsStep && (
                     <SelectPosition
