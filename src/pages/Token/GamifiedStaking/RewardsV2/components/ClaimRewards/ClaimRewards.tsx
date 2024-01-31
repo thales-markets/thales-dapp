@@ -215,8 +215,15 @@ const ClaimRewards: React.FC = () => {
                     <ColumnDiv>
                         <Label>{t('thales-token.gamified-staking.rewards.claim.your-rewards')}</Label>
                         <Value>
-                            {formatCurrencyWithKey(THALES_CURRENCY, userStakingData ? userStakingData.rewards : 0, 2)} +{' '}
-                            {formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
+                            {stakingData?.isPaused || isClaimed
+                                ? '---/---'
+                                : formatCurrencyWithKey(
+                                      THALES_CURRENCY,
+                                      userStakingData ? userStakingData.rewards : 0,
+                                      2
+                                  ) +
+                                  ' + ' +
+                                  formatCurrencyWithKey(USD_SIGN, userStakingData ? userStakingData.feeRewards : 0)}
                         </Value>
                     </ColumnDiv>
                     {canClosePeriod ? (
