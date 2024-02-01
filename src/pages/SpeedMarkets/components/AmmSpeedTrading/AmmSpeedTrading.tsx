@@ -128,11 +128,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const isPositionSelected = isChained
         ? chainedPositions.every((pos) => pos !== undefined)
         : positionType !== undefined;
+    const isPaidAmountEntered = Number(paidAmount) > 0;
 
     const isButtonDisabled =
         !isPositionSelected ||
         !(strikeTimeSec || deltaTimeSec) ||
-        !paidAmount ||
+        isPaidAmountEntered ||
         isSubmitting ||
         !hasAllowance ||
         !!errorMessageKey ||
@@ -599,7 +600,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!(strikeTimeSec || deltaTimeSec)) {
             return <Button disabled={true}>{t('markets.amm-trading.choose-time')}</Button>;
         }
-        if (!paidAmount) {
+        if (!isPaidAmountEntered) {
             return <Button disabled={true}>{t('common.enter-amount')}</Button>;
         }
         if (outOfLiquidityPerDirection) {
