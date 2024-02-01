@@ -50,7 +50,8 @@ export const Colors = {
     GRAY: '#2B3139',
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
-    GRAY_PURPLE: '#303656',
+    GRAY_PURPLE: 'rgba(48, 54, 86, 1)',
+    GRAY_PURPLE_BLURED: 'rgba(48, 54, 86, 0.4)',
     GRAY_BLUE: '#808997',
 
     WHITE: '#FFFFFF',
