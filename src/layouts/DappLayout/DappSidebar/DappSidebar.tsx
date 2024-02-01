@@ -92,7 +92,7 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {!isMobile && (
+                    {!isMobile && getSupportedNetworksByRoute(ROUTES.Options.Wizard).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
                             href={buildHref(ROUTES.Options.Wizard)}

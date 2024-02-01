@@ -204,8 +204,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 Network.Base,
                 Network.PolygonMainnet,
-                Network.ZkSync,
-                Network.ZkSyncSepolia,
                 Network.Mainnet,
             ];
         default:
@@ -221,3 +219,6 @@ export const getIsLpStakingSupported = (networkId: Network): boolean =>
 
 export const getIsBridgeSupported = (networkId: Network): boolean =>
     [Network.OptimismMainnet, Network.Arbitrum, Network.Base].includes(networkId);
+
+export const isOnlySpeedMarketsSupported = (networkId: Network): boolean =>
+    [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
