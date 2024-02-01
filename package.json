@@ -26,6 +26,7 @@
         "html-to-image": "^1.11.11",
         "i18next": "^19.9.1",
         "i18next-browser-languagedetector": "^6.0.1",
+        "lightweight-charts": "^4.1.2",
         "lodash": "^4.17.21",
         "lottie-react": "^2.3.1",
         "numbro": "^2.3.2",

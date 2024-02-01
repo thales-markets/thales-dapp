@@ -24,9 +24,9 @@ import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import DatesDropdown from './components/MaturityDateDropdown';
 import OpenPositions from './components/OpenPositions';
-import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
+import LightweightChart from './components/PriceChart/LightweightChart';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -137,12 +137,12 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                     ></DatesDropdown>
                                 </PositionedWrapper>
                             </DropdownsWrapper>
-                            <PriceChart
+                            <LightweightChart
                                 position={positionType}
                                 asset={currencyKey}
                                 selectedPrice={getSelectedPrice()}
                                 selectedRightPrice={getSelectedRightPrice()}
-                            ></PriceChart>
+                            ></LightweightChart>
                         </LeftSide>
                         <RightSide>
                             <PositionedWrapper>
