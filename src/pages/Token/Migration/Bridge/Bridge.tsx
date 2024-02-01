@@ -196,7 +196,7 @@ const Bridge: React.FC = () => {
                     disabled={isSubmitting}
                     currencyLabel={THALES_CURRENCY}
                     placeholder={t('common.enter-amount')}
-                    label={`${t('migration.from-label')}: ${network.networkName}`}
+                    label={`${t('migration.from-label')} ${network.networkName}`}
                     onMaxButton={onMaxClick}
                     showValidation={!isAmountValid}
                     validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
@@ -217,7 +217,7 @@ const Bridge: React.FC = () => {
                     onChange={() => {}}
                     disabled={true}
                     currencyLabel={THALES_CURRENCY}
-                    label={`${t('migration.to-label')}: ${
+                    label={`${t('migration.to-label')} ${
                         SUPPORTED_NETWORKS_NAMES[L1_TO_L2_NETWORK_MAPPER[networkId] as Network]
                     }`}
                 />

@@ -1,3 +1,4 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import axios from 'axios';
 import Button from 'components/Button';
@@ -25,7 +26,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatTxTimestamp, getEtherscanAddressLink, truncateAddress } from 'thales-utils';
@@ -77,9 +78,12 @@ const tabs = [
 const Referral: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+    const { openConnectModal } = useConnectModal();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const showOPBanner = getIsOVM(networkId);
 
@@ -201,11 +205,6 @@ const Referral: React.FC = () => {
     };
 
     const generateLinkHandler = useCallback(async () => {
-        if (!walletAddress) {
-            alert('Connect your wallet first.');
-            return;
-        }
-
         const signature = await (snxJSConnector as any).signer.signMessage(reffererID);
         const response = await axios.post(`${generalConfig.API_URL}/update-refferer-id`, {
             walletAddress,
@@ -276,13 +275,13 @@ const Referral: React.FC = () => {
                         />
                     </RowContrainer>
                     <Button
-                        disabled={!reffererID || savedReffererID === reffererID}
+                        disabled={isWalletConnected && (!reffererID || savedReffererID === reffererID)}
                         margin={'0px 0px 10px 0px'}
                         fontSize="15px"
                         height="30px"
-                        onClick={generateLinkHandler}
+                        onClick={isWalletConnected ? generateLinkHandler : openConnectModal}
                     >
-                        {t('referral-page.generate.link-btn')}
+                        {walletAddress ? t('referral-page.generate.link-btn') : t('common.wallet.connect-your-wallet')}
                     </Button>
                     <TextInput
                         value={referralLink}

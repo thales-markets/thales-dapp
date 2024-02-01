@@ -5,9 +5,12 @@ const binaryOptionsMarketDataContract = {
         [Network.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
         [Network.OptimismMainnet]: '0x21382a033E581a2D685826449d6c9b3d6507e23C',
         [Network.OptimismGoerli]: '0x21C7684d27113E06e8B4Fe0114b0c74DEDFCC328',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: '0x3198ab211cdf3e4d13a698e1fb819507bca2e579',
         [Network.Arbitrum]: '0x036adEA6bc1fD0247c2796f8D201B28C0dC2a67d',
         [Network.Base]: '0x22Eb15Fb53B61B470cabbe9fC268a1b67E675ff9',
+        [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

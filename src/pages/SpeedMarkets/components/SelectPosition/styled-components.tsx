@@ -12,13 +12,14 @@ export const Roi = styled.span`
     font-weight: 600;
     line-height: 20px;
 `;
-export const ClearAll = styled(FlexDivCentered)`
+export const ClearAll = styled(FlexDivCentered)<{ isDisabled?: boolean }>`
     color: ${(props) => props.theme.textColor.tertiary};
     font-size: 13px;
     font-weight: 500;
     line-height: 13px;
     text-transform: capitalize;
-    cursor: pointer;
+    cursor: ${(props) => (props.isDisabled ? 'default' : 'pointer')};
+    opacity: ${(props) => (props.isDisabled ? '0.5' : '1')};
 `;
 
 export const IconWrong = styled(FlexDivCentered)`

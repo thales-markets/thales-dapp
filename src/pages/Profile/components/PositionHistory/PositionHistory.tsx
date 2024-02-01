@@ -25,6 +25,7 @@ import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { IconLink, getAmount, getStatus } from '../styled-components';
+import { Network } from 'enums/network';
 
 type PositionHistoryProps = {
     searchAddress: string;
@@ -40,8 +41,10 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
+
     const closedPositionsQuery = useClosedPositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isZkSync,
     });
 
     const closedPositions: UserPosition[] = useMemo(
@@ -69,7 +72,7 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected,
+            enabled: isAppReady && isWalletConnected && !isZkSync,
         }
     );
 

@@ -33,6 +33,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { LINKS } from 'constants/links';
+import SimpleLoader from 'components/SimpleLoader';
 
 type PriceChartProps = {
     asset: string;
@@ -111,6 +112,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     ); // default date range
     const [ticks, setTicks] = useState<number[]>();
     const [iv, setIV] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady && !explicitCurrentPrice,
@@ -137,6 +139,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             let result;
             try {
                 result = await coinGeckoClientPublic.coinIdMarketChart({
@@ -169,6 +172,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
             } else {
                 console.log('COINGECKO API failed');
             }
+            setIsLoading(false);
         };
 
         fetchData();
@@ -348,93 +352,97 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     </PriceChange>
                 )}
             </FlexDivSpaceBetween>
-            {!isMobile && data && (
+            {!isMobile && (
                 <ResponsiveContainer width="100%" height={isSpeedMarkets ? 326 : 266}>
-                    <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
-                        {getReferenceArea(ticks)}
-                        <defs xHeight={1}>
-                            <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1" xHeight={1}>
-                                <stop
-                                    offset="0%"
-                                    stopColor={`${theme.textColor.quaternary}`}
-                                    stopOpacity={position === Positions.UP ? 0 : 0.8}
-                                />
-                                <stop
-                                    offset="90.62%"
-                                    stopColor={`${theme.textColor.quaternary}`}
-                                    stopOpacity={position === Positions.UP ? 0.8 : 0}
-                                />
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid stroke={theme.borderColor.primary} strokeDasharray="1" />
-                        <XAxis
-                            tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
-                            tickLine={false}
-                            axisLine={false}
-                            dataKey="date"
-                            domain={['auto', 'auto']}
-                            padding={{ right: 75 }}
-                        />
-                        <YAxis
-                            domain={['auto', 'auto']}
-                            ticks={ticks}
-                            tick={{
-                                fontSize: '10px',
-                                fill: theme.textColor.secondary,
-                                width: 100,
-                            }}
-                            width={70}
-                            tickCount={10}
-                            tickLine={false}
-                            axisLine={false}
-                            orientation="right"
-                            tickFormatter={(value) => formatYAxisTick(value)}
-                        />
-                        <Tooltip
-                            formatter={(value) => formatCurrencyWithPrecision(Number(value))}
-                            contentStyle={{
-                                backgroundColor: theme.background.secondary,
-                                color: theme.textColor.primary,
-                                border: 'none',
-                                borderRadius: '8px',
-                                fontSize: 14,
-                            }}
-                        />
-                        <Area
-                            type="monotone"
-                            dataKey="price"
-                            stroke={theme.borderColor.tertiary}
-                            strokeWidth={2}
-                            fill="transparent"
-                            animationEasing="ease-in"
-                            animationDuration={150}
-                            xHeight={2}
-                        />
-
-                        <ReferenceLine
-                            y={data[data?.length - 1].price}
-                            stroke={theme.borderColor.tertiary}
-                            strokeDasharray="3 3"
-                            xHeight={2}
-                            label={<CustomLabel price={data[data?.length - 1].price} />}
-                        />
-
-                        {selectedPrice && (
-                            <ReferenceLine
-                                y={selectedPrice}
-                                stroke={theme.borderColor.quaternary}
-                                label={<CustomLabel2 price={selectedPrice} />}
+                    {isLoading || !data ? (
+                        <SimpleLoader />
+                    ) : (
+                        <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
+                            {getReferenceArea(ticks)}
+                            <defs xHeight={1}>
+                                <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1" xHeight={1}>
+                                    <stop
+                                        offset="0%"
+                                        stopColor={`${theme.textColor.quaternary}`}
+                                        stopOpacity={position === Positions.UP ? 0 : 0.8}
+                                    />
+                                    <stop
+                                        offset="90.62%"
+                                        stopColor={`${theme.textColor.quaternary}`}
+                                        stopOpacity={position === Positions.UP ? 0.8 : 0}
+                                    />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid stroke={theme.borderColor.primary} strokeDasharray="1" />
+                            <XAxis
+                                tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
+                                tickLine={false}
+                                axisLine={false}
+                                dataKey="date"
+                                domain={['auto', 'auto']}
+                                padding={{ right: 75 }}
                             />
-                        )}
-
-                        {selectedRightPrice && (
-                            <ReferenceLine
-                                y={selectedRightPrice}
-                                stroke={theme.borderColor.quaternary}
-                                label={<CustomLabel2 price={selectedRightPrice} />}
+                            <YAxis
+                                domain={['auto', 'auto']}
+                                ticks={ticks}
+                                tick={{
+                                    fontSize: '10px',
+                                    fill: theme.textColor.secondary,
+                                    width: 100,
+                                }}
+                                width={70}
+                                tickCount={10}
+                                tickLine={false}
+                                axisLine={false}
+                                orientation="right"
+                                tickFormatter={(value) => formatYAxisTick(value)}
                             />
-                        )}
-                    </AreaChart>
+                            <Tooltip
+                                formatter={(value) => formatCurrencyWithPrecision(Number(value))}
+                                contentStyle={{
+                                    backgroundColor: theme.background.secondary,
+                                    color: theme.textColor.primary,
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: 14,
+                                }}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="price"
+                                stroke={theme.borderColor.tertiary}
+                                strokeWidth={2}
+                                fill="transparent"
+                                animationEasing="ease-in"
+                                animationDuration={150}
+                                xHeight={2}
+                            />
+
+                            <ReferenceLine
+                                y={data[data?.length - 1].price}
+                                stroke={theme.borderColor.tertiary}
+                                strokeDasharray="3 3"
+                                xHeight={2}
+                                label={<CustomLabel price={data[data?.length - 1].price} />}
+                            />
+
+                            {selectedPrice && (
+                                <ReferenceLine
+                                    y={selectedPrice}
+                                    stroke={theme.borderColor.quaternary}
+                                    label={<CustomLabel2 price={selectedPrice} />}
+                                />
+                            )}
+
+                            {selectedRightPrice && (
+                                <ReferenceLine
+                                    y={selectedRightPrice}
+                                    stroke={theme.borderColor.quaternary}
+                                    label={<CustomLabel2 price={selectedRightPrice} />}
+                                />
+                            )}
+                        </AreaChart>
+                    )}
                 </ResponsiveContainer>
             )}
             <Toggle
@@ -444,7 +452,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 }
                 onChange={handleDateRangeChange}
             />
-            {isSpeedMarkets && (
+            {isSpeedMarkets && !isLoading && (
                 <PythIconWrap>
                     <a target="_blank" rel="noreferrer" href={LINKS.Pyth}>
                         <i className="icon icon--pyth" />

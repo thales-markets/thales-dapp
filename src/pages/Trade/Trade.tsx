@@ -1,6 +1,5 @@
 import PageLinkBanner from 'components/PageLinkBanner';
 import Tooltip from 'components/Tooltip/Tooltip';
-import UnsupportedNetwork from 'components/UnsupportedNetwork';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
 import { Positions } from 'enums/options';
@@ -18,7 +17,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { getSupportedNetworksByRoute } from 'utils/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -44,17 +42,15 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const [positionType, setPositionType] = useState(isRangedMarkets ? Positions.IN : Positions.UP);
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
-    const supportedNetworks = getSupportedNetworksByRoute(props.location?.pathname);
-
     // queries
     const assetsQuery = useAvailableAssetsQuery(networkId, {
-        enabled: isAppReady && supportedNetworks.includes(networkId),
+        enabled: isAppReady,
     });
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
-        enabled: isAppReady && supportedNetworks.includes(networkId),
+        enabled: isAppReady,
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
-        enabled: !!maturityDate && supportedNetworks.includes(networkId),
+        enabled: !!maturityDate,
     });
 
     // hooks
@@ -107,101 +103,82 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     };
 
     return (
-        <>
-            {supportedNetworks.includes(networkId) ? (
-                <Wrapper>
-                    <BannerCarousel />
-                    <ContentWrapper>
-                        <LeftSide>
-                            <DropdownsWrapper>
-                                <PositionedWrapper>
-                                    <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
-                                        <Info>{t('markets.steps.choose-asset')}</Info>
-                                    </Tooltip>
-                                    {allAssets && (
-                                        <AssetDropdown
-                                            asset={currencyKey}
-                                            setAsset={setCurrencyKey}
-                                            allAssets={allAssets}
-                                        />
-                                    )}
-                                </PositionedWrapper>
-                                <PositionedWrapper>
-                                    <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
-                                        <Info>{t('markets.steps.choose-date')}</Info>
-                                    </Tooltip>
-                                    <DatesDropdown
-                                        date={maturityDate}
-                                        setDate={setMaturityDate}
-                                        allDates={allDates}
-                                    ></DatesDropdown>
-                                </PositionedWrapper>
-                            </DropdownsWrapper>
-                            <PriceChart
-                                position={positionType}
-                                asset={currencyKey}
-                                selectedPrice={getSelectedPrice()}
-                                selectedRightPrice={getSelectedRightPrice()}
-                            ></PriceChart>
-                        </LeftSide>
-                        <RightSide>
-                            <PositionedWrapper>
-                                <Info>{t('markets.steps.choose-direction')}</Info>
-                                <RadioButtons onChange={setPositionType} selected={positionType} />
-                            </PositionedWrapper>
+        <Wrapper>
+            <BannerCarousel />
+            <ContentWrapper>
+                <LeftSide>
+                    <DropdownsWrapper>
+                        <PositionedWrapper>
+                            <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
+                                <Info>{t('markets.steps.choose-asset')}</Info>
+                            </Tooltip>
+                            {allAssets && (
+                                <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
+                            )}
+                        </PositionedWrapper>
+                        <PositionedWrapper>
+                            <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
+                                <Info>{t('markets.steps.choose-date')}</Info>
+                            </Tooltip>
+                            <DatesDropdown
+                                date={maturityDate}
+                                setDate={setMaturityDate}
+                                allDates={allDates}
+                            ></DatesDropdown>
+                        </PositionedWrapper>
+                    </DropdownsWrapper>
+                    <PriceChart
+                        position={positionType}
+                        asset={currencyKey}
+                        selectedPrice={getSelectedPrice()}
+                        selectedRightPrice={getSelectedRightPrice()}
+                    ></PriceChart>
+                </LeftSide>
+                <RightSide>
+                    <PositionedWrapper>
+                        <Info>{t('markets.steps.choose-direction')}</Info>
+                        <RadioButtons onChange={setPositionType} selected={positionType} />
+                    </PositionedWrapper>
 
-                            <AssetTable
-                                setMarket={setMarket}
-                                markets={allMarkets}
-                                position={positionType}
-                                isLoading={marketsQuery.isLoading}
-                            />
-                        </RightSide>
-                    </ContentWrapper>
-
-                    <AmmTrading
-                        currencyKey={currencyKey}
-                        maturityDate={maturityDate || 0}
-                        market={
-                            market || {
-                                currencyKey: '',
-                                address: '',
-                                liquidity: 0,
-                                price: 0,
-                                roi: 0,
-                                strikePrice: 0,
-                                leftPrice: 0,
-                                rightPrice: 0,
-                                discount: 0,
-                                positionType: Positions.UP,
-                            }
-                        }
-                        showBuyLiquidity
+                    <AssetTable
+                        setMarket={setMarket}
+                        markets={allMarkets}
+                        position={positionType}
+                        isLoading={marketsQuery.isLoading}
                     />
-                    <BannerWrapper>
-                        <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
-                    </BannerWrapper>
-                    {isWalletConnected && <OpenPositions />}
-                </Wrapper>
-            ) : (
-                <UnsupportedNetworkWrapper>
-                    <UnsupportedNetwork supportedNetworks={supportedNetworks} />
-                </UnsupportedNetworkWrapper>
-            )}
-        </>
+                </RightSide>
+            </ContentWrapper>
+
+            <AmmTrading
+                currencyKey={currencyKey}
+                maturityDate={maturityDate || 0}
+                market={
+                    market || {
+                        currencyKey: '',
+                        address: '',
+                        liquidity: 0,
+                        price: 0,
+                        roi: 0,
+                        strikePrice: 0,
+                        leftPrice: 0,
+                        rightPrice: 0,
+                        discount: 0,
+                        positionType: Positions.UP,
+                    }
+                }
+                showBuyLiquidity
+            />
+            <BannerWrapper>
+                <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
+            </BannerWrapper>
+            {isWalletConnected && <OpenPositions />}
+        </Wrapper>
     );
 };
 
 const Wrapper = styled.div`
     width: 100%;
     max-width: 974px;
-`;
-
-const UnsupportedNetworkWrapper = styled.div`
-    margin: 90px 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: 0;
-    }
 `;
 
 const ContentWrapper = styled.div`
