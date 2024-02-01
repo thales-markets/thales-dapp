@@ -133,7 +133,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const isButtonDisabled =
         !isPositionSelected ||
         !(strikeTimeSec || deltaTimeSec) ||
-        isPaidAmountEntered ||
+        !isPaidAmountEntered ||
         isSubmitting ||
         !hasAllowance ||
         !!errorMessageKey ||
