@@ -7,7 +7,7 @@ import { generalConfig } from 'config/general';
 import { ethers } from 'ethers';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
-    if (networkId === Network.OptimismGoerli) {
+    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
         return PRICE_SERVICE_ENDPOINTS.testnet;
     } else {
         return PRICE_SERVICE_ENDPOINTS.mainnet;
@@ -15,7 +15,7 @@ export const getPriceServiceEndpoint = (networkId: Network) => {
 };
 
 export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_MAP[number]) => {
-    if (networkId === Network.OptimismGoerli) {
+    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
         return PRICE_ID.testnet[currency];
     } else {
         return PRICE_ID.mainnet[currency];
@@ -23,7 +23,7 @@ export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_
 };
 
 const getCurrencyByPriceId = (networkId: Network, priceId: string) => {
-    if (networkId === Network.OptimismGoerli) {
+    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
         return (
             Object.keys(PRICE_ID.testnet).find((key) => PRICE_ID.testnet[key] === '0x' + priceId) || 'currencyNotFound'
         );

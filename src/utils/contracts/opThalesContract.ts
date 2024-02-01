@@ -5,9 +5,12 @@ const opThalesContract = {
         [Network.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
         [Network.OptimismMainnet]: 'TBD',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
+        [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

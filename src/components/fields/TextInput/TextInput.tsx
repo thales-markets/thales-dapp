@@ -43,7 +43,7 @@ const TextInput: React.FC<TextInputProps> = ({
 }) => {
     return (
         <ValidationTooltip open={showValidation} title={validationMessage || ''} placement="bottom">
-            <FieldContainer margin={margin}>
+            <FieldContainer width={width} margin={margin}>
                 {label && (
                     <FieldLabel>
                         {label}

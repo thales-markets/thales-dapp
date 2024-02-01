@@ -16,7 +16,7 @@ import {
 import UnexpectedError from 'components/UnexpectedError';
 import WalletDisclaimer from 'components/WalletDisclaimer';
 import { PLAUSIBLE } from 'constants/analytics';
-import { base } from 'constants/network';
+import { base, optimismSepolia, zkSyncSepolia } from 'constants/network';
 import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
 import { Network } from 'enums/network';
@@ -27,7 +27,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { getDefaultTheme } from 'utils/style';
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
-import { arbitrum, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains';
+import { arbitrum, mainnet, optimism, optimismGoerli, polygon, zkSync } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
@@ -57,14 +57,17 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
         blast: 'polygon-mainnet',
     },
     [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
+    [Network.OptimismSepolia]: { ankr: '', chainnode: '', blast: '' },
     [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
     [Network.Base]: { ankr: 'base', chainnode: 'base-mainnet', blast: '' },
+    [Network.ZkSync]: { ankr: '', chainnode: '', blast: '' },
+    [Network.ZkSyncSepolia]: { ankr: '', chainnode: '', blast: '' },
 };
 
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, mainnet, polygon, arbitrum, base],
+    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base, zkSync, zkSyncSepolia],
     [
         jsonRpcProvider({
             rpc: (chain) => ({

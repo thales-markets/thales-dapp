@@ -5,9 +5,12 @@ const stakingBonusRewardsManager = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0xc07520843239C2CAA28101D8241D9132669B4271',
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x6535F4cCC70E0CCb192a8A224d5eBA420DDF9e3f',
         [Network.Base]: '0xA851554aA5f97b3DcA6486683b2da02d5a6a75dd',
+        [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
     abi: [
         {

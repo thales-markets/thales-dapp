@@ -114,7 +114,7 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
     align-items: center;
     justify-content: center;
     width: 100%;
-    cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'default')};
+    cursor: default;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => (props?.spanColumns ? `grid-column: span ${props.spanColumns}` : '')};
     }
@@ -133,7 +133,7 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     display: flex;
     align-items: center;
     position: relative;
-    cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'pointer')};
+    cursor: ${(props: any) => (props.disabled ? 'default' : 'pointer')};
     border-width: ${(props: any) => props.borderWidth || '1px'};
     border-style: solid;
     border-color: ${(props: any) => props.borderColor || props.theme.textColor.primary};

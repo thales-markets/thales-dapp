@@ -60,6 +60,9 @@ const Container = styled.div`
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        gap: 5px;
+    }
 `;
 
 const AnimatedPrice = styled.div`
