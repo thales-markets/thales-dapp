@@ -155,7 +155,8 @@
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
                 "base": "Switch to Base",
-                "zkSync": "Switch to ZkSync"
+                "zkSync": "Switch to ZkSync",
+                "blast-sepolia": "Switch to Blast Sepolia"
             }
         },
         "swap": {

@@ -11,6 +11,7 @@ const chainedSpeedMarketsAMMContract = {
         [Network.Base]: '0x6848F001ddDb4442d352C495c7B4a231e3889b70',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

@@ -16,7 +16,7 @@ import {
 import UnexpectedError from 'components/UnexpectedError';
 import WalletDisclaimer from 'components/WalletDisclaimer';
 import { PLAUSIBLE } from 'constants/analytics';
-import { base, optimismSepolia, zkSyncSepolia } from 'constants/network';
+import { BlastSepolia, base, optimismSepolia, zkSyncSepolia } from 'constants/network';
 import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
 import { Network } from 'enums/network';
@@ -62,12 +62,13 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     [Network.Base]: { ankr: 'base', chainnode: 'base-mainnet', blast: '' },
     [Network.ZkSync]: { ankr: '', chainnode: '', blast: '' },
     [Network.ZkSyncSepolia]: { ankr: '', chainnode: '', blast: '' },
+    [Network.BlastSepolia]: { ankr: '', chainnode: '', blast: '' },
 };
 
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base, zkSync, zkSyncSepolia],
+    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base, zkSync, zkSyncSepolia, BlastSepolia],
     [
         jsonRpcProvider({
             rpc: (chain) => ({

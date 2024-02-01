@@ -11,6 +11,7 @@ const stakingBonusRewardsManager = {
         [Network.Base]: '0xA851554aA5f97b3DcA6486683b2da02d5a6a75dd',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

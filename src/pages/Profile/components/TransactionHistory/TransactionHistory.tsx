@@ -1,32 +1,32 @@
 import TileTable from 'components/TileTable';
+import { OPTIONS_POSITIONS_MAP } from 'constants/options';
+import { Positions } from 'enums/options';
 import { keyBy } from 'lodash';
+import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
+import useUserChainedSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserChainedSpeedMarketsTransactionsQuery';
+import useUserSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserSpeedMarketsTransactionsQuery';
+import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
+import useTradesQuery from 'queries/profile/useTradesQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useTheme } from 'styled-components';
-import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade, Trades } from 'types/options';
-import { ThemeInterface } from 'types/ui';
-import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
-import { getIsAppReady } from 'redux/modules/app';
 import {
+    formatCurrency,
     formatHoursAndMinutesFromTimestamp,
     formatShortDate,
     formatShortDateWithTime,
-    formatCurrency,
     getEtherscanTxLink,
 } from 'thales-utils';
-import { OPTIONS_POSITIONS_MAP } from 'constants/options';
-import { Positions } from 'enums/options';
-import { ArrowLink, getAmount } from '../styled-components';
-import { getIsMobile } from 'redux/modules/ui';
+import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade, Trades } from 'types/options';
 import { TradeWithMarket } from 'types/profile';
-import useTradesQuery from 'queries/profile/useTradesQuery';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useUserSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserSpeedMarketsTransactionsQuery';
-import useUserChainedSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserChainedSpeedMarketsTransactionsQuery';
-import { Network } from 'enums/network';
+import { ThemeInterface } from 'types/ui';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
+import { ArrowLink, getAmount } from '../styled-components';
 
 type TransactionHistoryProps = {
     searchAddress: string;
@@ -42,17 +42,17 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
-
     const tradesQuery = useTradesQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isZkSync,
+        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
     });
     const trades: Trades = useMemo(() => (tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : []), [
         tradesQuery.isSuccess,
         tradesQuery.data,
     ]);
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady && !isZkSync });
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
+        enabled: isAppReady && !isOnlySpeedMarketsSupported(networkId),
+    });
     const markets = useMemo(() => (marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : []), [
         marketsQuery.isSuccess,
         marketsQuery.data,
@@ -63,7 +63,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         .map((trade: Trade) => trade.market);
 
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, rangedTrades, {
-        enabled: isAppReady && rangedTrades.length > 0 && !isZkSync,
+        enabled: isAppReady && rangedTrades.length > 0 && !isOnlySpeedMarketsSupported(networkId),
     });
     const rangedMarkets = useMemo(
         () => (rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : []),
@@ -84,7 +84,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected && !isZkSync,
+            enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
         }
     );
     const chainedSpeedMarketsData: TradeWithMarket[] = useMemo(

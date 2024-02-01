@@ -18,6 +18,7 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.Base]: 'BASE',
     [Network.ZkSync]: 'ZKSYNC',
     [Network.ZkSyncSepolia]: 'ZKSYNC-SEPOLIA',
+    [Network.BlastSepolia]: 'BLAST-SEPOLIA',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
@@ -30,6 +31,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.Base]: 'BASE',
     [Network.ZkSync]: 'ZKSYNC',
     [Network.ZkSyncSepolia]: 'ZKSYNC SEPOLIA',
+    [Network.BlastSepolia]: 'BLAST SEPOLIA',
 };
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
@@ -104,9 +106,20 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
             decimals: 18,
         },
     },
+    [Network.BlastSepolia]: {
+        chainId: '0xa0c71fd',
+        chainName: 'Blast Sepolia',
+        rpcUrls: ['https://sepolia.blast.io'],
+        blockExplorerUrls: ['https://testnet.blastscan.io/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'ETH',
+            decimals: 18,
+        },
+    },
 };
 
-// configuration for wagmi
+// configuration for wagmi (https://github.com/wevm/viem/tree/main/src/chains/definitions)
 export const base = {
     id: 8453,
     network: 'base',
@@ -193,6 +206,29 @@ export const zkSyncSepolia = {
     contracts: {
         multicall3: {
             address: '0xF9cda624FBC7e059355ce98a31693d299FACd963',
+        },
+    },
+    testnet: true,
+} as Chain;
+export const BlastSepolia = {
+    id: 168587773,
+    network: 'blast-sepolia',
+    name: 'Blast Sepolia',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://sepolia.blast.io'],
+            webSocket: ['wss://sepolia.blast.io/ws'],
+        },
+        public: {
+            http: ['https://sepolia.blast.io'],
+            webSocket: ['wss://sepolia.blast.io/ws'],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: 'zkExplorer',
+            url: 'https://testnet.blastscan.io/',
         },
     },
     testnet: true,

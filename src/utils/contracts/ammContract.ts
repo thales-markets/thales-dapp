@@ -11,6 +11,7 @@ const ammContract = {
         [Network.Base]: '0xe41cD3A25CBdeDA0BC46D48C380393D953bD2034',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

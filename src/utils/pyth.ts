@@ -1,13 +1,17 @@
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
+import { generalConfig } from 'config/general';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import { PRICE_ID, PRICE_SERVICE_ENDPOINTS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { Network } from 'enums/network';
-import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
-import { bigNumberFormatter, floorNumberToDecimals } from 'thales-utils';
-import { generalConfig } from 'config/general';
 import { ethers } from 'ethers';
+import { bigNumberFormatter, floorNumberToDecimals } from 'thales-utils';
 
 export const getPriceServiceEndpoint = (networkId: Network) => {
-    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
+    if (
+        [Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia, Network.BlastSepolia].includes(
+            networkId
+        )
+    ) {
         return PRICE_SERVICE_ENDPOINTS.testnet;
     } else {
         return PRICE_SERVICE_ENDPOINTS.mainnet;
@@ -15,7 +19,11 @@ export const getPriceServiceEndpoint = (networkId: Network) => {
 };
 
 export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_MAP[number]) => {
-    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
+    if (
+        [Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia, Network.BlastSepolia].includes(
+            networkId
+        )
+    ) {
         return PRICE_ID.testnet[currency];
     } else {
         return PRICE_ID.mainnet[currency];
@@ -23,7 +31,11 @@ export const getPriceId = (networkId: Network, currency: typeof CRYPTO_CURRENCY_
 };
 
 const getCurrencyByPriceId = (networkId: Network, priceId: string) => {
-    if ([Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia].includes(networkId)) {
+    if (
+        [Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia, Network.BlastSepolia].includes(
+            networkId
+        )
+    ) {
         return (
             Object.keys(PRICE_ID.testnet).find((key) => PRICE_ID.testnet[key] === '0x' + priceId) || 'currencyNotFound'
         );

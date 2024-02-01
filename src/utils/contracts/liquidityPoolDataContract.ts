@@ -11,6 +11,7 @@ const liquidityPoolDataContract = {
         [Network.Base]: '0x33bf0378242c7C814942197ea4AE584b52681197',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

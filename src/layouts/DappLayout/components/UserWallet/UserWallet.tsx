@@ -58,7 +58,7 @@ const UserWallet: React.FC = () => {
 };
 
 const Container = styled.div`
-    width: 400px;
+    width: 408px;
     z-index: 1000;
     @media (max-width: 500px) {
         width: 100%;

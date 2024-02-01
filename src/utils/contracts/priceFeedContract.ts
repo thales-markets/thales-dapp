@@ -11,6 +11,7 @@ const priceFeedContract = {
         [Network.Base]: '0x5B5DbF38a1fcf63B58d263648EBb63b53c1de3E7',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {
