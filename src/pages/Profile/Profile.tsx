@@ -22,6 +22,7 @@ import { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { UserProfileData } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
 import { getPriceId } from 'utils/pyth';
 import { history } from 'utils/routes';
 import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
@@ -181,7 +182,7 @@ const Profile: React.FC = () => {
     return (
         <>
             <ElectionsBanner />
-            <BannerCarousel />
+            {!isOnlySpeedMarketsSupported(networkId) && <BannerCarousel />}
             <Container>
                 <Header>
                     <Title>{t('profile.title')}</Title>
@@ -250,12 +251,14 @@ const Profile: React.FC = () => {
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('profile.tabs.history')}
                         </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.VaultsLp)}
-                            active={view === NavItems.VaultsLp}
-                        >
-                            {t('profile.tabs.vaults-lp')}
-                        </NavItem>
+                        {!isOnlySpeedMarketsSupported(networkId) && (
+                            <NavItem
+                                onClick={() => onTabClickHandler(NavItems.VaultsLp)}
+                                active={view === NavItems.VaultsLp}
+                            >
+                                {t('profile.tabs.vaults-lp')}
+                            </NavItem>
+                        )}
                     </Nav>
                     <>
                         {view === NavItems.MyPositions && (
