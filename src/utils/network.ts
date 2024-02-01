@@ -215,9 +215,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 Network.Base,
                 Network.PolygonMainnet,
-                Network.ZkSync,
-                Network.ZkSyncSepolia,
-                Network.BlastSepolia,
                 Network.Mainnet,
             ];
         default:
