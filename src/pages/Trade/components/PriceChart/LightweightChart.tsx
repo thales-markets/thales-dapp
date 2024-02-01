@@ -21,7 +21,8 @@ import useCoingeckoCandlestickQuery from 'queries/prices/useCoingeckoCandlestick
 
 type LightweightChartProps = {
     asset: string;
-    selectedPrice: number | undefined;
+    selectedPrice?: number;
+    selectedDate?: number;
     selectedRightPrice?: number;
     position: Positions | undefined;
 };
@@ -36,9 +37,11 @@ const ToggleButtons = [
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
-const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPrice, position }) => {
+const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPrice, position, selectedDate }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
+
+    console.log(selectedDate);
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -101,16 +104,26 @@ const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPric
                     value: selectedPrice,
                 }));
 
-                const areaSeriesSelected = chart.addAreaSeries({
-                    lastValueVisible: true,
-                    crosshairMarkerVisible: false,
-                    lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
-                    lineWidth: 1,
-                    topColor: position === Positions.UP ? Colors.BLUE_MIDNIGHT_LIGHT : Colors.GRAY_PURPLE_BLURED,
-                    bottomColor: position === Positions.UP ? Colors.GRAY_PURPLE_BLURED : Colors.BLUE_MIDNIGHT_LIGHT,
-                    invertFilledArea: position === Positions.UP,
-                });
-                areaSeriesSelected.setData(lineDataSelected as any);
+                if (selectedPrice && selectedDate) {
+                    const deltaTime = candleStickData[1].time - candleStickData[0].time;
+                    while (lineDataSelected[lineDataSelected.length - 1].time < selectedDate / 1000) {
+                        lineDataSelected.push({
+                            time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
+                            value: selectedPrice,
+                        });
+                    }
+
+                    const areaSeriesSelected = chart.addAreaSeries({
+                        lastValueVisible: true,
+                        crosshairMarkerVisible: false,
+                        lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
+                        lineWidth: 1,
+                        topColor: position === Positions.UP ? Colors.BLUE_MIDNIGHT_LIGHT : Colors.GRAY_PURPLE_BLURED,
+                        bottomColor: position === Positions.UP ? Colors.GRAY_PURPLE_BLURED : Colors.BLUE_MIDNIGHT_LIGHT,
+                        invertFilledArea: position === Positions.UP,
+                    });
+                    areaSeriesSelected.setData(lineDataSelected as any);
+                }
 
                 const candlestickSeries = chart.addCandlestickSeries({
                     upColor: '#26a69a',

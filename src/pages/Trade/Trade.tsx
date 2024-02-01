@@ -141,6 +141,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 position={positionType}
                                 asset={currencyKey}
                                 selectedPrice={getSelectedPrice()}
+                                selectedDate={maturityDate}
                                 selectedRightPrice={getSelectedRightPrice()}
                             ></LightweightChart>
                         </LeftSide>
