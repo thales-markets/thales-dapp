@@ -53,8 +53,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
 
-    console.log(selectedDate);
-
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -105,7 +103,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         pythQuery.data,
         isSpeedMarkets,
     ]);
-    console.log(currentPrice);
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);

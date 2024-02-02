@@ -36,8 +36,6 @@ const usePythCandlestickQuery = (asset: string, dateRange: number, options?: Use
                 };
             });
 
-            console.log(candleStickData);
-
             return candleStickData;
         },
         options
