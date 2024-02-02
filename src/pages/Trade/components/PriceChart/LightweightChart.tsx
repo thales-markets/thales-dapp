@@ -157,10 +157,10 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 }
 
                 const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: '#26a69a',
-                    downColor: '#ef5350',
-                    wickUpColor: '#26a69a',
-                    wickDownColor: '#ef5350',
+                    upColor: Colors.GREEN,
+                    downColor: Colors.RED,
+                    wickUpColor: Colors.GREEN,
+                    wickDownColor: Colors.RED,
                     priceLineColor: theme.borderColor.tertiary,
                     priceLineWidth: 1,
                     lastValueVisible: true,
