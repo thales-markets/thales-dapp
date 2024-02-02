@@ -134,6 +134,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 },
             },
         });
+
         const createLightweightChart = async () => {
             if (chart && candleStickData) {
                 // candleStickData[candleStickData.length - 1].close = currentPrice; // update last price with current one from chainlink
@@ -178,6 +179,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 candlestickSeries.setData(cloneData as any);
 
                 chart.timeScale().fitContent();
+                chart.timeScale().applyOptions({
+                    timeVisible: true,
+                });
 
                 setProcessedPriceData(
                     calculatePercentageChange(
