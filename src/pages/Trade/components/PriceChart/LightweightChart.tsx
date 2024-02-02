@@ -3,14 +3,14 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { Colors, FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
-import { bigNumberFormatter, bytesFormatter } from 'thales-utils';
+import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
 import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -19,6 +19,8 @@ import Toggle from './components/DateToggle';
 import { createChart, ColorType } from 'lightweight-charts';
 import useCoingeckoCandlestickQuery from 'queries/prices/useCoingeckoCandlestickQuery';
 import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
+import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
+import { USD_SIGN } from 'constants/currency';
 
 type LightweightChartProps = {
     asset: string;
@@ -29,6 +31,9 @@ type LightweightChartProps = {
     selectedRightPrice?: number;
     explicitCurrentPrice?: number;
     prevExplicitPrice?: number;
+    chainedRisk?: Risk;
+    risksPerAsset?: RiskPerAsset[];
+    risksPerAssetAndDirection?: RiskPerAssetAndPosition[];
 };
 
 const ToggleButtons = [
@@ -49,6 +54,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     isSpeedMarkets,
     explicitCurrentPrice,
     prevExplicitPrice,
+    chainedRisk,
+    risksPerAsset,
+    risksPerAssetAndDirection,
 }) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
@@ -199,6 +207,24 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         getImpliedVolatility();
     }, [asset]);
 
+    const risk = chainedRisk
+        ? chainedRisk
+        : risksPerAsset?.filter((riskPerAsset) => riskPerAsset.currency === asset)[0];
+    const liquidity = risk ? formatCurrencyWithSign(USD_SIGN, risk.max - risk.current) : 0;
+
+    const riskPerDirectionUp = risksPerAssetAndDirection?.filter(
+        (risk) => risk.currency === asset && risk.position === Positions.UP
+    )[0];
+    const liquidityPerUp = riskPerDirectionUp
+        ? formatCurrencyWithSign(USD_SIGN, riskPerDirectionUp.max - riskPerDirectionUp.current)
+        : 0;
+    const riskPerDirectionDown = risksPerAssetAndDirection?.filter(
+        (risk) => risk.currency === asset && risk.position === Positions.DOWN
+    )[0];
+    const liquidityPerDown = riskPerDirectionDown
+        ? formatCurrencyWithSign(USD_SIGN, riskPerDirectionDown.max - riskPerDirectionDown.current)
+        : 0;
+
     return (
         <Wrapper>
             <FlexDivSpaceBetween margin="15px 0px">
@@ -225,8 +251,36 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                         </FlexDiv>
                     )}
                 </FlexDivRowCentered>
-
-                <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
+                {isSpeedMarkets ? (
+                    !!liquidity && (
+                        <FlexDiv>
+                            <Value>{`${t('common.liquidity')} ${liquidity}`}</Value>
+                            <TooltipInfo
+                                overlay={
+                                    <Trans
+                                        i18nKey={
+                                            chainedRisk
+                                                ? 'speed-markets.chained.tooltips.liquidity'
+                                                : 'speed-markets.tooltips.liquidity'
+                                        }
+                                        components={{
+                                            br: <br />,
+                                        }}
+                                        values={{
+                                            liquidityPerUp,
+                                            liquidityPerDown,
+                                        }}
+                                    />
+                                }
+                                customIconStyling={{ marginTop: '1px' }}
+                            />
+                        </FlexDiv>
+                    )
+                ) : (
+                    <PriceChange up={processedPriceData > 0}>
+                        {formatPricePercentageGrowth(processedPriceData)}
+                    </PriceChange>
+                )}
             </FlexDivSpaceBetween>
             <div ref={chartContainerRef} />
 

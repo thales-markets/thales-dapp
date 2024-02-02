@@ -331,11 +331,11 @@ const SpeedMarkets: React.FC = () => {
                                 isSpeedMarkets={true}
                                 explicitCurrentPrice={currentPrices[currencyKey]}
                                 prevExplicitPrice={prevPrice.current}
-                                // chainedRisk={isChained ? ammChainedSpeedMarketsLimitsData?.risk : undefined}
-                                // risksPerAsset={isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAsset}
-                                // risksPerAssetAndDirection={
-                                //     isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAssetAndDirection
-                                // }
+                                chainedRisk={isChained ? ammChainedSpeedMarketsLimitsData?.risk : undefined}
+                                risksPerAsset={isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAsset}
+                                risksPerAssetAndDirection={
+                                    isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAssetAndDirection
+                                }
                             ></LightweightChart>
                         </LeftSide>
                         <RightSide>
