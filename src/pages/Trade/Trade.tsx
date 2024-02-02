@@ -143,6 +143,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 selectedPrice={getSelectedPrice()}
                                 selectedDate={maturityDate}
                                 selectedRightPrice={getSelectedRightPrice()}
+                                isSpeedMarkets={false}
                             ></LightweightChart>
                         </LeftSide>
                         <RightSide>

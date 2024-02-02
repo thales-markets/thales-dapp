@@ -14,7 +14,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
-import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
+// import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import queryString from 'query-string';
@@ -38,6 +38,7 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
+import LightweightChart from 'pages/Trade/components/PriceChart/LightweightChart';
 
 const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
@@ -323,22 +324,22 @@ const SpeedMarkets: React.FC = () => {
                                     customIconStyling={{ top: '-2px' }}
                                 />
                             </Info>
-                            <PriceChart
+                            <LightweightChart
                                 position={isChained ? undefined : positionType}
                                 asset={currencyKey}
                                 selectedPrice={
                                     !isChained && positionType !== undefined ? currentPrices[currencyKey] : undefined
                                 }
                                 selectedRightPrice={undefined}
-                                isSpeedMarkets
+                                isSpeedMarkets={true}
                                 explicitCurrentPrice={currentPrices[currencyKey]}
                                 prevExplicitPrice={prevPrice.current}
-                                chainedRisk={isChained ? ammChainedSpeedMarketsLimitsData?.risk : undefined}
-                                risksPerAsset={isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAsset}
-                                risksPerAssetAndDirection={
-                                    isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAssetAndDirection
-                                }
-                            ></PriceChart>
+                                // chainedRisk={isChained ? ammChainedSpeedMarketsLimitsData?.risk : undefined}
+                                // risksPerAsset={isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAsset}
+                                // risksPerAssetAndDirection={
+                                //     isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAssetAndDirection
+                                // }
+                            ></LightweightChart>
                         </LeftSide>
                         <RightSide>
                             {!isMobile && getToggle()}

@@ -18,13 +18,17 @@ import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { createChart, ColorType } from 'lightweight-charts';
 import useCoingeckoCandlestickQuery from 'queries/prices/useCoingeckoCandlestickQuery';
+import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 
 type LightweightChartProps = {
     asset: string;
+    position: Positions | undefined;
+    isSpeedMarkets: boolean;
     selectedPrice?: number;
     selectedDate?: number;
     selectedRightPrice?: number;
-    position: Positions | undefined;
+    explicitCurrentPrice?: number;
+    prevExplicitPrice?: number;
 };
 
 const ToggleButtons = [
@@ -37,7 +41,15 @@ const ToggleButtons = [
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
-const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPrice, position, selectedDate }) => {
+const LightweightChart: React.FC<LightweightChartProps> = ({
+    asset,
+    selectedPrice,
+    position,
+    selectedDate,
+    isSpeedMarkets,
+    explicitCurrentPrice,
+    prevExplicitPrice,
+}) => {
     const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
 
@@ -58,20 +70,42 @@ const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPric
     });
 
     const ohlcQuery = useCoingeckoCandlestickQuery(asset, dateRange, {
-        enabled: isAppReady,
+        enabled: isAppReady && !isSpeedMarkets,
+    });
+
+    const pythQuery = usePythCandlestickQuery(asset, dateRange, {
+        enabled: isAppReady && isSpeedMarkets,
+        refetchInterval: 5000,
     });
 
     const candleStickData = useMemo(() => {
-        if (ohlcQuery.isSuccess && ohlcQuery.data) {
-            return ohlcQuery.data;
+        if (isSpeedMarkets) {
+            if (pythQuery.isSuccess && pythQuery.data) {
+                return pythQuery.data;
+            }
+        } else {
+            if (ohlcQuery.isSuccess && ohlcQuery.data) {
+                return ohlcQuery.data;
+            }
         }
-    }, [ohlcQuery.isSuccess, ohlcQuery.data]);
+    }, [ohlcQuery.isSuccess, ohlcQuery.data, pythQuery.isSuccess, pythQuery.data, isSpeedMarkets]);
 
     const currentPrice = useMemo(() => {
-        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+        if (explicitCurrentPrice) {
+            return explicitCurrentPrice;
+        } else if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
             return exchangeRatesMarketDataQuery.data[asset];
         }
-    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset]);
+    }, [
+        exchangeRatesMarketDataQuery.isSuccess,
+        exchangeRatesMarketDataQuery.data,
+        asset,
+        explicitCurrentPrice,
+        pythQuery.isSuccess,
+        pythQuery.data,
+        isSpeedMarkets,
+    ]);
+    console.log(currentPrice);
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);
@@ -134,7 +168,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPric
                     priceLineWidth: 1,
                     lastValueVisible: true,
                 });
-                candlestickSeries.setData(candleStickData as any);
+                const cloneData = [...candleStickData];
+                if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
+                candlestickSeries.setData(cloneData as any);
 
                 chart.timeScale().fitContent();
 
@@ -150,7 +186,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPric
         return () => {
             chart.remove();
         };
-    }, [asset, dateRange, theme, selectedPrice, position, candleStickData]);
+    }, [asset, dateRange, theme, selectedPrice, position, candleStickData, selectedDate, currentPrice]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -170,7 +206,18 @@ const LightweightChart: React.FC<LightweightChartProps> = ({ asset, selectedPric
         <Wrapper>
             <FlexDivSpaceBetween margin="15px 0px">
                 <FlexDivRowCentered>
-                    <CurrentPrice asset={asset} currentPrice={currentPrice} />
+                    <CurrentPrice
+                        asset={asset}
+                        currentPrice={currentPrice}
+                        animatePrice={isSpeedMarkets}
+                        isPriceUp={isSpeedMarkets ? (explicitCurrentPrice || 0) > (prevExplicitPrice || 0) : undefined}
+                    />
+                    {isSpeedMarkets && (
+                        <TooltipInfo
+                            overlay={t('speed-markets.tooltips.current-price')}
+                            customIconStyling={{ marginTop: '1px' }}
+                        />
+                    )}
                     {!!iv && (
                         <FlexDiv>
                             <Value margin="0 0 0 20px">{`IV ${iv}%`}</Value>
