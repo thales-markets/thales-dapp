@@ -5,7 +5,7 @@ import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
 type ToggleProps = {
-    options: { label: string; value: number }[];
+    options: { label: string; value: number; resolution: string }[];
     onChange: (value: number) => void;
     defaultSelectedIndex?: number;
 };
@@ -13,7 +13,7 @@ type ToggleProps = {
 const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex = 0 }) => {
     const theme: ThemeInterface = useTheme();
 
-    const [activeOption, setActiveOption] = useState(options[defaultSelectedIndex].value);
+    const [activeOption, setActiveOption] = useState(defaultSelectedIndex);
 
     const handleClick = (value: number) => {
         setActiveOption(value);
@@ -22,20 +22,20 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
 
     return (
         <Wrapper>
-            {options.map(({ label, value }) => (
+            {options.map(({ label, value }, index) => (
                 <Button
                     key={value}
                     width="35px"
                     height="31px"
                     textColor={theme.button.textColor.tertiary}
                     backgroundColor={
-                        value === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
+                        index === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
                     }
                     borderColor={theme.button.borderColor.tertiary}
                     fontSize="13px"
                     padding="0"
                     additionalStyles={{ borderRadius: '8px', transition: 'all 0.2s ease-in-out' }}
-                    onClick={() => handleClick(value)}
+                    onClick={() => handleClick(index)}
                 >
                     {label}
                 </Button>

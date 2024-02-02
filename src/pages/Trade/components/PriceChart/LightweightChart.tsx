@@ -37,14 +37,24 @@ type LightweightChartProps = {
 };
 
 const ToggleButtons = [
-    { label: '1D', value: 1 },
-    { label: '1W', value: 7 },
-    { label: '2W', value: 14 },
-    { label: '1M', value: 30 },
-    { label: '6M', value: 182 },
-    { label: '1Y', value: 365 },
+    { label: '1D', value: 1, resolution: '' },
+    { label: '1W', value: 7, resolution: '' },
+    { label: '2W', value: 14, resolution: '' },
+    { label: '1M', value: 30, resolution: '' },
+    { label: '6M', value: 182, resolution: '' },
+    { label: '1Y', value: 365, resolution: '' },
+];
+
+const ToggleButtonsSpeed = [
+    { label: '15', resolution: '15', value: 1 },
+    { label: '30', resolution: '30', value: 2 },
+    { label: '1H', resolution: '60', value: 7 },
+    { label: '4H', resolution: '240', value: 14 },
+    { label: '1D', resolution: '1D', value: 60 },
+    { label: '1W', resolution: '1W', value: 365 },
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
+const DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS = 0;
 
 const LightweightChart: React.FC<LightweightChartProps> = ({
     asset,
@@ -65,7 +75,11 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const [processedPriceData, setProcessedPriceData] = useState<number>(0);
-    const [dateRange, setDateRange] = useState(ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX].value); // default date range
+    const [dateRange, setDateRange] = useState(
+        !isSpeedMarkets
+            ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
+            : ToggleButtonsSpeed[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
+    ); // default date range: ;
 
     const [iv, setIV] = useState(0);
 
@@ -75,11 +89,11 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         enabled: isAppReady,
     });
 
-    const ohlcQuery = useCoingeckoCandlestickQuery(asset, dateRange, {
+    const ohlcQuery = useCoingeckoCandlestickQuery(asset, dateRange.value, {
         enabled: isAppReady && !isSpeedMarkets,
     });
 
-    const pythQuery = usePythCandlestickQuery(asset, dateRange, {
+    const pythQuery = usePythCandlestickQuery(asset, dateRange.value, dateRange.resolution, {
         enabled: isAppReady && isSpeedMarkets,
         refetchInterval: 5000,
     });
@@ -113,7 +127,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     ]);
 
     const handleDateRangeChange = (value: number) => {
-        setDateRange(value);
+        setDateRange(isSpeedMarkets ? ToggleButtonsSpeed[value] : ToggleButtons[value]);
     };
 
     useEffect(() => {
@@ -181,6 +195,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 chart.timeScale().fitContent();
                 chart.timeScale().applyOptions({
                     timeVisible: true,
+                    fixLeftEdge: true,
+                    fixRightEdge: true,
+                    barSpacing: 10,
                 });
 
                 setProcessedPriceData(
@@ -289,8 +306,10 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             <div ref={chartContainerRef} />
 
             <Toggle
-                options={ToggleButtons}
-                defaultSelectedIndex={DEFAULT_TOGGLE_BUTTON_INDEX}
+                options={isSpeedMarkets ? ToggleButtonsSpeed : ToggleButtons}
+                defaultSelectedIndex={
+                    isSpeedMarkets ? DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS : DEFAULT_TOGGLE_BUTTON_INDEX
+                }
                 onChange={handleDateRangeChange}
             />
         </Wrapper>

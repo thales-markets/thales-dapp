@@ -33,6 +33,14 @@ const QUERY_KEYS = {
     Prices: {
         PythPrices: (priceId: string, publishTime: number) => ['prices', 'pythPrices', priceId, publishTime],
         CandlestickData: (asset: string, dateRange: number) => ['asset', 'dateRange', asset, dateRange],
+        PythCandlestickData: (asset: string, dateRange: number, resolution: string) => [
+            'asset',
+            'dateRange',
+            'resolution',
+            asset,
+            dateRange,
+            resolution,
+        ],
     },
     Medium: {
         Posts: ['medium', 'posts'],
