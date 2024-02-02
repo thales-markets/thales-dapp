@@ -674,7 +674,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const inputWrapperRef = useRef<HTMLDivElement>(null);
 
     const dynamicFeesTooltipData =
-        !isChained && ammSpeedMarketsLimits && ammSpeedMarketsLimits?.lpFees.length === 4
+        !isChained && ammSpeedMarketsLimits && ammSpeedMarketsLimits?.lpFees.length > 4
             ? {
                   firstPerc: formatPercentage(
                       ammSpeedMarketsLimits?.lpFees[0] + ammSpeedMarketsLimits?.safeBoxImpact,
@@ -685,17 +685,17 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                       0
                   ),
                   thirdPerc: formatPercentage(
-                      ammSpeedMarketsLimits?.lpFees[2] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      ammSpeedMarketsLimits?.lpFees[3] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
                   fourthPerc: formatPercentage(
-                      ammSpeedMarketsLimits?.lpFees[3] + ammSpeedMarketsLimits?.safeBoxImpact,
+                      ammSpeedMarketsLimits?.lpFees[4] + ammSpeedMarketsLimits?.safeBoxImpact,
                       0
                   ),
                   firstTime: ammSpeedMarketsLimits?.timeThresholdsForFees[0],
                   secondTime: ammSpeedMarketsLimits?.timeThresholdsForFees[1],
-                  thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[2],
-                  fourthTime: ammSpeedMarketsLimits?.timeThresholdsForFees[3],
+                  thirdTime: ammSpeedMarketsLimits?.timeThresholdsForFees[3],
+                  fourthTime: ammSpeedMarketsLimits?.timeThresholdsForFees[4],
                   maxSkewImpact: formatPercentage(ammSpeedMarketsLimits?.maxSkewImpact, 0),
               }
             : {};
@@ -862,9 +862,11 @@ const Container = styled(FlexDivRow)`
     position: relative;
     z-index: 4;
     height: 78px;
+    margin-bottom: 46px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
+        margin-bottom: 20px;
         flex-direction: column;
     }
 `;

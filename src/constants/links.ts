@@ -36,7 +36,7 @@ export const LINKS = {
         TIP182:
             'https://thalesmarket.io/governance/thalesgov.eth/0xd8fb36c23bc63ee639cbaba7969caae3c2c9e129dcbbe0554f566be779feb3fb',
         ClaimOnBehalfGuide:
-            'https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide/automate-staking-rewards-claiming-using-gelato-guide',
+            'https://docs.thalesmarket.io/thales-token/automate-staking-rewards-claiming-with-chainlink-automation-guide',
         OpRewardsPage: 'https://thalesmarket.io/op-rewards',
         Bonus: {
             SnxStaking: 'https://staking.synthetix.io/',

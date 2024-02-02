@@ -131,13 +131,12 @@ const snxJSConnector: SnxJSConnector = {
     },
 };
 
-const conditionalInitializeContract = (contract: any, contractSettings: any) =>
-    contract.addresses[contractSettings.networkId || 1] !== 'TBD'
-        ? new ethers.Contract(
-              contract.addresses[contractSettings.networkId || 1],
-              contract.abi,
-              snxJSConnector.provider
-          )
+const conditionalInitializeContract = (contract: any, contractSettings: any) => {
+    const networkId = contractSettings.networkId || 1;
+    const abi = contract.abis && contract.abis[networkId] ? contract.abis[networkId] : contract.abi;
+    return contract.addresses[networkId] !== 'TBD'
+        ? new ethers.Contract(contract.addresses[networkId], abi, snxJSConnector.provider)
         : undefined;
+};
 
 export default snxJSConnector;

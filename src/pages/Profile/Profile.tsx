@@ -1,5 +1,15 @@
 import ElectionsBanner from 'components/ElectionsBanner';
 import SearchInput from 'components/SearchInput/SearchInput';
+import { USD_SIGN } from 'constants/currency';
+import { millisecondsToSeconds } from 'date-fns';
+import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
+import BannerCarousel from 'pages/Trade/components/BannerCarousel';
+import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
+import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
+import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +18,20 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
+import { UserProfileData } from 'types/profile';
+import { ThemeInterface } from 'types/ui';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
+import { getPriceId } from 'utils/pyth';
 import { history } from 'utils/routes';
+import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
+import ClaimablePositions from './components/ClaimablePositions';
+import OpenPositions from './components/OpenPositions';
+import PositionHistory from './components/PositionHistory';
+import ProfileSection from './components/ProfileSection';
+import TransactionHistory from './components/TransactionHistory';
+import UserVaultsLp from './components/UserVaultsLp';
 import {
     Container,
     Header,
@@ -22,27 +45,6 @@ import {
     StatsValue,
     Title,
 } from './styled-components';
-import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
-import { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
-import BannerCarousel from 'pages/Trade/components/BannerCarousel';
-import ClaimablePositions from './components/ClaimablePositions';
-import PositionHistory from './components/PositionHistory';
-import TransactionHistory from './components/TransactionHistory';
-import OpenPositions from './components/OpenPositions';
-import { UserProfileData } from 'types/profile';
-import ProfileSection from './components/ProfileSection';
-import UserVaultsLp from './components/UserVaultsLp';
-import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
-import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
-import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
-import { millisecondsToSeconds } from 'date-fns';
-import { getPriceId } from 'utils/pyth';
-import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
-import { Positions } from 'enums/options';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -64,7 +66,7 @@ const Profile: React.FC = () => {
     const [searchText, setSearchText] = useState<string>('');
 
     const notificationsQuery = useUserNotificationsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && ![Network.ZkSync, Network.ZkSyncSepolia].includes(networkId),
     });
     const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
 
@@ -180,7 +182,7 @@ const Profile: React.FC = () => {
     return (
         <>
             <ElectionsBanner />
-            <BannerCarousel />
+            {!isOnlySpeedMarketsSupported(networkId) && <BannerCarousel />}
             <Container>
                 <Header>
                     <Title>{t('profile.title')}</Title>
@@ -249,12 +251,14 @@ const Profile: React.FC = () => {
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('profile.tabs.history')}
                         </NavItem>
-                        <NavItem
-                            onClick={() => onTabClickHandler(NavItems.VaultsLp)}
-                            active={view === NavItems.VaultsLp}
-                        >
-                            {t('profile.tabs.vaults-lp')}
-                        </NavItem>
+                        {!isOnlySpeedMarketsSupported(networkId) && (
+                            <NavItem
+                                onClick={() => onTabClickHandler(NavItems.VaultsLp)}
+                                active={view === NavItems.VaultsLp}
+                            >
+                                {t('profile.tabs.vaults-lp')}
+                            </NavItem>
+                        )}
                     </Nav>
                     <>
                         {view === NavItems.MyPositions && (

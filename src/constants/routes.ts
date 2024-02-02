@@ -10,6 +10,8 @@ const ROUTES = {
         RangeMarkets: '/ranged-markets',
         SpeedMarkets: '/speed-markets',
         SpeedMarketsOverview: '/speed-markets/overview',
+        ChainedSpeedMarkets: '/speed-markets?isChained=true',
+        ChainedSpeedMarketsOverview: '/speed-markets/overview?isChained=true',
         HotMarkets: '/markets?anchor=hot-markets',
         CustomMarkets: '/markets?userFilter2=custom',
         CompetitionMarkets: '/markets?userFilter2=competition',

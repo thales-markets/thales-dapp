@@ -53,6 +53,9 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
 
     const discount = skew[Positions.UP] > 0 ? skew[Positions.UP] / 2 : skew[Positions.DOWN] / 2;
 
+    const isClearAllDisabled =
+        selected.length === ammChainedSpeedMarketsLimits?.minChainedMarkets && selected.every((p) => p === undefined);
+
     return (
         <Container>
             {selected.length === 1 ? (
@@ -125,7 +128,9 @@ const SelectPosition: React.FC<SelectPositionProps> = ({
                     <ChainedHeader>
                         <Roi>{t('speed-markets.chained.roi', { value: roi })}x</Roi>
                         <ClearAll
+                            isDisabled={isClearAllDisabled}
                             onClick={() =>
+                                !isClearAllDisabled &&
                                 onChainedChange(Array(ammChainedSpeedMarketsLimits?.minChainedMarkets).fill(undefined))
                             }
                         >

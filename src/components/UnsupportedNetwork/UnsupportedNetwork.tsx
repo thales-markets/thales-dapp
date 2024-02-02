@@ -3,6 +3,7 @@ import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-lo
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
+import { ReactComponent as ZkSyncLogo } from 'assets/images/zksync-circle-logo.svg';
 import Button from 'components/Button';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { Network } from 'enums/network';
@@ -47,6 +48,10 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
                 logo = <StyledBaseLogo />;
                 text = t(`common.unsupported-network.button.base`);
                 break;
+            case Network.ZkSync:
+                logo = <ZkSyncLogo />;
+                text = t(`common.unsupported-network.button.zkSync`);
+                break;
         }
 
         return (
@@ -62,39 +67,48 @@ const UnsupportedNetwork: React.FC<UnsupportedNetworkProps> = ({ supportedNetwor
     };
 
     return (
-        <Wrapper>
-            <Title>{t(`common.unsupported-network.title`)}</Title>
-            <ExplanationText>{t(`common.unsupported-network.description`)}</ExplanationText>
-            {supportedMainnetNetworks.map((supportedNetwork, index) => {
-                const isSecondInRow = (index + 1) % 2 === 0;
-                const prevNetwork = supportedMainnetNetworks[index - 1];
-                if (index < supportedMainnetNetworks.length - 1) {
-                    // has next
-                    if (isSecondInRow) {
-                        return (
-                            <ButtonWrapper key={index}>
-                                {getButton(prevNetwork)}
-                                {getButton(supportedNetwork)}
-                            </ButtonWrapper>
-                        );
-                    }
-                } else {
-                    // it is last
-                    if (isSecondInRow) {
-                        return (
-                            <ButtonWrapper key={index}>
-                                {getButton(prevNetwork)}
-                                {getButton(supportedNetwork)}
-                            </ButtonWrapper>
-                        );
+        <Container>
+            <Wrapper>
+                <Title>{t(`common.unsupported-network.title`)}</Title>
+                <ExplanationText>{t(`common.unsupported-network.description`)}</ExplanationText>
+                {supportedMainnetNetworks.map((supportedNetwork, index) => {
+                    const isSecondInRow = (index + 1) % 2 === 0;
+                    const prevNetwork = supportedMainnetNetworks[index - 1];
+                    if (index < supportedMainnetNetworks.length - 1) {
+                        // has next
+                        if (isSecondInRow) {
+                            return (
+                                <ButtonWrapper key={index}>
+                                    {getButton(prevNetwork)}
+                                    {getButton(supportedNetwork)}
+                                </ButtonWrapper>
+                            );
+                        }
                     } else {
-                        return <ButtonWrapper key={index}>{getButton(supportedNetwork)}</ButtonWrapper>;
+                        // it is last
+                        if (isSecondInRow) {
+                            return (
+                                <ButtonWrapper key={index}>
+                                    {getButton(prevNetwork)}
+                                    {getButton(supportedNetwork)}
+                                </ButtonWrapper>
+                            );
+                        } else {
+                            return <ButtonWrapper key={index}>{getButton(supportedNetwork)}</ButtonWrapper>;
+                        }
                     }
-                }
-            })}
-        </Wrapper>
+                })}
+            </Wrapper>
+        </Container>
     );
 };
+
+const Container = styled.div`
+    margin: 90px 0;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin: 0;
+    }
+`;
 
 const Wrapper = styled.div`
     display: flex;

@@ -26,6 +26,7 @@ import useTradesQuery from 'queries/profile/useTradesQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useUserSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserSpeedMarketsTransactionsQuery';
 import useUserChainedSpeedMarketsTransactionsQuery from 'queries/options/speedMarkets/useUserChainedSpeedMarketsTransactionsQuery';
+import { Network } from 'enums/network';
 
 type TransactionHistoryProps = {
     searchAddress: string;
@@ -41,15 +42,17 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
+
     const tradesQuery = useTradesQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isZkSync,
     });
     const trades: Trades = useMemo(() => (tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : []), [
         tradesQuery.isSuccess,
         tradesQuery.data,
     ]);
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady && !isZkSync });
     const markets = useMemo(() => (marketsQuery.isSuccess && marketsQuery.data ? marketsQuery.data : []), [
         marketsQuery.isSuccess,
         marketsQuery.data,
@@ -60,7 +63,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         .map((trade: Trade) => trade.market);
 
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, rangedTrades, {
-        enabled: isAppReady && rangedTrades.length > 0,
+        enabled: isAppReady && rangedTrades.length > 0 && !isZkSync,
     });
     const rangedMarkets = useMemo(
         () => (rangedMarketsQuery.isSuccess && rangedMarketsQuery.data ? rangedMarketsQuery.data : []),
@@ -81,7 +84,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ searchAddress, 
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected,
+            enabled: isAppReady && isWalletConnected && !isZkSync,
         }
     );
     const chainedSpeedMarketsData: TradeWithMarket[] = useMemo(

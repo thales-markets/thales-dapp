@@ -121,8 +121,11 @@ export const gelatoContract = {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: GELATO_POOL_ADDRESS,
         [Network.OptimismGoerli]: 'TBD',
+        [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: 'TBD',
         [Network.Base]: 'TBD',
+        [Network.ZkSync]: 'TBD',
+        [Network.ZkSyncSepolia]: 'TBD',
     },
 };

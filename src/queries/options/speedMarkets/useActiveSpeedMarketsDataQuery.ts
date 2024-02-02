@@ -28,7 +28,9 @@ const useActiveSpeedMarketsDataQuery = (networkId: Network, options?: UseQueryOp
                 const ammParams = await speedMarketsDataContract.getSpeedMarketsAMMParameters(ZERO_ADDRESS);
 
                 const activeMarkets = await speedMarketsAMMContract.activeMarkets(0, ammParams.numActiveMarkets);
-                const marketsDataArray = await speedMarketsDataContract.getMarketsData(activeMarkets);
+                const marketsDataArray = activeMarkets.length
+                    ? await speedMarketsDataContract.getMarketsData(activeMarkets)
+                    : [];
                 const maturedMarkets: any = marketsDataArray
                     .map((marketData: any, index: number) => ({ ...marketData, market: activeMarkets[index] }))
                     .filter((market: any) => secondsToMilliseconds(Number(market.strikeTime)) < Date.now());

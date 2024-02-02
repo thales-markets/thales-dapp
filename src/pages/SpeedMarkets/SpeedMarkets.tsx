@@ -12,7 +12,6 @@ import { secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
-import AssetDropdown from 'pages/Trade/components/AssetDropdown';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
 // import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
@@ -30,10 +29,12 @@ import styled, { useTheme } from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
 import { roundNumberToDecimals } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
+import { getSupportedNetworksByRoute } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { buildHref, history } from 'utils/routes';
 import AmmSpeedTrading from './components/AmmSpeedTrading';
 import ClosedPositions from './components/ClosedPositions';
+import SelectAsset from './components/SelectAsset';
 import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
@@ -50,7 +51,8 @@ const SpeedMarkets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    const isChainedMarkets = queryString.parse(location.search).isChained === 'true';
+    const isChainedSupported = getSupportedNetworksByRoute(ROUTES.Options.ChainedSpeedMarkets).includes(networkId);
+    const isChainedMarkets = isChainedSupported && queryString.parse(location.search).isChained === 'true';
 
     const [isChained, setIsChained] = useState(isChainedMarkets);
     const [currentPrices, setCurrentPrices] = useState<{ [key: string]: number }>({
@@ -75,7 +77,7 @@ const SpeedMarkets: React.FC = () => {
     }, [ammSpeedMarketsLimitsQuery]);
 
     const ammChainedSpeedMarketsLimitsQuery = useAmmChainedSpeedMarketsLimitsQuery(networkId, undefined, {
-        enabled: isAppReady,
+        enabled: isAppReady && isChainedSupported,
     });
 
     const ammChainedSpeedMarketsLimitsData = useMemo(() => {
@@ -216,13 +218,7 @@ const SpeedMarkets: React.FC = () => {
                     )}
                 </Step>
                 {isAssetStep && (
-                    <AssetDropdown
-                        asset={currencyKey}
-                        setAsset={setCurrencyKey}
-                        allAssets={SUPPORTED_ASSETS}
-                        showAssetIcon={true}
-                        type="center"
-                    />
+                    <SelectAsset selectedAsset={currencyKey} allAssets={SUPPORTED_ASSETS} onChange={setCurrencyKey} />
                 )}
                 {isDirectionsStep && (
                     <SelectPosition
@@ -261,6 +257,7 @@ const SpeedMarkets: React.FC = () => {
         return (
             <SwitchInput
                 active={isChained}
+                disabled={!isChainedSupported}
                 width="80px"
                 height="30px"
                 dotSize="20px"
@@ -369,9 +366,9 @@ const SpeedMarkets: React.FC = () => {
                         setSkewImpact={setSkew}
                         resetData={resetData}
                     />
-                    <BannerWrapper>
+                    {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) && (
                         <PageLinkBanner rout={ROUTES.Options.Home} />
-                    </BannerWrapper>
+                    )}
                     {isWalletConnected && (
                         <>
                             <OpenPositions
@@ -533,13 +530,6 @@ const Separator = styled.div`
     width: 2px;
     height: 23px;
     border-radius: 6px;
-`;
-
-const BannerWrapper = styled.div`
-    margin-top: 46px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-top: 20px;
-    }
 `;
 
 export default SpeedMarkets;

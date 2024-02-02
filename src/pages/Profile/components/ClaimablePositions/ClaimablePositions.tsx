@@ -28,6 +28,7 @@ import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
 import ChainedPositionAction from 'pages/SpeedMarkets/components/ChainedPositionAction';
+import { Network } from 'enums/network';
 
 type ClaimablePositionsProps = {
     searchAddress: string;
@@ -46,8 +47,10 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
 
+    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
+
     const claimablePositionsQuery = useClaimablePositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isZkSync,
     });
 
     const claimablePositions: UserPosition[] = useMemo(
@@ -75,7 +78,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected,
+            enabled: isAppReady && isWalletConnected && !isZkSync,
         }
     );
 

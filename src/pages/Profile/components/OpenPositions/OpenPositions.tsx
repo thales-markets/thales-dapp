@@ -33,6 +33,7 @@ import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyt
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
+import { Network } from 'enums/network';
 
 type OpenPositionsProps = {
     searchAddress: string;
@@ -84,8 +85,10 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
             ? exchangeRatesMarketDataQuery.data
             : null;
 
+    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
+
     const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isZkSync,
     });
 
     const openPositions: UserPosition[] = useMemo(
@@ -113,7 +116,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected,
+            enabled: isAppReady && isWalletConnected && !isZkSync,
         }
     );
 

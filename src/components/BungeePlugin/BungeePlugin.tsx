@@ -17,6 +17,7 @@ const SUPPORTED_DESTINATION_NETWORKS = [
     Network.Arbitrum,
     Network.PolygonMainnet,
     Network.Base,
+    Network.ZkSync,
 ];
 
 const BungeePlugin: React.FC = () => {
