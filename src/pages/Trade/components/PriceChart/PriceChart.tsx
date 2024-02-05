@@ -62,22 +62,23 @@ const coinGeckoClientPrivate = new CoinGeckoClient(
 );
 
 const ToggleButtons = [
-    { label: '1D', value: 1 },
-    { label: '1W', value: 7 },
-    { label: '2W', value: 14 },
-    { label: '1M', value: 30 },
-    { label: '6M', value: 182 },
-    { label: '1Y', value: 365 },
+    { label: '1D', value: 1, resolution: '' },
+    { label: '1W', value: 7, resolution: '' },
+    { label: '2W', value: 14, resolution: '' },
+    { label: '1M', value: 30, resolution: '' },
+    { label: '6M', value: 182, resolution: '' },
+    { label: '1Y', value: 365, resolution: '' },
 ];
+
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
 const SpeedMarketsToggleButtons = [
-    { label: '1H', value: 0.05 },
-    { label: '12H', value: 0.5 },
-    { label: '1D', value: 1 },
-    { label: '1W', value: 7 },
-    { label: '2W', value: 14 },
-    { label: '1M', value: 30 },
+    { label: '15', resolution: '15', value: 1 },
+    { label: '30', resolution: '30', value: 2 },
+    { label: '1H', resolution: '60', value: 7 },
+    { label: '4H', resolution: '240', value: 14 },
+    { label: '1D', resolution: '1D', value: 60 },
+    { label: '1W', resolution: '1W', value: 365 },
 ];
 const DEFAULT_SPEED_MARKETS_TOGGLE_BUTTON_INDEX = 0;
 
