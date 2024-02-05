@@ -59,7 +59,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     risksPerAssetAndDirection,
 }) => {
     const theme: ThemeInterface = useTheme();
-    console.log(asset);
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -139,13 +138,16 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
                 if (selectedPrice && selectedDate) {
                     const deltaTime = candleStickData[1].time - candleStickData[0].time;
-                    while (lineDataSelected[lineDataSelected.length - 1].time < selectedDate / 1000) {
+                    while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < selectedDate / 1000) {
                         lineDataSelected.push({
                             time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
                             value: selectedPrice,
                         });
                     }
-
+                    lineDataSelected.push({
+                        time: selectedDate / 1000,
+                        value: selectedPrice,
+                    });
                     const areaSeriesSelected = chart.addAreaSeries({
                         lastValueVisible: true,
                         crosshairMarkerVisible: false,
@@ -170,6 +172,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 const cloneData = [...candleStickData];
                 if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
                 candlestickSeries.setData(cloneData as any);
+                if (!isSpeedMarkets) chart.timeScale().fitContent();
 
                 setProcessedPriceData(
                     calculatePercentageChange(
@@ -183,7 +186,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         return () => {
             chart.remove();
         };
-    }, [asset, dateRange, theme, selectedPrice, position, candleStickData, selectedDate, currentPrice]);
+    }, [asset, theme, selectedPrice, position, candleStickData, selectedDate, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
