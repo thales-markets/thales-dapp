@@ -149,7 +149,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                         value: selectedPrice,
                     });
                     const areaSeriesSelected = chart.addAreaSeries({
-                        lastValueVisible: true,
+                        lastValueVisible: !isSpeedMarkets,
                         crosshairMarkerVisible: false,
                         lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
                         lineWidth: 1,
