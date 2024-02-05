@@ -17,7 +17,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { createChart, ColorType } from 'lightweight-charts';
-import useCoingeckoCandlestickQuery from 'queries/prices/useCoingeckoCandlestickQuery';
 import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { USD_SIGN } from 'constants/currency';
@@ -37,21 +36,12 @@ type LightweightChartProps = {
 };
 
 const ToggleButtons = [
-    { label: '1D', value: 1, resolution: '' },
-    { label: '1W', value: 7, resolution: '' },
-    { label: '2W', value: 14, resolution: '' },
-    { label: '1M', value: 30, resolution: '' },
-    { label: '6M', value: 182, resolution: '' },
-    { label: '1Y', value: 365, resolution: '' },
-];
-
-const ToggleButtonsSpeed = [
-    { label: '15', resolution: '15', value: 1 },
-    { label: '30', resolution: '30', value: 2 },
-    { label: '1H', resolution: '60', value: 7 },
-    { label: '4H', resolution: '240', value: 14 },
-    { label: '1D', resolution: '1D', value: 60 },
-    { label: '1W', resolution: '1W', value: 365 },
+    { label: '15', resolution: '15', value: 2 },
+    { label: '30', resolution: '30', value: 4 },
+    { label: '1H', resolution: '60', value: 14 },
+    { label: '4H', resolution: '240', value: 28 },
+    { label: '1D', resolution: '1D', value: 120 },
+    { label: '1W', resolution: '1W', value: 730 },
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 const DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS = 0;
@@ -69,6 +59,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     risksPerAssetAndDirection,
 }) => {
     const theme: ThemeInterface = useTheme();
+    console.log(asset);
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -78,7 +69,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const [dateRange, setDateRange] = useState(
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
-            : ToggleButtonsSpeed[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
+            : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
     ); // default date range: ;
 
     const [iv, setIV] = useState(0);
@@ -89,26 +80,16 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         enabled: isAppReady,
     });
 
-    const ohlcQuery = useCoingeckoCandlestickQuery(asset, dateRange.value, {
-        enabled: isAppReady && !isSpeedMarkets,
-    });
-
     const pythQuery = usePythCandlestickQuery(asset, dateRange.value, dateRange.resolution, {
-        enabled: isAppReady && isSpeedMarkets,
+        enabled: isAppReady,
         refetchInterval: 5000,
     });
 
     const candleStickData = useMemo(() => {
-        if (isSpeedMarkets) {
-            if (pythQuery.isSuccess && pythQuery.data) {
-                return pythQuery.data;
-            }
-        } else {
-            if (ohlcQuery.isSuccess && ohlcQuery.data) {
-                return ohlcQuery.data;
-            }
+        if (pythQuery.isSuccess && pythQuery.data) {
+            return pythQuery.data;
         }
-    }, [ohlcQuery.isSuccess, ohlcQuery.data, pythQuery.isSuccess, pythQuery.data, isSpeedMarkets]);
+    }, [pythQuery.isSuccess, pythQuery.data]);
 
     const currentPrice = useMemo(() => {
         if (explicitCurrentPrice) {
@@ -116,18 +97,10 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         } else if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
             return exchangeRatesMarketDataQuery.data[asset];
         }
-    }, [
-        exchangeRatesMarketDataQuery.isSuccess,
-        exchangeRatesMarketDataQuery.data,
-        asset,
-        explicitCurrentPrice,
-        pythQuery.isSuccess,
-        pythQuery.data,
-        isSpeedMarkets,
-    ]);
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
     const handleDateRangeChange = (value: number) => {
-        setDateRange(isSpeedMarkets ? ToggleButtonsSpeed[value] : ToggleButtons[value]);
+        setDateRange(ToggleButtons[value]);
     };
 
     useEffect(() => {
@@ -146,6 +119,12 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                     visible: true,
                     color: theme.borderColor.primary,
                 },
+            },
+            timeScale: {
+                rightOffset: 1,
+                timeVisible: true,
+                fixLeftEdge: true,
+                barSpacing: 15,
             },
         });
 
@@ -192,14 +171,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
                 candlestickSeries.setData(cloneData as any);
 
-                chart.timeScale().fitContent();
-                chart.timeScale().applyOptions({
-                    timeVisible: true,
-                    fixLeftEdge: true,
-                    fixRightEdge: true,
-                    barSpacing: 10,
-                });
-
                 setProcessedPriceData(
                     calculatePercentageChange(
                         candleStickData[candleStickData.length - 1].close,
@@ -225,8 +196,10 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             }
         };
 
-        getImpliedVolatility();
-    }, [asset]);
+        if (!isSpeedMarkets) {
+            getImpliedVolatility();
+        }
+    }, [asset, isSpeedMarkets]);
 
     const risk = chainedRisk
         ? chainedRisk
@@ -306,7 +279,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             <div ref={chartContainerRef} />
 
             <Toggle
-                options={isSpeedMarkets ? ToggleButtonsSpeed : ToggleButtons}
+                options={ToggleButtons}
                 defaultSelectedIndex={
                     isSpeedMarkets ? DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS : DEFAULT_TOGGLE_BUTTON_INDEX
                 }

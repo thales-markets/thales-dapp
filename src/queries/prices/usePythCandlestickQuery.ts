@@ -22,11 +22,11 @@ const usePythCandlestickQuery = (
             const now = new Date();
             now.setDate(now.getDate() - dateRange);
             const response = await fetch(
-                `${
-                    generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY
-                }?symbol=Crypto.${asset}/USD&resolution=${resolution}&from=${Math.floor(
-                    Number(now) / 1000
-                )}&to=${Math.floor(Number(Date.now()) / 1000)}`
+                `${generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY}?symbol=${getAssetSymbol(
+                    asset
+                )}/USD&resolution=${resolution}&from=${Math.floor(Number(now) / 1000)}&to=${Math.floor(
+                    Number(Date.now()) / 1000
+                )}`
             );
             const pythCandlestickData = await response.json();
 
@@ -44,6 +44,17 @@ const usePythCandlestickQuery = (
         },
         options
     );
+};
+
+const getAssetSymbol = (asset: string) => {
+    if (asset === 'XAU') {
+        return 'Crypto.XAUT';
+    }
+    if (asset === 'XAG') {
+        return 'Metal.XAG';
+    }
+
+    return `Crypto.${asset}`;
 };
 
 export default usePythCandlestickQuery;
