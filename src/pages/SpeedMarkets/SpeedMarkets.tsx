@@ -327,6 +327,7 @@ const SpeedMarkets: React.FC = () => {
                                 selectedPrice={
                                     !isChained && positionType !== undefined ? currentPrices[currencyKey] : undefined
                                 }
+                                selectedDate={getTimeStampForDelta(deltaTimeSec)}
                                 selectedRightPrice={undefined}
                                 isSpeedMarkets={true}
                                 explicitCurrentPrice={currentPrices[currencyKey]}
@@ -394,6 +395,12 @@ const SpeedMarkets: React.FC = () => {
             )}
         </>
     );
+};
+
+const getTimeStampForDelta = (seconds: number) => {
+    const now = new Date();
+    now.setSeconds(now.getSeconds() + seconds);
+    return Number(now);
 };
 
 const Container = styled.div`
