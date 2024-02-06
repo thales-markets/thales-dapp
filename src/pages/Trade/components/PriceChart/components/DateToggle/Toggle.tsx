@@ -34,7 +34,11 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
                     borderColor={theme.button.borderColor.tertiary}
                     fontSize="13px"
                     padding="0"
-                    additionalStyles={{ borderRadius: '8px', transition: 'all 0.2s ease-in-out' }}
+                    additionalStyles={{
+                        borderRadius: '8px',
+                        transition: 'all 0.2s ease-in-out',
+                        textTransform: 'none',
+                    }}
                     onClick={() => handleClick(index)}
                 >
                     {label}

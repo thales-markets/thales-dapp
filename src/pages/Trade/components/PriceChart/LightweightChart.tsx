@@ -36,8 +36,8 @@ type LightweightChartProps = {
 };
 
 const ToggleButtons = [
-    { label: '15', resolution: '15', value: 2 },
-    { label: '30', resolution: '30', value: 4 },
+    { label: '15m', resolution: '15', value: 2 },
+    { label: '30m', resolution: '30', value: 4 },
     { label: '1H', resolution: '60', value: 14 },
     { label: '4H', resolution: '240', value: 28 },
     { label: '1D', resolution: '1D', value: 120 },
