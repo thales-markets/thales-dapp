@@ -153,21 +153,23 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                         crosshairMarkerVisible: false,
                         lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
                         lineWidth: 1,
-                        topColor: position === Positions.UP ? Colors.BLUE_MIDNIGHT_LIGHT : Colors.GRAY_PURPLE_BLURED,
-                        bottomColor: position === Positions.UP ? Colors.GRAY_PURPLE_BLURED : Colors.BLUE_MIDNIGHT_LIGHT,
+                        topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.GREEN_DARK_START,
+                        bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.GREEN_DARK_END,
                         invertFilledArea: position === Positions.UP,
                     });
                     areaSeriesSelected.setData(lineDataSelected as any);
                 }
 
                 const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: Colors.GREEN,
-                    downColor: Colors.RED,
-                    wickUpColor: Colors.GREEN,
-                    wickDownColor: Colors.RED,
+                    upColor: Colors.WHITE,
+                    downColor: Colors.GRAY_DARK_ZERO,
+                    wickVisible: true,
+                    wickUpColor: Colors.WHITE,
+                    wickDownColor: Colors.WHITE,
+                    borderColor: Colors.WHITE,
                     priceLineColor: theme.borderColor.tertiary,
                     priceLineWidth: 1,
-                    lastValueVisible: true,
+                    lastValueVisible: false,
                 });
                 const cloneData = [...candleStickData];
                 if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
