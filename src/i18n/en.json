@@ -16,6 +16,11 @@
             "progress-label": "Selling in progress...",
             "confirmation-message": "Successfully sold"
         },
+        "mint": {
+            "label": "Mint token",
+            "progress-label": "Minting...",
+            "confirmation-message": "Successfully minted"
+        },
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "or": "or",

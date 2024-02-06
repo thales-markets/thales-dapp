@@ -610,6 +610,19 @@ const erc20Contract = {
             stateMutability: 'nonpayable',
             type: 'function',
         },
+        {
+            inputs: [
+                {
+                    internalType: 'address payable',
+                    name: '_account',
+                    type: 'address',
+                },
+            ],
+            name: 'mintForUser',
+            outputs: [],
+            stateMutability: 'payable',
+            type: 'function',
+        },
     ],
 };
 

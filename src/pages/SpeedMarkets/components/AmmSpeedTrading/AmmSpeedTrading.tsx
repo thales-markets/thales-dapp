@@ -22,6 +22,7 @@ import {
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -58,7 +59,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { refetchBalances, refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
@@ -128,6 +129,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const isPositionSelected = isChained
         ? chainedPositions.every((pos) => pos !== undefined)
         : positionType !== undefined;
+
     const isPaidAmountEntered = Number(paidAmount) > 0;
 
     const isButtonDisabled =
@@ -201,6 +203,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         defaultCollateral,
         selectedCollateral,
     ]);
+
+    const isMintAvailable = networkId === Network.BlastSepolia && collateralBalance < minBuyinAmount;
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
@@ -584,9 +588,41 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     };
 
+    const handleMint = async () => {
+        const { collateral, signer } = snxJSConnector as any;
+        if (collateral) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+
+            const collateralWithSigner = collateral.connect(signer);
+            try {
+                const tx: ethers.ContractTransaction = await collateralWithSigner.mintForUser(walletAddress);
+
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.transactionHash) {
+                    toast.update(id, getSuccessToastOptions(t(`common.mint.confirmation-message`), id));
+                    refetchBalances(walletAddress, networkId);
+                }
+            } catch (e) {
+                console.log(e);
+                await delay(800);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+            }
+            setIsSubmitting(false);
+        }
+    };
+
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+        }
+        if (isMintAvailable) {
+            return (
+                <Button onClick={handleMint}>
+                    {isSubmitting ? t(`common.mint.progress-label`) : t(`common.mint.label`)}
+                </Button>
+            );
         }
         if (!isPositionSelected) {
             return (
