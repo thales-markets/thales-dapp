@@ -169,7 +169,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                     borderColor: Colors.WHITE,
                     priceLineColor: theme.borderColor.tertiary,
                     priceLineWidth: 1,
-                    lastValueVisible: false,
+                    lastValueVisible: true,
                 });
                 const cloneData = [...candleStickData];
                 if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
