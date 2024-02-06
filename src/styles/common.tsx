@@ -50,9 +50,6 @@ export const Colors = {
     GRAY: '#2B3139',
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
-    GRAY_DARK_ZERO: 'rgb(24, 26, 32, 0)',
-    GRAY_PURPLE: 'rgba(48, 54, 86, 1)',
-    GRAY_PURPLE_BLURED: 'rgba(48, 54, 86, 0.4)',
     GRAY_BLUE: '#808997',
 
     WHITE: '#FFFFFF',
@@ -60,7 +57,7 @@ export const Colors = {
     GREEN: '#03DAC5',
     GREEN_LIGHT: '#B0FFE7',
     GREEN_DARK: '#1D976C',
-    GREEN_DARK_START: 'rgb(76, 211, 163, 0.5)',
+    GREEN_DARK_START: 'rgb(76, 211, 163, 0.4)',
     GREEN_DARK_END: 'rgb(76, 211, 163, 0)',
 
     BLACK: '#000000',

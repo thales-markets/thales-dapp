@@ -129,8 +129,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
         const createLightweightChart = async () => {
             if (chart && candleStickData) {
-                // candleStickData[candleStickData.length - 1].close = currentPrice; // update last price with current one from chainlink
-
                 const lineDataSelected = candleStickData.map((datapoint) => ({
                     time: datapoint.time,
                     value: selectedPrice,
@@ -161,12 +159,11 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 }
 
                 const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: Colors.WHITE,
-                    downColor: Colors.GRAY_DARK_ZERO,
+                    upColor: Colors.GREEN,
+                    downColor: Colors.RED,
                     wickVisible: true,
-                    wickUpColor: Colors.WHITE,
-                    wickDownColor: Colors.WHITE,
-                    borderColor: Colors.WHITE,
+                    wickUpColor: Colors.GREEN,
+                    wickDownColor: Colors.RED,
                     priceLineColor: theme.borderColor.tertiary,
                     priceLineWidth: 1,
                     lastValueVisible: true,
