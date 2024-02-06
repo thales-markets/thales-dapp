@@ -514,10 +514,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     (snxJSConnector as any).provider
                 );
                 const priceId = getPriceId(networkId, currencyKey);
-                const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([priceId]);
+
+                let priceUpdateData: string[] = [];
+                let prices: { [key: string]: number } = {};
+                [priceUpdateData, prices] = await Promise.all([
+                    priceConnection.getPriceFeedsUpdateData([priceId]),
+                    getCurrentPrices(priceConnection, networkId, [priceId]),
+                ]);
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
 
-                const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, [priceId]);
                 setSubmittedStrikePrice(prices[currencyKey]);
 
                 const asset = ethers.utils.formatBytes32String(currencyKey);
@@ -898,11 +903,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
 const Container = styled(FlexDivRow)`
     position: relative;
     z-index: 4;
-    height: 78px;
-    margin-bottom: 46px;
+    height: 100%;
+    margin-bottom: 26px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
-        height: 100%;
         margin-bottom: 20px;
         flex-direction: column;
     }
