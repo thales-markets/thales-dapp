@@ -204,7 +204,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         selectedCollateral,
     ]);
 
-    const isMintAvailable = networkId === Network.BlastSepolia && collateralBalance < minBuyinAmount;
+    const isBlastSepolia = networkId === Network.BlastSepolia;
+    const isMintAvailable = isBlastSepolia && collateralBalance < totalPaidAmount;
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
@@ -347,7 +348,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             Number(paidAmount) > 0 &&
             ((isWalletConnected && Number(paidAmount) > collateralBalance) || collateralBalance === 0)
         ) {
-            messageKey = 'common.errors.insufficient-balance-wallet';
+            messageKey = isBlastSepolia
+                ? 'speed-markets.errors.insufficient-balance-wallet'
+                : 'common.errors.insufficient-balance-wallet';
         }
         if (Number(paidAmount) > 0) {
             const convertedTotalPaidAmount = isStableCurrency(selectedCollateral)
@@ -371,6 +374,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         totalPaidAmount,
         selectedCollateral,
         convertToStable,
+        isBlastSepolia,
     ]);
 
     // Submit validations
@@ -606,7 +610,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    toast.update(id, getSuccessToastOptions(t(`common.mint.confirmation-message`), id));
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t(`common.mint.confirmation-message`, { token: selectedCollateral }), id)
+                    );
                     refetchBalances(walletAddress, networkId);
                 }
             } catch (e) {
@@ -625,7 +632,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (isMintAvailable) {
             return (
                 <Button onClick={handleMint}>
-                    {isSubmitting ? t(`common.mint.progress-label`) : t(`common.mint.label`)}
+                    {isSubmitting ? t('common.mint.progress-label') : t('common.mint.label')}
+                    <CollateralText>&nbsp;{selectedCollateral}</CollateralText>
+                    {isSubmitting ? '...' : ''}
                 </Button>
             );
         }
@@ -653,9 +662,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!hasAllowance) {
             return (
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
-                    {!isAllowing
-                        ? `${t('common.enable-wallet-access.approve')} ${selectedCollateral}`
-                        : `${t('common.enable-wallet-access.approve-progress')} ${selectedCollateral}...`}
+                    {isAllowing
+                        ? t('common.enable-wallet-access.approve-progress')
+                        : t('common.enable-wallet-access.approve')}
+                    <CollateralText>&nbsp;{selectedCollateral}</CollateralText>
+                    {isAllowing ? '...' : ''}
                 </Button>
             );
         }
@@ -957,6 +968,10 @@ const ShareIcon = styled.i<{ disabled: boolean }>`
     color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+`;
+
+const CollateralText = styled.span`
+    text-transform: none;
 `;
 
 export default AmmSpeedTrading;
