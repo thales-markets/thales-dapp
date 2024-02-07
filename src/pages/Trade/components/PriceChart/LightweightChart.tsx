@@ -1,6 +1,11 @@
+import SimpleLoader from 'components/SimpleLoader';
 import TooltipInfo from 'components/Tooltip';
+import { USD_SIGN } from 'constants/currency';
+import { LINKS } from 'constants/links';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import { ColorType, createChart } from 'lightweight-charts';
+import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -11,15 +16,12 @@ import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { Colors, FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
+import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
-import { createChart, ColorType } from 'lightweight-charts';
-import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
-import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
-import { USD_SIGN } from 'constants/currency';
 
 type LightweightChartProps = {
     asset: string;
@@ -69,7 +71,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
             : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
-    ); // default date range: ;
+    );
 
     const [iv, setIV] = useState(0);
 
@@ -278,7 +280,10 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                     </PriceChange>
                 )}
             </FlexDivSpaceBetween>
-            <div ref={chartContainerRef} />
+            <ChartContainer>
+                {pythQuery.isLoading && <SimpleLoader />}
+                <Chart ref={chartContainerRef} isVisible={!pythQuery.isLoading} />
+            </ChartContainer>
 
             <Toggle
                 options={ToggleButtons}
@@ -287,6 +292,14 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 }
                 onChange={handleDateRangeChange}
             />
+
+            {isSpeedMarkets && !pythQuery.isLoading && (
+                <PythIconWrap>
+                    <a target="_blank" rel="noreferrer" href={LINKS.Pyth}>
+                        <i className="icon icon--pyth" />
+                    </a>
+                </PythIconWrap>
+            )}
         </Wrapper>
     );
 };
@@ -295,6 +308,17 @@ const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+`;
+
+const ChartContainer = styled.div`
+    height: 284px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
+`;
+
+const Chart = styled.div<{ isVisible: boolean }>`
+    ${(props) => (props.isVisible ? '' : 'display: none;')}
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
@@ -314,6 +338,22 @@ const Value = styled.span<{ margin?: string }>`
     line-height: 100%;
     color: ${(props) => props.theme.textColor.primary};
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')};
+`;
+
+const PythIconWrap = styled.div`
+    position: absolute;
+    height: 20px;
+    right: 20px;
+    bottom: 35px;
+    z-index: 1;
+    i {
+        font-size: 40px;
+        line-height: 10px;
+        color: ${(props) => props.theme.textColor.primary};
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        display: none;
+    }
 `;
 
 export default LightweightChart;
