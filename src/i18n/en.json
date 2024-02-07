@@ -16,6 +16,11 @@
             "progress-label": "Selling in progress...",
             "confirmation-message": "Successfully sold"
         },
+        "mint": {
+            "label": "Get",
+            "progress-label": "Getting",
+            "confirmation-message": "Successfully received {{token}}"
+        },
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "or": "or",
@@ -155,7 +160,8 @@
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
                 "base": "Switch to Base",
-                "zkSync": "Switch to ZkSync"
+                "zkSync": "Switch to ZkSync",
+                "blast-sepolia": "Switch to Blast Sepolia"
             }
         },
         "swap": {
@@ -469,7 +475,8 @@
             "max-time": "The maximum time is {{maxTime}} {{timeUnit}}",
             "min-maturity-date": "The time has to be at least {{minTime}} {{timeUnit}} in the future",
             "out-of-liquidity-direction": "Out of liquidity for direction",
-            "insufficient-balance-fee": "Not enough {{currencyKey}} in wallet for {{fee}} fee"
+            "insufficient-balance-fee": "Not enough {{currencyKey}} in wallet for {{fee}} fee",
+            "insufficient-balance-wallet": "Get {{currencyKey}} below"
         },
         "user-positions": {
             "end-time": "End time",
@@ -518,7 +525,9 @@
             "add-directions": "Click + to add directions",
             "roi": "ROI: {{value}}",
             "clear-all": "Clear all",
-            "asset-price": "If {{asset}} price sequence follows",
+            "asset-price": "If {{asset}} price sequence",
+            "starting-from": "starting from",
+            "follows": "follows",
             "between-rounds": "between rounds",
             "total-pay": "Total to pay {{amount}} + {{fee}} fee (= {{totalAmount}})",
             "to-pay-with-conversion": "To pay {{amount}} ({{stableAmount}}) + {{fee}} fee",

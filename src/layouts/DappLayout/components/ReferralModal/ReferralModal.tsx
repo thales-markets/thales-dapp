@@ -8,7 +8,6 @@ import { getErrorToastOptions, getSuccessToastOptions } from 'components/ToastMe
 import TextInput from 'components/fields/TextInput';
 import { generalConfig } from 'config/general';
 import ROUTES from 'constants/routes';
-import { Network } from 'enums/network';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -18,6 +17,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
 import { buildReferrerLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -58,8 +58,7 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         },
     ];
 
-    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
-    !isZkSync &&
+    !isOnlySpeedMarketsSupported(networkId) &&
         referralPageOptions.unshift(
             {
                 value: Pages.Markets,

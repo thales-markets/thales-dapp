@@ -1,20 +1,20 @@
+import Tooltip from 'components/Tooltip/Tooltip';
 import { USD_SIGN } from 'constants/currency';
+import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
+import { Positions } from 'enums/options';
+import useInterval from 'hooks/useInterval';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
+import { formatCurrencyWithKey, formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { formatShortDateWithTime, formatCurrencyWithKey, formatCurrencyWithSign } from 'thales-utils';
-import useInterval from 'hooks/useInterval';
-import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
-import { Positions } from 'enums/options';
 import { getDefaultCollateral } from 'utils/currency';
-import { secondsToHours, secondsToMilliseconds, secondsToMinutes } from 'date-fns';
-import Tooltip from 'components/Tooltip/Tooltip';
-import { getIsMobile } from 'redux/modules/ui';
+import { ColumnSpaceBetween, Text, TextLabel, TextValue } from '../../styled-components';
 
 type SpeedMarketsTrade = {
     address: string;
@@ -112,13 +112,11 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
         : `( ${t('markets.amm-trading.choose-time')} )`;
 
     const getChainedPositions = () =>
-        chainedPositions.map((pos, index) => {
-            return (
-                <PositionText isUp={pos === Positions.UP} key={index}>{`${pos}${
-                    index !== chainedPositions.length - 1 ? ', ' : ''
-                }`}</PositionText>
-            );
-        });
+        chainedPositions.map((pos, index) => (
+            <PositionText isUp={pos === Positions.UP} key={index}>{`${pos}${
+                index !== chainedPositions.length - 1 ? ', ' : ''
+            }`}</PositionText>
+        ));
 
     const isAllChainedMarketsSelected = chainedPositions.every((pos) => pos !== undefined);
 
@@ -131,21 +129,27 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                             isChainedSpeedMarket
                                 ? 'speed-markets.chained.asset-price'
                                 : 'markets.amm-trading.asset-price',
-                            { asset: currencyKey }
+                            {
+                                asset: currencyKey,
+                            }
                         )}
                     </TextLabel>
+                    {isChainedSpeedMarket && (
+                        <SentanceTextValue>
+                            {`(${t('speed-markets.chained.starting-from')} ${formatCurrencyWithSign(
+                                USD_SIGN,
+                                (market as MarketInfo).strikePrice
+                            )}),`}
+                        </SentanceTextValue>
+                    )}
                     {market.address ? (
                         <>
-                            {(!isMobile || !isChainedSpeedMarket) && (
+                            {!isMobile && !isChainedSpeedMarket && (
                                 <SentanceTextValue
                                     uppercase={!!positionTypeFormatted}
                                     lowercase={!positionTypeFormatted}
                                 >
-                                    {isChainedSpeedMarket
-                                        ? isAllChainedMarketsSelected
-                                            ? getChainedPositions()
-                                            : `( ${t('speed-markets.chained.errors.choose-directions')} )`
-                                        : positionTypeFormatted
+                                    {positionTypeFormatted
                                         ? positionTypeFormatted
                                         : `( ${t('markets.amm-trading.choose-direction')} )`}
                                 </SentanceTextValue>
@@ -181,9 +185,10 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
                     )}
                 </Text>
             </FlexDivCentered>
-            {isChainedSpeedMarket && isMobile && (
+            {isChainedSpeedMarket && (
                 <FlexDivCentered>
                     <SentanceTextValue uppercase={!!positionTypeFormatted} lowercase={!positionTypeFormatted}>
+                        <TextLabel>{t('speed-markets.chained.follows')}&nbsp;</TextLabel>
                         {isAllChainedMarketsSelected
                             ? getChainedPositions()
                             : `( ${t('speed-markets.chained.errors.choose-directions')} )`}

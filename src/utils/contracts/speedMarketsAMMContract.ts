@@ -11,6 +11,7 @@ const speedMarketsAMMContract = {
         [Network.Base]: '0x85b827d133FEDC36B844b20f4a198dA583B25BAA',
         [Network.ZkSync]: '0x508F31897c25C436b257E37763E157Cb53D0a6fa',
         [Network.ZkSyncSepolia]: '0xF0C711f9DBd9937fc43BEa168B3F40614B3D6821',
+        [Network.BlastSepolia]: '0xA2dCFEe657Bc0a71AC31d146366246202eae18a4',
     },
     abi: [
         {

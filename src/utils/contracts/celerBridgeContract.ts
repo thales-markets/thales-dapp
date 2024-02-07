@@ -11,6 +11,7 @@ const celerBridgeContract = {
         [Network.Base]: '0x7d43aabc515c356145049227cee54b608342c0ad',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

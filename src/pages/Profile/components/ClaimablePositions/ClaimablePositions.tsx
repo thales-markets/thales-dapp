@@ -5,6 +5,7 @@ import { millisecondsToSeconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 import { orderBy } from 'lodash';
+import ChainedPositionAction from 'pages/SpeedMarkets/components/ChainedPositionAction';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
 import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
@@ -23,12 +24,11 @@ import { formatCurrency, formatCurrencyWithSign, formatShortDate, formatShortDat
 import { SharePositionData } from 'types/flexCards';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
 import { getPriceId } from 'utils/pyth';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
-import ChainedPositionAction from 'pages/SpeedMarkets/components/ChainedPositionAction';
-import { Network } from 'enums/network';
 
 type ClaimablePositionsProps = {
     searchAddress: string;
@@ -47,10 +47,8 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
 
-    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
-
     const claimablePositionsQuery = useClaimablePositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isZkSync,
+        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
     });
 
     const claimablePositions: UserPosition[] = useMemo(
@@ -78,7 +76,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected && !isZkSync,
+            enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
         }
     );
 

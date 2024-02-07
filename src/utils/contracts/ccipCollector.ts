@@ -11,6 +11,7 @@ const CCIPCollector = {
         [Network.Base]: '0x25f29136801b0Eac63C586FFD249B49F1d96DB9c',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

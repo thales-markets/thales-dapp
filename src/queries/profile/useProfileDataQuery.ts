@@ -2,10 +2,11 @@ import { BATCH_NUMBER_OF_SPEED_MARKETS, SPEED_MARKETS_QUOTE } from 'constants/op
 import QUERY_KEYS from 'constants/queryKeys';
 import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
-import { UserProfileData } from 'types/profile';
 import { bigNumberFormatter, coinFormatter, roundNumberToDecimals } from 'thales-utils';
+import { UserProfileData } from 'types/profile';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeesFromHistory } from 'utils/speedAmm';
 
@@ -25,9 +26,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 speedAmmParams = [],
                 chainedAmmParams = [];
 
-            const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
-
-            if (isZkSync) {
+            if (isOnlySpeedMarketsSupported(networkId)) {
                 speedAmmParams = await speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress);
             } else {
                 [userMarketTransactions, userTrades, speedAmmParams, chainedAmmParams] = await Promise.all([
@@ -73,7 +72,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                     activeChainedSpeedMarkets = [],
                     maturedChainedSpeedMarkets = [];
 
-                if (isZkSync) {
+                if (isOnlySpeedMarketsSupported(networkId)) {
                     [activeSpeedMarkets, maturedSpeedMarkets] = await Promise.all([
                         speedMarketsAMMContract.activeMarketsPerUser(
                             0,
@@ -120,7 +119,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 if (activeSpeedMarkets.length) {
                     promises.push(speedMarketsDataContract.getMarketsData(activeSpeedMarkets));
                 }
-                if (!isZkSync) {
+                if (!isOnlySpeedMarketsSupported(networkId)) {
                     // Chained speed markets active
                     promises.push(speedMarketsDataContract.getChainedMarketsData(activeChainedSpeedMarkets));
 
@@ -208,7 +207,7 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
                 const numSpeedMarkets =
                     Number(speedAmmParams.numActiveMarketsPerUser) +
                     Number(speedAmmParams.numMaturedMarketsPerUser) +
-                    (isZkSync
+                    (isOnlySpeedMarketsSupported(networkId)
                         ? 0
                         : Number(chainedAmmParams.numActiveMarketsPerUser) +
                           Number(chainedAmmParams.numMaturedMarketsPerUser));

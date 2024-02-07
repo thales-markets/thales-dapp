@@ -11,6 +11,7 @@ const binaryOptionsMarketDataContract = {
         [Network.Base]: '0x22Eb15Fb53B61B470cabbe9fC268a1b67E675ff9',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {
