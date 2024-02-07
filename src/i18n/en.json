@@ -17,9 +17,9 @@
             "confirmation-message": "Successfully sold"
         },
         "mint": {
-            "label": "Mint token",
-            "progress-label": "Minting...",
-            "confirmation-message": "Successfully minted"
+            "label": "Get sUSD",
+            "progress-label": "Getting sUSD...",
+            "confirmation-message": "Successfully received sUSD"
         },
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
