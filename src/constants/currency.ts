@@ -470,6 +470,7 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.ZkSync]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
     [Network.ZkSyncSepolia]: [SYNTHS_MAP.sUSD as Coins],
+    [Network.BlastSepolia]: [SYNTHS_MAP.sUSD as Coins],
 };
 
 // TODO: merge with COLLATERALS when all pages will support these
@@ -494,4 +495,5 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
     ],
     [Network.ZkSync]: [],
     [Network.ZkSyncSepolia]: [],
+    [Network.BlastSepolia]: [],
 };

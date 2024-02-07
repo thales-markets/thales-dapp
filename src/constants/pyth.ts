@@ -21,7 +21,7 @@ export const PRICE_ID = {
 
 export const CONNECTION_TIMEOUT_MS = 15000;
 
-// You can find at https://github.com/pyth-network/pyth-crosschain/tree/main/target_chains/ethereum/contracts/networks
+// You can find at https://docs.pyth.network/price-feeds/contract-addresses/evm
 export const PYTH_CONTRACT_ADDRESS = {
     [Network.Mainnet]: '0x4305FB66699C3B2702D4d05CF36551390A4c69C6',
     [Network.OptimismMainnet]: '0xff1a0f4744e8582DF1aE09D5611b887B6a12925C',
@@ -32,6 +32,7 @@ export const PYTH_CONTRACT_ADDRESS = {
     [Network.Base]: '0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a',
     [Network.ZkSync]: '0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834',
     [Network.ZkSyncSepolia]: '0x056f829183Ec806A78c26C98961678c24faB71af',
+    [Network.BlastSepolia]: '0xA2aa501b19aff244D90cc15a4Cf739D2725B5729',
 };
 
 export const PYTH_CURRENCY_DECIMALS = 8;

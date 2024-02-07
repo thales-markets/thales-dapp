@@ -11,6 +11,7 @@ const lpStakingRewardsContract = {
         [Network.Base]: 'TBD',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

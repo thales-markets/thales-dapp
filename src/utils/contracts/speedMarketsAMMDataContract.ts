@@ -11,6 +11,7 @@ const speedMarketsDataContract = {
         [Network.Base]: '0xD6155E7C948458D6Ab58f9D63E1566493b9304C1',
         [Network.ZkSync]: '0x6356454D76642c72edb9170EF1102418D656887d',
         [Network.ZkSyncSepolia]: '0x32A27803257207Fe4DB699A97Fb2CF055C9Ca727',
+        [Network.BlastSepolia]: '0x82dD5508537C2355c321584EcB440E3340d3aB79',
     },
     abi: [
         {

@@ -11,6 +11,7 @@ const erc20Contract = {
         [Network.Base]: '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA', // USDbC
         [Network.ZkSync]: '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4', // USDC
         [Network.ZkSyncSepolia]: '0xCa032EdCFfC65Fc5FAea69624700d61318D6f6e8', // exoticSUSD
+        [Network.BlastSepolia]: '0x0E350351d27F950c92280c6B76ee49f0a64275fe', // exoticSUSD
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
@@ -607,6 +608,19 @@ const erc20Contract = {
             name: 'withdraw',
             outputs: [],
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address payable',
+                    name: '_account',
+                    type: 'address',
+                },
+            ],
+            name: 'mintForUser',
+            outputs: [],
+            stateMutability: 'payable',
             type: 'function',
         },
     ],
