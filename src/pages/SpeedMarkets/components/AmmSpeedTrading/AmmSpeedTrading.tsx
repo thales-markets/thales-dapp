@@ -22,6 +22,7 @@ import {
 } from 'constants/options';
 import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber, ethers } from 'ethers';
@@ -58,7 +59,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
-import { refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
+import { refetchBalances, refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getFeeByTimeThreshold, getTransactionForSpeedAMM } from 'utils/speedAmm';
@@ -129,10 +130,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         ? chainedPositions.every((pos) => pos !== undefined)
         : positionType !== undefined;
 
+    const isPaidAmountEntered = Number(paidAmount) > 0;
+
     const isButtonDisabled =
         !isPositionSelected ||
         !(strikeTimeSec || deltaTimeSec) ||
-        !paidAmount ||
+        !isPaidAmountEntered ||
         isSubmitting ||
         !hasAllowance ||
         !!errorMessageKey ||
@@ -200,6 +203,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         defaultCollateral,
         selectedCollateral,
     ]);
+
+    const isBlastSepolia = networkId === Network.BlastSepolia;
+    const isMintAvailable = isBlastSepolia && collateralBalance < totalPaidAmount;
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
@@ -342,7 +348,9 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             Number(paidAmount) > 0 &&
             ((isWalletConnected && Number(paidAmount) > collateralBalance) || collateralBalance === 0)
         ) {
-            messageKey = 'common.errors.insufficient-balance-wallet';
+            messageKey = isBlastSepolia
+                ? 'speed-markets.errors.insufficient-balance-wallet'
+                : 'common.errors.insufficient-balance-wallet';
         }
         if (Number(paidAmount) > 0) {
             const convertedTotalPaidAmount = isStableCurrency(selectedCollateral)
@@ -366,6 +374,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         totalPaidAmount,
         selectedCollateral,
         convertToStable,
+        isBlastSepolia,
     ]);
 
     // Submit validations
@@ -509,10 +518,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     (snxJSConnector as any).provider
                 );
                 const priceId = getPriceId(networkId, currencyKey);
-                const priceUpdateData = await priceConnection.getPriceFeedsUpdateData([priceId]);
+
+                let priceUpdateData: string[] = [];
+                let prices: { [key: string]: number } = {};
+                [priceUpdateData, prices] = await Promise.all([
+                    priceConnection.getPriceFeedsUpdateData([priceId]),
+                    getCurrentPrices(priceConnection, networkId, [priceId]),
+                ]);
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
 
-                const prices: { [key: string]: number } = await getCurrentPrices(priceConnection, networkId, [priceId]);
                 setSubmittedStrikePrice(prices[currencyKey]);
 
                 const asset = ethers.utils.formatBytes32String(currencyKey);
@@ -583,9 +597,46 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         }
     };
 
+    const handleMint = async () => {
+        const { collateral, signer } = snxJSConnector as any;
+        if (collateral) {
+            setIsSubmitting(true);
+            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
+
+            const collateralWithSigner = collateral.connect(signer);
+            try {
+                const tx: ethers.ContractTransaction = await collateralWithSigner.mintForUser(walletAddress);
+
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.transactionHash) {
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t(`common.mint.confirmation-message`, { token: selectedCollateral }), id)
+                    );
+                    refetchBalances(walletAddress, networkId);
+                }
+            } catch (e) {
+                console.log(e);
+                await delay(800);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
+            }
+            setIsSubmitting(false);
+        }
+    };
+
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+        }
+        if (isMintAvailable) {
+            return (
+                <Button onClick={handleMint}>
+                    {isSubmitting ? t('common.mint.progress-label') : t('common.mint.label')}
+                    <CollateralText>&nbsp;{selectedCollateral}</CollateralText>
+                    {isSubmitting ? '...' : ''}
+                </Button>
+            );
         }
         if (!isPositionSelected) {
             return (
@@ -599,7 +650,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!(strikeTimeSec || deltaTimeSec)) {
             return <Button disabled={true}>{t('markets.amm-trading.choose-time')}</Button>;
         }
-        if (!paidAmount) {
+        if (!isPaidAmountEntered) {
             return <Button disabled={true}>{t('common.enter-amount')}</Button>;
         }
         if (outOfLiquidityPerDirection) {
@@ -611,9 +662,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         if (!hasAllowance) {
             return (
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
-                    {!isAllowing
-                        ? `${t('common.enable-wallet-access.approve')} ${selectedCollateral}`
-                        : `${t('common.enable-wallet-access.approve-progress')} ${selectedCollateral}...`}
+                    {isAllowing
+                        ? t('common.enable-wallet-access.approve-progress')
+                        : t('common.enable-wallet-access.approve')}
+                    <CollateralText>&nbsp;{selectedCollateral}</CollateralText>
+                    {isAllowing ? '...' : ''}
                 </Button>
             );
         }
@@ -701,7 +754,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             : {};
 
     return (
-        <Container>
+        <Container isChained={isChained}>
             {!isMobile && getTradingDetails()}
             <FinalizeTrade>
                 <ColumnSpaceBetween ref={inputWrapperRef}>
@@ -858,11 +911,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     );
 };
 
-const Container = styled(FlexDivRow)`
+const Container = styled(FlexDivRow)<{ isChained: boolean }>`
     position: relative;
     z-index: 4;
-    height: 78px;
-    margin-bottom: 46px;
+    height: ${(props) => (props.isChained ? '98' : '78')}px;
+    margin-bottom: ${(props) => (props.isChained ? '26' : '46')}px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
@@ -915,6 +968,10 @@ const ShareIcon = styled.i<{ disabled: boolean }>`
     color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+`;
+
+const CollateralText = styled.span`
+    text-transform: none;
 `;
 
 export default AmmSpeedTrading;

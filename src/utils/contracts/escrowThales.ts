@@ -11,6 +11,7 @@ const escrowThales = {
         [Network.Base]: '0x29dfc5fee05578CD913c75fF1C7A0d315595939A',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

@@ -11,6 +11,7 @@ const stakingThales = {
         [Network.Base]: '0x84aB38e42D8Da33b480762cCa543eEcA6135E040',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

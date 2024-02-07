@@ -29,11 +29,11 @@ import { formatCurrency, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
 import { UserPosition } from 'types/profile';
 import { ThemeInterface } from 'types/ui';
+import { isOnlySpeedMarketsSupported } from 'utils/network';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
-import { Network } from 'enums/network';
 
 type OpenPositionsProps = {
     searchAddress: string;
@@ -85,10 +85,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
             ? exchangeRatesMarketDataQuery.data
             : null;
 
-    const isZkSync = [Network.ZkSync, Network.ZkSyncSepolia].includes(networkId);
-
     const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isZkSync,
+        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
     });
 
     const openPositions: UserPosition[] = useMemo(
@@ -116,7 +114,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
         networkId,
         searchAddress || walletAddress,
         {
-            enabled: isAppReady && isWalletConnected && !isZkSync,
+            enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
         }
     );
 

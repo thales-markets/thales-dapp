@@ -11,6 +11,7 @@ export const thalesContract = {
         [Network.Base]: '0xf34e0cff046e154cafcae502c7541b9e5fd8c249',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

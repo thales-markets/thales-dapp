@@ -62,7 +62,7 @@ const NetworkSwitch: React.FC<NetworkSwitchProps> = ({
                         {React.createElement(selectedNetwork.icon, {
                             style: { marginRight: 5 },
                         })}
-                        {selectedNetwork.name}
+                        <NetworkName>{selectedNetwork.name}</NetworkName>
                         {<Icon className={isDropdownOpen ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                     </NetworkItem>
                     {isDropdownOpen && (
@@ -128,8 +128,8 @@ const NetworkDropDown = styled.div`
     flex-direction: column;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
-    width: 130px;
-    max-width: 130px;
+    width: 136px;
+    max-width: 136px;
     padding: 5px;
     justify-content: center;
     align-items: center;
@@ -143,8 +143,8 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 130px;
-    width: 130px;
+    max-width: 136px;
+    width: 136px;
     color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => props.cursor};
     flex-direction: column;
@@ -171,6 +171,12 @@ const NetworkItem = styled.div<{ selectedItem?: boolean; noHover?: boolean }>`
     @media (max-width: 500px) {
         ${(props) => (props.selectedItem ? 'padding: 4px 7px' : '')}
     }
+`;
+
+const NetworkName = styled.span`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 const Icon = styled.i`

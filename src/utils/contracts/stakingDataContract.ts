@@ -11,6 +11,7 @@ const stakingDataContract = {
         [Network.Base]: '0xEB4fBF2C6939787e2b9e00C45115eF90631F637c',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

@@ -11,6 +11,7 @@ const rangedMarketAMMContract = {
         [Network.Base]: '0xB8109ac56EE572990e6d2C6b4648042bB1C33317',
         [Network.ZkSync]: 'TBD',
         [Network.ZkSyncSepolia]: 'TBD',
+        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

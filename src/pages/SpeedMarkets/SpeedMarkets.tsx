@@ -100,6 +100,11 @@ const SpeedMarkets: React.FC = () => {
         });
     }, [networkId, priceConnection, currencyKey]);
 
+    // Set isChained when query param is changed after initialization
+    useEffect(() => {
+        setIsChained(isChainedMarkets);
+    }, [isChainedMarkets]);
+
     // Used for canceling asynchronous tasks
     const mountedRef = useRef(true);
     useEffect(() => {

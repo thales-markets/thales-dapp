@@ -76,3 +76,7 @@ export const ColumnSpaceBetween = styled(FlexDivColumn)`
     height: 100%;
     justify-content: space-between;
 `;
+
+export const CollateralText = styled.span`
+    text-transform: none;
+`;

@@ -2,7 +2,6 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import SearchInput from 'components/SearchInput/SearchInput';
 import { USD_SIGN } from 'constants/currency';
 import { millisecondsToSeconds } from 'date-fns';
-import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
@@ -66,7 +65,7 @@ const Profile: React.FC = () => {
     const [searchText, setSearchText] = useState<string>('');
 
     const notificationsQuery = useUserNotificationsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && ![Network.ZkSync, Network.ZkSyncSepolia].includes(networkId),
+        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
     });
     const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
 
