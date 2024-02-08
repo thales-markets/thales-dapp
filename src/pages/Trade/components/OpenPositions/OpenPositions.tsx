@@ -7,7 +7,7 @@ import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -15,7 +15,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { UserLivePositions } from 'types/options';
+import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
 import OpenPosition from '../OpenPosition';
 
 type OpenPositionsProps = {
@@ -37,6 +37,12 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    // For sorting purpose as claimable status is unknown until all chained positions is rendered
+    const [chainedClaimableStatuses, setChainedClaimableStatuses] = useState<
+        { address: string; isClaimable: boolean }[]
+    >([]);
+    const [chainedPositionsWithStatus, setChainedPositionsWithStatus] = useState<ChainedSpeedMarket[]>([]);
 
     const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
         enabled: isAppReady && isWalletConnected && !isSpeedMarkets,
@@ -70,25 +76,70 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
         [userChainedSpeedMarketsDataQuery]
     );
 
+    // For chained sorting purpose
+    const updateChainedClaimable = (address: string, isClaimable: boolean) => {
+        const status = chainedClaimableStatuses.find((s) => s.address === address);
+        if (status === undefined) {
+            setChainedClaimableStatuses([...chainedClaimableStatuses, { address, isClaimable }]);
+        } else if (status.isClaimable !== isClaimable) {
+            setChainedClaimableStatuses(
+                chainedClaimableStatuses.map((s) => (s.address === address ? { ...s, isClaimable } : s))
+            );
+        }
+    };
+
+    // For chained sorting purpose update claimable status when it is known
+    useEffect(() => {
+        if (userOpenChainedSpeedMarketsData.length === chainedClaimableStatuses.length) {
+            let isStatusChanged = false;
+            const chainedPositionsWithStatusUpdated: ChainedSpeedMarket[] = userOpenChainedSpeedMarketsData.map(
+                (position) => {
+                    const claimable = chainedClaimableStatuses.find((p) => p.address === position.address)?.isClaimable;
+                    const claimableUpdated = chainedPositionsWithStatus.find((p) => p.address === position.address)
+                        ?.claimable;
+
+                    isStatusChanged =
+                        isStatusChanged || (position.claimable !== claimable && claimableUpdated !== claimable);
+
+                    return {
+                        ...position,
+                        claimable,
+                    } as ChainedSpeedMarket;
+                }
+            );
+            if (isStatusChanged) {
+                setChainedPositionsWithStatus(chainedPositionsWithStatusUpdated);
+            }
+        }
+    }, [userOpenChainedSpeedMarketsData, chainedPositionsWithStatus, chainedClaimableStatuses]);
+
+    const sortSpeedMarkets = (markets: (UserLivePositions | ChainedSpeedMarket)[]) =>
+        markets
+            // 1. sort open by maturity asc
+            .filter((position) => position.maturityDate > Date.now())
+            .sort((a, b) => a.maturityDate - b.maturityDate)
+            .concat(
+                // 2. sort claimable by maturity desc
+                markets.filter((position) => position.claimable).sort((a, b) => b.maturityDate - a.maturityDate)
+            )
+            .concat(
+                markets
+                    // 3. sort lost by maturity desc
+                    .filter((position) => position.maturityDate < Date.now() && !position.claimable)
+                    .sort((a, b) => b.maturityDate - a.maturityDate)
+            );
+
+    const sortedUserOpenSpeedMarketsData = sortSpeedMarkets(userOpenSpeedMarketsData) as UserLivePositions[];
+
+    const sortedUserOpenChainedSpeedMarketsData = sortSpeedMarkets(
+        chainedPositionsWithStatus.length ? chainedPositionsWithStatus : userOpenChainedSpeedMarketsData
+    ) as ChainedSpeedMarket[];
+
     const noPositions = isSpeedMarkets
         ? isChainedSpeedMarkets
             ? userOpenChainedSpeedMarketsData.length === 0
             : userOpenSpeedMarketsData.length === 0
         : livePositions.length === 0;
-
-    const sortedUserOpenSpeedMarketsData = userOpenSpeedMarketsData
-        .filter((position) => position.maturityDate > Date.now())
-        .sort((a, b) => a.maturityDate - b.maturityDate) // 1. sort open by maturity asc
-        .concat(
-            userOpenSpeedMarketsData
-                .filter((position) => position.claimable)
-                .sort((a, b) => b.maturityDate - a.maturityDate) // 2. sort claimable by maturity desc
-        )
-        .concat(
-            userOpenSpeedMarketsData
-                .filter((position) => position.maturityDate < Date.now() && !position.claimable)
-                .sort((a, b) => b.maturityDate - a.maturityDate) // 3. sort lost by maturity desc
-        );
 
     const positions = noPositions
         ? dummyPositions
@@ -112,16 +163,17 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 <>
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
-                            ? userOpenChainedSpeedMarketsData
-                                  .sort((a, b) => b.maturityDate - a.maturityDate)
-                                  .map((position, index) => (
-                                      <ChainedPosition
-                                          position={position}
-                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                                          isMultipleMarkets={userOpenChainedSpeedMarketsData.length > 1}
-                                          key={`position${position.address}${index}`}
-                                      />
-                                  ))
+                            ? sortedUserOpenChainedSpeedMarketsData.map((position, index) => (
+                                  <ChainedPosition
+                                      position={position}
+                                      maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                      isMultipleMarkets={userOpenChainedSpeedMarketsData.length > 1}
+                                      setIsClaimable={(isClaimable) =>
+                                          updateChainedClaimable(position.address, isClaimable)
+                                      }
+                                      key={`position${position.address}${index}`}
+                                  />
+                              ))
                             : positions.map((position, index) => (
                                   <OpenPosition
                                       position={position}
