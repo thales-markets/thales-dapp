@@ -71,24 +71,41 @@ const { chains, provider } = configureChains(
     [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base, zkSync, zkSyncSepolia, BlastSepolia],
     [
         jsonRpcProvider({
-            rpc: (chain) => ({
-                http:
-                    // For Polygon always use Infura as Chainnode is having issues
-                    chain.id === Network.PolygonMainnet
-                        ? `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
-                        : !!CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
-                        ? `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
-                              process.env.REACT_APP_CHAINNODE_PROJECT_ID
-                          }`
-                        : chain.rpcUrls.default.http[0],
-            }),
+            rpc: (chain) => {
+                const chainnodeNetworkName = CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode;
+                return {
+                    http:
+                        chain.id === Network.PolygonMainnet
+                            ? // For Polygon always use Infura as Chainnode is having issues
+                              `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
+                            : !!chainnodeNetworkName
+                            ? `https://${chainnodeNetworkName}.chainnodes.org/${process.env.REACT_APP_CHAINNODE_PROJECT_ID}`
+                            : chain.rpcUrls.default.http[0],
+                };
+            },
             stallTimeout: STALL_TIMEOUT,
-            priority: 1,
+            priority: 2,
+        }),
+        jsonRpcProvider({
+            rpc: (chain) => {
+                const chainnodeNetworkName = CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode;
+                return {
+                    http:
+                        chain.id === Network.Base
+                            ? // For Base use Ankr as Infura doesn't support it
+                              `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`
+                            : !!chainnodeNetworkName
+                            ? `https://${chainnodeNetworkName}.chainnodes.org/${process.env.REACT_APP_CHAINNODE_PROJECT_ID}`
+                            : chain.rpcUrls.default.http[0],
+                };
+            },
+            stallTimeout: STALL_TIMEOUT,
+            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 1 : 4,
         }),
         infuraProvider({
             apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '',
             stallTimeout: STALL_TIMEOUT,
-            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 2,
+            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 3,
         }),
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
