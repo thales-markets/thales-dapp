@@ -75,7 +75,10 @@ const { chains, provider } = configureChains(
                 const chainnodeNetworkName = CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode;
                 return {
                     http:
-                        chain.id === Network.PolygonMainnet
+                        process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' && chain.id === Network.Base
+                            ? // For Base use Ankr when Infura is primary as Infura doesn't support it
+                              `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`
+                            : chain.id === Network.PolygonMainnet
                             ? // For Polygon always use Infura as Chainnode is having issues
                               `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
                             : !!chainnodeNetworkName
@@ -84,28 +87,12 @@ const { chains, provider } = configureChains(
                 };
             },
             stallTimeout: STALL_TIMEOUT,
-            priority: 2,
-        }),
-        jsonRpcProvider({
-            rpc: (chain) => {
-                const chainnodeNetworkName = CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode;
-                return {
-                    http:
-                        chain.id === Network.Base
-                            ? // For Base use Ankr as Infura doesn't support it
-                              `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`
-                            : !!chainnodeNetworkName
-                            ? `https://${chainnodeNetworkName}.chainnodes.org/${process.env.REACT_APP_CHAINNODE_PROJECT_ID}`
-                            : chain.rpcUrls.default.http[0],
-                };
-            },
-            stallTimeout: STALL_TIMEOUT,
-            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 1 : 4,
+            priority: 1,
         }),
         infuraProvider({
             apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '',
             stallTimeout: STALL_TIMEOUT,
-            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 3,
+            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 2,
         }),
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
