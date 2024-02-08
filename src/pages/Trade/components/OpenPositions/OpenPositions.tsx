@@ -76,7 +76,25 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
             : userOpenSpeedMarketsData.length === 0
         : livePositions.length === 0;
 
-    const positions = noPositions ? dummyPositions : isSpeedMarkets ? userOpenSpeedMarketsData : livePositions;
+    const sortedUserOpenSpeedMarketsData = userOpenSpeedMarketsData
+        .filter((position) => position.maturityDate > Date.now())
+        .sort((a, b) => a.maturityDate - b.maturityDate) // 1. sort open by maturity asc
+        .concat(
+            userOpenSpeedMarketsData
+                .filter((position) => position.claimable)
+                .sort((a, b) => b.maturityDate - a.maturityDate) // 2. sort claimable by maturity desc
+        )
+        .concat(
+            userOpenSpeedMarketsData
+                .filter((position) => position.maturityDate < Date.now() && !position.claimable)
+                .sort((a, b) => b.maturityDate - a.maturityDate) // 3. sort lost by maturity desc
+        );
+
+    const positions = noPositions
+        ? dummyPositions
+        : isSpeedMarkets
+        ? sortedUserOpenSpeedMarketsData
+        : livePositions.sort((a, b) => a.maturityDate - b.maturityDate);
 
     const isLoading =
         positionsQuery.isLoading ||
@@ -95,7 +113,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
                             ? userOpenChainedSpeedMarketsData
-                                  .sort((a, b) => a.maturityDate - b.maturityDate)
+                                  .sort((a, b) => b.maturityDate - a.maturityDate)
                                   .map((position, index) => (
                                       <ChainedPosition
                                           position={position}
@@ -104,17 +122,15 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                                           key={`position${position.address}${index}`}
                                       />
                                   ))
-                            : positions
-                                  .sort((a, b) => a.maturityDate - b.maturityDate)
-                                  .map((position, index) => (
-                                      <OpenPosition
-                                          position={position}
-                                          maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
-                                          currentPrices={currentPrices}
-                                          isMultipleMarkets={positions.length > 3}
-                                          key={`position${position.market}${position.positionAddress}${index}`}
-                                      />
-                                  ))}
+                            : positions.map((position, index) => (
+                                  <OpenPosition
+                                      position={position}
+                                      maxPriceDelayForResolvingSec={maxPriceDelayForResolvingSec}
+                                      currentPrices={currentPrices}
+                                      isMultipleMarkets={positions.length > 3}
+                                      key={`position${position.market}${position.positionAddress}${index}`}
+                                  />
+                              ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>

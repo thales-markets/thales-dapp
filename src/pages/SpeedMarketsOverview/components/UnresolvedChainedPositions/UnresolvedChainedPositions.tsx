@@ -362,20 +362,18 @@ const UnresolvedChainedPositions: React.FC = () => {
                 ) : (
                     <PositionsWrapper hasPositions={positions.length > 0} isChained>
                         {positions.length > 0 ? (
-                            positions
-                                .sort((a, b) => a.maturityDate - b.maturityDate)
-                                .map((position, index) => (
-                                    <ChainedPosition
-                                        position={position}
-                                        maxPriceDelayForResolvingSec={
-                                            ammChainedSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
-                                        }
-                                        isOverview
-                                        isAdmin={isAdmin}
-                                        isSubmittingBatch={isSubmitting}
-                                        key={`${section}${index}`}
-                                    />
-                                ))
+                            positions.map((position, index) => (
+                                <ChainedPosition
+                                    position={position}
+                                    maxPriceDelayForResolvingSec={
+                                        ammChainedSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec
+                                    }
+                                    isOverview
+                                    isAdmin={isAdmin}
+                                    isSubmittingBatch={isSubmitting}
+                                    key={`${section}${index}`}
+                                />
+                            ))
                         ) : (
                             <NoPositionsText>{t('speed-markets.overview.no-positions')}</NoPositionsText>
                         )}
@@ -387,10 +385,22 @@ const UnresolvedChainedPositions: React.FC = () => {
 
     return (
         <Wrapper>
-            {getSection(SECTIONS.userWinner, userWinnerSpeedMarketsData)}
-            {getSection(SECTIONS.ammWinner, ammWinnerSpeedMarketsData)}
-            {getSection(SECTIONS.unknownPrice, unknownPriceSpeedMarketsData)}
-            {getSection(SECTIONS.openPositions, openSpeedMarketsData)}
+            {getSection(
+                SECTIONS.userWinner,
+                userWinnerSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.ammWinner,
+                ammWinnerSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.unknownPrice,
+                unknownPriceSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.openPositions,
+                openSpeedMarketsData.sort((a, b) => a.maturityDate - b.maturityDate)
+            )}
         </Wrapper>
     );
 };

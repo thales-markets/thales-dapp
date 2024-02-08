@@ -34,6 +34,7 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
                 ? userResolvedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
+                      .sort((a, b) => b.maturityDate - a.maturityDate)
                 : [],
         [userResolvedSpeedMarketsDataQuery]
     );
@@ -52,6 +53,7 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
                 ? userResolvedChainedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
+                      .sort((a, b) => b.maturityDate - a.maturityDate)
                 : [],
         [userResolvedChainedSpeedMarketsDataQuery]
     );
