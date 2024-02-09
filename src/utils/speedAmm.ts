@@ -220,6 +220,7 @@ export const resolveAllSpeedPositions = async (
 
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(i18n.t(`speed-markets.overview.confirmation-message`), id));
+                    await delay(5000);
                     refetchActiveSpeedMarkets(false, networkId);
                 }
             } catch (e) {
@@ -328,6 +329,7 @@ export const resolveAllChainedMarkets = async (
 
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(i18n.t(`speed-markets.overview.confirmation-message`), id));
+                    await delay(5000);
                     refetchActiveSpeedMarkets(true, networkId);
                 }
             } catch (e) {
