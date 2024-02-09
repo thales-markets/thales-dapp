@@ -465,7 +465,7 @@ export const COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.USDC as Coins,
         CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
-    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.ZkSync]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
