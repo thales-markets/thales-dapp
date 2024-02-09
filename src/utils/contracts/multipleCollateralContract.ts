@@ -1172,7 +1172,7 @@ const multipleCollateral = {
             [Network.OptimismSepolia]: 'TBD',
             [Network.PolygonMainnet]: 'TBD',
             [Network.Arbitrum]: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-            [Network.Base]: 'TBD',
+            [Network.Base]: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
             [Network.ZkSync]: '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4',
             [Network.ZkSyncSepolia]: 'TBD',
             [Network.BlastSepolia]: 'TBD',
