@@ -167,8 +167,9 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const claimableChainedPositions = chainedWithClaimableStatus.filter((p) => p.claimable);
     const claimableChainedPositionsSum = claimableChainedPositions.reduce((acc, pos) => acc + pos.amount, 0);
 
-    const isButtonDisabled =
-        isSubmitting || (isChainedSpeedMarkets ? !claimableChainedPositions.length : !claimableSpeedPositions.length);
+    const hasClaimableSpeedPositions = isChainedSpeedMarkets
+        ? !!claimableChainedPositions.length
+        : !!claimableSpeedPositions.length;
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -183,7 +184,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const getButton = () => (
         <Button
             {...getDefaultButtonProps(isMobile)}
-            disabled={isButtonDisabled}
+            disabled={isSubmitting}
             additionalStyles={additionalButtonStyle}
             backgroundColor={theme.button.textColor.quaternary}
             onClick={handleSubmit}
@@ -208,7 +209,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 </LoaderContainer>
             ) : (
                 <>
-                    {!noPositions && isSpeedMarkets && <ButtonWrapper>{getButton()}</ButtonWrapper>}
+                    {isSpeedMarkets && hasClaimableSpeedPositions && <ButtonWrapper>{getButton()}</ButtonWrapper>}
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
                             ? sortedUserOpenChainedSpeedMarketsData.map((position, index) => (
