@@ -149,6 +149,9 @@ const Title = styled.span`
     margin-bottom: 10px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-left: 5px;
+    }
 `;
 
 const LoaderContainer = styled(FlexDivCentered)`

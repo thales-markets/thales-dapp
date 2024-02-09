@@ -436,6 +436,10 @@ const GlobalStyle = createGlobalStyle`
     *::-webkit-scrollbar-thumb {
         background: ${(props) => props.theme.background.tertiary};
     }
+    html {
+        scroll-behavior: smooth;
+        scrollbar-color: ${(props) => props.theme.background.tertiary} transparent;
+    }
     body {
         background: ${(props) => props.theme.landingPage.background.primary};
     }

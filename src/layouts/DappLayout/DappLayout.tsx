@@ -87,6 +87,9 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     useWidgetBotScript(preventDiscordWidgetLoad, theme);
 
+    // Fix page scrollbar background as landing page has different background than dApp
+    document.body.style.background = theme.background.primary;
+
     return (
         <Background id="main-content">
             {networkId === Network.Arbitrum && <ElectionsBanner />}

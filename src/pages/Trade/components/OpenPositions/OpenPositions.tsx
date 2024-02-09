@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
@@ -7,16 +8,21 @@ import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
 import useUserLivePositionsQuery from 'queries/user/useUserLivePositionsQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
+import { ThemeInterface } from 'types/ui';
 import OpenPosition from '../OpenPosition';
+import { resolveAllChainedMarkets, resolveAllSpeedPositions } from 'utils/speedAmm';
+import { formatCurrencyWithSign } from 'thales-utils';
+import { USD_SIGN } from 'constants/currency';
 
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
@@ -32,17 +38,20 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     currentPrices,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     // For sorting purpose as claimable status is unknown until all chained positions is rendered
     const [chainedClaimableStatuses, setChainedClaimableStatuses] = useState<
         { address: string; isClaimable: boolean }[]
     >([]);
-    const [chainedPositionsWithStatus, setChainedPositionsWithStatus] = useState<ChainedSpeedMarket[]>([]);
+    const [chainedWithClaimableStatus, setChainedWithClaimableStatus] = useState<ChainedSpeedMarket[]>([]);
 
     const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
         enabled: isAppReady && isWalletConnected && !isSpeedMarkets,
@@ -95,7 +104,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
             const chainedPositionsWithStatusUpdated: ChainedSpeedMarket[] = userOpenChainedSpeedMarketsData.map(
                 (position) => {
                     const claimable = chainedClaimableStatuses.find((p) => p.address === position.address)?.isClaimable;
-                    const claimableUpdated = chainedPositionsWithStatus.find((p) => p.address === position.address)
+                    const claimableUpdated = chainedWithClaimableStatus.find((p) => p.address === position.address)
                         ?.claimable;
 
                     isStatusChanged =
@@ -108,10 +117,10 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 }
             );
             if (isStatusChanged) {
-                setChainedPositionsWithStatus(chainedPositionsWithStatusUpdated);
+                setChainedWithClaimableStatus(chainedPositionsWithStatusUpdated);
             }
         }
-    }, [userOpenChainedSpeedMarketsData, chainedPositionsWithStatus, chainedClaimableStatuses]);
+    }, [userOpenChainedSpeedMarketsData, chainedWithClaimableStatus, chainedClaimableStatuses]);
 
     const sortSpeedMarkets = (markets: (UserLivePositions | ChainedSpeedMarket)[]) =>
         markets
@@ -132,7 +141,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const sortedUserOpenSpeedMarketsData = sortSpeedMarkets(userOpenSpeedMarketsData) as UserLivePositions[];
 
     const sortedUserOpenChainedSpeedMarketsData = sortSpeedMarkets(
-        chainedPositionsWithStatus.length ? chainedPositionsWithStatus : userOpenChainedSpeedMarketsData
+        chainedWithClaimableStatus.length ? chainedWithClaimableStatus : userOpenChainedSpeedMarketsData
     ) as ChainedSpeedMarket[];
 
     const noPositions = isSpeedMarkets
@@ -152,6 +161,44 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
         userActiveSpeedMarketsDataQuery.isLoading ||
         userChainedSpeedMarketsDataQuery.isLoading;
 
+    const claimableSpeedPositions = userOpenSpeedMarketsData.filter((p) => p.claimable);
+    const claimableSpeedPositionsSum = claimableSpeedPositions.reduce((acc, pos) => acc + pos.value, 0);
+
+    const claimableChainedPositions = chainedWithClaimableStatus.filter((p) => p.claimable);
+    const claimableChainedPositionsSum = claimableChainedPositions.reduce((acc, pos) => acc + pos.amount, 0);
+
+    const isButtonDisabled =
+        isSubmitting || (isChainedSpeedMarkets ? !claimableChainedPositions.length : !claimableSpeedPositions.length);
+
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        if (isChainedSpeedMarkets) {
+            await resolveAllChainedMarkets(claimableChainedPositions, false, networkId);
+        } else {
+            await resolveAllSpeedPositions(claimableSpeedPositions, false, networkId);
+        }
+        setIsSubmitting(false);
+    };
+
+    const getButton = () => (
+        <Button
+            {...getDefaultButtonProps(isMobile)}
+            disabled={isButtonDisabled}
+            additionalStyles={additionalButtonStyle}
+            backgroundColor={theme.button.textColor.quaternary}
+            onClick={handleSubmit}
+        >
+            {`${
+                isSubmitting
+                    ? t('speed-markets.user-positions.claim-all-progress')
+                    : t('speed-markets.user-positions.claim-all')
+            } ${formatCurrencyWithSign(
+                USD_SIGN,
+                isChainedSpeedMarkets ? claimableChainedPositionsSum : claimableSpeedPositionsSum,
+                2
+            )}`}
+        </Button>
+    );
     return (
         <Wrapper>
             <Title>{t('markets.user-positions.your-positions')}</Title>
@@ -161,6 +208,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 </LoaderContainer>
             ) : (
                 <>
+                    {!noPositions && isSpeedMarkets && <ButtonWrapper>{getButton()}</ButtonWrapper>}
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
                             ? sortedUserOpenChainedSpeedMarketsData.map((position, index) => (
@@ -245,11 +293,31 @@ const Title = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
-    margin-left: 20px;
-    margin-bottom: 10px;
+    margin: 12px 0 12px 20px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-left: 5px;
+    }
 `;
+
+const ButtonWrapper = styled.div`
+    position: absolute;
+    right: 0;
+    top: 5px;
+`;
+
+const getDefaultButtonProps = (isMobile: boolean) => ({
+    width: isMobile ? '175px' : '220px',
+    height: isMobile ? '24px' : '27px',
+    fontSize: isMobile ? '12px' : '13px',
+    padding: '0px 5px',
+});
+
+const additionalButtonStyle: CSSProperties = {
+    lineHeight: '100%',
+    border: 'none',
+};
 
 const LoaderContainer = styled(FlexDivCentered)`
     position: relative;
