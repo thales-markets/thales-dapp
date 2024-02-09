@@ -898,7 +898,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     defaultAmount={
                         isStableCurrency(selectedCollateral)
                             ? roundNumberToDecimals(totalPaidAmount)
-                            : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                            : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
                     }
                     tokenSymbol={selectedCollateral}
                     isNonStable={false}
