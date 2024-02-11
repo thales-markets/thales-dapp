@@ -387,6 +387,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         ammChainedSpeedMarketsLimits?.risk.current + convertedStableBuyinAmount >
                             ammChainedSpeedMarketsLimits?.risk.max
                     );
+                    setOutOfLiquidityPerDirection(false);
                 }
             } else {
                 const riskPerAssetAndDirectionData = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
