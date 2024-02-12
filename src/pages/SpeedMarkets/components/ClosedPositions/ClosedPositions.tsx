@@ -34,6 +34,7 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
                 ? userResolvedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
+                      .sort((a, b) => b.maturityDate - a.maturityDate)
                 : [],
         [userResolvedSpeedMarketsDataQuery]
     );
@@ -52,6 +53,7 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
                 ? userResolvedChainedSpeedMarketsDataQuery.data
                       .sort((a: any, b: any) => a.maturityDate - b.maturityDate)
                       .slice(-10)
+                      .sort((a, b) => b.maturityDate - a.maturityDate)
                 : [],
         [userResolvedChainedSpeedMarketsDataQuery]
     );
@@ -147,6 +149,9 @@ const Title = styled.span`
     margin-bottom: 10px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin-left: 5px;
+    }
 `;
 
 const LoaderContainer = styled(FlexDivCentered)`

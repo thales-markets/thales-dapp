@@ -1,21 +1,11 @@
-import * as pythEvmJs from '@pythnetwork/pyth-evm-js';
 import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
-import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import Button from 'components/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import {
-    getDefaultToastContent,
-    getErrorToastOptions,
-    getInfoToastOptions,
-    getLoadingToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
 import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { SPEED_MARKETS_OVERVIEW_SECTIONS as SECTIONS } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS, SUPPORTED_ASSETS } from 'constants/pyth';
+import { CONNECTION_TIMEOUT_MS, SUPPORTED_ASSETS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Positions } from 'enums/options';
-import { BigNumber, ethers } from 'ethers';
 import useInterval from 'hooks/useInterval';
 import {
     LoaderContainer,
@@ -33,17 +23,15 @@ import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { formatCurrencyWithSign } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
-import { getCurrentPrices, getPriceId, getPriceServiceEndpoint, priceParser } from 'utils/pyth';
+import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchActiveSpeedMarkets, refetchPythPrice } from 'utils/queryConnector';
-import snxJSConnector from 'utils/snxJSConnector';
-import { delay } from 'utils/timer';
+import { resolveAllSpeedPositions } from 'utils/speedAmm';
 import UnresolvedPosition from '../UnresolvedPosition';
 
 const UnresolvedPositions: React.FC = () => {
@@ -165,89 +153,10 @@ const UnresolvedPositions: React.FC = () => {
     }, [networkId]);
 
     const handleResolveAll = async (positions: UserLivePositions[], isAdmin: boolean) => {
-        if (!positions.length) {
-            return;
-        }
-
-        const priceConnection = new pythEvmJs.EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
-            timeout: CONNECTION_TIMEOUT_MS,
-        });
-
-        const { speedMarketsAMMContract, signer } = snxJSConnector as any;
-        if (speedMarketsAMMContract) {
-            setIsSubmitting(true);
-            const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
-
-            const speedMarketsAMMContractWithSigner = speedMarketsAMMContract.connect(signer);
-
-            const marketsToResolve: string[] = isAdmin
-                ? positions.filter((position) => !!position.finalPrice).map((position) => position.market)
-                : [];
-            const manualFinalPrices: number[] = isAdmin
-                ? positions
-                      .filter((position) => !!position.finalPrice)
-                      .map((position) => Number(priceParser(position.finalPrice || 0)))
-                : [];
-            const priceUpdateDataArray: string[] = [];
-            let totalUpdateFee = BigNumber.from(0);
-
-            for (const position of positions) {
-                if (isAdmin) {
-                    break;
-                }
-                try {
-                    const pythContract = new ethers.Contract(
-                        PYTH_CONTRACT_ADDRESS[networkId],
-                        PythInterfaceAbi as any,
-                        (snxJSConnector as any).provider
-                    );
-
-                    const [priceFeedUpdateVaa] = await priceConnection.getVaa(
-                        getPriceId(networkId, position.currencyKey),
-                        millisecondsToSeconds(position.maturityDate)
-                    );
-
-                    const priceUpdateData = ['0x' + Buffer.from(priceFeedUpdateVaa, 'base64').toString('hex')];
-                    const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-
-                    marketsToResolve.push(position.market);
-                    priceUpdateDataArray.push(priceUpdateData[0]);
-                    totalUpdateFee = totalUpdateFee.add(updateFee);
-                } catch (e) {
-                    console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
-                }
-            }
-
-            if (marketsToResolve.length > 0) {
-                try {
-                    const tx: ethers.ContractTransaction = isAdmin
-                        ? await speedMarketsAMMContractWithSigner.resolveMarketManuallyBatch(
-                              marketsToResolve,
-                              manualFinalPrices
-                          )
-                        : await speedMarketsAMMContractWithSigner.resolveMarketsBatch(
-                              marketsToResolve,
-                              priceUpdateDataArray,
-                              { value: totalUpdateFee }
-                          );
-
-                    const txResult = await tx.wait();
-
-                    if (txResult && txResult.transactionHash) {
-                        toast.update(id, getSuccessToastOptions(t(`speed-markets.overview.confirmation-message`), id));
-                        refetchActiveSpeedMarkets(false, networkId);
-                    }
-                } catch (e) {
-                    console.log(e);
-                    await delay(800);
-                    toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                }
-            } else {
-                toast.update(id, getInfoToastOptions(t('speed-markets.overview.no-resolve-positions'), id));
-            }
-            setIsSubmitting(false);
-            setIsSubmittingSection('');
-        }
+        setIsSubmitting(true);
+        await resolveAllSpeedPositions(positions, isAdmin, networkId);
+        setIsSubmitting(false);
+        setIsSubmittingSection('');
     };
 
     const getButton = (
@@ -311,19 +220,17 @@ const UnresolvedPositions: React.FC = () => {
                 ) : (
                     <PositionsWrapper hasPositions={positions.length > 0}>
                         {positions.length > 0 ? (
-                            positions
-                                .sort((a, b) => a.maturityDate - b.maturityDate)
-                                .map((position, index) => (
-                                    <UnresolvedPosition
-                                        position={position}
-                                        maxPriceDelayForResolvingSec={
-                                            ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec || 0
-                                        }
-                                        isAdmin={isAdmin}
-                                        isSubmittingBatch={isSubmitting}
-                                        key={`${section}${index}`}
-                                    />
-                                ))
+                            positions.map((position, index) => (
+                                <UnresolvedPosition
+                                    position={position}
+                                    maxPriceDelayForResolvingSec={
+                                        ammSpeedMarketsLimitsData?.maxPriceDelayForResolvingSec || 0
+                                    }
+                                    isAdmin={isAdmin}
+                                    isSubmittingBatch={isSubmitting}
+                                    key={`${section}${index}`}
+                                />
+                            ))
                         ) : (
                             <NoPositionsText>{t('speed-markets.overview.no-positions')}</NoPositionsText>
                         )}
@@ -335,10 +242,22 @@ const UnresolvedPositions: React.FC = () => {
 
     return (
         <Wrapper>
-            {getSection(SECTIONS.userWinner, userWinnerSpeedMarketsData)}
-            {getSection(SECTIONS.ammWinner, ammWinnerSpeedMarketsData)}
-            {getSection(SECTIONS.unknownPrice, unknownPriceSpeedMarketsData)}
-            {getSection(SECTIONS.openPositions, openSpeedMarketsData)}
+            {getSection(
+                SECTIONS.userWinner,
+                userWinnerSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.ammWinner,
+                ammWinnerSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.unknownPrice,
+                unknownPriceSpeedMarketsData.sort((a, b) => b.maturityDate - a.maturityDate)
+            )}
+            {getSection(
+                SECTIONS.openPositions,
+                openSpeedMarketsData.sort((a, b) => a.maturityDate - b.maturityDate)
+            )}
         </Wrapper>
     );
 };

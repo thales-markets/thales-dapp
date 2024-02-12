@@ -96,9 +96,9 @@ const OP_USDT = {
     symbol: TokenSymbol.USDT,
 };
 
-export const POLYGON_USDC = {
-    symbol: TokenSymbol.USDC,
-    name: 'USD Coin',
+export const POLYGON_USDCe = {
+    symbol: TokenSymbol.USDCe,
+    name: 'USD Coin (PoS)',
     address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
     decimals: 6,
     logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
@@ -149,19 +149,19 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
 
     switch (tokenSymbol) {
         case TokenSymbol.SUSD:
-            mappedToken = isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD;
+            mappedToken = isL2 ? OP_sUSD : isPolygon ? POLYGON_USDCe : ETH_sUSD;
             break;
         case TokenSymbol.DAI:
             mappedToken = isL2 ? OP_Dai : isPolygon ? POLYGON_DAI : ETH_Dai;
             break;
         case TokenSymbol.USDC:
-            mappedToken = isL2 ? OP_USDC : isPolygon ? POLYGON_USDC : ETH_USDC;
+            mappedToken = isL2 ? OP_USDC : isPolygon ? POLYGON_USDCe : ETH_USDC;
             break;
         case TokenSymbol.USDT:
             mappedToken = isL2 ? OP_USDT : isPolygon ? POLYGON_USDT : ETH_USDT;
             break;
         default:
-            mappedToken = isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD;
+            mappedToken = isL2 ? OP_sUSD : isPolygon ? POLYGON_USDCe : ETH_sUSD;
             break;
     }
 
@@ -185,7 +185,7 @@ export const getTokenForSwap = (networkId: Network, initialToToken: any) => {
 
     if (isPolygon) {
         return {
-            preloadTokens: [POLYGON_USDC],
+            preloadTokens: [POLYGON_USDCe],
             fromToken: POLYGON_MATIC,
             toToken,
         };
