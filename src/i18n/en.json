@@ -479,6 +479,8 @@
             "insufficient-balance-wallet": "Get {{currencyKey}} below"
         },
         "user-positions": {
+            "claim-all": "Claim all wins",
+            "claim-all-progress": "Claiming all wins",
             "end-time": "End time",
             "confirmation-message": "Positions successfully claimed",
             "no-closed-positions": "Your closed positions will be visible here",
