@@ -36,6 +36,7 @@ type ChainedPositionProps = {
     isAdmin?: boolean;
     isSubmittingBatch?: boolean;
     isMultipleMarkets?: boolean;
+    setIsClaimable?: (isClaimable: boolean) => void;
 };
 
 const ChainedPosition: React.FC<ChainedPositionProps> = ({
@@ -45,6 +46,7 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     isAdmin,
     isSubmittingBatch,
     isMultipleMarkets,
+    setIsClaimable,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -94,7 +96,11 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
     const canResolve = position.isOpen
         ? userWonStatuses.some((status) => status === false) || userWonStatuses.every((status) => status !== undefined)
         : position.canResolve;
-    const claimable = position.isOpen ? userWonStatuses.every((status) => status) : position.claimable;
+
+    const claimable = useMemo(
+        () => (position.isOpen ? userWonStatuses.every((status) => status) : position.claimable),
+        [position.isOpen, position.claimable, userWonStatuses]
+    );
 
     const positionWithPrices = {
         ...position,
@@ -124,6 +130,10 @@ const ChainedPosition: React.FC<ChainedPositionProps> = ({
             setFetchLastFinalPriceIndex(fetchLastFinalPriceIndex + 1);
         }
     }, [canResolve, finalPrices, size, position.isOpen, fetchLastFinalPriceIndex]);
+
+    useEffect(() => {
+        setIsClaimable && setIsClaimable(claimable);
+    }, [setIsClaimable, claimable]);
 
     const displayShare = !isOverview && (positionWithPrices.canResolve || positionWithPrices.isMatured);
 

@@ -387,6 +387,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                         ammChainedSpeedMarketsLimits?.risk.current + convertedStableBuyinAmount >
                             ammChainedSpeedMarketsLimits?.risk.max
                     );
+                    setOutOfLiquidityPerDirection(false);
                 }
             } else {
                 const riskPerAssetAndDirectionData = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
@@ -435,8 +436,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             try {
                 const parsedAmount: BigNumber = coinParser(
                     isStableCurrency(selectedCollateral)
-                        ? truncToDecimals(totalPaidAmount)
-                        : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]),
+                        ? roundNumberToDecimals(totalPaidAmount).toString()
+                        : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]).toString(),
                     networkId,
                     selectedCollateral
                 );
@@ -688,8 +689,35 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                           truncToDecimals(collateralBalance / (1 + totalFee + STABLECOIN_CONVERSION_BUFFER_PERCENTAGE))
                       )
                     : Number(truncToDecimals(collateralBalance / (1 + totalFee), 18));
-            setPaidAmount(Math.min(maxBuyinAmount, maxWalletAmount));
-            setSelectedStableBuyinAmount(Math.min(maxBuyinAmount, convertToStable(maxWalletAmount)));
+
+            let maxLiquidity, maxLiquidityPerDirection: number;
+            if (isChained) {
+                maxLiquidity =
+                    ammChainedSpeedMarketsLimits !== undefined
+                        ? Number(ammChainedSpeedMarketsLimits?.risk.max) -
+                          Number(ammChainedSpeedMarketsLimits?.risk.current)
+                        : Infinity;
+                maxLiquidityPerDirection = Infinity;
+            } else {
+                const riskPerAsset = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
+                    (data) => data.currency === currencyKey
+                )[0];
+                maxLiquidity = riskPerAsset !== undefined ? riskPerAsset.max - riskPerAsset.current : Infinity;
+
+                const riskPerAssetAndDirection = ammSpeedMarketsLimits?.risksPerAssetAndDirection.filter(
+                    (data) => data.currency === currencyKey && data.position === Positions.UP
+                )[0];
+                maxLiquidityPerDirection =
+                    riskPerAssetAndDirection !== undefined
+                        ? riskPerAssetAndDirection.max - riskPerAssetAndDirection.current
+                        : Infinity;
+            }
+
+            const maxPaidAmount = Math.floor(
+                Math.min(maxBuyinAmount, maxWalletAmount, maxLiquidity, maxLiquidityPerDirection)
+            );
+            setPaidAmount(maxPaidAmount);
+            setSelectedStableBuyinAmount(Math.min(maxPaidAmount, convertToStable(maxWalletAmount)));
         }
     };
 
@@ -898,7 +926,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     defaultAmount={
                         isStableCurrency(selectedCollateral)
                             ? roundNumberToDecimals(totalPaidAmount)
-                            : truncToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                            : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
                     }
                     tokenSymbol={selectedCollateral}
                     isNonStable={false}
