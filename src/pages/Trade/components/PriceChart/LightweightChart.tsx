@@ -225,7 +225,14 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             <ChartContainer>
-                <ChartComponent data={candleData} areaData={areaData} position={position} asset={asset} />
+                <ChartComponent
+                    data={candleData}
+                    areaData={areaData}
+                    position={position}
+                    asset={asset}
+                    selectedPrice={selectedPrice}
+                    isSpeedMarkets={isSpeedMarkets}
+                />
             </ChartContainer>
 
             <Toggle

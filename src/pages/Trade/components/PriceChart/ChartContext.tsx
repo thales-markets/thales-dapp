@@ -1,6 +1,6 @@
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { createChart, ColorType, IChartApi } from 'lightweight-charts';
+import { createChart, ColorType, IChartApi, ISeriesApi } from 'lightweight-charts';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { Colors } from 'styles/common';
@@ -18,17 +18,25 @@ type ChartProps = {
     areaData: any;
     position: Positions | undefined;
     asset: string;
+    isSpeedMarkets: boolean;
+    selectedPrice?: number;
 };
 
 const ChartProvider: React.FC<ChartContextProps> = ({ children, chart }) => (
     <ChartContext.Provider value={chart}>{children}</ChartContext.Provider>
 );
 
-export const ChartComponent: React.FC<ChartProps> = ({ data, areaData, position, asset }) => {
-    console.log(asset);
+export const ChartComponent: React.FC<ChartProps> = ({
+    data,
+    areaData,
+    position,
+    asset,
+    isSpeedMarkets,
+    selectedPrice,
+}) => {
     const theme: ThemeInterface = useTheme();
     const chartContainerRef = useRef<HTMLDivElement>(null);
-    const [chart, setChart] = useState<any>();
+    const [chart, setChart] = useState<IChartApi | undefined>();
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current ?? '', {
@@ -60,18 +68,16 @@ export const ChartComponent: React.FC<ChartProps> = ({ data, areaData, position,
         };
     }, [theme]);
 
-    // useEffect(() => {
-    //     if (chart) {
-    //         chart.timeScale().fitContent();
-    //     }
-    // }, [asset, chart]);
+    useEffect(() => {
+        if (!isSpeedMarkets) chart?.timeScale().fitContent();
+    }, [isSpeedMarkets, selectedPrice, chart]);
 
     return (
         <ChartContainer>
             <Chart ref={chartContainerRef}>
                 {chart && (
                     <ChartProvider chart={chart}>
-                        <CandlestickComponent data={data} />
+                        <CandlestickComponent data={data} asset={asset} />
                         {position && <AreaSeriesComponent data={areaData} position={position} />}
                     </ChartProvider>
                 )}
@@ -80,10 +86,10 @@ export const ChartComponent: React.FC<ChartProps> = ({ data, areaData, position,
     );
 };
 
-const CandlestickComponent: React.FC<{ data: any }> = ({ data }) => {
+const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ data, asset }) => {
     const theme: ThemeInterface = useTheme();
     const chart = useContext(ChartContext);
-    const [series, setSeries] = useState<any>();
+    const [series, setSeries] = useState<ISeriesApi<'Candlestick'> | undefined>();
 
     useEffect(() => {
         const series = chart?.addCandlestickSeries({
@@ -102,6 +108,12 @@ const CandlestickComponent: React.FC<{ data: any }> = ({ data }) => {
     useEffect(() => {
         if (series && data) series.setData(data);
     }, [data, series]);
+
+    useEffect(() => {
+        series?.priceScale().applyOptions({
+            autoScale: true,
+        });
+    }, [asset, series]);
 
     return <></>;
 };
