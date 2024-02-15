@@ -76,8 +76,13 @@ export const ChartComponent: React.FC<ChartProps> = ({
             <Chart ref={chartContainerRef}>
                 {chart && (
                     <ChartProvider chart={chart}>
+                        <AreaSeriesComponent
+                            data={areaData}
+                            isSpeedMarkets={isSpeedMarkets}
+                            position={position}
+                            selectedPrice={selectedPrice}
+                        />
                         <CandlestickComponent data={data} asset={asset} />
-                        {selectedPrice && position && <AreaSeriesComponent data={areaData} position={position} />}
                     </ChartProvider>
                 )}
             </Chart>
@@ -117,31 +122,53 @@ const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ data, as
     return <></>;
 };
 
-const AreaSeriesComponent: React.FC<{ data: any; position: Positions }> = ({ data, position }) => {
+const AreaSeriesComponent: React.FC<{
+    data: any;
+    position?: Positions;
+    selectedPrice?: number;
+    isSpeedMarkets: boolean;
+}> = ({ data, position, selectedPrice, isSpeedMarkets }) => {
     const chart = useContext(ChartContext);
-    const [series, setSeries] = useState<any>();
+    const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
 
     useEffect(() => {
         if (series) {
             chart?.removeSeries(series);
+            setSeries(undefined);
         }
-        if (position) {
+        if (position && selectedPrice) {
             const series = chart?.addAreaSeries({
                 crosshairMarkerVisible: false,
                 lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
                 lineWidth: 1,
-                topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.GREEN_DARK_START,
-                bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.GREEN_DARK_END,
+                topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.RED_START,
+                bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.RED_END,
                 invertFilledArea: position === Positions.UP,
+                lastValueVisible: !isSpeedMarkets,
             });
+
             setSeries(series);
         }
         // eslint-disable-next-line
-    }, [position]);
+    }, [position, isSpeedMarkets]);
 
     useEffect(() => {
-        if (series && data) series.setData(data);
-    }, [data, series]);
+        if (series && data) {
+            series.setData(data);
+
+            if (isSpeedMarkets) {
+                series?.setMarkers([
+                    {
+                        time: data[data.length - 1].time,
+                        position: position === Positions.UP ? 'aboveBar' : 'belowBar',
+                        size: 2,
+                        color: position === Positions.UP ? Colors.GREEN : Colors.RED,
+                        shape: position === Positions.UP ? 'arrowUp' : 'arrowDown',
+                    },
+                ]);
+            }
+        }
+    }, [data, series, isSpeedMarkets, position]);
 
     return <></>;
 };
