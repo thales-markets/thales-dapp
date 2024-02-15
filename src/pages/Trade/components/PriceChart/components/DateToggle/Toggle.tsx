@@ -1,5 +1,4 @@
 import Button from 'components/Button';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
@@ -53,9 +52,6 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     gap: 6px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 export default Toggle;

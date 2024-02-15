@@ -22,6 +22,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { ChartComponent } from './ChartContext';
+import SimpleLoader from 'components/SimpleLoader';
 
 type LightweightChartProps = {
     asset: string;
@@ -225,14 +226,18 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             <ChartContainer>
-                <ChartComponent
-                    data={candleData}
-                    areaData={areaData}
-                    position={position}
-                    asset={asset}
-                    selectedPrice={selectedPrice}
-                    isSpeedMarkets={isSpeedMarkets}
-                />
+                {pythQuery.isLoading ? (
+                    <SimpleLoader />
+                ) : (
+                    <ChartComponent
+                        data={candleData}
+                        areaData={areaData}
+                        position={position}
+                        asset={asset}
+                        selectedPrice={selectedPrice}
+                        isSpeedMarkets={isSpeedMarkets}
+                    />
+                )}
             </ChartContainer>
 
             <Toggle
@@ -242,8 +247,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 }
                 onChange={handleDateRangeChange}
             />
-
-            {isSpeedMarkets && !pythQuery.isLoading && (
+            {isSpeedMarkets && (
                 <PythIconWrap>
                     <a target="_blank" rel="noreferrer" href={LINKS.Pyth}>
                         <i className="icon icon--pyth" />
@@ -262,9 +266,6 @@ const Wrapper = styled.div`
 
 const ChartContainer = styled.div`
     height: 284px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
@@ -276,6 +277,9 @@ const PriceChange = styled.span<{ up: boolean }>`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 18px;
     }
+    @media (max-width: ${ScreenSizeBreakpoint.EXTRA_SMALL}px) {
+        font-size: 16px;
+    }
 `;
 
 const Value = styled.span<{ margin?: string }>`
@@ -284,6 +288,12 @@ const Value = styled.span<{ margin?: string }>`
     line-height: 100%;
     color: ${(props) => props.theme.textColor.primary};
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 18px;
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.EXTRA_SMALL}px) {
+        font-size: 16px;
+    }
 `;
 
 const PythIconWrap = styled.div`
@@ -296,9 +306,6 @@ const PythIconWrap = styled.div`
         font-size: 40px;
         line-height: 10px;
         color: ${(props) => props.theme.textColor.primary};
-    }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
     }
 `;
 

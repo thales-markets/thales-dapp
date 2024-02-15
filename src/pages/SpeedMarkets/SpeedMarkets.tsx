@@ -300,7 +300,6 @@ const SpeedMarkets: React.FC = () => {
                     <HeaderImage />
                     <ContentWrapper>
                         <LeftSide>
-                            {isMobile && getToggle()}
                             <Info>
                                 <Trans
                                     i18nKey={isChained ? 'speed-markets.chained.info' : 'speed-markets.info'}
@@ -334,7 +333,7 @@ const SpeedMarkets: React.FC = () => {
                                 }
                                 selectedDate={getTimeStampForDelta(deltaTimeSec)}
                                 selectedRightPrice={undefined}
-                                isSpeedMarkets={true}
+                                isSpeedMarkets
                                 explicitCurrentPrice={currentPrices[currencyKey]}
                                 prevExplicitPrice={prevPrice.current}
                                 chainedRisk={isChained ? ammChainedSpeedMarketsLimitsData?.risk : undefined}
@@ -345,7 +344,7 @@ const SpeedMarkets: React.FC = () => {
                             ></LightweightChart>
                         </LeftSide>
                         <RightSide>
-                            {!isMobile && getToggle()}
+                            {getToggle()}
                             {/* Asset */}
                             {getStep(1, t('speed-markets.steps.choose-asset'))}
                             {/* Direction */}

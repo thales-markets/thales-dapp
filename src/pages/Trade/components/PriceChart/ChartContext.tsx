@@ -1,5 +1,4 @@
 import { Positions } from 'enums/options';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 import { createChart, ColorType, IChartApi, ISeriesApi } from 'lightweight-charts';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
@@ -78,7 +77,7 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 {chart && (
                     <ChartProvider chart={chart}>
                         <CandlestickComponent data={data} asset={asset} />
-                        {position && <AreaSeriesComponent data={areaData} position={position} />}
+                        {selectedPrice && position && <AreaSeriesComponent data={areaData} position={position} />}
                     </ChartProvider>
                 )}
             </Chart>
@@ -149,9 +148,6 @@ const AreaSeriesComponent: React.FC<{ data: any; position: Positions }> = ({ dat
 
 const ChartContainer = styled.div`
     height: 284px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const Chart = styled.div``;

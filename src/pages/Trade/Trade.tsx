@@ -195,6 +195,7 @@ const ContentWrapper = styled.div`
         flex-direction: column;
         gap: 10px;
         margin-top: 0;
+        height: auto;
     }
 `;
 
@@ -243,6 +244,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
         flex-direction: column;
         gap: 10px;
         order: 2;
+        margin-top: 10px;
     }
 `;
 
