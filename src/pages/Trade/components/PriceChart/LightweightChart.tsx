@@ -1,27 +1,27 @@
-import SimpleLoader from 'components/SimpleLoader';
 import TooltipInfo from 'components/Tooltip';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import { ColorType, createChart } from 'lightweight-charts';
+
 import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled, { useTheme } from 'styled-components';
-import { Colors, FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
-import { ThemeInterface } from 'types/ui';
-import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
+
+import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
+import { ChartComponent } from './ChartContext';
 
 type LightweightChartProps = {
     asset: string;
@@ -60,22 +60,22 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     risksPerAsset,
     risksPerAssetAndDirection,
 }) => {
-    const theme: ThemeInterface = useTheme();
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const [processedPriceData, setProcessedPriceData] = useState<number>(0);
+    const [processedPriceData] = useState<number>(0);
     const [dateRange, setDateRange] = useState(
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
             : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
     );
 
-    const [iv, setIV] = useState(0);
+    const [candleData, setCandleData] = useState<any>();
+    const [areaData, setAreaData] = useState<any>();
 
-    const chartContainerRef = useRef<HTMLDivElement>(null);
+    const [iv, setIV] = useState(0);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
@@ -100,94 +100,38 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         }
     }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
+    useEffect(() => {
+        if (currentPrice && candleStickData) {
+            const cloneData = [...candleStickData];
+            cloneData[cloneData.length - 1].close = currentPrice;
+            setCandleData(cloneData);
+        }
+    }, [currentPrice, candleStickData]);
+
+    useEffect(() => {
+        if (selectedPrice && selectedDate && position && candleStickData) {
+            const lineDataSelected = candleStickData.map((datapoint) => ({
+                time: datapoint.time,
+                value: selectedPrice,
+            }));
+            const deltaTime = candleStickData[1].time - candleStickData[0].time;
+            while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < selectedDate / 1000) {
+                lineDataSelected.push({
+                    time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
+                    value: selectedPrice,
+                });
+            }
+            lineDataSelected.push({
+                time: selectedDate / 1000,
+                value: selectedPrice,
+            });
+            setAreaData(lineDataSelected);
+        }
+    }, [selectedPrice, selectedDate, position, candleStickData]);
+
     const handleDateRangeChange = (value: number) => {
         setDateRange(ToggleButtons[value]);
     };
-
-    useEffect(() => {
-        const chart = createChart(chartContainerRef.current ?? '', {
-            layout: {
-                background: { type: ColorType.Solid, color: theme.background.primary },
-                textColor: theme.textColor.secondary,
-            },
-            height: 285,
-            grid: {
-                vertLines: {
-                    visible: true,
-                    color: theme.borderColor.primary,
-                },
-                horzLines: {
-                    visible: true,
-                    color: theme.borderColor.primary,
-                },
-            },
-            timeScale: {
-                rightOffset: 1,
-                timeVisible: true,
-                fixLeftEdge: true,
-                barSpacing: 15,
-            },
-        });
-
-        const createLightweightChart = async () => {
-            if (chart && candleStickData) {
-                const lineDataSelected = candleStickData.map((datapoint) => ({
-                    time: datapoint.time,
-                    value: selectedPrice,
-                }));
-
-                if (selectedPrice && selectedDate) {
-                    const deltaTime = candleStickData[1].time - candleStickData[0].time;
-                    while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < selectedDate / 1000) {
-                        lineDataSelected.push({
-                            time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
-                            value: selectedPrice,
-                        });
-                    }
-                    lineDataSelected.push({
-                        time: selectedDate / 1000,
-                        value: selectedPrice,
-                    });
-                    const areaSeriesSelected = chart.addAreaSeries({
-                        lastValueVisible: !isSpeedMarkets,
-                        crosshairMarkerVisible: false,
-                        lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
-                        lineWidth: 1,
-                        topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.GREEN_DARK_START,
-                        bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.GREEN_DARK_END,
-                        invertFilledArea: position === Positions.UP,
-                    });
-                    areaSeriesSelected.setData(lineDataSelected as any);
-                }
-
-                const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: Colors.GREEN,
-                    downColor: Colors.RED,
-                    wickVisible: true,
-                    wickUpColor: Colors.GREEN,
-                    wickDownColor: Colors.RED,
-                    priceLineColor: theme.borderColor.tertiary,
-                    priceLineWidth: 1,
-                    lastValueVisible: true,
-                });
-                const cloneData = [...candleStickData];
-                if (currentPrice) cloneData[cloneData.length - 1].close = currentPrice;
-                candlestickSeries.setData(cloneData as any);
-                if (!isSpeedMarkets) chart.timeScale().fitContent();
-
-                setProcessedPriceData(
-                    calculatePercentageChange(
-                        candleStickData[candleStickData.length - 1].close,
-                        candleStickData[0].close
-                    )
-                );
-            }
-        };
-        createLightweightChart();
-        return () => {
-            chart.remove();
-        };
-    }, [asset, theme, selectedPrice, position, candleStickData, selectedDate, currentPrice, isSpeedMarkets]);
 
     useEffect(() => {
         const { ammContract } = snxJSConnector;
@@ -281,8 +225,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 )}
             </FlexDivSpaceBetween>
             <ChartContainer>
-                {pythQuery.isLoading && <SimpleLoader />}
-                <Chart ref={chartContainerRef} isVisible={!pythQuery.isLoading} />
+                <ChartComponent data={candleData} areaData={areaData} position={position} asset={asset} />
             </ChartContainer>
 
             <Toggle
@@ -315,10 +258,6 @@ const ChartContainer = styled.div`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
-`;
-
-const Chart = styled.div<{ isVisible: boolean }>`
-    ${(props) => (props.isVisible ? '' : 'display: none;')}
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
