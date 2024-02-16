@@ -116,14 +116,14 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 value: selectedPrice,
             }));
             const deltaTime = candleStickData[1].time - candleStickData[0].time;
-            while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < selectedDate / 1000) {
+            while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < Math.floor(selectedDate / 1000)) {
                 lineDataSelected.push({
                     time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
                     value: selectedPrice,
                 });
             }
             lineDataSelected.push({
-                time: selectedDate / 1000,
+                time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
                 value: selectedPrice,
             });
             setAreaData(lineDataSelected);

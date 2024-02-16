@@ -402,9 +402,10 @@ const SpeedMarkets: React.FC = () => {
 };
 
 const getTimeStampForDelta = (seconds: number) => {
-    const now = new Date();
-    now.setSeconds(now.getSeconds() + seconds);
-    return Number(now);
+    if (seconds) {
+        const reuslt = Number(Date.now() + seconds * 1000);
+        return reuslt;
+    }
 };
 
 const Container = styled.div`
