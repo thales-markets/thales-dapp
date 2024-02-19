@@ -1,6 +1,11 @@
 import { Positions } from 'enums/options';
 import { createChart, ColorType, IChartApi, ISeriesApi } from 'lightweight-charts';
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { Colors } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
@@ -34,8 +39,32 @@ export const ChartComponent: React.FC<ChartProps> = ({
     selectedPrice,
 }) => {
     const theme: ThemeInterface = useTheme();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [chart, setChart] = useState<IChartApi | undefined>();
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !!isSpeedMarkets,
+    });
+
+    const userData = useMemo(() => {
+        if (userActiveSpeedMarketsDataQuery.isSuccess) {
+            return userActiveSpeedMarketsDataQuery.data
+                .filter((position) => {
+                    return position.currencyKey === asset;
+                })
+                .map((position) => {
+                    return {
+                        time: Math.floor(position.maturityDate / 1000),
+                        value: position.strikePriceNum,
+                        position,
+                    };
+                });
+        }
+        return [];
+    }, [userActiveSpeedMarketsDataQuery, asset]);
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current ?? '', {
@@ -76,13 +105,14 @@ export const ChartComponent: React.FC<ChartProps> = ({
             <Chart ref={chartContainerRef}>
                 {chart && (
                     <ChartProvider chart={chart}>
+                        <CandlestickComponent data={data} asset={asset} />
                         <AreaSeriesComponent
                             data={areaData}
                             isSpeedMarkets={isSpeedMarkets}
                             position={position}
                             selectedPrice={selectedPrice}
                         />
-                        <CandlestickComponent data={data} asset={asset} />
+                        <UserPositionAreaSeries data={userData} />
                     </ChartProvider>
                 )}
             </Chart>
@@ -169,6 +199,53 @@ const AreaSeriesComponent: React.FC<{
             }
         }
     }, [data, series, isSpeedMarkets, position]);
+
+    return <></>;
+};
+
+const UserPositionAreaSeries: React.FC<{
+    data: any;
+}> = ({ data }) => {
+    const chart = useContext(ChartContext);
+    const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
+
+    useEffect(() => {
+        if (series) {
+            chart?.removeSeries(series);
+            setSeries(undefined);
+        }
+
+        const localSeries = chart?.addAreaSeries({
+            crosshairMarkerVisible: false,
+            lineVisible: false,
+            priceLineVisible: false,
+            pointMarkersVisible: false,
+            topColor: 'transparent',
+            bottomColor: 'transparent',
+            lastValueVisible: false,
+        });
+
+        setSeries(localSeries);
+
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        if (series && data) {
+            series.setData(data);
+            const markers = data.map((value: any) => {
+                return {
+                    time: value.time,
+                    position: 'inBar',
+                    size: 0.1,
+                    color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
+                    shape: 'circle',
+                    text: value.position.side === Positions.UP ? `UP` : `DOWN`,
+                };
+            });
+            series?.setMarkers(markers);
+        }
+    }, [data, series]);
 
     return <></>;
 };
