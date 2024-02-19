@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import { Positions } from 'enums/options';
 import { createChart, ColorType, IChartApi, ISeriesApi } from 'lightweight-charts';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
@@ -39,32 +40,8 @@ export const ChartComponent: React.FC<ChartProps> = ({
     selectedPrice,
 }) => {
     const theme: ThemeInterface = useTheme();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [chart, setChart] = useState<IChartApi | undefined>();
-    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !!isSpeedMarkets,
-    });
-
-    const userData = useMemo(() => {
-        if (userActiveSpeedMarketsDataQuery.isSuccess) {
-            return userActiveSpeedMarketsDataQuery.data
-                .filter((position) => {
-                    return position.currencyKey === asset;
-                })
-                .map((position) => {
-                    return {
-                        time: Math.floor(position.maturityDate / 1000),
-                        value: position.strikePriceNum,
-                        position,
-                    };
-                });
-        }
-        return [];
-    }, [userActiveSpeedMarketsDataQuery, asset]);
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current ?? '', {
@@ -112,10 +89,36 @@ export const ChartComponent: React.FC<ChartProps> = ({
                             position={position}
                             selectedPrice={selectedPrice}
                         />
-                        <UserPositionAreaSeries data={userData} />
+                        {isSpeedMarkets && <UserPositionAreaSeries asset={asset} isSpeedMarkets={isSpeedMarkets} />}
                     </ChartProvider>
                 )}
             </Chart>
+            <ResetButton>
+                <Button
+                    width="35px"
+                    height="31px"
+                    textColor={theme.button.textColor.tertiary}
+                    backgroundColor={theme.button.background.secondary}
+                    borderColor={theme.button.borderColor.tertiary}
+                    fontSize="13px"
+                    padding="0"
+                    additionalStyles={{
+                        borderRadius: '8px',
+                        transition: 'all 0.2s ease-in-out',
+                        textTransform: 'none',
+                    }}
+                    onClick={() => {
+                        chart?.timeScale().resetTimeScale();
+                        chart?.applyOptions({
+                            rightPriceScale: {
+                                autoScale: true,
+                            },
+                        });
+                    }}
+                >
+                    <i className="icon icon--reload" />
+                </Button>
+            </ResetButton>
         </ChartContainer>
     );
 };
@@ -204,10 +207,36 @@ const AreaSeriesComponent: React.FC<{
 };
 
 const UserPositionAreaSeries: React.FC<{
-    data: any;
-}> = ({ data }) => {
+    isSpeedMarkets: boolean;
+    asset: string;
+}> = ({ isSpeedMarkets, asset }) => {
     const chart = useContext(ChartContext);
     const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+    });
+
+    const userData = useMemo(() => {
+        if (userActiveSpeedMarketsDataQuery.isSuccess) {
+            return userActiveSpeedMarketsDataQuery.data
+                .filter((position) => {
+                    return position.currencyKey === asset;
+                })
+                .map((position) => {
+                    return {
+                        time: Math.floor(position.maturityDate / 1000),
+                        value: position.strikePriceNum,
+                        position,
+                    };
+                });
+        }
+        return [];
+    }, [userActiveSpeedMarketsDataQuery, asset]);
 
     useEffect(() => {
         if (series) {
@@ -231,9 +260,9 @@ const UserPositionAreaSeries: React.FC<{
     }, []);
 
     useEffect(() => {
-        if (series && data) {
-            series.setData(data);
-            const markers = data.map((value: any) => {
+        if (series && userData) {
+            series.setData(userData as any);
+            const markers = userData.map((value: any) => {
                 return {
                     time: value.time,
                     position: 'inBar',
@@ -243,15 +272,25 @@ const UserPositionAreaSeries: React.FC<{
                     text: value.position.side === Positions.UP ? `UP` : `DOWN`,
                 };
             });
-            series?.setMarkers(markers);
+            series?.setMarkers(markers as any);
         }
-    }, [data, series]);
+    }, [userData, series]);
 
     return <></>;
 };
 
 const ChartContainer = styled.div`
     height: 284px;
+    position: 'relative';
+`;
+
+const ResetButton = styled.div`
+    position: 'absolute';
+    right: 0;
+    bottom: 0;
+    i {
+        font-size: 16px;
+    }
 `;
 
 const Chart = styled.div``;

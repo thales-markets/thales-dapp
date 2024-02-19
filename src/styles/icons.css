@@ -394,6 +394,10 @@
     content: '\007A';
 }
 
+.icon--reload:before {
+    content: '\007B';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);
