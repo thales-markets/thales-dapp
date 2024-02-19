@@ -46,8 +46,16 @@ const ToggleButtons = [
     { label: '1D', resolution: '1D', value: 120 },
     { label: '1W', resolution: '1W', value: 730 },
 ];
+
+const SpeedMarketsToggleButtons = [
+    { label: '1m', resolution: '1', value: 1 },
+    { label: '5m', resolution: '5', value: 1 },
+    { label: '15m', resolution: '15', value: 2 },
+    { label: '30m', resolution: '30', value: 4 },
+    { label: '1H', resolution: '60', value: 30 },
+    { label: '1D', resolution: '1D', value: 365 },
+];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
-const DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS = 0;
 
 const LightweightChart: React.FC<LightweightChartProps> = ({
     asset,
@@ -70,7 +78,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const [dateRange, setDateRange] = useState(
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
-            : ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS]
+            : SpeedMarketsToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
     );
 
     const [candleData, setCandleData] = useState<any>();
@@ -84,7 +92,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
     const pythQuery = usePythCandlestickQuery(asset, dateRange.value, dateRange.resolution, {
         enabled: isAppReady,
-        refetchInterval: 5000,
+        refetchInterval: 30 * 1000,
     });
 
     const candleStickData = useMemo(() => {
@@ -131,7 +139,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     }, [selectedPrice, selectedDate, position, candleStickData]);
 
     const handleDateRangeChange = (value: number) => {
-        setDateRange(ToggleButtons[value]);
+        setDateRange(isSpeedMarkets ? SpeedMarketsToggleButtons[value] : ToggleButtons[value]);
     };
 
     useEffect(() => {
@@ -241,10 +249,8 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             </ChartContainer>
 
             <Toggle
-                options={ToggleButtons}
-                defaultSelectedIndex={
-                    isSpeedMarkets ? DEFAULT_TOGGLE_BUTTON_INDEX_SPEED_MARKETS : DEFAULT_TOGGLE_BUTTON_INDEX
-                }
+                options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
+                defaultSelectedIndex={DEFAULT_TOGGLE_BUTTON_INDEX}
                 onChange={handleDateRangeChange}
             />
             {isSpeedMarkets && (
