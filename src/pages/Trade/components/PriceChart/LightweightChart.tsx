@@ -56,6 +56,7 @@ const SpeedMarketsToggleButtons = [
     { label: '1D', resolution: '1D', value: 365 },
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
+const SPEED_DEFAULT_TOGGLE_BUTTON_INDEX = 0;
 
 const LightweightChart: React.FC<LightweightChartProps> = ({
     asset,
@@ -78,7 +79,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const [dateRange, setDateRange] = useState(
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
-            : SpeedMarketsToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
+            : SpeedMarketsToggleButtons[SPEED_DEFAULT_TOGGLE_BUTTON_INDEX]
     );
 
     const [candleData, setCandleData] = useState<any>();
@@ -250,7 +251,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
             <Toggle
                 options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
-                defaultSelectedIndex={DEFAULT_TOGGLE_BUTTON_INDEX}
+                defaultSelectedIndex={isSpeedMarkets ? SPEED_DEFAULT_TOGGLE_BUTTON_INDEX : DEFAULT_TOGGLE_BUTTON_INDEX}
                 onChange={handleDateRangeChange}
             />
             {isSpeedMarkets && (

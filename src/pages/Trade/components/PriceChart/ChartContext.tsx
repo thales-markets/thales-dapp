@@ -230,18 +230,38 @@ const UserPositionAreaSeries: React.FC<{
 
     const userData = useMemo(() => {
         if (userActiveSpeedMarketsDataQuery.isSuccess) {
-            return userActiveSpeedMarketsDataQuery.data
+            const result: Array<{
+                time: number;
+                value?: number;
+                position: any;
+                hide: boolean;
+            }> = [];
+            let iterator = 1;
+            userActiveSpeedMarketsDataQuery.data
                 .filter((position) => {
                     return position.currencyKey === asset;
                 })
                 .map((position) => {
                     if (Math.floor(position.maturityDate / 1000) > candlestickData[candlestickData.length - 1].time) {
-                        console.log('yes');
-                        return {
+                        const deltaTime = candlestickData[1].time - candlestickData[0].time;
+                        while (
+                            candlestickData[candlestickData.length - 1].time + iterator * deltaTime <
+                            Math.floor(position.maturityDate / 1000)
+                        ) {
+                            result.push({
+                                time: candlestickData[candlestickData.length - 1].time + iterator * deltaTime,
+                                value: position.strikePriceNum,
+                                position,
+                                hide: true,
+                            });
+                            iterator++;
+                        }
+                        result.push({
                             time: Math.floor(position.maturityDate / 1000),
                             value: position.strikePriceNum,
                             position,
-                        };
+                            hide: false,
+                        });
                     } else {
                         let it = 1;
                         while (
@@ -249,14 +269,15 @@ const UserPositionAreaSeries: React.FC<{
                         ) {
                             it++;
                         }
-                        console.log('no', it);
-                        return {
+                        result.push({
                             time: candlestickData[candlestickData.length - it + 1].time,
                             value: position.strikePriceNum,
                             position,
-                        };
+                            hide: false,
+                        });
                     }
                 });
+            return result;
         }
         return [];
     }, [userActiveSpeedMarketsDataQuery, asset, candlestickData]);
@@ -285,16 +306,18 @@ const UserPositionAreaSeries: React.FC<{
     useEffect(() => {
         if (series && userData) {
             series.setData(userData as any);
-            const markers = userData.map((value: any) => {
-                return {
-                    time: Math.floor(value.position.maturityDate / 1000),
-                    position: 'inBar',
-                    size: 0.1,
-                    color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
-                    shape: 'circle',
-                    text: value.position.side === Positions.UP ? `UP` : `DOWN`,
-                };
-            });
+            const markers = userData
+                .filter((value: any) => !value.hide)
+                .map((value: any) => {
+                    return {
+                        time: Math.floor(value.position.maturityDate / 1000),
+                        position: 'inBar',
+                        size: 0.1,
+                        color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
+                        shape: 'circle',
+                        text: value.position.side === Positions.UP ? `UP` : `DOWN`,
+                    };
+                });
             series?.setMarkers(markers as any);
         }
     }, [userData, series, candlestickData]);
