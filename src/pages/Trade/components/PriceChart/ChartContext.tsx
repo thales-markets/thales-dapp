@@ -160,7 +160,6 @@ const AreaSeriesComponent: React.FC<{
 }> = ({ data, position, selectedPrice, isSpeedMarkets }) => {
     const chart = useContext(ChartContext);
     const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
-    console.log(position, selectedPrice);
 
     useEffect(() => {
         if (series) {
