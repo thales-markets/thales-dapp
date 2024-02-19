@@ -89,7 +89,13 @@ export const ChartComponent: React.FC<ChartProps> = ({
                             position={position}
                             selectedPrice={selectedPrice}
                         />
-                        {isSpeedMarkets && <UserPositionAreaSeries asset={asset} isSpeedMarkets={isSpeedMarkets} />}
+                        {isSpeedMarkets && (
+                            <UserPositionAreaSeries
+                                candlestickData={data}
+                                asset={asset}
+                                isSpeedMarkets={isSpeedMarkets}
+                            />
+                        )}
                     </ChartProvider>
                 )}
             </Chart>
@@ -209,7 +215,8 @@ const AreaSeriesComponent: React.FC<{
 const UserPositionAreaSeries: React.FC<{
     isSpeedMarkets: boolean;
     asset: string;
-}> = ({ isSpeedMarkets, asset }) => {
+    candlestickData: any;
+}> = ({ isSpeedMarkets, asset, candlestickData }) => {
     const chart = useContext(ChartContext);
     const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -228,15 +235,31 @@ const UserPositionAreaSeries: React.FC<{
                     return position.currencyKey === asset;
                 })
                 .map((position) => {
-                    return {
-                        time: Math.floor(position.maturityDate / 1000),
-                        value: position.strikePriceNum,
-                        position,
-                    };
+                    if (Math.floor(position.maturityDate / 1000) > candlestickData[candlestickData.length - 1].time) {
+                        console.log('yes');
+                        return {
+                            time: Math.floor(position.maturityDate / 1000),
+                            value: position.strikePriceNum,
+                            position,
+                        };
+                    } else {
+                        let it = 1;
+                        while (
+                            candlestickData[candlestickData.length - it].time > Math.floor(position.maturityDate / 1000)
+                        ) {
+                            it++;
+                        }
+                        console.log('no', it);
+                        return {
+                            time: candlestickData[candlestickData.length - it + 1].time,
+                            value: position.strikePriceNum,
+                            position,
+                        };
+                    }
                 });
         }
         return [];
-    }, [userActiveSpeedMarketsDataQuery, asset]);
+    }, [userActiveSpeedMarketsDataQuery, asset, candlestickData]);
 
     useEffect(() => {
         if (series) {
@@ -264,7 +287,7 @@ const UserPositionAreaSeries: React.FC<{
             series.setData(userData as any);
             const markers = userData.map((value: any) => {
                 return {
-                    time: value.time,
+                    time: Math.floor(value.position.maturityDate / 1000),
                     position: 'inBar',
                     size: 0.1,
                     color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
@@ -274,7 +297,7 @@ const UserPositionAreaSeries: React.FC<{
             });
             series?.setMarkers(markers as any);
         }
-    }, [userData, series]);
+    }, [userData, series, candlestickData]);
 
     return <></>;
 };

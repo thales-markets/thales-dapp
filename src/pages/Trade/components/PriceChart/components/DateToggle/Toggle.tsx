@@ -21,9 +21,9 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
 
     return (
         <Wrapper>
-            {options.map(({ label, value }, index) => (
+            {options.map(({ label, resolution }, index) => (
                 <Button
-                    key={value}
+                    key={resolution}
                     width="35px"
                     height="31px"
                     textColor={theme.button.textColor.tertiary}
