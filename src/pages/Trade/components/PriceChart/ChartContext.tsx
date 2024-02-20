@@ -304,7 +304,7 @@ const UserPositionAreaSeries: React.FC<{
     }, []);
 
     useEffect(() => {
-        if (series && userData) {
+        if (series && userData.length > 0) {
             series.setData(userData as any);
             const markers = userData
                 .filter((value: any) => !value.hide)
