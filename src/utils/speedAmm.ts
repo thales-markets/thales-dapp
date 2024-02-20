@@ -199,7 +199,7 @@ export const resolveAllSpeedPositions = async (
                 priceUpdateDataArray.push(priceUpdateData[0]);
                 totalUpdateFee = totalUpdateFee.add(updateFee);
             } catch (e) {
-                console.log(`Can't fetch VAA from Pyth API for marekt ${position.market}`, e);
+                console.log(`Can't fetch VAA from Pyth API for market ${position.market}`, e);
             }
         }
 
