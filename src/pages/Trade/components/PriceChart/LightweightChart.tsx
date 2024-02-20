@@ -21,7 +21,7 @@ import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
-import { ChartComponent } from './ChartContext';
+import { ChartComponent } from './components/Chart/ChartContext';
 import SimpleLoader from 'components/SimpleLoader';
 
 type LightweightChartProps = {
@@ -83,7 +83,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     );
 
     const [candleData, setCandleData] = useState<any>();
-    const [areaData, setAreaData] = useState<any>();
 
     const [iv, setIV] = useState(0);
 
@@ -117,27 +116,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             setCandleData(cloneData);
         }
     }, [currentPrice, candleStickData]);
-
-    useEffect(() => {
-        if (selectedPrice && selectedDate && position && candleStickData) {
-            const lineDataSelected = candleStickData.map((datapoint) => ({
-                time: datapoint.time,
-                value: selectedPrice,
-            }));
-            const deltaTime = candleStickData[1].time - candleStickData[0].time;
-            while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < Math.floor(selectedDate / 1000)) {
-                lineDataSelected.push({
-                    time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
-                    value: selectedPrice,
-                });
-            }
-            lineDataSelected.push({
-                time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
-                value: selectedPrice,
-            });
-            setAreaData(lineDataSelected);
-        }
-    }, [selectedPrice, selectedDate, position, candleStickData]);
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(isSpeedMarkets ? SpeedMarketsToggleButtons[value] : ToggleButtons[value]);
@@ -240,11 +218,11 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 ) : (
                     <ChartComponent
                         data={candleData}
-                        areaData={areaData}
                         position={position}
                         asset={asset}
                         selectedPrice={selectedPrice}
                         isSpeedMarkets={isSpeedMarkets}
+                        selectedDate={selectedDate}
                     />
                 )}
             </ChartContainer>
