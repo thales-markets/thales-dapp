@@ -26,7 +26,7 @@ export const UserPositionAreaSeries: React.FC<{
     });
 
     const userData = useMemo(() => {
-        if (userActiveSpeedMarketsDataQuery.isSuccess) {
+        if (userActiveSpeedMarketsDataQuery.isSuccess && candlestickData) {
             const result: Array<{
                 time: number;
                 value?: number;
