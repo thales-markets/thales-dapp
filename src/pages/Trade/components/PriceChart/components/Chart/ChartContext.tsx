@@ -7,6 +7,7 @@ import { ThemeInterface } from 'types/ui';
 import { CandlestickComponent } from './CandlestickSeries/CandlestickComponent';
 import { AreaSeriesComponent } from './AreaSeries/AreaSerierComponent';
 import { UserPositionAreaSeries } from './UserSeries/UserSeriesComponent';
+import { millisecondsToSeconds } from 'date-fns';
 
 export const ChartContext = createContext<IChartApi | null>(null);
 
@@ -48,7 +49,10 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 value: selectedPrice,
             }));
             const deltaTime = data[1].time - data[0].time;
-            while (lineDataSelected[lineDataSelected.length - 1].time + deltaTime < Math.floor(selectedDate / 1000)) {
+            while (
+                lineDataSelected[lineDataSelected.length - 1].time + deltaTime <
+                millisecondsToSeconds(selectedDate)
+            ) {
                 lineDataSelected.push({
                     time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
                     value: selectedPrice,

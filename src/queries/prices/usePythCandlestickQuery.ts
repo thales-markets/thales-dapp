@@ -1,5 +1,7 @@
 import { generalConfig } from 'config/general';
+import { COMMODITY_MAP } from 'constants/currency';
 import QUERY_KEYS from 'constants/queryKeys';
+import { millisecondsToSeconds } from 'date-fns';
 import { UseQueryOptions, useQuery } from 'react-query';
 
 type CandlestickData = {
@@ -19,14 +21,14 @@ const usePythCandlestickQuery = (
     return useQuery<CandlestickData[]>(
         QUERY_KEYS.Prices.PythCandlestickData(asset, dateRange, resolution),
         async () => {
-            const now = new Date();
-            now.setDate(now.getDate() - dateRange);
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - dateRange);
             const response = await fetch(
                 `${generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY}?symbol=${getAssetSymbol(
                     asset
-                )}/USD&resolution=${resolution}&from=${Math.floor(Number(now) / 1000)}&to=${Math.floor(
-                    Number(Date.now()) / 1000
-                )}`
+                )}/USD&resolution=${resolution}&from=${millisecondsToSeconds(
+                    Number(startDate)
+                )}&to=${millisecondsToSeconds(Number(Date.now()))}`
             );
             const pythCandlestickData = await response.json();
 
@@ -47,10 +49,10 @@ const usePythCandlestickQuery = (
 };
 
 const getAssetSymbol = (asset: string) => {
-    if (asset === 'XAU') {
+    if (asset === COMMODITY_MAP.XAU) {
         return 'Crypto.XAUT';
     }
-    if (asset === 'XAG') {
+    if (asset === COMMODITY_MAP.XAG) {
         return 'Metal.XAG';
     }
 

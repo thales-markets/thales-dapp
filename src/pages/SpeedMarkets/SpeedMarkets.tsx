@@ -13,7 +13,6 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
-// import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import queryString from 'query-string';

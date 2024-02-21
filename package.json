@@ -15,7 +15,6 @@
         "@snapshot-labs/snapshot.js": "^0.5.8",
         "@socket.tech/plugin": "^1.2.4",
         "axios": "^0.21.1",
-        "coingecko-api-v3": "^0.0.23",
         "date-fns": "^2.19.0",
         "ethereum-blockies-base64": "^1.0.2",
         "ethers": "5.7.2",

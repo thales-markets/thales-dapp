@@ -17,7 +17,7 @@ import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common'
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 
-import { formatPricePercentageGrowth } from 'utils/formatters/number';
+import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
@@ -75,7 +75,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const [processedPriceData] = useState<number>(0);
+    const [processedPriceData, setProcessedPriceData] = useState<number>(0);
     const [dateRange, setDateRange] = useState(
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
@@ -113,6 +113,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         if (currentPrice && candleStickData) {
             const cloneData = [...candleStickData];
             cloneData[cloneData.length - 1].close = currentPrice;
+            setProcessedPriceData(
+                calculatePercentageChange(candleStickData[candleStickData.length - 2].close, currentPrice)
+            );
             setCandleData(cloneData);
         }
     }, [currentPrice, candleStickData]);

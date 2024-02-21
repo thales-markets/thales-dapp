@@ -112,7 +112,7 @@ export const UserPositionAreaSeries: React.FC<{
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
                         shape: 'circle',
-                        text: value.position.side === Positions.UP ? `UP` : `DOWN`,
+                        text: value.position.side,
                     };
                 });
             series?.setMarkers(markers as any);
