@@ -49,14 +49,14 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 value: selectedPrice,
             }));
             const deltaTime = data[1].time - data[0].time;
-            while (
-                lineDataSelected[lineDataSelected.length - 1].time + deltaTime <
-                millisecondsToSeconds(selectedDate)
-            ) {
+            const lastDate = lineDataSelected[lineDataSelected.length - 1].time;
+            let iterator = 1;
+            while (lastDate + iterator * deltaTime < millisecondsToSeconds(selectedDate)) {
                 lineDataSelected.push({
-                    time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
+                    time: lastDate + iterator * deltaTime,
                     value: selectedPrice,
                 });
+                iterator++;
             }
             lineDataSelected.push({
                 time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
