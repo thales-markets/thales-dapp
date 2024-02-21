@@ -42,15 +42,17 @@ export const ChartComponent: React.FC<ChartProps> = ({
     const [chart, setChart] = useState<IChartApi | undefined>();
     const [areaData, setAreaData] = useState();
 
+    // useEffect for calculating data for selected position.
     useEffect(() => {
         if (selectedPrice && selectedDate && position && data) {
             const lineDataSelected = data.map((datapoint: any) => ({
                 time: datapoint.time,
                 value: selectedPrice,
             }));
-            const deltaTime = data[1].time - data[0].time;
-            const lastDate = lineDataSelected[lineDataSelected.length - 1].time;
+            const deltaTime = data[1].time - data[0].time; // delta time between candles
+            const lastDate = lineDataSelected[lineDataSelected.length - 1].time; // time of last candle
             let iterator = 1;
+            // we need to add every tick on the x axis between selected position and last candle
             while (lastDate + iterator * deltaTime < millisecondsToSeconds(selectedDate)) {
                 lineDataSelected.push({
                     time: lastDate + iterator * deltaTime,
@@ -58,6 +60,14 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 });
                 iterator++;
             }
+            // Adding selected position that is being drawn to data
+            // logically it should be done like this:
+            // lineDataSelected.push({
+            //     time: millisecondsToSeconds(selectedDate),
+            //     value: selectedPrice,
+            // });
+            // but this is pushing the chart constantly to the left on position toggling
+            // therefore we need to use the delta time that was used for candles to draw the selected position
             lineDataSelected.push({
                 time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
                 value: selectedPrice,
