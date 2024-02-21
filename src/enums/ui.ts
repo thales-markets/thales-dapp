@@ -4,4 +4,5 @@ export enum Theme {
 
 export enum ScreenSizeBreakpoint {
     SMALL = 767,
+    EXTRA_SMALL = 512,
 }

@@ -50,7 +50,6 @@ export const Colors = {
     GRAY: '#2B3139',
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
-    GRAY_PURPLE: '#303656',
     GRAY_BLUE: '#808997',
 
     WHITE: '#FFFFFF',
@@ -58,6 +57,8 @@ export const Colors = {
     GREEN: '#03DAC5',
     GREEN_LIGHT: '#B0FFE7',
     GREEN_DARK: '#1D976C',
+    GREEN_DARK_START: 'rgb(76, 211, 163, 0.4)',
+    GREEN_DARK_END: 'rgb(76, 211, 163, 0)',
 
     BLACK: '#000000',
     BLACK_LIGHT: '#121212',
@@ -72,6 +73,8 @@ export const Colors = {
     RED: '#DE496D',
     RED_LIGHT: '#E29587',
     RED_DARK: '#D66D75',
+    RED_START: 'rgb(109, 18, 40, 0.4)',
+    RED_END: 'rgb(222, 73, 109, 0)',
 
     ORANGE: '#F7B91A',
     ORANGE_LIGHT: '#FFB866',

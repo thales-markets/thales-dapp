@@ -22,9 +22,9 @@ import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import DatesDropdown from './components/MaturityDateDropdown';
 import OpenPositions from './components/OpenPositions';
-import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import AssetTable from './components/Table';
+import LightweightChart from './components/PriceChart/LightweightChart';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
@@ -127,12 +127,14 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                             ></DatesDropdown>
                         </PositionedWrapper>
                     </DropdownsWrapper>
-                    <PriceChart
+                    <LightweightChart
+                        isSpeedMarkets={false}
                         position={positionType}
                         asset={currencyKey}
                         selectedPrice={getSelectedPrice()}
                         selectedRightPrice={getSelectedRightPrice()}
-                    ></PriceChart>
+                        selectedDate={maturityDate}
+                    ></LightweightChart>
                 </LeftSide>
                 <RightSide>
                     <PositionedWrapper>
@@ -193,6 +195,7 @@ const ContentWrapper = styled.div`
         flex-direction: column;
         gap: 10px;
         margin-top: 0;
+        height: auto;
     }
 `;
 
@@ -241,6 +244,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
         flex-direction: column;
         gap: 10px;
         order: 2;
+        margin-top: 10px;
     }
 `;
 
