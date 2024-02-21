@@ -8,6 +8,7 @@ import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { Colors } from 'styles/common';
 import { ChartContext } from '../ChartContext';
+import { millisecondsToSeconds } from 'date-fns';
 
 export const UserPositionAreaSeries: React.FC<{
     isSpeedMarkets: boolean;
@@ -33,45 +34,56 @@ export const UserPositionAreaSeries: React.FC<{
                 position: any;
                 hide: boolean;
             }> = [];
-            let iterator = 1;
+
             userActiveSpeedMarketsDataQuery.data
                 .filter((position) => {
                     return position.currencyKey === asset;
                 })
                 .map((position) => {
-                    if (Math.floor(position.maturityDate / 1000) > candlestickData[candlestickData.length - 1].time) {
-                        const deltaTime = candlestickData[1].time - candlestickData[0].time;
+                    const lastCandleTime = candlestickData[candlestickData.length - 1].time;
+                    const deltaTime = candlestickData[1].time - candlestickData[0].time;
+                    // if user position is in the future we need to draw every tick o the x axis using candle delta time
+                    if (millisecondsToSeconds(Number(position.maturityDate)) > lastCandleTime) {
+                        let iterator = 1;
+
                         while (
-                            candlestickData[candlestickData.length - 1].time + iterator * deltaTime <
-                            Math.floor(position.maturityDate / 1000)
+                            lastCandleTime + iterator * deltaTime <
+                            millisecondsToSeconds(Number(position.maturityDate))
                         ) {
+                            // we are adding every tick on the x axis but are hiding the data from being drawn by setting hide: true
                             result.push({
-                                time: candlestickData[candlestickData.length - 1].time + iterator * deltaTime,
+                                time: lastCandleTime + iterator * deltaTime,
                                 value: position.strikePriceNum,
                                 position,
                                 hide: true,
                             });
                             iterator++;
                         }
+                        // finally we can push the position that should be drawn and are passing hide:false to tell the chart to draw marker for this position
                         result.push({
-                            time: Math.floor(position.maturityDate / 1000),
+                            time: millisecondsToSeconds(Number(position.maturityDate)),
                             value: position.strikePriceNum,
                             position,
                             hide: false,
                         });
                     } else {
+                        // if user position is in the past we need to find the right candle where we should paint the position
                         let it = 1;
                         while (
-                            candlestickData[candlestickData.length - it].time > Math.floor(position.maturityDate / 1000)
+                            it <= candlestickData.length &&
+                            candlestickData[candlestickData.length - it].time >=
+                                millisecondsToSeconds(Number(position.maturityDate))
                         ) {
                             it++;
                         }
-                        result.push({
-                            time: candlestickData[candlestickData.length - it + 1].time,
-                            value: position.strikePriceNum,
-                            position,
-                            hide: false,
-                        });
+                        // checking if we found the position to be drawn
+                        if (it <= candlestickData.length)
+                            result.push({
+                                time: candlestickData[candlestickData.length - it + 1].time,
+                                value: position.strikePriceNum,
+                                position,
+                                hide: false,
+                            });
                     }
                 });
             return result;
@@ -107,7 +119,7 @@ export const UserPositionAreaSeries: React.FC<{
                 .filter((value: any) => !value.hide)
                 .map((value: any) => {
                     return {
-                        time: Math.floor(value.position.maturityDate / 1000),
+                        time: millisecondsToSeconds(Number(value.position.maturityDate)),
                         position: 'inBar',
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,

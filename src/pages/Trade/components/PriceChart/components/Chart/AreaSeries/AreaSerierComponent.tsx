@@ -35,19 +35,21 @@ export const AreaSeriesComponent: React.FC<{
     }, [position, isSpeedMarkets, selectedPrice]);
 
     useEffect(() => {
-        if (series && data) {
-            series.setData(data);
+        if (series) {
+            if (position) {
+                series.setData(data);
 
-            if (isSpeedMarkets) {
                 series?.setMarkers([
                     {
                         time: data[data.length - 1].time,
-                        position: position === Positions.UP ? 'aboveBar' : 'belowBar',
-                        size: 2,
+                        position: 'inBar',
+                        size: 1,
                         color: position === Positions.UP ? Colors.GREEN : Colors.RED,
-                        shape: position === Positions.UP ? 'arrowUp' : 'arrowDown',
+                        shape: 'circle',
                     },
                 ]);
+            } else {
+                series.setData([]);
             }
         }
     }, [data, series, isSpeedMarkets, position]);
