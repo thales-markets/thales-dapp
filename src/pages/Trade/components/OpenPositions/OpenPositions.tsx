@@ -19,7 +19,7 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import { formatCurrencyWithSign } from 'thales-utils';
 import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
 import { ThemeInterface } from 'types/ui';
@@ -187,7 +187,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
         setIsSubmitting(false);
     };
 
-    const getButton = () => (
+    const getClaimAllButton = () => (
         <Button
             {...getDefaultButtonProps(isMobile)}
             disabled={isSubmitting}
@@ -206,34 +206,39 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
             )}`}
         </Button>
     );
+
+    const showClaimAll = isSpeedMarkets && hasClaimableSpeedPositions;
+
     return (
         <Wrapper>
-            <Title>{t('markets.user-positions.your-positions')}</Title>
+            <Header>
+                <Title>{t('markets.user-positions.your-positions')}</Title>
+                {showClaimAll && (
+                    <ButtonWrapper>
+                        {getClaimAllButton()}
+                        {isMultiCollateralSupported && (
+                            <CollateralSelectorContainer>
+                                <InLabel color={theme.button.textColor.quaternary}>{t('common.in')}</InLabel>
+                                <CollateralSelector
+                                    collateralArray={[getDefaultCollateral(networkId)]}
+                                    selectedItem={0}
+                                    onChangeCollateral={() => {}}
+                                    disabled
+                                    additionalStyles={{
+                                        color: theme.button.textColor.quaternary,
+                                    }}
+                                />
+                            </CollateralSelectorContainer>
+                        )}
+                    </ButtonWrapper>
+                )}
+            </Header>
             {isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             ) : (
                 <>
-                    {isSpeedMarkets && hasClaimableSpeedPositions && (
-                        <ButtonWrapper>
-                            {getButton()}
-                            {isMultiCollateralSupported && (
-                                <CollateralSelectorContainer>
-                                    <InLabel color={theme.button.textColor.quaternary}>{t('common.in')}</InLabel>
-                                    <CollateralSelector
-                                        collateralArray={[getDefaultCollateral(networkId)]}
-                                        selectedItem={0}
-                                        onChangeCollateral={() => {}}
-                                        disabled
-                                        additionalStyles={{
-                                            color: theme.button.textColor.quaternary,
-                                        }}
-                                    />
-                                </CollateralSelectorContainer>
-                            )}
-                        </ButtonWrapper>
-                    )}
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
                             ? sortedUserOpenChainedSpeedMarketsData.map((position, index) => (
@@ -298,7 +303,6 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    padding-bottom: 20px;
 `;
 
 const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean }>`
@@ -314,26 +318,34 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean
     }
 `;
 
+const Header = styled(FlexDivRowCentered)`
+    min-height: 37px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        flex: 1;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+    }
+`;
+
 const Title = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
-    margin: 12px 0 12px 20px;
+    margin-left: 20px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin: 12px 0 40px 5px;
+        margin-left: 5px;
     }
 `;
 
 const ButtonWrapper = styled(FlexDivRow)`
-    position: absolute;
-    right: 0;
-    top: 5px;
+    height: 27px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        left: 5px;
-        right: unset;
-        top: 33px;
+        height: 34px;
+        margin-left: 5px;
+        padding: 5px 0;
     }
 `;
 
