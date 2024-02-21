@@ -8,6 +8,7 @@ import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { Colors } from 'styles/common';
 import { ChartContext } from '../ChartContext';
+import { millisecondsToSeconds } from 'date-fns';
 
 export const UserPositionAreaSeries: React.FC<{
     isSpeedMarkets: boolean;
@@ -33,17 +34,21 @@ export const UserPositionAreaSeries: React.FC<{
                 position: any;
                 hide: boolean;
             }> = [];
-            let iterator = 1;
+
             userActiveSpeedMarketsDataQuery.data
                 .filter((position) => {
                     return position.currencyKey === asset;
                 })
                 .map((position) => {
-                    if (Math.floor(position.maturityDate / 1000) > candlestickData[candlestickData.length - 1].time) {
+                    if (
+                        millisecondsToSeconds(Number(position.maturityDate)) >
+                        candlestickData[candlestickData.length - 1].time
+                    ) {
+                        let iterator = 1;
                         const deltaTime = candlestickData[1].time - candlestickData[0].time;
                         while (
                             candlestickData[candlestickData.length - 1].time + iterator * deltaTime <
-                            Math.floor(position.maturityDate / 1000)
+                            millisecondsToSeconds(Number(position.maturityDate))
                         ) {
                             result.push({
                                 time: candlestickData[candlestickData.length - 1].time + iterator * deltaTime,
@@ -54,7 +59,7 @@ export const UserPositionAreaSeries: React.FC<{
                             iterator++;
                         }
                         result.push({
-                            time: Math.floor(position.maturityDate / 1000),
+                            time: millisecondsToSeconds(Number(position.maturityDate)),
                             value: position.strikePriceNum,
                             position,
                             hide: false,
@@ -62,16 +67,19 @@ export const UserPositionAreaSeries: React.FC<{
                     } else {
                         let it = 1;
                         while (
-                            candlestickData[candlestickData.length - it].time > Math.floor(position.maturityDate / 1000)
+                            it <= candlestickData.length &&
+                            candlestickData[candlestickData.length - it].time >=
+                                millisecondsToSeconds(Number(position.maturityDate))
                         ) {
                             it++;
                         }
-                        result.push({
-                            time: candlestickData[candlestickData.length - it + 1].time,
-                            value: position.strikePriceNum,
-                            position,
-                            hide: false,
-                        });
+                        if (it <= candlestickData.length)
+                            result.push({
+                                time: candlestickData[candlestickData.length - it + 1].time,
+                                value: position.strikePriceNum,
+                                position,
+                                hide: false,
+                            });
                     }
                 });
             return result;
@@ -107,7 +115,7 @@ export const UserPositionAreaSeries: React.FC<{
                 .filter((value: any) => !value.hide)
                 .map((value: any) => {
                     return {
-                        time: Math.floor(value.position.maturityDate / 1000),
+                        time: millisecondsToSeconds(Number(value.position.maturityDate)),
                         position: 'inBar',
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
