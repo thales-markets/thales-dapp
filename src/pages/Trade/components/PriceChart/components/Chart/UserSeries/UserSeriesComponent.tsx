@@ -86,7 +86,7 @@ export const UserPositionAreaSeries: React.FC<{
                             });
                     }
                 });
-            return result;
+            return result.sort((a, b) => a.time - b.time);
         }
         return [];
     }, [userActiveSpeedMarketsDataQuery, asset, candlestickData]);
