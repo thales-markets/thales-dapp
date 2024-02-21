@@ -1,4 +1,3 @@
-import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 import PythInterfaceAbi from '@pythnetwork/pyth-sdk-solidity/abis/IPyth.json';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
@@ -20,7 +19,7 @@ import {
     SPEED_MARKETS_QUOTE,
     STABLECOIN_CONVERSION_BUFFER_PERCENTAGE,
 } from 'constants/options';
-import { CONNECTION_TIMEOUT_MS, PYTH_CONTRACT_ADDRESS } from 'constants/pyth';
+import { PYTH_CONTRACT_ADDRESS, PYTH_CURRENCY_DECIMALS } from 'constants/pyth';
 import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
@@ -45,6 +44,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import {
     COLLATERAL_DECIMALS,
+    bigNumberFormatter,
     coinParser,
     formatCurrency,
     formatCurrencyWithKey,
@@ -58,7 +58,7 @@ import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
-import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
+import { getPriceId, getPriceServiceEndpoint } from 'utils/pyth';
 import { refetchBalances, refetchSpeedMarketsLimits, refetchUserSpeedMarkets } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -226,10 +226,10 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     );
     const convertFromStable = useCallback(
         (value: number) => {
-            const rate = exchangeRates?.[selectedCollateral];
             if (isStableCurrency(selectedCollateral)) {
                 return value;
             } else {
+                const rate = exchangeRates?.[selectedCollateral];
                 const priceFeedBuffer = value === minBuyinAmount ? 1 - ALTCOIN_CONVERSION_BUFFER_PERCENTAGE : 1;
                 return rate
                     ? Math.ceil((value / (rate * priceFeedBuffer)) * 10 ** COLLATERAL_DECIMALS[selectedCollateral]) /
@@ -276,12 +276,12 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     ammSpeedMarketsLimits?.defaultLPFee
                 );
                 const skew = positionType ? skewImpact[positionType] : 0;
-                const oppositePositionSkew = positionType
+                const oppositePosition = positionType
                     ? positionType === Positions.UP
                         ? Positions.DOWN
                         : Positions.UP
                     : undefined;
-                const discount = oppositePositionSkew ? skewImpact[oppositePositionSkew] / 2 : 0;
+                const discount = oppositePosition ? skewImpact[oppositePosition] / 2 : 0;
 
                 return lpFee + skew - discount + Number(ammSpeedMarketsLimits?.safeBoxImpact);
             }
@@ -500,11 +500,7 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
     const handleSubmit = async () => {
         if (isButtonDisabled) return;
 
-        const priceConnection = new EvmPriceServiceConnection(getPriceServiceEndpoint(networkId), {
-            timeout: CONNECTION_TIMEOUT_MS,
-        });
-
-        const { speedMarketsAMMContract, chainedSpeedMarketsAMMContract, signer } = snxJSConnector as any;
+        const { speedMarketsAMMContract, chainedSpeedMarketsAMMContract, provider, signer } = snxJSConnector as any;
         if (speedMarketsAMMContract || (isChained && chainedSpeedMarketsAMMContract)) {
             setIsSubmitting(true);
             const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
@@ -513,22 +509,23 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 ? chainedSpeedMarketsAMMContract.connect(signer)
                 : speedMarketsAMMContract.connect(signer);
             try {
+                const priceId = getPriceId(networkId, currencyKey);
+
+                const latestPriceUpdateResponse = await fetch(`
+                ${getPriceServiceEndpoint(networkId)}/v2/updates/price/latest?ids[]=${priceId.replace('0x', '')}`);
+
+                const latestPriceUpdate = JSON.parse(await latestPriceUpdateResponse.text());
+
+                const pythPrice = bigNumberFormatter(latestPriceUpdate.parsed[0].price.price, PYTH_CURRENCY_DECIMALS);
+                setSubmittedStrikePrice(pythPrice);
+
                 const pythContract = new ethers.Contract(
                     PYTH_CONTRACT_ADDRESS[networkId],
                     PythInterfaceAbi as any,
-                    (snxJSConnector as any).provider
+                    provider
                 );
-                const priceId = getPriceId(networkId, currencyKey);
-
-                let priceUpdateData: string[] = [];
-                let prices: { [key: string]: number } = {};
-                [priceUpdateData, prices] = await Promise.all([
-                    priceConnection.getPriceFeedsUpdateData([priceId]),
-                    getCurrentPrices(priceConnection, networkId, [priceId]),
-                ]);
+                const priceUpdateData = ['0x' + latestPriceUpdate.binary.data[0]];
                 const updateFee = await pythContract.getUpdateFee(priceUpdateData);
-
-                setSubmittedStrikePrice(prices[currencyKey]);
 
                 const asset = ethers.utils.formatBytes32String(currencyKey);
 

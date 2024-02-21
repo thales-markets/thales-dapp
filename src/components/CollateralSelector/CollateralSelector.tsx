@@ -55,6 +55,8 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
         );
     }, [collateralArray, isDetailedView, getUSDForCollateral]);
 
+    disabled = disabled || collateralArray.length === 1;
+
     return (
         <Container
             isDropDownAbove={isDropDownAbove}
@@ -66,10 +68,12 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                     <TextCollateralWrapper>
                         <TextCollateral color={additionalStyles?.color}>{collateralArray[selectedItem]}</TextCollateral>
                     </TextCollateralWrapper>
-                    <Arrow
-                        color={additionalStyles?.color}
-                        className={open ? `icon icon--caret-up` : `icon icon--caret-down`}
-                    />
+                    {collateralArray.length > 1 && (
+                        <Arrow
+                            color={additionalStyles?.color}
+                            className={open ? `icon icon--caret-up` : `icon icon--caret-down`}
+                        />
+                    )}
                 </SelectedCollateral>
                 {isDetailedView
                     ? open && (
