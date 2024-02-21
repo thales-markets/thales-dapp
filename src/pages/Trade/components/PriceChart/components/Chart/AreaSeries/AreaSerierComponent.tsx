@@ -35,10 +35,10 @@ export const AreaSeriesComponent: React.FC<{
     }, [position, isSpeedMarkets, selectedPrice]);
 
     useEffect(() => {
-        if (series && data) {
-            series.setData(data);
+        if (series) {
+            if (position) {
+                series.setData(data);
 
-            if (isSpeedMarkets) {
                 series?.setMarkers([
                     {
                         time: data[data.length - 1].time,
@@ -48,6 +48,8 @@ export const AreaSeriesComponent: React.FC<{
                         shape: 'circle',
                     },
                 ]);
+            } else {
+                series.setData([]);
             }
         }
     }, [data, series, isSpeedMarkets, position]);
