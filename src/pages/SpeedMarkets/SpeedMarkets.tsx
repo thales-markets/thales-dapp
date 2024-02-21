@@ -13,7 +13,6 @@ import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useInterval from 'hooks/useInterval';
 import OpenPositions from 'pages/Trade/components/OpenPositions';
-import PriceChart from 'pages/Trade/components/PriceChart/PriceChart';
 import useAmmChainedSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmChainedSpeedMarketsLimitsQuery';
 import useAmmSpeedMarketsLimitsQuery from 'queries/options/speedMarkets/useAmmSpeedMarketsLimitsQuery';
 import queryString from 'query-string';
@@ -39,6 +38,7 @@ import SelectBuyin from './components/SelectBuyin';
 import SelectPosition from './components/SelectPosition';
 import { SelectedPosition } from './components/SelectPosition/SelectPosition';
 import SelectTime from './components/SelectTime';
+import LightweightChart from 'pages/Trade/components/PriceChart/LightweightChart';
 
 const SpeedMarkets: React.FC = () => {
     const { t } = useTranslation();
@@ -299,7 +299,6 @@ const SpeedMarkets: React.FC = () => {
                     <HeaderImage />
                     <ContentWrapper>
                         <LeftSide>
-                            {isMobile && getToggle()}
                             <Info>
                                 <Trans
                                     i18nKey={isChained ? 'speed-markets.chained.info' : 'speed-markets.info'}
@@ -325,12 +324,13 @@ const SpeedMarkets: React.FC = () => {
                                     customIconStyling={{ top: '-2px' }}
                                 />
                             </Info>
-                            <PriceChart
+                            <LightweightChart
                                 position={isChained ? undefined : positionType}
                                 asset={currencyKey}
                                 selectedPrice={
                                     !isChained && positionType !== undefined ? currentPrices[currencyKey] : undefined
                                 }
+                                selectedDate={getTimeStampForDelta(deltaTimeSec)}
                                 selectedRightPrice={undefined}
                                 isSpeedMarkets
                                 explicitCurrentPrice={currentPrices[currencyKey]}
@@ -340,10 +340,10 @@ const SpeedMarkets: React.FC = () => {
                                 risksPerAssetAndDirection={
                                     isChained ? undefined : ammSpeedMarketsLimitsData?.risksPerAssetAndDirection
                                 }
-                            ></PriceChart>
+                            ></LightweightChart>
                         </LeftSide>
                         <RightSide>
-                            {!isMobile && getToggle()}
+                            {getToggle()}
                             {/* Asset */}
                             {getStep(1, t('speed-markets.steps.choose-asset'))}
                             {/* Direction */}
@@ -398,6 +398,13 @@ const SpeedMarkets: React.FC = () => {
             )}
         </>
     );
+};
+
+const getTimeStampForDelta = (seconds: number) => {
+    if (seconds) {
+        const reuslt = Number(Date.now() + seconds * 1000);
+        return reuslt;
+    }
 };
 
 const Container = styled.div`

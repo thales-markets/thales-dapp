@@ -99,6 +99,9 @@ const Price = styled.span<{ isUp?: boolean }>`
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 18px;
     }
+    @media (max-width: ${ScreenSizeBreakpoint.EXTRA_SMALL}px) {
+        font-size: 16px;
+    }
 `;
 
 const getPriceAnimation = (priceLength: number, skipIndexes: number[]) => {
