@@ -166,13 +166,14 @@ export const ChartComponent: React.FC<ChartProps> = ({
 
 const ChartContainer = styled.div`
     height: 284px;
-    position: 'relative';
+    position: relative;
 `;
 
 const ResetButton = styled.div`
-    position: 'absolute';
-    right: 0;
-    bottom: 0;
+    position: absolute;
+    width: 35px;
+    left: 0;
+    bottom: -31px;
     i {
         font-size: 16px;
     }
