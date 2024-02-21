@@ -1,9 +1,12 @@
 import Button from 'components/Button';
+import CollateralSelector from 'components/CollateralSelector';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import { USD_SIGN } from 'constants/currency';
 import { ZERO_ADDRESS } from 'constants/network';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import { CollateralSelectorContainer, InLabel } from 'pages/Profile/components/MyPositionAction/MyPositionAction';
 import ChainedPosition from 'pages/SpeedMarkets/components/ChainedPosition';
 import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
@@ -16,13 +19,14 @@ import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivRow } from 'styles/common';
+import { formatCurrencyWithSign } from 'thales-utils';
 import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import OpenPosition from '../OpenPosition';
+import { getDefaultCollateral } from 'utils/currency';
+import { getIsMultiCollateralSupported } from 'utils/network';
 import { resolveAllChainedMarkets, resolveAllSpeedPositions } from 'utils/speedAmm';
-import { formatCurrencyWithSign } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
+import OpenPosition from '../OpenPosition';
 
 type OpenPositionsProps = {
     isSpeedMarkets?: boolean;
@@ -45,6 +49,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, true);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     // For sorting purpose as claimable status is unknown until all chained positions is rendered
@@ -209,7 +215,25 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
                 </LoaderContainer>
             ) : (
                 <>
-                    {isSpeedMarkets && hasClaimableSpeedPositions && <ButtonWrapper>{getButton()}</ButtonWrapper>}
+                    {isSpeedMarkets && hasClaimableSpeedPositions && (
+                        <ButtonWrapper>
+                            {getButton()}
+                            {isMultiCollateralSupported && (
+                                <CollateralSelectorContainer>
+                                    <InLabel color={theme.button.textColor.quaternary}>{t('common.in')}</InLabel>
+                                    <CollateralSelector
+                                        collateralArray={[getDefaultCollateral(networkId)]}
+                                        selectedItem={0}
+                                        onChangeCollateral={() => {}}
+                                        disabled
+                                        additionalStyles={{
+                                            color: theme.button.textColor.quaternary,
+                                        }}
+                                    />
+                                </CollateralSelectorContainer>
+                            )}
+                        </ButtonWrapper>
+                    )}
                     <PositionsWrapper noPositions={noPositions} isChained={isChainedSpeedMarkets}>
                         {isChainedSpeedMarkets && !noPositions
                             ? sortedUserOpenChainedSpeedMarketsData.map((position, index) => (
@@ -298,14 +322,19 @@ const Title = styled.span`
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        margin-left: 5px;
+        margin: 12px 0 40px 5px;
     }
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled(FlexDivRow)`
     position: absolute;
     right: 0;
     top: 5px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        left: 5px;
+        right: unset;
+        top: 33px;
+    }
 `;
 
 const getDefaultButtonProps = (isMobile: boolean) => ({
