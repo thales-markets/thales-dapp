@@ -110,10 +110,11 @@ export const UserPositionAreaSeries: React.FC<{
         setSeries(localSeries);
 
         // eslint-disable-next-line
-    }, [candlestickData]);
+    }, []);
 
     useEffect(() => {
         if (series && userData.length > 0) {
+            series?.setMarkers([]);
             series.setData(userData as any);
             const markers = userData
                 .filter((value: any) => !value.hide)
@@ -129,7 +130,7 @@ export const UserPositionAreaSeries: React.FC<{
                 });
             series?.setMarkers(markers as any);
         }
-    }, [userData, series, candlestickData]);
+    }, [userData, series]);
 
     return <></>;
 };
