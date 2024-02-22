@@ -113,7 +113,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
     useEffect(() => {
-        if (currentPrice && candleStickData) {
+        if (currentPrice && candleStickData && candleStickData.length) {
             const cloneData = [...candleStickData];
             cloneData[cloneData.length - 1].close = currentPrice;
             setProcessedPriceData(
