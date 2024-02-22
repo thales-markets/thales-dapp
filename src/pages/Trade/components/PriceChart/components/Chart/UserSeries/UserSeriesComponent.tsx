@@ -27,7 +27,7 @@ export const UserPositionAreaSeries: React.FC<{
     });
 
     const userData = useMemo(() => {
-        if (userActiveSpeedMarketsDataQuery.isSuccess && candlestickData) {
+        if (userActiveSpeedMarketsDataQuery.isSuccess && candlestickData && candlestickData.length) {
             const result: Array<{
                 time: number;
                 value?: number;
@@ -68,28 +68,33 @@ export const UserPositionAreaSeries: React.FC<{
                         });
                     } else {
                         // if user position is in the past we need to find the right candle where we should paint the position
-                        let it = 1;
-                        while (
-                            it <= candlestickData.length &&
-                            candlestickData[candlestickData.length - it].time >=
-                                millisecondsToSeconds(Number(position.maturityDate))
-                        ) {
-                            it++;
+                        // Checking if the position is present on the chart
+                        if (millisecondsToSeconds(Number(position.maturityDate)) >= candlestickData[0].time) {
+                            let it = 1;
+                            while (
+                                it <= candlestickData.length &&
+                                candlestickData[candlestickData.length - it].time >=
+                                    millisecondsToSeconds(Number(position.maturityDate))
+                            ) {
+                                it++;
+                            }
+                            // checking if we found the position to be drawn
+                            if (it <= candlestickData.length)
+                                result.push({
+                                    time: candlestickData[candlestickData.length - it + 1].time,
+                                    value: position.strikePriceNum,
+                                    position,
+                                    hide: false,
+                                });
                         }
-                        // checking if we found the position to be drawn
-                        if (it <= candlestickData.length)
-                            result.push({
-                                time: candlestickData[candlestickData.length - it + 1].time,
-                                value: position.strikePriceNum,
-                                position,
-                                hide: false,
-                            });
                     }
                 });
             return result.sort((a, b) => a.time - b.time);
         }
         return [];
-    }, [userActiveSpeedMarketsDataQuery, asset, candlestickData]);
+
+        // eslint-disable-next-line
+    }, [userActiveSpeedMarketsDataQuery, asset]);
 
     useEffect(() => {
         if (series) {
