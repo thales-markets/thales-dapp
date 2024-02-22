@@ -110,7 +110,7 @@ export const UserPositionAreaSeries: React.FC<{
         setSeries(localSeries);
 
         // eslint-disable-next-line
-    }, []);
+    }, [candlestickData]);
 
     useEffect(() => {
         if (series && userData.length > 0) {
