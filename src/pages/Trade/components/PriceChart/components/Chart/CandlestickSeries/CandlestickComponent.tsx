@@ -11,7 +11,6 @@ export const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ d
     const [series, setSeries] = useState<ISeriesApi<'Candlestick'> | undefined>();
 
     useEffect(() => {
-        console.log('add candlestick chart');
         const series = chart?.addCandlestickSeries({
             upColor: Colors.GREEN,
             downColor: Colors.RED,
