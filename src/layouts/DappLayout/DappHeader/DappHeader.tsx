@@ -81,6 +81,7 @@ const Container = styled(FlexDivRowCentered)<{ maxWidth: string }>`
     margin-bottom: 25px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
+        margin-bottom: 10px;
     }
 `;
 

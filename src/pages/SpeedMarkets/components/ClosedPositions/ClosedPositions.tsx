@@ -2,6 +2,7 @@ import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import { BigNumber } from 'ethers';
+import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
 import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +11,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered } from 'styles/common';
+import { FlexDivCentered, FlexDivRowCentered } from 'styles/common';
 import { UserClosedPositions } from 'types/options';
 import ChainedPosition from '../ChainedPosition';
 import ClosedPosition from '../ClosedPosition';
-import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
 
 const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
     const { t } = useTranslation();
@@ -65,7 +65,9 @@ const ClosedPositions: React.FC<{ isChained: boolean }> = ({ isChained }) => {
 
     return (
         <Wrapper>
-            <Title>{t('markets.user-positions.your-closed-positions')}</Title>
+            <Header>
+                <Title>{t('markets.user-positions.your-closed-positions')}</Title>
+            </Header>
             {userResolvedSpeedMarketsDataQuery.isLoading || userResolvedChainedSpeedMarketsDataQuery.isLoading ? (
                 <LoaderContainer>
                     <SimpleLoader />
@@ -141,12 +143,15 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean; isChained?: boolean
     }
 `;
 
+const Header = styled(FlexDivRowCentered)`
+    min-height: 37px;
+`;
+
 const Title = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
     margin-left: 20px;
-    margin-bottom: 10px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
