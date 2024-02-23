@@ -6,12 +6,13 @@ import { ChartContext } from '../ChartContext';
 import { millisecondsToSeconds } from 'date-fns';
 
 export const AreaSeriesComponent: React.FC<{
+    asset: string;
     data: any;
     position?: Positions;
     selectedPrice?: number;
     selectedDate?: number;
     isSpeedMarkets: boolean;
-}> = ({ data, position, selectedPrice, isSpeedMarkets, selectedDate }) => {
+}> = ({ data, position, selectedPrice, isSpeedMarkets, selectedDate, asset }) => {
     const chart = useContext(ChartContext);
     const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
     const [dataSeries, setDataSeries] = useState<any>([]);
@@ -22,21 +23,18 @@ export const AreaSeriesComponent: React.FC<{
             chart?.removeSeries(series);
             setSeries(undefined);
         }
-        if (position && selectedPrice) {
-            const series = chart?.addAreaSeries({
-                crosshairMarkerVisible: false,
-                lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
-                lineWidth: 1,
-                topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.RED_START,
-                bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.RED_END,
-                invertFilledArea: position === Positions.UP,
-                lastValueVisible: !isSpeedMarkets,
-            });
 
-            setSeries(series);
-        }
+        const localSeries = chart?.addAreaSeries({
+            crosshairMarkerVisible: false,
+            lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
+            lineWidth: 1,
+            lastValueVisible: !isSpeedMarkets,
+        });
+
+        setSeries(localSeries);
+
         // eslint-disable-next-line
-    }, [position, isSpeedMarkets, selectedPrice, selectedDate]);
+    }, []);
 
     // useEffect for calculating data for selected position.
     useEffect(() => {
@@ -67,12 +65,15 @@ export const AreaSeriesComponent: React.FC<{
             // but this is pushing the chart constantly to the left on position toggling
             // therefore we need to use the delta time that was used for candles to draw the selected position
             lineDataSelected.push({
-                time: lineDataSelected[lineDataSelected.length - 1].time + deltaTime,
+                time: millisecondsToSeconds(selectedDate),
                 value: selectedPrice,
             });
             setDataSeries(lineDataSelected);
+        } else {
+            setDataSeries([]);
         }
-    }, [series, selectedPrice, selectedDate, position, data]);
+        // eslint-disable-next-line
+    }, [selectedPrice, selectedDate, position, data, asset]);
 
     useEffect(() => {
         if (series) {
@@ -88,11 +89,17 @@ export const AreaSeriesComponent: React.FC<{
                         shape: 'circle',
                     },
                 ]);
+                series.applyOptions({
+                    topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.RED_START,
+                    bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.RED_END,
+                    invertFilledArea: position === Positions.UP,
+                });
             } else {
                 series.setData([]);
             }
         }
-    }, [series, dataSeries, position]);
+        // eslint-disable-next-line
+    }, [series, dataSeries]);
 
     return <></>;
 };

@@ -89,6 +89,7 @@ export const ChartComponent: React.FC<ChartProps> = ({
                         <CandlestickComponent data={data} asset={asset} />
 
                         <AreaSeriesComponent
+                            asset={asset}
                             data={data}
                             isSpeedMarkets={isSpeedMarkets}
                             position={position}

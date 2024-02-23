@@ -1,7 +1,7 @@
 import { Positions } from 'enums/options';
 import { ISeriesApi } from 'lightweight-charts';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import { useContext, useState, useMemo, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
@@ -21,12 +21,14 @@ export const UserPositionAreaSeries: React.FC<{
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [userData, setUserData] = useState<any>([]);
 
     const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+        refetchInterval: 30 * 1000,
     });
 
-    const userData = useMemo(() => {
+    useEffect(() => {
         if (userActiveSpeedMarketsDataQuery.isSuccess && candlestickData && candlestickData.length) {
             const result: Array<{
                 time: number;
@@ -88,12 +90,13 @@ export const UserPositionAreaSeries: React.FC<{
                         }
                     }
                 });
-            return result.sort((a, b) => a.time - b.time);
+            setUserData(result.sort((a, b) => a.time - b.time));
+        } else {
+            setUserData([]);
         }
-        return [];
 
         // eslint-disable-next-line
-    }, [userActiveSpeedMarketsDataQuery, asset]);
+    }, [userActiveSpeedMarketsDataQuery.data, asset]);
 
     useEffect(() => {
         if (series) {
@@ -118,7 +121,6 @@ export const UserPositionAreaSeries: React.FC<{
 
     useEffect(() => {
         if (series && userData.length > 0) {
-            series?.setMarkers([]);
             series.setData(userData as any);
             const markers = userData
                 .filter((value: any) => !value.hide)
@@ -133,6 +135,9 @@ export const UserPositionAreaSeries: React.FC<{
                     };
                 });
             series?.setMarkers(markers as any);
+        } else {
+            series?.setMarkers([]);
+            series?.setData([]);
         }
     }, [userData, series]);
 
