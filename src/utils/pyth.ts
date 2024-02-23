@@ -87,28 +87,29 @@ export const getBenchmarksPriceFeeds = async (priceFeeds: { priceId: string; pub
         );
 
         const benchmarksPriceResponses = await Promise.allSettled(benchmarksPricePromises);
-        const benchmarksResponseBodies: Promise<any>[] = [];
-
-        benchmarksPriceResponses.map((benchmarksPriceResponse) => {
-            if (benchmarksPriceResponse.status === 'fulfilled') {
-                if (benchmarksPriceResponse.value) {
-                    if (benchmarksPriceResponse.value.status == 200) {
-                        benchmarksResponseBodies.push(benchmarksPriceResponse.value.text());
-                    } else {
-                        console.log('Failed to fetch Pyth benchmarks data', benchmarksPriceResponse.value.status);
+        const benchmarksResponseBodies: (Promise<any> | undefined)[] = benchmarksPriceResponses.map(
+            (benchmarksPriceResponse) => {
+                if (benchmarksPriceResponse.status === 'fulfilled') {
+                    if (benchmarksPriceResponse.value) {
+                        if (benchmarksPriceResponse.value.status == 200) {
+                            return benchmarksPriceResponse.value.text();
+                        } else {
+                            console.log('Failed to fetch Pyth benchmarks data', benchmarksPriceResponse.value.status);
+                        }
                     }
                 }
             }
-        });
+        );
 
         const responses = await Promise.all(benchmarksResponseBodies);
         responses.map((response, index) => {
-            const bodyTextParsed = JSON.parse(response).parsed[0]; // always fetching one price ID
+            // parsed[0] - always fetching one price ID
+            const bodyTextParsed = response ? JSON.parse(response).parsed[0] : undefined;
 
             benchmarksPriceFeeds.push({
-                priceId: bodyTextParsed.id,
+                priceId: priceFeeds[index].priceId,
                 publishTime: priceFeeds[index].publishTime, // requested publish time
-                price: bigNumberFormatter(bodyTextParsed.price.price, PYTH_CURRENCY_DECIMALS),
+                price: bodyTextParsed ? bigNumberFormatter(bodyTextParsed.price.price, PYTH_CURRENCY_DECIMALS) : 0,
             });
         });
     }

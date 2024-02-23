@@ -206,7 +206,7 @@
             "open-market": "Go to Market page"
         },
         "flex-card": {
-            "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial perimutuel</bold> markets",
+            "footer-text": "Novel <bold>On-chain</bold>, <bold>permissionless</bold>, and <bold>non-custodial parimutual</bold> markets",
             "strike-price": "Strike price",
             "strike-date": "Strike date",
             "entry-price": "Entry price",
