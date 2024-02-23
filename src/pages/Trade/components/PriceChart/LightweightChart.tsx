@@ -223,6 +223,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                     <SimpleLoader />
                 ) : (
                     <ChartComponent
+                        resolution={dateRange.resolution}
                         data={candleData}
                         position={position}
                         asset={asset}
