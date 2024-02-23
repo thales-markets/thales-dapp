@@ -70,18 +70,17 @@ export const UserPositionAreaSeries: React.FC<{
                         // if user position is in the past we need to find the right candle where we should paint the position
                         // Checking if the position is present on the chart
                         if (millisecondsToSeconds(Number(position.maturityDate)) >= candlestickData[0].time) {
-                            let it = 1;
+                            let it = 0;
                             while (
                                 it <= candlestickData.length &&
-                                candlestickData[candlestickData.length - it].time >=
-                                    millisecondsToSeconds(Number(position.maturityDate))
+                                candlestickData[it].time < millisecondsToSeconds(Number(position.maturityDate))
                             ) {
                                 it++;
                             }
                             // checking if we found the position to be drawn
-                            if (it <= candlestickData.length)
+                            if (it < candlestickData.length)
                                 result.push({
-                                    time: candlestickData[candlestickData.length - it + 1].time,
+                                    time: candlestickData[it - 1].time,
                                     value: position.strikePriceNum,
                                     position,
                                     hide: false,
