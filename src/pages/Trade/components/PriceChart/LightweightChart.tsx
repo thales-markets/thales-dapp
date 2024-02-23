@@ -23,6 +23,9 @@ import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { ChartComponent } from './components/Chart/ChartContext';
 import SimpleLoader from 'components/SimpleLoader';
+import { subDays } from 'date-fns';
+
+const now = new Date();
 
 type LightweightChartProps = {
     asset: string;
@@ -39,21 +42,21 @@ type LightweightChartProps = {
 };
 
 const ToggleButtons = [
-    { label: '15m', resolution: '15', value: 2 },
-    { label: '30m', resolution: '30', value: 4 },
-    { label: '1H', resolution: '60', value: 14 },
-    { label: '4H', resolution: '240', value: 28 },
-    { label: '1D', resolution: '1D', value: 120 },
-    { label: '1W', resolution: '1W', value: 730 },
+    { label: '15m', resolution: '15', value: 2, startDate: Number(subDays(now, 2)) },
+    { label: '30m', resolution: '30', value: 4, startDate: Number(subDays(now, 4)) },
+    { label: '1H', resolution: '60', value: 14, startDate: Number(subDays(now, 14)) },
+    { label: '4H', resolution: '240', value: 28, startDate: Number(subDays(now, 28)) },
+    { label: '1D', resolution: '1D', value: 120, startDate: Number(subDays(now, 120)) },
+    { label: '1W', resolution: '1W', value: 730, startDate: Number(subDays(now, 730)) },
 ];
 
 const SpeedMarketsToggleButtons = [
-    { label: '1m', resolution: '1', value: 1 },
-    { label: '5m', resolution: '5', value: 1 },
-    { label: '15m', resolution: '15', value: 2 },
-    { label: '30m', resolution: '30', value: 4 },
-    { label: '1H', resolution: '60', value: 30 },
-    { label: '1D', resolution: '1D', value: 365 },
+    { label: '1m', resolution: '1', value: 1, startDate: Number(subDays(now, 1)) },
+    { label: '5m', resolution: '5', value: 1, startDate: Number(subDays(now, 1)) },
+    { label: '15m', resolution: '15', value: 2, startDate: Number(subDays(now, 2)) },
+    { label: '30m', resolution: '30', value: 4, startDate: Number(subDays(now, 4)) },
+    { label: '1H', resolution: '60', value: 30, startDate: Number(subDays(now, 30)) },
+    { label: '1D', resolution: '1D', value: 365, startDate: Number(subDays(now, 365)) },
 ];
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 const SPEED_DEFAULT_TOGGLE_BUTTON_INDEX = 0;
@@ -90,7 +93,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         enabled: isAppReady,
     });
 
-    const pythQuery = usePythCandlestickQuery(asset, dateRange.value, dateRange.resolution, {
+    const pythQuery = usePythCandlestickQuery(asset, dateRange.startDate, dateRange.resolution, {
         enabled: isAppReady,
         refetchInterval: 30 * 1000,
     });
@@ -110,7 +113,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset, explicitCurrentPrice]);
 
     useEffect(() => {
-        if (currentPrice && candleStickData) {
+        if (currentPrice && candleStickData && candleStickData.length) {
             const cloneData = [...candleStickData];
             cloneData[cloneData.length - 1].close = currentPrice;
             setProcessedPriceData(
