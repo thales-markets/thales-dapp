@@ -41,17 +41,19 @@ export const AreaSeriesComponent: React.FC<{
     // useEffect for calculating data for selected position.
     useEffect(() => {
         if (series && selectedPrice && selectedDate && position && data) {
-            const lineDataSelected = data.map((datapoint: any) => ({
-                time: datapoint.time,
-                value: selectedPrice,
-            }));
+            const startDate = data[0].time;
+            const lineDataSelected = [
+                {
+                    time: startDate,
+                    value: selectedPrice,
+                },
+            ];
             const deltaTime = data[1].time - data[0].time; // delta time between candles
-            const lastDate = lineDataSelected[lineDataSelected.length - 1].time; // time of last candle
             let iterator = 1;
             // we need to add every tick on the x axis between selected position and last candle
-            while (lastDate + iterator * deltaTime < millisecondsToSeconds(selectedDate)) {
+            while (startDate + iterator * deltaTime < millisecondsToSeconds(selectedDate)) {
                 lineDataSelected.push({
-                    time: lastDate + iterator * deltaTime,
+                    time: startDate + iterator * deltaTime,
                     value: selectedPrice,
                 });
                 iterator++;
