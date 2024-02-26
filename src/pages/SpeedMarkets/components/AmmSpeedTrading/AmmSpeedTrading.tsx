@@ -141,6 +141,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         !!errorMessageKey ||
         outOfLiquidity;
 
+    const isButtonBuyAvailable =
+        isWalletConnected &&
+        isPositionSelected &&
+        !!(strikeTimeSec || deltaTimeSec) &&
+        isPaidAmountEntered &&
+        !outOfLiquidityPerDirection &&
+        !outOfLiquidity &&
+        hasAllowance;
+
     const chainedQuote =
         isChained && ammChainedSpeedMarketsLimits
             ? ammChainedSpeedMarketsLimits?.payoutMultipliers[
@@ -822,6 +831,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     />
                     {isMobile && getTradingDetails()}
                     {getSubmitButton()}
+                    {isButtonBuyAvailable && (
+                        <BuyInfo>
+                            {t('speed-markets.buy-info', { value: ammSpeedMarketsLimits?.maxPriceDelaySec })}
+                        </BuyInfo>
+                    )}
                     <PaymentInfo>
                         {!isChained && !totalFee ? (
                             t('speed-markets.fee-info')
@@ -940,7 +954,7 @@ const Container = styled(FlexDivRow)<{ isChained: boolean }>`
     position: relative;
     z-index: 4;
     height: ${(props) => (props.isChained ? '98' : '78')}px;
-    margin-bottom: ${(props) => (props.isChained ? '26' : '46')}px;
+    margin-bottom: ${(props) => (props.isChained ? '48' : '68')}px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
@@ -974,6 +988,15 @@ const ColumnSpaceBetween = styled(FlexDivColumn)`
     width: 100%;
     height: 100%;
     justify-content: space-between;
+`;
+
+const BuyInfo = styled.span`
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 110%;
+    text-align: center;
+    color: ${(props) => props.theme.textColor.secondary};
+    margin-top: 6px;
 `;
 
 const PaymentInfo = styled.span`
