@@ -4,6 +4,7 @@ import { useContext, useState, useEffect } from 'react';
 import { Colors } from 'styles/common';
 import { ChartContext } from '../ChartContext';
 import { millisecondsToSeconds } from 'date-fns';
+import { timeToLocal } from 'utils/formatters/date';
 
 export const AreaSeriesComponent: React.FC<{
     asset: string;
@@ -79,10 +80,16 @@ export const AreaSeriesComponent: React.FC<{
         if (series) {
             if (dataSeries.length) {
                 series.setMarkers([]);
-                series.setData(dataSeries);
+                const dataInLocalTime = dataSeries.map((data: any) => {
+                    return {
+                        ...data,
+                        time: timeToLocal(data.time),
+                    };
+                });
+                series.setData(dataInLocalTime);
                 series?.setMarkers([
                     {
-                        time: dataSeries[dataSeries.length - 1].time,
+                        time: dataInLocalTime[dataSeries.length - 1].time,
                         position: 'inBar',
                         size: 1,
                         color: position === Positions.UP ? Colors.GREEN : Colors.RED,

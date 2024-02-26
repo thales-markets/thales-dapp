@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { Colors } from 'styles/common';
 import { ChartContext } from '../ChartContext';
 import { millisecondsToSeconds } from 'date-fns';
+import { timeToLocal } from 'utils/formatters/date';
 
 export const UserPositionAreaSeries: React.FC<{
     isSpeedMarkets: boolean;
@@ -121,12 +122,19 @@ export const UserPositionAreaSeries: React.FC<{
 
     useEffect(() => {
         if (series && userData.length > 0) {
-            series.setData(userData as any);
-            const markers = userData
+            const userDataWithLocalTime = userData.map((data: any) => {
+                return {
+                    ...data,
+                    time: timeToLocal(data.time),
+                };
+            });
+            series.setData(userDataWithLocalTime as any);
+
+            const markers = userDataWithLocalTime
                 .filter((value: any) => !value.hide)
                 .map((value: any) => {
                     return {
-                        time: millisecondsToSeconds(Number(value.position.maturityDate)),
+                        time: timeToLocal(value.position.maturityDate),
                         position: 'inBar',
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
