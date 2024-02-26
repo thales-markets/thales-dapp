@@ -39,7 +39,7 @@ export const AreaSeriesComponent: React.FC<{
 
     // useEffect for calculating data for selected position.
     useEffect(() => {
-        if (series && selectedPrice && selectedDate && position && data) {
+        if (selectedPrice && selectedDate && position && data) {
             const startDate = data[0].time;
             const lineDataSelected = [
                 {
@@ -73,7 +73,6 @@ export const AreaSeriesComponent: React.FC<{
         } else {
             setDataSeries([]);
         }
-        // eslint-disable-next-line
     }, [selectedPrice, selectedDate, position, data, asset]);
 
     useEffect(() => {
