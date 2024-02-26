@@ -25,6 +25,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                 maxBuyinAmount: 0,
                 minimalTimeToMaturity: 0,
                 maximalTimeToMaturity: 0,
+                maxPriceDelaySec: 0,
                 maxPriceDelayForResolvingSec: 0,
                 risksPerAsset: [],
                 risksPerAssetAndDirection: [],
@@ -60,6 +61,7 @@ const useAmmSpeedMarketsLimitsQuery = (
                     coinFormatter(ammParams.maxBuyinAmount, networkId) - MAX_BUYIN_COLLATERAL_CONVERSION_BUFFER;
                 ammSpeedMarketsLimits.minimalTimeToMaturity = Number(ammParams.minimalTimeToMaturity);
                 ammSpeedMarketsLimits.maximalTimeToMaturity = Number(ammParams.maximalTimeToMaturity);
+                ammSpeedMarketsLimits.maxPriceDelaySec = Number(ammParams.maximumPriceDelay);
                 ammSpeedMarketsLimits.maxPriceDelayForResolvingSec = Number(ammParams.maximumPriceDelayForResolving);
                 ammSpeedMarketsLimits.risksPerAsset = [
                     {

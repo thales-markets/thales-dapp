@@ -249,6 +249,7 @@ export type AmmSpeedMarketsLimits = {
     minBuyinAmount: number;
     minimalTimeToMaturity: number;
     maximalTimeToMaturity: number;
+    maxPriceDelaySec: number;
     maxPriceDelayForResolvingSec: number;
     risksPerAsset: RiskPerAsset[];
     risksPerAssetAndDirection: RiskPerAssetAndPosition[];
