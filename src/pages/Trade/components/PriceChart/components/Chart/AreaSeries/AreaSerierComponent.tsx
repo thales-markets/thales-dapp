@@ -11,12 +11,15 @@ export const AreaSeriesComponent: React.FC<{
     data: any;
     position?: Positions;
     selectedPrice?: number;
+    selectedRightPrice?: number;
     selectedDate?: number;
     isSpeedMarkets: boolean;
-}> = ({ data, position, selectedPrice, isSpeedMarkets, selectedDate, asset }) => {
+}> = ({ data, position, selectedPrice, isSpeedMarkets, selectedDate, asset, selectedRightPrice }) => {
     const chart = useContext(ChartContext);
     const [series, setSeries] = useState<ISeriesApi<'Area'> | undefined>();
+    const [rangeSeries, setRangeSeries] = useState<ISeriesApi<'Area'> | undefined>();
     const [dataSeries, setDataSeries] = useState<any>([]);
+    const [rangeDataSeries, setRangeDataSeries] = useState<any>([]);
 
     useEffect(() => {
         if (series) {
@@ -25,7 +28,19 @@ export const AreaSeriesComponent: React.FC<{
             setSeries(undefined);
         }
 
+        if (rangeSeries) {
+            rangeSeries.setMarkers([]);
+            chart?.removeSeries(rangeSeries);
+            setRangeSeries(undefined);
+        }
+
         const localSeries = chart?.addAreaSeries({
+            crosshairMarkerVisible: false,
+            lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
+            lineWidth: 1,
+            lastValueVisible: !isSpeedMarkets,
+        });
+        const localRangeSeries = chart?.addAreaSeries({
             crosshairMarkerVisible: false,
             lineColor: Colors.BLUE_MIDNIGHT_LIGHT,
             lineWidth: 1,
@@ -33,6 +48,7 @@ export const AreaSeriesComponent: React.FC<{
         });
 
         setSeries(localSeries);
+        setRangeSeries(localRangeSeries);
 
         // eslint-disable-next-line
     }, []);
@@ -70,10 +86,22 @@ export const AreaSeriesComponent: React.FC<{
                 value: selectedPrice,
             });
             setDataSeries(lineDataSelected);
+            if (selectedRightPrice) {
+                const rangeSeriesLocal = lineDataSelected.map((singleData: any) => {
+                    return {
+                        ...singleData,
+                        value: selectedRightPrice,
+                    };
+                });
+                setRangeDataSeries(rangeSeriesLocal);
+            } else {
+                setRangeDataSeries([]);
+            }
         } else {
             setDataSeries([]);
+            setRangeDataSeries([]);
         }
-    }, [selectedPrice, selectedDate, position, data, asset]);
+    }, [selectedPrice, selectedDate, position, data, asset, selectedRightPrice]);
 
     useEffect(() => {
         if (series) {
@@ -95,17 +123,53 @@ export const AreaSeriesComponent: React.FC<{
                         shape: 'circle',
                     },
                 ]);
-                series.applyOptions({
-                    topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.RED_START,
-                    bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.RED_END,
-                    invertFilledArea: position === Positions.UP,
-                });
+                if (position === Positions.UP || position === Positions.DOWN) {
+                    series.applyOptions({
+                        topColor: position === Positions.UP ? Colors.GREEN_DARK_END : Colors.RED_START,
+                        bottomColor: position === Positions.UP ? Colors.GREEN_DARK_START : Colors.RED_END,
+                        invertFilledArea: position === Positions.UP,
+                    });
+                } else {
+                    series.applyOptions({
+                        topColor: position === Positions.OUT ? Colors.GREEN_DARK_START : Colors.GREEN_IN_END,
+                        bottomColor: position === Positions.OUT ? Colors.GREEN_DARK_END : Colors.GREEN_IN_START,
+                        invertFilledArea: position === Positions.IN,
+                    });
+                }
             } else {
                 series.setData([]);
             }
         }
+        if (rangeSeries) {
+            if (rangeDataSeries.length) {
+                rangeSeries.setMarkers([]);
+                const dataInLocalTime = rangeDataSeries.map((data: any) => {
+                    return {
+                        ...data,
+                        time: timeToLocal(data.time),
+                    };
+                });
+                rangeSeries.setData(dataInLocalTime);
+                rangeSeries?.setMarkers([
+                    {
+                        time: dataInLocalTime[dataInLocalTime.length - 1].time,
+                        position: 'inBar',
+                        size: 1,
+                        color: position === Positions.UP ? Colors.GREEN : Colors.RED,
+                        shape: 'circle',
+                    },
+                ]);
+                rangeSeries.applyOptions({
+                    topColor: position === Positions.OUT ? Colors.GREEN_DARK_END : Colors.GREEN_IN_START,
+                    bottomColor: position === Positions.OUT ? Colors.GREEN_DARK_START : Colors.GREEN_IN_END,
+                    invertFilledArea: position === Positions.OUT,
+                });
+            } else {
+                rangeSeries.setData([]);
+            }
+        }
         // eslint-disable-next-line
-    }, [series, dataSeries]);
+    }, [series, dataSeries, rangeSeries]);
 
     return <></>;
 };

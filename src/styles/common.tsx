@@ -46,7 +46,7 @@ export const BoldText = styled.span`
 
 // TODO: Update color names
 export const Colors = {
-    GRAY: '#2B3139',
+    GRAY: 'rgb(43, 49, 57)',
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
     GRAY_BLUE: '#808997',
@@ -58,6 +58,9 @@ export const Colors = {
     GREEN_DARK: '#1D976C',
     GREEN_DARK_START: 'rgb(76, 211, 163, 0.4)',
     GREEN_DARK_END: 'rgb(76, 211, 163, 0)',
+
+    GREEN_IN_START: 'rgb(76, 211, 163, 0.5)',
+    GREEN_IN_END: 'rgb(43, 49, 57, 0)',
 
     BLACK: '#000000',
     BLACK_LIGHT: '#121212',
