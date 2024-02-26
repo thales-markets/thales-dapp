@@ -47,9 +47,9 @@ type StableBalances = {
     USDT: number | null;
 };
 
-export const getDefaultStableIndexByBalance = (balancesObject: any, networkId: Network, currencyKey: Coins) => {
-    let index = COLLATERALS[networkId].indexOf(currencyKey);
-    if (balancesObject && balancesObject[currencyKey] < 1) {
+export const getCollateralIndexByBalance = (balancesObject: any, networkId: Network, collateral: Coins) => {
+    let index = COLLATERALS[networkId].indexOf(collateral);
+    if (balancesObject && balancesObject[collateral] < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
             if (value && value > 1) {
                 const collateralIndex = COLLATERALS[networkId].indexOf(key as Coins);
