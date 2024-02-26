@@ -262,6 +262,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
     gap: 15px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
+        height: 56px;
         gap: 10px;
         order: 2;
         margin-top: 10px;
