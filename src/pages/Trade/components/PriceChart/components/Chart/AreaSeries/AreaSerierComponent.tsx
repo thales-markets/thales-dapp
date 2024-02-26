@@ -119,7 +119,7 @@ export const AreaSeriesComponent: React.FC<{
                         time: dataInLocalTime[dataSeries.length - 1].time,
                         position: 'inBar',
                         size: 1,
-                        color: position === Positions.UP ? Colors.GREEN : Colors.RED,
+                        color: position === Positions.DOWN ? Colors.RED : Colors.GREEN,
                         shape: 'circle',
                     },
                 ]);
@@ -155,7 +155,7 @@ export const AreaSeriesComponent: React.FC<{
                         time: dataInLocalTime[dataInLocalTime.length - 1].time,
                         position: 'inBar',
                         size: 1,
-                        color: position === Positions.UP ? Colors.GREEN : Colors.RED,
+                        color: Colors.GREEN,
                         shape: 'circle',
                     },
                 ]);
