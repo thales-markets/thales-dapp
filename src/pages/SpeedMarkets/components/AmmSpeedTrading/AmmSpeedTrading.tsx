@@ -141,6 +141,15 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         !!errorMessageKey ||
         outOfLiquidity;
 
+    const isButtonBuyAvailable =
+        isWalletConnected &&
+        isPositionSelected &&
+        !!(strikeTimeSec || deltaTimeSec) &&
+        isPaidAmountEntered &&
+        !outOfLiquidityPerDirection &&
+        !outOfLiquidity &&
+        hasAllowance;
+
     const chainedQuote =
         isChained && ammChainedSpeedMarketsLimits
             ? ammChainedSpeedMarketsLimits?.payoutMultipliers[
@@ -822,7 +831,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                     />
                     {isMobile && getTradingDetails()}
                     {getSubmitButton()}
-                    <BuyInfo>{t('speed-markets.buy-info', { value: ammSpeedMarketsLimits?.maxPriceDelaySec })}</BuyInfo>
+                    {isButtonBuyAvailable && (
+                        <BuyInfo>
+                            {t('speed-markets.buy-info', { value: ammSpeedMarketsLimits?.maxPriceDelaySec })}
+                        </BuyInfo>
+                    )}
                     <PaymentInfo>
                         {!isChained && !totalFee ? (
                             t('speed-markets.fee-info')
