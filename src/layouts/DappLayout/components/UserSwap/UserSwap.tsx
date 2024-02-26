@@ -27,7 +27,7 @@ import {
     getCollateral,
     getCollateralIndexForNetwork,
     getDefaultCollateral,
-    getDefaultStableIndexByBalance,
+    getCollateralIndexByBalance,
 } from 'utils/currency';
 import { getIsMultiCollateralSupported } from 'utils/network';
 
@@ -51,17 +51,19 @@ const UserSwap: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [swapToStableCoin, setSwapToStableCoin] = useState(SYNTHS_MAP.sUSD as Coins);
 
-    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
+    const multipleCollateralBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && isMultiCollateralSupported,
     });
 
-    const multipleStableBalancesData =
-        multipleStableBalances.isSuccess && multipleStableBalances.data ? multipleStableBalances.data : null;
+    const multipleCollateralBalancesData =
+        multipleCollateralBalances.isSuccess && multipleCollateralBalances.data
+            ? multipleCollateralBalances.data
+            : null;
 
-    const sUSDBalance = getCoinBalance(multipleStableBalancesData, SYNTHS_MAP.sUSD as Coins);
-    const DAIBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.DAI as Coins);
-    const USDCBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDC as Coins);
-    const USDTBalance = getCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDT as Coins);
+    const sUSDBalance = getCoinBalance(multipleCollateralBalancesData, SYNTHS_MAP.sUSD as Coins);
+    const DAIBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.DAI as Coins);
+    const USDCBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDC as Coins);
+    const USDTBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDT as Coins);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && !isMultiCollateralSupported,
@@ -92,8 +94,8 @@ const UserSwap: React.FC = () => {
                   el.type ===
                   getCollateral(
                       networkId,
-                      getDefaultStableIndexByBalance(
-                          multipleStableBalances?.data,
+                      getCollateralIndexByBalance(
+                          multipleCollateralBalances?.data,
                           networkId,
                           getCollateral(networkId, userSelectedCollateralIndex) as Coins
                       )
@@ -107,26 +109,28 @@ const UserSwap: React.FC = () => {
 
     useEffect(() => {
         if (isMultiCollateralSupported) {
-            const collateralIndexWithPositiveBalance = getDefaultStableIndexByBalance(
-                multipleStableBalances?.data,
+            const collateralIndexWithPositiveBalance = getCollateralIndexByBalance(
+                multipleCollateralBalances?.data,
                 networkId,
-                getDefaultCollateral(networkId) as Coins
+                collateral.type
             );
-            const positiveCollateral =
-                userCollaterals.find(
-                    (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance)
-                ) || userCollaterals[0];
+            const positiveCollateral = userCollaterals.find(
+                (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance)
+            );
 
-            setCollateral(positiveCollateral);
-            dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+            if (positiveCollateral && positiveCollateral.type !== collateral.type) {
+                setCollateral(positiveCollateral);
+                dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+            }
         }
     }, [
-        multipleStableBalances.data,
+        multipleCollateralBalances.data,
         stableBalanceQuery.data,
         dispatch,
         isMultiCollateralSupported,
         networkId,
         userCollaterals,
+        collateral.type,
     ]);
 
     useEffect(() => {
