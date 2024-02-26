@@ -163,7 +163,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
     return (
         <Wrapper>
-            <FlexDivSpaceBetween margin="15px 0px">
+            <FlexDivSpaceBetween>
                 <FlexDivRowCentered>
                     <CurrentPrice
                         asset={asset}
@@ -254,10 +254,15 @@ const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+    margin-top: 15px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        height: 352px;
+    }
 `;
 
 const ChartContainer = styled.div`
     height: 284px;
+    margin-top: 15px;
 `;
 
 const PriceChange = styled.span<{ up: boolean }>`
