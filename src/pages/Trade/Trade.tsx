@@ -108,15 +108,15 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>
-                        <PositionedWrapper>
+                        <AssetWrapper>
                             <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
                                 <Info>{t('markets.steps.choose-asset')}</Info>
                             </Tooltip>
                             {allAssets && (
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
                             )}
-                        </PositionedWrapper>
-                        <PositionedWrapper>
+                        </AssetWrapper>
+                        <DatesWrapper>
                             <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
                                 <Info>{t('markets.steps.choose-date')}</Info>
                             </Tooltip>
@@ -125,7 +125,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 setDate={setMaturityDate}
                                 allDates={allDates}
                             ></DatesDropdown>
-                        </PositionedWrapper>
+                        </DatesWrapper>
                     </DropdownsWrapper>
                     <LightweightChart
                         isSpeedMarkets={false}
@@ -199,6 +199,25 @@ const ContentWrapper = styled.div`
     }
 `;
 
+const AssetWrapper = styled(FlexDivColumnCentered)`
+    position: relative;
+    text-align: center;
+    z-index: 9999;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100%;
+        z-index: 10000;
+    }
+`;
+
+const DatesWrapper = styled(FlexDivColumnCentered)`
+    position: relative;
+    text-align: center;
+    z-index: 9999;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100%;
+    }
+`;
+
 const PositionedWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
@@ -243,9 +262,11 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
     gap: 15px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
+        height: 56px;
         gap: 10px;
         order: 2;
         margin-top: 10px;
+        z-index: 10000;
     }
 `;
 

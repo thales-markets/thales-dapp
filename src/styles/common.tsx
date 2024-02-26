@@ -10,10 +10,9 @@ export const FlexDivCentered = styled(FlexDiv)`
     justify-content: center;
 `;
 
-export const FlexDivSpaceBetween = styled(FlexDiv)<{ margin?: string }>`
+export const FlexDivSpaceBetween = styled(FlexDiv)`
     align-items: center;
     justify-content: space-between;
-    ${(props) => (props.margin ? `margin: ${props.margin}` : '')}
 `;
 
 export const FlexDivEnd = styled(FlexDiv)`
