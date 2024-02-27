@@ -38,6 +38,7 @@ type LightweightChartProps = {
     prevExplicitPrice?: number;
     chainedRisk?: Risk;
     risksPerAsset?: RiskPerAsset[];
+    deltaTimeSec?: number;
     risksPerAssetAndDirection?: RiskPerAssetAndPosition[];
 };
 
@@ -69,6 +70,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     selectedDate,
     isSpeedMarkets,
     explicitCurrentPrice,
+    deltaTimeSec,
     prevExplicitPrice,
     chainedRisk,
     risksPerAsset,
@@ -84,6 +86,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         !isSpeedMarkets
             ? ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]
             : SpeedMarketsToggleButtons[SPEED_DEFAULT_TOGGLE_BUTTON_INDEX]
+    );
+    const [selectedToggleIndex, setToggleIndex] = useState(
+        isSpeedMarkets ? SPEED_DEFAULT_TOGGLE_BUTTON_INDEX : DEFAULT_TOGGLE_BUTTON_INDEX
     );
 
     const [candleData, setCandleData] = useState<any>();
@@ -126,6 +131,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(isSpeedMarkets ? SpeedMarketsToggleButtons[value] : ToggleButtons[value]);
+        setToggleIndex(value);
     };
 
     useEffect(() => {
@@ -143,6 +149,35 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             getImpliedVolatility();
         }
     }, [asset, isSpeedMarkets]);
+
+    useEffect(() => {
+        if (deltaTimeSec) {
+            if (deltaTimeSec >= 36000) {
+                if (dateRange.resolution !== SpeedMarketsToggleButtons[4].resolution) {
+                    handleDateRangeChange(4);
+                }
+            } else {
+                if (deltaTimeSec >= 14400) {
+                    if (dateRange.resolution !== SpeedMarketsToggleButtons[3].resolution) {
+                        handleDateRangeChange(3);
+                    }
+                } else {
+                    if (deltaTimeSec >= 3600) {
+                        if (dateRange.resolution !== SpeedMarketsToggleButtons[2].resolution) {
+                            handleDateRangeChange(2);
+                        }
+                    } else {
+                        if (deltaTimeSec >= 1800) {
+                            if (dateRange.resolution !== SpeedMarketsToggleButtons[1].resolution) {
+                                handleDateRangeChange(1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // eslint-disable-next-line
+    }, [deltaTimeSec]);
 
     const risk = chainedRisk
         ? chainedRisk
@@ -238,7 +273,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
             <Toggle
                 options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
-                defaultSelectedIndex={isSpeedMarkets ? SPEED_DEFAULT_TOGGLE_BUTTON_INDEX : DEFAULT_TOGGLE_BUTTON_INDEX}
+                selectedIndex={selectedToggleIndex}
                 onChange={handleDateRangeChange}
             />
             {isSpeedMarkets && (

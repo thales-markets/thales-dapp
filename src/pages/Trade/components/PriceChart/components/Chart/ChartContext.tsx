@@ -66,7 +66,7 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 rightOffset: 1,
                 timeVisible: true,
                 fixLeftEdge: true,
-                barSpacing: 5,
+                barSpacing: 7.5,
             },
         });
         setChart(chart);
