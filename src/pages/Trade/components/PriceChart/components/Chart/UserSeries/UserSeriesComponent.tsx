@@ -1,7 +1,7 @@
 import { Positions } from 'enums/options';
 import { ISeriesApi } from 'lightweight-charts';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import { useContext, useState, useMemo, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { Colors } from 'styles/common';
 import { ChartContext } from '../ChartContext';
 import { millisecondsToSeconds } from 'date-fns';
+import { timeToLocal } from 'utils/formatters/date';
 
 export const UserPositionAreaSeries: React.FC<{
     isSpeedMarkets: boolean;
@@ -21,12 +22,14 @@ export const UserPositionAreaSeries: React.FC<{
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [userData, setUserData] = useState<any>([]);
 
     const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected && isSpeedMarkets,
+        refetchInterval: 30 * 1000,
     });
 
-    const userData = useMemo(() => {
+    useEffect(() => {
         if (userActiveSpeedMarketsDataQuery.isSuccess && candlestickData && candlestickData.length) {
             const result: Array<{
                 time: number;
@@ -70,18 +73,17 @@ export const UserPositionAreaSeries: React.FC<{
                         // if user position is in the past we need to find the right candle where we should paint the position
                         // Checking if the position is present on the chart
                         if (millisecondsToSeconds(Number(position.maturityDate)) >= candlestickData[0].time) {
-                            let it = 1;
+                            let it = 0;
                             while (
                                 it <= candlestickData.length &&
-                                candlestickData[candlestickData.length - it].time >=
-                                    millisecondsToSeconds(Number(position.maturityDate))
+                                candlestickData[it].time < millisecondsToSeconds(Number(position.maturityDate))
                             ) {
                                 it++;
                             }
                             // checking if we found the position to be drawn
-                            if (it <= candlestickData.length)
+                            if (it < candlestickData.length)
                                 result.push({
-                                    time: candlestickData[candlestickData.length - it + 1].time,
+                                    time: candlestickData[it - 1].time,
                                     value: position.strikePriceNum,
                                     position,
                                     hide: false,
@@ -89,12 +91,13 @@ export const UserPositionAreaSeries: React.FC<{
                         }
                     }
                 });
-            return result.sort((a, b) => a.time - b.time);
+            setUserData(result.sort((a, b) => a.time - b.time));
+        } else {
+            setUserData([]);
         }
-        return [];
 
         // eslint-disable-next-line
-    }, [userActiveSpeedMarketsDataQuery, asset]);
+    }, [userActiveSpeedMarketsDataQuery.data, asset]);
 
     useEffect(() => {
         if (series) {
@@ -119,13 +122,19 @@ export const UserPositionAreaSeries: React.FC<{
 
     useEffect(() => {
         if (series && userData.length > 0) {
-            series?.setMarkers([]);
-            series.setData(userData as any);
-            const markers = userData
+            const userDataWithLocalTime = userData.map((data: any) => {
+                return {
+                    ...data,
+                    time: timeToLocal(data.time),
+                };
+            });
+            series.setData(userDataWithLocalTime as any);
+
+            const markers = userDataWithLocalTime
                 .filter((value: any) => !value.hide)
                 .map((value: any) => {
                     return {
-                        time: millisecondsToSeconds(Number(value.position.maturityDate)),
+                        time: timeToLocal(value.position.maturityDate),
                         position: 'inBar',
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
@@ -134,6 +143,9 @@ export const UserPositionAreaSeries: React.FC<{
                     };
                 });
             series?.setMarkers(markers as any);
+        } else {
+            series?.setMarkers([]);
+            series?.setData([]);
         }
     }, [userData, series]);
 

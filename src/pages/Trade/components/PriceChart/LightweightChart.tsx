@@ -64,6 +64,7 @@ const SPEED_DEFAULT_TOGGLE_BUTTON_INDEX = 0;
 const LightweightChart: React.FC<LightweightChartProps> = ({
     asset,
     selectedPrice,
+    selectedRightPrice,
     position,
     selectedDate,
     isSpeedMarkets,
@@ -228,6 +229,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                         position={position}
                         asset={asset}
                         selectedPrice={selectedPrice}
+                        selectedRightPrice={selectedRightPrice}
                         isSpeedMarkets={isSpeedMarkets}
                         selectedDate={selectedDate}
                     />

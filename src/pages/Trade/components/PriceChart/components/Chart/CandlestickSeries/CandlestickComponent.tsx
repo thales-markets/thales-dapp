@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components';
 import { Colors } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
 import { ChartContext } from '../ChartContext';
+import { timeToLocal } from 'utils/formatters/date';
 
 export const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ data, asset }) => {
     const theme: ThemeInterface = useTheme();
@@ -25,7 +26,15 @@ export const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ d
     }, [theme, chart]);
 
     useEffect(() => {
-        if (series && data) series.setData(data);
+        if (series && data) {
+            const dataWithLocalTime = data.map((point: any) => {
+                return {
+                    ...point,
+                    time: timeToLocal(point.time),
+                };
+            });
+            series.setData(dataWithLocalTime);
+        }
     }, [data, series]);
 
     useEffect(() => {

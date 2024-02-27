@@ -21,6 +21,7 @@ type ChartProps = {
     asset: string;
     isSpeedMarkets: boolean;
     selectedPrice?: number;
+    selectedRightPrice?: number;
     selectedDate?: number;
     resolution?: string;
 };
@@ -35,6 +36,7 @@ export const ChartComponent: React.FC<ChartProps> = ({
     asset,
     isSpeedMarkets,
     selectedPrice,
+    selectedRightPrice,
     selectedDate,
     resolution,
 }) => {
@@ -64,7 +66,7 @@ export const ChartComponent: React.FC<ChartProps> = ({
                 rightOffset: 1,
                 timeVisible: true,
                 fixLeftEdge: true,
-                barSpacing: 15,
+                barSpacing: 5,
             },
         });
         setChart(chart);
@@ -89,10 +91,12 @@ export const ChartComponent: React.FC<ChartProps> = ({
                         <CandlestickComponent data={data} asset={asset} />
 
                         <AreaSeriesComponent
+                            asset={asset}
                             data={data}
                             isSpeedMarkets={isSpeedMarkets}
                             position={position}
                             selectedPrice={selectedPrice}
+                            selectedRightPrice={selectedRightPrice}
                             selectedDate={selectedDate}
                         />
 
