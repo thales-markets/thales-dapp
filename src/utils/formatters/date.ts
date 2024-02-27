@@ -1,4 +1,7 @@
 // date-fns formatDuration does not let us customize the actual string, so we need to write this custom formatter.
+
+import { millisecondsToSeconds, secondsToMilliseconds } from 'date-fns';
+
 // TODO: support translations
 export const formattedDuration = (
     duration: Duration,
@@ -81,8 +84,8 @@ export const formattedDurationFull = (
 };
 
 export function timeToLocal(originalTime: number) {
-    const d = new Date(originalTime * 1000);
-    return (
+    const d = new Date(secondsToMilliseconds(originalTime));
+    return millisecondsToSeconds(
         Date.UTC(
             d.getFullYear(),
             d.getMonth(),
@@ -91,6 +94,6 @@ export function timeToLocal(originalTime: number) {
             d.getMinutes(),
             d.getSeconds(),
             d.getMilliseconds()
-        ) / 1000
+        )
     );
 }
