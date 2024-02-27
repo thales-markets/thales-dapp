@@ -154,7 +154,7 @@ export const AreaSeriesComponent: React.FC<{
                     {
                         time: dataInLocalTime[dataInLocalTime.length - 1].time,
                         position: 'inBar',
-                        size: 1,
+                        size: 0.1,
                         color: Colors.GREEN,
                         shape: 'circle',
                     },

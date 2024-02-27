@@ -134,7 +134,7 @@ export const UserPositionAreaSeries: React.FC<{
                 .filter((value: any) => !value.hide)
                 .map((value: any) => {
                     return {
-                        time: timeToLocal(value.position.maturityDate),
+                        time: value.time,
                         position: 'inBar',
                         size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
