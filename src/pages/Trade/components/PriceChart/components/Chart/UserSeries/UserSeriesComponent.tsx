@@ -136,7 +136,7 @@ export const UserPositionAreaSeries: React.FC<{
                     return {
                         time: value.time,
                         position: 'inBar',
-                        size: 1,
+                        size: 0.1,
                         color: value.position.side === Positions.UP ? Colors.GREEN : Colors.RED,
                         shape: 'circle',
                         text: value.position.side,
