@@ -23,7 +23,7 @@ import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 import { ChartComponent } from './components/Chart/ChartContext';
 import SimpleLoader from 'components/SimpleLoader';
-import { subDays } from 'date-fns';
+import { hoursToSeconds, minutesToSeconds, subDays } from 'date-fns';
 
 const now = new Date();
 
@@ -150,24 +150,25 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         }
     }, [asset, isSpeedMarkets]);
 
+    // useEffect for changing the dateRange on chart when user clicks on speed markets buttons for time
     useEffect(() => {
         if (deltaTimeSec) {
-            if (deltaTimeSec >= 36000) {
+            if (deltaTimeSec >= hoursToSeconds(10)) {
                 if (dateRange.resolution !== SpeedMarketsToggleButtons[4].resolution) {
                     handleDateRangeChange(4);
                 }
             } else {
-                if (deltaTimeSec >= 14400) {
+                if (deltaTimeSec >= hoursToSeconds(4)) {
                     if (dateRange.resolution !== SpeedMarketsToggleButtons[3].resolution) {
                         handleDateRangeChange(3);
                     }
                 } else {
-                    if (deltaTimeSec >= 3600) {
+                    if (deltaTimeSec >= hoursToSeconds(1)) {
                         if (dateRange.resolution !== SpeedMarketsToggleButtons[2].resolution) {
                             handleDateRangeChange(2);
                         }
                     } else {
-                        if (deltaTimeSec >= 1800) {
+                        if (deltaTimeSec >= minutesToSeconds(30)) {
                             if (dateRange.resolution !== SpeedMarketsToggleButtons[1].resolution) {
                                 handleDateRangeChange(1);
                             }

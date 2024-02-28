@@ -126,6 +126,7 @@ export const UserPositionAreaSeries: React.FC<{
                 return {
                     ...data,
                     time: timeToLocal(data.time),
+                    shape: 'circle',
                 };
             });
             series.setData(userDataWithLocalTime as any);
