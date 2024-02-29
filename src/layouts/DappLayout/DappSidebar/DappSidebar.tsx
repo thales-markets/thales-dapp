@@ -8,7 +8,7 @@ import { getSupportedNetworksByRoute } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';

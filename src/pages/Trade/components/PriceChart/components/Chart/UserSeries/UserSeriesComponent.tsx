@@ -1,14 +1,14 @@
+import { ChartContext } from 'constants/chart';
+import { millisecondsToSeconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ISeriesApi } from 'lightweight-charts';
 import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { Colors } from 'styles/common';
-import { ChartContext } from '../ChartContext';
-import { millisecondsToSeconds } from 'date-fns';
+import { RootState } from 'types/ui';
 import { timeToLocal } from 'utils/formatters/date';
 
 export const UserPositionAreaSeries: React.FC<{

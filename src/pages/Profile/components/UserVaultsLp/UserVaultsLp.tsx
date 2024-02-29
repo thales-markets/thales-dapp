@@ -2,7 +2,7 @@ import { VAULT_MAP } from 'constants/vault';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import UserLiquidityPool from './components/UserLiquidityPool';
 import UserVault from './components/UserVault';
 import ProfileSection from '../ProfileSection/ProfileSection';

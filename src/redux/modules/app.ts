@@ -1,9 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from 'redux/rootReducer';
-
-type AppSliceState = {
-    isReady: boolean;
-};
+import { AppSliceState, RootState } from 'types/ui';
 
 const initialState: AppSliceState = {
     isReady: false,

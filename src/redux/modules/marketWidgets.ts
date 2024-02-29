@@ -1,13 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../rootReducer';
+import { MarketWidgetsSliceState, RootState } from 'types/ui';
 
 const sliceName = 'marketWidgets';
 
-type UISliceState = {
-    isBuy: boolean;
-};
-
-const initialState: UISliceState = {
+const initialState: MarketWidgetsSliceState = {
     isBuy: true,
 };
 
@@ -15,7 +11,7 @@ const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        setIsBuy: (state: UISliceState, action: PayloadAction<boolean>) => {
+        setIsBuy: (state: MarketWidgetsSliceState, action: PayloadAction<boolean>) => {
             state.isBuy = action.payload;
         },
     },

@@ -1,9 +1,9 @@
+import { ChartContext } from 'constants/chart';
 import { ISeriesApi } from 'lightweight-charts';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Colors } from 'styles/common';
 import { ThemeInterface } from 'types/ui';
-import { ChartContext } from '../ChartContext';
 import { timeToLocal } from 'utils/formatters/date';
 
 export const CandlestickComponent: React.FC<{ data: any; asset: string }> = ({ data, asset }) => {

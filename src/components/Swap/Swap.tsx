@@ -17,7 +17,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';

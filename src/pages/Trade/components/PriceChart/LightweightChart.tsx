@@ -6,12 +6,12 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 
 import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
@@ -94,6 +94,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const [candleData, setCandleData] = useState<any>();
 
     const [iv, setIV] = useState(0);
+    const [currentDeltaTimeSec, setCurrentDeltaTimeSec] = useState(deltaTimeSec);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
         enabled: isAppReady,
@@ -129,11 +130,6 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         }
     }, [currentPrice, candleStickData]);
 
-    const handleDateRangeChange = (value: number) => {
-        setDateRange(isSpeedMarkets ? SpeedMarketsToggleButtons[value] : ToggleButtons[value]);
-        setToggleIndex(value);
-    };
-
     useEffect(() => {
         const { ammContract } = snxJSConnector;
         const getImpliedVolatility = async () => {
@@ -150,9 +146,24 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         }
     }, [asset, isSpeedMarkets]);
 
+    const handleDateRangeChange = useCallback(
+        (value: number) => {
+            setDateRange(isSpeedMarkets ? SpeedMarketsToggleButtons[value] : ToggleButtons[value]);
+            setToggleIndex(value);
+        },
+        [isSpeedMarkets]
+    );
+
+    // save previous deltaTimeSec
+    const prevDeltaTimeSecRef = useRef<number | undefined>(currentDeltaTimeSec);
+    useEffect(() => {
+        prevDeltaTimeSecRef.current = currentDeltaTimeSec;
+        setCurrentDeltaTimeSec(deltaTimeSec);
+    }, [deltaTimeSec, currentDeltaTimeSec]);
+
     // useEffect for changing the dateRange on chart when user clicks on speed markets buttons for time
     useEffect(() => {
-        if (deltaTimeSec) {
+        if (deltaTimeSec && deltaTimeSec !== prevDeltaTimeSecRef.current) {
             if (deltaTimeSec >= hoursToSeconds(10)) {
                 if (dateRange.resolution !== SpeedMarketsToggleButtons[4].resolution) {
                     handleDateRangeChange(4);
@@ -177,8 +188,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 }
             }
         }
-        // eslint-disable-next-line
-    }, [deltaTimeSec]);
+    }, [deltaTimeSec, dateRange.resolution, handleDateRangeChange]);
 
     const risk = chainedRisk
         ? chainedRisk

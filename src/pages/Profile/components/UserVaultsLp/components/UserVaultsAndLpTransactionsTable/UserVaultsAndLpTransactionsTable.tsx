@@ -6,7 +6,7 @@ import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
 import { getIsAppReady } from 'redux/modules/app';
 import useUserVaultsAndLpTransactionsQuery from 'queries/user/useUserVaultsAndLpTransactionsQuery';

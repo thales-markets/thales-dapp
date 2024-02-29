@@ -6,7 +6,7 @@ import { FlexDiv } from 'styles/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { Network } from 'enums/network';

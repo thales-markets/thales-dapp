@@ -4,7 +4,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { Banner, useBannersQuery } from 'queries/banners/useBannersQuery';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 

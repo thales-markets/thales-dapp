@@ -8,7 +8,7 @@ import React, { CSSProperties } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { buildHref } from 'utils/routes';

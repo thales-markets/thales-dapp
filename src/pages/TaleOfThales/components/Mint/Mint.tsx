@@ -19,7 +19,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import { useTranslation } from 'react-i18next';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsAppReady } from 'redux/modules/app';
 
 const Mint: React.FC = () => {

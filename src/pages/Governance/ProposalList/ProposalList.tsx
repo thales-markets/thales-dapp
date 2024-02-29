@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { Proposal } from 'types/governance';
 import { navigateToGovernance } from 'utils/routes';
 import ProposalCard from '../ProposalCard';

@@ -1,14 +1,13 @@
 import Button from 'components/Button';
+import { ChartContext } from 'constants/chart';
 import { Positions } from 'enums/options';
-import { createChart, ColorType, IChartApi } from 'lightweight-charts';
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import { ColorType, IChartApi, createChart } from 'lightweight-charts';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
-import { CandlestickComponent } from './CandlestickSeries/CandlestickComponent';
 import { AreaSeriesComponent } from './AreaSeries/AreaSerierComponent';
+import { CandlestickComponent } from './CandlestickSeries/CandlestickComponent';
 import { UserPositionAreaSeries } from './UserSeries/UserSeriesComponent';
-
-export const ChartContext = createContext<IChartApi | null>(null);
 
 type ChartContextProps = {
     children: React.ReactNode;

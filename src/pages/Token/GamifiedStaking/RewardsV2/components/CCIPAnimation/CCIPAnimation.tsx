@@ -3,7 +3,7 @@ import ccipAnimation from 'assets/lotties/ccip.json';
 import Lottie from 'lottie-react';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsAppReady } from 'redux/modules/app';
 import styled from 'styled-components';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';

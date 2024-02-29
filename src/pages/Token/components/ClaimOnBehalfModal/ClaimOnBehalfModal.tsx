@@ -5,7 +5,7 @@ import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { InputContainer } from '../styled-components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getIsAppReady } from 'redux/modules/app';

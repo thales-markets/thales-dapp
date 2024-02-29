@@ -4,7 +4,7 @@ import OptionPriceChart from '../../OptionPriceChart';
 import { useMarketContext } from '../../../contexts/MarketContext';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { maxBy, orderBy } from 'lodash';
 import { OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
