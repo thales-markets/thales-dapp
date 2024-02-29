@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useTranslation } from 'react-i18next';
 import { getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'components/Button';
 import { toast } from 'react-toastify';

@@ -2,16 +2,16 @@ import Button from 'components/Button';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { RootState } from 'types/ui';
 import { getIsMobile } from '../../../redux/modules/ui';
-import { RootState } from '../../../redux/rootReducer';
 import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
 import Logo from '../components/Logo';
 import Notifications from '../components/Notifications';
-import UserWallet from '../components/UserWallet';
-import { useTranslation } from 'react-i18next';
 import ReferralModal from '../components/ReferralModal';
+import UserWallet from '../components/UserWallet';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();

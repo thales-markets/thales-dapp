@@ -12,7 +12,7 @@ import { bytesFormatter, convertLocalToUTCDate, convertUTCToLocalDate, formatSho
 import { checkAllowance } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import { BigNumber, ethers } from 'ethers';
 import { FlexDivColumn, FlexDivCentered } from 'styles/common';

@@ -27,7 +27,7 @@ import {
 } from 'components/ToastMessage/ToastMessage';
 import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';

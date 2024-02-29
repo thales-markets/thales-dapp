@@ -41,7 +41,7 @@ import {
     HeaderVaultIcon,
 } from './styled-components';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { VAULT_MAP } from 'constants/vault';
 import { VaultTab } from 'enums/vault';

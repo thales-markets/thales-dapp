@@ -10,7 +10,7 @@ import { TransactionFilterEnum } from 'enums/token';
 import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 
 const MobileRewardsView: React.FC = () => {
     const { t } = useTranslation();

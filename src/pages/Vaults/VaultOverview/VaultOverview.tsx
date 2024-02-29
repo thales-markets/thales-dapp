@@ -18,7 +18,7 @@ import {
 } from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
 import { VAULT_MAP } from 'constants/vault';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';

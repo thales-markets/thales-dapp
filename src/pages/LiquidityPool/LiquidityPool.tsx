@@ -28,7 +28,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { FlexDivRow } from 'styles/common';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';

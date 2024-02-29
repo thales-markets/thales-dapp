@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'styles/common';
 import { OptionsMarkets } from 'types/options';

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SpeedMarketsLogo from 'assets/images/flex-cards/speed_markets_logo.svg';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { buildReferrerLink } from 'utils/routes';

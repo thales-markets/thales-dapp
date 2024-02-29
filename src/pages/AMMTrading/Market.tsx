@@ -15,7 +15,7 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { setIsBuy } from 'redux/modules/marketWidgets';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';

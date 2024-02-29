@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import RewardsV2 from '../RewardsV2';
 import MobileRewardsView from './components/MobileRewardsView';
 

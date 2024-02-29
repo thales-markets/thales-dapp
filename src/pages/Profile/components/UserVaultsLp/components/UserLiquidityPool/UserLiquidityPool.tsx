@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { buildLiquidityPoolLink } from 'utils/routes';
 import VaultLpDetails from '../VaultLpDetails';

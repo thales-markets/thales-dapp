@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { useSelector } from 'react-redux';
 import { SUPPORTED_NETWORK_IDS_MAP, checkAllowance } from 'utils/network';
 import { THALES_CURRENCY } from 'constants/currency';

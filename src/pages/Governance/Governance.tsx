@@ -13,7 +13,7 @@ import ThalesStakers from './ThalesStakers';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import ElectionsBanner from 'components/ElectionsBanner';
 import {

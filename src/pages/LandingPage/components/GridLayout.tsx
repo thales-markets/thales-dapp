@@ -14,7 +14,7 @@ import { navigateTo } from 'utils/routes';
 import Header from './Header/Header';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 
 const GridLayout: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));

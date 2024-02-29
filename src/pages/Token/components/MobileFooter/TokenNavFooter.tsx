@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { TokenTabSection } from 'types/token';
 import { getIsBridgeSupported, getIsLpStakingSupported, getIsStakingSupported } from 'utils/network';
