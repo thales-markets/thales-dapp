@@ -1,34 +1,36 @@
-import snxJSConnector from 'utils/snxJSConnector';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { bigNumberFormatter, Coins, COLLATERAL_DECIMALS } from 'thales-utils';
+import { UseQueryOptions, useQuery } from 'react-query';
+import { COLLATERAL_DECIMALS, Coins, bigNumberFormatter } from 'thales-utils';
+import { CollateralsBalance } from 'types/collateral';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const useMultipleCollateralBalanceQuery = (
     walletAddress: string,
     networkId: Network,
     options?: UseQueryOptions<any>
 ) => {
-    return useQuery<any>(
+    return useQuery<CollateralsBalance>(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId),
         async () => {
+            let collateralsBalance: CollateralsBalance = {
+                sUSD: 0,
+                DAI: 0,
+                USDCe: 0,
+                USDbC: 0,
+                USDT: 0,
+                OP: 0,
+                WETH: 0,
+                ETH: 0,
+                ARB: 0,
+                USDC: 0,
+            };
             try {
                 const multipleCollateral = snxJSConnector.multipleCollateral;
 
                 if (!walletAddress || !networkId) {
-                    return {
-                        sUSD: 0,
-                        DAI: 0,
-                        USDCe: 0,
-                        USDbC: 0,
-                        USDT: 0,
-                        OP: 0,
-                        WETH: 0,
-                        ETH: 0,
-                        ARB: 0,
-                        USDC: 0,
-                    };
+                    return collateralsBalance;
                 }
 
                 const [
@@ -72,7 +74,7 @@ const useMultipleCollateralBalanceQuery = (
                         ? multipleCollateral[CRYPTO_CURRENCY_MAP.ARB as Coins]?.balanceOf(walletAddress)
                         : undefined,
                 ]);
-                return {
+                collateralsBalance = {
                     sUSD: sUSDBalance ? bigNumberFormatter(sUSDBalance, COLLATERAL_DECIMALS.sUSD) : 0,
                     DAI: DAIBalance ? bigNumberFormatter(DAIBalance, COLLATERAL_DECIMALS.DAI) : 0,
                     USDC: USDCBalance ? bigNumberFormatter(USDCBalance, COLLATERAL_DECIMALS.USDC) : 0,
@@ -86,19 +88,9 @@ const useMultipleCollateralBalanceQuery = (
                 };
             } catch (e) {
                 console.log('e ', e);
-                return {
-                    sUSD: 0,
-                    DAI: 0,
-                    USDCe: 0,
-                    USDbC: 0,
-                    USDT: 0,
-                    OP: 0,
-                    WETH: 0,
-                    ETH: 0,
-                    ARB: 0,
-                    USDC: 0,
-                };
             }
+
+            return collateralsBalance;
         },
         options
     );
