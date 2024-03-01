@@ -10,6 +10,7 @@ import {
 } from 'constants/currency';
 import { Network } from 'enums/network';
 import { Coins } from 'thales-utils';
+import { CollateralsBalance } from 'types/collateral';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
 const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
@@ -38,24 +39,13 @@ export const isStableCurrency = (currencyKey: Coins) => {
     return STABLE_COINS.includes(currencyKey);
 };
 
-type StableBalances = {
-    sUSD: number | null;
-    DAI: number | null;
-    USDCe: number | null;
-    USDbC: number | null;
-    USDC: number | null;
-    USDT: number | null;
-};
-
-export const getCollateralIndexByBalance = (balancesObject: any, networkId: Network, collateral: Coins) => {
-    let index = COLLATERALS[networkId].indexOf(collateral);
-    if (balancesObject && balancesObject[collateral] < 1) {
-        for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
-            if (value && value > 1) {
-                const collateralIndex = COLLATERALS[networkId].indexOf(key as Coins);
-                index = collateralIndex !== -1 ? collateralIndex : 0;
-                break;
-            }
+export const getCollateralIndexByBalance = (balancesObject: CollateralsBalance, networkId: Network) => {
+    let index = 0;
+    for (const [key, value] of Object.entries(balancesObject)) {
+        if (value && value > 1) {
+            const collateralIndex = COLLATERALS[networkId].indexOf(key as Coins);
+            index = collateralIndex !== -1 ? collateralIndex : 0;
+            break;
         }
     }
 
