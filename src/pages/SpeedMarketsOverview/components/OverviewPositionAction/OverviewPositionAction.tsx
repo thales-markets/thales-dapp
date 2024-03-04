@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled, { CSSProperties } from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';

@@ -8,7 +8,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivEnd, FlexDivRow } from 'styles/common';
 import { formatCurrency, formatCurrencyWithSign, roundNumberToDecimals } from 'thales-utils';

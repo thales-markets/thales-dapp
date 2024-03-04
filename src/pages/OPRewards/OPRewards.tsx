@@ -21,7 +21,7 @@ import SearchInput from 'components/SearchInput';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import {

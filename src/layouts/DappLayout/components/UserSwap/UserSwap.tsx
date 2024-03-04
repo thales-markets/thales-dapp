@@ -16,7 +16,7 @@ import {
     getWalletAddress,
     setSelectedCollateralIndex,
 } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
 import { Coins, formatCurrencyWithKey } from 'thales-utils';
@@ -88,37 +88,39 @@ const UserSwap: React.FC = () => {
         return collaterals;
     }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCBalance, USDTBalance, balance, networkId]);
 
-    const defaultCollateral = isMultiCollateralSupported
-        ? userCollaterals.find(
-              (el) =>
-                  el.type ===
-                  getCollateral(
-                      networkId,
-                      getCollateralIndexByBalance(
-                          multipleCollateralBalances?.data,
-                          networkId,
-                          getCollateral(networkId, userSelectedCollateralIndex) as Coins
-                      )
-                  )
-          ) || userCollaterals[0]
-        : userCollaterals[0];
+    const currentCollateral = getCollateral(networkId, userSelectedCollateralIndex);
+    const currentCollateralBalance = userCollaterals.find((col) => col.type === currentCollateral)?.balance || 0;
+    const currentCollateralWithBalance = { type: currentCollateral, balance: currentCollateralBalance };
+
+    const defaultCollateral =
+        isMultiCollateralSupported && currentCollateralBalance < 1
+            ? multipleCollateralBalances?.data
+                ? userCollaterals.find(
+                      (col) =>
+                          col.type ===
+                          getCollateral(
+                              networkId,
+                              getCollateralIndexByBalance(multipleCollateralBalances.data, networkId)
+                          )
+                  ) || currentCollateralWithBalance
+                : currentCollateralWithBalance
+            : currentCollateralWithBalance;
 
     const [collateral, setCollateral] = useState(defaultCollateral);
     const [swapText, setSwapText] = useState('');
     const [swapTextIndex, setSwapTextIndex] = useState(-1);
 
     useEffect(() => {
-        if (isMultiCollateralSupported) {
+        if (isMultiCollateralSupported && multipleCollateralBalances?.data) {
             const collateralIndexWithPositiveBalance = getCollateralIndexByBalance(
-                multipleCollateralBalances?.data,
-                networkId,
-                collateral.type
+                multipleCollateralBalances.data,
+                networkId
             );
             const positiveCollateral = userCollaterals.find(
                 (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance)
             );
 
-            if (positiveCollateral && positiveCollateral.type !== collateral.type) {
+            if (positiveCollateral && positiveCollateral.balance >= 1) {
                 setCollateral(positiveCollateral);
                 dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
             }
@@ -130,7 +132,6 @@ const UserSwap: React.FC = () => {
         isMultiCollateralSupported,
         networkId,
         userCollaterals,
-        collateral.type,
     ]);
 
     useEffect(() => {

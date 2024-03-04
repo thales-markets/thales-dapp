@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
 import { formatCurrencyWithKey, formatCurrencyWithSign, getEtherscanTokenLink } from 'thales-utils';

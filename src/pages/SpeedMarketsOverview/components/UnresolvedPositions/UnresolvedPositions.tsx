@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { formatCurrencyWithSign } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
 import { getCurrentPrices, getPriceId, getPriceServiceEndpoint } from 'utils/pyth';

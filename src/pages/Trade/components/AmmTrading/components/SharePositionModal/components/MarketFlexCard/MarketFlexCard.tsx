@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from 'react-qr-code';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';

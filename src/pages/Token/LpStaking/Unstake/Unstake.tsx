@@ -4,7 +4,7 @@ import { FlexDivColumnCentered } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';

@@ -10,7 +10,7 @@ import { formatCurrencyWithKey } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { StakingData, UserStakingData } from 'types/token';

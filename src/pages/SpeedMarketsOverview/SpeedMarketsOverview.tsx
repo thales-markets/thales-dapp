@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getSupportedNetworksByRoute } from 'utils/network';
 import { buildHref } from 'utils/routes';
 import UnresolvedChainedPositions from './components/UnresolvedChainedPositions';

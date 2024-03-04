@@ -8,7 +8,7 @@ import BaseRewards from './components/BaseRewards/BaseRewards';
 import ClaimRewards from './components/ClaimRewards/ClaimRewards';
 import { BoldedText, HighlightText } from './components/StakingSteps/styled-components';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrency } from 'thales-utils';

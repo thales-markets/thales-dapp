@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { FlexDiv } from 'styles/common';
 import { useTranslation } from 'react-i18next';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';

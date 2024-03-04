@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Unity, { UnityContext } from 'react-unity-webgl';
 import fullScreenImage from 'assets/images/full_screen_icon.png';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';

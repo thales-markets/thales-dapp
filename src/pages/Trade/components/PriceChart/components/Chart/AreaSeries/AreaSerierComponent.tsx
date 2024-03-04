@@ -1,9 +1,9 @@
+import { ChartContext } from 'constants/chart';
+import { millisecondsToSeconds } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ISeriesApi } from 'lightweight-charts';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Colors } from 'styles/common';
-import { ChartContext } from '../ChartContext';
-import { millisecondsToSeconds } from 'date-fns';
 import { timeToLocal } from 'utils/formatters/date';
 
 export const AreaSeriesComponent: React.FC<{

@@ -18,7 +18,7 @@ import { Network } from 'enums/network';
 import { FIRST_COUNCIL_ELECTIONS_ID } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';

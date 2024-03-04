@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNetworkId, switchToNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';

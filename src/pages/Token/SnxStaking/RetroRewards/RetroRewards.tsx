@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'styles/common';
 import { VestingInfo } from 'types/token';

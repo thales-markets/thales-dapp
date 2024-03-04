@@ -1,21 +1,18 @@
 import Button from 'components/Button';
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
 type ToggleProps = {
     options: { label: string; value: number; resolution: string }[];
     onChange: (value: number) => void;
-    defaultSelectedIndex?: number;
+    selectedIndex?: number;
 };
 
-const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex = 0 }) => {
+const Toggle: React.FC<ToggleProps> = ({ options, onChange, selectedIndex }) => {
     const theme: ThemeInterface = useTheme();
 
-    const [activeOption, setActiveOption] = useState(defaultSelectedIndex);
-
     const handleClick = (value: number) => {
-        setActiveOption(value);
         onChange(value);
     };
 
@@ -28,7 +25,7 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
                     height="31px"
                     textColor={theme.button.textColor.tertiary}
                     backgroundColor={
-                        index === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
+                        index === selectedIndex ? theme.button.background.tertiary : theme.button.background.secondary
                     }
                     borderColor={theme.button.borderColor.tertiary}
                     fontSize="13px"

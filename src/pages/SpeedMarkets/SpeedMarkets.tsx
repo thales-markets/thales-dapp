@@ -23,7 +23,7 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween, FlexDivStart } from 'styles/common';
 import { roundNumberToDecimals } from 'thales-utils';
@@ -331,6 +331,7 @@ const SpeedMarkets: React.FC = () => {
                                     !isChained && positionType !== undefined ? currentPrices[currencyKey] : undefined
                                 }
                                 selectedDate={getTimeStampForDelta(deltaTimeSec)}
+                                deltaTimeSec={deltaTimeSec}
                                 selectedRightPrice={undefined}
                                 isSpeedMarkets
                                 explicitCurrentPrice={currentPrices[currencyKey]}

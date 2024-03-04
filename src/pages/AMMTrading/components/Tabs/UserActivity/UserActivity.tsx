@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import TileTable, { TileRow } from 'components/TileTable/TileTable';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import useBinaryOptionsUserTradesQuery from 'queries/options/useBinaryOptionsUserTradesQuery';

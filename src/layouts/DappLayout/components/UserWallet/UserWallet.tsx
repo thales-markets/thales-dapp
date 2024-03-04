@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { truncateAddress } from 'thales-utils';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
+import { RootState } from 'types/ui';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
