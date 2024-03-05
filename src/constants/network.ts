@@ -36,7 +36,12 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
-export const TEST_NETWORKS = [Network.OptimismGoerli, Network.OptimismSepolia, Network.ZkSyncSepolia];
+export const TEST_NETWORKS = [
+    Network.OptimismGoerli,
+    Network.OptimismSepolia,
+    Network.ZkSyncSepolia,
+    Network.BlastSepolia,
+];
 
 export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
@@ -100,17 +105,6 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
         chainName: 'zkSync',
         rpcUrls: ['https://mainnet.era.zksync.io'],
         blockExplorerUrls: ['https://explorer.zksync.io/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'ETH',
-            decimals: 18,
-        },
-    },
-    [Network.BlastSepolia]: {
-        chainId: '0xa0c71fd',
-        chainName: 'Blast Sepolia',
-        rpcUrls: ['https://sepolia.blast.io'],
-        blockExplorerUrls: ['https://testnet.blastscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
             symbol: 'ETH',
