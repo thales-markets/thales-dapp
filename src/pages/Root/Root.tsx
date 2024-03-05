@@ -162,7 +162,7 @@ const Root: React.FC<RootProps> = ({ store }) => {
                             chains={chains}
                             theme={customTheme}
                             appInfo={{
-                                appName: 'Overtime',
+                                appName: 'Thales Markets',
                                 disclaimer: WalletDisclaimer,
                             }}
                         >
