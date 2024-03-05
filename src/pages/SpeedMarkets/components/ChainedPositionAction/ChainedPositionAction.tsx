@@ -236,21 +236,22 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
                     const isEth = collateralAddress === ZERO_ADDRESS;
 
-                    tx = isDefaultCollateral
-                        ? await chainedSpeedMarketsAMMContractWithSigner.resolveMarket(
-                              position.address,
-                              priceUpdateDataArray,
-                              {
-                                  value: totalUpdateFee,
-                              }
-                          )
-                        : await chainedSpeedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
-                              position.address,
-                              priceUpdateDataArray,
-                              collateralAddress,
-                              isEth,
-                              { value: totalUpdateFee }
-                          );
+                    tx =
+                        isDefaultCollateral || isOverview
+                            ? await chainedSpeedMarketsAMMContractWithSigner.resolveMarket(
+                                  position.address,
+                                  priceUpdateDataArray,
+                                  {
+                                      value: totalUpdateFee,
+                                  }
+                              )
+                            : await chainedSpeedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
+                                  position.address,
+                                  priceUpdateDataArray,
+                                  collateralAddress,
+                                  isEth,
+                                  { value: totalUpdateFee }
+                              );
                 }
 
                 const txResult = await tx.wait();
