@@ -77,7 +77,7 @@ const SharePositionModal: React.FC<SharePositionModalProps> = ({
         overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             backdropFilter: 'blur(10px)',
-            zIndex: '1501', // .MuiTooltip-popper has 1500 and validation message pops up from background
+            zIndex: '30000', // .MuiTooltip-popper has 1500 and validation message pops up from background
         },
     };
 
