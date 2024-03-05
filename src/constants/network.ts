@@ -217,7 +217,7 @@ export const BlastSepolia = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
         default: {
-            http: ['https://sepolia.blast.io'],
+            http: ['https://blast-sepolia.blockpi.network/v1/rpc/public'],
             webSocket: ['wss://sepolia.blast.io/ws'],
         },
         public: {
@@ -227,7 +227,7 @@ export const BlastSepolia = {
     },
     blockExplorers: {
         default: {
-            name: 'zkExplorer',
+            name: 'Blastscan',
             url: 'https://testnet.blastscan.io/',
         },
     },
