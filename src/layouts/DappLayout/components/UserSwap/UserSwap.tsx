@@ -239,7 +239,6 @@ const UserSwap: React.FC = () => {
                             title={t('common.swap.title', { token: swapToStableCoin })}
                             onClose={() => setShowSwap(false)}
                             shouldCloseOnOverlayClick={false}
-                            customStyle={{ overlay: { zIndex: 2000 } }}
                         >
                             <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
                         </Modal>
