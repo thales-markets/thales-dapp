@@ -141,7 +141,7 @@ const Wrapper = styled.div`
 
 const StyledToastContainer = styled(ToastContainer)`
     &&&.Toastify__toast-container {
-        z-index: 10001;
+        z-index: 30000;
         width: 330px;
         @media (max-width: 600px) {
             top: 0;

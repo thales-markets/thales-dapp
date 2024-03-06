@@ -14,7 +14,6 @@ const StakingStepsMobile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onClose={onClose}
             shouldCloseOnOverlayClick={false}
             customStyle={{
-                overlay: { zIndex: 2000 },
                 content: { width: '100%', height: '100vh' },
             }}
             mobileStyle={{

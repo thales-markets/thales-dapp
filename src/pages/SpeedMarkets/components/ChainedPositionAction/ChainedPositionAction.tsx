@@ -236,21 +236,22 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
 
                     const isEth = collateralAddress === ZERO_ADDRESS;
 
-                    tx = isDefaultCollateral
-                        ? await chainedSpeedMarketsAMMContractWithSigner.resolveMarket(
-                              position.address,
-                              priceUpdateDataArray,
-                              {
-                                  value: totalUpdateFee,
-                              }
-                          )
-                        : await chainedSpeedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
-                              position.address,
-                              priceUpdateDataArray,
-                              collateralAddress,
-                              isEth,
-                              { value: totalUpdateFee }
-                          );
+                    tx =
+                        isDefaultCollateral || isOverview
+                            ? await chainedSpeedMarketsAMMContractWithSigner.resolveMarket(
+                                  position.address,
+                                  priceUpdateDataArray,
+                                  {
+                                      value: totalUpdateFee,
+                                  }
+                              )
+                            : await chainedSpeedMarketsAMMContractWithSigner.resolveMarketWithOfframp(
+                                  position.address,
+                                  priceUpdateDataArray,
+                                  collateralAddress,
+                                  isEth,
+                                  { value: totalUpdateFee }
+                              );
                 }
 
                 const txResult = await tx.wait();
@@ -294,19 +295,25 @@ const ChainedPositionAction: React.FC<ChainedPositionActionProps> = ({
                 }
             >
                 {hasAllowance || isDefaultCollateral || isOverview
-                    ? `${
-                          isSubmitting
-                              ? isOverview
-                                  ? isSubmittingBatch
-                                      ? t('speed-markets.overview.resolve')
-                                      : t(`speed-markets.overview.resolve-progress`)
-                                  : t('markets.user-positions.claim-win-progress')
-                              : isOverview
-                              ? isAdmin
-                                  ? `${t('common.admin')} ${t('speed-markets.overview.resolve')}`
-                                  : t('speed-markets.overview.resolve')
-                              : t('markets.user-positions.claim-win')
-                      } ${formatCurrencyWithSign(USD_SIGN, position.amount, 2)}`
+                    ? isSubmitting
+                        ? isOverview
+                            ? isSubmittingBatch
+                                ? t('speed-markets.overview.resolve')
+                                : t(`speed-markets.overview.resolve-progress`)
+                            : `${t('markets.user-positions.claim-win-progress')} ${formatCurrencyWithSign(
+                                  USD_SIGN,
+                                  position.amount,
+                                  2
+                              )}`
+                        : isOverview
+                        ? isAdmin
+                            ? `${t('common.admin')} ${t('speed-markets.overview.resolve')}`
+                            : t('speed-markets.overview.resolve')
+                        : `${t('markets.user-positions.claim-win')} ${formatCurrencyWithSign(
+                              USD_SIGN,
+                              position.amount,
+                              2
+                          )}`
                     : isAllowing
                     ? `${t('common.enable-wallet-access.approve-progress')} ${defaultCollateral}...`
                     : t('common.enable-wallet-access.approve-swap', {
