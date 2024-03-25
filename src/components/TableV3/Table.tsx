@@ -155,7 +155,7 @@ const Table: React.FC<TableProps> = ({
                 let indexOfElement = 0;
                 for (let i = 0; i < markets.length; i++) {
                     if (i === markets.length - 1) {
-                        if (greaterThanCounter == markets.length - 1) {
+                        if (greaterThanCounter === markets.length - 1) {
                             indexOfElement = 0;
                             break;
                         }
@@ -165,17 +165,20 @@ const Table: React.FC<TableProps> = ({
                     if (markets[i].strikePrice <= currentPrice) {
                         greaterThanCounter++;
                     }
+
                     if (markets[i].strikePrice >= currentPrice && markets[i + 1].strikePrice <= currentPrice) {
                         indexOfElement = i;
                         break;
                     }
                 }
-                return { index: indexOfElement, price: currentPrice };
+                return {
+                    index: indexOfElement,
+                    price: currentPrice,
+                    stickyToTop: greaterThanCounter === markets.length - 1,
+                };
             }
         }
     }, [exchangeRates, data]);
-
-    console.log('indexForDrawingAndPrice ', indexForDrawingAndPrice);
 
     return (
         <>
@@ -241,7 +244,7 @@ const Table: React.FC<TableProps> = ({
                                         <>
                                             {showCurrentPrice &&
                                                 indexForDrawingAndPrice?.index === rowIndex &&
-                                                indexForDrawingAndPrice?.index == 0 && (
+                                                indexForDrawingAndPrice?.stickyToTop == true && (
                                                     <PriceWrapper ref={elementRef as any}>
                                                         <Price>
                                                             {(indexForDrawingAndPrice?.price as any) < 0.01
@@ -315,7 +318,7 @@ const Table: React.FC<TableProps> = ({
                                             )}
                                             {showCurrentPrice &&
                                                 indexForDrawingAndPrice?.index === rowIndex &&
-                                                indexForDrawingAndPrice?.index !== 0 && (
+                                                indexForDrawingAndPrice?.stickyToTop == false && (
                                                     <PriceWrapper ref={elementRef as any}>
                                                         <Price>
                                                             {(indexForDrawingAndPrice?.price as any) < 0.01
