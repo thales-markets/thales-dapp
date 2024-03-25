@@ -177,6 +177,7 @@ const NetworkName = styled.span`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: normal;
 `;
 
 const Icon = styled.i`
