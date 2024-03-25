@@ -8,11 +8,11 @@ import { useSelector } from 'react-redux';
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'styles/common';
-import { OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'thales-utils';
+import { OptionsMarkets } from 'types/options';
+import { RootState } from 'types/ui';
 
 enum SortDirection {
     NONE,
@@ -151,11 +151,19 @@ const Table: React.FC<TableProps> = ({
             const markets: OptionsMarkets = data as OptionsMarkets;
             if (markets.length > 0) {
                 const currentPrice = exchangeRates[markets[0].currencyKey];
+                let greaterThanCounter = 0;
                 let indexOfElement = 0;
                 for (let i = 0; i < markets.length; i++) {
                     if (i === markets.length - 1) {
+                        if (greaterThanCounter == markets.length - 1) {
+                            indexOfElement = 0;
+                            break;
+                        }
                         indexOfElement = i;
                         break;
+                    }
+                    if (markets[i].strikePrice <= currentPrice) {
+                        greaterThanCounter++;
                     }
                     if (markets[i].strikePrice >= currentPrice && markets[i + 1].strikePrice <= currentPrice) {
                         indexOfElement = i;
@@ -166,6 +174,8 @@ const Table: React.FC<TableProps> = ({
             }
         }
     }, [exchangeRates, data]);
+
+    console.log('indexForDrawingAndPrice ', indexForDrawingAndPrice);
 
     return (
         <>
@@ -229,6 +239,29 @@ const Table: React.FC<TableProps> = ({
                                         </ExpandableRowReact>
                                     ) : (
                                         <>
+                                            {showCurrentPrice &&
+                                                indexForDrawingAndPrice?.index === rowIndex &&
+                                                indexForDrawingAndPrice?.index == 0 && (
+                                                    <PriceWrapper ref={elementRef as any}>
+                                                        <Price>
+                                                            {(indexForDrawingAndPrice?.price as any) < 0.01
+                                                                ? formatCurrencyWithSign(
+                                                                      USD_SIGN,
+                                                                      indexForDrawingAndPrice?.price ?? 0
+                                                                  )
+                                                                : formatCurrencyWithSign(
+                                                                      USD_SIGN,
+                                                                      indexForDrawingAndPrice?.price ?? 0,
+                                                                      2
+                                                                  )}
+                                                        </Price>
+                                                        <DirectedArrowIcon
+                                                            className="icon icon--caret-up"
+                                                            top="-12px"
+                                                        />
+                                                        <DirectedArrowIcon className="icon icon--caret-down" top="0" />
+                                                    </PriceWrapper>
+                                                )}
                                             {(row.original as any).url && selectedRowIndex === rowIndex ? (
                                                 <SPAAnchor href={(row.original as any).url} key={rowIndex}>
                                                     <TableRow
@@ -280,25 +313,29 @@ const Table: React.FC<TableProps> = ({
                                                     })}
                                                 </TableRow>
                                             )}
-
-                                            {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
-                                                <PriceWrapper ref={elementRef as any}>
-                                                    <Price>
-                                                        {(indexForDrawingAndPrice?.price as any) < 0.01
-                                                            ? formatCurrencyWithSign(
-                                                                  USD_SIGN,
-                                                                  indexForDrawingAndPrice?.price ?? 0
-                                                              )
-                                                            : formatCurrencyWithSign(
-                                                                  USD_SIGN,
-                                                                  indexForDrawingAndPrice?.price ?? 0,
-                                                                  2
-                                                              )}
-                                                    </Price>
-                                                    <DirectedArrowIcon className="icon icon--caret-up" top="-12px" />
-                                                    <DirectedArrowIcon className="icon icon--caret-down" top="0" />
-                                                </PriceWrapper>
-                                            )}
+                                            {showCurrentPrice &&
+                                                indexForDrawingAndPrice?.index === rowIndex &&
+                                                indexForDrawingAndPrice?.index !== 0 && (
+                                                    <PriceWrapper ref={elementRef as any}>
+                                                        <Price>
+                                                            {(indexForDrawingAndPrice?.price as any) < 0.01
+                                                                ? formatCurrencyWithSign(
+                                                                      USD_SIGN,
+                                                                      indexForDrawingAndPrice?.price ?? 0
+                                                                  )
+                                                                : formatCurrencyWithSign(
+                                                                      USD_SIGN,
+                                                                      indexForDrawingAndPrice?.price ?? 0,
+                                                                      2
+                                                                  )}
+                                                        </Price>
+                                                        <DirectedArrowIcon
+                                                            className="icon icon--caret-up"
+                                                            top="-12px"
+                                                        />
+                                                        <DirectedArrowIcon className="icon icon--caret-down" top="0" />
+                                                    </PriceWrapper>
+                                                )}
                                         </>
                                     )}
                                 </ExpandableRow>
