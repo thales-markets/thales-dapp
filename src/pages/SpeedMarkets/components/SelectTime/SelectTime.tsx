@@ -18,11 +18,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivEnd, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
-import { ThemeInterface } from 'types/ui';
+import { RootState, ThemeInterface } from 'types/ui';
 
 type SelectTimeProps = {
     selectedDeltaSec: number;
@@ -431,9 +430,8 @@ const Row = styled(FlexDivRow)`
     }
 `;
 
-const ChainedRow = styled(FlexDivCentered)`
+const ChainedRow = styled(FlexDivEnd)`
     gap: 15px;
-    padding-right: 85px;
 `;
 
 const Column = styled(FlexDivColumnCentered)`
