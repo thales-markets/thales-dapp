@@ -35,8 +35,7 @@ type SelectTimeProps = {
 
 const SPEED_NUMBER_OF_BUTTONS = 4;
 
-const CHAINED_FIRST_TIMEFRAME_MINUTES = 5;
-const CHAINED_SECOND_TIMEFRAME_MINUTES = 10;
+const CHAINED_TIMEFRAMES_MINUTES = [2, 5, 10];
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
@@ -67,7 +66,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const deltaTimesMinutes: number[] = useMemo(() => {
         let times: number[] = [];
         if (isChained) {
-            times = [CHAINED_FIRST_TIMEFRAME_MINUTES, CHAINED_SECOND_TIMEFRAME_MINUTES];
+            times = CHAINED_TIMEFRAMES_MINUTES;
         } else {
             if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
                 times = ammSpeedMarketsLimits.timeThresholdsForFees
