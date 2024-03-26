@@ -39,12 +39,12 @@ import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import {
     COLLATERAL_DECIMALS,
     bigNumberFormatter,
+    ceilNumberToDecimals,
     coinParser,
     formatCurrency,
     formatCurrencyWithKey,
@@ -54,6 +54,7 @@ import {
     truncToDecimals,
 } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
+import { RootState } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
@@ -936,8 +937,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 <ApprovalModal
                     defaultAmount={
                         isStableCurrency(selectedCollateral)
-                            ? roundNumberToDecimals(totalPaidAmount)
-                            : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                            ? ceilNumberToDecimals(totalPaidAmount)
+                            : ceilNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
                     }
                     tokenSymbol={selectedCollateral}
                     isNonStable={false}
