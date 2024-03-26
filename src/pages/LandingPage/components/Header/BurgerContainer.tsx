@@ -1,9 +1,9 @@
 import ROUTES from 'constants/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HashLink } from 'react-router-hash-link';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
-import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {
     burgerState: boolean;
@@ -52,12 +52,6 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             </Link>
             <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                 {t('landing-page.header.links.blog')}
-            </Link>
-            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
-                {t('landing-page.header.links.governance')}
-            </Link>
-            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
-                {t('landing-page.header.links.token')}
             </Link>
 
             <HorizontalLine />

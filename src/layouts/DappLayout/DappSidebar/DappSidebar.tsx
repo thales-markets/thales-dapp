@@ -1,21 +1,21 @@
-import React from 'react';
-import { buildHref } from 'utils/routes';
-import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
+import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import SPAAnchor from 'components/SPAAnchor';
-import { useLocation } from 'react-router-dom';
-import { getSupportedNetworksByRoute } from 'utils/network';
 import { LINKS } from 'constants/links';
-import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { RootState } from 'types/ui';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { getIsMobile } from 'redux/modules/ui';
-import DappHeaderItem from '../components/DappHeaderItem';
-import { ScreenSizeBreakpoint } from '../../../enums/ui';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { getIsMobile } from 'redux/modules/ui';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import styled from 'styled-components';
+import { RootState } from 'types/ui';
+import { getSupportedNetworksByRoute } from 'utils/network';
+import { buildHref } from 'utils/routes';
+import { ScreenSizeBreakpoint } from '../../../enums/ui';
+import DappHeaderItem from '../components/DappHeaderItem';
 
 const DappSidebar: React.FC = () => {
     const { t } = useTranslation();
@@ -115,7 +115,7 @@ const DappSidebar: React.FC = () => {
                     {showTokenPage && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Options.Token)}
+                            href={LINKS.ThalesProtocol.Token}
                             iconName="token"
                             label={t('common.sidebar.earn-label')}
                         />
@@ -124,7 +124,7 @@ const DappSidebar: React.FC = () => {
                     {showGovernancePage && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Governance.Home)}
+                            href={LINKS.ThalesProtocol.Governance}
                             iconName="governance"
                             label={t('common.sidebar.governance-label')}
                         />
