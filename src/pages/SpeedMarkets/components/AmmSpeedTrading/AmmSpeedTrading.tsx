@@ -446,8 +446,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             try {
                 const parsedAmount: BigNumber = coinParser(
                     isStableCurrency(selectedCollateral)
-                        ? roundNumberToDecimals(totalPaidAmount).toString()
-                        : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]).toString(),
+                        ? ceilNumberToDecimals(totalPaidAmount).toString()
+                        : ceilNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]).toString(),
                     networkId,
                     selectedCollateral
                 );
