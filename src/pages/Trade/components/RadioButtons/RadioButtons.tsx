@@ -1,14 +1,45 @@
 import { Positions } from 'enums/options';
-import React from 'react';
+import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
+import { RootState } from 'types/ui';
+import { areDatesEqual } from 'utils/ui';
 
 type RadioButtonsProps = {
     selected: Positions;
     onChange: React.Dispatch<Positions>;
     options?: Positions[];
+    currencyKey?: string;
+    date?: number | undefined;
 };
 
-const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options }) => {
+const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options, currencyKey, date }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const marketsCountQuery = useMarketsCountQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const marketsQueryData = useMemo(() => {
+        if (marketsCountQuery.isSuccess && marketsCountQuery.data) return marketsCountQuery.data;
+        return [];
+    }, [marketsCountQuery.data, marketsCountQuery.isSuccess]);
+
+    const countData = marketsQueryData
+        .find((item) => item.asset == currencyKey)
+        ?.byMaturity.find((item) => areDatesEqual(date, item.maturity));
+
+    const diplayPositionCount = (position: Positions) => {
+        const positionData = countData?.positions.find((item) => item.position == position);
+
+        if (positionData) return `(${positionData.count})`;
+        return '';
+    };
+
     return (
         <Wrapper>
             {(options || Object.values(Positions)).map((position, index) => {
@@ -20,7 +51,10 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options
                             ) : (
                                 <RadioIcon selected={false} className="icon icon--radio-button" />
                             )}
-                            <Label selected={selected === position}> {position}</Label>
+                            <Label selected={selected === position}>
+                                {' '}
+                                {position} {diplayPositionCount(position)}
+                            </Label>
                         </RadioWrapper>
                         {index === 1 && !options && <Separator />}
                     </React.Fragment>

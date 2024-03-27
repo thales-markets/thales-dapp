@@ -124,6 +124,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 date={maturityDate}
                                 setDate={setMaturityDate}
                                 allDates={allDates}
+                                currencyKey={currencyKey}
                             ></DatesDropdown>
                         </DatesWrapper>
                     </DropdownsWrapper>
@@ -139,7 +140,12 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 <RightSide>
                     <PositionedWrapper>
                         <Info>{t('markets.steps.choose-direction')}</Info>
-                        <RadioButtons onChange={setPositionType} selected={positionType} />
+                        <RadioButtons
+                            onChange={setPositionType}
+                            selected={positionType}
+                            currencyKey={currencyKey}
+                            date={maturityDate}
+                        />
                     </PositionedWrapper>
 
                     <AssetTable

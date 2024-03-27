@@ -10,7 +10,7 @@ type MaturityInfo = {
     positions: { position: string; count: number }[];
 };
 
-type MarketsCountType = { asset: string; count: number; byMaturity: MaturityInfo }[];
+type MarketsCountType = { asset: string; count: number; byMaturity: MaturityInfo[] }[];
 
 const useMarketsCountQuery = (networkId: Network, options?: UseQueryOptions<MarketsCountType>) => {
     return useQuery<MarketsCountType>(
