@@ -1,5 +1,6 @@
 import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -17,6 +18,8 @@ type AssetDropdownProps = {
 };
 
 const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, currencyKey }) => {
+    const { t } = useTranslation();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
@@ -41,7 +44,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
     const countDisplay = (date: number | undefined) => {
         const countData = assetsCountData?.byMaturity.find((item) => areDatesEqual(date, item.maturity));
 
-        if (countData) return `(${countData.count})`;
+        if (countData) return `(${countData.count} ${t('markets.markets')})`;
         return undefined;
     };
 
@@ -61,7 +64,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
                             <DateContainer key={index}>
                                 <DatePrint onClick={() => setDate(_date)}>
                                     {formatShortDateWithTime(_date)}
-                                    <MarketsCount>{countDisplay(_date)}</MarketsCount>
+                                    {countDisplay(_date) && <MarketsCount>{countDisplay(_date)}</MarketsCount>}
                                 </DatePrint>
                             </DateContainer>
                         ))}
@@ -137,6 +140,7 @@ const DateContainer = styled.div`
 
 const MarketsCount = styled.span`
     margin-left: 5px;
+    font-weight: 400;
 `;
 
 export default DatesDropdown;

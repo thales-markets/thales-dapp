@@ -1,5 +1,6 @@
 import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -90,6 +91,8 @@ const Asset: React.FC<AssetProps> = ({
     type,
     marketsCount,
 }) => {
+    const { t } = useTranslation();
+
     return (
         <Container
             onClick={() => setAsset(asset)}
@@ -102,7 +105,7 @@ const Asset: React.FC<AssetProps> = ({
                 {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
-                {marketsCount && <MarketsCount>({marketsCount})</MarketsCount>}
+                {marketsCount && <MarketsCount>{`(${marketsCount} ${t('markets.markets')})`}</MarketsCount>}
             </AssetWrapper>
             {showDropDownIcon && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
         </Container>
@@ -179,6 +182,7 @@ const AssetContainer = styled.div`
 `;
 const MarketsCount = styled.span`
     margin-left: 5px;
+    text-transform: uppercase;
 `;
 
 export default AssetDropdown;
