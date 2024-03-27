@@ -126,6 +126,7 @@ const QUERY_KEYS = {
             position,
             networkId,
         ],
+        MarketsCount: (networkId: Network) => ['markets-count', networkId],
     },
     User: {
         OpenPositions: (walletAddress: string, networkId: Network) => [
