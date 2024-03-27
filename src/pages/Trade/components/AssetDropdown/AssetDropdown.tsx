@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
+import React, { useMemo, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
+import { RootState } from 'types/ui';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
 type AssetDropdownType = 'center' | 'left';
@@ -14,7 +19,19 @@ type AssetDropdownProps = {
 };
 
 const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAssets, showAssetIcon, type }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
     const [open, setOpen] = useState(false);
+
+    const marketsCountQuery = useMarketsCountQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const marketsQueryData = useMemo(() => {
+        if (marketsCountQuery.isSuccess && marketsCountQuery.data) return marketsCountQuery.data;
+        return [];
+    }, [marketsCountQuery.data, marketsCountQuery.isSuccess]);
 
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
@@ -28,6 +45,7 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                     selectedAsset={true}
                     showIcon={showAssetIcon}
                     type={type}
+                    marketsCount={marketsQueryData.find((item) => item.asset == asset)?.count || undefined}
                 />
                 {open && allAssets.length > 1 && (
                     <AssetContainer>
@@ -39,6 +57,7 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                                 showIcon={showAssetIcon}
                                 isClickable={true}
                                 type={type}
+                                marketsCount={marketsQueryData.find((item) => item.asset == _asset)?.count || undefined}
                             />
                         ))}
                     </AssetContainer>
@@ -57,6 +76,7 @@ type AssetProps = {
     selectedAsset?: boolean;
     showIcon?: boolean;
     type?: AssetDropdownType;
+    marketsCount?: number;
 };
 
 const Asset: React.FC<AssetProps> = ({
@@ -68,6 +88,7 @@ const Asset: React.FC<AssetProps> = ({
     selectedAsset = false,
     showIcon = false,
     type,
+    marketsCount,
 }) => {
     return (
         <Container
@@ -81,6 +102,7 @@ const Asset: React.FC<AssetProps> = ({
                 {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
+                {marketsCount && <MarketsCount>({marketsCount})</MarketsCount>}
             </AssetWrapper>
             {showDropDownIcon && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
         </Container>
@@ -154,6 +176,9 @@ const AssetContainer = styled.div`
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     width: 100%;
+`;
+const MarketsCount = styled.span`
+    margin-left: 5px;
 `;
 
 export default AssetDropdown;
