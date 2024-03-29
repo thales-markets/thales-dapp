@@ -41,10 +41,10 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
         if (allDates[0]) setDate(allDates[0]);
     }, [allDates, setDate]);
 
-    const countDisplay = (date: number | undefined) => {
+    const countDisplay = (date: number | undefined, removeMarketsLabel?: boolean) => {
         const countData = assetsCountData?.byMaturity.find((item) => areDatesEqual(date, item.maturity));
 
-        if (countData) return `(${countData.count} ${t('markets.markets')})`;
+        if (countData) return `(${countData.count}${!removeMarketsLabel ? ` ${t('markets.markets')}` : ''})`;
         return undefined;
     };
 
@@ -64,7 +64,9 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
                             <DateContainer key={index}>
                                 <DatePrint onClick={() => setDate(_date)}>
                                     {formatShortDateWithTime(_date)}
-                                    {countDisplay(_date) && <MarketsCount>{countDisplay(_date)}</MarketsCount>}
+                                    {countDisplay(_date, true) && (
+                                        <MarketsCount>{countDisplay(_date, true)}</MarketsCount>
+                                    )}
                                 </DatePrint>
                             </DateContainer>
                         ))}
@@ -116,9 +118,13 @@ const Dropdown = styled.div`
 `;
 
 const DatePrint = styled.p`
+    display: flex;
+    justify-content: space-between;
     font-weight: 600;
+    width: 100%;
     font-size: 13px;
     line-height: 100%;
+    margin-right: 5px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;

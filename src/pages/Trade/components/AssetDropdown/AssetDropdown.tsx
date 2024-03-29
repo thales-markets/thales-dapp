@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
 import { RootState } from 'types/ui';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
@@ -59,6 +60,7 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                                 isClickable={true}
                                 type={type}
                                 marketsCount={marketsQueryData.find((item) => item.asset == _asset)?.count || undefined}
+                                removeMarketsLabel={true}
                             />
                         ))}
                     </AssetContainer>
@@ -78,6 +80,7 @@ type AssetProps = {
     showIcon?: boolean;
     type?: AssetDropdownType;
     marketsCount?: number;
+    removeMarketsLabel?: boolean;
 };
 
 const Asset: React.FC<AssetProps> = ({
@@ -90,8 +93,13 @@ const Asset: React.FC<AssetProps> = ({
     showIcon = false,
     type,
     marketsCount,
+    removeMarketsLabel,
 }) => {
     const { t } = useTranslation();
+
+    const countDisplay = (count: number, removeMarketsLabel?: boolean) => {
+        return `(${count}${!removeMarketsLabel ? ` ${t('markets.markets')}` : ''})`;
+    };
 
     return (
         <Container
@@ -102,10 +110,16 @@ const Asset: React.FC<AssetProps> = ({
             type={type}
         >
             <AssetWrapper showIcon={showIcon} type={type}>
-                {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
-                <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
-                <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
-                {marketsCount && <MarketsCount>{`(${marketsCount} ${t('markets.markets')})`}</MarketsCount>}
+                <AssetInfoWrapper>
+                    {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
+                    <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
+                    <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
+                </AssetInfoWrapper>
+                {marketsCount && (
+                    <MarketsCount marginRight={!removeMarketsLabel ? '13px' : ''}>
+                        {countDisplay(marketsCount, removeMarketsLabel)}
+                    </MarketsCount>
+                )}
             </AssetWrapper>
             {showDropDownIcon && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
         </Container>
@@ -116,6 +130,10 @@ const Wrapper = styled.div`
     position: relative;
     z-index: 100;
     border-radius: 8px;
+`;
+
+const AssetInfoWrapper = styled(FlexDiv)`
+    flex-direction: row;
 `;
 
 const Icon = styled.i`
@@ -149,6 +167,7 @@ const AssetWrapper = styled.div<{ showIcon?: boolean; type?: AssetDropdownType }
     display: flex;
     flex: 2;
     align-items: center;
+    justify-content: space-between;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -180,7 +199,8 @@ const AssetContainer = styled.div`
     border-radius: 8px;
     width: 100%;
 `;
-const MarketsCount = styled.span`
+const MarketsCount = styled.span<{ marginRight?: string }>`
+    margin-right: ${(props) => (props.marginRight ? props.marginRight : '')};
     margin-left: 5px;
     text-transform: uppercase;
 `;
