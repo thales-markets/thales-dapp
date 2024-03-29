@@ -116,7 +116,7 @@ const Asset: React.FC<AssetProps> = ({
                     <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
                 </AssetInfoWrapper>
                 {marketsCount && (
-                    <MarketsCount marginRight={!removeMarketsLabel ? '13px' : ''}>
+                    <MarketsCount marginRight={!removeMarketsLabel ? '18px' : ''}>
                         {countDisplay(marketsCount, removeMarketsLabel)}
                     </MarketsCount>
                 )}
