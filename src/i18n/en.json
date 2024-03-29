@@ -317,6 +317,7 @@
     },
     "markets": {
         "title": "Thales Markets",
+        "markets": "markets",
         "amm-trading": {
             "asset-price": "If {{asset}} price is",
             "choose-direction": "choose direction",

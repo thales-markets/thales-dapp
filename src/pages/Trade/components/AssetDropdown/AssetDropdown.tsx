@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
+import { RootState } from 'types/ui';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
 type AssetDropdownType = 'center' | 'left';
@@ -14,7 +21,19 @@ type AssetDropdownProps = {
 };
 
 const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAssets, showAssetIcon, type }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
     const [open, setOpen] = useState(false);
+
+    const marketsCountQuery = useMarketsCountQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const marketsQueryData = useMemo(() => {
+        if (marketsCountQuery.isSuccess && marketsCountQuery.data) return marketsCountQuery.data;
+        return [];
+    }, [marketsCountQuery.data, marketsCountQuery.isSuccess]);
 
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
@@ -28,6 +47,7 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                     selectedAsset={true}
                     showIcon={showAssetIcon}
                     type={type}
+                    marketsCount={marketsQueryData.find((item) => item.asset == asset)?.count || undefined}
                 />
                 {open && allAssets.length > 1 && (
                     <AssetContainer>
@@ -39,6 +59,8 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                                 showIcon={showAssetIcon}
                                 isClickable={true}
                                 type={type}
+                                marketsCount={marketsQueryData.find((item) => item.asset == _asset)?.count || undefined}
+                                removeMarketsLabel={true}
                             />
                         ))}
                     </AssetContainer>
@@ -57,6 +79,8 @@ type AssetProps = {
     selectedAsset?: boolean;
     showIcon?: boolean;
     type?: AssetDropdownType;
+    marketsCount?: number;
+    removeMarketsLabel?: boolean;
 };
 
 const Asset: React.FC<AssetProps> = ({
@@ -68,7 +92,15 @@ const Asset: React.FC<AssetProps> = ({
     selectedAsset = false,
     showIcon = false,
     type,
+    marketsCount,
+    removeMarketsLabel,
 }) => {
+    const { t } = useTranslation();
+
+    const countDisplay = (count: number, removeMarketsLabel?: boolean) => {
+        return `(${count}${!removeMarketsLabel ? ` ${t('markets.markets')}` : ''})`;
+    };
+
     return (
         <Container
             onClick={() => setAsset(asset)}
@@ -78,9 +110,16 @@ const Asset: React.FC<AssetProps> = ({
             type={type}
         >
             <AssetWrapper showIcon={showIcon} type={type}>
-                {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
-                <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
-                <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
+                <AssetInfoWrapper>
+                    {showIcon && <CurrenyIcon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />}
+                    <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
+                    <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
+                </AssetInfoWrapper>
+                {marketsCount && (
+                    <MarketsCount marginRight={!removeMarketsLabel ? '18px' : ''}>
+                        {countDisplay(marketsCount, removeMarketsLabel)}
+                    </MarketsCount>
+                )}
             </AssetWrapper>
             {showDropDownIcon && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
         </Container>
@@ -91,6 +130,10 @@ const Wrapper = styled.div`
     position: relative;
     z-index: 100;
     border-radius: 8px;
+`;
+
+const AssetInfoWrapper = styled(FlexDiv)`
+    flex-direction: row;
 `;
 
 const Icon = styled.i`
@@ -124,6 +167,7 @@ const AssetWrapper = styled.div<{ showIcon?: boolean; type?: AssetDropdownType }
     display: flex;
     flex: 2;
     align-items: center;
+    justify-content: space-between;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -154,6 +198,11 @@ const AssetContainer = styled.div`
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     width: 100%;
+`;
+const MarketsCount = styled.span<{ marginRight?: string }>`
+    margin-right: ${(props) => (props.marginRight ? props.marginRight : '')};
+    margin-left: 5px;
+    text-transform: uppercase;
 `;
 
 export default AssetDropdown;
