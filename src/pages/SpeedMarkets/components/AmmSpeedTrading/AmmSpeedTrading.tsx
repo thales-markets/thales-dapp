@@ -50,7 +50,6 @@ import {
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     formatPercentage,
-    roundNumberToDecimals,
     truncToDecimals,
 } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
@@ -261,11 +260,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         )[0];
 
         if (riskPerUp && riskPerDown) {
-            skewPerPosition[Positions.UP] = roundNumberToDecimals(
+            skewPerPosition[Positions.UP] = ceilNumberToDecimals(
                 (riskPerUp.current / riskPerUp.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
-            skewPerPosition[Positions.DOWN] = roundNumberToDecimals(
+            skewPerPosition[Positions.DOWN] = ceilNumberToDecimals(
                 (riskPerDown.current / riskPerDown.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
