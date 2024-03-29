@@ -13,10 +13,10 @@ import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
+import { RootState } from 'types/ui';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -124,6 +124,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 date={maturityDate}
                                 setDate={setMaturityDate}
                                 allDates={allDates}
+                                currencyKey={currencyKey}
                             ></DatesDropdown>
                         </DatesWrapper>
                     </DropdownsWrapper>
@@ -139,7 +140,12 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 <RightSide>
                     <PositionedWrapper>
                         <Info>{t('markets.steps.choose-direction')}</Info>
-                        <RadioButtons onChange={setPositionType} selected={positionType} />
+                        <RadioButtons
+                            onChange={setPositionType}
+                            selected={positionType}
+                            currencyKey={currencyKey}
+                            date={maturityDate}
+                        />
                     </PositionedWrapper>
 
                     <AssetTable
