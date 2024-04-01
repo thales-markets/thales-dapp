@@ -19,7 +19,7 @@ const useMarketsCountQuery = (networkId: Network, options?: UseQueryOptions<Mark
             const response = await axios.get(`${generalConfig.API_URL}/thales/networks/${networkId}/market-count`);
 
             if (response.data) {
-                return response.data;
+                return response.data?.data;
             }
             return [];
         },
