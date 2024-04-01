@@ -39,21 +39,21 @@ import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import {
     COLLATERAL_DECIMALS,
     bigNumberFormatter,
+    ceilNumberToDecimals,
     coinParser,
     formatCurrency,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     formatPercentage,
-    roundNumberToDecimals,
     truncToDecimals,
 } from 'thales-utils';
 import { AmmChainedSpeedMarketsLimits, AmmSpeedMarketsLimits } from 'types/options';
+import { RootState } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral, isStableCurrency } from 'utils/currency';
@@ -260,11 +260,11 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
         )[0];
 
         if (riskPerUp && riskPerDown) {
-            skewPerPosition[Positions.UP] = roundNumberToDecimals(
+            skewPerPosition[Positions.UP] = ceilNumberToDecimals(
                 (riskPerUp.current / riskPerUp.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
-            skewPerPosition[Positions.DOWN] = roundNumberToDecimals(
+            skewPerPosition[Positions.DOWN] = ceilNumberToDecimals(
                 (riskPerDown.current / riskPerDown.max) * ammSpeedMarketsLimits?.maxSkewImpact,
                 4
             );
@@ -445,8 +445,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
             try {
                 const parsedAmount: BigNumber = coinParser(
                     isStableCurrency(selectedCollateral)
-                        ? roundNumberToDecimals(totalPaidAmount).toString()
-                        : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]).toString(),
+                        ? ceilNumberToDecimals(totalPaidAmount).toString()
+                        : ceilNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral]).toString(),
                     networkId,
                     selectedCollateral
                 );
@@ -936,8 +936,8 @@ const AmmSpeedTrading: React.FC<AmmSpeedTradingProps> = ({
                 <ApprovalModal
                     defaultAmount={
                         isStableCurrency(selectedCollateral)
-                            ? roundNumberToDecimals(totalPaidAmount)
-                            : roundNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
+                            ? ceilNumberToDecimals(totalPaidAmount)
+                            : ceilNumberToDecimals(totalPaidAmount, COLLATERAL_DECIMALS[selectedCollateral])
                     }
                     tokenSymbol={selectedCollateral}
                     isNonStable={false}

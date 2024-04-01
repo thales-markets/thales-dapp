@@ -18,11 +18,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivEnd, FlexDivRow } from 'styles/common';
 import { AmmSpeedMarketsLimits } from 'types/options';
-import { ThemeInterface } from 'types/ui';
+import { RootState, ThemeInterface } from 'types/ui';
 
 type SelectTimeProps = {
     selectedDeltaSec: number;
@@ -35,8 +34,7 @@ type SelectTimeProps = {
 
 const SPEED_NUMBER_OF_BUTTONS = 4;
 
-const CHAINED_FIRST_TIMEFRAME_MINUTES = 5;
-const CHAINED_SECOND_TIMEFRAME_MINUTES = 10;
+const CHAINED_TIMEFRAMES_MINUTES = [2, 5, 10];
 
 const SelectTime: React.FC<SelectTimeProps> = ({
     selectedDeltaSec,
@@ -67,7 +65,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     const deltaTimesMinutes: number[] = useMemo(() => {
         let times: number[] = [];
         if (isChained) {
-            times = [CHAINED_FIRST_TIMEFRAME_MINUTES, CHAINED_SECOND_TIMEFRAME_MINUTES];
+            times = CHAINED_TIMEFRAMES_MINUTES;
         } else {
             if (ammSpeedMarketsLimits && secondsToHours(ammSpeedMarketsLimits?.minimalTimeToMaturity) === 0) {
                 times = ammSpeedMarketsLimits.timeThresholdsForFees
@@ -432,9 +430,8 @@ const Row = styled(FlexDivRow)`
     }
 `;
 
-const ChainedRow = styled(FlexDivCentered)`
+const ChainedRow = styled(FlexDivEnd)`
     gap: 15px;
-    padding-right: 85px;
 `;
 
 const Column = styled(FlexDivColumnCentered)`
