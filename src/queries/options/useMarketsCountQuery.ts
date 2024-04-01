@@ -16,12 +16,17 @@ const useMarketsCountQuery = (networkId: Network, options?: UseQueryOptions<Mark
     return useQuery<MarketsCountType>(
         QUERY_KEYS.BinaryOptions.MarketsCount(networkId),
         async () => {
-            const response = await axios.get(`${generalConfig.API_URL}/thales/networks/${networkId}/market-count`);
+            try {
+                const response = await axios.get(`${generalConfig.API_URL}/thales/networks/${networkId}/market-count`);
 
-            if (response.data) {
-                return response.data?.data;
+                if (response.data && response.data?.data) {
+                    return response.data?.data;
+                }
+                return [];
+            } catch (e) {
+                console.log('Error ', e);
+                return [];
             }
-            return [];
         },
         options
     );
