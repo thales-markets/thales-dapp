@@ -5,6 +5,7 @@ const ROUTES = {
         Governance: '/article/governance',
         Whitepaper: '/article/whitepaper',
     },
+    SalesLanding: '/funnel',
     Options: {
         Home: '/markets',
         RangeMarkets: '/ranged-markets',

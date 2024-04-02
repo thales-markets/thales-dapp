@@ -8,8 +8,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
+import { RootState } from 'types/ui';
 import { navigateTo } from 'utils/routes';
 
 type HeaderInput = {
@@ -19,7 +19,6 @@ type HeaderInput = {
 const Footer: React.FC<HeaderInput> = ({ className }) => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const { t } = useTranslation();
-
     return (
         <FooterHtml className={className}>
             <Image src={isMobile ? footerWMobile : footerW} width={1000} alt="portrait with globe" />
