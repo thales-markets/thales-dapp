@@ -1,56 +1,51 @@
 import Header from 'pages/LandingPage/components/Header/Header';
-import { Theme } from 'pages/LandingPage/Home';
-import React, { useState } from 'react';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
-import Cookies from 'universal-cookie';
 import {
+    AnimationSvg,
     Background,
+    Button,
+    ButtonContainer,
     Content,
     H1,
     H2,
+    IllustrationContainer,
     List,
     ListItem,
     ListWrapper,
     NestedList,
+    OrderedItem,
+    OrderedList,
+    OrderedListContrainer,
     Paragraph,
     ParagraphContainer,
     SectionWrapper,
-    IllustrationContainer,
     Wrapper,
-    OrderedListContrainer,
-    OrderedList,
-    AnimationSvg,
-    OrderedItem,
-    ButtonContainer,
-    Button,
 } from './styled-components';
 
-import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
-import UPChart from 'assets/images/sales-funnel/UPchart.svg';
-import DOWNMarket from 'assets/images/sales-funnel/DOWNmarket.svg';
 import DOWNChart from 'assets/images/sales-funnel/DOWNchart.svg';
-import INMarket from 'assets/images/sales-funnel/INmarket.svg';
-import INChart from 'assets/images/sales-funnel/INchart.svg';
-import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
-import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
+import DOWNMarket from 'assets/images/sales-funnel/DOWNmarket.svg';
 import GroupImg from 'assets/images/sales-funnel/Group606.svg';
-import { buildHref } from 'utils/routes';
+import INChart from 'assets/images/sales-funnel/INchart.svg';
+import INMarket from 'assets/images/sales-funnel/INmarket.svg';
+import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
+import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
+import UPChart from 'assets/images/sales-funnel/UPchart.svg';
+import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
 import ROUTES from 'constants/routes';
+import { buildHref } from 'utils/routes';
 
 import termsOfUseReferral from 'assets/docs/thales-terms-of-use.pdf';
 import Footer from 'pages/LandingPage/components/Footer';
 
-const cookies = new Cookies();
-
 const SalesLanding: React.FC = () => {
     const { t } = useTranslation();
 
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+        <Background>
             <Wrapper>
-                <Header theme={theme} setTheme={setTheme} />
+                <Header />
             </Wrapper>
             <Content>
                 <H1>{t('sales-landing.title')}</H1>
@@ -284,7 +279,7 @@ const SalesLanding: React.FC = () => {
                     </Button>
                 </ButtonContainer>
             </Content>
-            <Footer theme={theme} setTheme={setTheme} hideGraphics={true} />
+            <Footer />
         </Background>
     );
 };

@@ -8,18 +8,10 @@ export const Background = styled.div`
         font-size: 14px;
     }
 
-    &.light {
-        background: #f7f7f7;
-        --main-background: #f7f7f7;
-        --color: #052040;
-        --background: #ffffff;
-    }
-    &.dark {
-        background: #052040;
-        --main-background: #052040;
-        --color: #f7f7f7;
-        --background: #1b314f;
-    }
+    background: #052040;
+    --main-background: #052040;
+    --color: #f7f7f7;
+    --background: #1b314f;
 `;
 
 export const Wrapper = styled.div`

@@ -382,9 +382,11 @@ const App = () => {
                         </Route>
 
                         <Route exact path={ROUTES.SalesLanding}>
-                            <MainLayout>
-                                <SalesLanding />
-                            </MainLayout>
+                            <Suspense fallback={<Loader />}>
+                                <MainLayout>
+                                    <SalesLanding />
+                                </MainLayout>
+                            </Suspense>
                         </Route>
 
                         <Route exact path={ROUTES.Article.Token}>
