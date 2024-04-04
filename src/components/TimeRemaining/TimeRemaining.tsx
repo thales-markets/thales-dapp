@@ -21,6 +21,7 @@ type TimeRemainingProps = {
 };
 
 const ONE_SECOND_IN_MS = 1000;
+const SHOW_WEEKS_THRESHOLD = 4;
 
 const TimeRemaining: React.FC<TimeRemainingProps> = ({
     end,
@@ -72,17 +73,28 @@ const TimeRemaining: React.FC<TimeRemainingProps> = ({
     }, [onEnded, timeElapsed]);
 
     useEffect(() => {
-        const today = Date.now();
-        setTimeElapsed(today >= Number(end));
-        setWeekDiff(Math.abs(differenceInWeeks(today, end)));
-        setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, end)) > 4);
-        setCountdownDisabled(today >= Number(end) || Math.abs(differenceInWeeks(today, end)) > 4);
-        setDuration(intervalToDuration({ start: timeElapsed ? end : today, end }));
+        const nowValue = Date.now();
+
+        const timeElapsedValue = nowValue >= Number(end);
+        setTimeElapsed(timeElapsedValue);
+
+        const weekDiffValue = Math.abs(differenceInWeeks(nowValue, end));
+        setWeekDiff(weekDiffValue);
+
+        const showRemainingInWeeksValue = weekDiffValue > SHOW_WEEKS_THRESHOLD;
+        setShowRemainingInWeeks(showRemainingInWeeksValue);
+
+        const countdownDisabledValue = timeElapsedValue || showRemainingInWeeksValue;
+        setCountdownDisabled(countdownDisabledValue);
+
+        setTimeInterval(countdownDisabledValue ? null : ONE_SECOND_IN_MS);
+        setDuration(intervalToDuration({ start: timeElapsed ? end : nowValue, end }));
     }, [end, timeElapsed]);
 
     useInterval(() => {
-        if (now <= Number(end)) {
-            setDuration(intervalToDuration({ start: now, end }));
+        const nowValue = Date.now();
+        if (nowValue <= Number(end)) {
+            setDuration(intervalToDuration({ start: nowValue, end }));
         } else {
             setTimeElapsed(true);
             setTimeInterval(null);
