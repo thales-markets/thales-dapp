@@ -129,7 +129,11 @@ export const UserPositionAreaSeries: React.FC<{
                     shape: 'circle',
                 };
             });
-            series.setData(userDataWithLocalTime as any);
+            const userDataWitoutDuplicates = userDataWithLocalTime.filter(
+                (data: any, i: number) =>
+                    i === userDataWithLocalTime.length - 1 || data.time !== userDataWithLocalTime[i + 1].time
+            );
+            series.setData(userDataWitoutDuplicates as any);
 
             const cleanArray = [];
             // merging multiple positions that have the same timestamp in one marker
