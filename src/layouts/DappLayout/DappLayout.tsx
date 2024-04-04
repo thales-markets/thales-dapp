@@ -1,8 +1,6 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
-import ElectionsBanner from 'components/ElectionsBannerV2';
 import { generalConfig } from 'config/general';
-import { Network } from 'enums/network';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
@@ -11,10 +9,9 @@ import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { isAndroid, isMetamask } from 'thales-utils';
-import { ThemeInterface } from 'types/ui';
+import { RootState, ThemeInterface } from 'types/ui';
 import { isMobile } from 'utils/device';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { ScreenSizeBreakpoint } from '../../enums/ui';
@@ -92,7 +89,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     return (
         <Background id="main-content">
-            {networkId === Network.Arbitrum && <ElectionsBanner />}
             <Wrapper>
                 <DappSidebar />
                 <DappHeader />
@@ -130,7 +126,7 @@ const Wrapper = styled.div`
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    padding: 30px 20px 0px 92px;
+    padding: 10px 20px 0px 92px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 10px 0 10px;
         padding-bottom: 50px !important;
