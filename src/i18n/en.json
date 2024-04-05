@@ -1693,5 +1693,31 @@
         "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!",
         "temp-check-banner-message": "Tokenomics temp check. Cast your vote here!",
         "arb-distribution-message": "ARB distribution has started. Earn ARB tokens by using Thales products. Checkout the details here."
+    },
+    "onboarding-tour": {
+        "back": "Back",
+        "next": "Next",
+        "steps": {
+            "step-1": {
+                "title": "Choosing an Asset and Viewing Its Chart",
+                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+            },
+            "step-2": {
+                "title": "Choosing an Asset and Viewing Its Chart",
+                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+            },
+            "step-3": {
+                "title": "Choosing an Asset and Viewing Its Chart",
+                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+            },
+            "step-4": {
+                "title": "Choosing an Asset and Viewing Its Chart",
+                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+            },
+            "step-5": {
+                "title": "Choosing an Asset and Viewing Its Chart",
+                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+            }
+        }
     }
 }
