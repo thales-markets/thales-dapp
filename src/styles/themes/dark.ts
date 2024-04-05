@@ -190,4 +190,24 @@ export default {
         resolved: Colors.YELLOW_DARK,
         text: Colors.GRAY_BLUE,
     },
+    tour: {
+        background: {
+            primary: Colors.GRAY_SILVER,
+            secondary: Colors.GRAY,
+            tertiary: Colors.MUSTARD_YELLOW,
+        },
+        textColor: {
+            primary: Colors.GRAY,
+        },
+        buttons: {
+            background: {
+                primary: Colors.GRAY_BLUE,
+                secondary: Colors.MUSTARD_YELLOW,
+            },
+            textColor: {
+                primary: Colors.WHITE,
+                secondary: Colors.GRAY,
+            },
+        },
+    },
 };
