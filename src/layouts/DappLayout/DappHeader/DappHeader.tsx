@@ -3,10 +3,10 @@ import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from 'types/ui';
-import { getIsMobile } from '../../../redux/modules/ui';
+import { getIsMobile, setShowTour } from '../../../redux/modules/ui';
 import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
 import Logo from '../components/Logo';
 import Notifications from '../components/Notifications';
@@ -15,6 +15,7 @@ import UserWallet from '../components/UserWallet';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
@@ -27,13 +28,23 @@ const DappHeader: React.FC = () => {
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
                     <Button
-                        width="117px"
-                        height="21px"
-                        padding="0 15px"
-                        margin="0 0 0 15px"
+                        height="25px"
+                        padding="0 7px"
+                        margin="0 0 0 10px"
+                        fontSize="13px"
+                        onClick={() => dispatch(setShowTour(true))}
+                    >
+                        <ButtonIcon className="icon icon--tour" />
+                        {t('common.header.tutorial')}
+                    </Button>
+                    <Button
+                        height="25px"
+                        padding="0 7px"
+                        margin="0 0 0 5px"
                         fontSize="13px"
                         onClick={() => setOpenReferralModal(true)}
                     >
+                        <ButtonIcon className="icon icon--referrer" />
                         {t('common.header.refer-earn')}
                     </Button>
                 </FlexDivRow>
@@ -101,6 +112,12 @@ const RightContainer = styled(FlexDivRowCentered)`
 const Icon = styled.i`
     margin-right: 13px;
     font-size: 26px;
+`;
+
+const ButtonIcon = styled.i`
+    font-size: 21px;
+    color: ${(props) => props.theme.button.textColor.primary};
+    margin-right: 5px;
 `;
 
 export default DappHeader;

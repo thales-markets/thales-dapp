@@ -1,7 +1,9 @@
 import PageLinkBanner from 'components/PageLinkBanner';
 import Tooltip from 'components/Tooltip/Tooltip';
+import TourStep from 'components/TourStep';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
+import { tradePageSteps } from 'constants/tour';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
@@ -9,14 +11,17 @@ import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndD
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
+import { getShowTour, setShowTour } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { RootState } from 'types/ui';
+import { Step } from 'types/tour';
+import { RootState, ThemeInterface } from 'types/ui';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -28,10 +33,13 @@ import AssetTable from './components/Table';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+    const dispatch = useDispatch();
 
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const showTour = useSelector((state: RootState) => getShowTour(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
@@ -104,11 +112,21 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     return (
         <Wrapper>
+            <Tour
+                steps={getSteps(tradePageSteps, theme)}
+                isOpen={showTour}
+                onRequestClose={() => dispatch(setShowTour(false))}
+                showNumber={false}
+                disableDotsNavigation={true}
+                showButtons={false}
+                showNavigation={false}
+                scrollOffset={10}
+            />
             <BannerCarousel />
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>
-                        <AssetWrapper>
+                        <AssetWrapper className="step-1">
                             <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
                                 <Info>{t('markets.steps.choose-asset')}</Info>
                             </Tooltip>
@@ -116,7 +134,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
                             )}
                         </AssetWrapper>
-                        <DatesWrapper>
+                        <DatesWrapper className="step-2">
                             <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
                                 <Info>{t('markets.steps.choose-date')}</Info>
                             </Tooltip>
@@ -137,7 +155,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                         selectedDate={maturityDate}
                     ></LightweightChart>
                 </LeftSide>
-                <RightSide>
+                <RightSide className="step-3">
                     <PositionedWrapper>
                         <Info>{t('markets.steps.choose-direction')}</Info>
                         <RadioButtons
@@ -279,5 +297,28 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
 const BannerWrapper = styled.div`
     margin-top: 20px;
 `;
+
+const getSteps = (steps: Step[], theme: ThemeInterface): ReactourStep[] => {
+    return steps.map((item, index) => {
+        return {
+            selector: item.selector,
+            content: ({ goTo }) => (
+                <TourStep
+                    heading={item.heading}
+                    content={item.content}
+                    currentStep={index}
+                    stepsCount={steps.length}
+                    goTo={goTo}
+                    key={`tour-${index}`}
+                />
+            ),
+            style: {
+                borderRadius: '8px',
+                minWidth: '450px',
+                backgroundColor: theme.tour.background.primary,
+            },
+        };
+    });
+};
 
 export default TradePage;
