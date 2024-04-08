@@ -1,5 +1,7 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { setShowTour } from 'redux/modules/ui';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 
@@ -13,17 +15,35 @@ type TourStepProps = {
 
 const TourStep: React.FC<TourStepProps> = ({ heading, content, currentStep, stepsCount, goTo }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     return (
         <Wrapper>
-            {heading && <Heading>{t(heading)}</Heading>}
-            <Content>{t(content)}</Content>
+            {heading && (
+                <Heading>
+                    <Trans
+                        i18nKey={heading}
+                        components={{
+                            bold: <Bold />,
+                            br: <br />,
+                        }}
+                    />
+                </Heading>
+            )}
+            <Content>
+                <Trans
+                    i18nKey={content}
+                    components={{
+                        bold: <Bold />,
+                        br: <br />,
+                    }}
+                />
+            </Content>
             <ButtonWrapper>
                 <BackButton
                     className={`${currentStep - 1}`}
                     disabled={currentStep - 1 <= -1}
                     onClick={() => {
-                        console.log('Current step back', currentStep);
                         goTo(currentStep - 1);
                     }}
                 >
@@ -35,6 +55,7 @@ const TourStep: React.FC<TourStepProps> = ({ heading, content, currentStep, step
                         if (!(currentStep + 1 >= stepsCount)) {
                             goTo(currentStep + 1);
                         } else {
+                            dispatch(setShowTour(false));
                         }
                     }}
                 >
@@ -125,7 +146,11 @@ const Step = styled.div<{ active?: boolean }>`
     width: ${(props) => (props?.active ? '50px' : '21px')};
     height: 7px;
     background-color: ${(props) =>
-        props.active ? props.theme.tour.background.secondary : props.theme.tour.background.tertiary};
+        props.active ? props.theme.tour.background.tertiary : props.theme.tour.background.secondary};
+`;
+
+const Bold = styled.span`
+    font-weight: 800;
 `;
 
 export default TourStep;

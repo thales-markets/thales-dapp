@@ -1701,24 +1701,24 @@
         "start-trading": "Start trading!🎉",
         "steps": {
             "step-1": {
-                "title": "Choosing an Asset and Viewing Its Chart",
-                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+                "title": "Choose an Asset",
+                "content": "Use this dropdown to pick an Asset around which you want to trade. After you click on your desired asset, you will be able to see the assets historical price movement on the chart below."
             },
             "step-2": {
-                "title": "Choosing an Asset and Viewing Its Chart",
-                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+                "title": "Choose a Strike Date",
+                "content": "After choosing an Asset, now it’s time to pick a Strike Date for your Digital Option. Click on this dropdown to see a list of all available Strike Dates for the previously chosen Asset."
             },
             "step-3": {
-                "title": "Choosing an Asset and Viewing Its Chart",
-                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+                "title": "Choose a Position",
+                "content": "In this table, you can see all the available options for your previously chosen Asset and Strike Date. Using the UP, DOWN, IN and OUT radio buttons, you choose a position type. After picking a position type, choose a strike price from the table by clicking on that row in the table.<br/><br/><bold>UP and DOWN</bold> positions allow you to place a trade on where the price of the chosen Asset will end up on the chosen Strike Date, above or below the quoted Strike Price in the left column.<br/><br/><bold>IN and OUT</bold> positions allow you to place a trade around what price range will the chosen Asset end up on at the Chosen Strike Date, inside or outside the quoted price range in the left column.<br><br/>Every available market is represented by a row in the table where you can also see a potential ROI of that market if you are to open a position and win."
             },
             "step-4": {
-                "title": "Choosing an Asset and Viewing Its Chart",
-                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+                "title": "Input your Buy-In amount",
+                "content": "Final step is to input your desired Buy-In amount and read the summary of your final position before confirming the trade. In the right side input field, select your collateral type and then input your buy-in amount in the input field.<br/><br/>After inputting the buy-in amount, you will be able to see a final summary of your Digital Option you are about to open.<br/><br/>If you are pleased with the summarized trade and your potential win, click on the BUY button and confirm the transaction."
             },
             "step-5": {
-                "title": "Choosing an Asset and Viewing Its Chart",
-                "content": "In the app, navigate to this  section where assets are listed. Use the dropdown menu to browse through the available assets. Click on the asset you want to trade. Once you select an asset, the dapp automatically displays its price chart. This chart shows the asset’s historical price movements. Use the chart to analyze trends and make informed trading decisions."
+                "title": "Manage your open positions",
+                "content": "You can see all your open positions in this table below. Positions that you won will have yellow <bold>CLAIM NOW</bold> buttons that you use to claim your win. Some positions that are still not matured will have a Cash Out option available that allow you to exit your position early for a reduced payout."
             }
         }
     }
