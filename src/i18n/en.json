@@ -126,7 +126,8 @@
             "approve-swap": "Approve swap to {{currencyKey}}"
         },
         "header": {
-            "refer-earn": "Refer & earn",
+            "refer-earn": "Referral",
+            "tutorial": "Tutorial",
             "notification": { "tooltip": "You have {{count}} claimable position(s)" }
         },
         "footer": {
@@ -1697,6 +1698,7 @@
     "onboarding-tour": {
         "back": "Back",
         "next": "Next",
+        "start-trading": "Start trading!🎉",
         "steps": {
             "step-1": {
                 "title": "Choosing an Asset and Viewing Its Chart",
