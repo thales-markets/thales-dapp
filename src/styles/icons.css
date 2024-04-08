@@ -398,6 +398,14 @@
     content: '\007B';
 }
 
+.icon--tour:before {
+    content: '\007C';
+}
+
+.icon--referrer:before {
+    content: '\007D';
+}
+
 @keyframes shake {
     0% {
         transform: rotate(0deg);
