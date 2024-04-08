@@ -1,4 +1,6 @@
-export const tradePageSteps = [
+import { Step } from 'types/tour';
+
+export const tradePageSteps: Step[] = [
     {
         selector: '.step-1',
         heading: 'onboarding-tour.steps.step-1.title',
