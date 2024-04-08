@@ -100,8 +100,9 @@ const ButtonWrapper = styled(FlexDiv)`
     margin: 20px 0px;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ disabled?: boolean }>`
     border-radius: 8px;
+    opacity: ${(props) => props.disabled && '0.4'};
     border: none;
     display: flex;
     align-items: center;
