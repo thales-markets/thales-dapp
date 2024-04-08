@@ -4,6 +4,7 @@ import { ScreenSizeBreakpoint } from 'enums/ui';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'types/ui';
 import { getIsMobile, setShowTour } from '../../../redux/modules/ui';
@@ -16,10 +17,13 @@ import UserWallet from '../components/UserWallet';
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [openReferralModal, setOpenReferralModal] = useState(false);
+
+    console.log('location ', location);
 
     return (
         <Container maxWidth={getMaxWidth()}>
@@ -27,20 +31,22 @@ const DappHeader: React.FC = () => {
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
+                    {location.pathname == ROUTES.Options.Home && (
+                        <Button
+                            height="25px"
+                            padding="0 7px"
+                            margin="0 0 0 10px"
+                            fontSize="13px"
+                            onClick={() => dispatch(setShowTour(true))}
+                        >
+                            <ButtonIcon className="icon icon--tour" />
+                            {t('common.header.tutorial')}
+                        </Button>
+                    )}
                     <Button
                         height="25px"
                         padding="0 7px"
                         margin="0 0 0 10px"
-                        fontSize="13px"
-                        onClick={() => dispatch(setShowTour(true))}
-                    >
-                        <ButtonIcon className="icon icon--tour" />
-                        {t('common.header.tutorial')}
-                    </Button>
-                    <Button
-                        height="25px"
-                        padding="0 7px"
-                        margin="0 0 0 5px"
                         fontSize="13px"
                         onClick={() => setOpenReferralModal(true)}
                     >
