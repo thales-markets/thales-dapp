@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
-import { getShowTour, setShowTour } from 'redux/modules/ui';
+import { getIsMobile, getShowTour, setShowTour } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
@@ -40,6 +40,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const showTour = useSelector((state: RootState) => getShowTour(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
@@ -110,17 +111,27 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         }
     };
 
+    useEffect(() => {
+        if (showTour) {
+            document.documentElement.style.overflowX = 'inherit';
+            document.documentElement.style.scrollBehavior = 'inherit';
+        } else {
+            document.documentElement.style.overflowX = 'hidden';
+            document.documentElement.style.scrollBehavior = 'smooth';
+        }
+    }, [showTour]);
+
     return (
         <Wrapper>
             <Tour
-                steps={getSteps(tradePageSteps, theme)}
+                steps={getSteps(tradePageSteps, theme, isMobile)}
                 isOpen={showTour}
                 onRequestClose={() => dispatch(setShowTour(false))}
                 showNumber={false}
                 disableDotsNavigation={true}
                 showButtons={false}
                 showNavigation={false}
-                scrollOffset={10}
+                closeWithMask={true}
             />
             <BannerCarousel />
             <ContentWrapper>
@@ -298,7 +309,7 @@ const BannerWrapper = styled.div`
     margin-top: 20px;
 `;
 
-const getSteps = (steps: Step[], theme: ThemeInterface): ReactourStep[] => {
+const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): ReactourStep[] => {
     return steps.map((item, index) => {
         return {
             selector: item.selector,
@@ -314,7 +325,7 @@ const getSteps = (steps: Step[], theme: ThemeInterface): ReactourStep[] => {
             ),
             style: {
                 borderRadius: '8px',
-                minWidth: '450px',
+                minWidth: isMobile ? '100%' : '450px',
                 backgroundColor: theme.tour.background.primary,
             },
         };
