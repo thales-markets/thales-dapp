@@ -81,6 +81,7 @@ export const Colors = {
     ORANGE: '#F7B91A',
     ORANGE_LIGHT: '#FFB866',
     ORANGE_DARK: '#FF8800',
+    ORANGE_LANDING: '#E07E0A',
 
     YELLOW: '#FFCC00',
     YELLOW_DARK: '#9b8327',

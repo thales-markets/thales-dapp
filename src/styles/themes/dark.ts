@@ -135,6 +135,14 @@ export default {
             primary: Colors.WHITE,
             secondary: Colors.BLUE_SKY,
         },
+        button: {
+            background: {
+                primary: Colors.ORANGE_LANDING,
+            },
+            textColor: {
+                primary: Colors.BLUE_MIDNIGHT,
+            },
+        },
     },
     tokenPage: {
         border: {

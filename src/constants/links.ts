@@ -92,4 +92,5 @@ export const LINKS = {
         Token: 'https://thales.io/token/staking',
         Governance: 'https://thales.io/dao',
     },
+    SpeedMarkets: 'https://speedmarkets.xyz',
 };

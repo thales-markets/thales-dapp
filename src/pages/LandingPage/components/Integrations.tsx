@@ -1,16 +1,38 @@
 import SPAAnchor from 'components/SPAAnchor';
+import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
-import { FlexWrapper, Title, FlexDiv } from './styled-components';
+import { FlexDiv, FlexWrapper, Title } from './styled-components';
 
 const Integrations: React.FC = () => {
     const { t } = useTranslation();
 
     return (
         <FlexWrapper>
+            <Title> {t('landing-page.products')}</Title>
+            <ButtonWrapper>
+                <SPAAnchor href={buildHref(ROUTES.Options.Home)}>
+                    <Button>
+                        {t('landing-page.product-links.digital-options')}
+                        <Arrow className="icon icon--right" />
+                    </Button>
+                </SPAAnchor>
+                <SPAAnchor href={buildHref(ROUTES.Options.RangeMarkets)}>
+                    <Button>
+                        {t('landing-page.product-links.ranged-markets')}
+                        <Arrow className="icon icon--right" />
+                    </Button>
+                </SPAAnchor>
+                <SPAAnchor href={buildHref(LINKS.SpeedMarkets)}>
+                    <Button>
+                        {t('landing-page.product-links.speed-markets')}
+                        <Arrow className="icon icon--right" />
+                    </Button>
+                </SPAAnchor>
+            </ButtonWrapper>
             <Title> {t('landing-page.initiatives')}</Title>
             <FlexDiv className="initiatives">
                 <SPAAnchor href={buildHref(ROUTES.Options.Home)}>
@@ -203,6 +225,40 @@ const PYTH = styled(IconAbs)`
     @media (max-width: 600px) {
         font-size: 8em;
     }
+`;
+
+const ButtonWrapper = styled(FlexDiv)`
+    margin: 50px 0 90px 0;
+    align-items: center;
+    justify-content: center;
+`;
+
+const Button = styled.div`
+    background-color: ${(props) => props.theme.landingPage.button.background.primary};
+    color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    border-radius: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42px;
+    z-index: 2;
+    margin: 0 20px;
+    padding: 25px 30px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 22px;
+    a {
+        color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    }
+    i {
+        color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    }
+`;
+
+const Arrow = styled.i`
+    font-family: Icons !important;
+    font-weight: bold;
+    margin-left: 10px;
 `;
 
 export default Integrations;

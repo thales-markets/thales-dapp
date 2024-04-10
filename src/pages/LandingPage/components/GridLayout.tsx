@@ -1,20 +1,21 @@
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
-import thalesIW from 'assets/images/landing-page/thales1-white.webp';
 import thalesIWMobile from 'assets/images/landing-page/thales1-white-mobile.webp';
-import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
+import thalesIW from 'assets/images/landing-page/thales1-white.webp';
 import thalesIIWMobile from 'assets/images/landing-page/thales2-white-mobile.webp';
-import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
+import thalesIIW from 'assets/images/landing-page/thales2-white.webp';
 import thalesIIIWMobile from 'assets/images/landing-page/thales3-white-mobile.webp';
+import thalesIIIW from 'assets/images/landing-page/thales3-white.webp';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { navigateTo } from 'utils/routes';
-import Header from './Header/Header';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
+import styled from 'styled-components';
 import { RootState } from 'types/ui';
+import { navigateTo } from 'utils/routes';
+import AssetList from './AssetList';
+import Header from './Header/Header';
 
 const GridLayout: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
@@ -32,12 +33,15 @@ const GridLayout: React.FC = () => {
             </TitleContainer>
             <ButtonContainer>
                 <ThalesButton>
-                    <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}></Link>
-                    <Logo className="icon icon--logo" />
+                    <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
+                        <Logo className="landing-icons thales-icon" />
+                        <Arrow className="icon icon--right" />
+                    </Link>
                 </ThalesButton>
                 <LearnButton>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                         {t('landing-page.learn-more')}
+                        <Arrow className="icon icon--right" />
                     </Link>
                 </LearnButton>
             </ButtonContainer>
@@ -59,6 +63,7 @@ const GridLayout: React.FC = () => {
                 <ContSubTitle>
                     <Trans i18nKey="landing-page.a3" components={{ bold: <span style={{ fontWeight: 700 }} /> }} />
                 </ContSubTitle>
+                <AssetList />
             </ContIII>
             <ContIV>
                 <ContTitle>{t('landing-page.q4')}</ContTitle>
@@ -144,14 +149,21 @@ const Subtitle = styled.p`
 `;
 
 const Button = styled.div`
-    background: ${(props) => props.theme.landingPage.background.secondary};
-    color: ${(props) => props.theme.landingPage.textColor.primary};
+    background-color: ${(props) => props.theme.landingPage.button.background.primary};
+    color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    border-radius: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 56px;
+    width: 160px;
+    height: 48px;
     z-index: 2;
+    a {
+        color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    }
+    i {
+        color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    }
 `;
 
 const ButtonContainer = styled.div`
@@ -193,13 +205,12 @@ const LearnButton = styled(Button)`
     grid-column-end: 33;
     grid-row-start: 20;
     grid-row-end: 22;
-    font-family: Nunito !important;
+    font-family: Nunito;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
     line-height: 91.91%;
     text-align: center;
-    text-transform: capitalize;
     color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     transition: 0.2s;
@@ -248,7 +259,7 @@ const ContII = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
     grid-row-start: 36;
-    grid-row-end: 48;
+    grid-row-end: 49;
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
@@ -261,24 +272,25 @@ const ContII = styled(ContWrapper)`
 `;
 const ContIII = styled(ContWrapper)`
     grid-column-start: 4;
-    grid-column-end: 29;
+    grid-column-end: 26;
     grid-row-start: 49;
-    grid-row-end: 60;
-    padding-right: 90px;
+    grid-row-end: 64;
+    padding-right: 40px;
     @media (max-width: 800px) {
         padding-right: 3em;
+        grid-row-end: 70;
     }
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
         grid-row-start: 60;
-        grid-row-end: 71;
+        grid-row-end: 76;
         padding-right: 28px;
         padding-top: 42px;
     }
 `;
 const ContIV = styled(ContWrapper)`
-    grid-column-start: 24;
+    grid-column-start: 27;
     grid-column-end: 49;
     grid-row-start: 61;
     grid-row-end: 76;
@@ -291,11 +303,11 @@ const ContIV = styled(ContWrapper)`
         padding-left: 28px;
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 77;
+        grid-row-start: 82;
         grid-row-end: 92;
     }
     @media (max-width: 400px) {
-        grid-row-end: 94;
+        grid-row-end: 97;
     }
 `;
 
@@ -347,8 +359,8 @@ const ThalesImageII = styled.div`
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
         position: static !important;
-        grid-column-start: 37;
-        grid-column-end: 45;
+        grid-column-start: 29;
+        grid-column-end: 37;
         grid-row-start: 52;
         grid-row-end: 64;
     }
@@ -359,9 +371,9 @@ const ThalesImageII = styled.div`
 `;
 
 const ThalesImageIII = styled.div`
-    grid-column-start: 19;
+    grid-column-start: 23;
     grid-column-end: 45;
-    grid-row-start: 49;
+    grid-row-start: 50;
     grid-row-end: 69;
     z-index: 3;
 
@@ -373,10 +385,10 @@ const ThalesImageIII = styled.div`
     }
 
     @media (max-width: 600px) {
-        grid-column-start: 10;
-        grid-column-end: 48;
-        grid-row-start: 70;
-        grid-row-end: 82;
+        grid-column-start: 0;
+        grid-column-end: 34;
+        grid-row-start: 75;
+        grid-row-end: 87;
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
     }
@@ -424,7 +436,7 @@ const ContTitle = styled.h2`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 3.5em;
+    font-size: 3em;
     line-height: 95%;
     color: ${(props) => props.theme.landingPage.textColor.primary};
     margin-top: 10px;
@@ -462,7 +474,6 @@ const Link = styled.a`
     font-size: 20px;
     line-height: 91.91%;
     text-align: center;
-    text-transform: capitalize;
     color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: pointer;
     display: flex;
@@ -470,15 +481,22 @@ const Link = styled.a`
     justify-content: center;
     height: 100%;
     width: 100%;
+    font-weight: 800;
     z-index: 1;
 `;
 
 const Logo = styled.i`
     margin-top: 4px;
-    font-size: 5.2em;
-    line-height: 1.75em;
+    font-size: 90px;
+    line-height: 100%;
     color: ${(props) => props.theme.landingPage.textColor.primary} !important;
-    position: absolute;
+    font-weight: 400 !important;
+`;
+
+const Arrow = styled.i`
+    font-family: Icons !important;
+    font-weight: bold;
+    margin-left: 5px;
 `;
 
 export default GridLayout;
