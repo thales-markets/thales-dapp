@@ -27,3 +27,8 @@
     font-family: 'Fira Sans';
     src: local('Fira Sans'), url(../assets/fonts/FiraSans/FiraSans-Regular.ttf) format('truetype');
 }
+
+@font-face {
+    font-family: 'LandingIcons';
+    src: local('LandingIcons'), url(../assets/fonts/LandingIcons/landing-icons.ttf) format('truetype');
+}

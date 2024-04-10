@@ -1,0 +1,67 @@
+.landing-icons {
+    display: inline-block;
+    font-family: LandingIcons !important;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.btc-icon:before {
+    content: '\0021';
+}
+
+.xrp-icon:before {
+    content: '\0022';
+}
+
+.tron-icon:before {
+    content: '\0023';
+}
+
+.xag-icon:before {
+    content: '\0024';
+}
+
+.xau-icon:before {
+    content: '\0025';
+}
+
+.eth-icon:before {
+    content: '\0026';
+}
+
+.snx-icon:before {
+    content: '\0027';
+}
+
+.link-icon:before {
+    content: '\0028';
+}
+
+.sol-icon:before {
+    content: '\0029';
+}
+
+.op-icon:before {
+    content: '\002A';
+}
+
+.bnb-icon:before {
+    content: '\002B';
+}
+
+.crv-icon:before {
+    content: '\002C';
+}
+
+.arb-icon:before {
+    content: '\002D';
+}
+
+.ltc-icon:before {
+    content: '\002E';
+}
+
+.thales-icon:before {
+    content: '\002F';
+}
