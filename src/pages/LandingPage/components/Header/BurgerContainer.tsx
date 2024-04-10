@@ -59,7 +59,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             <ThalesButton>
                 <Logo
                     onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                    className="icon icon--logo"
+                    className="landing-icons thales-icon"
                 />
             </ThalesButton>
             <Xicon

@@ -12,10 +12,7 @@ const Header: React.FC = () => {
 
     return (
         <Wrapper>
-            <Logo
-                onClick={() => navigateTo(ROUTES.Home, false, false, 'show')}
-                className="icon-home icon-home--thales"
-            />
+            <Logo onClick={() => navigateTo(ROUTES.Home, false, false, 'show')} className="landing-icons thales-icon" />
             <Links>
                 <PositionedContainer>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
