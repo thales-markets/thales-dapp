@@ -82,9 +82,14 @@ const SupportedNetworkWrapper = styled(FlexDiv)`
     align-items: center;
     justify-content: space-between;
     margin-top: 40px;
+    @media (max-width: 400px) {
+        justify-content: space-around;
+    }
 `;
 
-const InfrastuctureWrapper = styled(SupportedNetworkWrapper)``;
+const InfrastuctureWrapper = styled(SupportedNetworkWrapper)`
+    margin-top: 20px;
+`;
 
 const Thales = styled(IconAbs)`
     font-size: 10em;
@@ -184,6 +189,9 @@ const Button = styled.div`
     }
     i {
         color: ${(props) => props.theme.landingPage.button.textColor.primary} !important;
+    }
+    @media (max-width: 800px) {
+        margin-bottom: 20px;
     }
 `;
 

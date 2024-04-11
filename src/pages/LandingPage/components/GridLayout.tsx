@@ -260,14 +260,17 @@ const ContII = styled(ContWrapper)`
     grid-column-end: 49;
     grid-row-start: 36;
     grid-row-end: 49;
+    @media (max-width: 800px) {
+        grid-row-end: 54;
+    }
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
         grid-row-start: 43;
-        grid-row-end: 54;
+        grid-row-end: 57;
     }
     @media (max-width: 400px) {
-        grid-row-end: 55;
+        grid-row-end: 60;
     }
 `;
 const ContIII = styled(ContWrapper)`
@@ -283,8 +286,16 @@ const ContIII = styled(ContWrapper)`
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 60;
-        grid-row-end: 76;
+        grid-row-start: 64;
+        grid-row-end: 81;
+        padding-right: 28px;
+        padding-top: 42px;
+    }
+    @media (max-width: 400px) {
+        grid-column-start: 4;
+        grid-column-end: 49;
+        grid-row-start: 64;
+        grid-row-end: 84;
         padding-right: 28px;
         padding-top: 42px;
     }
@@ -303,11 +314,14 @@ const ContIV = styled(ContWrapper)`
         padding-left: 28px;
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 82;
-        grid-row-end: 92;
+        grid-row-start: 85;
+        grid-row-end: 98;
     }
     @media (max-width: 400px) {
-        grid-row-end: 97;
+        grid-column-start: 4;
+        grid-column-end: 49;
+        grid-row-start: 88;
+        grid-row-end: 103;
     }
 `;
 
@@ -360,13 +374,13 @@ const ThalesImageII = styled.div`
         transform: scaleX(-1);
         position: static !important;
         grid-column-start: 29;
-        grid-column-end: 37;
-        grid-row-start: 52;
-        grid-row-end: 64;
+        grid-column-end: 31;
+        grid-row-start: 55;
+        grid-row-end: 69;
     }
     @media (max-width: 400px) {
-        grid-row-start: 54;
-        grid-row-end: 63;
+        grid-row-start: 58;
+        grid-row-end: 67;
     }
 `;
 
@@ -386,9 +400,18 @@ const ThalesImageIII = styled.div`
 
     @media (max-width: 600px) {
         grid-column-start: 0;
-        grid-column-end: 34;
-        grid-row-start: 75;
-        grid-row-end: 87;
+        grid-column-end: 27;
+        grid-row-start: 78;
+        grid-row-end: 90;
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+
+    @media (max-width: 400px) {
+        grid-column-start: 0;
+        grid-column-end: 30;
+        grid-row-start: 82;
+        grid-row-end: 92;
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
     }
