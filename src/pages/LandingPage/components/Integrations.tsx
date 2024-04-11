@@ -96,14 +96,6 @@ const Thales = styled(IconAbs)`
     }
 `;
 
-const FeatureLogo = styled(IconAbs)`
-    font-size: 16em;
-    line-height: 0.5em;
-    @media (max-width: 600px) {
-        font-size: 10em;
-    }
-`;
-
 const SNX = styled(IconAbs)`
     font-size: 14em;
     line-height: 0.5em;
