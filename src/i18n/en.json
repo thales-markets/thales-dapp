@@ -59,6 +59,7 @@
         "liquidity": "Liquidity",
         "support-contact": "Please contact <anchor>Thales support</anchor>",
         "try-again": "Try again",
+        "no-chart-data": "No chart data",
         "time-remaining": {
             "ended": "ended",
             "years": "years",

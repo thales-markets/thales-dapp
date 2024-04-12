@@ -21,25 +21,31 @@ const usePythCandlestickQuery = (
     return useQuery<CandlestickData[]>(
         QUERY_KEYS.Prices.PythCandlestickData(asset, date, resolution),
         async () => {
-            const startDate = new Date(date);
-            const response = await fetch(
-                `${generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY}?symbol=${getAssetSymbol(
-                    asset
-                )}/USD&resolution=${resolution}&from=${millisecondsToSeconds(
-                    Number(startDate)
-                )}&to=${millisecondsToSeconds(Number(Date.now()))}`
-            );
-            const pythCandlestickData = await response.json();
+            let candleStickData = [];
 
-            const candleStickData = pythCandlestickData.t.map((time: number, index: number) => {
-                return {
-                    open: pythCandlestickData.o[index],
-                    high: pythCandlestickData.h[index],
-                    low: pythCandlestickData.l[index],
-                    close: pythCandlestickData.c[index],
-                    time: time,
-                };
-            });
+            try {
+                const startDate = new Date(date);
+                const response = await fetch(
+                    `${generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY}?symbol=${getAssetSymbol(
+                        asset
+                    )}/USD&resolution=${resolution}&from=${millisecondsToSeconds(
+                        Number(startDate)
+                    )}&to=${millisecondsToSeconds(Number(Date.now()))}`
+                );
+                const pythCandlestickData = await response.json();
+
+                candleStickData = pythCandlestickData.t.map((time: number, index: number) => {
+                    return {
+                        open: pythCandlestickData.o[index],
+                        high: pythCandlestickData.h[index],
+                        low: pythCandlestickData.l[index],
+                        close: pythCandlestickData.c[index],
+                        time: time,
+                    };
+                });
+            } catch (e) {
+                console.log(e);
+            }
 
             return candleStickData;
         },
