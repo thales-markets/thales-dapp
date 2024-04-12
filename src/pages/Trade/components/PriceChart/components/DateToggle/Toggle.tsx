@@ -5,11 +5,12 @@ import { ThemeInterface } from 'types/ui';
 
 type ToggleProps = {
     options: { label: string; value: number; resolution: string }[];
+    disabled: boolean;
     onChange: (value: number) => void;
     selectedIndex?: number;
 };
 
-const Toggle: React.FC<ToggleProps> = ({ options, onChange, selectedIndex }) => {
+const Toggle: React.FC<ToggleProps> = ({ options, disabled, onChange, selectedIndex }) => {
     const theme: ThemeInterface = useTheme();
 
     const handleClick = (value: number) => {
@@ -35,6 +36,7 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, selectedIndex }) => 
                         transition: 'all 0.2s ease-in-out',
                         textTransform: 'none',
                     }}
+                    disabled={disabled}
                     onClick={() => handleClick(index)}
                 >
                     {label}
