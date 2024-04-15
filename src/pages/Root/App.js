@@ -34,7 +34,8 @@ const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layou
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
 const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
-const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
+const SalesLanding = lazy(() => import(/* webpackChunkName: "Home" */ '../SalesLanding'));
 const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
 const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
 const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
@@ -376,6 +377,14 @@ const App = () => {
                             <Suspense fallback={<Loader />}>
                                 <MainLayout>
                                     <Home />
+                                </MainLayout>
+                            </Suspense>
+                        </Route>
+
+                        <Route exact path={ROUTES.SalesLanding}>
+                            <Suspense fallback={<Loader />}>
+                                <MainLayout>
+                                    <SalesLanding />
                                 </MainLayout>
                             </Suspense>
                         </Route>

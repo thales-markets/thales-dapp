@@ -263,7 +263,7 @@ const Paragraph = styled.p`
     }
 `;
 
-const AnimationSvg = styled.object``;
+export const AnimationSvg = styled.object``;
 
 const ListWrapper = styled.div`
     border: 1px solid ${(props) => props.theme.landingPage.textColor.primary};
@@ -273,7 +273,6 @@ const ListWrapper = styled.div`
     @media (max-width: 600px) {
         width: 100%;
     }
-}
 `;
 
 const List = styled.ul`
