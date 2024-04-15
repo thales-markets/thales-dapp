@@ -66,7 +66,7 @@ const TourStep: React.FC<TourStepProps> = ({ heading, content, currentStep, step
                 <StepInfo>{`${currentStep + 1} of ${stepsCount}`}</StepInfo>
                 <StepsWrapper>
                     {Array.from(Array(stepsCount)).map((_item, index) => {
-                        return <Step active={index == currentStep} key={index} />;
+                        return <Step active={index == currentStep} key={index} onClick={() => goTo(index)} />;
                     })}
                 </StepsWrapper>
             </BottomWrapper>
@@ -142,6 +142,7 @@ const StepsWrapper = styled(FlexDiv)`
 `;
 
 const Step = styled.div<{ active?: boolean }>`
+    cursor: pointer;
     border-radius: 5px;
     margin: 0 3px;
     width: ${(props) => (props?.active ? '50px' : '21px')};

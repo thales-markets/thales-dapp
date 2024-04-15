@@ -131,7 +131,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 disableDotsNavigation={true}
                 showButtons={false}
                 showNavigation={false}
-                closeWithMask={true}
             />
             <BannerCarousel />
             <ContentWrapper>
