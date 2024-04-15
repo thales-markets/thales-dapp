@@ -208,7 +208,7 @@ const ContentWrapper = styled.div`
 const AssetWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
-    z-index: 9999;
+    z-index: 2;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         z-index: 10000;
@@ -218,7 +218,7 @@ const AssetWrapper = styled(FlexDivColumnCentered)`
 const DatesWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
-    z-index: 9999;
+    z-index: 2;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
