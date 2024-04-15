@@ -3,6 +3,7 @@ import Tooltip from 'components/Tooltip/Tooltip';
 import TourStep from 'components/TourStep';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import { tradePageSteps } from 'constants/tour';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
@@ -111,6 +112,16 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         }
     };
 
+    const startTourForNewUser = localStorage.getItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR);
+
+    console.log('startTourForNewUser ', startTourForNewUser);
+
+    useEffect(() => {
+        if (startTourForNewUser == null) {
+            dispatch(setShowTour(true));
+        }
+    }, [dispatch, startTourForNewUser]);
+
     useEffect(() => {
         if (showTour) {
             document.documentElement.style.overflowX = 'inherit';
@@ -127,7 +138,10 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             <Tour
                 steps={getSteps(tradePageSteps, theme, isMobile)}
                 isOpen={showTour}
-                onRequestClose={() => dispatch(setShowTour(false))}
+                onRequestClose={() => {
+                    dispatch(setShowTour(false));
+                    localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
+                }}
                 showNumber={false}
                 disableDotsNavigation={true}
                 showButtons={false}
