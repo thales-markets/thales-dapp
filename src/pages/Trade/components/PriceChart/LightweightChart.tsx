@@ -13,7 +13,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'types/ui';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { FlexDiv, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
 
@@ -127,6 +127,8 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
                 calculatePercentageChange(candleStickData[candleStickData.length - 2].close, currentPrice)
             );
             setCandleData(cloneData);
+        } else {
+            setCandleData(null);
         }
     }, [currentPrice, candleStickData]);
 
@@ -268,6 +270,8 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             <ChartContainer>
                 {pythQuery.isLoading ? (
                     <SimpleLoader />
+                ) : !candleData ? (
+                    <EmptyChart>{t('common.no-chart-data')}</EmptyChart>
                 ) : (
                     <ChartComponent
                         resolution={dateRange.resolution}
@@ -284,6 +288,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
             <Toggle
                 options={isSpeedMarkets ? SpeedMarketsToggleButtons : ToggleButtons}
+                disabled={!candleData}
                 selectedIndex={selectedToggleIndex}
                 onChange={handleDateRangeChange}
             />
@@ -352,6 +357,13 @@ const PythIconWrap = styled.div`
         line-height: 10px;
         color: ${(props) => props.theme.textColor.primary};
     }
+`;
+
+const EmptyChart = styled(FlexDivCentered)`
+    height: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 23px;
+    text-transform: uppercase;
 `;
 
 export default LightweightChart;

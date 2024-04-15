@@ -1,9 +1,9 @@
+import { assetToTradingViewMap } from 'config/tradingView';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import React from 'react';
 import TradingViewWidget from 'react-tradingview-widget';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { assetToTradingViewMap } from 'config/tradingView';
 import { Container, CopyrightLabel, TradingViewLink } from './styled-components';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
     const directMarket = useMarketContext();
