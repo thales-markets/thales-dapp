@@ -23,15 +23,13 @@ const DappHeader: React.FC = () => {
 
     const [openReferralModal, setOpenReferralModal] = useState(false);
 
-    console.log('location ', location);
-
     return (
         <Container maxWidth={getMaxWidth()}>
             <LeftContainer>
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
-                    {location.pathname == ROUTES.Options.Home && (
+                    {location.pathname == ROUTES.Options.Home && !isMobile && (
                         <Button
                             height="25px"
                             padding="0 7px"
