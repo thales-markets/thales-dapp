@@ -114,12 +114,13 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     useEffect(() => {
         if (showTour) {
             document.documentElement.style.overflowX = 'inherit';
+            if (!isMobile) document.documentElement.style.overflowY = 'hidden';
             document.documentElement.style.scrollBehavior = 'inherit';
         } else {
             document.documentElement.style.overflowX = 'hidden';
             document.documentElement.style.scrollBehavior = 'smooth';
         }
-    }, [showTour]);
+    }, [isMobile, showTour]);
 
     return (
         <Wrapper>

@@ -38,6 +38,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import {
     bigNumberFormatter,
@@ -113,6 +114,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const selectedCollateralIndexSelector = useSelector((state: RootState) => getSelectedCollateralIndex(state));
     const isBuy = useSelector((state: RootState) => getIsBuy(state)) || !isDetailsPage;
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -648,7 +650,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     };
 
     return (
-        <Container isDetailsPage={isDetailsPage} className="step-4">
+        <Container isDetailsPage={isDetailsPage} className={isMobile ? '' : 'step-4'}>
             {!isDetailsPage && (
                 <TradingDetailsContainer>
                     <TradingDetailsSentence
@@ -681,7 +683,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                     />
                 </TradingDetailsContainer>
             )}
-            <FinalizeTrade isDetailsPage={isDetailsPage}>
+            <FinalizeTrade isDetailsPage={isDetailsPage} className={isMobile ? 'step-4' : ''}>
                 <ColumnSpaceBetween>
                     <NumericInput
                         value={paidAmount}
