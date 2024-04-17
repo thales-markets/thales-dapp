@@ -125,7 +125,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     useEffect(() => {
         if (showTour) {
             document.documentElement.style.overflowX = 'inherit';
-            if (!isMobile) document.documentElement.style.overflowY = 'hidden';
             document.documentElement.style.scrollBehavior = 'inherit';
         } else {
             document.documentElement.style.overflowX = 'hidden';
@@ -135,18 +134,23 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     return (
         <Wrapper>
-            <Tour
-                steps={getSteps(tradePageSteps, theme, isMobile)}
-                isOpen={showTour}
-                onRequestClose={() => {
-                    dispatch(setShowTour(false));
-                    localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
-                }}
-                showNumber={false}
-                disableDotsNavigation={true}
-                showButtons={false}
-                showNavigation={false}
-            />
+            {showTour && (
+                <Tour
+                    steps={getSteps(tradePageSteps, theme, isMobile)}
+                    isOpen={showTour}
+                    onRequestClose={() => {
+                        dispatch(setShowTour(false));
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
+                    }}
+                    showNumber={false}
+                    disableDotsNavigation={true}
+                    showButtons={false}
+                    showNavigation={false}
+                    disableFocusLock={true}
+                    onAfterOpen={() => (document.body.style.overflowY = 'hidden')}
+                    onBeforeClose={() => (document.body.style.overflowY = 'auto')}
+                />
+            )}
             <BannerCarousel />
             <ContentWrapper>
                 <LeftSide>
@@ -337,6 +341,7 @@ const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): Reac
                     key={`tour-${index}`}
                 />
             ),
+            mutationObservables: ['reactour__mask--disable-interaction'],
             style: {
                 borderRadius: '8px',
                 minWidth: isMobile ? '100%' : '450px',
