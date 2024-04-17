@@ -1712,6 +1712,9 @@
         "first-section": "Thales Markets is a digital options platform that allows you to predict the value of various crypto assets to earn a payout. Thanks to its flexible automated market maker (AMM) architecture, Thales Markets allows users to predict whether the movement of an asset will go UP or DOWN, or stay IN or go OUT of a predefined range by a certain date.<br/><br/>Unlike most other digital options platforms, <bold>Thales Markets</bold> also offers automated trading strategies as well as markets that resolve in as little as 1-24 hours (known as Speed Markets). Users can also, metaphorically speaking, \"be the house\" and provide liquidity to the Thales AMM and gain exposure to it's performance.<br/><br/>Let’s dive deeper into the power of digital options and what makes Thales unique in how we approach them.",
         "button-positional-markets": "UP or DOWN markets",
         "button-range-markets": "IN or OUT markets",
+        "buttons": {
+            "go-to": "Go to Thales Markets"
+        },
         "sections": {
             "1": {
                 "heading": "What is a digital option?",
@@ -1737,9 +1740,9 @@
                 }
             },
             "4": {
-                "heading": "How to position for price staying in the range?",
-                "content-heading": "Positioning if you think the outcome will be within a range",
-                "content": "There are times when markets move in between a price range (higher than price A but lower than price B), so if you for example wanted to get exposure for a specific range then you only need to <marketoverview>find a market</marketoverview> with a target date that suits you for that specific asset.<br><br>This will get clearer with an example. For this one we’ll use ETH.<br><br>Let’s say that the current price of ETH is 1150 USD. If you believe that the price of ETH in this theoretical situation will be between 1000 and 1200 USD in one month you can buy some <strong>IN tokens</strong> from the AMM.<br><br>To continue the example, let’s imagine you bought 1000 of these IN tokens for 25 cents each. If in one month (market target date) ETH is above 1000 USD but below 1200 USD, even by one cent, then those 1000 IN tokens are redeemable for 1000 USD, giving it a 300% ROI. There’s no other market where you can do this as easily as on Thales.<br><br>Conversevely, if in one month ETH was 980 USD (below 1000 USD) or 1201 USD (above 1200 USD) then those IN tokens expire worthless.<br><br>But wait, you can also choose the other side!"
+                "heading": "Examples of digital options",
+                "content-heading": "Examples of digital options",
+                "content": "We’re going to walk you through four examples of digital options - UP and DOWN, as well as IN and OUT (the so-called ‘ranged markets’)."
             },
             "5": {
                 "heading": "How to position for price going outside the range?",

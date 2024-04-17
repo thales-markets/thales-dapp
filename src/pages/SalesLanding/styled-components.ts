@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
 
 export const Background = styled.div`
     width: 100%;
@@ -165,7 +166,8 @@ export const NestedList = styled.ul`
     }
 `;
 
-export const OrderedListContrainer = styled.div`
+export const OrderedListContrainer = styled(FlexDiv)`
+    flex: 2;
     margin: 40px auto;
     color: var(--color);
     margin-left: 30px;
@@ -214,5 +216,6 @@ export const Button = styled.a`
 export const ButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    margin: 15px 0px;
 `;

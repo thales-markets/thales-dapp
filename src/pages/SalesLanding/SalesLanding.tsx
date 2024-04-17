@@ -5,7 +5,6 @@ import { HashLink } from 'react-router-hash-link';
 import {
     AnimationSvg,
     Background,
-    Button,
     ButtonContainer,
     Content,
     H1,
@@ -149,7 +148,20 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
-                <H2 id="section2">{t('sales-landing.sections.2.content-heading')}</H2>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.go-to')}</Button>
+                </ButtonContainer>
+                <H2>{t('sales-landing.sections.4.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.4.content'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
                         <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
@@ -333,6 +345,27 @@ const HighlightedUnderlined = styled.span`
     color: ${(props) => props.theme.landingPage.textColor.tertiary};
     text-decoration: underline;
     font-style: italic !important;
+`;
+
+const Button = styled.a`
+    display: flex;
+    align-items: center;
+    font-family: Nunito !important;
+    padding: 11px 36px;
+    border-radius: 32px;
+    font-weight: 800;
+    font-size: 24px;
+    cursor: pointer;
+    color: ${(props) => props.theme.landingPage.button.textColor.primary};
+    background-color: ${(props) => props.theme.landingPage.button.background.primary};
+    &:after {
+        font-family: Icons !important;
+        content: '\\007A';
+        color: ${(props) => props.theme.landingPage.button.textColor.primary};
+        padding-left: 10px;
+        font-weight: 900;
+        vertical-align: text-top;
+    }
 `;
 
 export default SalesLanding;
