@@ -1699,8 +1699,13 @@
     "onboarding-tour": {
         "back": "Back",
         "next": "Next",
+        "start-tutorial": "Start tutorial!",
         "start-trading": "Start trading!🎉",
         "steps": {
+            "step-0": {
+                "title": "Welcome to the Thales Markets dapp!",
+                "content": "Learn how to use Thales Markets to trade Digital Options via this interactive tutorial."
+            },
             "step-1": {
                 "title": "Choose an Asset",
                 "content": "Use this dropdown to pick an Asset around which you want to trade. After you click on your desired asset, you will be able to see the assets historical price movement on the chart below."

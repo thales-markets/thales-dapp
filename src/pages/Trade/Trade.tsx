@@ -17,7 +17,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile, getShowTour, setShowTour } from 'redux/modules/ui';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
@@ -42,7 +42,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const showTour = useSelector((state: RootState) => getShowTour(state));
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
@@ -142,6 +141,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     }}
                     showNumber={false}
                     disableDotsNavigation={true}
+                    closeWithMask={false}
                     showButtons={false}
                     showNavigation={false}
                     disableFocusLock={true}
@@ -224,7 +224,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             <BannerWrapper>
                 <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
             </BannerWrapper>
-            {isWalletConnected && <OpenPositions />}
+            <OpenPositions />
         </Wrapper>
     );
 };
@@ -251,6 +251,7 @@ const ContentWrapper = styled.div`
 `;
 
 const AssetWrapper = styled(FlexDivColumnCentered)`
+    display: block;
     position: relative;
     text-align: center;
     z-index: 2;
@@ -339,6 +340,8 @@ const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): Reac
                     key={`tour-${index}`}
                 />
             ),
+            highlightedSelectors: item.highlightedSelectors,
+            mutationObservables: item.highlightedSelectors,
             position: isMobile ? (index > 2 ? 'top' : 'bottom') : undefined,
             style: {
                 borderRadius: '8px',
