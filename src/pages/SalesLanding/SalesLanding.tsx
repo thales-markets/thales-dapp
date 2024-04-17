@@ -26,7 +26,6 @@ import {
 
 import DOWNChart from 'assets/images/sales-funnel/DOWNchart.svg';
 import DOWNMarket from 'assets/images/sales-funnel/DOWNmarket.svg';
-import GroupImg from 'assets/images/sales-funnel/Group606.svg';
 import INChart from 'assets/images/sales-funnel/INchart.svg';
 import INMarket from 'assets/images/sales-funnel/INmarket.svg';
 import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
@@ -38,6 +37,7 @@ import { buildHref } from 'utils/routes';
 
 import termsOfUseReferral from 'assets/docs/thales-terms-of-use.pdf';
 import Footer from 'pages/LandingPage/components/Footer';
+import styled from 'styled-components';
 
 const SalesLanding: React.FC = () => {
     const { t } = useTranslation();
@@ -48,7 +48,23 @@ const SalesLanding: React.FC = () => {
                 <Header />
             </Wrapper>
             <Content>
-                <H1>{t('sales-landing.title')}</H1>
+                <H1>
+                    <Trans
+                        i18nKey="sales-landing.title"
+                        components={{
+                            bold: <BoldHeading />,
+                        }}
+                    />
+                </H1>
+                <FirstParagraph>
+                    <Trans
+                        i18nKey="sales-landing.first-section"
+                        components={{
+                            bold: <HighlightedUnderlined />,
+                            br: <br />,
+                        }}
+                    />
+                </FirstParagraph>
                 <SectionWrapper>
                     <ListWrapper>
                         <List>
@@ -74,56 +90,65 @@ const SalesLanding: React.FC = () => {
                             </NestedList>
                         </List>
                     </ListWrapper>
-                    <IllustrationContainer
-                        width="40%"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginLeft: '30px',
-                        }}
-                    >
-                        <AnimationSvg type="image/svg+xml" data={GroupImg}></AnimationSvg>
-                    </IllustrationContainer>
                 </SectionWrapper>
                 <H2 id="section1">{t('sales-landing.sections.1.heading')}</H2>
-                <SectionWrapper flexDirection={'column'}>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.1.first-paragraph'}
-                                components={{
-                                    poslink: <a href={buildHref(ROUTES.Options.Overview)} />,
-                                    rangelink: <a href={buildHref(ROUTES.Options.RangeMarkets)} />,
-                                }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <OrderedListContrainer>
-                        <OrderedList>
-                            <OrderedItem>
-                                <Trans i18nKey={'sales-landing.sections.1.ordered-list.1'} />
-                            </OrderedItem>
-                            <OrderedItem>
-                                <Trans i18nKey={'sales-landing.sections.1.ordered-list.2'} />
-                            </OrderedItem>
-                            <OrderedItem>
-                                <Trans i18nKey={'sales-landing.sections.1.ordered-list.3'} />
-                            </OrderedItem>
-                            <OrderedItem>
-                                <Trans i18nKey={'sales-landing.sections.1.ordered-list.4'} />
-                            </OrderedItem>
-                            <OrderedItem>
-                                <Trans i18nKey={'sales-landing.sections.1.ordered-list.5'} />
-                            </OrderedItem>
-                        </OrderedList>
-                    </OrderedListContrainer>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans i18nKey={'sales-landing.sections.1.second-paragraph'} />
-                        </Paragraph>
-                    </ParagraphContainer>
-                </SectionWrapper>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.1.content'}
+                        components={{
+                            br: <br />,
+                        }}
+                    />
+                </Paragraph>
+                <H2 id="section1">{t('sales-landing.sections.2.heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.2.content'}
+                        components={{
+                            br: <br />,
+                        }}
+                    />
+                </Paragraph>
+                <H2 id="section1">{t('sales-landing.sections.3.heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.3.first-paragraph'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
+                <OrderedListContrainer>
+                    <OrderedList>
+                        <OrderedItem>
+                            <Trans i18nKey={'sales-landing.sections.3.list.1'} components={{ bold: <Bold /> }} />
+                        </OrderedItem>
+                        <OrderedItem>
+                            <Trans i18nKey={'sales-landing.sections.3.list.2'} components={{ bold: <Bold /> }} />
+                        </OrderedItem>
+                        <OrderedItem>
+                            <Trans i18nKey={'sales-landing.sections.3.list.3'} components={{ bold: <Bold /> }} />
+                        </OrderedItem>
+                        <OrderedItem>
+                            <Trans i18nKey={'sales-landing.sections.3.list.4'} components={{ bold: <Bold /> }} />
+                        </OrderedItem>
+                        <OrderedItem>
+                            <Trans i18nKey={'sales-landing.sections.3.list.5'} components={{ bold: <Bold /> }} />
+                        </OrderedItem>
+                    </OrderedList>
+                </OrderedListContrainer>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.3.second-paragraph'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
                 <H2 id="section2">{t('sales-landing.sections.2.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
@@ -283,5 +308,31 @@ const SalesLanding: React.FC = () => {
         </Background>
     );
 };
+
+const BoldHeading = styled.span`
+    font-weight: 700;
+    color: ${(props) => props.theme.landingPage.textColor.tertiary};
+    font-family: Playfair Display !important;
+`;
+
+const FirstParagraph = styled(Paragraph)`
+    font-weight: 600;
+    font-style: italic !important;
+`;
+
+const HighlightParagraph = styled.span`
+    color: ${(props) => props.theme.landingPage.textColor.tertiary};
+    font-weight: 800;
+`;
+
+const Bold = styled.span`
+    font-weight: 800;
+`;
+
+const HighlightedUnderlined = styled.span`
+    color: ${(props) => props.theme.landingPage.textColor.tertiary};
+    text-decoration: underline;
+    font-style: italic !important;
+`;
 
 export default SalesLanding;

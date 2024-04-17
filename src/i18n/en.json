@@ -1708,32 +1708,33 @@
         "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
     },
     "sales-landing": {
-        "title": "Win with Thales",
+        "title": "<bold>Thales</bold> Digital Options A Powerful <bold>Platform</bold> for Crypto <bold>Prediction Markets</bold>",
+        "first-section": "Thales Markets is a digital options platform that allows you to predict the value of various crypto assets to earn a payout. Thanks to its flexible automated market maker (AMM) architecture, Thales Markets allows users to predict whether the movement of an asset will go UP or DOWN, or stay IN or go OUT of a predefined range by a certain date.<br/><br/>Unlike most other digital options platforms, <bold>Thales Markets</bold> also offers automated trading strategies as well as markets that resolve in as little as 1-24 hours (known as Speed Markets). Users can also, metaphorically speaking, \"be the house\" and provide liquidity to the Thales AMM and gain exposure to it's performance.<br/><br/>Let’s dive deeper into the power of digital options and what makes Thales unique in how we approach them.",
         "button-positional-markets": "UP or DOWN markets",
         "button-range-markets": "IN or OUT markets",
         "sections": {
             "1": {
-                "heading": "Introducing Thales",
-                "content-heading": "Introducing Thales",
-                "first-paragraph": "Thales market is both a protocol and a platform where you can access <strong>easy to understand derivatives for crypto asset prices</strong> on a future date: <poslink>UP or DOWN?</poslink> Yes, we got that for the directional traders, but what’s new about Thales is that you can also choose if it will stay within a range or abandon it <rangelink>(IN or OUT)</rangelink> at the target date.<br><br>Don’t worry, there’s many ways to use the Thales platform and we’ll walk through some <strong>examples</strong> so you know how this all works.<br><br>But first, why should you care and what makes Thales different?",
-                "ordered-list": {
-                    "1": "Thales platform <strong>requires no registration</strong>. One web3 wallet is your passport to novel on-chain derivatives, multi-collateral accepted (USDC, USDT, DAI, and sUSD).",
-                    "2": "The results for the settlement of markets is provided by Chainlink. Having an integration with the industry-leader in decentralized data feeds means one thing: <strong>market results you can trust.</strong>",
-                    "3": "When you buy positional tokens (UP, DOWN, IN or OUT) there are <strong>no liquidations involved</strong>, you can only lose what you risk on each market and not more.",
-                    "4": "You can sell back a positional token to the AMM and exit your position at any time up until 24 hours from the market target date. Basically, there’s <strong>an option for early exits or profit-taking.</strong>",
-                    "5": "Thales is deployed on Optimism and Polygon networks, both are <strong>fast, secure, and low-transaction-cost</strong> Ethereum scaling solutions."
-                },
-                "second-paragraph": "By now we hope to have captured your attention regarding the possibilities that Thales brings to the table.<br><br>Let’s tackle some theoretical scenarios, so you get to know what Thales can offer you.<br><br><i>Disclaimer: All the presented scenarios are examples describing a basic model of how positional tokens work and are in no way financial advice.</i><br><br>With that out of the way, let’s start by addressing something very important regarding Thales markets structure, and needed to understand the examples:<br><br>Any time you buy (or sell) positional tokens on the AMM (Automated market maker) these get priced between 10 and 90 cents, based on the probabilities of the outcome.<br><br>The <strong>positional tokens that represent the winning option at the target date are redeemable for 1 USD once the market is resolved.</strong>"
+                "heading": "What is a digital option?",
+                "content-heading": "What is a digital option?",
+                "content": "A digital option is a type of option that offers the opportunity of a fixed, transparent payout if the market price of an asset goes over or under a pre-determined limit called the strike price.<br/><br/>Digital options allow users to profit from correctly predicting the future price of an asset. They are based on a statement with only two possible outcomes – yes or no – and allow you to predict what outcome will take place by a certain date. "
             },
             "2": {
-                "heading": "How to position for price going up",
-                "content-heading": "Positioning if you think the outcome will be above the strike price",
-                "content": "If the current price of a crypto-asset is 100 USD and you think it will be above 110 USD at the end of the week, then you can <marketoverview>search for a market</marketoverview> with a strike price of 110 USD that expires at the end of that week.<br><br>Let’s say at that moment in time the AMM quotes 0.5 USD per UP token, and you decide to buy 1000 with 500 USD.<br><br>If at the end of the week, when the market reaches its target date, the price is even one cent above 110 USD then those 1000 <marketoverview>UP tokens</marketoverview> are now worth 1000 USD, a 100% ROI.<br><br>Conversevely, if the price at the end of the week is below 110 US (again even by one cent), then those UP tokens are now worthless, and whoever is holding DOWN tokens for this market can redeem those."
+                "heading": "What Are Automated Market Makers (AMM)?",
+                "content-heading": "What Are Automated Market Makers (AMM)?",
+                "content": "Automated market makers (AMMs) are part of the decentralized finance (DeFi) ecosystem. They allow digital assets to be traded permissionlessly and automatically. This is possible by using liquidity pools rather than relying on a traditional market of buyers and sellers. AMM users supply liquidity pools with crypto tokens, whose prices are defined by a mathematical formula. Liquidity pools can be set up for different purposes, and are a key tool in the DeFi ecosystem."
             },
             "3": {
-                "heading": "How to position for falling prices?",
-                "content-heading": "Positioning if you think the outcome will be below the strike price",
-                "content": "Now that you know how it works you can also take advantage of the other side of the trade by buying <marketoverview>DOWN tokens</marketoverview>.<br><br>Based on the same example as before, if you believe that the same crypto-asset will have a price below 110 USD at the end of the week and you want to <marketoverview>participate in the market</marketoverview> you can buy DOWN tokens.<br><br>For example, you bought 1000 of these DOWN tokens from the AMM for 30 cents each, then the end of the week comes and on the target date the actual price of the crypto-asset is 105 USD. This means that your 1000 DOWN tokens bought for 300 USD are now redeemable for 1000 USD.<br><br>This is a glimpse of why Thales markets and its UP and DOWN positional tokens are so powerful.<br><br>But that 's not all, get ready to learn about ranged markets!"
+                "heading": "Introducing Thales Markets and Our Digital Options",
+                "content-heading": "Introducing Thales Markets and Our Digital Options",
+                "first-paragraph": "Thales Markets is an AMM-based digital options platform where you can access easy-to-understand derivatives for crypto asset prices on a future date. <highlight>UP or DOWN?</highlight> Yes, we got that for the directional traders, but what’s new about Thales is that you can also choose if it will stay within a range or end up outside of it (<highlight>IN or OUT</highlight>) at the target date.<br/><br/>Don't worry, there are many ways to use the Thales platform and we’ll walk through some <bold>examples</bold> so you know how this all works.<br/><br/>But first, why should you care and what makes Thales different?",
+                "second-paragraph": "By now we hope to have captured your attention regarding the possibilities that Thales brings to the table.Let’s tackle some theoretical scenarios, so you get to know what Thales can offer you.<br/><br/><bold>Disclaimer</bold>: All the presented scenarios are examples describing a basic model of how positional tokens work and are in no way financial advice.<br/><br/>With that out of the way, let’s start by addressing something very important regarding the Thales Markets structure, and needed to understand the examples:<br/><br/>Any time you buy (or sell) positional tokens on the AMM (automated market maker) these get priced between 10 and 90 cents, based on the probabilities of the outcome.<br/>If you guessed correctly and you have winning tokens on the target date, each one is now worth $1 instead of what you initially paid for it. <bold>If you guessed incorrectly, your tokens are worth $0.</bold><br/>In other words, <bold>the positional tokens that represent the winning option at the target date are redeemable for 1 USD once the market is resolved</bold> (minus the trading fees).Here are a few scenarios of what that looks like in practice.",
+                "list": {
+                    "1": "Thales platform <bold>requires no registration</bold>. One web3 wallet is your passport to novel on-chain derivatives with various multi-collateral accepted.",
+                    "2": "The results for the settlement of markets is provided by Chainlink. Having an integration with the industry-leader in decentralized data feeds means one thing: <bold>market results you can trust</bold>.",
+                    "3": "When you buy positional tokens (UP, DOWN, IN or OUT) there are <bold>no liquidations</bold> involved, your potential loss and potential win on market expiry is known from the start.",
+                    "4": "You can cash out your positional tokens from the AMM and exit your position at any time up until 24 hours from the market expiry. Basically, there’s an option for <bold>early exits or profit-taking</bold>.",
+                    "5": "Thales Markets are available on Optimism, Arbitrum, Base and Polygon networks. All are <bold>fast, secure, and low-transaction-cost</bold> scaling solutions"
+                }
             },
             "4": {
                 "heading": "How to position for price staying in the range?",
@@ -1757,6 +1758,10 @@
                 "first-paragraph": "If you’ve made it this far, congratulations!<br><br>You now have a deeper understanding of how Thales works, including its directional (<poslink>UP or DOWN</poslink>) and ranged (<rangelink>IN or OUT</rangelink>) markets.<br><br>There are a few paths you can take now:<br><br>You can watch a guided walkthrough to get to know the platform, see how the AMM works, and reinforce what you just learned.",
                 "second-paragraph": "If you need help getting some ETH and stablecoins into Optimism network (where both directional and ranged markets are live) to use the platform then check this on-boarding wizard with credit-card, bridging, and centralized exchanges withdrawals solutions.",
                 "third-paragraph": "Or if you are ready to jump into the markets by all means just go!"
+            },
+            "8": {
+                "heading": "What Are Automated Market Makers (AMM)?",
+                "content": "Automated market makers (AMMs) are part of the decentralized finance (DeFi) ecosystem. They allow digital assets to be traded permissionlessly and automatically. This is possible by using liquidity pools rather than relying on a traditional market of buyers and sellers. AMM users supply liquidity pools with crypto tokens, whose prices are defined by a mathematical formula. Liquidity pools can be set up for different purposes, and are a key tool in the DeFi ecosystem."
             }
         },
         "sections-short-version": {

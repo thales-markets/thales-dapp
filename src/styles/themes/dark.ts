@@ -134,6 +134,7 @@ export default {
         textColor: {
             primary: Colors.WHITE,
             secondary: Colors.BLUE_SKY,
+            tertiary: Colors.ORANGE_LANDING,
         },
         button: {
             background: {

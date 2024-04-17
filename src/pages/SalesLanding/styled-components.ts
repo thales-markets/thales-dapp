@@ -31,27 +31,31 @@ export const AnimationSvg = styled.object`
 
 export const H1 = styled.h1`
     font-family: Playfair Display !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 3.8em;
-    line-height: 91.91%;
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 110%;
     text-transform: uppercase;
-    color: var(--color);
-    margin-top: 1em;
-    margin-bottom: 1.3em;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-top: 50px;
+    margin-bottom: 30px;
 `;
 
 export const H2 = styled.h2`
-    font-family: NunitoSemiBold !important;
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 1em;
-    letter-spacing: 0em;
-    text-align: justified;
-    color: var(--color);
-    margin-top: 2em;
-    margin-bottom: 1em;
+    font-family: Nunito !important;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 30px;
+    text-align: left;
+    color: ${(props) => props.theme.textColor.primary};
+    margin: 41px 0px;
+    &:after {
+        font-family: Icons !important;
+        content: '\\007A';
+        color: ${(props) => props.theme.landingPage.textColor.tertiary};
+        padding-left: 20px;
+        font-weight: 900;
+        vertical-align: text-top;
+    }
 `;
 
 export const SectionWrapper = styled.div<{ flexDirection?: string }>`
@@ -65,27 +69,14 @@ export const SectionWrapper = styled.div<{ flexDirection?: string }>`
 `;
 
 export const Paragraph = styled.p`
-    font-size: 1.4em;
-    line-height: 1em;
-    &,
-    & * {
-        color: var(--color);
-        font-family: NunitoExtraLight !important;
-        font-style: normal;
-        font-weight: 300;
-        letter-spacing: 0em;
-        text-align: justified;
-        white-space: pre-line;
-    }
-    strong {
-        font-family: NunitoSemiBold !important;
-        font-weight: bold;
-        font-size: 1.1em;
-    }
+    font-size: 24px;
+    line-height: 30px;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
+    font-family: NunitoExtraLight !important;
+    white-space: pre-line;
     a {
-        font-family: NunitoSemiBold !important;
-        text-decoration: none;
-        color: #64d9fe;
+        color: ${(props) => props.theme.landingPage.textColor.tertiary};
+        text-decoration: underline;
     }
     @media screen and (max-width: 500px) {
         text-align: justify;
@@ -123,9 +114,10 @@ export const Content = styled.div`
 `;
 
 export const ListWrapper = styled.div`
-    border: 1px solid var(--color);
+    position: relative;
+    border: 3px solid ${(props) => props.theme.landingPage.textColor.tertiary};
     border-radius: 7px;
-    width: 60%;
+    width: 70%;
     @media (max-width: 600px) {
         width: 100%;
     }
@@ -154,21 +146,21 @@ export const NestedList = styled.ul`
     color: var(--color);
     & li {
         &:before {
-            content: '\\25BA \\0020';
-            padding-right: 5px;
+            font-family: Icons !important;
+            content: '\\007A';
+            color: ${(props) => props.theme.landingPage.textColor.tertiary};
+            padding-right: 20px;
+            font-weight: 900;
             vertical-align: text-top;
         }
         & > a {
             font-family: Nunito !important;
             font-style: normal;
-            font-size: 20px;
-            font-weight: 300;
             line-height: 170%;
-            color: var(--color);
-            &:hover {
-                font-size: 21px;
-                transition: 0.2s;
-            }
+            color: ${(props) => props.theme.textColor.primary};
+            font-weight: 600;
+            font-size: 24px;
+            margin: 5px 0px;
         }
     }
 `;
@@ -184,27 +176,26 @@ export const OrderedListContrainer = styled.div`
 
 export const OrderedList = styled.ol`
     list-style: none;
+    counter-reset: item;
+    list-style-position: outside;
+    list-style-type: none;
 `;
 
 export const OrderedItem = styled.li`
     counter-increment: item;
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 15px;
-    font-size: 19px;
+    font-style: italic !important;
+    font-size: 21px;
     &::before {
         content: counter(item) '.';
-        font-size: 25px;
-        margin-right: 5px;
-        font-weight: bold;
-    }
-    strong {
+        font-size: 32px;
+        margin-right: 10px;
         font-weight: bold;
     }
 `;
 
-export const ListItem = styled.li`
-    color: var(--color);
-`;
+export const ListItem = styled.li``;
 
 export const Button = styled.a`
     display: flex;
