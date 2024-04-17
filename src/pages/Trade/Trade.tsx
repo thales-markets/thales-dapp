@@ -114,13 +114,11 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     const startTourForNewUser = localStorage.getItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR);
 
-    console.log('startTourForNewUser ', startTourForNewUser);
-
     useEffect(() => {
-        if (startTourForNewUser == null) {
+        if (startTourForNewUser == null && !isMobile) {
             dispatch(setShowTour(true));
         }
-    }, [dispatch, startTourForNewUser]);
+    }, [dispatch, isMobile, startTourForNewUser]);
 
     useEffect(() => {
         if (showTour) {
@@ -341,7 +339,7 @@ const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): Reac
                     key={`tour-${index}`}
                 />
             ),
-            mutationObservables: ['reactour__mask--disable-interaction'],
+            position: isMobile ? (index > 2 ? 'top' : 'bottom') : undefined,
             style: {
                 borderRadius: '8px',
                 minWidth: isMobile ? '100%' : '450px',
