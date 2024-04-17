@@ -1,4 +1,4 @@
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, COMMODITY_MAP } from 'constants/currency';
+import { COMMODITY_MAP, CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 
 export const assetToTradingViewMap = {
     [SYNTHS_MAP.sBTC]: 'COINBASE:BTCUSD',
@@ -53,4 +53,5 @@ export const assetToTradingViewMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'DPXWETH*ETHUSD',
     [COMMODITY_MAP.XAU]: 'FX_IDC:XAUUSD',
     [COMMODITY_MAP.XAG]: 'FX_IDC:XAGUSD',
+    [CRYPTO_CURRENCY_MAP.AERO]: 'COINBASE:AEROUSD',
 };

@@ -177,6 +177,7 @@ export const CRYPTO_CURRENCY = [
     'WETH',
     'TIA',
     'BONK',
+    'AERO',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -357,6 +358,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.BONK]: 'BONK',
     [COMMODITY_MAP.XAU]: 'Gold',
     [COMMODITY_MAP.XAG]: 'Silver',
+    [CRYPTO_CURRENCY_MAP.AERO]: 'Aerodrome',
 };
 
 export const COLLATERALS: Record<Network, Coins[]> = {
