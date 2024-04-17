@@ -11,19 +11,19 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter, formatCurrencyWithSign } from 'thales-utils';
 import { Risk, RiskPerAsset, RiskPerAssetAndPosition } from 'types/options';
+import { RootState } from 'types/ui';
 
-import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
-import snxJSConnector from 'utils/snxJSConnector';
-import CurrentPrice from './components/CurrentPrice';
-import Toggle from './components/DateToggle';
-import { ChartComponent } from './components/Chart/ChartContext';
 import SimpleLoader from 'components/SimpleLoader';
 import { hoursToSeconds, minutesToSeconds, subDays } from 'date-fns';
+import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
+import snxJSConnector from 'utils/snxJSConnector';
+import { ChartComponent } from './components/Chart/ChartContext';
+import CurrentPrice from './components/CurrentPrice';
+import Toggle from './components/DateToggle';
 
 const now = new Date();
 
@@ -308,6 +308,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     margin-top: 15px;
+    z-index: 0;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 352px;
     }
