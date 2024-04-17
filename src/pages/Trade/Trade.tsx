@@ -136,6 +136,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     steps={getSteps(tradePageSteps, theme, isMobile)}
                     isOpen={showTour}
                     onRequestClose={() => {
+                        document.body.style.overflowY = 'auto';
                         dispatch(setShowTour(false));
                         localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
                     }}
