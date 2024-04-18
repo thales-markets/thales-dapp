@@ -99,6 +99,7 @@ export const IllustrationContainer = styled.div<{ width?: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 40px;
     @media screen and (max-width: 700px) {
         width: 100% !important;
         margin: 30px auto !important;

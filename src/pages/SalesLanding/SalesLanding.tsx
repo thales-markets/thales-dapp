@@ -162,81 +162,102 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
+                <H2>{t('sales-landing.sections.5.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
-                        <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                        <IllustrationContainer width="100%">
                             <AnimationSvg type="image/svg+xml" data={UPMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.2.content'}
-                                components={{
-                                    marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
-                                }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
-                        <AnimationSvg type="image/svg+xml" data={UPChart}></AnimationSvg>
-                    </IllustrationContainer>
-                </SectionWrapper>
-                <H2 id="section3">{t('sales-landing.sections.3.content-heading')}</H2>
-                <SectionWrapper>
-                    <ParagraphContainer width="60%">
-                        <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
-                            <AnimationSvg type="image/svg+xml" data={DOWNMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.3.content'}
-                                components={{
-                                    marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
-                                }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
-                        <AnimationSvg type="image/svg+xml" data={DOWNChart}></AnimationSvg>
-                    </IllustrationContainer>
-                </SectionWrapper>
-                <H2 id="section4">{t('sales-landing.sections.4.content-heading')}</H2>
-                <SectionWrapper>
-                    <ParagraphContainer width="60%">
-                        <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
-                            <AnimationSvg type="image/svg+xml" data={INMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.4.content'}
-                                components={{
-                                    marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
-                                }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
-                        <AnimationSvg type="image/svg+xml" data={INChart}></AnimationSvg>
-                    </IllustrationContainer>
-                </SectionWrapper>
-                <H2 id="section5">{t('sales-landing.sections.5.content-heading')}</H2>
-                <SectionWrapper>
-                    <ParagraphContainer width="60%">
-                        <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
-                            <AnimationSvg type="image/svg+xml" data={OUTMarket}></AnimationSvg>
                         </IllustrationContainer>
                         <Paragraph>
                             <Trans
                                 i18nKey={'sales-landing.sections.5.content'}
                                 components={{
-                                    marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                    br: <br />,
+                                    highlight: <HighlightParagraph />,
+                                    bold: <Bold />,
                                 }}
                             />
                         </Paragraph>
                     </ParagraphContainer>
-                    <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
+                    <IllustrationContainer width="40%">
+                        <AnimationSvg type="image/svg+xml" data={UPChart}></AnimationSvg>
+                    </IllustrationContainer>
+                </SectionWrapper>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.up-markets')}</Button>
+                </ButtonContainer>
+                <H2>{t('sales-landing.sections.6.content-heading')}</H2>
+                <SectionWrapper>
+                    <ParagraphContainer width="60%">
+                        <IllustrationContainer width="100%">
+                            <AnimationSvg type="image/svg+xml" data={DOWNMarket}></AnimationSvg>
+                        </IllustrationContainer>
+                        <Paragraph>
+                            <Trans
+                                i18nKey={'sales-landing.sections.6.content'}
+                                components={{
+                                    br: <br />,
+                                    highlight: <HighlightParagraph />,
+                                    bold: <Bold />,
+                                }}
+                            />
+                        </Paragraph>
+                    </ParagraphContainer>
+                    <IllustrationContainer width="40%">
+                        <AnimationSvg type="image/svg+xml" data={DOWNChart}></AnimationSvg>
+                    </IllustrationContainer>
+                </SectionWrapper>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.down-markets')}</Button>
+                </ButtonContainer>
+                <H2>{t('sales-landing.sections.7.content-heading')}</H2>
+                <SectionWrapper>
+                    <ParagraphContainer width="60%">
+                        <IllustrationContainer width="100%">
+                            <AnimationSvg type="image/svg+xml" data={INMarket}></AnimationSvg>
+                        </IllustrationContainer>
+                        <Paragraph>
+                            <Trans
+                                i18nKey={'sales-landing.sections.7.content'}
+                                components={{
+                                    br: <br />,
+                                    highlight: <HighlightParagraph />,
+                                    bold: <Bold />,
+                                }}
+                            />
+                        </Paragraph>
+                    </ParagraphContainer>
+                    <IllustrationContainer width="40%">
+                        <AnimationSvg type="image/svg+xml" data={INChart}></AnimationSvg>
+                    </IllustrationContainer>
+                </SectionWrapper>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.in-markets')}</Button>
+                </ButtonContainer>
+                <H2>{t('sales-landing.sections.8.content-heading')}</H2>
+                <SectionWrapper>
+                    <ParagraphContainer width="60%">
+                        <IllustrationContainer width="100%">
+                            <AnimationSvg type="image/svg+xml" data={OUTMarket}></AnimationSvg>
+                        </IllustrationContainer>
+                        <Paragraph>
+                            <Trans
+                                i18nKey={'sales-landing.sections.8.content'}
+                                components={{
+                                    br: <br />,
+                                    highlight: <HighlightParagraph />,
+                                    bold: <Bold />,
+                                }}
+                            />
+                        </Paragraph>
+                    </ParagraphContainer>
+                    <IllustrationContainer width="40%">
                         <AnimationSvg type="image/svg+xml" data={OUTChart}></AnimationSvg>
                     </IllustrationContainer>
                 </SectionWrapper>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.out-markets')}</Button>
+                </ButtonContainer>
                 <H2 id="section6">{t('sales-landing.sections.6.content-heading')}</H2>
                 <SectionWrapper flexDirection={'column'} style={{ marginTop: '80px' }}>
                     <ParagraphContainer width="100%">
