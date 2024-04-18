@@ -33,7 +33,7 @@ const defaultCustomStyles = {
     },
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 9999999,
+        zIndex: 9999998,
         backdropFilter: 'blur(10px)',
     },
 };
