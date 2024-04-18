@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import { RootState, UISliceState } from 'types/ui';
 
 const sliceName = 'ui';
@@ -17,6 +18,7 @@ const uiSlice = createSlice({
         },
         setShowTour: (state, action: PayloadAction<boolean>) => {
             state.showTour = action.payload;
+            localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
         },
     },
 });

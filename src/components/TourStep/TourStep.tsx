@@ -39,11 +39,6 @@ const TourStep: React.FC<TourStepProps> = ({ heading, content, currentStep, step
                     }}
                 />
             </Content>
-            {currentStep == 0 && (
-                <ImageWrapper>
-                    <img src="https://64.media.tumblr.com/7dc3c6aa5cffa120605c892d0941f743/tumblr_nqkeawwflK1tbq1geo1_540.gifv" />
-                </ImageWrapper>
-            )}
             <ButtonWrapper>
                 {currentStep == 0 && (
                     <NextButton onClick={() => goTo(currentStep + 1)}>{t('onboarding-tour.start-tutorial')}</NextButton>
@@ -167,16 +162,6 @@ const Step = styled.div<{ active?: boolean }>`
 
 const Bold = styled.span`
     font-weight: 800;
-`;
-
-const ImageWrapper = styled(FlexDiv)`
-    width: 100%;
-    margin: 15px 0px;
-    align-items: center;
-    justify-content: center;
-    img {
-        width: 80%;
-    }
 `;
 
 export default TourStep;

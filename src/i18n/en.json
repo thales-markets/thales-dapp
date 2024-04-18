@@ -1704,7 +1704,7 @@
         "steps": {
             "step-0": {
                 "title": "Welcome to the Thales Markets dapp!",
-                "content": "Learn how to use Thales Markets to trade Digital Options via this interactive tutorial."
+                "content": "Welcome to Thales Markets, your go-to platform for digital options trading.<br/><br/>Whether you're a seasoned trader or new to the game, we're here to provide you with a seamless experience. After completing this quick guide, you'll be able to trade digital options effortlessly. Let's get started!"
             },
             "step-1": {
                 "title": "Choose an Asset",
@@ -1716,7 +1716,7 @@
             },
             "step-3": {
                 "title": "Choose a Position",
-                "content": "In this table, you can see all the available options for your previously chosen Asset and Strike Date. Using the UP, DOWN, IN and OUT radio buttons, you choose a position type. After picking a position type, choose a strike price from the table by clicking on that row in the table.<br/><br/><bold>UP and DOWN</bold> positions allow you to place a trade on where the price of the chosen Asset will end up on the chosen Strike Date, above or below the quoted Strike Price in the left column.<br/><br/><bold>IN and OUT</bold> positions allow you to place a trade around what price range will the chosen Asset end up on at the Chosen Strike Date, inside or outside the quoted price range in the left column.<br><br/>Every available market is represented by a row in the table where you can also see a potential ROI of that market if you are to open a position and win."
+                "content": "In this table, you can see all the available options for your previously chosen Asset and Strike Date. Using the UP, DOWN, IN and OUT radio buttons, you choose a position type. After picking a position type, choose a strike price from the table by clicking on that row in the table.<br/><br/><bold>UP and DOWN</bold> positions allow you to place a trade on if the price of the chosen Asset will end up ABOVE or BELOW of chosen Strike Price on the chosen Strike Date.<br/><br/><bold>IN and OUT</bold> positions allow you to place a trade around will the price of chosen Asset end up INSIDE or OUTSIDE the chosen Strike Range on the chosen Strike Date.<br><br/>Every available market is represented by a row in the table where you can also see a potential ROI of that market if you are to open a position and win."
             },
             "step-4": {
                 "title": "Input your Buy-In amount",
