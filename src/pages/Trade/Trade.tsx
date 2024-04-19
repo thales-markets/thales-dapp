@@ -127,7 +127,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             document.documentElement.style.overflowX = 'hidden';
             document.documentElement.style.scrollBehavior = 'smooth';
         }
-    }, [isMobile, showTour]);
+    }, [showTour]);
 
     return (
         <Wrapper>
