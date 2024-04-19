@@ -1767,6 +1767,19 @@
                 "heading": "How to position for price going outside the range?",
                 "content-heading": "Digital options if you think the outcome will be outside a range (above or below)",
                 "content": "Let’s say you are convinced a major price movement will happen to a crypto-asset, but you are uncertain about the direction this movement will go. It could be up or could be down.<br/><br/>We got a solution for that too! Introducing the <bold>OUT token</bold>.<br/><br/>Continuing with the previous example, current ETH price of 1150 USD, you choose the same market with a range between 1000 and 1200 USD but this time you buy OUT tokens.<br><br/>For the sake of this example, let’s say you bought 2000 OUT tokens for 40 cents each. If at the target date the price is either above 1200 (remember, even by one cent) or below 1000 then the 800 USD you used to buy those 2000 OUT tokens will now be worth 2000 USD when you redeem those OUT tokens. Remember, 1 USD for each positional token representing the winning choice.<br><br/>These solutions are one of a kind in DeFi and let people <bold>access structured products that before were only reserved for a selected few.</bold>"
+            },
+            "9": {
+                "heading": "What asset movements can I predict using Thales Markets digital options?",
+                "content-heading": "What asset movements can I predict using Thales Markets digital options?",
+                "first-paragraph": "At the moment, you can predict the price movement and secure digital options using the following crypto assets on Thales Markets:",
+                "second-paragraph": "But wait! Did you think those were the only ways to be part of the action?<br>Keep reading!",
+                "list": {
+                    "btc": "<bold>BTC</bold> Bitcoin",
+                    "eth": "<bold>ETH</bold> Ethereum",
+                    "snx": "<bold>SNX</bold> Synthetix",
+                    "op": "<bold>OP</bold> Optimism",
+                    "link": "<bold>LINK</bold> Chainlink"
+                }
             }
         },
         "sections-short-version": {

@@ -258,7 +258,99 @@ const SalesLanding: React.FC = () => {
                 <ButtonContainer>
                     <Button>{t('sales-landing.buttons.out-markets')}</Button>
                 </ButtonContainer>
-                <H2 id="section6">{t('sales-landing.sections.6.content-heading')}</H2>
+                <H2>{t('sales-landing.sections.9.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.9.first-paragraph'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
+                <UnorderedList>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                </UnorderedList>
                 <SectionWrapper flexDirection={'column'} style={{ marginTop: '80px' }}>
                     <ParagraphContainer width="100%">
                         <Paragraph>
@@ -386,6 +478,19 @@ const Button = styled.a`
         padding-left: 10px;
         font-weight: 900;
         vertical-align: text-top;
+    }
+`;
+
+const UnorderedList = styled.ul`
+    margin: 20px 0px;
+    list-style-position: outside;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
+    list-style: disc;
+    li {
+        color: ${(props) => props.theme.landingPage.textColor.primary};
+        font-size: 21px;
+        line-height: 30px;
+        font-weight: 300;
     }
 `;
 
