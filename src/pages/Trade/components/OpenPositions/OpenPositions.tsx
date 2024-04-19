@@ -17,12 +17,11 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'styles/common';
 import { formatCurrencyWithSign } from 'thales-utils';
 import { ChainedSpeedMarket, UserLivePositions } from 'types/options';
-import { ThemeInterface } from 'types/ui';
+import { RootState, ThemeInterface } from 'types/ui';
 import { getDefaultCollateral } from 'utils/currency';
 import { getIsMultiCollateralSupported } from 'utils/network';
 import { resolveAllChainedMarkets, resolveAllSpeedPositions } from 'utils/speedAmm';
@@ -210,7 +209,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({
     const showClaimAll = isSpeedMarkets && hasClaimableSpeedPositions;
 
     return (
-        <Wrapper>
+        <Wrapper className="step-5">
             <Header>
                 <Title>{t('markets.user-positions.your-positions')}</Title>
                 {showClaimAll && (

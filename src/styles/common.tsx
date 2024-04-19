@@ -50,6 +50,7 @@ export const Colors = {
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
     GRAY_BLUE: '#808997',
+    GRAY_SILVER: '#D9D9D9',
 
     WHITE: '#FFFFFF',
 
@@ -84,6 +85,7 @@ export const Colors = {
 
     YELLOW: '#FFCC00',
     YELLOW_DARK: '#9b8327',
+    MUSTARD_YELLOW: '#DAAB03',
 
     PURPLE: '#BF7EFF',
 };

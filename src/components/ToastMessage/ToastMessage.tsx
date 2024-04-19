@@ -69,6 +69,7 @@ export const toastBasicProperties = {
     progress: undefined,
     isLoading: false,
     closeButton: false,
+    zIndex: 9999999,
 };
 
 export const getSuccessToastOptions = (message: string | React.ReactNode, id: ReactText, options?: ToastOptions) => {
