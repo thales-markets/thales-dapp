@@ -59,7 +59,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
                     {allDates.length > 1 && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                 </Container>
                 {open && allDates.length > 1 && (
-                    <Dropdown onClick={() => setOpen(!open)}>
+                    <Dropdown onClick={() => setOpen(!open)} className="step-2-dropdown">
                         {allDates.map((_date, index) => (
                             <DateContainer key={index}>
                                 <DatePrint onClick={() => setDate(_date)}>

@@ -127,7 +127,8 @@
             "approve-swap": "Approve swap to {{currencyKey}}"
         },
         "header": {
-            "refer-earn": "Refer & earn",
+            "refer-earn": "Referral",
+            "tutorial": "Tutorial",
             "notification": { "tooltip": "You have {{count}} claimable position(s)" }
         },
         "footer": {
@@ -1694,5 +1695,37 @@
         "speed-markets-banner": "Join the Speed Markets trading competition! Compete for 30,000 Thales from Sep 20 - Oct 11!",
         "temp-check-banner-message": "Tokenomics temp check. Cast your vote here!",
         "arb-distribution-message": "ARB distribution has started. Earn ARB tokens by using Thales products. Checkout the details here."
+    },
+    "onboarding-tour": {
+        "back": "Back",
+        "next": "Next",
+        "start-tutorial": "Start tutorial!",
+        "start-trading": "Start trading!🎉",
+        "steps": {
+            "step-0": {
+                "title": "Welcome to the Thales Markets dapp!",
+                "content": "Welcome to Thales Markets, your go-to platform for digital options trading.<br/><br/>Whether you're a seasoned trader or new to the game, we're here to provide you with a seamless experience. After completing this quick guide, you'll be able to trade digital options effortlessly. Let's get started!"
+            },
+            "step-1": {
+                "title": "Choose an Asset",
+                "content": "Use this dropdown to pick an Asset around which you want to trade. After you click on your desired asset, you will be able to see the assets historical price movement on the chart below."
+            },
+            "step-2": {
+                "title": "Choose a Strike Date",
+                "content": "After choosing an Asset, now it’s time to pick a Strike Date for your Digital Option. Click on this dropdown to see a list of all available Strike Dates for the previously chosen Asset."
+            },
+            "step-3": {
+                "title": "Choose a Position",
+                "content": "In this table, you can see all the available options for your previously chosen Asset and Strike Date. Using the UP, DOWN, IN and OUT radio buttons, you choose a position type. After picking a position type, choose a strike price from the table by clicking on that row in the table.<br/><br/><bold>UP and DOWN</bold> positions allow you to place a trade on if the price of the chosen Asset will end up ABOVE or BELOW of chosen Strike Price on the chosen Strike Date.<br/><br/><bold>IN and OUT</bold> positions allow you to place a trade around will the price of chosen Asset end up INSIDE or OUTSIDE the chosen Strike Range on the chosen Strike Date.<br><br/>Every available market is represented by a row in the table where you can also see a potential ROI of that market if you are to open a position and win."
+            },
+            "step-4": {
+                "title": "Input your Buy-In amount",
+                "content": "Final step is to input your desired Buy-In amount and read the summary of your final position before confirming the trade. In the right side input field, select your collateral type and then input your buy-in amount in the input field.<br/><br/>After inputting the buy-in amount, you will be able to see a final summary of your Digital Option you are about to open.<br/><br/>If you are pleased with the summarized trade and your potential win, click on the BUY button and confirm the transaction."
+            },
+            "step-5": {
+                "title": "Manage your open positions",
+                "content": "You can see all your open positions in this table below. Positions that you won will have yellow <bold>CLAIM NOW</bold> buttons that you use to claim your win. Some positions that are still not matured will have a Cash Out option available that allow you to exit your position early for a reduced payout."
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ export type WalletSliceState = {
 
 export type UISliceState = {
     isMobile: boolean;
+    showTour: boolean;
 };
 
 export type MarketWidgetsSliceState = {

@@ -50,7 +50,7 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
                     marketsCount={marketsQueryData.find((item) => item.asset == asset)?.count || undefined}
                 />
                 {open && allAssets.length > 1 && (
-                    <AssetContainer>
+                    <AssetContainer className="step-1-dropdown">
                         {allAssets.map((_asset, index) => (
                             <Asset
                                 key={index}

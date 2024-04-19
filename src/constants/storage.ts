@@ -3,6 +3,8 @@ export const LOCAL_STORAGE_KEYS = {
 
     REFERRAL_WALLET: 'referralId',
 
+    NEW_USER_TOUR: 'newUserTour',
+
     MARKET_WIDGET_CURRENT_LAYOUT: 'marketWidgetCurrentLayout',
     MARKET_WIDGET_FULL_LAYOUT: 'marketWidgetFullLayout',
     MARKET_WIDGET_VISIBILITY_MAP: 'marketWidgetVisibilityMap',

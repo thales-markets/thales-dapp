@@ -1,7 +1,10 @@
 import PageLinkBanner from 'components/PageLinkBanner';
 import Tooltip from 'components/Tooltip/Tooltip';
+import TourStep from 'components/TourStep';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import { tradePageSteps } from 'constants/tour';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
@@ -9,14 +12,17 @@ import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndD
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import styled from 'styled-components';
+import { getIsMobile, getShowTour, setShowTour } from 'redux/modules/ui';
+import { getNetworkId } from 'redux/modules/wallet';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
-import { RootState } from 'types/ui';
+import { Step } from 'types/tour';
+import { RootState, ThemeInterface } from 'types/ui';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -28,11 +34,14 @@ import AssetTable from './components/Table';
 
 const TradePage: React.FC<RouteComponentProps> = (props) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+    const dispatch = useDispatch();
 
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const showTour = useSelector((state: RootState) => getShowTour(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
@@ -102,13 +111,50 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         }
     };
 
+    const startTourForNewUser = localStorage.getItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR);
+
+    useEffect(() => {
+        if (startTourForNewUser == null && !isMobile) {
+            dispatch(setShowTour(true));
+        }
+    }, [dispatch, isMobile, startTourForNewUser]);
+
+    useEffect(() => {
+        if (showTour) {
+            document.documentElement.style.overflowX = 'inherit';
+            document.documentElement.style.scrollBehavior = 'inherit';
+        } else {
+            document.documentElement.style.overflowX = 'hidden';
+            document.documentElement.style.scrollBehavior = 'smooth';
+        }
+    }, [showTour]);
+
     return (
         <Wrapper>
+            {showTour && (
+                <Tour
+                    steps={getSteps(tradePageSteps, theme, isMobile)}
+                    isOpen={showTour}
+                    onRequestClose={() => {
+                        document.body.style.overflowY = 'auto';
+                        dispatch(setShowTour(false));
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.NEW_USER_TOUR, 'false');
+                    }}
+                    showNumber={false}
+                    disableDotsNavigation={true}
+                    closeWithMask={false}
+                    showButtons={false}
+                    showNavigation={false}
+                    disableFocusLock={true}
+                    onAfterOpen={() => (document.body.style.overflowY = 'hidden')}
+                    onBeforeClose={() => (document.body.style.overflowY = 'auto')}
+                />
+            )}
             <BannerCarousel />
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>
-                        <AssetWrapper>
+                        <AssetWrapper className="step-1">
                             <Tooltip overlay={t('markets.steps.tooltip.choose-asset')}>
                                 <Info>{t('markets.steps.choose-asset')}</Info>
                             </Tooltip>
@@ -116,7 +162,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
                             )}
                         </AssetWrapper>
-                        <DatesWrapper>
+                        <DatesWrapper className="step-2">
                             <Tooltip overlay={t('markets.steps.tooltip.choose-date')}>
                                 <Info>{t('markets.steps.choose-date')}</Info>
                             </Tooltip>
@@ -137,7 +183,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                         selectedDate={maturityDate}
                     ></LightweightChart>
                 </LeftSide>
-                <RightSide>
+                <RightSide className="step-3">
                     <PositionedWrapper>
                         <Info>{t('markets.steps.choose-direction')}</Info>
                         <RadioButtons
@@ -179,7 +225,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             <BannerWrapper>
                 <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
             </BannerWrapper>
-            {isWalletConnected && <OpenPositions />}
+            <OpenPositions />
         </Wrapper>
     );
 };
@@ -206,9 +252,10 @@ const ContentWrapper = styled.div`
 `;
 
 const AssetWrapper = styled(FlexDivColumnCentered)`
+    display: block;
     position: relative;
     text-align: center;
-    z-index: 9999;
+    z-index: 2;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         z-index: 10000;
@@ -218,7 +265,7 @@ const AssetWrapper = styled(FlexDivColumnCentered)`
 const DatesWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
-    z-index: 9999;
+    z-index: 2;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
@@ -279,5 +326,31 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
 const BannerWrapper = styled.div`
     margin-top: 20px;
 `;
+
+const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): ReactourStep[] => {
+    return steps.map((item, index) => {
+        return {
+            selector: item.selector,
+            content: ({ goTo }) => (
+                <TourStep
+                    heading={item.heading}
+                    content={item.content}
+                    currentStep={index}
+                    stepsCount={steps.length}
+                    goTo={goTo}
+                    key={`tour-${index}`}
+                />
+            ),
+            highlightedSelectors: item.highlightedSelectors,
+            mutationObservables: item.highlightedSelectors,
+            position: isMobile ? (index > 2 ? 'top' : 'bottom') : undefined,
+            style: {
+                borderRadius: '8px',
+                minWidth: isMobile ? '100%' : '450px',
+                backgroundColor: theme.tour.background.primary,
+            },
+        };
+    });
+};
 
 export default TradePage;
