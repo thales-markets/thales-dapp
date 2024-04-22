@@ -34,7 +34,6 @@ import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 
-import termsOfUseReferral from 'assets/docs/thales-terms-of-use.pdf';
 import Footer from 'pages/LandingPage/components/Footer';
 import styled from 'styled-components';
 
@@ -282,7 +281,7 @@ const SalesLanding: React.FC = () => {
                     </li>
                     <li>
                         <Trans
-                            i18nKey={'sales-landing.sections.9.list.btc'}
+                            i18nKey={'sales-landing.sections.9.list.eth'}
                             components={{
                                 br: <br />,
                                 highlight: <HighlightParagraph />,
@@ -351,75 +350,133 @@ const SalesLanding: React.FC = () => {
                         />
                     </li>
                 </UnorderedList>
-                <SectionWrapper flexDirection={'column'} style={{ marginTop: '80px' }}>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.6.first-paragraph'}
-                                components={{ a: <a href={buildHref(ROUTES.Options.Referral)} /> }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
-                        <iframe
-                            width="100%"
-                            height="480"
-                            src="https://www.youtube.com/embed/oHSSOnXqLwU"
-                            frameBorder="0"
-                            allowFullScreen
-                        ></iframe>
-                    </IllustrationContainer>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.6.second-paragraph'}
-                                components={{ this: <a href={buildHref(termsOfUseReferral)} /> }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                </SectionWrapper>
-                <H2 id="section7">{t('sales-landing.sections.7.content-heading')}</H2>
-                <SectionWrapper flexDirection={'column'}>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans
-                                i18nKey={'sales-landing.sections.7.first-paragraph'}
-                                components={{
-                                    poslink: <a href={buildHref(ROUTES.Options.Overview)} />,
-                                    rangelink: <a href={buildHref(ROUTES.Options.RangeMarkets)} />,
-                                }}
-                            />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
-                        <iframe
-                            width="100%"
-                            height="480"
-                            src="https://www.youtube.com/embed/8oIgCT8GTd0"
-                            frameBorder="0"
-                            allowFullScreen
-                        ></iframe>
-                    </IllustrationContainer>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans i18nKey={'sales-landing.sections.7.second-paragraph'} />
-                        </Paragraph>
-                    </ParagraphContainer>
-                    <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
-                        <iframe
-                            width="100%"
-                            height="480"
-                            src="https://www.youtube.com/embed/MXqt3itSCgw"
-                            frameBorder="0"
-                            allowFullScreen
-                        ></iframe>
-                    </IllustrationContainer>
-                    <ParagraphContainer width="100%">
-                        <Paragraph>
-                            <Trans i18nKey={'sales-landing.sections.7.third-paragraph'} />
-                        </Paragraph>
-                    </ParagraphContainer>
-                </SectionWrapper>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.9.second-paragraph'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
+                <H2>{t('sales-landing.sections.10.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.10.content'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                            link: <a href="test.com" target="_blank" />,
+                        }}
+                    />
+                </Paragraph>
+                <UnorderedList>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.10.list.1'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.10.list.2'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.10.list.3'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.10.list.4'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                    <li>
+                        <Trans
+                            i18nKey={'sales-landing.sections.10.list.5'}
+                            components={{
+                                br: <br />,
+                                highlight: <HighlightParagraph />,
+                                bold: <Bold />,
+                            }}
+                        />
+                    </li>
+                </UnorderedList>
+                <ButtonContainer>
+                    <Button>{t('sales-landing.buttons.speed-markets')}</Button>
+                </ButtonContainer>
+                <H2>{t('sales-landing.sections.11.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.11.content'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
+                <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
+                    <iframe
+                        width="100%"
+                        height="480"
+                        src="https://www.youtube.com/embed/oHSSOnXqLwU"
+                        allowFullScreen
+                    ></iframe>
+                </IllustrationContainer>
+                <H2>{t('sales-landing.sections.12.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.12.content'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
+                <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
+                    <iframe
+                        width="100%"
+                        height="480"
+                        src="https://www.youtube.com/embed/8oIgCT8GTd0"
+                        frameBorder="0"
+                        allowFullScreen
+                    ></iframe>
+                </IllustrationContainer>
+                <H2>{t('sales-landing.sections.13.content-heading')}</H2>
+                <Paragraph>
+                    <Trans
+                        i18nKey={'sales-landing.sections.13.content'}
+                        components={{
+                            br: <br />,
+                            highlight: <HighlightParagraph />,
+                            bold: <Bold />,
+                        }}
+                    />
+                </Paragraph>
                 <ButtonContainer>
                     <Button href={buildHref(ROUTES.Options.Overview)}>
                         {t('sales-landing.button-positional-markets')}
@@ -483,9 +540,9 @@ const Button = styled.a`
 
 const UnorderedList = styled.ul`
     margin: 20px 0px;
-    list-style-position: outside;
-    color: ${(props) => props.theme.landingPage.textColor.primary};
+    list-style-position: inside !important;
     list-style: disc;
+    color: ${(props) => props.theme.landingPage.textColor.primary};
     li {
         color: ${(props) => props.theme.landingPage.textColor.primary};
         font-size: 21px;
