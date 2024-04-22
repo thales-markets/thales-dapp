@@ -93,4 +93,8 @@ export const LINKS = {
         Governance: 'https://thales.io/dao',
     },
     SpeedMarkets: 'https://speedmarkets.xyz',
+    Docs: {
+        LP: 'https://docs.thalesmarket.io/using-thales/providing-liquidity-for-thales-amm',
+    },
+    TermsOfUse: 'https://thalesmarket.io/static/media/thales-terms-of-use.9f69e9a2.pdf',
 };

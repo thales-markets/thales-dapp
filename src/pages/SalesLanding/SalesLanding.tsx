@@ -34,6 +34,7 @@ import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
 
+import { LINKS } from 'constants/links';
 import Footer from 'pages/LandingPage/components/Footer';
 import styled from 'styled-components';
 
@@ -368,7 +369,7 @@ const SalesLanding: React.FC = () => {
                             br: <br />,
                             highlight: <HighlightParagraph />,
                             bold: <Bold />,
-                            link: <a href="test.com" target="_blank" />,
+                            pythLink: <a target="_blank" href={LINKS.Pyth} rel="noreferrer" />,
                         }}
                     />
                 </Paragraph>
@@ -435,6 +436,7 @@ const SalesLanding: React.FC = () => {
                             br: <br />,
                             highlight: <HighlightParagraph />,
                             bold: <Bold />,
+                            termsOfUse: <a target="_blank" href={LINKS.TermsOfUse} rel="noreferrer" />,
                         }}
                     />
                 </Paragraph>
@@ -474,6 +476,8 @@ const SalesLanding: React.FC = () => {
                             br: <br />,
                             highlight: <HighlightParagraph />,
                             bold: <Bold />,
+                            stakingUrl: <a target="_blank" href={LINKS.ThalesStaking} rel="noreferrer" />,
+                            lpDocs: <a target="_blank" href={LINKS.Docs.LP} rel="noreferrer" />,
                         }}
                     />
                 </Paragraph>
