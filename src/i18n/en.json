@@ -1736,9 +1736,9 @@
                 "title": "What are the different types of digital options?",
                 "content": "These are some of the common types of digital options:",
                 "list": {
-                    "1": "Up/down: Up/down digital option contracts are more straightforward in structure as they involve predicting whether the market will move above or below its current value when it expires.",
-                    "2": "One-touch: One-touch options require traders to determine whether an asset’s price will reach a specific level before expiry.",
-                    "3": "Range: Range trading involves predicting if an asset will remain within defined boundaries over its target period in order for profits to be realized upon expiry."
+                    "1": "<bold>Up/down</bold>: Up/down digital option contracts involve predicting whether an asset will move above or below its current value when it expires. For example, will the price of ETH be UP/DOWN (i.e. above or below) $4,000 on December 1, 2024?",
+                    "2": "<bold>Ranged</bold>: Ranged options or ranged trading involves predicting if an asset will remain within a defined range over its target period in order for profits to be realized upon expiry. For example, will BTC be IN/OUT (within or outside) $68,000 - $72,000 on December 1, 2024?",
+                    "3": "<bold>One-touch</bold>: One-touch options require traders to determine whether an asset's price will reach a specific level before expiry. For example, will BTC touch $75,000 by December 1, 2024?"
                 }
             },
             "2": {
@@ -1758,6 +1758,14 @@
                     "3": "Enjoying full transparency into the performance of the liquidity pool",
                     "4": "Being able to withdraw and deposit funds seamlessly and intuitively"
                 }
+            },
+            "5": {
+                "title": "What are the advantages of using AMM-based digital options platforms?",
+                "content": "Some of the biggest advantages of using AMM-based digital options platforms include:<br/><br/><bold>Increased liquidity</bold>:<br/><br/>AMMs are great at providing liquidity for trading pairs, even for lesser-known tokens. Traditional exchanges rely on order books that require buyers and sellers to match their orders, leading to potential liquidity problems. Unlike them, AMMs use liquidity pools that allow users to trade directly against the pool, providing consistent liquidity at all times.<br/><br/><bold>Decentralization and Trustlessness</bold><br/><br/>AMMs operate on decentralized networks and eliminate the need for intermediaries thanks to their smart contract architecture. This decentralization ensures that trades are executed directly between participants, removing the need to trust a central authority. Transactions on AMMs are transparent and verifiable on the blockchain, enhancing trust and security. It’s for this reason they are considered trustless and permissionless.<br/><br/> <bold>Ease of registration for users</bold><br/><br/>Traditional exchanges often have deliberately complex registration processes, including Know Your Customer (KYC) requirements such as submitting your passport or ID number. AMMs, on the other hand, usually offer a more user-friendly experience, allowing anyone with a compatible crypto wallet such as Rabby or Metamask to participate. This opens up cryptocurrency trading to a larger audience.<br/><br/><bold>Lower trading fees</bold><br/><br/>AMMs normally have much lower trading fees compared to traditional exchanges. Instead of charging fixed commissions, AMMs charge a percentage-based fee on trades. This fee is shared among liquidity providers. This is a great way to incentivize users to contribute to the liquidity pools. The lack of intermediaries allows for lower overhead costs, resulting in cost savings for traders."
+            },
+            "6": {
+                "title": "What are the risks of trading digital options?",
+                "content": "Trading digital options is by no means risk-free. Here are the two most important things you need to look out for when participating in digital options markets:<br/><br/><bold>Market volatility</bold><br/><br/>Digital options prices depend on a number of factors, including the underlying asset and its current market price as well as other economic or political events and internal positions secured by users on a digital options platform. It is important to stay up to date with news related to the assets you’re trading in order to maximize profits. Even then, there’s no guarantee of winning.<br/><br/><bold>Fake or misleading dApps</bold><br/><br/>One of the biggest risks associated with digital options trading is the possibility of fraud. Make sure you are trading on a legitimate digital options and keep an eye out for lookalikes and impostors who might be running a scam. The best way to do this is to research their background, read URLs very carefully and use links from official channels like X, Discord, Medium, and others."
             }
         },
         "sections": {
