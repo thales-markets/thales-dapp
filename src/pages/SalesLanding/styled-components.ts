@@ -109,6 +109,7 @@ export const IllustrationContainer = styled.div<{ width?: string }>`
 export const Content = styled.div`
     max-width: 1122px;
     margin: 0 auto;
+    font-family: Nunito !important;
     @media (max-width: 1024px) {
         width: 100vw;
         padding: 0 40px;

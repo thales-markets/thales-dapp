@@ -31,12 +31,11 @@ import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
 import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
 import UPChart from 'assets/images/sales-funnel/UPchart.svg';
 import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
-import ROUTES from 'constants/routes';
-import { buildHref } from 'utils/routes';
 
 import { LINKS } from 'constants/links';
 import Footer from 'pages/LandingPage/components/Footer';
 import styled from 'styled-components';
+import FAQ from './components/FAQ';
 
 const SalesLanding: React.FC = () => {
     const { t } = useTranslation();
@@ -78,13 +77,19 @@ const SalesLanding: React.FC = () => {
                                     <HashLink to="#section3">{t('sales-landing.sections.3.heading')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <HashLink to="#section4">{t('sales-landing.sections.4.heading')}</HashLink>
-                                </ListItem>
-                                <ListItem>
                                     <HashLink to="#section5">{t('sales-landing.sections.5.heading')}</HashLink>
                                 </ListItem>
                                 <ListItem>
                                     <HashLink to="#section6">{t('sales-landing.sections.6.heading')}</HashLink>
+                                </ListItem>
+                                <ListItem>
+                                    <HashLink to="#section7">{t('sales-landing.sections.7.heading')}</HashLink>
+                                </ListItem>
+                                <ListItem>
+                                    <HashLink to="#section8">{t('sales-landing.sections.8.heading')}</HashLink>
+                                </ListItem>
+                                <ListItem>
+                                    <HashLink to="#section11">{t('sales-landing.sections.11.heading')}</HashLink>
                                 </ListItem>
                             </NestedList>
                         </List>
@@ -99,7 +104,7 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
-                <H2 id="section1">{t('sales-landing.sections.2.heading')}</H2>
+                <H2 id="section2">{t('sales-landing.sections.2.heading')}</H2>
                 <Paragraph>
                     <Trans
                         i18nKey={'sales-landing.sections.2.content'}
@@ -108,7 +113,7 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
-                <H2 id="section1">{t('sales-landing.sections.3.heading')}</H2>
+                <H2 id="section3">{t('sales-landing.sections.3.heading')}</H2>
                 <Paragraph>
                     <Trans
                         i18nKey={'sales-landing.sections.3.first-paragraph'}
@@ -162,7 +167,7 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
-                <H2>{t('sales-landing.sections.5.content-heading')}</H2>
+                <H2 id="section5">{t('sales-landing.sections.5.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
                         <IllustrationContainer width="100%">
@@ -186,7 +191,7 @@ const SalesLanding: React.FC = () => {
                 <ButtonContainer>
                     <Button>{t('sales-landing.buttons.up-markets')}</Button>
                 </ButtonContainer>
-                <H2>{t('sales-landing.sections.6.content-heading')}</H2>
+                <H2 id="section6">{t('sales-landing.sections.6.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
                         <IllustrationContainer width="100%">
@@ -210,7 +215,7 @@ const SalesLanding: React.FC = () => {
                 <ButtonContainer>
                     <Button>{t('sales-landing.buttons.down-markets')}</Button>
                 </ButtonContainer>
-                <H2>{t('sales-landing.sections.7.content-heading')}</H2>
+                <H2 id="section7">{t('sales-landing.sections.7.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
                         <IllustrationContainer width="100%">
@@ -234,7 +239,7 @@ const SalesLanding: React.FC = () => {
                 <ButtonContainer>
                     <Button>{t('sales-landing.buttons.in-markets')}</Button>
                 </ButtonContainer>
-                <H2>{t('sales-landing.sections.8.content-heading')}</H2>
+                <H2 id="section8">{t('sales-landing.sections.8.content-heading')}</H2>
                 <SectionWrapper>
                     <ParagraphContainer width="60%">
                         <IllustrationContainer width="100%">
@@ -428,7 +433,7 @@ const SalesLanding: React.FC = () => {
                 <ButtonContainer>
                     <Button>{t('sales-landing.buttons.speed-markets')}</Button>
                 </ButtonContainer>
-                <H2>{t('sales-landing.sections.11.content-heading')}</H2>
+                <H2 id="section11">{t('sales-landing.sections.11.content-heading')}</H2>
                 <Paragraph>
                     <Trans
                         i18nKey={'sales-landing.sections.11.content'}
@@ -481,14 +486,8 @@ const SalesLanding: React.FC = () => {
                         }}
                     />
                 </Paragraph>
-                <ButtonContainer>
-                    <Button href={buildHref(ROUTES.Options.Overview)}>
-                        {t('sales-landing.button-positional-markets')}
-                    </Button>
-                    <Button href={buildHref(ROUTES.Options.RangeMarkets)}>
-                        {t('sales-landing.button-range-markets')}
-                    </Button>
-                </ButtonContainer>
+                <H2>{t('sales-landing.faq.title')}</H2>
+                <FAQ />
             </Content>
             <Footer />
         </Background>
