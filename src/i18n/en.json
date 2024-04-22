@@ -255,12 +255,22 @@
         },
         "faq": {
             "title": "FAQ",
-            "firstQ": "What is a Parimutuel Market?",
-            "firstA": "The definition of a Parimutuel Market is a market where collateral is placed in a pool and final payout to participants is not determined until the market-settling event is finalized.",
-            "secondQ": "What type of collateral do Thales' Parimutuel Markets support?",
-            "secondA": "Thales smart contracts exclusively support sUSD, an uncensorable and decentralized stablecoin, as collateral. This stablecoin is the flagship product of Synthetix.",
-            "thirdQ": "What is the utility of the THALES token?",
-            "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
+            "1": {
+                "question": "What are digital options?",
+                "answer": "Digital Options are financial exotic options in which the payoff is a fixed monetary amount or nothing at all. With Digital Options, you are presented with the potential payout and loss for a specific price condition on a certain date and time before you execute a trade. After you execute a trade on where will the price of a certain asset end up on a specific date, you will either win a fixed amount presented on execution, or lose your initial collateral of the trade."
+            },
+            "2": {
+                "question": "What type of Digital Options are supported on Thales Markets?",
+                "answer": "On Thales Markets you can trade either UP/DOWN options or IN/OUT options. UP/DOWN options revolve around the condition on if the price of a selected asset will be above or below a chosen strike price on a chosen strike date. IN/OUT range options revolve around the condition on if the price of a selected asset will be inside or outside of a selected price range on a chosen strike date."
+            },
+            "3": {
+                "question": "What type of collateral is supported for trading on Thales Markets?",
+                "answer": "On Optimism, you can trade with sUSD, USDT, USDC or DAI. On Arbitrum you can trade with USDC.e and on Base you can trade with USDbC."
+            },
+            "4": {
+                "question": "After I place a trade, can I cash out the option early or do I need to wait for the maturity date?",
+                "answer": "On Thales Markets you can Cash Out a trade before maturity date if your open position falls under the liquidity limits. You can read more on liquidity limits on this docs page."
+            }
         },
         "header": {
             "links": {
@@ -1719,6 +1729,36 @@
             "in-markets": "Go to IN Markets",
             "out-markets": "Go to OUT Markets",
             "speed-markets": "Enter Speed Markets"
+        },
+        "faq": {
+            "title": "FAQ",
+            "1": {
+                "title": "What are the different types of digital options?",
+                "content": "These are some of the common types of digital options:",
+                "list": {
+                    "1": "Up/down: Up/down digital option contracts are more straightforward in structure as they involve predicting whether the market will move above or below its current value when it expires.",
+                    "2": "One-touch: One-touch options require traders to determine whether an asset’s price will reach a specific level before expiry.",
+                    "3": "Range: Range trading involves predicting if an asset will remain within defined boundaries over its target period in order for profits to be realized upon expiry."
+                }
+            },
+            "2": {
+                "title": "What do you need to trade digital options on Thales Markets?",
+                "content": "All you need to trade digital options on Thales Markets is a crypto wallet such as Metamask or Rabby. Since you can use Thales Markets on L2 Ethereum networks (Optimism, Arbitrum, Base, ZkSync, and Polygon), you need to bridge funds to them to start trading."
+            },
+            "3": {
+                "title": "How do liquidity pools and liquidity providing work?",
+                "content": "Liquidity providing involves users depositing stablecoin collateral into a smart contract-based liquidity pool. In this way, the user practically ’becomes the house’ and partakes in the liquidity pool’s profits and losses. The collateral deposited is used to facilitate trading on the digital options platform.\n\nAt the end of each trading round, the proportional share of that round's PnL is added to a trader’s deposited balance. It’s important to note providing liquidity exposes you to various risks including potential losses due to digital options platform users winning in trading, as well as smart contract security risks. Trustworthy dApps should always be transparent about the profits and losses of their liquidity pools."
+            },
+            "4": {
+                "title": "What are some of the benefits of participating in a Thales Markets liquidity pool?",
+                "content": "The benefits of participating in a Thales Markets liquidity pool include:",
+                "list": {
+                    "1": "Sharing a percentage of the dApp’s PnL every week",
+                    "2": "Hedging and reducing losses in prediction markets",
+                    "3": "Enjoying full transparency into the performance of the liquidity pool",
+                    "4": "Being able to withdraw and deposit funds seamlessly and intuitively"
+                }
+            }
         },
         "sections": {
             "1": {
