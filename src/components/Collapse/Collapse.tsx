@@ -40,10 +40,11 @@ const Highlight = styled.div<{
 }>`
     color: ${(props) => props.theme.landingPage.textColor.primary};
     cursor: ${(props) => (props.cursor ? props.cursor : 'default')};
-    font-family: Nunito;
+    font-family: NunitoExtraLight !important;
     font-size: 24px;
     font-style: normal;
     line-height: 140%;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
