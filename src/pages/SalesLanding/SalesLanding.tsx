@@ -32,9 +32,13 @@ import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
 import UPChart from 'assets/images/sales-funnel/UPchart.svg';
 import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
 
+import LeftGlobe from 'assets/images/sales-funnel/left.svg';
+import RightGlobe from 'assets/images/sales-funnel/right.svg';
+
 import { LINKS } from 'constants/links';
 import Footer from 'pages/LandingPage/components/Footer';
 import styled from 'styled-components';
+import { FlexDiv } from 'styles/common';
 import FAQ from './components/FAQ';
 
 const SalesLanding: React.FC = () => {
@@ -65,6 +69,9 @@ const SalesLanding: React.FC = () => {
                 </FirstParagraph>
                 <SectionWrapper>
                     <ListWrapper>
+                        <GlobeImageWrapper>
+                            <Image type="image/svg+xml" data={LeftGlobe}></Image>
+                        </GlobeImageWrapper>
                         <List>
                             <NestedList>
                                 <ListItem>
@@ -92,7 +99,11 @@ const SalesLanding: React.FC = () => {
                                     <HashLink to="#section11">{t('sales-landing.sections.11.heading')}</HashLink>
                                 </ListItem>
                             </NestedList>
+                            <EnterButton href={LINKS.Markets.Home}>{t('sales-landing.buttons.enter-dapp')}</EnterButton>
                         </List>
+                        <GlobeImageWrapper>
+                            <Image type="image/svg+xml" data={RightGlobe}></Image>
+                        </GlobeImageWrapper>
                     </ListWrapper>
                 </SectionWrapper>
                 <H2 id="section1">{t('sales-landing.sections.1.heading')}</H2>
@@ -541,6 +552,13 @@ const Button = styled.a`
     }
 `;
 
+const EnterButton = styled(Button)`
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+`;
+
 const UnorderedList = styled.ul`
     margin: 20px 0px;
     list-style-position: inside !important;
@@ -552,6 +570,14 @@ const UnorderedList = styled.ul`
         line-height: 30px;
         font-weight: 300;
     }
+`;
+
+const GlobeImageWrapper = styled(FlexDiv)`
+    height: auto;
+`;
+
+const Image = styled.object`
+    height: 350px;
 `;
 
 export default SalesLanding;

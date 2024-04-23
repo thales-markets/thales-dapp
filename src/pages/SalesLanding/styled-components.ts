@@ -116,32 +116,18 @@ export const Content = styled.div`
     }
 `;
 
-export const ListWrapper = styled.div`
-    position: relative;
-    border: 3px solid ${(props) => props.theme.landingPage.textColor.tertiary};
-    border-radius: 7px;
-    width: 70%;
-    @media (max-width: 600px) {
-        width: 100%;
-    }
+export const ListWrapper = styled(FlexDiv)`
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 `;
 
-export const List = styled.ul`
-    list-style: disc;
-    color: var(--color);
-    margin-left: 2em;
+export const List = styled(FlexDiv)`
+    border: 3px solid ${(props) => props.theme.landingPage.textColor.tertiary};
+    border-radius: 7px;
     padding: 1.5em;
-    & > li {
-        font-family: Nunito !important;
-        font-style: normal;
-        font-size: 1.4em;
-        font-weight: 700;
-        line-height: 170%;
-        height: 2em;
-    }
-    @media (max-width: 600px) {
-        margin-left: 1em;
-    }
+    position: relative;
 `;
 
 export const NestedList = styled.ul`

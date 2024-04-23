@@ -1728,7 +1728,8 @@
             "up-markets": "Go to UP Markets",
             "in-markets": "Go to IN Markets",
             "out-markets": "Go to OUT Markets",
-            "speed-markets": "Enter Speed Markets"
+            "speed-markets": "Enter Speed Markets",
+            "enter-dapp": "Enter Dapp"
         },
         "faq": {
             "title": "FAQ",
