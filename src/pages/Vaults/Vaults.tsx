@@ -1,5 +1,4 @@
 import ElectionsBanner from 'components/ElectionsBanner';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import React from 'react';
 import { Container, Title, Wrapper } from './styled-components';
 import VaultOverview from './VaultOverview';
@@ -10,7 +9,6 @@ const Vault: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
             <ElectionsBanner />
             <Wrapper>
                 <Title>{t('vaults.title')}</Title>

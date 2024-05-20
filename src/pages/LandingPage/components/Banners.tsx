@@ -5,7 +5,6 @@ import { SUPPORTED_NETWORK_IDS_MAP } from 'utils/network';
 import { navigateTo, buildHref } from 'utils/routes';
 import { Network } from 'enums/network';
 import ElectionsBanner from 'components/ElectionsBanner';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import { Info } from './styled-components';
 
 const INFORMATION_BANNER_ACTIVE = false;
@@ -13,7 +12,6 @@ const INFORMATION_BANNER_ACTIVE = false;
 const Banners: React.FC = () => {
     return (
         <>
-            <OpRewardsBanner isLandingPage={true} />
             <ElectionsBanner isLandingPage={true} />
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>
