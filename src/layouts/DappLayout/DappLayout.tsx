@@ -18,7 +18,6 @@ import { ScreenSizeBreakpoint } from '../../enums/ui';
 import DappFooter from './DappFooter';
 import DappHeader from './DappHeader';
 import DappSidebar from './DappSidebar';
-import { Network } from 'enums/network';
 import Banner from 'components/Banner';
 
 type DappLayoutProps = {
@@ -91,7 +90,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     return (
         <Background id="main-content">
-            {networkId === Network.OptimismMainnet && <Banner />}
+            <Banner />
             <Wrapper>
                 <DappSidebar />
                 <DappHeader />
