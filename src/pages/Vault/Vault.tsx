@@ -67,7 +67,6 @@ import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/Tooltip';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
@@ -381,7 +380,6 @@ const Vault: React.FC<VaultProps> = (props) => {
 
     return (
         <>
-            <OpRewardsBanner />
             <ElectionsBanner />
             <Wrapper>
                 <Header>

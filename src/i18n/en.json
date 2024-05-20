@@ -196,7 +196,7 @@
             "error": "Error"
         },
         "banner": {
-            "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
+            "op-rewards-banner-message": "All traders on Optimism are eligible for <bold>5,000 OP</bold> weekly based on Notional Volume. <bold>More details here</bold>.",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
             "page-link": {
                 "thales-markets": "Looking for markets with longer time frames (days, weeks, or months)?",

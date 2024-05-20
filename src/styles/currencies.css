@@ -133,3 +133,7 @@
 .currency-icon--aero::before {
     content: '\0075';
 }
+
+.currency-icon--wif::before {
+    content: '\0076';
+}

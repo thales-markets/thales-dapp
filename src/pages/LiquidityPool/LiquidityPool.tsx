@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button/Button';
 import ElectionsBanner from 'components/ElectionsBanner';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import SimpleLoader from 'components/SimpleLoader';
 import Switch from 'components/SwitchInput/SwitchInput';
 import TimeRemaining from 'components/TimeRemaining';
@@ -492,7 +491,6 @@ const LiquidityPool: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
             <ElectionsBanner />
             <Wrapper>
                 <Title>{t('liquidity-pool.title')}</Title>

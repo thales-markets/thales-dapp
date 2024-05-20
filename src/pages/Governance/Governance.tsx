@@ -10,11 +10,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
-import OpRewardsBanner from 'components/OpRewardsBanner';
-import { getIsOVM } from 'utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from 'types/ui';
-import { getNetworkId } from 'redux/modules/wallet';
 import ElectionsBanner from 'components/ElectionsBanner';
 import {
     ArrowIcon,
@@ -42,13 +39,10 @@ type GovernancePageProps = RouteComponentProps<{
 const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const { t } = useTranslation();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
     const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
-
-    const showOPBanner = getIsOVM(networkId);
 
     const fetchPreloadedProposal = useCallback(() => {
         const fetch = async () => {
@@ -139,7 +133,6 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 
     return (
         <>
-            {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
             <BackLinkWrapper isOverviewPage={isOverviewPage}>
                 {selectedProposal && (

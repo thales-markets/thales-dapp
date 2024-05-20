@@ -5,7 +5,6 @@ import WizardText, { Text } from './components/WizardText';
 import WizardFaq from './components/WizardFaq';
 import WizardVideo from './components/WizardVideo';
 import styled from 'styled-components';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { WizardSteps } from 'enums/wizard';
 
@@ -18,7 +17,6 @@ const Wizard: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner width={72} />
             <ElectionsBanner width={72} />
             <Wrapper>
                 <TextHeader>{t('wizard-page.header')}</TextHeader>
