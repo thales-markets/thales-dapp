@@ -6,12 +6,14 @@ import { navigateTo, buildHref } from 'utils/routes';
 import { Network } from 'enums/network';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { Info } from './styled-components';
+import Banner from 'components/Banner';
 
 const INFORMATION_BANNER_ACTIVE = false;
 
 const Banners: React.FC = () => {
     return (
         <>
+            <Banner isLandingPage />
             <ElectionsBanner isLandingPage={true} />
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>

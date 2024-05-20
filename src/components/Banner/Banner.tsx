@@ -5,20 +5,41 @@ import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import SPAAnchor from '../SPAAnchor';
 
-const Banner: React.FC = () => {
+type ElectionsBannerProps = {
+    isLandingPage?: boolean;
+};
+
+const Banner: React.FC<ElectionsBannerProps> = ({ isLandingPage }) => {
     return (
-        <Container>
-            <SPAAnchor href={'https://dune.com/leifu/op-incentive-program'}>
-                <Label>
-                    <Trans
-                        i18nKey="common.banner.op-rewards-banner-message"
-                        components={{
-                            bold: <BoldedText />,
-                        }}
-                    />
-                </Label>
-            </SPAAnchor>
-        </Container>
+        <>
+            {isLandingPage ? (
+                <Info>
+                    <SPAAnchor href={'https://dune.com/leifu/op-incentive-program'}>
+                        <Label>
+                            <Trans
+                                i18nKey="common.banner.op-rewards-banner-message"
+                                components={{
+                                    bold: <BoldedText />,
+                                }}
+                            />
+                        </Label>
+                    </SPAAnchor>
+                </Info>
+            ) : (
+                <Container>
+                    <SPAAnchor href={'https://dune.com/leifu/op-incentive-program'}>
+                        <Label>
+                            <Trans
+                                i18nKey="common.banner.op-rewards-banner-message"
+                                components={{
+                                    bold: <BoldedText />,
+                                }}
+                            />
+                        </Label>
+                    </SPAAnchor>
+                </Container>
+            )}
+        </>
     );
 };
 
@@ -47,8 +68,32 @@ const Label = styled.span`
     font-weight: 400;
 `;
 
-const BoldedText = styled.span`
+const BoldedText = styled.strong`
     font-weight: 800;
+`;
+
+const Info = styled.div`
+    width: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    background-color: ${(props) => props.theme.landingPage.background.secondary};
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
+    z-index: 2;
+    position: absolute;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.2em;
+        color: #91bced;
+    }
+    a,
+    ${Label} {
+        display: contents;
+        cursor: pointer;
+        color: #91bced;
+    }
 `;
 
 export default Banner;
