@@ -3,7 +3,6 @@ import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import axios from 'axios';
 import Button from 'components/Button';
 import ElectionsBanner from 'components/ElectionsBanner';
-import OpRewardsBanner from 'components/OpRewardsBanner';
 import ReadMoreButton from 'components/ReadMoreButton';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
@@ -31,7 +30,6 @@ import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatTxTimestamp, getEtherscanAddressLink, truncateAddress } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
-import { getIsOVM } from 'utils/network';
 import { buildReferrerLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import {
@@ -84,8 +82,6 @@ const Referral: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
-    const showOPBanner = getIsOVM(networkId);
 
     const [tabIndex, setTabIndex] = useState(tabs[0].id);
     const [landingPage, setLandingPage] = useState(0);
@@ -254,7 +250,6 @@ const Referral: React.FC = () => {
 
     return (
         <>
-            {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
             <HeaderContainer>
                 <FormWrapper>
