@@ -1,4 +1,4 @@
-const ROUTES = {
+export const ROUTES = {
     Home: '/',
     Article: {
         Token: '/article/token',
@@ -40,4 +40,15 @@ const ROUTES = {
         Proposal: '/governance/:space/:id',
     },
 };
+
+export const API_ROUTES = {
+    Staking: 'v1/staking',
+    CacheControl: 'v1/cache-control',
+    LP: 'v1/liquidity-providing',
+    LPPnls: 'v1/liquidity-providing/pnl',
+    LPTransactions: 'v1/liquidity-providing/transactions',
+    Trades: 'v1/trades',
+    OptionTransactions: 'v1/trades/option-transactions',
+};
+
 export default ROUTES;
