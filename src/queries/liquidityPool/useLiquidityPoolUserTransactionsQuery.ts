@@ -1,8 +1,10 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import thalesData from 'thales-data';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import QUERY_KEYS from 'constants/queryKeys';
-import { LiquidityPoolUserTransactions } from 'types/liquidityPool';
+import { API_ROUTES } from 'constants/routes';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { LiquidityPoolUserTransactions } from 'types/liquidityPool';
 
 const useLiquidityPoolUserTransactionsQuery = (
     networkId: Network,
@@ -12,10 +14,13 @@ const useLiquidityPoolUserTransactionsQuery = (
         QUERY_KEYS.LiquidityPool.UserTransactions(networkId),
         async () => {
             try {
-                const liquidityPoolUserTransactions = await thalesData.binaryOptions.liquidityPoolUserTransactions({
-                    network: networkId,
-                });
-                return liquidityPoolUserTransactions;
+                const liquidityPoolUserTransactionsResponse = await axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.LPTransactions}/${networkId}`
+                );
+
+                if (!liquidityPoolUserTransactionsResponse?.data) return [];
+
+                return liquidityPoolUserTransactionsResponse.data;
             } catch (e) {
                 console.log(e);
                 return [];

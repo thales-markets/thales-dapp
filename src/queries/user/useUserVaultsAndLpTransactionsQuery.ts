@@ -1,10 +1,13 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import thalesData from 'thales-data';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import QUERY_KEYS from 'constants/queryKeys';
-import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
+import { API_ROUTES } from 'constants/routes';
 import { VAULT_MAP } from 'constants/vault';
 import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
+import { useQuery, UseQueryOptions } from 'react-query';
+import thalesData from 'thales-data';
+import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
 
 const useUserVaultsAndLpTransactionsQuery = (
     networkId: Network,
@@ -34,12 +37,13 @@ const useUserVaultsAndLpTransactionsQuery = (
                     })
                     .flat(1);
 
-                const liquidityPoolUserTransactions: VaultsAndLiquidityPoolUserTransactions = await thalesData.binaryOptions.liquidityPoolUserTransactions(
-                    {
-                        network: networkId,
-                        account: walletAddress,
-                    }
+                const liquidityPoolUserTransactionsResponse = await axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.LPTransactions}/${networkId}?account=${walletAddress}`
                 );
+
+                const liquidityPoolUserTransactions: VaultsAndLiquidityPoolUserTransactions = liquidityPoolUserTransactionsResponse?.data
+                    ? liquidityPoolUserTransactionsResponse?.data
+                    : [];
 
                 const liquidityPoolUserTransactionsWithName = liquidityPoolUserTransactions.map(
                     (tx: VaultsAndLiquidityPoolUserTransaction) => {
