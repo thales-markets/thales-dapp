@@ -1,14 +1,17 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
+import { MAX_MATURITY, MIN_MATURITY, POSITION_BALANCE_THRESHOLD } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
+import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
+import { BigNumber } from 'ethers';
+import { parseBytes32String } from 'ethers/lib/utils.js';
+import { UseQueryOptions, useQuery } from 'react-query';
 import thalesData from 'thales-data';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
 import { UserPosition } from 'types/profile';
-import { Network } from 'enums/network';
-import { bigNumberFormatter, coinFormatter } from 'thales-utils';
-import { MAX_MATURITY, MIN_MATURITY, POSITION_BALANCE_THRESHOLD } from 'constants/options';
-import { Positions } from 'enums/options';
-import { parseBytes32String } from 'ethers/lib/utils.js';
-import { BigNumber } from 'ethers';
 import { isOptionClaimable } from 'utils/options';
 
 const useClosedPositionsQuery = (
@@ -117,23 +120,24 @@ const useClosedPositionsQuery = (
             });
             const rangedMarketIds = filteredUserMarketTransactions.map((tx: any) => tx.market);
 
-            const [optionsMarkets, rangedMarkets] = await Promise.all([
-                thalesData.binaryOptions.markets({
-                    max: Infinity,
-                    network: networkId,
-                    minMaturity: MIN_MATURITY,
-                    maxMaturity: MAX_MATURITY,
-                }),
+            const [optionsMarketsResponse, rangedMarketsResponse] = await Promise.all([
+                axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.MarketsList}/${networkId}?min-maturity=${MIN_MATURITY}&max-maturity=${MAX_MATURITY}`
+                ),
                 rangedMarketIds.length > 0
-                    ? thalesData.binaryOptions.rangedMarkets({
-                          max: Infinity,
-                          network: networkId,
-                          marketIds: rangedMarketIds,
-                          minMaturity: MIN_MATURITY,
-                          maxMaturity: MAX_MATURITY,
-                      })
-                    : [],
+                    ? axios.get(
+                          `${generalConfig.API_URL}/${
+                              API_ROUTES.RangeMarketsList
+                          }/${networkId}?min-maturity=${MIN_MATURITY}&max-maturity=${MAX_MATURITY}&market-ids=${rangedMarketIds.join(
+                              ','
+                          )}`
+                      )
+                    : undefined,
             ]);
+
+            const optionsMarkets = optionsMarketsResponse?.data ? optionsMarketsResponse?.data : [];
+            const rangedMarkets =
+                rangedMarketsResponse && rangedMarketsResponse?.data ? rangedMarketsResponse?.data : [];
 
             const claimedPositions = optionsMarkets
                 .filter((market: HistoricalOptionsMarketInfo) => claimTransactionsMap.has(market.address))
