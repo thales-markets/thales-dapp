@@ -49,6 +49,8 @@ export const API_ROUTES = {
     LPTransactions: 'v1/liquidity-providing/transactions',
     Trades: 'v1/trades',
     OptionTransactions: 'v1/trades/option-transactions',
+    MarketsList: 'v1/markets/list',
+    RangeMarketsList: 'v1/markets/ranged',
 };
 
 export default ROUTES;
