@@ -8,7 +8,6 @@ import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { UseQueryOptions, useQuery } from 'react-query';
-import thalesData from 'thales-data';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
 import { UserPosition } from 'types/profile';
@@ -22,22 +21,35 @@ const useClosedPositionsQuery = (
     return useQuery<UserPosition[]>(
         QUERY_KEYS.Profile.ClosedPositions(walletAddress, networkId),
         async () => {
-            const [positionBalances, rangedPositionBalances, userMarketTransactions] = await Promise.all([
-                thalesData.binaryOptions.positionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
-                thalesData.binaryOptions.rangedPositionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
-                thalesData.binaryOptions.optionTransactions({
-                    account: walletAddress,
-                    network: networkId,
-                }),
+            const [
+                positionBalancesResponse,
+                rangedPositionBalancesResponse,
+                userMarketTransactionsResponse,
+            ] = await Promise.all([
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.PositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.RangedPositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.OptionTransactions
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
             ]);
+
+            const positionBalances = positionBalancesResponse?.data ? positionBalancesResponse.data : [];
+            const rangedPositionBalances = rangedPositionBalancesResponse?.data
+                ? rangedPositionBalancesResponse?.data
+                : [];
+            const userMarketTransactions = userMarketTransactionsResponse?.data
+                ? userMarketTransactionsResponse?.data
+                : [];
 
             const ripPositions: UserPosition[] = [];
             const rangedRipPositions: UserPosition[] = [];
