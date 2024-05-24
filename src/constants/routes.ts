@@ -53,6 +53,10 @@ export const API_ROUTES = {
     RangedPositionBalance: 'v1/trades/ranged-position-balance',
     MarketsList: 'v1/markets/list',
     RangeMarketsList: 'v1/markets/ranged',
+    Referral: 'v1/referral',
+    ReferralTransactions: 'v1/referral/transactions',
+    ReferralTraders: 'v1/referral/traders',
+    Referrers: 'v1/referral/referrers',
 };
 
 export default ROUTES;
