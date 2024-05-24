@@ -6,7 +6,6 @@ import { VAULT_MAP } from 'constants/vault';
 import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 import { useQuery, UseQueryOptions } from 'react-query';
-import thalesData from 'thales-data';
 import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
 
 const useUserVaultsAndLpTransactionsQuery = (
@@ -20,15 +19,18 @@ const useUserVaultsAndLpTransactionsQuery = (
             try {
                 const vaultsNames = Object.keys(VAULT_MAP);
 
-                const vaultsUserTransactions = await Promise.all(
+                const vaultsUserTransactionsResponse = await Promise.all(
                     vaultsNames.map((name: string) =>
-                        thalesData.binaryOptions.vaultUserTransactions({
-                            network: networkId,
-                            vault: VAULT_MAP[name].addresses[networkId],
-                            account: walletAddress,
-                        })
+                        axios.get(
+                            `${generalConfig.API_URL}/${API_ROUTES.VaultsUserTransactions}/${networkId}?vault=${VAULT_MAP[name].addresses[networkId]}&account=${walletAddress}`
+                        )
                     )
                 );
+
+                const vaultsUserTransactions = vaultsUserTransactionsResponse
+                    .map((response) => (response?.data ? response.data : undefined))
+                    .filter((item) => item);
+
                 const vaultsUserTransactionsWithName = vaultsUserTransactions
                     .map((vaultTransactions: VaultsAndLiquidityPoolUserTransactions, index: number) => {
                         return vaultTransactions.map((tx: VaultsAndLiquidityPoolUserTransaction) => {

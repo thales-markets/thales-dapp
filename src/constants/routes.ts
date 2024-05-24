@@ -57,6 +57,9 @@ export const API_ROUTES = {
     ReferralTransactions: 'v1/referral/transactions',
     ReferralTraders: 'v1/referral/traders',
     Referrers: 'v1/referral/referrers',
+    VaultsUserTransactions: 'v1/vaults/user-transactions',
+    VaultsPnl: 'v1/vaults/pnl',
+    VaultsTransactions: 'v1/vaults/transactions',
 };
 
 export default ROUTES;
