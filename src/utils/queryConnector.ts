@@ -26,7 +26,10 @@ const getCacheKey = (prefixKey: string, keys: any[]) => {
 
     return keys
         .filter((item) => item)
-        .map((item) => item && item.toLowerCase())
+        .map((item) => {
+            if (typeof item !== 'string') return item?.toString();
+            return item?.toLowerCase();
+        })
         .join('-');
 };
 
