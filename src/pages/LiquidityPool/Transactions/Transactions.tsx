@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
 import { LiquidityPoolUserTransaction, LiquidityPoolUserTransactions } from 'types/liquidityPool';
+import { RootState } from 'types/ui';
 import UserTransactionsTable from '../UserTransactionsTable';
 
 type TransactionsProps = {
@@ -57,7 +57,7 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
         });
     }
 
-    const liquidityPoolUserTransactionsQuery = useLiquidityPoolUserTransactionsQuery(networkId, {
+    const liquidityPoolUserTransactionsQuery = useLiquidityPoolUserTransactionsQuery(networkId, round, {
         enabled: isAppReady,
     });
 
@@ -66,13 +66,7 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
     useEffect(() => {
         if (liquidityPoolUserTransactionsQuery.isSuccess && liquidityPoolUserTransactionsQuery.data) {
             setLiquidityPoolUserTransactions(
-                orderBy(
-                    liquidityPoolUserTransactionsQuery.data.filter(
-                        (trade: LiquidityPoolUserTransaction) => trade.round === round
-                    ),
-                    ['timestamp', 'blockNumber'],
-                    ['desc', 'desc']
-                )
+                orderBy(liquidityPoolUserTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
             );
             setLiquidityPoolMyTransactions(
                 orderBy(
