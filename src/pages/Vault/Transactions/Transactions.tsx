@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
-import { VaultTrade, VaultTrades, VaultUserTransaction, VaultUserTransactions } from 'types/vault';
+import { RootState } from 'types/ui';
+import { VaultTrade, VaultTrades, VaultUserTransactions } from 'types/vault';
 import TradesTable from '../TradesTable';
 import UserTransactionsTable from '../UserTransactionsTable';
 
@@ -55,7 +55,7 @@ const Transactions: React.FC<TransactionsProps> = ({ vaultAddress, currentRound 
         [t]
     );
 
-    const vaultTradesQuery = useVaultTradesQuery(vaultAddress, networkId, {
+    const vaultTradesQuery = useVaultTradesQuery(vaultAddress, networkId, round + 1, {
         enabled: isAppReady && !!vaultAddress,
     });
 
@@ -82,11 +82,7 @@ const Transactions: React.FC<TransactionsProps> = ({ vaultAddress, currentRound 
     useEffect(() => {
         if (vaultUserTransactionsQuery.isSuccess && vaultUserTransactionsQuery.data) {
             setVaultUserTransactions(
-                orderBy(
-                    vaultUserTransactionsQuery.data.filter((trade: VaultUserTransaction) => trade.round === round + 1),
-                    ['timestamp', 'blockNumber'],
-                    ['desc', 'desc']
-                )
+                orderBy(vaultUserTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
             );
         } else {
             setVaultUserTransactions([]);

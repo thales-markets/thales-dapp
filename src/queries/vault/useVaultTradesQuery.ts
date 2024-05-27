@@ -8,13 +8,18 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import { bigNumberFormatter } from 'thales-utils';
 import { VaultTrade, VaultTrades } from 'types/vault';
 
-const useVaultTradesQuery = (vaultAddress: string, networkId: Network, options?: UseQueryOptions<VaultTrades>) => {
+const useVaultTradesQuery = (
+    vaultAddress: string,
+    networkId: Network,
+    round: number,
+    options?: UseQueryOptions<VaultTrades>
+) => {
     return useQuery<VaultTrades>(
-        QUERY_KEYS.Vault.Trades(vaultAddress, networkId),
+        QUERY_KEYS.Vault.Trades(vaultAddress, networkId, round),
         async () => {
             try {
                 const response = await axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.VaultsTransactions}/${networkId}?vault=${vaultAddress}`
+                    `${generalConfig.API_URL}/${API_ROUTES.VaultsTransactions}/${networkId}?vault=${vaultAddress}&round=${round}`
                 );
 
                 if (!response?.data) return [];

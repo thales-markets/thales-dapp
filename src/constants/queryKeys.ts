@@ -331,7 +331,7 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Trades: (vaultAddress: string, networkId: Network) => [vaultAddress, 'trades', networkId],
+        Trades: (vaultAddress: string, networkId: Network, round: number) => [vaultAddress, 'trades', networkId, round],
         PnL: (vaultAddress: string, networkId: Network) => [vaultAddress, 'pnl', networkId],
         UserTransactions: (vaultAddress: string, networkId: Network) => [vaultAddress, 'userTransactions', networkId],
     },
