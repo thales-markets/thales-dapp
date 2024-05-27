@@ -1,4 +1,8 @@
+import axios from 'axios';
+import { generalConfig } from 'config/general';
+import { CACHE_PREFIX_KEYS } from 'constants/cache';
 import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
 import { SpaceKey } from 'enums/governance';
 import { Network } from 'enums/network';
 import { QueryClient } from 'react-query';
@@ -15,6 +19,26 @@ const queryConnector: QueryConnector = {
             this.queryClient = new QueryClient();
         }
     },
+};
+
+const getCacheKey = (prefixKey: string, keys: any[]) => {
+    keys.unshift(prefixKey);
+
+    return keys
+        .filter((item) => item)
+        .map((item) => item && item.toLowerCase())
+        .join('-');
+};
+
+const invalidateCache = async (cacheKeys: string[]) => {
+    try {
+        await axios.post(`${generalConfig.API_URL}/${API_ROUTES.CacheControl}`, {
+            cacheKeys: cacheKeys,
+        });
+    } catch (e) {
+        console.log('Error while invalidating cache on API ', e);
+        return;
+    }
 };
 
 export const refetchMarketQueries = (
@@ -46,15 +70,32 @@ export const refetchRangeMarketQueries = (
     }
 };
 
-export const refetchUserNotifications = (walletAddress: string, networkId: Network) => {
+export const refetchUserNotifications = async (walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Notifications(walletAddress, networkId));
 };
 
-export const refetchUserOpenPositions = (walletAddress: string, networkId: Network) => {
+export const refetchUserOpenPositions = async (walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
 };
 
-export const refetchUserProfileQueries = (walletAddress: string, networkId: Network) => {
+export const refetchUserProfileQueries = async (walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.OptionTransactions, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.Trades, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Data(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.ClaimablePositions(walletAddress, networkId));
@@ -115,7 +156,13 @@ export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress:
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
-export const refetchVaultData = (vaultAddress: string, walletAddress: string, networkId: Network) => {
+export const refetchVaultData = async (vaultAddress: string, walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.VaultPnl, [networkId, vaultAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.VaultUserTransactions, [networkId, vaultAddress]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Data(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserData(vaultAddress, walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.PnL(vaultAddress, networkId));
@@ -123,7 +170,13 @@ export const refetchVaultData = (vaultAddress: string, walletAddress: string, ne
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
 };
 
-export const refetchLiquidityPoolData = (walletAddress: string, networkId: Network) => {
+export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolPnl, [networkId]),
+        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
