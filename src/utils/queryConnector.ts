@@ -159,7 +159,12 @@ export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress:
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
-export const refetchVaultData = async (vaultAddress: string, walletAddress: string, networkId: Network) => {
+export const refetchVaultData = async (
+    vaultAddress: string,
+    walletAddress: string,
+    networkId: Network,
+    round: number
+) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.VaultPnl, [networkId, vaultAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress]),
@@ -169,11 +174,11 @@ export const refetchVaultData = async (vaultAddress: string, walletAddress: stri
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Data(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserData(vaultAddress, walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.PnL(vaultAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Trades(vaultAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Trades(vaultAddress, networkId, round));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
 };
 
-export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network) => {
+export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network, round: number) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolPnl, [networkId]),
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, walletAddress]),
@@ -183,7 +188,7 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId, round));
 };
 
 export const refetchSpeedMarketsLimits = (isChained: boolean, networkId: Network, walletAddress?: string) => {

@@ -5,17 +5,18 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import SimpleLoader from 'components/SimpleLoader';
 import Switch from 'components/SwitchInput/SwitchInput';
 import TimeRemaining from 'components/TimeRemaining';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
 import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
+import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import {
-    getDefaultToastContent,
-    getLoadingToastOptions,
-    getErrorToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
 import { BigNumber, ethers } from 'ethers';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
@@ -27,17 +28,17 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { FlexDivRow } from 'styles/common';
+import { formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
-import { ThemeInterface } from 'types/ui';
+import { RootState, ThemeInterface } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getDefaultCollateral } from 'utils/currency';
-import { formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
 import { checkAllowance } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { delay } from 'utils/timer';
 import PnL from './PnL';
 import Transactions from './Transactions';
 import {
@@ -75,8 +76,6 @@ import {
     Wrapper,
     defaultButtonProps,
 } from './styled-components';
-import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
-import { delay } from 'utils/timer';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -300,7 +299,7 @@ const LiquidityPool: React.FC = () => {
                     );
                     setAmount('');
                     setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId);
+                    refetchLiquidityPoolData(walletAddress, networkId, liquidityPoolData?.round || 0);
                 }
             } catch (e) {
                 console.log(e);
@@ -334,7 +333,7 @@ const LiquidityPool: React.FC = () => {
                     );
                     setAmount('');
                     setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId);
+                    refetchLiquidityPoolData(walletAddress, networkId, liquidityPoolData?.round || 0);
                 }
             } catch (e) {
                 console.log(e);
