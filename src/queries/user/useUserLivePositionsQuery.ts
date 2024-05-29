@@ -8,7 +8,7 @@ import { Positions } from 'enums/options';
 import { ethers } from 'ethers';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { orderBy } from 'lodash';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { UseQueryOptions, useQuery } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { UserLivePositions } from 'types/options';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
@@ -25,6 +25,8 @@ const useUserLivePositionsQuery = (
     return useQuery<UserLivePositions[]>(
         QUERY_KEYS.User.OpenPositions(walletAddress, networkId),
         async () => {
+            console.log('Ulazi useUserLivePositionsQuery');
+
             const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
                 axios.get(
                     `${generalConfig.API_URL}/${

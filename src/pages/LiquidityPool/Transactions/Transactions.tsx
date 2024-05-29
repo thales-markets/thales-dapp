@@ -10,7 +10,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow } from 'styles/common';
-import { LiquidityPoolUserTransaction, LiquidityPoolUserTransactions } from 'types/liquidityPool';
+import { LiquidityPoolUserTransactions } from 'types/liquidityPool';
 import { RootState } from 'types/ui';
 import UserTransactionsTable from '../UserTransactionsTable';
 
@@ -57,28 +57,38 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
         });
     }
 
-    const liquidityPoolUserTransactionsQuery = useLiquidityPoolUserTransactionsQuery(networkId, round, {
+    const liquidityPoolRoundTransactionsQuery = useLiquidityPoolUserTransactionsQuery(networkId, undefined, round, {
         enabled: isAppReady,
     });
+
+    const liquidityPoolUserTransactionsQuery = useLiquidityPoolUserTransactionsQuery(
+        networkId,
+        walletAddress,
+        undefined,
+        {
+            enabled: isAppReady,
+        }
+    );
 
     useEffect(() => setRound(currentRound), [currentRound]);
 
     useEffect(() => {
-        if (liquidityPoolUserTransactionsQuery.isSuccess && liquidityPoolUserTransactionsQuery.data) {
+        if (liquidityPoolRoundTransactionsQuery.isSuccess && liquidityPoolRoundTransactionsQuery.data) {
             setLiquidityPoolUserTransactions(
-                orderBy(liquidityPoolUserTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
-            );
-            setLiquidityPoolMyTransactions(
-                orderBy(
-                    liquidityPoolUserTransactionsQuery.data.filter(
-                        (trade: LiquidityPoolUserTransaction) => trade.account === walletAddress.toLowerCase()
-                    ),
-                    ['timestamp', 'blockNumber'],
-                    ['desc', 'desc']
-                )
+                orderBy(liquidityPoolRoundTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
             );
         } else {
             setLiquidityPoolUserTransactions([]);
+        }
+    }, [liquidityPoolRoundTransactionsQuery.isSuccess, liquidityPoolRoundTransactionsQuery.data, round, walletAddress]);
+
+    useEffect(() => {
+        if (liquidityPoolUserTransactionsQuery.isSuccess && liquidityPoolUserTransactionsQuery.data) {
+            setLiquidityPoolMyTransactions(
+                orderBy(liquidityPoolUserTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
+            );
+        } else {
+            setLiquidityPoolMyTransactions([]);
         }
     }, [liquidityPoolUserTransactionsQuery.isSuccess, liquidityPoolUserTransactionsQuery.data, round, walletAddress]);
 

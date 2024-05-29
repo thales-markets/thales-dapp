@@ -38,6 +38,8 @@ const invalidateCache = async (cacheKeys: string[]) => {
         await axios.post(`${generalConfig.API_URL}/${API_ROUTES.CacheControl}`, {
             cacheKeys: cacheKeys,
         });
+
+        return;
     } catch (e) {
         console.log('Error while invalidating cache on API ', e);
         return;
@@ -148,11 +150,17 @@ export const refetchVestingEscrow = (walletAddress: string, networkId: Network) 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.VestingEscrow(walletAddress, networkId));
 };
 
-export const refetchBalances = (walletAddress: string, networkId: Network) => {
+export const refetchBalances = async (walletAddress: string, networkId: Network) => {
+    await invalidateCache([
+        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+    ]);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
     );
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
 };
 
 export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {
@@ -167,7 +175,7 @@ export const refetchVaultData = async (
 ) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.VaultPnl, [networkId, vaultAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress, round]),
         getCacheKey(CACHE_PREFIX_KEYS.VaultUserTransactions, [networkId, vaultAddress]),
     ]);
 
@@ -180,15 +188,16 @@ export const refetchVaultData = async (
 
 export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network, round: number) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolPnl, [networkId]),
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId]),
+        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, round]),
     ]);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserTransactions(networkId, round));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, round)
+    );
 };
 
 export const refetchSpeedMarketsLimits = (isChained: boolean, networkId: Network, walletAddress?: string) => {
