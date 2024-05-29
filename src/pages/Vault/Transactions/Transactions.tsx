@@ -82,7 +82,11 @@ const Transactions: React.FC<TransactionsProps> = ({ vaultAddress, currentRound 
     useEffect(() => {
         if (vaultUserTransactionsQuery.isSuccess && vaultUserTransactionsQuery.data) {
             setVaultUserTransactions(
-                orderBy(vaultUserTransactionsQuery.data, ['timestamp', 'blockNumber'], ['desc', 'desc'])
+                orderBy(
+                    vaultUserTransactionsQuery.data.filter((transactions) => transactions.round === round + 1),
+                    ['timestamp', 'blockNumber'],
+                    ['desc', 'desc']
+                )
             );
         } else {
             setVaultUserTransactions([]);

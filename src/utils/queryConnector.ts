@@ -46,6 +46,10 @@ const invalidateCache = async (cacheKeys: string[]) => {
     }
 };
 
+const wait = (seconds: number) => {
+    return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+};
+
 export const refetchMarketQueries = (
     walletAddress: string,
     BOMContractAddress: string,
@@ -156,6 +160,8 @@ export const refetchBalances = async (walletAddress: string, networkId: Network)
         getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
+    await wait(1);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
@@ -174,10 +180,11 @@ export const refetchVaultData = async (
     round: number
 ) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.VaultPnl, [networkId, vaultAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress, round]),
         getCacheKey(CACHE_PREFIX_KEYS.VaultUserTransactions, [networkId, vaultAddress]),
     ]);
+
+    await wait(1);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Data(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserData(vaultAddress, walletAddress, networkId));
@@ -191,6 +198,8 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, round]),
     ]);
+
+    await wait(1);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
