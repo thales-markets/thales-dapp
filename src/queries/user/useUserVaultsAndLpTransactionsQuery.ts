@@ -20,11 +20,13 @@ const useUserVaultsAndLpTransactionsQuery = (
                 const vaultsNames = Object.keys(VAULT_MAP);
 
                 const vaultsUserTransactionsResponse = await Promise.all(
-                    vaultsNames.map((name: string) =>
-                        axios.get(
-                            `${generalConfig.API_URL}/${API_ROUTES.VaultsUserTransactions}/${networkId}?vault=${VAULT_MAP[name].addresses[networkId]}&account=${walletAddress}`
-                        )
-                    )
+                    vaultsNames.map((name: string) => {
+                        return VAULT_MAP[name]?.addresses[networkId]
+                            ? axios.get(
+                                  `${generalConfig.API_URL}/${API_ROUTES.VaultsUserTransactions}/${networkId}?vault=${VAULT_MAP[name].addresses[networkId]}&account=${walletAddress}`
+                              )
+                            : { data: [] };
+                    })
                 );
 
                 const vaultsUserTransactions = vaultsUserTransactionsResponse
