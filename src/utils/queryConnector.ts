@@ -85,6 +85,8 @@ export const refetchUserNotifications = async (walletAddress: string, networkId:
         getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
+    await wait(2.5);
+
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Notifications(walletAddress, networkId));
 };
 
@@ -93,6 +95,8 @@ export const refetchUserOpenPositions = async (walletAddress: string, networkId:
         getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
     ]);
+
+    await wait(2.5);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
 };
@@ -104,6 +108,8 @@ export const refetchUserProfileQueries = async (walletAddress: string, networkId
         getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
     ]);
+
+    await wait(2.5);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Data(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId));
@@ -160,7 +166,7 @@ export const refetchBalances = async (walletAddress: string, networkId: Network)
         getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
-    await wait(1);
+    await wait(2.5);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(
@@ -184,7 +190,7 @@ export const refetchVaultData = async (
         getCacheKey(CACHE_PREFIX_KEYS.VaultUserTransactions, [networkId, vaultAddress]),
     ]);
 
-    await wait(1);
+    await wait(2.5);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Data(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserData(vaultAddress, walletAddress, networkId));
@@ -199,13 +205,16 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
         getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, round]),
     ]);
 
-    await wait(1);
+    await wait(2.5);
 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, round)
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, undefined, round)
+    );
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, undefined)
     );
 };
 
