@@ -81,8 +81,8 @@ export const refetchRangeMarketQueries = (
 
 export const refetchUserNotifications = async (walletAddress: string, networkId: Network) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
     await wait(2.5);
@@ -92,8 +92,8 @@ export const refetchUserNotifications = async (walletAddress: string, networkId:
 
 export const refetchUserOpenPositions = async (walletAddress: string, networkId: Network) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
     await wait(2.5);
@@ -103,10 +103,10 @@ export const refetchUserOpenPositions = async (walletAddress: string, networkId:
 
 export const refetchUserProfileQueries = async (walletAddress: string, networkId: Network) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.OptionTransactions, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.Trades, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.OptionTransactions, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.Trades, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
     await wait(2.5);
@@ -162,8 +162,8 @@ export const refetchVestingEscrow = (walletAddress: string, networkId: Network) 
 
 export const refetchBalances = async (walletAddress: string, networkId: Network) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.PositionBalance, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.RangePositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
     ]);
 
     await wait(2.5);
@@ -186,8 +186,8 @@ export const refetchVaultData = async (
     round: number
 ) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.VaultTransactions, [networkId, vaultAddress, round]),
-        getCacheKey(CACHE_PREFIX_KEYS.VaultUserTransactions, [networkId, vaultAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.VaultTransactions, [networkId, vaultAddress, round]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.VaultUserTransactions, [networkId, vaultAddress]),
     ]);
 
     await wait(2.5);
@@ -201,8 +201,8 @@ export const refetchVaultData = async (
 
 export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network, round: number) => {
     await invalidateCache([
-        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, walletAddress]),
-        getCacheKey(CACHE_PREFIX_KEYS.LiquidityPoolTransactions, [networkId, round]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, round]),
     ]);
 
     await wait(2.5);
