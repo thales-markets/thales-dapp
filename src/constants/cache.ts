@@ -31,3 +31,5 @@ export const CACHE_PREFIX_KEYS = {
         Referrers: 'sports-markets-referrers',
     },
 };
+
+export const WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS = 3.5;
