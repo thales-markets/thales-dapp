@@ -164,6 +164,8 @@ export const refetchBalances = async (walletAddress: string, networkId: Network)
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.OptionTransactions, [networkId, walletAddress]),
+        getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.Trades, [networkId, walletAddress]),
     ]);
 
     await wait(WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS);
