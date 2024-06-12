@@ -1,7 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
 import { Network } from 'enums/network';
-import thalesData from 'thales-data';
+import { useQuery, UseQueryOptions } from 'react-query';
 
 type Referrer = {
     id: string;
@@ -15,12 +17,20 @@ const useReferrerQuery = (networkId: Network, address?: string, options?: UseQue
     return useQuery<Referrer[]>(
         QUERY_KEYS.Referral.Referrer(networkId, address),
         async () => {
-            const referrers: Referrer[] = await thalesData.binaryOptions.referrers({
-                max: Infinity,
-                network: networkId,
-                address: address ? address.toLowerCase() : undefined,
-            });
-            return referrers;
+            try {
+                const response = await axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.Referrers}/${networkId}?address=${
+                        address ? address.toLowerCase() : ''
+                    }`
+                );
+
+                if (!response?.data) return [];
+
+                return response.data as Referrer[];
+            } catch (e) {
+                console.log('Error ', e);
+                return [];
+            }
         },
         options
     );

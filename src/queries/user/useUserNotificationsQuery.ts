@@ -1,27 +1,34 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from 'constants/queryKeys';
-import thalesData from 'thales-data';
-import { Network } from 'enums/network';
-import { bigNumberFormatter } from 'thales-utils';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import { POSITION_BALANCE_THRESHOLD } from 'constants/options';
+import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
+import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter } from 'thales-utils';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
 const useUserNotificationsQuery = (networkId: Network, walletAddress: string, options?: UseQueryOptions<number>) => {
     return useQuery<number>(
         QUERY_KEYS.User.Notifications(walletAddress, networkId),
         async () => {
-            const [positionBalances, rangedPositionBalances] = await Promise.all([
-                thalesData.binaryOptions.positionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
-                thalesData.binaryOptions.rangedPositionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
+            const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.PositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.RangedPositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
             ]);
+
+            const positionBalances = positionBalancesResponse?.data ? positionBalancesResponse.data : [];
+            const rangedPositionBalances = rangedPositionBalancesResponse?.data
+                ? rangedPositionBalancesResponse.data
+                : [];
 
             const claimablePositions: any = [];
             const rangedClaimablePositions: any = [];

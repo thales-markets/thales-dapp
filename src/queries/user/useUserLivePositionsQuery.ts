@@ -1,19 +1,21 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from 'constants/queryKeys';
-import thalesData from 'thales-data';
-import { Network } from 'enums/network';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import { POSITION_BALANCE_THRESHOLD, RANGE_SIDE, SIDE } from 'constants/options';
-import { parseBytes32String } from 'ethers/lib/utils.js';
-import { formatStrikePrice } from 'utils/formatters/number';
-import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
-import { bigNumberFormatter, coinFormatter } from 'thales-utils';
-import { orderBy } from 'lodash';
-import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
-import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
-import { UserLivePositions } from 'types/options';
+import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
+import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
+import { ethers } from 'ethers';
+import { parseBytes32String } from 'ethers/lib/utils.js';
+import { orderBy } from 'lodash';
+import { UseQueryOptions, useQuery } from 'react-query';
+import { bigNumberFormatter, coinFormatter } from 'thales-utils';
+import { UserLivePositions } from 'types/options';
+import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
+import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
+import { formatStrikePrice } from 'utils/formatters/number';
 import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const useUserLivePositionsQuery = (
     networkId: Network,
@@ -23,18 +25,25 @@ const useUserLivePositionsQuery = (
     return useQuery<UserLivePositions[]>(
         QUERY_KEYS.User.OpenPositions(walletAddress, networkId),
         async () => {
-            const [positionBalances, rangedPositionBalances] = await Promise.all([
-                thalesData.binaryOptions.positionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
-                thalesData.binaryOptions.rangedPositionBalances({
-                    max: Infinity,
-                    network: networkId,
-                    account: walletAddress.toLowerCase(),
-                }),
+            console.log('Ulazi useUserLivePositionsQuery');
+
+            const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.PositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.RangedPositionBalance
+                    }/${networkId}?account=${walletAddress.toLowerCase()}`
+                ),
             ]);
+
+            const positionBalances = positionBalancesResponse?.data ? positionBalancesResponse.data : [];
+            const rangedPositionBalances = rangedPositionBalancesResponse?.data
+                ? rangedPositionBalancesResponse.data
+                : [];
 
             const openPositions: any = [];
             const openRangedPositions: any = [];

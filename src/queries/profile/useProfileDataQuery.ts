@@ -1,9 +1,11 @@
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import { BATCH_NUMBER_OF_SPEED_MARKETS, SPEED_MARKETS_QUOTE } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
 import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { Network } from 'enums/network';
 import { UseQueryOptions, useQuery } from 'react-query';
-import thalesData from 'thales-data';
 import { bigNumberFormatter, coinFormatter, roundNumberToDecimals } from 'thales-utils';
 import { UserProfileData } from 'types/profile';
 import { isOnlySpeedMarketsSupported } from 'utils/network';
@@ -29,18 +31,24 @@ const useProfileDataQuery = (networkId: Network, walletAddress: string, options?
             if (isOnlySpeedMarketsSupported(networkId)) {
                 speedAmmParams = await speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress);
             } else {
-                [userMarketTransactions, userTrades, speedAmmParams, chainedAmmParams] = await Promise.all([
-                    thalesData.binaryOptions.optionTransactions({
-                        account: walletAddress,
-                        network: networkId,
-                    }),
-                    thalesData.binaryOptions.trades({
-                        taker: walletAddress,
-                        network: networkId,
-                    }),
+                const [
+                    userMarketTransactionsResponse,
+                    userTradesResponse,
+                    speedAmmParamsResponse,
+                    chainedAmmParamsResponse,
+                ] = await Promise.all([
+                    axios.get(
+                        `${generalConfig.API_URL}/${API_ROUTES.OptionTransactions}/${networkId}?account=${walletAddress}`
+                    ),
+                    axios.get(`${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?taker=${walletAddress}`),
                     speedMarketsDataContract?.getSpeedMarketsAMMParameters(walletAddress),
                     speedMarketsDataContract?.getChainedSpeedMarketsAMMParameters(walletAddress),
                 ]);
+
+                if (userMarketTransactionsResponse?.data) userMarketTransactions = userMarketTransactionsResponse?.data;
+                if (userTradesResponse?.data) userTrades = userTradesResponse?.data;
+                if (speedAmmParamsResponse) speedAmmParams = speedAmmParamsResponse;
+                if (chainedAmmParamsResponse) chainedAmmParams = chainedAmmParamsResponse;
             }
 
             userMarketTransactions.map((tx: any) => {

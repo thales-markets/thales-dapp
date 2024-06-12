@@ -1,11 +1,12 @@
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import { THALES_CURRENCY } from 'constants/currency';
 import QUERY_KEYS from 'constants/queryKeys';
 import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 import { UseQueryOptions, useQuery } from 'react-query';
-import thalesData from 'thales-data';
-import { Staker, Stakers } from 'types/governance';
 import { bigNumberFormatter, formatCurrencyWithKey } from 'thales-utils';
+import { Staker, Stakers } from 'types/governance';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type StakerContractLeaderboardData = {
@@ -59,9 +60,11 @@ const useStakersDataLeaderboardQuery = (
                 const BATCH_SIZE = 800;
                 const MIN_STAKING_AMOUNT = 0.01;
 
-                const stakers: Stakers = await thalesData.binaryOptions.stakers({
-                    network,
-                });
+                const stakersResponse = await axios.get(
+                    `${generalConfig.API_URL}/v1/stakers/${Network.OptimismMainnet}`
+                );
+
+                const stakers: Stakers = stakersResponse?.data ? stakersResponse?.data : [];
 
                 const stakersOnlyWithSomeStakingAmount =
                     stakers && stakers.filter((staker) => staker.stakedAmount > MIN_STAKING_AMOUNT);
