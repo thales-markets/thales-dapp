@@ -1,7 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import QUERY_KEYS from 'constants/queryKeys';
+import { API_ROUTES } from 'constants/routes';
 import { Network } from 'enums/network';
-import thalesData from 'thales-data';
+import { useQuery, UseQueryOptions } from 'react-query';
 
 export type ReferralTransactions = {
     id: string;
@@ -21,13 +23,20 @@ const useReferralTransactionsQuery = (
     return useQuery<ReferralTransactions[]>(
         QUERY_KEYS.Referral.ReferralTransacations(networkId, trader, referrer),
         async () => {
-            const referrers: ReferralTransactions[] = await thalesData.binaryOptions.referralTransfers({
-                max: Infinity,
-                network: networkId,
-                trader: trader ? trader.toLowerCase() : undefined,
-                referrer: referrer ? referrer.toLowerCase() : undefined,
-            });
-            return referrers;
+            try {
+                const response = await axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.ReferralTransactions}/${networkId}?trader=${
+                        trader ? trader.toLowerCase() : ''
+                    }&referrer=${referrer ? referrer.toLowerCase() : ''}`
+                );
+
+                if (!response?.data) return [];
+
+                return response.data as ReferralTransactions[];
+            } catch (e) {
+                console.log('Error ', e);
+                return [];
+            }
         },
         options
     );

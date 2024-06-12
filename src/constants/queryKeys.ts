@@ -331,7 +331,7 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Trades: (vaultAddress: string, networkId: Network) => [vaultAddress, 'trades', networkId],
+        Trades: (vaultAddress: string, networkId: Network, round: number) => [vaultAddress, 'trades', networkId, round],
         PnL: (vaultAddress: string, networkId: Network) => [vaultAddress, 'pnl', networkId],
         UserTransactions: (vaultAddress: string, networkId: Network) => [vaultAddress, 'userTransactions', networkId],
     },
@@ -340,7 +340,12 @@ const QUERY_KEYS = {
         Data: (networkId: Network) => ['liquidityPool', 'data', networkId],
         UserData: (walletAddress: string, networkId: Network) => ['liquidityPool', 'data', walletAddress, networkId],
         PnL: (networkId: Network) => ['liquidityPool', 'pnl', networkId],
-        UserTransactions: (networkId: Network) => ['liquidityPool', 'userTransactions', networkId],
+        UserTransactions: (networkId: Network, walletAddress?: string, round?: number) => [
+            'liquidityPool',
+            'userTransactions',
+            networkId,
+            round ? round : walletAddress ? walletAddress : '',
+        ],
     },
 };
 

@@ -56,8 +56,12 @@ export const ALTCOIN_CONVERSION_BUFFER_PERCENTAGE = 0.01; // 1%
 export const STABLECOIN_CONVERSION_BUFFER_PERCENTAGE = 0.005; // 0.5%
 
 const TODAY = new Date();
+TODAY.setUTCHours(23, 59, 0, 0);
+
 export const MIN_MATURITY = Math.round(
-    new Date(new Date().setDate(TODAY.getDate() - MARKET_DURATION_IN_DAYS)).getTime() / 1000
+    new Date(
+        new Date(new Date().setDate(TODAY.getDate() - MARKET_DURATION_IN_DAYS)).setUTCHours(0, 0, 0, 0)
+    ).getTime() / 1000
 ); // show history for 90 days in the past
 export const MAX_MATURITY = Math.round(Number(TODAY.getTime() / 1000)); // show history until today
 

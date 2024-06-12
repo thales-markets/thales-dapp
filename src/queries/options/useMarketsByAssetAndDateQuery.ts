@@ -1,15 +1,17 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
+import { ZERO_ADDRESS } from 'constants/network';
 import QUERY_KEYS from 'constants/queryKeys';
-import snxJSConnector from 'utils/snxJSConnector';
+import { API_ROUTES } from 'constants/routes';
+import { Network } from 'enums/network';
+import { Positions } from 'enums/options';
 import { ethers } from 'ethers';
 import { uniq } from 'lodash';
-import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
-import { Network } from 'enums/network';
-import thalesData from 'thales-data';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { coinFormatter, truncToDecimals } from 'thales-utils';
-import { Positions } from 'enums/options';
+import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import { ZERO_ADDRESS } from 'constants/network';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const BATCH_LIMIT = 30;
 
@@ -74,13 +76,13 @@ const useMarketsByAssetAndDateQuery = (
                         return b.strikePrice - a.strikePrice;
                     });
             } else {
-                const rangedMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
-                    max: Infinity,
-                    network: networkId,
-                    minMaturity: Number(date / 1000),
-                    maxMaturity: Number(date / 1000),
-                    currencyKey: ethers.utils.formatBytes32String(asset),
-                });
+                const rangedMarketsResponse = await axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.RangeMarketsList}/${networkId}?min-maturity=${Number(
+                        date / 1000
+                    )}&max-maturity=${Number(date / 1000)}&currency-key=${ethers.utils.formatBytes32String(asset)}`
+                );
+
+                const rangedMarkets: RangedMarket[] = rangedMarketsResponse?.data ? rangedMarketsResponse.data : [];
 
                 const allRangedMarkets = new Map();
 

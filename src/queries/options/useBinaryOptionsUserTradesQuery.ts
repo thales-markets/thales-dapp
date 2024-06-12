@@ -1,9 +1,18 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import thalesData from 'thales-data';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 import QUERY_KEYS from 'constants/queryKeys';
-import { OptionsTransactions, OptionsTransaction, Trades, Trade, RangedMarketPositionType } from 'types/options';
+import { API_ROUTES } from 'constants/routes';
+import { useQuery, UseQueryOptions } from 'react-query';
+import {
+    OptionSide,
+    OptionsTransaction,
+    OptionsTransactions,
+    OrderSide,
+    RangedMarketPositionType,
+    Trade,
+    Trades,
+} from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { OptionSide, OrderSide } from 'types/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
@@ -54,28 +63,30 @@ const useBinaryOptionsUserTradesQuery = (
     return useQuery<OptionsTransactions>(
         QUERY_KEYS.BinaryOptions.UserMarketTrades(marketAddress, walletAddress),
         async () => {
-            const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
-                thalesData.binaryOptions.trades({
-                    makerToken: collateral?.address,
-                    takerToken: firstPositionAddress,
-                    network: networkId,
-                }),
-                thalesData.binaryOptions.trades({
-                    makerToken: firstPositionAddress,
-                    takerToken: collateral?.address,
-                    network: networkId,
-                }),
-                thalesData.binaryOptions.trades({
-                    makerToken: collateral?.address,
-                    takerToken: secondPositionAddress,
-                    network: networkId,
-                }),
-                thalesData.binaryOptions.trades({
-                    makerToken: secondPositionAddress,
-                    takerToken: collateral?.address,
-                    network: networkId,
-                }),
+            const [
+                firstPositionBuysResponse,
+                firstPositionSellsResponse,
+                secondPositionBuysResponse,
+                secondPositionSellsResponse,
+            ] = await Promise.all([
+                axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateral?.address}&taker-token=${firstPositionAddress}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${firstPositionAddress}&taker-token=${collateral?.address}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateral?.address}&taker-token=${secondPositionAddress}`
+                ),
+                axios.get(
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${secondPositionAddress}&taker-token=${collateral?.address}`
+                ),
             ]);
+
+            const firstPositionBuys = firstPositionBuysResponse?.data ? firstPositionBuysResponse.data : [];
+            const firstPositionSells = firstPositionSellsResponse?.data ? firstPositionSellsResponse.data : [];
+            const secondPositionBuys = secondPositionBuysResponse?.data ? secondPositionBuysResponse.data : [];
+            const secondPositionSells = secondPositionSellsResponse?.data ? secondPositionSellsResponse.data : [];
 
             const trades = [
                 ...mapToOptionTransactions(
