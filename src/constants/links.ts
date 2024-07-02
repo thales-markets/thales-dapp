@@ -54,6 +54,7 @@ export const LINKS = {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
         UsingAmm: 'https://docs.thalesmarket.io/using-thales/using-the-thales-amm',
     },
+    SpeedMarkets: 'https://speedmarkets.xyz/',
     SportMarkets: 'https://overtimemarkets.xyz/',
     Overtime: {
         Markets: 'https://overtimemarkets.xyz/#/markets',

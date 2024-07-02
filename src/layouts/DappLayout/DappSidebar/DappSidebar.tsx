@@ -61,14 +61,7 @@ const DappSidebar: React.FC = () => {
 
                     {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
                         <DappHeaderItem
-                            className={`${
-                                [ROUTES.Options.SpeedMarkets, ROUTES.Options.SpeedMarketsOverview].includes(
-                                    location.pathname
-                                )
-                                    ? 'selected'
-                                    : ''
-                            }`}
-                            href={buildHref(ROUTES.Options.SpeedMarkets)}
+                            href={LINKS.SpeedMarkets}
                             iconName="speed-markets"
                             label={t('common.sidebar.speed-markets')}
                         />
@@ -114,7 +107,6 @@ const DappSidebar: React.FC = () => {
 
                     {showTokenPage && (
                         <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                             href={LINKS.ThalesProtocol.Token}
                             iconName="token"
                             label={t('common.sidebar.earn-label')}
@@ -123,7 +115,6 @@ const DappSidebar: React.FC = () => {
 
                     {showGovernancePage && (
                         <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
                             href={LINKS.ThalesProtocol.Governance}
                             iconName="governance"
                             label={t('common.sidebar.governance-label')}
@@ -155,15 +146,6 @@ const DappSidebar: React.FC = () => {
                         href={LINKS.SportMarkets}
                         iconName="overtime-markets"
                         label={t('common.sidebar.sport-markets-label')}
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                            if (isMobile) {
-                                window.location.replace(LINKS.SportMarkets);
-                            } else {
-                                window.open(LINKS.SportMarkets);
-                            }
-                        }}
-                        simpleOnClick={true}
                     />
                 </ItemsContainer>
             </SidebarHtml>
