@@ -32,13 +32,6 @@ const Header: React.FC = () => {
                         >
                             {t('landing-page.header.links.learn.guides')}
                         </Link>
-                        <Link
-                            rel="noreferrer"
-                            onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
-                        >
-                            {t('landing-page.header.links.learn.whitepaper')}
-                        </Link>
-
                         <HashLink to="/#faq-section">{t('landing-page.header.links.faq')}</HashLink>
                     </DropDownContainer>
                 </PositionedContainer>

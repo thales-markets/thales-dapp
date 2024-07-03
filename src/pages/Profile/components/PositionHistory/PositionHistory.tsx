@@ -1,10 +1,7 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import TileTable from 'components/TileTable';
 import { USD_SIGN } from 'constants/currency';
-import { ZERO_ADDRESS } from 'constants/network';
 import { orderBy } from 'lodash';
-import useUserResolvedChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedChainedSpeedMarketsDataQuery';
-import useUserResolvedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserResolvedSpeedMarketsDataQuery';
 import useClosedPositionsQuery from 'queries/profile/useClosedPositionsQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,18 +9,10 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
-import {
-    coinParser,
-    formatCurrency,
-    formatCurrencyWithSign,
-    formatShortDate,
-    formatShortDateWithTime,
-} from 'thales-utils';
+import { formatCurrency, formatCurrencyWithSign, formatShortDate } from 'thales-utils';
 import { UserPosition } from 'types/profile';
-import { ThemeInterface } from 'types/ui';
-import { isOnlySpeedMarketsSupported } from 'utils/network';
+import { RootState, ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { IconLink, getAmount, getStatus } from '../styled-components';
 
@@ -42,7 +31,7 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const closedPositionsQuery = useClosedPositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
+        enabled: isAppReady && isWalletConnected,
     });
 
     const closedPositions: UserPosition[] = useMemo(
@@ -50,96 +39,9 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
         [closedPositionsQuery.isSuccess, closedPositionsQuery.data]
     );
 
-    const closedSpeedMarketsDataQuery = useUserResolvedSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
-
-    const closedSpeedMarketsData = useMemo(
-        () =>
-            closedSpeedMarketsDataQuery.isSuccess && closedSpeedMarketsDataQuery.data
-                ? closedSpeedMarketsDataQuery.data
-                : [],
-        [closedSpeedMarketsDataQuery]
-    );
-
-    const closedChainedSpeedMarketsDataQuery = useUserResolvedChainedSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
-        }
-    );
-
-    const closedChainedSpeedMarketsData = useMemo(
-        () =>
-            closedChainedSpeedMarketsDataQuery.isSuccess && closedChainedSpeedMarketsDataQuery.data
-                ? closedChainedSpeedMarketsDataQuery.data
-                : [],
-        [closedChainedSpeedMarketsDataQuery]
-    );
-
     const data: UserPosition[] = useMemo(() => {
-        const speedMarketsClosedPositions: UserPosition[] = closedSpeedMarketsData.map((marketData) => {
-            return {
-                positionAddress: ZERO_ADDRESS,
-                currencyKey: marketData.currencyKey,
-                strikePrice: marketData.strikePriceNum,
-                leftPrice: 0,
-                rightPrice: 0,
-                finalPrice: marketData.finalPrice,
-                amount: marketData.amount,
-                amountBigNumber: marketData.amountBigNumber,
-                maturityDate: marketData.maturityDate,
-                expiryDate: marketData.maturityDate,
-                market: marketData.market,
-                side: marketData.side,
-                paid: marketData.paid,
-                value: marketData.value,
-                claimable: false,
-                claimed: marketData.isUserWinner,
-                isRanged: false,
-                isSpeedMarket: true,
-            };
-        });
-
-        const chainedSpeedMarketsClosedPositions: UserPosition[] = closedChainedSpeedMarketsData.map((marketData) => {
-            const lastPositivePriceIndex =
-                marketData.strikePrices.length -
-                1 -
-                [...marketData.strikePrices].reverse().findIndex((strikePrice) => strikePrice);
-            return {
-                positionAddress: ZERO_ADDRESS,
-                currencyKey: marketData.currencyKey,
-                strikePrice: marketData.strikePrices[lastPositivePriceIndex],
-                leftPrice: 0,
-                rightPrice: 0,
-                finalPrice: marketData.finalPrices[lastPositivePriceIndex],
-                amount: marketData.amount,
-                amountBigNumber: coinParser(marketData.amount.toString(), networkId),
-                maturityDate: marketData.strikeTimes[lastPositivePriceIndex],
-                expiryDate: marketData.maturityDate,
-                market: marketData.address,
-                side: marketData.sides[lastPositivePriceIndex],
-                paid: marketData.paid,
-                value: marketData.amount,
-                claimable: false,
-                claimed: marketData.isUserWinner,
-                isRanged: false,
-                isSpeedMarket: true,
-                isChainedSpeedMarket: true,
-            };
-        });
-
-        return orderBy(
-            closedPositions.concat(speedMarketsClosedPositions).concat(chainedSpeedMarketsClosedPositions),
-            ['maturityDate'],
-            ['desc']
-        );
-    }, [closedPositions, closedSpeedMarketsData, closedChainedSpeedMarketsData, networkId]);
+        return orderBy(closedPositions, ['maturityDate'], ['desc']);
+    }, [closedPositions]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -173,19 +75,17 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                         },
                         {
                             title: t('profile.leaderboard.trades.table.amount-col'),
-                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme, row.isChainedSpeedMarket),
+                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
                         },
                         {
                             title: t('profile.history.expired'),
-                            value: row.isSpeedMarket
-                                ? formatShortDateWithTime(row.maturityDate)
-                                : formatShortDate(row.maturityDate),
+                            value: formatShortDate(row.maturityDate),
                         },
                     ];
 
                     if (!isMobile) {
                         cells.push({
-                            value: !row.isSpeedMarket && (
+                            value: (
                                 <SPAAnchor
                                     href={
                                         row.isRanged

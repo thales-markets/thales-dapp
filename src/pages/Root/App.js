@@ -35,24 +35,13 @@ const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'compo
 
 const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
 const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
-const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
-const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
-const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
-
-const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
-const SpeedMarkets = lazy(() => import(/* webpackChunkName: "SpeedMarkets" */ '../SpeedMarkets'));
-const SpeedMarketsOverview = lazy(() =>
-    import(/* webpackChunkName: "SpeedMarketsOverview" */ '../SpeedMarketsOverview')
-);
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
 const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
 const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
-
-const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token'));
 
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
@@ -201,20 +190,6 @@ const App = () => {
                             </Route>
                         )}
 
-                        {getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId) && (
-                            <Route
-                                exact
-                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                                render={(routeProps) => (
-                                    <Suspense fallback={<Loader />}>
-                                        <DappLayout>
-                                            <GovernancePage {...routeProps} />
-                                        </DappLayout>
-                                    </Suspense>
-                                )}
-                            />
-                        )}
-
                         {getSupportedNetworksByRoute(ROUTES.Options.Game).includes(networkId) && (
                             <Route exact path={ROUTES.Options.Game}>
                                 <Suspense fallback={<Loader />}>
@@ -230,16 +205,6 @@ const App = () => {
                                 <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Profile />
-                                    </DappLayout>
-                                </Suspense>
-                            </Route>
-                        )}
-
-                        {getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId) && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <TokenPage />
                                     </DappLayout>
                                 </Suspense>
                             </Route>
@@ -331,25 +296,6 @@ const App = () => {
                             />
                         )}
 
-                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                            <Route exact path={ROUTES.Options.SpeedMarkets}>
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <SpeedMarkets />
-                                    </DappLayout>
-                                </Suspense>
-                            </Route>
-                        )}
-                        {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarketsOverview).includes(networkId) && (
-                            <Route exact path={ROUTES.Options.SpeedMarketsOverview}>
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <SpeedMarketsOverview />
-                                    </DappLayout>
-                                </Suspense>
-                            </Route>
-                        )}
-
                         <Route
                             exact
                             path={ROUTES.Options.RangeMarkets}
@@ -380,37 +326,15 @@ const App = () => {
                             </Suspense>
                         </Route>
 
-                        <Route exact path={ROUTES.Article.Token}>
-                            <Suspense fallback={<Loader />}>
-                                <MainLayout>
-                                    <Token />
-                                </MainLayout>
-                            </Suspense>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Governance}>
-                            <Suspense fallback={<Loader />}>
-                                <MainLayout>
-                                    <Governance />
-                                </MainLayout>
-                            </Suspense>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Whitepaper}>
-                            <Suspense fallback={<Loader />}>
-                                <MainLayout>
-                                    <Whitepaper />
-                                </MainLayout>
-                            </Suspense>
-                        </Route>
-
                         <Route>
-                            <Redirect to={ROUTES.Options.SpeedMarkets} />
+                            <Redirect to={ROUTES.Options.Home} />
                             <Suspense fallback={<Loader />}>
                                 <DappLayout>
-                                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) ? (
-                                        <SpeedMarkets />
+                                    {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) ? (
+                                        <Markets />
                                     ) : (
                                         <UnsupportedNetwork
-                                            supportedNetworks={getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets)}
+                                            supportedNetworks={getSupportedNetworksByRoute(ROUTES.Options.Home)}
                                         />
                                     )}
                                 </DappLayout>

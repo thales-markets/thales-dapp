@@ -5,7 +5,6 @@ import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ReactComponent as ZkSyncLogo } from 'assets/images/zksync-circle-logo.svg';
 import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
 import {
     DEFAULT_NETWORK,
@@ -18,7 +17,7 @@ import ROUTES from 'constants/routes';
 import { Network } from 'enums/network';
 import { BigNumber } from 'ethers';
 import { FunctionComponent, SVGProps } from 'react';
-import { NetworkParams } from '../types/network';
+import { NetworkParams, SupportedNetwork } from '../types/network';
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -34,7 +33,7 @@ export async function getEthereumNetwork() {
         if (hasEthereumInjected()) {
             const provider = (await detectEthereumProvider()) as EthereumProvider;
             if (provider && provider.networkVersion != null) {
-                const networkId = Number(provider.networkVersion) as Network;
+                const networkId = Number(provider.networkVersion) as SupportedNetwork;
                 return { name: SUPPORTED_NETWORKS_NAMES[networkId], networkId };
             }
         }
@@ -45,11 +44,11 @@ export async function getEthereumNetwork() {
     }
 }
 
-export const isNetworkSupported = (networkId: Network): boolean => {
+export const isNetworkSupported = (networkId: SupportedNetwork): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsMultiCollateralSupported = (networkId: Network, includeAdditional?: boolean): boolean =>
+export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, includeAdditional?: boolean): boolean =>
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
 
 export const getIsOVM = (networkId: number): boolean =>
@@ -151,15 +150,6 @@ export const SUPPORTED_NETWORK_IDS_MAP: Record<number, DropdownNetwork> = {
         },
         order: 3,
     },
-    [Network.ZkSync]: {
-        name: 'ZkSync',
-        icon: ZkSyncLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
-            const baseNetworkParams = SUPPORTED_NETWORKS_PARAMS[networkId];
-            await changeNetwork(baseNetworkParams, callback);
-        },
-        order: 5,
-    },
 };
 
 export const getSupportedNetworksByRoute = (route: string): Network[] => {
@@ -167,19 +157,7 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.Home:
         case ROUTES.Options.RangeMarkets:
         case ROUTES.Options.Referral:
-        case ROUTES.Governance.Home:
         case ROUTES.Options.CreateMarket:
-        case ROUTES.Options.ChainedSpeedMarkets:
-        case ROUTES.Options.ChainedSpeedMarketsOverview:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
-        case ROUTES.Options.SpeedMarkets:
-        case ROUTES.Options.SpeedMarketsOverview:
         case ROUTES.Options.Profile:
         case ROUTES.Options.Game:
             return [
@@ -188,16 +166,11 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
                 Network.Arbitrum,
                 Network.Base,
                 Network.PolygonMainnet,
-                Network.ZkSync,
-                Network.ZkSyncSepolia,
-                Network.BlastSepolia,
             ];
         case ROUTES.Options.Vaults:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
             return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
-        case ROUTES.Options.Token:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Mainnet, Network.Base];
         case ROUTES.Options.Wizard:
             return [
                 Network.OptimismMainnet,
@@ -211,15 +184,3 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }
 };
-
-export const getIsStakingSupported = (networkId: Network): boolean =>
-    [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base].includes(networkId);
-
-export const getIsLpStakingSupported = (networkId: Network): boolean =>
-    [Network.OptimismMainnet, Network.OptimismGoerli].includes(networkId);
-
-export const getIsBridgeSupported = (networkId: Network): boolean =>
-    [Network.OptimismMainnet, Network.Arbitrum, Network.Base].includes(networkId);
-
-export const isOnlySpeedMarketsSupported = (networkId: Network): boolean =>
-    [Network.ZkSync, Network.ZkSyncSepolia, Network.BlastSepolia].includes(networkId);

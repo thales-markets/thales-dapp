@@ -16,7 +16,7 @@ import {
 import UnexpectedError from 'components/UnexpectedError';
 import WalletDisclaimer from 'components/WalletDisclaimer';
 import { PLAUSIBLE } from 'constants/analytics';
-import { BlastSepolia, base, optimismSepolia, zkSyncSepolia } from 'constants/network';
+import { base, optimismSepolia } from 'constants/network';
 import { ThemeMap } from 'constants/ui';
 import dotenv from 'dotenv';
 import { Network } from 'enums/network';
@@ -27,7 +27,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { getDefaultTheme } from 'utils/style';
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
-import { arbitrum, mainnet, optimism, optimismGoerli, polygon, zkSync } from 'wagmi/chains';
+import { arbitrum, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
@@ -37,38 +37,31 @@ dotenv.config();
 type RpcProvider = {
     ankr: string;
     chainnode: string;
-    blast: string;
 };
 
 const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     [Network.Mainnet]: {
         ankr: '',
         chainnode: 'mainnet',
-        blast: 'eth-mainnet',
     },
     [Network.OptimismMainnet]: {
         ankr: 'optimism',
         chainnode: 'optimism-mainnet',
-        blast: 'optimism-mainnet',
     },
     [Network.PolygonMainnet]: {
         ankr: '',
         chainnode: 'polygon-mainnet',
-        blast: 'polygon-mainnet',
     },
-    [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
-    [Network.OptimismSepolia]: { ankr: '', chainnode: '', blast: '' },
-    [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
-    [Network.Base]: { ankr: 'base', chainnode: 'base-mainnet', blast: '' },
-    [Network.ZkSync]: { ankr: '', chainnode: '', blast: '' },
-    [Network.ZkSyncSepolia]: { ankr: '', chainnode: '', blast: '' },
-    [Network.BlastSepolia]: { ankr: '', chainnode: '', blast: '' },
+    [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli' },
+    [Network.OptimismSepolia]: { ankr: '', chainnode: '' },
+    [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one' },
+    [Network.Base]: { ankr: 'base', chainnode: 'base-mainnet' },
 };
 
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base, zkSync, zkSyncSepolia, BlastSepolia],
+    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base],
     [
         jsonRpcProvider({
             rpc: (chain) => {

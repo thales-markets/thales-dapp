@@ -20,9 +20,9 @@ import Footer from '../Footer';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
     type,
-    positions,
+    position,
     currencyKey,
-    strikePrices,
+    strikePrice,
     leftPrice,
     rightPrice,
     strikeDate,
@@ -37,7 +37,6 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
 
     const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
 
-    const strikePrice = strikePrices ? strikePrices[0] : 0;
     const price =
         typeof strikePrice == 'string' && strikePrice
             ? strikePrice
@@ -59,7 +58,7 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
             <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
-                <Position>{`${currencyKey.toUpperCase()} ${positions[0]}`}</Position>
+                <Position>{`${currencyKey.toUpperCase()} ${position}`}</Position>
             </PositionInfo>
             <PotentialWinContainer>
                 <PotentialWinHeading type={type}>

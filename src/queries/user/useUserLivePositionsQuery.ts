@@ -25,8 +25,6 @@ const useUserLivePositionsQuery = (
     return useQuery<UserLivePositions[]>(
         QUERY_KEYS.User.OpenPositions(walletAddress, networkId),
         async () => {
-            console.log('Ulazi useUserLivePositionsQuery');
-
             const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
                 axios.get(
                     `${generalConfig.API_URL}/${
@@ -156,7 +154,6 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: positionBalance.value,
                         claimable: false,
-                        isSpeedMarket: false,
                     };
                 }),
                 ...claimablePositions.map((positionBalance: any) => {
@@ -175,7 +172,6 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
-                        isSpeedMarket: false,
                     };
                 }),
                 ...resultsRanged.map((positionBalance: any) => {
@@ -195,7 +191,6 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
                         claimable: false,
-                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
@@ -215,7 +210,6 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
-                        isSpeedMarket: false,
                     };
                 }),
             ];

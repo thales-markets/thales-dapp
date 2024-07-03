@@ -68,6 +68,7 @@ import { ReactComponent as sXTZIcon } from 'assets/synths/sXTZ.svg';
 import { ReactComponent as sYFIIcon } from 'assets/synths/sYFI.svg';
 import { Network } from 'enums/network';
 import { Coins } from 'thales-utils';
+import { SupportedNetwork } from 'types/network';
 
 const SYNTHS = [
     'sBTC',
@@ -195,14 +196,11 @@ export const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
 
 const FIAT_CURRENCY = ['USD'];
-export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
+const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
 const FIAT_CURRENCY_SIGN = {
     [FIAT_CURRENCY_MAP.USD]: '$',
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
-
-export const THALES_CURRENCY = 'THALES';
-export const LP_TOKEN = 'LP Token';
 
 export const currencyKeyToAssetIconMap = {
     [SYNTHS_MAP.sBTC]: sBTCIcon,
@@ -361,7 +359,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.AERO]: 'Aerodrome',
 };
 
-export const COLLATERALS: Record<Network, Coins[]> = {
+export const COLLATERALS: Record<SupportedNetwork, Coins[]> = {
     [Network.Mainnet]: [SYNTHS_MAP.sUSD as Coins],
     [Network.OptimismMainnet]: [
         SYNTHS_MAP.sUSD as Coins,
@@ -384,13 +382,10 @@ export const COLLATERALS: Record<Network, Coins[]> = {
     [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
-    [Network.ZkSync]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
-    [Network.ZkSyncSepolia]: [SYNTHS_MAP.sUSD as Coins],
-    [Network.BlastSepolia]: [SYNTHS_MAP.sUSD as Coins],
 };
 
 // TODO: merge with COLLATERALS when all pages will support these
-export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
+export const ADDITIONAL_COLLATERALS: Record<SupportedNetwork, Coins[]> = {
     [Network.Mainnet]: [],
     [Network.OptimismMainnet]: [
         CRYPTO_CURRENCY_MAP.OP as Coins,
@@ -413,7 +408,4 @@ export const ADDITIONAL_COLLATERALS: Record<Network, Coins[]> = {
         CRYPTO_CURRENCY_MAP.WETH as Coins,
         CRYPTO_CURRENCY_MAP.ETH as Coins,
     ],
-    [Network.ZkSync]: [],
-    [Network.ZkSyncSepolia]: [],
-    [Network.BlastSepolia]: [],
 };

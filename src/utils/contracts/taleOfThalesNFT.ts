@@ -9,9 +9,6 @@ const taleOfThalesNFT = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xe42517a1Bf3E6Bd088Bf26ead8d8754e0e2BeBA3',
         [Network.Base]: 'TBD',
-        [Network.ZkSync]: 'TBD',
-        [Network.ZkSyncSepolia]: 'TBD',
-        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

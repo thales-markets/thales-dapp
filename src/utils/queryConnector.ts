@@ -3,7 +3,6 @@ import { generalConfig } from 'config/general';
 import { CACHE_PREFIX_KEYS, WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS } from 'constants/cache';
 import QUERY_KEYS from 'constants/queryKeys';
 import { API_ROUTES } from 'constants/routes';
-import { SpaceKey } from 'enums/governance';
 import { Network } from 'enums/network';
 import { QueryClient } from 'react-query';
 
@@ -132,34 +131,6 @@ export const refetchRangedAmmData = (walletAddress: string, marketAddress: strin
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
 
-export const refetchTokenQueries = (walletAddress: string, networkId: Network) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingData(networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.UserStakingData(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.UserVestingData(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId, undefined));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Thales(walletAddress, networkId));
-};
-
-export const refetchLPStakingQueries = (walletAddress: string, networkId: Network) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.GelatoBalance(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Gelato());
-};
-
-export const refetchUserTokenTransactions = (walletAddress: string, networkId: Network) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId, undefined));
-};
-
-export const refetchMigratedInvestorsRetroRewards = (walletAddress: string, networkId: Network) => {
-    queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.Token.MigratedInvestorsRetroRewards(walletAddress, networkId)
-    );
-};
-
-export const refetchVestingEscrow = (walletAddress: string, networkId: Network) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.VestingEscrow(walletAddress, networkId));
-};
-
 export const refetchBalances = async (walletAddress: string, networkId: Network) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
@@ -175,10 +146,6 @@ export const refetchBalances = async (walletAddress: string, networkId: Network)
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.OpenPositions(walletAddress, networkId));
-};
-
-export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
 export const refetchVaultData = async (
@@ -218,50 +185,6 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, undefined)
     );
-};
-
-export const refetchSpeedMarketsLimits = (isChained: boolean, networkId: Network, walletAddress?: string) => {
-    queryConnector.queryClient.invalidateQueries(
-        isChained
-            ? QUERY_KEYS.BinaryOptions.ChainedSpeedMarketsLimits(networkId, walletAddress)
-            : QUERY_KEYS.BinaryOptions.SpeedMarketsLimits(networkId, walletAddress)
-    );
-};
-
-export const refetchUserSpeedMarkets = (isChained: boolean, networkId: Network, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(
-        isChained
-            ? QUERY_KEYS.BinaryOptions.UserChainedSpeedMarkets(networkId, walletAddress)
-            : QUERY_KEYS.BinaryOptions.UserSpeedMarkets(networkId, walletAddress)
-    );
-};
-
-export const refetchUserResolvedSpeedMarkets = (isChained: boolean, networkId: Network, walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(
-        isChained
-            ? QUERY_KEYS.BinaryOptions.UserResolvedChainedSpeedMarkets(networkId, walletAddress)
-            : QUERY_KEYS.BinaryOptions.UserResolvedSpeedMarkets(networkId, walletAddress)
-    );
-};
-
-export const refetchActiveSpeedMarkets = (isChained: boolean, networkId: Network) => {
-    isChained
-        ? queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveChainedSpeedMarkets(networkId))
-        : queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.ActiveSpeedMarkets(networkId));
-};
-
-export const refetchPythPrice = (priceId: string, publishTime: number) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Prices.PythPrices(priceId, publishTime));
-};
-
-export const refetchStakingLeaderboardData = (walletAddress: string, networkId: Network, period: number) => {
-    queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.Token.StakersLeaderboardData(walletAddress, networkId, period)
-    );
-};
-
-export const refetchCelerBridgeHistory = (walletAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.CelerBridgeHistory(walletAddress));
 };
 
 export default queryConnector;

@@ -1,5 +1,5 @@
 import { Positions } from 'enums/options';
-import { HistoricalOptionsMarketInfo, RangedMarket, SpeedMarket, Trade } from './options';
+import { HistoricalOptionsMarketInfo, RangedMarket, Trade } from './options';
 import { BigNumber } from 'ethers';
 
 export type UserPosition = {
@@ -20,8 +20,6 @@ export type UserPosition = {
     claimable: boolean;
     claimed: boolean;
     isRanged: boolean;
-    isSpeedMarket: boolean;
-    isChainedSpeedMarket?: boolean;
 };
 
 export type UserProfileData = {
@@ -33,7 +31,7 @@ export type UserProfileData = {
 };
 
 export type TradeWithMarket = Trade & {
-    marketItem: HistoricalOptionsMarketInfo | RangedMarket | SpeedMarket;
+    marketItem: HistoricalOptionsMarketInfo | RangedMarket;
 };
 
 export type VaultsAndLiquidityPoolUserTransaction = {

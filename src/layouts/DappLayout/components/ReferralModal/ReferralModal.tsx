@@ -13,11 +13,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { BoldText, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, FlexDivStart } from 'styles/common';
-import { isOnlySpeedMarketsSupported } from 'utils/network';
+import { RootState } from 'types/ui';
 import { buildReferrerLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -28,15 +27,13 @@ type ReferralModalProps = {
 enum Pages {
     Markets = 0,
     RangeMarkets = 1,
-    SpeedMarkets = 2,
-    LandingPage = 3,
+    LandingPage = 2,
 }
 
 const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
 
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
@@ -49,26 +46,18 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
 
     const referralPageOptions = [
         {
-            value: Pages.SpeedMarkets,
-            label: t('referral-page.pages.speed-market-page'),
+            value: Pages.Markets,
+            label: t('referral-page.pages.market-page'),
+        },
+        {
+            value: Pages.RangeMarkets,
+            label: t('referral-page.pages.range-market-page'),
         },
         {
             value: Pages.LandingPage,
             label: t('referral-page.pages.landing-page'),
         },
     ];
-
-    !isOnlySpeedMarketsSupported(networkId) &&
-        referralPageOptions.unshift(
-            {
-                value: Pages.Markets,
-                label: t('referral-page.pages.market-page'),
-            },
-            {
-                value: Pages.RangeMarkets,
-                label: t('referral-page.pages.range-market-page'),
-            }
-        );
 
     const populateReferralLink = (referralPageId: Pages, reffererId: string) => {
         let link = ROUTES.Options.Home;
@@ -78,9 +67,6 @@ const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
                 break;
             case Pages.RangeMarkets:
                 link = ROUTES.Options.RangeMarkets;
-                break;
-            case Pages.SpeedMarkets:
-                link = ROUTES.Options.SpeedMarkets;
                 break;
             case Pages.LandingPage:
                 link = ROUTES.Home;

@@ -2,6 +2,7 @@ import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_NETWORK } from 'constants/network';
 import { Network } from 'enums/network';
 import { getAddress } from 'thales-utils';
+import { SupportedNetwork } from 'types/network';
 import { RootState, WalletSliceState } from 'types/ui';
 
 const sliceName = 'wallet';
@@ -9,7 +10,6 @@ const sliceName = 'wallet';
 const initialState: WalletSliceState = {
     walletAddress: null,
     networkId: DEFAULT_NETWORK.networkId,
-    networkName: DEFAULT_NETWORK.name,
     switchToNetworkId: DEFAULT_NETWORK.networkId,
     selectedCollateralIndex: 0,
 };
@@ -31,14 +31,12 @@ const walletDetailsSlice = createSlice({
         updateNetworkSettings: (
             state,
             action: PayloadAction<{
-                networkId: Network;
-                networkName: string;
+                networkId: SupportedNetwork;
             }>
         ) => {
-            const { networkId, networkName } = action.payload;
+            const { networkId } = action.payload;
 
             state.networkId = networkId;
-            state.networkName = networkName;
         },
         switchToNetworkId: (
             state,
@@ -56,11 +54,6 @@ const walletDetailsSlice = createSlice({
 
 const getWalletState = (state: RootState) => state[sliceName];
 export const getNetworkId = (state: RootState) => getWalletState(state).networkId;
-const getNetworkName = (state: RootState) => getWalletState(state).networkName;
-export const getNetwork = (state: RootState) => ({
-    networkId: getNetworkId(state),
-    networkName: getNetworkName(state),
-});
 export const getSwitchToNetworkId = (state: RootState) => getWalletState(state).switchToNetworkId;
 export const getWalletAddress = (state: RootState) => getWalletState(state).walletAddress;
 export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);

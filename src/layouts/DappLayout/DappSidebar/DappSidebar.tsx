@@ -29,10 +29,6 @@ const DappSidebar: React.FC = () => {
         isWalletConnected && getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId);
     const showProfileDivider = showGamePage || showProfilePage;
 
-    const showTokenPage = getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId);
-    const showGovernancePage = getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId);
-    const showTokenDivider = showTokenPage || showGovernancePage;
-
     return (
         <OutsideClickHandler
             onOutsideClick={(e) => {
@@ -59,13 +55,11 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                        <DappHeaderItem
-                            href={LINKS.SpeedMarkets}
-                            iconName="speed-markets"
-                            label={t('common.sidebar.speed-markets')}
-                        />
-                    )}
+                    <DappHeaderItem
+                        href={LINKS.SpeedMarkets}
+                        iconName="speed-markets"
+                        label={t('common.sidebar.speed-markets')}
+                    />
 
                     {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
                         <DappHeaderItem
@@ -103,23 +97,17 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showTokenDivider && <Divider />}
-
-                    {showTokenPage && (
-                        <DappHeaderItem
-                            href={LINKS.ThalesProtocol.Token}
-                            iconName="token"
-                            label={t('common.sidebar.earn-label')}
-                        />
-                    )}
-
-                    {showGovernancePage && (
-                        <DappHeaderItem
-                            href={LINKS.ThalesProtocol.Governance}
-                            iconName="governance"
-                            label={t('common.sidebar.governance-label')}
-                        />
-                    )}
+                    <Divider />
+                    <DappHeaderItem
+                        href={LINKS.ThalesProtocol.Token}
+                        iconName="token"
+                        label={t('common.sidebar.earn-label')}
+                    />
+                    <DappHeaderItem
+                        href={LINKS.ThalesProtocol.Governance}
+                        iconName="governance"
+                        label={t('common.sidebar.governance-label')}
+                    />
 
                     {showProfileDivider && <Divider />}
 

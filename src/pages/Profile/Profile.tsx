@@ -1,12 +1,6 @@
-import ElectionsBanner from 'components/ElectionsBanner';
-import SearchInput from 'components/SearchInput/SearchInput';
+import SearchInput from 'components/SearchInput';
 import { USD_SIGN } from 'constants/currency';
-import { millisecondsToSeconds } from 'date-fns';
-import { Positions } from 'enums/options';
 import BannerCarousel from 'pages/Trade/components/BannerCarousel';
-import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import useProfileDataQuery from 'queries/profile/useProfileDataQuery';
 import useUserNotificationsQuery from 'queries/user/useUserNotificationsQuery';
 import queryString from 'query-string';
@@ -16,13 +10,10 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { UserProfileData } from 'types/profile';
-import { ThemeInterface } from 'types/ui';
-import { isOnlySpeedMarketsSupported } from 'utils/network';
-import { getPriceId } from 'utils/pyth';
+import { RootState, ThemeInterface } from 'types/ui';
 import { history } from 'utils/routes';
 import { MARKET_DURATION_IN_DAYS } from '../../constants/options';
 import ClaimablePositions from './components/ClaimablePositions';
@@ -65,83 +56,9 @@ const Profile: React.FC = () => {
     const [searchText, setSearchText] = useState<string>('');
 
     const notificationsQuery = useUserNotificationsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
+        enabled: isAppReady && isWalletConnected,
     });
     const notifications = notificationsQuery.isSuccess && notificationsQuery.data ? notificationsQuery.data : 0;
-
-    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
-    const speedMarketsNotifications =
-        userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
-            ? userActiveSpeedMarketsDataQuery.data.filter((marketData) => marketData.claimable).length
-            : 0;
-
-    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
-    const userActiveChainedSpeedMarketsData =
-        userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
-            ? userActiveChainedSpeedMarketsDataQuery.data
-            : [];
-
-    // Prepare active chained speed markets that become matured to fetch Pyth prices
-    const maturedChainedMarkets = userActiveChainedSpeedMarketsData
-        .filter((marketData) => marketData.isMatured)
-        .map((marketData) => {
-            const strikeTimes = marketData.strikeTimes.map((strikeTime) => millisecondsToSeconds(strikeTime));
-            return {
-                ...marketData,
-                strikeTimes,
-                pythPriceId: getPriceId(networkId, marketData.currencyKey),
-            };
-        });
-
-    const priceRequests = maturedChainedMarkets
-        .map((data) =>
-            data.strikeTimes.map((strikeTime) => ({
-                priceId: data.pythPriceId,
-                publishTime: strikeTime,
-                market: data.address,
-            }))
-        )
-        .flat();
-    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
-    const pythPricesWithMarket = priceRequests.map((request, i) => ({
-        market: request.market,
-        price: pythPricesQueries[i]?.data || 0,
-    }));
-
-    // Based on Pyth prices determine if chained position is claimable
-    const chainedSpeedMarketsNotifications = maturedChainedMarkets
-        .map((marketData) => {
-            const finalPrices = marketData.strikeTimes.map(
-                (_, i) => pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i].price
-            );
-            const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
-                i > 0 ? finalPrices[i - 1] : strikePrice
-            );
-            const userWonStatuses = marketData.sides.map((side, i) =>
-                finalPrices[i] > 0 && strikePrices[i] > 0
-                    ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
-                      (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
-                    : undefined
-            );
-            const claimable = userWonStatuses.every((status) => status);
-
-            return { ...marketData, finalPrices, claimable };
-        })
-        .filter((marketData) => marketData.claimable).length;
-
-    const totalNotifications = notifications + speedMarketsNotifications + chainedSpeedMarketsNotifications;
 
     const userProfileDataQuery = useProfileDataQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -180,8 +97,7 @@ const Profile: React.FC = () => {
 
     return (
         <>
-            <ElectionsBanner />
-            {!isOnlySpeedMarketsSupported(networkId) && <BannerCarousel />}
+            <BannerCarousel />
             <Container>
                 <Header>
                     <Title>{t('profile.title')}</Title>
@@ -245,19 +161,17 @@ const Profile: React.FC = () => {
                             active={view === NavItems.MyPositions}
                         >
                             {t('profile.tabs.my-positions')}
-                            {totalNotifications > 0 && <Notification>{totalNotifications}</Notification>}
+                            {notifications > 0 && <Notification>{notifications}</Notification>}
                         </NavItem>
                         <NavItem onClick={() => onTabClickHandler(NavItems.History)} active={view === NavItems.History}>
                             {t('profile.tabs.history')}
                         </NavItem>
-                        {!isOnlySpeedMarketsSupported(networkId) && (
-                            <NavItem
-                                onClick={() => onTabClickHandler(NavItems.VaultsLp)}
-                                active={view === NavItems.VaultsLp}
-                            >
-                                {t('profile.tabs.vaults-lp')}
-                            </NavItem>
-                        )}
+                        <NavItem
+                            onClick={() => onTabClickHandler(NavItems.VaultsLp)}
+                            active={view === NavItems.VaultsLp}
+                        >
+                            {t('profile.tabs.vaults-lp')}
+                        </NavItem>
                     </Nav>
                     <>
                         {view === NavItems.MyPositions && (

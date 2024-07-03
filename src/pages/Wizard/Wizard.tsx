@@ -5,7 +5,6 @@ import WizardText, { Text } from './components/WizardText';
 import WizardFaq from './components/WizardFaq';
 import WizardVideo from './components/WizardVideo';
 import styled from 'styled-components';
-import ElectionsBanner from 'components/ElectionsBanner';
 import { WizardSteps } from 'enums/wizard';
 
 const Wizard: React.FC = () => {
@@ -16,33 +15,30 @@ const Wizard: React.FC = () => {
     const [currentStep, setCurrentStep] = useState(initialStep);
 
     return (
-        <>
-            <ElectionsBanner width={72} />
-            <Wrapper>
-                <TextHeader>{t('wizard-page.header')}</TextHeader>
-                <TextIntro>
-                    <Trans
-                        i18nKey="wizard-page.intro"
-                        components={{
-                            b: <strong />,
-                        }}
-                    />
-                </TextIntro>
-                <WizardVideo
-                    header={false}
-                    videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
-                    videoTitle="On-boarding Wizard video walk through for Thales platform"
+        <Wrapper>
+            <TextHeader>{t('wizard-page.header')}</TextHeader>
+            <TextIntro>
+                <Trans
+                    i18nKey="wizard-page.intro"
+                    components={{
+                        b: <strong />,
+                    }}
                 />
-                <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
-                <WizardText step={currentStep}></WizardText>
-                <WizardVideo
-                    header={true}
-                    videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
-                    videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
-                />
-                <WizardFaq />
-            </Wrapper>
-        </>
+            </TextIntro>
+            <WizardVideo
+                header={false}
+                videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
+                videoTitle="On-boarding Wizard video walk through for Thales platform"
+            />
+            <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
+            <WizardText step={currentStep}></WizardText>
+            <WizardVideo
+                header={true}
+                videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
+                videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
+            />
+            <WizardFaq />
+        </Wrapper>
     );
 };
 

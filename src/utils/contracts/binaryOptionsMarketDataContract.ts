@@ -9,9 +9,6 @@ const binaryOptionsMarketDataContract = {
         [Network.PolygonMainnet]: '0x3198ab211cdf3e4d13a698e1fb819507bca2e579',
         [Network.Arbitrum]: '0x036adEA6bc1fD0247c2796f8D201B28C0dC2a67d',
         [Network.Base]: '0x22Eb15Fb53B61B470cabbe9fC268a1b67E675ff9',
-        [Network.ZkSync]: 'TBD',
-        [Network.ZkSyncSepolia]: 'TBD',
-        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

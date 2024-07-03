@@ -1,62 +1,43 @@
 import SpeedLogoImg from 'assets/images/speed-markets/speed-markets-logo.svg';
 import arrowRightAnimation from 'assets/lotties/rigth-arrows.json';
-import SPAAnchor from 'components/SPAAnchor';
-import ROUTES from 'constants/routes';
+import { LINKS } from 'constants/links';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import Lottie from 'lottie-react';
 import React, { CSSProperties } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
-import { buildHref } from 'utils/routes';
+import { RootState } from 'types/ui';
 
-type PageLinkBannerProps = { rout: string };
-
-const PageLinkBanner: React.FC<PageLinkBannerProps> = ({ rout }) => {
+const PageLinkBanner: React.FC = () => {
     const { t } = useTranslation();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
-    let textKey = '';
-    let tryMarketsValue = '';
-    let imageSrc = '';
-    switch (rout) {
-        case ROUTES.Options.Home:
-            textKey = 'common.banner.page-link.thales-markets';
-            tryMarketsValue = 'markets.title';
-            break;
-        case ROUTES.Options.SpeedMarkets:
-            textKey = 'common.banner.page-link.speed-markets';
-            tryMarketsValue = isMobile ? 'speed-markets.title' : '';
-            imageSrc = SpeedLogoImg;
-            break;
-    }
-
     return (
-        <SPAAnchor href={buildHref(rout)}>
+        <a target="_blank" rel="noreferrer" href={LINKS.SpeedMarkets}>
             <Content>
                 <Text>
-                    {t(textKey)}{' '}
+                    {t('common.banner.page-link.speed-markets')}{' '}
                     <Text noWrap>
                         <Trans
                             i18nKey="common.banner.page-link.try"
                             components={{
                                 bold: <BoldText />,
-                                value: t(tryMarketsValue),
+                                value: t(isMobile ? 'speed-markets.title' : ''),
                             }}
                         />
                     </Text>
                 </Text>
-                {!isMobile && imageSrc && (
+                {!isMobile && (
                     <Text>
-                        <Image src={imageSrc} />
+                        <Image src={SpeedLogoImg} />
                     </Text>
                 )}
                 {!isMobile && <Lottie animationData={arrowRightAnimation} style={arrowRightStyle} />}
             </Content>
-        </SPAAnchor>
+        </a>
     );
 };
 
