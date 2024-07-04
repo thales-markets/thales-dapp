@@ -56,7 +56,7 @@ const DappSidebar: React.FC = () => {
                     )}
 
                     <DappHeaderItem
-                        href={LINKS.SpeedMarkets}
+                        href={buildHref('/speedV2')} // TODO: replace this with href={LINKS.SpeedMarkets} when V2 is live
                         iconName="speed-markets"
                         label={t('common.sidebar.speed-markets')}
                     />
