@@ -29,10 +29,6 @@ const DappSidebar: React.FC = () => {
         isWalletConnected && getSupportedNetworksByRoute(ROUTES.Options.Profile).includes(networkId);
     const showProfileDivider = showGamePage || showProfilePage;
 
-    const showTokenPage = getSupportedNetworksByRoute(ROUTES.Options.Token).includes(networkId);
-    const showGovernancePage = getSupportedNetworksByRoute(ROUTES.Governance.Home).includes(networkId);
-    const showTokenDivider = showTokenPage || showGovernancePage;
-
     return (
         <OutsideClickHandler
             onOutsideClick={(e) => {
@@ -59,20 +55,11 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {getSupportedNetworksByRoute(ROUTES.Options.SpeedMarkets).includes(networkId) && (
-                        <DappHeaderItem
-                            className={`${
-                                [ROUTES.Options.SpeedMarkets, ROUTES.Options.SpeedMarketsOverview].includes(
-                                    location.pathname
-                                )
-                                    ? 'selected'
-                                    : ''
-                            }`}
-                            href={buildHref(ROUTES.Options.SpeedMarkets)}
-                            iconName="speed-markets"
-                            label={t('common.sidebar.speed-markets')}
-                        />
-                    )}
+                    <DappHeaderItem
+                        href={buildHref('/speed-markets')} // TODO: replace this with href={LINKS.SpeedMarkets} when V2 is live
+                        iconName="speed-markets"
+                        label={t('common.sidebar.speed-markets')}
+                    />
 
                     {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
                         <DappHeaderItem
@@ -110,25 +97,17 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {showTokenDivider && <Divider />}
-
-                    {showTokenPage && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
-                            href={LINKS.ThalesProtocol.Token}
-                            iconName="token"
-                            label={t('common.sidebar.earn-label')}
-                        />
-                    )}
-
-                    {showGovernancePage && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Governance.Home ? 'selected' : ''}`}
-                            href={LINKS.ThalesProtocol.Governance}
-                            iconName="governance"
-                            label={t('common.sidebar.governance-label')}
-                        />
-                    )}
+                    <Divider />
+                    <DappHeaderItem
+                        href={LINKS.ThalesProtocol.Token}
+                        iconName="token"
+                        label={t('common.sidebar.earn-label')}
+                    />
+                    <DappHeaderItem
+                        href={LINKS.ThalesProtocol.Governance}
+                        iconName="governance"
+                        label={t('common.sidebar.governance-label')}
+                    />
 
                     {showProfileDivider && <Divider />}
 
@@ -155,15 +134,6 @@ const DappSidebar: React.FC = () => {
                         href={LINKS.SportMarkets}
                         iconName="overtime-markets"
                         label={t('common.sidebar.sport-markets-label')}
-                        onClick={(event: any) => {
-                            event.preventDefault();
-                            if (isMobile) {
-                                window.location.replace(LINKS.SportMarkets);
-                            } else {
-                                window.open(LINKS.SportMarkets);
-                            }
-                        }}
-                        simpleOnClick={true}
                     />
                 </ItemsContainer>
             </SidebarHtml>

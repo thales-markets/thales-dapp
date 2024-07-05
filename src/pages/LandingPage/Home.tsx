@@ -36,7 +36,7 @@ const Home: React.FC = () => {
 
 export default Home;
 
-export const Background = styled.div`
+const Background = styled.div`
     width: 100%;
     font-size: 16px;
 

@@ -1,5 +1,6 @@
 import { Network } from 'enums/network';
 import theme from 'styles/themes/dark';
+import { SupportedNetwork } from './network';
 
 export type AppSliceState = {
     isReady: boolean;
@@ -7,8 +8,7 @@ export type AppSliceState = {
 
 export type WalletSliceState = {
     walletAddress: string | null;
-    networkId: Network;
-    networkName: string;
+    networkId: SupportedNetwork;
     switchToNetworkId: Network; // used to trigger manually network switch in App.js
     selectedCollateralIndex: number;
 };

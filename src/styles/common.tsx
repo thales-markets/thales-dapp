@@ -44,7 +44,6 @@ export const BoldText = styled.span`
     font-weight: 700;
 `;
 
-// TODO: Update color names
 export const Colors = {
     GRAY: '#2b3139',
     GRAY_LIGHT: '#848E9C',
@@ -64,7 +63,6 @@ export const Colors = {
     GREEN_IN_END: 'rgb(43, 49, 57, 0)',
 
     BLACK: '#000000',
-    BLACK_LIGHT: '#121212',
 
     BLUE: '#5B86E5',
     BLUE_LIGHT: '#36D1DC',
@@ -83,9 +81,8 @@ export const Colors = {
     ORANGE_LIGHT: '#FFB866',
     ORANGE_DARK: '#FF8800',
 
-    YELLOW: '#FFCC00',
     YELLOW_DARK: '#9b8327',
-    MUSTARD_YELLOW: '#DAAB03',
+    YELLOW_MUSTARD: '#DAAB03',
 
     PURPLE: '#BF7EFF',
 };

@@ -130,7 +130,6 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
-                        isSpeedMarket: false,
                     };
                 }),
                 ...openRangedPositionsWithValue.map((positionBalance: any) => {
@@ -152,7 +151,6 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
-                        isSpeedMarket: false,
                     };
                 }),
             ];

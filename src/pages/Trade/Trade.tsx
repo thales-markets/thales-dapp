@@ -175,7 +175,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                         </DatesWrapper>
                     </DropdownsWrapper>
                     <LightweightChart
-                        isSpeedMarkets={false}
                         position={positionType}
                         asset={currencyKey}
                         selectedPrice={getSelectedPrice()}
@@ -223,7 +222,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 showBuyLiquidity
             />
             <BannerWrapper>
-                <PageLinkBanner rout={ROUTES.Options.SpeedMarkets} />
+                <PageLinkBanner />
             </BannerWrapper>
             <OpenPositions />
         </Wrapper>

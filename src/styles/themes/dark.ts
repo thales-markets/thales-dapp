@@ -53,11 +53,9 @@ export default {
             primary: Colors.WHITE,
             secondary: Colors.GRAY_LIGHT,
             tertiary: Colors.GRAY,
-            quaternary: Colors.RED,
         },
         borderColor: {
             primary: Colors.GRAY_LIGHT,
-            secondary: Colors.GRAY,
             focus: {
                 primary: Colors.GREEN,
             },
@@ -73,38 +71,18 @@ export default {
         },
     },
     error: {
-        background: {
-            primary: Colors.GRAY_DARK,
-        },
         textColor: {
-            primary: Colors.RED,
-        },
-        borderColor: {
             primary: Colors.RED,
         },
     },
     warning: {
-        background: {
-            primary: Colors.GRAY_DARK,
-            secondary: Colors.GRAY,
-        },
         textColor: {
             primary: Colors.ORANGE,
             secondary: Colors.ORANGE_DARK,
         },
-        borderColor: {
-            primary: Colors.ORANGE,
-        },
     },
     info: {
-        background: {
-            primary: Colors.GRAY_DARK,
-        },
         textColor: {
-            primary: Colors.BLUE,
-            secondary: Colors.BLUE_DARK,
-        },
-        borderColor: {
             primary: Colors.BLUE,
         },
     },
@@ -136,21 +114,12 @@ export default {
             secondary: Colors.BLUE_SKY,
         },
     },
-    tokenPage: {
-        border: {
-            primary: Colors.GRAY,
-            secondary: Colors.PURPLE,
-        },
-    },
     toastMessages: {
         success: {
             background: {
                 primary: Colors.GREEN,
                 secondary: Colors.GREEN_LIGHT,
                 tertiary: Colors.GREEN_DARK,
-            },
-            textColor: {
-                primary: Colors.BLACK,
             },
         },
         info: {
@@ -159,18 +128,12 @@ export default {
                 secondary: Colors.BLUE_LIGHT,
                 tertiary: Colors.BLUE,
             },
-            textColor: {
-                primary: Colors.BLACK,
-            },
         },
         warning: {
             background: {
                 primary: Colors.ORANGE,
                 secondary: Colors.ORANGE_LIGHT,
                 tertiary: Colors.ORANGE_DARK,
-            },
-            textColor: {
-                primary: Colors.BLACK,
             },
         },
         error: {
@@ -185,8 +148,7 @@ export default {
         },
     },
     flexCard: {
-        down: Colors.RED,
-        up: Colors.GREEN,
+        potential: Colors.GREEN,
         resolved: Colors.YELLOW_DARK,
         text: Colors.GRAY_BLUE,
     },
@@ -194,7 +156,7 @@ export default {
         background: {
             primary: Colors.GRAY_SILVER,
             secondary: Colors.GRAY,
-            tertiary: Colors.MUSTARD_YELLOW,
+            tertiary: Colors.YELLOW_MUSTARD,
         },
         textColor: {
             primary: Colors.GRAY,
@@ -202,7 +164,7 @@ export default {
         buttons: {
             background: {
                 primary: Colors.GRAY_BLUE,
-                secondary: Colors.MUSTARD_YELLOW,
+                secondary: Colors.YELLOW_MUSTARD,
             },
             textColor: {
                 primary: Colors.WHITE,

@@ -7,7 +7,6 @@ import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 import { AreaSeriesComponent } from './AreaSeries/AreaSerierComponent';
 import { CandlestickComponent } from './CandlestickSeries/CandlestickComponent';
-import { UserPositionAreaSeries } from './UserSeries/UserSeriesComponent';
 
 type ChartContextProps = {
     children: React.ReactNode;
@@ -18,7 +17,6 @@ type ChartProps = {
     data: any;
     position: Positions | undefined;
     asset: string;
-    isSpeedMarkets: boolean;
     selectedPrice?: number;
     selectedRightPrice?: number;
     selectedDate?: number;
@@ -33,16 +31,13 @@ export const ChartComponent: React.FC<ChartProps> = ({
     data,
     position,
     asset,
-    isSpeedMarkets,
     selectedPrice,
     selectedRightPrice,
     selectedDate,
-    resolution,
 }) => {
     const theme: ThemeInterface = useTheme();
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [chart, setChart] = useState<IChartApi | undefined>();
-    const [displayPositions, setDisplayPositions] = useState(false);
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current ?? '', {
@@ -75,12 +70,8 @@ export const ChartComponent: React.FC<ChartProps> = ({
     }, [theme]);
 
     useEffect(() => {
-        if (!isSpeedMarkets) chart?.timeScale().fitContent();
-    }, [isSpeedMarkets, selectedPrice, chart]);
-
-    useEffect(() => {
-        setDisplayPositions(Number(resolution) === 1 && isSpeedMarkets);
-    }, [resolution, isSpeedMarkets]);
+        chart?.timeScale().fitContent();
+    }, [selectedPrice, chart]);
 
     return (
         <ChartContainer>
@@ -92,20 +83,11 @@ export const ChartComponent: React.FC<ChartProps> = ({
                         <AreaSeriesComponent
                             asset={asset}
                             data={data}
-                            isSpeedMarkets={isSpeedMarkets}
                             position={position}
                             selectedPrice={selectedPrice}
                             selectedRightPrice={selectedRightPrice}
                             selectedDate={selectedDate}
                         />
-
-                        {displayPositions && (
-                            <UserPositionAreaSeries
-                                candlestickData={data}
-                                asset={asset}
-                                isSpeedMarkets={isSpeedMarkets}
-                            />
-                        )}
                     </ChartProvider>
                 )}
             </Chart>

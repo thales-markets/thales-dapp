@@ -1,4 +1,3 @@
-import { SpaceKey } from 'enums/governance';
 import { Network } from 'enums/network';
 import { Positions } from 'enums/options';
 import { BigNumber } from 'ethers';
@@ -46,44 +45,6 @@ const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: Network) => ['markets', networkId],
-        SpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
-            'speedMarketsLimits',
-            networkId,
-            walletAddress,
-        ],
-        ChainedSpeedMarketsLimits: (networkId: Network, walletAddress?: string) => [
-            'chainedSpeedMarketsLimits',
-            networkId,
-            walletAddress,
-        ],
-        UserSpeedMarkets: (networkId: Network, walletAddress: string) => ['userSpeedMarkets', networkId, walletAddress],
-        UserChainedSpeedMarkets: (networkId: Network, walletAddress: string) => [
-            'userChainedSpeedMarkets',
-            networkId,
-            walletAddress,
-        ],
-        UserSpeedMarketsTransactions: (networkId: Network, walletAddress: string) => [
-            'userSpeedMarketsTransactions',
-            networkId,
-            walletAddress,
-        ],
-        UserChainedSpeedMarketsTransactions: (networkId: Network, walletAddress: string) => [
-            'userChainedSpeedMarketsTransactions',
-            networkId,
-            walletAddress,
-        ],
-        UserResolvedSpeedMarkets: (networkId: Network, walletAddress: string) => [
-            'userResolvedSpeedMarkets',
-            networkId,
-            walletAddress,
-        ],
-        UserResolvedChainedSpeedMarkets: (networkId: Network, walletAddress: string) => [
-            'userResolvedChainedSpeedMarkets',
-            networkId,
-            walletAddress,
-        ],
-        ActiveSpeedMarkets: (networkId: Network) => ['activeSpeedMarkets', networkId],
-        ActiveChainedSpeedMarkets: (networkId: Network) => ['activeChainedSpeedMarkets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
         Market: (marketAddress: string) => ['market', marketAddress],
@@ -172,29 +133,6 @@ const QUERY_KEYS = {
         Trades: (walletAddress: string, networkId: Network) => ['profile', 'trades', walletAddress, networkId],
     },
     Token: {
-        StakingOverview: (walletAddress: string, networkId: Network) => [
-            'token',
-            'staking',
-            'overview',
-            walletAddress,
-            networkId,
-        ],
-        PointsBreakdown: (walletAddress: string, networkId: Network) => [
-            'token',
-            'staking',
-            'breakdown',
-            walletAddress,
-            networkId,
-        ],
-        UserBaseRewards: (walletAddress: string, networkId: Network) => [
-            'token',
-            'staking',
-            'baserewards',
-            walletAddress,
-            networkId,
-        ],
-        StakingData: (networkId: Network) => ['token', 'staking', 'data', networkId],
-        GlobalStakingData: () => ['token', 'global', 'staking'],
         UserStakingData: (walletAddress: string, networkId: Network) => [
             'token',
             'staking',
@@ -202,63 +140,6 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        UserVestingData: (walletAddress: string, networkId: Network) => [
-            'token',
-            'vesting',
-            'data',
-            walletAddress,
-            networkId,
-        ],
-        ClaimOnBehalf: (walletAddress: string, networkId: Network) => [
-            'token',
-            'staking',
-            'claimOnBehalf',
-            walletAddress,
-            networkId,
-        ],
-        Transactions: (walletAddress: string | undefined, networkId: Network, type_in: string | undefined) => [
-            'token',
-            'transactions',
-            walletAddress,
-            networkId,
-            type_in,
-        ],
-        MigratedInvestorsRetroRewards: (walletAddress: string, networkId: Network) => [
-            'token',
-            'migratedInvestorsRetroRewards',
-            walletAddress,
-            networkId,
-        ],
-        VestingEscrow: (walletAddress: string, networkId: Network) => [
-            'token',
-            'vestingEscrow',
-            walletAddress,
-            networkId,
-        ],
-        LPStaking: (walletAddress: string, networkId: Network) => ['token', 'lpStaking', walletAddress, networkId],
-        GelatoBalance: (walletAddress: string, networkId: Network) => [
-            'token',
-            'gelatoBalance',
-            walletAddress,
-            networkId,
-        ],
-        Gelato: () => ['token', 'gelato'],
-        Info: (networkId: Network) => ['token', 'info', networkId],
-        StakersLeaderboardData: (walletAddress: string, networkId: Network, period: number) => [
-            'token',
-            'stakersLeaderboard',
-            walletAddress,
-            networkId,
-            period,
-        ],
-        CelerBridgeData: (srcNetwork: Network, destNetwork: Network) => [
-            'token',
-            'celerBridge',
-            'data',
-            srcNetwork,
-            destNetwork,
-        ],
-        CelerBridgeHistory: (walletAddress: string) => ['token', 'celerBridge', 'history', walletAddress],
     },
     TaleOfThales: {
         NFTCollections: (walletAddress: string, networkId: Network) => [
@@ -301,24 +182,6 @@ const QUERY_KEYS = {
             refferer ? refferer : undefined,
         ],
         ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
-    },
-    Governance: {
-        Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],
-        Proposal: (spaceKey: SpaceKey, hash: string, walletAddress: string) => [
-            'governance',
-            'proposal',
-            spaceKey,
-            hash,
-            walletAddress,
-        ],
-        ThalesStakers: (filter: string) => ['governance', 'thalesStakers', filter],
-        VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
-            'governance',
-            'votingPower',
-            proposalId,
-            snapshot,
-            walletAddress,
-        ],
     },
     Bungee: {
         Tokens: () => ['bungee', 'tokens'],

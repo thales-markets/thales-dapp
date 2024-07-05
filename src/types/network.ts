@@ -1,3 +1,5 @@
+import { Network } from 'enums/network';
+
 export type NetworkParams = {
     chainId: string;
     chainName: string;
@@ -10,3 +12,5 @@ export type NetworkParams = {
         decimals: number;
     };
 };
+
+export type SupportedNetwork = Exclude<Network, Network.ZkSync | Network.ZkSyncSepolia | Network.BlastSepolia>;

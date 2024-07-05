@@ -2,10 +2,30 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
-import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
-import { UserStakingData } from 'types/token';
 import { Network } from 'enums/network';
+
+const BALANCE_THRESHOLD = 0.00000001;
+
+type UserStakingData = {
+    thalesStaked: number;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    isUnstaking: boolean;
+    lastUnstakeTime: number;
+    unstakingAmount: number;
+    delegatedVolume: string;
+    rewards: number;
+    baseRewards: number;
+    feeRewards: number;
+    totalBonus: number;
+    escrowedBalance: number;
+    claimable: number;
+    rawClaimable: string;
+    isPaused: boolean;
+    unstakeDurationPeriod: number;
+    mergeAccountEnabled: boolean;
+};
 
 const useUserStakingDataQuery = (
     walletAddress: string,

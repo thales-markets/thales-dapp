@@ -84,7 +84,6 @@ const getMaxWidth = () => {
         return '974px';
 
     if (location.pathname === ROUTES.Options.Wizard) return '900px';
-    if (location.pathname === ROUTES.Options.SpeedMarkets) return '1080px';
     return '1440px';
 };
 
