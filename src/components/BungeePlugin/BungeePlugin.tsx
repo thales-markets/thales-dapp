@@ -11,13 +11,13 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { hexToRGB } from 'thales-utils';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 import { getDefaultCollateral } from 'utils/currency';
+import { SupportedNetwork } from 'types/network';
 
-const SUPPORTED_DESTINATION_NETWORKS = [
+const SUPPORTED_DESTINATION_NETWORKS: SupportedNetwork[] = [
     Network.OptimismMainnet,
     Network.Arbitrum,
     Network.PolygonMainnet,
     Network.Base,
-    Network.ZkSync,
 ];
 
 const BungeePlugin: React.FC = () => {
@@ -42,7 +42,7 @@ const BungeePlugin: React.FC = () => {
     const defaultDestinationToken = allTokens.filter(
         (token) =>
             token.chainId === defaultDestNetwork &&
-            token.symbol === getDefaultCollateral(defaultDestNetwork as Network).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
+            token.symbol === getDefaultCollateral(defaultDestNetwork).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
     )[0]?.address;
 
     // All colors should stricktly be in RGB format

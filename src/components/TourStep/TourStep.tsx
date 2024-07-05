@@ -128,7 +128,7 @@ const BackButton = styled(Button)`
     color: ${(props) => props.theme.tour.buttons.textColor.primary};
 `;
 
-export const NextButton = styled(Button)`
+const NextButton = styled(Button)`
     background-color: ${(props) => props.theme.tour.buttons.background.secondary};
     color: ${(props) => props.theme.tour.buttons.textColor.secondary};
 `;

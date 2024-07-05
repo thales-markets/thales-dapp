@@ -8,9 +8,9 @@ import {
     currencyKeyToAssetIconMap,
     currencyKeyToNameMap,
 } from 'constants/currency';
-import { Network } from 'enums/network';
 import { Coins } from 'thales-utils';
 import { CollateralsBalance } from 'types/collateral';
+import { SupportedNetwork } from 'types/network';
 
 // TODO: replace this with a more robust logic (like checking the asset field)
 const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
@@ -24,22 +24,22 @@ export const getSynthName = (currencyKey: string) =>
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
-export const getDefaultCollateral = (networkId: Network) => COLLATERALS[networkId][0];
+export const getDefaultCollateral = (networkId: SupportedNetwork) => COLLATERALS[networkId][0];
 
-export const getCollateral = (networkId: Network, index: number, includeAdditional?: boolean) =>
+export const getCollateral = (networkId: SupportedNetwork, index: number, includeAdditional?: boolean) =>
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : [])[index];
 
-export const getCollaterals = (networkId: Network, includeAdditional?: boolean) =>
+export const getCollaterals = (networkId: SupportedNetwork, includeAdditional?: boolean) =>
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []);
 
-export const getCollateralIndexForNetwork = (networkId: Network, currencyKey: Coins) =>
+export const getCollateralIndexForNetwork = (networkId: SupportedNetwork, currencyKey: Coins) =>
     COLLATERALS[networkId].concat(ADDITIONAL_COLLATERALS[networkId]).indexOf(currencyKey);
 
 export const isStableCurrency = (currencyKey: Coins) => {
     return STABLE_COINS.includes(currencyKey);
 };
 
-export const getCollateralIndexByBalance = (balancesObject: CollateralsBalance, networkId: Network) => {
+export const getCollateralIndexByBalance = (balancesObject: CollateralsBalance, networkId: SupportedNetwork) => {
     let index = 0;
     for (const [key, value] of Object.entries(balancesObject)) {
         if (value && value > 1) {

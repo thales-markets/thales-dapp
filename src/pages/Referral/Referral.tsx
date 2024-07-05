@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import axios from 'axios';
 import Button from 'components/Button';
-import ElectionsBanner from 'components/ElectionsBanner';
 import ReadMoreButton from 'components/ReadMoreButton';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
@@ -105,10 +104,6 @@ const Referral: React.FC = () => {
         },
         {
             value: 2,
-            label: t('referral-page.pages.speed-market-page'),
-        },
-        {
-            value: 3,
             label: t('referral-page.pages.landing-page'),
         },
     ];
@@ -189,9 +184,6 @@ const Referral: React.FC = () => {
                 link = ROUTES.Options.RangeMarkets;
                 break;
             case 2:
-                link = ROUTES.Options.SpeedMarkets;
-                break;
-            case 3:
                 link = ROUTES.Home;
                 break;
             default:
@@ -250,7 +242,6 @@ const Referral: React.FC = () => {
 
     return (
         <>
-            <ElectionsBanner />
             <HeaderContainer>
                 <FormWrapper>
                     <Label>{t('referral-page.choose-landing')}</Label>

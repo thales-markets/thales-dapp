@@ -85,7 +85,6 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: false,
-                        isSpeedMarket: false,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
@@ -107,7 +106,6 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: true,
-                        isSpeedMarket: false,
                     };
                 }),
             ];

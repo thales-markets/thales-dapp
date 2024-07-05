@@ -103,6 +103,7 @@ const Lines = styled.img`
     margin: auto;
     @media (max-width: 1500px) {
         width: 150%;
+        height: 100%;
         left: -25%;
     }
 `;
@@ -298,8 +299,9 @@ const DAPPLink = styled.a`
     }
     & > i {
         font-size: 4em;
-        line-height: 26px;
+        line-height: 20px;
         color: ${(props) => props.theme.landingPage.textColor.primary};
+        padding-top: 4px;
     }
 `;
 

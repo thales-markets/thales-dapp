@@ -5,11 +5,11 @@ import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import SPAAnchor from '../SPAAnchor';
 
-type ElectionsBannerProps = {
+type BannerProps = {
     isLandingPage?: boolean;
 };
 
-const Banner: React.FC<ElectionsBannerProps> = ({ isLandingPage }) => {
+const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
     return (
         <>
             {isLandingPage ? (

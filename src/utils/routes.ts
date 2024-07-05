@@ -1,6 +1,4 @@
-import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
-import { SpaceKey } from 'enums/governance';
 import { createBrowserHistory, createHashHistory } from 'history';
 
 const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
@@ -32,14 +30,10 @@ export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${rou
 export const navigateToOptionsMarket = (marketAddress: string, position?: string, replacePath = false) =>
     navigateTo(buildOptionsMarketLink(marketAddress, position), replacePath);
 
-export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = false) =>
-    navigateTo(`${ROUTES.Governance.Home}/${spaceKey ? spaceKey : ''}/${id ? id : ''}`, replacePath);
-
 export const buildVaultLink = (vaultId: string, excludeSlash = false) =>
     `${ifIpfsDeployment && !excludeSlash ? '#' : ''}${ROUTES.Options.Vaults}/${vaultId}`;
 
 export const buildLiquidityPoolLink = (excludeSlash = false) =>
     `${ifIpfsDeployment && !excludeSlash ? '#' : ''}${ROUTES.Options.LiquidityPool}`;
 
-export const buildOvertimeVaultsLink = (vaultId: string) => `${LINKS.SportMarkets}#/vaults/${vaultId}`;
 export { history };

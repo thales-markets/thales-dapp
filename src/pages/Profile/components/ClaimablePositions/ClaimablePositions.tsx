@@ -1,16 +1,9 @@
 import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import TileTable from 'components/TileTable/TileTable';
 import { USD_SIGN } from 'constants/currency';
-import { millisecondsToSeconds } from 'date-fns';
-import { Positions } from 'enums/options';
-import { BigNumber } from 'ethers';
 import { orderBy } from 'lodash';
-import ChainedPositionAction from 'pages/SpeedMarkets/components/ChainedPositionAction';
 import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal/SharePositionModal';
 import { ShareIcon } from 'pages/Trade/components/OpenPosition/OpenPosition';
-import useUserActiveChainedSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveChainedSpeedMarketsDataQuery';
-import useUserActiveSpeedMarketsDataQuery from 'queries/options/speedMarkets/useUserActiveSpeedMarketsDataQuery';
-import usePythPriceQueries from 'queries/prices/usePythPriceQueries';
 import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,14 +11,11 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
-import { formatCurrency, formatCurrencyWithSign, formatShortDate, formatShortDateWithTime } from 'thales-utils';
+import { formatCurrency, formatCurrencyWithSign, formatShortDate } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
 import { UserPosition } from 'types/profile';
-import { ThemeInterface } from 'types/ui';
-import { isOnlySpeedMarketsSupported } from 'utils/network';
-import { getPriceId } from 'utils/pyth';
+import { RootState, ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
@@ -48,7 +38,7 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
 
     const claimablePositionsQuery = useClaimablePositionsQuery(networkId, searchAddress || walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
+        enabled: isAppReady && isWalletConnected,
     });
 
     const claimablePositions: UserPosition[] = useMemo(
@@ -56,146 +46,9 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         [claimablePositionsQuery.isSuccess, claimablePositionsQuery.data]
     );
 
-    const userActiveSpeedMarketsDataQuery = useUserActiveSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
-
-    const userOpenSpeedMarketsData = useMemo(
-        () =>
-            userActiveSpeedMarketsDataQuery.isSuccess && userActiveSpeedMarketsDataQuery.data
-                ? userActiveSpeedMarketsDataQuery.data
-                : [],
-        [userActiveSpeedMarketsDataQuery]
-    );
-
-    const userActiveChainedSpeedMarketsDataQuery = useUserActiveChainedSpeedMarketsDataQuery(
-        networkId,
-        searchAddress || walletAddress,
-        {
-            enabled: isAppReady && isWalletConnected && !isOnlySpeedMarketsSupported(networkId),
-        }
-    );
-
-    const userOpenChainedSpeedMarketsData = useMemo(
-        () =>
-            userActiveChainedSpeedMarketsDataQuery.isSuccess && userActiveChainedSpeedMarketsDataQuery.data
-                ? userActiveChainedSpeedMarketsDataQuery.data
-                : [],
-        [userActiveChainedSpeedMarketsDataQuery]
-    );
-
-    // Prepare chained speed markets that are matured
-    const userMaturedChainedMarkets = userOpenChainedSpeedMarketsData
-        .filter((marketData) => marketData.isMatured)
-        .map((marketData) => {
-            return {
-                ...marketData,
-                pythPriceId: getPriceId(networkId, marketData.currencyKey),
-            };
-        });
-
-    const priceRequests = userMaturedChainedMarkets
-        .map((data) =>
-            data.strikeTimes.map((strikeTime) => ({
-                priceId: data.pythPriceId,
-                publishTime: millisecondsToSeconds(strikeTime),
-                market: data.address,
-            }))
-        )
-        .flat();
-
-    const pythPricesQueries = usePythPriceQueries(networkId, priceRequests, { enabled: priceRequests.length > 0 });
-    const pythPricesWithMarket = priceRequests.map((request, i) => ({
-        market: request.market,
-        price: pythPricesQueries[i]?.data || 0,
-    }));
-
-    // Based on Pyth prices populate strike prices
-    const userOpenChainedSpeedMarketsDataWithPrices = userMaturedChainedMarkets
-        .map((marketData) => {
-            const finalPrices = marketData.finalPrices.map(
-                (_, i) =>
-                    pythPricesWithMarket.filter((pythPrice) => pythPrice.market === marketData.address)[i]?.price || 0
-            );
-            const strikePrices = marketData.strikePrices.map((strikePrice, i) =>
-                i === 0 ? strikePrice : finalPrices[i - 1]
-            );
-            const userWonStatuses = marketData.sides.map((side, i) =>
-                finalPrices[i] > 0 && strikePrices[i] > 0
-                    ? (side === Positions.UP && finalPrices[i] > strikePrices[i]) ||
-                      (side === Positions.DOWN && finalPrices[i] < strikePrices[i])
-                    : undefined
-            );
-            const canResolve =
-                userWonStatuses.some((status) => status === false) ||
-                userWonStatuses.every((status) => status !== undefined);
-            const claimable = userWonStatuses.every((status) => status);
-            return { ...marketData, strikePrices, finalPrices, canResolve, claimable };
-        })
-        .filter((marketData) => marketData.claimable);
-
     const data: UserPosition[] = useMemo(() => {
-        const speedMarketsOpenPositions: UserPosition[] = userOpenSpeedMarketsData
-            .filter((marketData) => marketData.claimable)
-            .map((marketData) => {
-                return {
-                    positionAddress: marketData.positionAddress,
-                    currencyKey: marketData.currencyKey,
-                    strikePrice: marketData.strikePriceNum || 0,
-                    leftPrice: 0,
-                    rightPrice: 0,
-                    finalPrice: marketData.finalPrice || 0,
-                    amount: marketData.amount,
-                    amountBigNumber: marketData.amountBigNumber,
-                    maturityDate: marketData.maturityDate,
-                    expiryDate: marketData.maturityDate,
-                    market: marketData.market,
-                    side: marketData.side,
-                    paid: marketData.paid,
-                    value: marketData.value,
-                    claimable: !!marketData.claimable,
-                    claimed: false,
-                    isRanged: false,
-                    isSpeedMarket: true,
-                };
-            });
-
-        const chainedSpeedMarketsOpenPositions: UserPosition[] = userOpenChainedSpeedMarketsDataWithPrices.map(
-            (marketData) => {
-                return {
-                    positionAddress: marketData.address,
-                    currencyKey: marketData.currencyKey,
-                    strikePrice: marketData.strikePrices[marketData.strikePrices.length - 1],
-                    leftPrice: 0,
-                    rightPrice: 0,
-                    finalPrice: marketData.finalPrices[marketData.finalPrices.length - 1],
-                    amount: marketData.amount,
-                    amountBigNumber: BigNumber.from(0), // won't be used
-                    maturityDate: marketData.maturityDate,
-                    expiryDate: marketData.maturityDate,
-                    market: marketData.address,
-                    side: marketData.sides[marketData.sides.length - 1],
-                    paid: marketData.paid,
-                    value: marketData.amount,
-                    claimable: marketData.claimable,
-                    claimed: false,
-                    isRanged: false,
-                    isSpeedMarket: true,
-                    isChainedSpeedMarket: true,
-                };
-            }
-        );
-
-        return orderBy(
-            claimablePositions.concat(speedMarketsOpenPositions).concat(chainedSpeedMarketsOpenPositions),
-            ['maturityDate', 'value'],
-            ['asc', 'desc']
-        );
-    }, [claimablePositions, userOpenSpeedMarketsData, userOpenChainedSpeedMarketsDataWithPrices]);
+        return orderBy(claimablePositions, ['maturityDate', 'value'], ['asc', 'desc']);
+    }, [claimablePositions]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -208,11 +61,6 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
         const generateRows = (data: UserPosition[]) => {
             try {
                 return data.map((row: UserPosition) => {
-                    const chainedPosition = row.isChainedSpeedMarket
-                        ? userOpenChainedSpeedMarketsDataWithPrices.find(
-                              (marketData) => marketData.address === row.market
-                          )
-                        : undefined;
                     const cells: any = [
                         {
                             title: row.isRanged
@@ -228,26 +76,14 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                         },
                         {
                             title: t('profile.leaderboard.trades.table.amount-col'),
-                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme, row.isChainedSpeedMarket),
+                            value: getAmount(formatCurrency(row.amount, 2), row.side, theme),
                         },
                         {
                             title: t('profile.history.expired'),
-                            value: row.isSpeedMarket
-                                ? formatShortDateWithTime(row.maturityDate)
-                                : formatShortDate(row.maturityDate),
+                            value: formatShortDate(row.maturityDate),
                         },
                         {
-                            value: chainedPosition ? (
-                                <ChainedPositionAction
-                                    position={chainedPosition}
-                                    isOverview={false}
-                                    isAdmin={false}
-                                    isSubmittingBatch={false}
-                                    isProfileAction
-                                />
-                            ) : (
-                                <MyPositionAction position={row} isProfileAction />
-                            ),
+                            value: <MyPositionAction position={row} isProfileAction />,
                         },
                         {
                             value: (
@@ -256,38 +92,24 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                     disabled={false}
                                     onClick={() => {
                                         setOpenTwitterShareModal(true);
-                                        if (row.isChainedSpeedMarket && chainedPosition) {
-                                            setPositionShareData({
-                                                type: 'chained-speed-won',
-                                                positions: chainedPosition.sides,
-                                                currencyKey: chainedPosition.currencyKey,
-                                                strikeDate: chainedPosition.maturityDate,
-                                                strikePrices: chainedPosition.strikePrices,
-                                                finalPrices: chainedPosition.finalPrices,
-                                                buyIn: chainedPosition.paid,
-                                                payout: chainedPosition.amount,
-                                                payoutMultiplier: chainedPosition.payoutMultiplier,
-                                            });
-                                        } else {
-                                            setPositionShareData({
-                                                type: row.isSpeedMarket ? 'resolved-speed' : 'resolved',
-                                                positions: [row.side],
-                                                currencyKey: row.currencyKey,
-                                                strikePrices: [row.strikePrice],
-                                                leftPrice: row.leftPrice,
-                                                rightPrice: row.rightPrice,
-                                                strikeDate: row.maturityDate,
-                                                buyIn: row.paid,
-                                                payout: row.amount,
-                                            });
-                                        }
+                                        setPositionShareData({
+                                            type: 'resolved',
+                                            position: row.side,
+                                            currencyKey: row.currencyKey,
+                                            strikePrice: row.strikePrice,
+                                            leftPrice: row.leftPrice,
+                                            rightPrice: row.rightPrice,
+                                            strikeDate: row.maturityDate,
+                                            buyIn: row.paid,
+                                            payout: row.amount,
+                                        });
                                     }}
                                 />
                             ),
                             width: isMobile ? undefined : '20px',
                         },
                         {
-                            value: !row.isSpeedMarket && (
+                            value: (
                                 <SPAAnchor
                                     href={
                                         row.isRanged
@@ -318,7 +140,6 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                         asset: {
                             currencyKey: row.currencyKey,
                             position: row.side,
-                            isChainedPosition: row.isChainedSpeedMarket,
                             width: '50px',
                             displayInRowMobile: true,
                         },
@@ -336,28 +157,22 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
             return generateRows(filteredData);
         }
         return [];
-    }, [filteredData, isMobile, t, theme, userOpenChainedSpeedMarketsDataWithPrices]);
+    }, [filteredData, isMobile, t, theme]);
 
     return (
         <>
-            <TileTable
-                rows={rows as any}
-                isLoading={claimablePositionsQuery.isLoading || userActiveSpeedMarketsDataQuery.isLoading}
-                hideFlow
-            />
+            <TileTable rows={rows as any} isLoading={claimablePositionsQuery.isLoading} hideFlow />
             {positionsShareData !== null && openTwitterShareModal && (
                 <SharePositionModal
                     type={positionsShareData.type}
-                    positions={positionsShareData.positions}
+                    position={positionsShareData.position}
                     currencyKey={positionsShareData.currencyKey}
                     strikeDate={positionsShareData.strikeDate}
-                    strikePrices={positionsShareData.strikePrices}
-                    finalPrices={positionsShareData.finalPrices}
+                    strikePrice={positionsShareData.strikePrice}
                     leftPrice={positionsShareData.leftPrice}
                     rightPrice={positionsShareData.rightPrice}
                     buyIn={positionsShareData.buyIn}
                     payout={positionsShareData.payout}
-                    payoutMultiplier={positionsShareData.payoutMultiplier}
                     onClose={() => setOpenTwitterShareModal(false)}
                 />
             )}

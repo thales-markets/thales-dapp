@@ -9,9 +9,6 @@ const liquidityPoolContract = {
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
         [Network.Base]: '0x5713ab44042D92C642444bd2F0fee9c2336F9E3b',
-        [Network.ZkSync]: 'TBD',
-        [Network.ZkSyncSepolia]: 'TBD',
-        [Network.BlastSepolia]: 'TBD',
     },
     abi: [
         {

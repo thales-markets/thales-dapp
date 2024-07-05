@@ -1,14 +1,10 @@
 import { Network } from 'enums/network';
-import { NetworkParams } from 'types/network';
+import { NetworkParams, SupportedNetwork } from 'types/network';
 import { Chain } from 'wagmi';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
-export const OP_SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
-export const ARB_SAFE_BOX_ADDRESS = '0xE9F5E7579931a46e4beaC08Ca9ab52961AD66203';
-export const BASE_SAFE_BOX_ADDRESS = '0x860C4DD827DdDd98755e0843b89d909f5A0347Ff';
 
-export const SUPPORTED_NETWORKS: Record<Network, string> = {
+export const SUPPORTED_NETWORKS: Record<SupportedNetwork, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISTIC',
     [Network.PolygonMainnet]: 'POLYGON-MAINNET',
@@ -16,12 +12,9 @@ export const SUPPORTED_NETWORKS: Record<Network, string> = {
     [Network.OptimismSepolia]: 'SEPOLIA-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
     [Network.Base]: 'BASE',
-    [Network.ZkSync]: 'ZKSYNC',
-    [Network.ZkSyncSepolia]: 'ZKSYNC-SEPOLIA',
-    [Network.BlastSepolia]: 'BLAST-SEPOLIA',
 };
 
-export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
+export const SUPPORTED_NETWORKS_NAMES: Record<SupportedNetwork, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
     [Network.PolygonMainnet]: 'POLYGON',
@@ -29,21 +22,13 @@ export const SUPPORTED_NETWORKS_NAMES: Record<Network, string> = {
     [Network.OptimismSepolia]: 'OPTIMISM SEPOLIA',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
-    [Network.ZkSync]: 'ZKSYNC',
-    [Network.ZkSyncSepolia]: 'ZKSYNC SEPOLIA',
-    [Network.BlastSepolia]: 'BLAST SEPOLIA',
 };
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
-export const TEST_NETWORKS = [
-    Network.OptimismGoerli,
-    Network.OptimismSepolia,
-    Network.ZkSyncSepolia,
-    Network.BlastSepolia,
-];
+export const TEST_NETWORKS = [Network.OptimismGoerli, Network.OptimismSepolia];
 
-export const DEFAULT_NETWORK: { name: string; networkId: Network } = {
+export const DEFAULT_NETWORK: { name: string; networkId: SupportedNetwork } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],
     networkId: Network.OptimismMainnet,
 };
@@ -94,17 +79,6 @@ export const SUPPORTED_NETWORKS_PARAMS: Record<number, NetworkParams> = {
         chainName: 'BASE',
         rpcUrls: ['https://mainnet.base.org'],
         blockExplorerUrls: ['https://basescan.org/'],
-        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
-        nativeCurrency: {
-            symbol: 'ETH',
-            decimals: 18,
-        },
-    },
-    [Network.ZkSync]: {
-        chainId: '0x144',
-        chainName: 'zkSync',
-        rpcUrls: ['https://mainnet.era.zksync.io'],
-        blockExplorerUrls: ['https://explorer.zksync.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
         nativeCurrency: {
             symbol: 'ETH',
@@ -176,56 +150,3 @@ export const optimismSepolia = {
     },
     testnet: true,
 } as Chain;
-export const zkSyncSepolia = {
-    id: 300,
-    network: 'zksync-sepolia-testnet',
-    name: 'zkSync Sepolia Testnet',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    rpcUrls: {
-        default: {
-            http: ['https://sepolia.era.zksync.dev'],
-            webSocket: ['wss://sepolia.era.zksync.dev/ws'],
-        },
-        public: {
-            http: ['https://sepolia.era.zksync.dev'],
-            webSocket: ['wss://sepolia.era.zksync.dev/ws'],
-        },
-    },
-    blockExplorers: {
-        default: {
-            name: 'zkExplorer',
-            url: 'https://sepolia.explorer.zksync.io/',
-        },
-    },
-    contracts: {
-        multicall3: {
-            address: '0xF9cda624FBC7e059355ce98a31693d299FACd963',
-        },
-    },
-    testnet: true,
-} as Chain;
-export const BlastSepolia = {
-    id: 168587773,
-    network: 'blast-sepolia',
-    name: 'Blast Sepolia',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    rpcUrls: {
-        default: {
-            http: ['https://blast-sepolia.blockpi.network/v1/rpc/public'],
-            webSocket: ['wss://sepolia.blast.io/ws'],
-        },
-        public: {
-            http: ['https://sepolia.blast.io'],
-            webSocket: ['wss://sepolia.blast.io/ws'],
-        },
-    },
-    blockExplorers: {
-        default: {
-            name: 'Blastscan',
-            url: 'https://testnet.blastscan.io/',
-        },
-    },
-    testnet: true,
-} as Chain;
-
-export const BRIDGE_SUPPORTED_NETWORKS = [Network.OptimismMainnet, Network.Arbitrum, Network.Base];
