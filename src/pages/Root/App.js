@@ -184,7 +184,7 @@ const App = () => {
                 <Router history={history}>
                     <Switch>
                         {/* TODO: delete this when V2 is live */}
-                        <Route exact path={'/speedV2'}>
+                        <Route exact path={'/speed-markets'}>
                             <Suspense fallback={<Loader />}>
                                 <DappLayout>
                                     <SpeedV2 />

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { buildHref } from 'utils/routes';
 import { FlexWrapper, Title, FlexDiv } from './styled-components';
-import { LINKS } from 'constants/links';
+// import { LINKS } from 'constants/links';
 
 const Integrations: React.FC = () => {
     const { t } = useTranslation();
@@ -17,7 +17,8 @@ const Integrations: React.FC = () => {
                 <SPAAnchor href={buildHref(ROUTES.Options.Home)}>
                     <Thales className="icon-home icon-home--thales" />
                 </SPAAnchor>
-                <a target="_blank" rel="noreferrer" href={LINKS.SpeedMarkets}>
+                {/* TODO: replace this with href={LINKS.SpeedMarkets} when V2 is live */}
+                <a target="_blank" rel="noreferrer" href={'/speed-markets'}>
                     <SpeedMarkets className="icon-home icon-home--speed" />
                 </a>
                 <SPAAnchor href={buildHref(ROUTES.Options.Game)}>

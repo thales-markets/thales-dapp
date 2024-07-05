@@ -1,6 +1,6 @@
 import SpeedLogoImg from 'assets/images/speed-markets/speed-markets-logo.svg';
 import arrowRightAnimation from 'assets/lotties/rigth-arrows.json';
-import { LINKS } from 'constants/links';
+// import { LINKS } from 'constants/links';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import Lottie from 'lottie-react';
 import React, { CSSProperties } from 'react';
@@ -16,7 +16,8 @@ const PageLinkBanner: React.FC = () => {
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
-        <a target="_blank" rel="noreferrer" href={LINKS.SpeedMarkets}>
+        // TODO: replace this with href={LINKS.SpeedMarkets} when V2 is live
+        <a target="_blank" rel="noreferrer" href={'/speed-markets'}>
             <Content>
                 <Text>
                     {t('common.banner.page-link.speed-markets')}{' '}
