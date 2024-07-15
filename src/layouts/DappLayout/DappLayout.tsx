@@ -1,5 +1,6 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
+import Banner from 'components/Banner';
 import { generalConfig } from 'config/general';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
@@ -18,7 +19,6 @@ import { ScreenSizeBreakpoint } from '../../enums/ui';
 import DappFooter from './DappFooter';
 import DappHeader from './DappHeader';
 import DappSidebar from './DappSidebar';
-import Banner from 'components/Banner';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -127,7 +127,7 @@ const Wrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 50px 20px 0px 92px; // reduced top padding from 50px to 30px when removing banner
+    padding: 30px 20px 0px 92px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 10px 0 10px;
         padding-bottom: 50px !important;
