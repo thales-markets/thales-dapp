@@ -9,7 +9,13 @@ type BannerProps = {
     isLandingPage?: boolean;
 };
 
+const IS_VISIBLE = false;
+
 const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
+    if (!IS_VISIBLE) {
+        return <></>;
+    }
+
     return (
         <>
             {isLandingPage ? (
@@ -44,7 +50,7 @@ const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
 };
 
 const Container = styled(FlexDiv)`
-    position: absolute;
+    position: relative;
     top: 0;
     width: 100%;
     align-items: center;

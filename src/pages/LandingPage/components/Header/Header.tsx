@@ -138,7 +138,7 @@ const Logo = styled.i`
     grid-row-start: 3;
     grid-row-end: 4;
     font-size: 8.3em;
-    line-height: 34px;
+    line-height: 45px;
     color: ${(props) => props.theme.landingPage.textColor.primary};
     z-index: 2;
     flex: 1;
