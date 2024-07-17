@@ -11,10 +11,9 @@ const useRangedMarketsQuery = (networkId: Network, marketIds?: string[], options
     return useQuery<RangedMarket[]>(
         QUERY_KEYS.BinaryOptions.RangedMarkets(networkId, marketIds),
         async () => {
-            const rangedMarketsResponse = await axios.get(
-                `${generalConfig.API_URL}/${API_ROUTES.RangeMarketsList}/${networkId}?min-maturity=${MIN_MATURITY}${
-                    marketIds ? `&market-ids=${marketIds?.join(',')}` : ''
-                }`
+            const rangedMarketsResponse = await axios.post(
+                `${generalConfig.API_URL}/${API_ROUTES.RangeMarketsList}/${networkId}?min-maturity=${MIN_MATURITY}`,
+                { marketIds: marketIds ? marketIds?.join(',') : undefined }
             );
             const rangedMarkets: RangedMarket[] = rangedMarketsResponse?.data ? rangedMarketsResponse.data : [];
 

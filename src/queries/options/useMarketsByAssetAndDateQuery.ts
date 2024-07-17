@@ -76,7 +76,7 @@ const useMarketsByAssetAndDateQuery = (
                         return b.strikePrice - a.strikePrice;
                     });
             } else {
-                const rangedMarketsResponse = await axios.get(
+                const rangedMarketsResponse = await axios.post(
                     `${generalConfig.API_URL}/${API_ROUTES.RangeMarketsList}/${networkId}?min-maturity=${Number(
                         date / 1000
                     )}&max-maturity=${Number(date / 1000)}&currency-key=${ethers.utils.formatBytes32String(asset)}`
