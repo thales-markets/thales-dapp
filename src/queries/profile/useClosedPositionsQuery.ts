@@ -135,12 +135,9 @@ const useClosedPositionsQuery = (
                     `${generalConfig.API_URL}/${API_ROUTES.MarketsList}/${networkId}?min-maturity=${MIN_MATURITY}&max-maturity=${MAX_MATURITY}`
                 ),
                 rangedMarketIds.length > 0
-                    ? axios.get(
-                          `${generalConfig.API_URL}/${
-                              API_ROUTES.RangeMarketsList
-                          }/${networkId}?min-maturity=${MIN_MATURITY}&max-maturity=${MAX_MATURITY}&market-ids=${rangedMarketIds.join(
-                              ','
-                          )}`
+                    ? axios.post(
+                          `${generalConfig.API_URL}/${API_ROUTES.RangeMarketsList}/${networkId}?min-maturity=${MIN_MATURITY}&max-maturity=${MAX_MATURITY}`,
+                          { marketIds: rangedMarketIds.join(',') }
                       )
                     : undefined,
             ]);
