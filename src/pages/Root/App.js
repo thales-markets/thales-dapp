@@ -49,9 +49,6 @@ const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
-// TODO: delete this when V2 is live
-const SpeedV2 = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../SpeedV2'));
-
 const App = () => {
     const dispatch = useDispatch();
     const walletAddress = useSelector((state) => getWalletAddress(state));
@@ -183,15 +180,6 @@ const App = () => {
             <QueryClientProvider client={queryConnector.queryClient}>
                 <Router history={history}>
                     <Switch>
-                        {/* TODO: delete this when V2 is live */}
-                        <Route exact path={'/speed-markets'}>
-                            <Suspense fallback={<Loader />}>
-                                <DappLayout>
-                                    <SpeedV2 />
-                                </DappLayout>
-                            </Suspense>
-                        </Route>
-
                         {getSupportedNetworksByRoute(ROUTES.Options.CreateMarket).includes(networkId) && (
                             <Route exact path={ROUTES.Options.CreateMarket}>
                                 <Suspense fallback={<Loader />}>
