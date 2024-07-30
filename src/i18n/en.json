@@ -182,7 +182,7 @@
         },
         "referral": {
             "title": "Refer and earn",
-            "info": "As a person sharing your personal Referral Link, you <bold>earn up to 50% of the trading fee</bold> (0.5% of total volume) from each trade the new user you onboarded executes.",
+            "info": "As a person sharing your personal Referral Link, you <bold>earn up to 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
             "choose-page": "Choose page you want to refer",
             "referral-id": "Create your referral ID"
         },
