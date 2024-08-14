@@ -34,30 +34,6 @@ import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 dotenv.config();
 
-type RpcProvider = {
-    ankr: string;
-    chainnode: string;
-};
-
-const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
-    [Network.Mainnet]: {
-        ankr: '',
-        chainnode: 'mainnet',
-    },
-    [Network.OptimismMainnet]: {
-        ankr: 'optimism',
-        chainnode: 'optimism-mainnet',
-    },
-    [Network.PolygonMainnet]: {
-        ankr: '',
-        chainnode: 'polygon-mainnet',
-    },
-    [Network.OptimismGoerli]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli' },
-    [Network.OptimismSepolia]: { ankr: '', chainnode: '' },
-    [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one' },
-    [Network.Base]: { ankr: 'base', chainnode: 'base-mainnet' },
-};
-
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
@@ -65,17 +41,10 @@ const { chains, provider } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain) => {
-                const chainnodeNetworkName = CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode;
                 return {
                     http:
-                        process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' && chain.id === Network.Base
-                            ? // For Base use Ankr when Infura is primary as Infura doesn't support it
-                              `https://rpc.ankr.com/base/${process.env.REACT_APP_ANKR_PROJECT_ID}`
-                            : chain.id === Network.PolygonMainnet
-                            ? // For Polygon always use Infura as Chainnode is having issues
-                              `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
-                            : !!chainnodeNetworkName
-                            ? `https://${chainnodeNetworkName}.chainnodes.org/${process.env.REACT_APP_CHAINNODE_PROJECT_ID}`
+                        chain.id === Network.Base
+                            ? `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
                             : chain.rpcUrls.default.http[0],
                 };
             },
@@ -85,7 +54,7 @@ const { chains, provider } = configureChains(
         infuraProvider({
             apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '',
             stallTimeout: STALL_TIMEOUT,
-            priority: process.env.REACT_APP_PRIMARY_PROVIDER_ID === 'INFURA' ? 0 : 2,
+            priority: 0,
         }),
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]
