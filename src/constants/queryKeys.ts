@@ -161,9 +161,6 @@ const QUERY_KEYS = {
         Approve: (networkId: Network) => ['swap', 'approve', networkId],
         Swap: (networkId: Network) => ['swap', 'swap', networkId],
     },
-    Referral: {
-        ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
-    },
     Bungee: {
         Tokens: () => ['bungee', 'tokens'],
     },

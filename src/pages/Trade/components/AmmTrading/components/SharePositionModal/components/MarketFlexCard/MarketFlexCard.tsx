@@ -1,21 +1,14 @@
 import ZeusResolvedWinBackground from 'assets/images/ZeusResolvedWinBackground.png';
 import ZeusPotentialWinBackground from 'assets/images/flex-cards/potential.png';
 import { USD_SIGN } from 'constants/currency';
-import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import QRCode from 'react-qr-code';
-import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import { formatCurrencyWithSign, formatShortDateWithTime } from 'thales-utils';
 import { SharePositionData, SharePositionType } from 'types/flexCards';
 import { getSynthName } from 'utils/currency';
-import { buildReferrerLink } from 'utils/routes';
 import Footer from '../Footer';
 
 const MarketFlexCard: React.FC<SharePositionData> = ({
@@ -30,10 +23,6 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
     payout,
 }) => {
     const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
-    const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
-    const reffererID = reffererIDQuery.isSuccess && reffererIDQuery.data ? reffererIDQuery.data : '';
 
     const potentialWinFormatted = `${formatCurrencyWithSign(USD_SIGN, Number(payout))}`;
 
@@ -50,11 +39,6 @@ const MarketFlexCard: React.FC<SharePositionData> = ({
     return (
         <Container type={type}>
             {type == 'resolved' && <Footer />}
-            {reffererID && (
-                <ReferralWrapper>
-                    <QRCode size={70} value={buildReferrerLink(ROUTES.Home, reffererID)} />
-                </ReferralWrapper>
-            )}
             <PositionInfo type={type}>
                 <CurrencyIcon className={`currency-icon currency-icon--${currencyKey.toLowerCase()}`} />
                 <AssetName>{getSynthName(currencyKey)}</AssetName>
@@ -207,17 +191,6 @@ const Position = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 22px;
     font-weight: 700;
-`;
-
-const ReferralWrapper = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    width: fit-content;
-    background-color: white;
-    padding: 5px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 50px;
 `;
 
 export default MarketFlexCard;
