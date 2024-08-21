@@ -162,25 +162,6 @@ const QUERY_KEYS = {
         Swap: (networkId: Network) => ['swap', 'swap', networkId],
     },
     Referral: {
-        Referrer: (networkId: Network, address?: string) => [
-            'referral',
-            'referrer',
-            networkId,
-            address ? address : undefined,
-        ],
-        ReferredTrader: (networkId: Network, referrer?: string) => [
-            'referral',
-            'ReferredTrader',
-            networkId,
-            referrer ? referrer : undefined,
-        ],
-        ReferralTransacations: (networkId: Network, trader?: string, refferer?: string) => [
-            'referral',
-            'referralTransacations',
-            networkId,
-            trader ? trader : undefined,
-            refferer ? refferer : undefined,
-        ],
         ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
     },
     Bungee: {
