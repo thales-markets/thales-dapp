@@ -156,7 +156,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
     switch (route) {
         case ROUTES.Options.Home:
         case ROUTES.Options.RangeMarkets:
-        case ROUTES.Options.Referral:
         case ROUTES.Options.CreateMarket:
         case ROUTES.Options.Profile:
         case ROUTES.Options.Game:

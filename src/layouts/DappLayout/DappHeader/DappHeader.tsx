@@ -1,7 +1,7 @@
 import Button from 'components/Button';
 import ROUTES from 'constants/routes';
 import { ScreenSizeBreakpoint } from 'enums/ui';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -11,7 +11,6 @@ import { getIsMobile, setShowTour } from '../../../redux/modules/ui';
 import { FlexDivRow, FlexDivRowCentered } from '../../../styles/common';
 import Logo from '../components/Logo';
 import Notifications from '../components/Notifications';
-import ReferralModal from '../components/ReferralModal';
 import UserWallet from '../components/UserWallet';
 
 const DappHeader: React.FC = () => {
@@ -20,8 +19,6 @@ const DappHeader: React.FC = () => {
     const location = useLocation();
 
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
-
-    const [openReferralModal, setOpenReferralModal] = useState(false);
 
     return (
         <Container maxWidth={getMaxWidth()}>
@@ -41,16 +38,6 @@ const DappHeader: React.FC = () => {
                             {t('common.header.tutorial')}
                         </Button>
                     )}
-                    <Button
-                        height="25px"
-                        padding="0 7px"
-                        margin="0 0 0 10px"
-                        fontSize="13px"
-                        onClick={() => setOpenReferralModal(true)}
-                    >
-                        <ButtonIcon className="icon icon--referrer" />
-                        {t('common.header.refer-earn')}
-                    </Button>
                 </FlexDivRow>
                 {isMobile && <Notifications />}
             </LeftContainer>
@@ -58,7 +45,6 @@ const DappHeader: React.FC = () => {
                 <UserWallet />
                 {!isMobile && <Notifications />}
             </RightContainer>
-            {openReferralModal && <ReferralModal onClose={() => setOpenReferralModal(false)} />}
         </Container>
     );
 };
