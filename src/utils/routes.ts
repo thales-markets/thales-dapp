@@ -19,12 +19,6 @@ export const buildRangeMarketLink = (marketAddress: string, position?: string) =
         position ? `?position=${position}` : ''
     }`;
 
-export const buildReferrerLink = (route: string, referralId: string) => {
-    return `${location.protocol}//${location.host ? location.host : ''}${route}?referrerId=${encodeURIComponent(
-        referralId
-    )}`;
-};
-
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;
 
 export const navigateToOptionsMarket = (marketAddress: string, position?: string, replacePath = false) =>

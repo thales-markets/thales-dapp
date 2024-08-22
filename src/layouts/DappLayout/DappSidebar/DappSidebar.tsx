@@ -88,15 +88,6 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Referral ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Options.Referral)}
-                            iconName="referral-page"
-                            label={t('referral-page.title')}
-                        />
-                    )}
-
                     <Divider />
                     <DappHeaderItem
                         href={LINKS.ThalesProtocol.Token}

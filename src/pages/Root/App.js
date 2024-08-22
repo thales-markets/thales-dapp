@@ -46,7 +46,6 @@ const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile'));
 
-const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
 const App = () => {
@@ -205,16 +204,6 @@ const App = () => {
                                 <Suspense fallback={<Loader />}>
                                     <DappLayout>
                                         <Profile />
-                                    </DappLayout>
-                                </Suspense>
-                            </Route>
-                        )}
-
-                        {getSupportedNetworksByRoute(ROUTES.Options.Referral).includes(networkId) && (
-                            <Route exact path={ROUTES.Options.Referral}>
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <Referral />
                                     </DappLayout>
                                 </Suspense>
                             </Route>
