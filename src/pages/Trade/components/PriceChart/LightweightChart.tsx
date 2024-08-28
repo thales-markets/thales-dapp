@@ -36,8 +36,10 @@ const ToggleButtons = [
     { label: '1H', resolution: '60', value: 14, startDate: Number(subDays(now, 14)) },
     { label: '4H', resolution: '240', value: 28, startDate: Number(subDays(now, 28)) },
     { label: '1D', resolution: '1D', value: 120, startDate: Number(subDays(now, 120)) },
-    { label: '1W', resolution: '1W', value: 730, startDate: Number(subDays(now, 730)) },
+    { label: '1W', resolution: '1W', value: 365, startDate: Number(subDays(now, 365)) }, // API history limit is 1 year range
 ];
+
+console.log(Number(subDays(now, 365)), Number(now));
 
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
@@ -65,7 +67,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         enabled: isAppReady,
     });
 
-    const pythQuery = usePythCandlestickQuery(asset, dateRange.startDate, dateRange.resolution, {
+    const pythQuery = usePythCandlestickQuery(asset, dateRange.startDate, Number(now), dateRange.resolution, {
         enabled: isAppReady,
         refetchInterval: 30 * 1000,
     });
