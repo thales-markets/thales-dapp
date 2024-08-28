@@ -14,23 +14,23 @@ type CandlestickData = {
 
 const usePythCandlestickQuery = (
     asset: string,
-    date: number,
+    dateFrom: number,
+    dateTo: number,
     resolution: string,
     options?: UseQueryOptions<CandlestickData[]>
 ) => {
     return useQuery<CandlestickData[]>(
-        QUERY_KEYS.Prices.PythCandlestickData(asset, date, resolution),
+        QUERY_KEYS.Prices.PythCandlestickData(asset, dateFrom, resolution),
         async () => {
             let candleStickData = [];
 
             try {
-                const startDate = new Date(date);
                 const response = await fetch(
                     `${generalConfig.PYTH_BENCHMARKS_TRADINGVIEW_HISTORY}?symbol=${getAssetSymbol(
                         asset
-                    )}/USD&resolution=${resolution}&from=${millisecondsToSeconds(
-                        Number(startDate)
-                    )}&to=${millisecondsToSeconds(Number(Date.now()))}`
+                    )}/USD&resolution=${resolution}&from=${millisecondsToSeconds(dateFrom)}&to=${millisecondsToSeconds(
+                        dateTo
+                    )}`
                 );
                 const pythCandlestickData = await response.json();
 
