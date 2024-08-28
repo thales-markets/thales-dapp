@@ -39,8 +39,6 @@ const ToggleButtons = [
     { label: '1W', resolution: '1W', value: 365, startDate: Number(subDays(now, 365)) }, // API history limit is 1 year range
 ];
 
-console.log(Number(subDays(now, 365)), Number(now));
-
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
 
 const LightweightChart: React.FC<LightweightChartProps> = ({
