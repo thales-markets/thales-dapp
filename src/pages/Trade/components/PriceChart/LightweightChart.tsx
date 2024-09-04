@@ -1,8 +1,9 @@
 import SimpleLoader from 'components/SimpleLoader';
 import TooltipInfo from 'components/Tooltip';
-import { subDays } from 'date-fns';
+import { secondsToMilliseconds, subDays } from 'date-fns';
 import { Positions } from 'enums/options';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import useInterval from 'hooks/useInterval';
 import usePythCandlestickQuery from 'queries/prices/usePythCandlestickQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -20,8 +21,6 @@ import { ChartComponent } from './components/Chart/ChartContext';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
 
-const now = new Date();
-
 type LightweightChartProps = {
     asset: string;
     position: Positions | undefined;
@@ -30,7 +29,7 @@ type LightweightChartProps = {
     selectedRightPrice?: number;
 };
 
-const ToggleButtons = [
+const getToggleButtons = (now: Date) => [
     { label: '15m', resolution: '15', value: 2, startDate: Number(subDays(now, 2)) },
     { label: '30m', resolution: '30', value: 4, startDate: Number(subDays(now, 4)) },
     { label: '1H', resolution: '60', value: 14, startDate: Number(subDays(now, 14)) },
@@ -40,6 +39,7 @@ const ToggleButtons = [
 ];
 
 const DEFAULT_TOGGLE_BUTTON_INDEX = 2;
+const CHART_REFRESH_INTERVAL_SEC = 30;
 
 const LightweightChart: React.FC<LightweightChartProps> = ({
     asset,
@@ -53,8 +53,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const [now, setNow] = useState(new Date());
     const [processedPriceData, setProcessedPriceData] = useState<number>(0);
-    const [dateRange, setDateRange] = useState(ToggleButtons[DEFAULT_TOGGLE_BUTTON_INDEX]);
+    const [dateRange, setDateRange] = useState(getToggleButtons(now)[DEFAULT_TOGGLE_BUTTON_INDEX]);
     const [selectedToggleIndex, setToggleIndex] = useState(DEFAULT_TOGGLE_BUTTON_INDEX);
 
     const [candleData, setCandleData] = useState<any>();
@@ -67,7 +68,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 
     const pythQuery = usePythCandlestickQuery(asset, dateRange.startDate, Number(now), dateRange.resolution, {
         enabled: isAppReady,
-        refetchInterval: 30 * 1000,
+        refetchInterval: secondsToMilliseconds(CHART_REFRESH_INTERVAL_SEC),
     });
 
     const candleStickData = useMemo(() => {
@@ -109,10 +110,17 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         getImpliedVolatility();
     }, [asset]);
 
-    const handleDateRangeChange = useCallback((value: number) => {
-        setDateRange(ToggleButtons[value]);
-        setToggleIndex(value);
-    }, []);
+    useInterval(() => {
+        setNow(new Date());
+    }, secondsToMilliseconds(CHART_REFRESH_INTERVAL_SEC));
+
+    const handleDateRangeChange = useCallback(
+        (value: number) => {
+            setDateRange(getToggleButtons(now)[value]);
+            setToggleIndex(value);
+        },
+        [now]
+    );
 
     return (
         <Wrapper>
@@ -150,7 +158,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
             </ChartContainer>
 
             <Toggle
-                options={ToggleButtons}
+                options={getToggleButtons(now)}
                 disabled={!candleData}
                 selectedIndex={selectedToggleIndex}
                 onChange={handleDateRangeChange}
