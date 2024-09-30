@@ -1,6 +1,8 @@
 {
-    "short_name": "React App",
-    "name": "Create React App Sample",
+    "short_name": "Thales Markets",
+    "name": "Thales Markets - Decentralized Derivatives Trading",
+    "description": "Thales Markets is a decentralized derivatives trading platform on the Ethereum blockchain.",
+    "icon_path": "favicon.ico",
     "icons": [
         {
             "src": "favicon.ico",
