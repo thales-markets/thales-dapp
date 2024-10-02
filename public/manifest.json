@@ -1,7 +1,7 @@
 {
     "short_name": "Thales Markets",
-    "name": "Thales Markets - Decentralized Derivatives Trading",
-    "description": "Thales Markets is a decentralized derivatives trading platform on the Ethereum blockchain.",
+    "name": "Thales Markets",
+    "description": "Thales Markets is a decentralized platform for trading digital options on crypto assets, offering a secure, transparent experience with low fees and real-time data from Chainlink oracles.",
     "icon_path": "favicon.ico",
     "icons": [
         {
