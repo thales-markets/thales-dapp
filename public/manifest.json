@@ -1,6 +1,8 @@
 {
-    "short_name": "React App",
-    "name": "Create React App Sample",
+    "short_name": "Thales Markets",
+    "name": "Thales Markets",
+    "description": "Thales Markets is a decentralized platform for trading digital options on crypto assets, offering a secure, transparent experience with low fees and real-time data from Chainlink oracles.",
+    "icon_path": "favicon.ico",
     "icons": [
         {
             "src": "favicon.ico",
