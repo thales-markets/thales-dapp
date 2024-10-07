@@ -10,6 +10,7 @@ import {
     metaMaskWallet,
     rabbyWallet,
     rainbowWallet,
+    safeWallet,
     trustWallet,
     walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
@@ -75,6 +76,7 @@ const connectors = connectorsForWallets([
             coinbaseWallet({ appName: 'Thales', chains }),
             rainbowWallet({ projectId, chains }),
             imTokenWallet({ projectId, chains }),
+            safeWallet({ chains }),
         ],
     },
 ]);
