@@ -1,13 +1,18 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from '../../constants/queryKeys';
-import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
-import snxJSConnector from 'utils/snxJSConnector';
-import { LiquidityPoolData } from 'types/liquidityPool';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter, coinFormatter, Coins } from 'thales-utils';
+import { LiquidityPoolData } from 'types/liquidityPool';
+import snxJSConnector from 'utils/snxJSConnector';
+import QUERY_KEYS from '../../constants/queryKeys';
 
-const useLiquidityPoolDataQuery = (networkId: Network, options?: UseQueryOptions<LiquidityPoolData | undefined>) => {
+const useLiquidityPoolDataQuery = (
+    address: string,
+    collateral: Coins,
+    networkId: Network,
+    options?: UseQueryOptions<LiquidityPoolData | undefined>
+) => {
     return useQuery<LiquidityPoolData | undefined>(
-        QUERY_KEYS.LiquidityPool.Data(networkId),
+        QUERY_KEYS.LiquidityPool.Data(address, networkId),
         async () => {
             const liquidityPoolData: LiquidityPoolData = {
                 liquidityPoolStarted: false,
@@ -29,31 +34,31 @@ const useLiquidityPoolDataQuery = (networkId: Network, options?: UseQueryOptions
                 stakedThalesMultiplier: 0,
             };
 
-            const decimals = getDefaultDecimalsForNetwork(networkId);
             try {
-                const { liquidityPoolContract, liquidityPoolDataContract } = snxJSConnector;
-                if (liquidityPoolContract && liquidityPoolDataContract) {
-                    const contractLiquidityPoolData = await liquidityPoolDataContract.getLiquidityPoolData(
-                        liquidityPoolContract.address
-                    );
+                const { liquidityPoolDataContract } = snxJSConnector;
+                if (liquidityPoolDataContract) {
+                    const contractLiquidityPoolData = await liquidityPoolDataContract.getLiquidityPoolData(address);
 
                     liquidityPoolData.liquidityPoolStarted = contractLiquidityPoolData.started;
-                    liquidityPoolData.maxAllowedDeposit = bigNumberFormatter(
+                    liquidityPoolData.maxAllowedDeposit = coinFormatter(
                         contractLiquidityPoolData.maxAllowedDeposit,
-                        decimals
+                        networkId,
+                        collateral
                     );
                     liquidityPoolData.round = Number(contractLiquidityPoolData.round);
-                    liquidityPoolData.allocationNextRound = bigNumberFormatter(
+                    liquidityPoolData.allocationNextRound = coinFormatter(
                         contractLiquidityPoolData.totalDeposited,
-                        decimals
+                        networkId,
+                        collateral
                     );
                     liquidityPoolData.availableAllocationNextRound =
                         liquidityPoolData.maxAllowedDeposit - liquidityPoolData.allocationNextRound;
                     liquidityPoolData.allocationNextRoundPercentage =
                         (liquidityPoolData.allocationNextRound / liquidityPoolData.maxAllowedDeposit) * 100;
-                    liquidityPoolData.minDepositAmount = bigNumberFormatter(
+                    liquidityPoolData.minDepositAmount = coinFormatter(
                         contractLiquidityPoolData.minDepositAmount,
-                        decimals
+                        networkId,
+                        collateral
                     );
                     liquidityPoolData.maxAllowedUsers = Number(contractLiquidityPoolData.maxAllowedUsers);
                     liquidityPoolData.usersCurrentlyInLiquidityPool = Number(
@@ -65,9 +70,10 @@ const useLiquidityPoolDataQuery = (networkId: Network, options?: UseQueryOptions
                     liquidityPoolData.stakedThalesMultiplier = bigNumberFormatter(
                         contractLiquidityPoolData.stakedThalesMultiplier
                     );
-                    liquidityPoolData.allocationCurrentRound = bigNumberFormatter(
+                    liquidityPoolData.allocationCurrentRound = coinFormatter(
                         contractLiquidityPoolData.allocationCurrentRound,
-                        decimals
+                        networkId,
+                        collateral
                     );
                     liquidityPoolData.lifetimePnl =
                         bigNumberFormatter(contractLiquidityPoolData.lifetimePnl, 18) === 0

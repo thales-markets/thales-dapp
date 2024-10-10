@@ -1,16 +1,17 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
-import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
-import { buildLiquidityPoolLink } from 'utils/routes';
-import VaultLpDetails from '../VaultLpDetails';
-import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { Coins } from 'thales-utils';
+import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
+import { RootState } from 'types/ui';
+import { buildLiquidityPoolLink } from 'utils/routes';
+import VaultLpDetails from '../VaultLpDetails';
 
 const UserLiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -26,7 +27,7 @@ const UserLiquidityPool: React.FC = () => {
         UserLiquidityPoolData | undefined
     >(undefined);
 
-    const liquidityPoolDataQuery = useLiquidityPoolDataQuery(networkId, {
+    const liquidityPoolDataQuery = useLiquidityPoolDataQuery('', '' as Coins, networkId, {
         enabled: isAppReady,
     });
 
@@ -43,7 +44,7 @@ const UserLiquidityPool: React.FC = () => {
         return lastValidLiquidityPoolData;
     }, [liquidityPoolDataQuery.isSuccess, liquidityPoolDataQuery.data, lastValidLiquidityPoolData]);
 
-    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery(walletAddress, networkId, {
+    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery('', '' as Coins, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 

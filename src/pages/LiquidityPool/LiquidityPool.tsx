@@ -16,28 +16,34 @@ import RadioButton from 'components/fields/RadioButton';
 import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
-import { BigNumber, ethers } from 'ethers';
+import { LiquidityPoolCollateral, LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
+import { BigNumber, Contract, ethers } from 'ethers';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
-import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
+import queryString from 'query-string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTheme } from 'styled-components';
 import { FlexDivRow } from 'styles/common';
-import { formatCurrencyWithSign, formatPercentage, getDefaultDecimalsForNetwork } from 'thales-utils';
+import { coinParser, formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { RootState, ThemeInterface } from 'types/ui';
-import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getDefaultCollateral } from 'utils/currency';
+import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import { checkAllowance } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { delay } from 'utils/timer';
+import SPAAnchor from '../../components/SPAAnchor';
+import ROUTES from '../../constants/routes';
+import { Network } from '../../enums/network';
+import useMultipleCollateralBalanceQuery from '../../queries/walletBalances/useMultipleCollateralBalanceQuery';
+import { getDefaultLpCollateral, getLiquidityPools, getLpAddress, getLpCollateral } from '../../utils/liquidityPool';
+import { buildHref } from '../../utils/routes';
 import PnL from './PnL';
 import Transactions from './Transactions';
 import {
@@ -59,6 +65,8 @@ import {
     LiquidityPoolInfoTitle,
     LoaderContainer,
     MainContainer,
+    NavigationContainer,
+    NavigationItem,
     RadioButtonContainer,
     RoundEnd,
     RoundEndContainer,
@@ -79,6 +87,7 @@ import {
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+    const location = useLocation();
     const { openConnectModal } = useConnectModal();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -102,22 +111,28 @@ const LiquidityPool: React.FC = () => {
     const [isWithdrawalPercentageValid, setIsWithdrawalPercentageValid] = useState<boolean>(true);
     const [withdrawalAmount, setWithdrawalAmount] = useState<number>(0);
 
-    const collateral = getDefaultCollateral(networkId);
+    const paramCollateral: LiquidityPoolCollateral =
+        networkId === Network.OptimismMainnet
+            ? queryString.parse(location.search).collateral || getDefaultLpCollateral(networkId)
+            : getDefaultLpCollateral(networkId);
 
-    const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const collateral = getLpCollateral(networkId, paramCollateral);
+
+    const liquidityPoolAddress = getLpAddress(networkId, paramCollateral);
+    const liquidityPools = getLiquidityPools(networkId);
+
+    const multipleCollateralBalanceQuery = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
-        if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
-            setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
-            );
+        if (multipleCollateralBalanceQuery.isSuccess && multipleCollateralBalanceQuery.data !== undefined) {
+            setPaymentTokenBalance(Number(multipleCollateralBalanceQuery.data[collateral]));
         }
-    }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
+    }, [multipleCollateralBalanceQuery.isSuccess, multipleCollateralBalanceQuery.data, collateral]);
 
-    const liquidityPoolDataQuery = useLiquidityPoolDataQuery(networkId, {
-        enabled: isAppReady,
+    const liquidityPoolDataQuery = useLiquidityPoolDataQuery(liquidityPoolAddress, collateral, networkId, {
+        enabled: isAppReady && liquidityPoolAddress !== undefined,
     });
 
     useEffect(() => {
@@ -133,9 +148,15 @@ const LiquidityPool: React.FC = () => {
         return lastValidLiquidityPoolData;
     }, [liquidityPoolDataQuery.isSuccess, liquidityPoolDataQuery.data, lastValidLiquidityPoolData]);
 
-    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
+    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery(
+        liquidityPoolAddress,
+        collateral,
+        walletAddress,
+        networkId,
+        {
+            enabled: isAppReady && isWalletConnected && liquidityPoolAddress !== undefined,
+        }
+    );
 
     useEffect(() => {
         if (userLiquidityPoolDataQuery.isSuccess && userLiquidityPoolDataQuery.data) {
@@ -158,6 +179,7 @@ const LiquidityPool: React.FC = () => {
         !userLiquidityPoolData.hasDepositForCurrentRound &&
         !userLiquidityPoolData.hasDepositForNextRound &&
         isAmountEntered;
+
     const insufficientBalance =
         (Number(paymentTokenBalance) < Number(amount) || Number(paymentTokenBalance) === 0) && isWalletConnected;
 
@@ -205,20 +227,19 @@ const LiquidityPool: React.FC = () => {
         isLiquidityPoolCapReached;
 
     useEffect(() => {
-        const { signer, collateral, liquidityPoolContract } = snxJSConnector;
-        if (signer && collateral && liquidityPoolContract) {
-            const collateralWithSigner = collateral.connect(signer);
+        const { signer, multipleCollateral } = snxJSConnector;
+
+        if (signer && multipleCollateral) {
+            const collateralContractWithSigner = multipleCollateral[collateral]?.connect(signer);
+
             const getAllowance = async () => {
                 try {
-                    const parsedAmount = ethers.utils.parseUnits(
-                        Number(amount).toString(),
-                        getDefaultDecimalsForNetwork(networkId)
-                    );
+                    const parsedAmount = coinParser(Number(amount).toString(), networkId, collateral);
                     const allowance = await checkAllowance(
                         parsedAmount,
-                        collateralWithSigner,
+                        collateralContractWithSigner,
                         walletAddress,
-                        liquidityPoolContract.address
+                        liquidityPoolAddress
                     );
                     setAllowance(allowance);
                 } catch (e) {
@@ -229,11 +250,20 @@ const LiquidityPool: React.FC = () => {
                 getAllowance();
             }
         }
-    }, [walletAddress, isWalletConnected, hasAllowance, amount, isAllowing, networkId]);
+    }, [
+        walletAddress,
+        isWalletConnected,
+        hasAllowance,
+        amount,
+        isAllowing,
+        networkId,
+        collateral,
+        liquidityPoolAddress,
+    ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const { signer, collateral, liquidityPoolContract } = snxJSConnector;
-        if (signer && collateral && liquidityPoolContract) {
+        const { signer, multipleCollateral } = snxJSConnector;
+        if (signer && multipleCollateral) {
             const id = toast.loading(
                 getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
@@ -241,10 +271,10 @@ const LiquidityPool: React.FC = () => {
             setIsAllowing(true);
 
             try {
-                const collateralWithSigner = collateral.connect(signer);
+                const collateralContractWithSigner = multipleCollateral[collateral]?.connect(signer);
 
-                const tx = (await collateralWithSigner.approve(
-                    liquidityPoolContract.address,
+                const tx = (await collateralContractWithSigner?.approve(
+                    liquidityPoolAddress,
                     approveAmount
                 )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
@@ -269,19 +299,20 @@ const LiquidityPool: React.FC = () => {
     };
 
     const handleDeposit = async () => {
-        const { signer, liquidityPoolContract } = snxJSConnector;
-        if (signer && liquidityPoolContract) {
+        const { signer } = snxJSConnector;
+        if (signer) {
             const id = toast.loading(
                 getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
             try {
-                const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
-                const parsedAmount = ethers.utils.parseUnits(
-                    Number(amount).toString(),
-                    getDefaultDecimalsForNetwork(networkId)
+                const liquidityPoolContractWithSigner = new Contract(
+                    liquidityPoolAddress,
+                    liquidityPoolContract.abi,
+                    signer
                 );
+                const parsedAmount = coinParser(Number(amount).toString(), networkId, collateral);
 
                 const tx = await liquidityPoolContractWithSigner.deposit(parsedAmount);
                 const txResult = await tx.wait();
@@ -309,15 +340,19 @@ const LiquidityPool: React.FC = () => {
     };
 
     const handleWithdrawalRequest = async () => {
-        const { signer, liquidityPoolContract } = snxJSConnector;
-        if (signer && liquidityPoolContract) {
+        const { signer } = snxJSConnector;
+        if (signer) {
             const id = toast.loading(
                 getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
                 getLoadingToastOptions()
             );
             setIsSubmitting(true);
             try {
-                const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
+                const liquidityPoolContractWithSigner = new Contract(
+                    liquidityPoolAddress,
+                    liquidityPoolContract.abi,
+                    signer
+                );
                 const parsedPercentage = ethers.utils.parseEther((Number(withdrawalPercentage) / 100).toString());
 
                 const tx = withdrawAll
@@ -346,10 +381,10 @@ const LiquidityPool: React.FC = () => {
         const id = toast.loading(getDefaultToastContent(t('liquidity-pool.closing-round')), getLoadingToastOptions());
         setIsSubmitting(true);
         try {
-            const { signer, liquidityPoolContract } = snxJSConnector;
+            const { signer } = snxJSConnector;
 
-            if (signer && liquidityPoolContract) {
-                const lpContractWithSigner = liquidityPoolContract.connect(signer);
+            if (signer) {
+                const lpContractWithSigner = new Contract(liquidityPoolAddress, liquidityPoolContract.abi, signer);
 
                 const canCloseCurrentRound = await lpContractWithSigner?.canCloseCurrentRound();
                 const roundClosingPrepared = await lpContractWithSigner?.roundClosingPrepared();
@@ -490,6 +525,23 @@ const LiquidityPool: React.FC = () => {
     return (
         <Wrapper>
             <Title>{t('liquidity-pool.title')}</Title>
+            {networkId === Network.OptimismMainnet && (
+                <NavigationContainer>
+                    {liquidityPools.map((item: any) => {
+                        const lpCollateral = item.collateral.toLowerCase() as LiquidityPoolCollateral;
+                        return (
+                            <SPAAnchor
+                                key={item.name}
+                                href={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lpCollateral}`}
+                            >
+                                <NavigationItem className={`${lpCollateral === paramCollateral ? 'selected' : ''}`}>
+                                    {item.name}
+                                </NavigationItem>
+                            </SPAAnchor>
+                        );
+                    })}
+                </NavigationContainer>
+            )}
             {liquidityPoolData && (
                 <Container>
                     <ContentContainer>

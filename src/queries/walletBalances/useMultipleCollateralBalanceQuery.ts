@@ -25,6 +25,7 @@ const useMultipleCollateralBalanceQuery = (
                 ETH: 0,
                 ARB: 0,
                 USDC: 0,
+                BUSD: 0,
             };
             try {
                 const multipleCollateral = snxJSConnector.multipleCollateral;
@@ -85,6 +86,7 @@ const useMultipleCollateralBalanceQuery = (
                     WETH: WETHBalance ? bigNumberFormatter(WETHBalance, COLLATERAL_DECIMALS.WETH) : 0,
                     ETH: ETHBalance ? bigNumberFormatter(ETHBalance, COLLATERAL_DECIMALS.ETH) : 0,
                     ARB: ARBBalance ? bigNumberFormatter(ARBBalance, COLLATERAL_DECIMALS.ARB) : 0,
+                    BUSD: 0,
                 };
             } catch (e) {
                 console.log('e ', e);

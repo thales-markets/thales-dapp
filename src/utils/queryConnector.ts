@@ -176,8 +176,8 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
 
     await wait(WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS);
 
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
+    // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
+    // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.LiquidityPool.UserTransactions(networkId, undefined, round)

@@ -178,8 +178,14 @@ const QUERY_KEYS = {
     },
     Banners: (networkId: Network) => ['banners', networkId],
     LiquidityPool: {
-        Data: (networkId: Network) => ['liquidityPool', 'data', networkId],
-        UserData: (walletAddress: string, networkId: Network) => ['liquidityPool', 'data', walletAddress, networkId],
+        Data: (address: string, networkId: Network) => ['liquidityPool', 'data', address, networkId],
+        UserData: (address: string, walletAddress: string, networkId: Network) => [
+            'liquidityPool',
+            'data',
+            address,
+            walletAddress,
+            networkId,
+        ],
         PnL: (networkId: Network) => ['liquidityPool', 'pnl', networkId],
         UserTransactions: (networkId: Network, walletAddress?: string, round?: number) => [
             'liquidityPool',

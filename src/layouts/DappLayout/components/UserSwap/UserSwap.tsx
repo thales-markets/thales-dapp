@@ -16,18 +16,18 @@ import {
     getWalletAddress,
     setSelectedCollateralIndex,
 } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivRow } from 'styles/common';
 import { Coins, formatCurrencyWithKey } from 'thales-utils';
+import { RootState } from 'types/ui';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import {
     getAssetIcon,
     getCoinBalance,
     getCollateral,
+    getCollateralIndexByBalance,
     getCollateralIndexForNetwork,
     getDefaultCollateral,
-    getCollateralIndexByBalance,
 } from 'utils/currency';
 import { getIsMultiCollateralSupported } from 'utils/network';
 
@@ -62,7 +62,7 @@ const UserSwap: React.FC = () => {
 
     const sUSDBalance = getCoinBalance(multipleCollateralBalancesData, SYNTHS_MAP.sUSD as Coins);
     const DAIBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.DAI as Coins);
-    const USDCBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDC as Coins);
+    const USDCBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDCe as Coins);
     const USDTBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDT as Coins);
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
@@ -78,7 +78,7 @@ const UserSwap: React.FC = () => {
             collaterals.push(
                 { type: SYNTHS_MAP.sUSD as Coins, balance: sUSDBalance },
                 { type: CRYPTO_CURRENCY_MAP.DAI as Coins, balance: DAIBalance },
-                { type: CRYPTO_CURRENCY_MAP.USDC as Coins, balance: USDCBalance }, // default for Polygon
+                { type: CRYPTO_CURRENCY_MAP.USDCe as Coins, balance: USDCBalance }, // default for Polygon
                 { type: CRYPTO_CURRENCY_MAP.USDT as Coins, balance: USDTBalance }
             );
         } else {
