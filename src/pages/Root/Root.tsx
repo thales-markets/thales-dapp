@@ -28,7 +28,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { getDefaultTheme } from 'utils/style';
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
-import { arbitrum, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains';
+import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
@@ -38,7 +38,7 @@ dotenv.config();
 const STALL_TIMEOUT = 2000;
 
 const { chains, provider } = configureChains(
-    [optimism, optimismGoerli, optimismSepolia, mainnet, polygon, arbitrum, base],
+    [optimism, optimismSepolia, mainnet, polygon, arbitrum, base],
     [
         jsonRpcProvider({
             rpc: (chain) => {

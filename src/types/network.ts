@@ -13,4 +13,4 @@ export type NetworkParams = {
     };
 };
 
-export type SupportedNetwork = Exclude<Network, Network.ZkSync | Network.ZkSyncSepolia | Network.BlastSepolia>;
+export type SupportedNetwork = Network;

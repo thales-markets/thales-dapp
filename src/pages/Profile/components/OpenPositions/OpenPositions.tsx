@@ -11,13 +11,13 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsMobile } from 'redux/modules/ui';
+import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
 import { UserPosition } from 'types/profile';
-import { RootState, ThemeInterface } from 'types/ui';
+import { ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
@@ -31,11 +31,12 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const isMobile = useSelector(getIsMobile);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
@@ -48,7 +49,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
             ? exchangeRatesMarketDataQuery.data
             : null;
 
-    const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, {
+    const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected,
     });
 

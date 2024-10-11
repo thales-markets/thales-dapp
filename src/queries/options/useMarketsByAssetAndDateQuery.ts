@@ -12,6 +12,7 @@ import { coinFormatter, truncToDecimals } from 'thales-utils';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getContractForInteraction } from '../../utils/options';
 
 const BATCH_LIMIT = 30;
 
@@ -20,18 +21,27 @@ const useMarketsByAssetAndDateQuery = (
     date: number,
     position: Positions,
     networkId: Network,
+    isDeprecatedCurrency: boolean,
     options?: UseQueryOptions<MarketInfo[] | RangedMarketPerPosition[]>
 ) => {
     return useQuery<MarketInfo[] | RangedMarketPerPosition[]>(
-        QUERY_KEYS.BinaryOptions.MarketsByAssetAndDate(asset, date, position, networkId),
+        QUERY_KEYS.BinaryOptions.MarketsByAssetAndDate(asset, date, position, networkId, isDeprecatedCurrency),
         async () => {
+            const { binaryOptionsMarketDataContract, binaryOptionsMarketDataUSDCContract } = snxJSConnector;
+            const binaryOptionsMarketDataContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                binaryOptionsMarketDataContract,
+                binaryOptionsMarketDataUSDCContract
+            );
+
             if (position === Positions.UP || position === Positions.DOWN) {
-                const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketsForAssetAndStrikeDate(
+                const result = await binaryOptionsMarketDataContractForInteraction?.getMarketsForAssetAndStrikeDate(
                     ethers.utils.formatBytes32String(asset),
                     Number(date / 1000)
                 );
                 const allMarkets = uniq(result).filter((value) => value !== ZERO_ADDRESS);
-                const result1 = await (snxJSConnector as any).binaryOptionsMarketDataContract.getActiveMarketsInfoPerPosition(
+                const result1 = await binaryOptionsMarketDataContractForInteraction?.getActiveMarketsInfoPerPosition(
                     allMarkets,
                     position === Positions.UP ? 0 : 1
                 );
@@ -41,7 +51,7 @@ const useMarketsByAssetAndDateQuery = (
                 const data = finalResult.map((market: any) => {
                     const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
-                    const price = coinFormatter(market.price, networkId);
+                    const price = coinFormatter(market.price, networkId, undefined, isDeprecatedCurrency);
                     const newPrice = (1 - discount) * price;
 
                     const roi = calculatePotentialProfit(price);
@@ -104,8 +114,8 @@ const useMarketsByAssetAndDateQuery = (
 
                 Array.from(allRangedMarkets).map(async (markets) => {
                     promises.push(
-                        (snxJSConnector as any).binaryOptionsMarketDataContract
-                            .getRangedActiveMarketsInfoPerPosition(markets[1], position === Positions.IN ? 0 : 1)
+                        binaryOptionsMarketDataContractForInteraction
+                            ?.getRangedActiveMarketsInfoPerPosition(markets[1], position === Positions.IN ? 0 : 1)
                             .then((rangedMarketsInfo: any) => {
                                 result.push(...rangedMarketsInfo);
                             })
@@ -117,14 +127,14 @@ const useMarketsByAssetAndDateQuery = (
                 const finalResult = result.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
-                        coinFormatter(marketInfo.price, networkId) !== 0
+                        coinFormatter(marketInfo.price, networkId, undefined, isDeprecatedCurrency) !== 0
                 );
 
                 return finalResult
                     .map((market: any) => {
                         const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
-                        const price = coinFormatter(market.price, networkId);
+                        const price = coinFormatter(market.price, networkId, undefined, isDeprecatedCurrency);
                         const newPrice = (1 - discount) * price;
 
                         const roi = calculatePotentialProfit(price);

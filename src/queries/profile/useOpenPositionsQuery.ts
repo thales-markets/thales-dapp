@@ -13,14 +13,16 @@ import { UserPosition } from 'types/profile';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getContractForInteraction } from '../../utils/options';
 
 const useOpenPositionsQuery = (
     networkId: Network,
     walletAddress: string,
+    isDeprecatedCurrency: boolean,
     options?: UseQueryOptions<UserPosition[]>
 ) => {
     return useQuery<UserPosition[]>(
-        QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId),
+        QUERY_KEYS.Profile.OpenPositions(walletAddress, networkId, isDeprecatedCurrency),
         async () => {
             const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
                 axios.get(
@@ -71,8 +73,14 @@ const useOpenPositionsQuery = (
                         );
                         const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
-                        const { ammContract } = snxJSConnector as any;
-                        const ammQuote = await ammContract.sellToAmmQuote(
+                        const { ammContract, ammUSDCContract } = snxJSConnector;
+                        const ammContractForInteraction = getContractForInteraction(
+                            networkId,
+                            isDeprecatedCurrency,
+                            ammContract,
+                            ammUSDCContract
+                        );
+                        const ammQuote = await ammContractForInteraction?.sellToAmmQuote(
                             positionBalance.position.market.id,
                             SIDE[positionBalance.position.side],
                             positionBalance.amount
@@ -94,8 +102,14 @@ const useOpenPositionsQuery = (
                         );
                         const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
-                        const { rangedMarketAMMContract } = snxJSConnector as any;
-                        const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
+                        const { rangedMarketAMMContract, rangedMarketsAMMUSDCContract } = snxJSConnector;
+                        const rangedMarketAMMContractForInteraction = getContractForInteraction(
+                            networkId,
+                            isDeprecatedCurrency,
+                            rangedMarketAMMContract,
+                            rangedMarketsAMMUSDCContract
+                        );
+                        const ammQuote = await rangedMarketAMMContractForInteraction?.sellToAmmQuote(
                             positionBalance.position.market.id,
                             RANGE_SIDE[positionBalance.position.side],
                             positionBalance.amount

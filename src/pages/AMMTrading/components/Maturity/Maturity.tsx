@@ -1,55 +1,55 @@
+import Button from 'components/Button';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import TimeRemaining from 'components/TimeRemaining';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+    getSuccessToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { Positions } from 'enums/options';
+import { ethers } from 'ethers';
+import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { ethers } from 'ethers';
-import {
-    Container,
-    Header,
-    Label,
-    PositionsContainer,
-    Position,
-    InfoContainer,
-    InfoItem,
-    additionalButtonStyle,
-    InfoLabel,
-    Info,
-    LoaderContainer,
-    ShareIcon,
-} from './styled-components';
-import Button from 'components/Button';
-import TimeRemaining from 'components/TimeRemaining';
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import {
-    getDefaultToastContent,
-    getLoadingToastOptions,
-    getErrorToastOptions,
-    getSuccessToastOptions,
-} from 'components/ToastMessage/ToastMessage';
-import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { RootState } from 'types/ui';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { useTheme } from 'styled-components';
+import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'thales-utils';
 import { AccountMarketInfo, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
+import { UserPosition } from 'types/profile';
+import { ThemeInterface } from 'types/ui';
+import { getDefaultCollateral } from 'utils/currency';
 import {
-    refetchMarketQueries,
     refetchBalances,
+    refetchMarketQueries,
     refetchRangeMarketQueries,
     refetchUserNotifications,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'thales-utils';
-import { toast } from 'react-toastify';
-import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
-import { Positions } from 'enums/options';
-import { getDefaultCollateral } from 'utils/currency';
-import SharePositionModal from 'pages/Trade/components/AmmTrading/components/SharePositionModal';
-import useClaimablePositionsQuery from 'queries/profile/useClaimablePositionsQuery';
-import { UserPosition } from 'types/profile';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
+import {
+    additionalButtonStyle,
+    Container,
+    Header,
+    Info,
+    InfoContainer,
+    InfoItem,
+    InfoLabel,
+    Label,
+    LoaderContainer,
+    Position,
+    PositionsContainer,
+    ShareIcon,
+} from './styled-components';
 
 type MaturityProps = {
     isRangedMarket: boolean;
@@ -63,19 +63,26 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
 
     let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
 
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedMarket,
-    });
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
+        market.address,
+        walletAddress,
+        networkId,
+        isDeprecatedCurrency,
+        {
+            enabled: isAppReady && isWalletConnected && !isRangedMarket,
+        }
+    );
 
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isRangedMarket,
@@ -140,7 +147,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                 isRangedMarket
                     ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
                     : refetchMarketQueries(walletAddress, BOMContract.address, market.address);
-                refetchBalances(walletAddress, networkId);
+                refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
                 refetchUserNotifications(walletAddress, networkId);
                 setIsExercising(false);
             }

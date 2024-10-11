@@ -1,13 +1,13 @@
 import { Network } from 'enums/network';
 
-const ammContract = {
+const ammUSDCContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
-        [Network.OptimismMainnet]: '0x278B5A44397c9D8E52743fEdec263c4760dc1A1A',
+        [Network.OptimismMainnet]: '0x9Ce94cdf8eCd57cec0835767528DC88628891dd9',
         [Network.OptimismSepolia]: 'TBD',
-        [Network.PolygonMainnet]: '0xd52B865584c25FEBfcB676B9A87F32683356A063',
-        [Network.Arbitrum]: '0x2b89275efB9509c33d9AD92A4586bdf8c4d21505',
-        [Network.Base]: '0xe41cD3A25CBdeDA0BC46D48C380393D953bD2034',
+        [Network.PolygonMainnet]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {
@@ -1771,4 +1771,4 @@ const ammContract = {
     ],
 };
 
-export default ammContract;
+export default ammUSDCContract;

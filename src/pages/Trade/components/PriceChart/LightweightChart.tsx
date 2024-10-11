@@ -14,9 +14,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
 import { bigNumberFormatter, bytesFormatter } from 'thales-utils';
-import { RootState } from 'types/ui';
 import { calculatePercentageChange, formatPricePercentageGrowth } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
+import { getContractForInteraction } from '../../../../utils/options';
 import { ChartComponent } from './components/Chart/ChartContext';
 import CurrentPrice from './components/CurrentPrice';
 import Toggle from './components/DateToggle';
@@ -50,8 +51,9 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
 }) => {
     const { t } = useTranslation();
 
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [now, setNow] = useState(new Date());
     const [processedPriceData, setProcessedPriceData] = useState<number>(0);
@@ -97,10 +99,18 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
     }, [currentPrice, candleStickData]);
 
     useEffect(() => {
-        const { ammContract } = snxJSConnector;
+        const { ammContract, ammUSDCContract } = snxJSConnector;
+        const ammContractForInteraction = getContractForInteraction(
+            networkId,
+            isDeprecatedCurrency,
+            ammContract,
+            ammUSDCContract
+        );
         const getImpliedVolatility = async () => {
             try {
-                const impliedVolatility = await ammContract?.impliedVolatilityPerAsset(bytesFormatter(asset));
+                const impliedVolatility = await ammContractForInteraction?.impliedVolatilityPerAsset(
+                    bytesFormatter(asset)
+                );
                 setIV(bigNumberFormatter(impliedVolatility));
             } catch (e) {
                 console.log(e);
@@ -108,7 +118,7 @@ const LightweightChart: React.FC<LightweightChartProps> = ({
         };
 
         getImpliedVolatility();
-    }, [asset]);
+    }, [asset, isDeprecatedCurrency, networkId]);
 
     useInterval(() => {
         setNow(new Date());

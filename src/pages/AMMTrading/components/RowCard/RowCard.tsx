@@ -13,18 +13,19 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
+import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import { useTheme } from 'styled-components';
-import { AccountMarketInfo, OptionsMarketInfo, RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
-import { ThemeInterface } from 'types/ui';
 import {
-    getEtherscanAddressLink,
     formatCurrency,
     formatCurrencyWithPrecision,
     formatCurrencyWithSign,
+    getEtherscanAddressLink,
 } from 'thales-utils';
+import { AccountMarketInfo, OptionsMarketInfo, RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
+import { ThemeInterface } from 'types/ui';
 import { formatPricePercentageDifference } from 'utils/formatters/number';
+import { getColorPerPosition } from 'utils/options';
 import { useMarketContext } from '../../contexts/MarketContext';
 import MaturityDate from '../MaturityDate';
 import {
@@ -39,8 +40,6 @@ import {
     UsingAmmLink,
     Value,
 } from './styled-components';
-import { getColorPerPosition } from 'utils/options';
-import { getIsMobile } from 'redux/modules/ui';
 
 type RowCardProps = {
     isRangedMarket: boolean;
@@ -52,17 +51,24 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     const market = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const isBuy = useSelector((state: RootState) => getIsBuy(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isBuy = useSelector(getIsBuy);
+    const networkId = useSelector(getNetworkId);
 
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const isAppReady = useSelector(getIsAppReady);
+    const isMobile = useSelector(getIsMobile);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedMarket,
-    });
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
+        market.address,
+        walletAddress,
+        networkId,
+        isDeprecatedCurrency,
+        {
+            enabled: isAppReady && isWalletConnected && !isRangedMarket,
+        }
+    );
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isRangedMarket,
     });
@@ -75,10 +81,10 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
         optBalances = { ...optBalances, ...(rangedMarketsBalance.data as RangedMarketBalanceInfo) };
     }
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && !isRangedMarket,
     });
-    const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, {
+    const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isRangedMarket,
     });
 

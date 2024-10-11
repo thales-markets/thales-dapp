@@ -1,8 +1,10 @@
-import { Phase } from '../types/options';
+import { Positions } from 'enums/options';
+import { Contract } from 'ethers';
 import { formatCurrency } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
-import { Positions } from 'enums/options';
 import { MARKET_DURATION_IN_DAYS } from '../constants/options';
+import { Network } from '../enums/network';
+import { Phase } from '../types/options';
 
 export const getPhaseAndEndDate = (
     maturityDate: number,
@@ -57,3 +59,10 @@ export const isOptionClaimable = (positionBalance: any) =>
 
 export const getMinMaturityDateForClaim = () =>
     Math.round(new Date(new Date().setDate(new Date().getDate() - MARKET_DURATION_IN_DAYS)).getTime() / 1000);
+
+export const getContractForInteraction = (
+    networkId: number,
+    isDeprecatedCurrency: boolean,
+    deprecatedContract: Contract | undefined,
+    newContract: Contract | undefined
+) => (networkId === Network.OptimismMainnet && !isDeprecatedCurrency ? newContract : deprecatedContract);

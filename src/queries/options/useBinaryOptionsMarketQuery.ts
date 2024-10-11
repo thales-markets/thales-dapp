@@ -1,20 +1,33 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from 'constants/queryKeys';
-import snxJSConnector from 'utils/snxJSConnector';
-import { OptionsMarketInfo } from 'types/options';
-import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
 import { SIDE } from 'constants/options';
-import { getPhaseAndEndDate } from 'utils/options';
+import QUERY_KEYS from 'constants/queryKeys';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
+import { OptionsMarketInfo } from 'types/options';
 import { getSynthAsset } from 'utils/currency';
+import { getContractForInteraction, getPhaseAndEndDate } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
 
-const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOptions<OptionsMarketInfo | null>) => {
+const useBinaryOptionsMarketQuery = (
+    marketAddress: string,
+    networkId: number,
+    isDeprecatedCurrency: boolean,
+    options?: UseQueryOptions<OptionsMarketInfo | null>
+) => {
     return useQuery<OptionsMarketInfo | null>(
         QUERY_KEYS.BinaryOptions.Market(marketAddress),
         async () => {
             try {
+                const { binaryOptionsMarketDataContract, binaryOptionsMarketDataUSDCContract } = snxJSConnector;
+                const binaryOptionsMarketDataContractForInteraction = getContractForInteraction(
+                    networkId,
+                    isDeprecatedCurrency,
+                    binaryOptionsMarketDataContract,
+                    binaryOptionsMarketDataUSDCContract
+                );
+
                 const [marketData, marketParameters] = await Promise.all([
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketData(marketAddress),
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketParameters(marketAddress),
+                    binaryOptionsMarketDataContractForInteraction?.getMarketData(marketAddress),
+                    binaryOptionsMarketDataContractForInteraction?.getMarketParameters(marketAddress),
                 ]);
 
                 const { times, oracleDetails, creator, options, fees } = marketParameters;

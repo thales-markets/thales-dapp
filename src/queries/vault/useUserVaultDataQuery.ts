@@ -1,9 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from '../../constants/queryKeys';
-import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
-import snxJSConnector from 'utils/snxJSConnector';
-import { UserVaultData } from 'types/vault';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
+import { UserVaultData } from 'types/vault';
+import snxJSConnector from 'utils/snxJSConnector';
+import QUERY_KEYS from '../../constants/queryKeys';
 
 const useUserVaultDataQuery = (
     vaultAddress: string,
@@ -33,12 +33,12 @@ const useUserVaultDataQuery = (
 
                     userVaultData.balanceCurrentRound = bigNumberFormatter(
                         contractUserVaultData.balanceCurrentRound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
 
                     userVaultData.balanceNextRound = bigNumberFormatter(
                         contractUserVaultData.balanceNextRound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
 
                     userVaultData.balanceTotal = contractUserVaultData.withdrawalRequested

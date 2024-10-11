@@ -367,12 +367,6 @@ export const COLLATERALS: Record<SupportedNetwork, Coins[]> = {
         CRYPTO_CURRENCY_MAP.USDCe as Coins,
         CRYPTO_CURRENCY_MAP.USDT as Coins,
     ],
-    [Network.OptimismGoerli]: [
-        SYNTHS_MAP.sUSD as Coins,
-        CRYPTO_CURRENCY_MAP.DAI as Coins,
-        CRYPTO_CURRENCY_MAP.USDC as Coins,
-        CRYPTO_CURRENCY_MAP.USDT as Coins,
-    ],
     [Network.OptimismSepolia]: [
         SYNTHS_MAP.sUSD as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,
@@ -392,7 +386,6 @@ export const ADDITIONAL_COLLATERALS: Record<SupportedNetwork, Coins[]> = {
         CRYPTO_CURRENCY_MAP.WETH as Coins,
         CRYPTO_CURRENCY_MAP.ETH as Coins,
     ],
-    [Network.OptimismGoerli]: [],
     [Network.OptimismSepolia]: [],
     [Network.PolygonMainnet]: [],
     [Network.Base]: [

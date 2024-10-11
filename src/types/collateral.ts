@@ -9,5 +9,6 @@ export type CollateralsBalance = {
     ETH: number;
     ARB: number;
     USDC: number;
-    BUSD: number;
+    THALES: number;
+    sTHALES: number;
 };

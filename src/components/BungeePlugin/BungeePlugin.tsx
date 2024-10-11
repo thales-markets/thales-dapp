@@ -4,14 +4,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
-import { ThemeInterface } from 'types/ui';
-import snxJSConnector from 'utils/snxJSConnector';
 import { hexToRGB } from 'thales-utils';
-import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
-import { getDefaultCollateral } from 'utils/currency';
 import { SupportedNetwork } from 'types/network';
+import { RootState, ThemeInterface } from 'types/ui';
+import { getDefaultCollateral } from 'utils/currency';
+import snxJSConnector from 'utils/snxJSConnector';
+import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 
 const SUPPORTED_DESTINATION_NETWORKS: SupportedNetwork[] = [
     Network.OptimismMainnet,

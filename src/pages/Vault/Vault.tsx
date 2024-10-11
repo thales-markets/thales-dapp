@@ -209,7 +209,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 try {
                     const parsedAmount = ethers.utils.parseUnits(
                         Number(amount).toString(),
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     const allowance = await checkAllowance(
                         parsedAmount,
@@ -279,7 +279,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
                 const parsedAmount = ethers.utils.parseUnits(
                     Number(amount).toString(),
-                    getDefaultDecimalsForNetwork(networkId)
+                    getDefaultDecimalsForNetwork(networkId, true)
                 );
 
                 const tx = await ammVaultContractWithSigner.deposit(parsedAmount);

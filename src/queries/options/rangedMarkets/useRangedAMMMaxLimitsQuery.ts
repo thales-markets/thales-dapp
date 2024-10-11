@@ -1,9 +1,10 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { AMM_MAX_BUFFER_PERCENTAGE, RANGE_SIDE } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { BigNumber } from 'ethers';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
-import { AMM_MAX_BUFFER_PERCENTAGE, RANGE_SIDE } from 'constants/options';
-import { BigNumber } from 'ethers';
+import { getContractForInteraction } from '../../../utils/options';
 
 export type RangeAmmMaxLimits = {
     in: {
@@ -27,6 +28,7 @@ export type RangeAmmMaxLimits = {
 const useRangedAMMMaxLimitsQuery = (
     marketAddress: string,
     networkId: number,
+    isDeprecatedCurrency: boolean,
     options?: UseQueryOptions<RangeAmmMaxLimits>
 ) => {
     return useQuery<RangeAmmMaxLimits>(
@@ -51,13 +53,33 @@ const useRangedAMMMaxLimitsQuery = (
                 },
             };
 
-            const { rangedMarketAMMContract, binaryOptionsMarketDataContract } = snxJSConnector;
-            if (rangedMarketAMMContract && binaryOptionsMarketDataContract) {
-                const rangedAmmMarketData = await binaryOptionsMarketDataContract.getRangedAmmMarketData(marketAddress);
+            const {
+                rangedMarketAMMContract,
+                rangedMarketsAMMUSDCContract,
+                binaryOptionsMarketDataContract,
+                binaryOptionsMarketDataUSDCContract,
+            } = snxJSConnector;
+            const rangedMarketAMMContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                rangedMarketAMMContract,
+                rangedMarketsAMMUSDCContract
+            );
+            const binaryOptionsMarketDataContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                binaryOptionsMarketDataContract,
+                binaryOptionsMarketDataUSDCContract
+            );
+
+            if (rangedMarketAMMContractForInteraction && binaryOptionsMarketDataContractForInteraction) {
+                const rangedAmmMarketData = await binaryOptionsMarketDataContractForInteraction.getRangedAmmMarketData(
+                    marketAddress
+                );
 
                 const [maxBuyInPrice, maxBuyOutPrice] = await Promise.all([
                     rangedAmmMarketData.inBuyLiquidity > 0
-                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                        ? rangedMarketAMMContractForInteraction.buyFromAmmQuote(
                               marketAddress,
                               RANGE_SIDE['in'],
                               (rangedAmmMarketData.inBuyLiquidity as BigNumber)
@@ -66,7 +88,7 @@ const useRangedAMMMaxLimitsQuery = (
                           )
                         : 0,
                     rangedAmmMarketData.outBuyLiquidity > 0
-                        ? rangedMarketAMMContract.buyFromAmmQuote(
+                        ? rangedMarketAMMContractForInteraction.buyFromAmmQuote(
                               marketAddress,
                               RANGE_SIDE['out'],
                               (rangedAmmMarketData.outBuyLiquidity as BigNumber)
@@ -76,12 +98,37 @@ const useRangedAMMMaxLimitsQuery = (
                         : 0,
                 ]);
 
-                ammMaxLimits.in.buyPrice = coinFormatter(rangedAmmMarketData.inBuyPrice, networkId);
-                ammMaxLimits.out.buyPrice = coinFormatter(rangedAmmMarketData.outBuyPrice, networkId);
-                ammMaxLimits.in.maxBuyPrice = coinFormatter(maxBuyInPrice, networkId);
-                ammMaxLimits.out.maxBuyPrice = coinFormatter(maxBuyOutPrice, networkId);
-                ammMaxLimits.in.sellPrice = coinFormatter(rangedAmmMarketData.inSellPrice, networkId);
-                ammMaxLimits.out.sellPrice = coinFormatter(rangedAmmMarketData.outSellPrice, networkId);
+                ammMaxLimits.in.buyPrice = coinFormatter(
+                    rangedAmmMarketData.inBuyPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.out.buyPrice = coinFormatter(
+                    rangedAmmMarketData.outBuyPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.in.maxBuyPrice = coinFormatter(maxBuyInPrice, networkId, undefined, isDeprecatedCurrency);
+                ammMaxLimits.out.maxBuyPrice = coinFormatter(
+                    maxBuyOutPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.in.sellPrice = coinFormatter(
+                    rangedAmmMarketData.inSellPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.out.sellPrice = coinFormatter(
+                    rangedAmmMarketData.outSellPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
                 ammMaxLimits.in.maxBuy =
                     ammMaxLimits.in.buyPrice !== 0
                         ? bigNumberFormatter(rangedAmmMarketData.inBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE

@@ -78,23 +78,33 @@ const QUERY_KEYS = {
         ],
         AmmMaxLimits: (marketAddress: string) => ['amm', marketAddress],
         RangedAmmMaxLimits: (marketAddress: string) => ['rangedAmm', marketAddress],
-        AvailableAssets: (networkId: Network) => ['availableAssets', networkId],
-        MaturityDatesByAsset: (asset: string, networkId: Network) => ['maturityDatesByAsset', asset, networkId],
-        MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: Network) => [
-            'marketsByAssetAndDate',
-            asset,
-            date,
-            position,
+        AvailableAssets: (networkId: Network, isDeprecatedCurrency: boolean) => [
+            'availableAssets',
             networkId,
+            isDeprecatedCurrency,
         ],
+        MaturityDatesByAsset: (asset: string, networkId: Network, isDeprecatedCurrency: boolean) => [
+            'maturityDatesByAsset',
+            asset,
+            networkId,
+            isDeprecatedCurrency,
+        ],
+        MarketsByAssetAndDate: (
+            asset: string,
+            date: number,
+            position: Positions,
+            networkId: Network,
+            isDeprecatedCurrency: boolean
+        ) => ['marketsByAssetAndDate', asset, date, position, networkId, isDeprecatedCurrency],
         MarketsCount: (networkId: Network) => ['markets-count', networkId],
     },
     User: {
-        OpenPositions: (walletAddress: string, networkId: Network) => [
+        OpenPositions: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
             'user',
             'userOpenPositions',
             walletAddress,
             networkId,
+            isDeprecatedCurrency,
         ],
         Notifications: (walletAddress: string, networkId: Network) => [
             'user',
@@ -112,11 +122,12 @@ const QUERY_KEYS = {
     },
     Profile: {
         Data: (walletAddress: string, networkId: Network) => ['profile', 'data', walletAddress, networkId],
-        OpenPositions: (walletAddress: string, networkId: Network) => [
+        OpenPositions: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
             'profile',
             'openPositions',
             walletAddress,
             networkId,
+            isDeprecatedCurrency,
         ],
         ClaimablePositions: (walletAddress: string, networkId: Network) => [
             'profile',

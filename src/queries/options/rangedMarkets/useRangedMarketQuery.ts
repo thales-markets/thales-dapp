@@ -1,15 +1,20 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from 'constants/queryKeys';
-import snxJSConnector from 'utils/snxJSConnector';
-import { RangedMarketData } from 'types/options';
-import { ethers } from 'ethers';
-import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
 import { RANGE_SIDE } from 'constants/options';
-import { getPhaseAndEndDate } from 'utils/options';
+import QUERY_KEYS from 'constants/queryKeys';
+import { ethers } from 'ethers';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter, parseBytes32String } from 'thales-utils';
+import { RangedMarketData } from 'types/options';
+import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { getSynthAsset } from 'utils/currency';
+import { getContractForInteraction, getPhaseAndEndDate } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
 
-const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<RangedMarketData | null>) => {
+const useRangedMarketQuery = (
+    marketAddress: string,
+    networkId: number,
+    isDeprecatedCurrency: boolean,
+    options?: UseQueryOptions<RangedMarketData | null>
+) => {
     return useQuery<RangedMarketData | null>(
         QUERY_KEYS.BinaryOptions.RangedMarket(marketAddress),
         async () => {
@@ -28,14 +33,22 @@ const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<R
                     rangedMarket.resolved(),
                 ]);
 
+                const { binaryOptionsMarketDataContract, binaryOptionsMarketDataUSDCContract } = snxJSConnector;
+                const binaryOptionsMarketDataContractForInteraction = getContractForInteraction(
+                    networkId,
+                    isDeprecatedCurrency,
+                    binaryOptionsMarketDataContract,
+                    binaryOptionsMarketDataUSDCContract
+                );
+
                 const [
                     marketDataLeftMarket,
                     marketParametersLeftMarket,
                     marketParametersRightMarket,
                 ] = await Promise.all([
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketData(leftMarketAddress),
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketParameters(leftMarketAddress),
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketParameters(rightMarketAddress),
+                    binaryOptionsMarketDataContractForInteraction?.getMarketData(leftMarketAddress),
+                    binaryOptionsMarketDataContractForInteraction?.getMarketParameters(leftMarketAddress),
+                    binaryOptionsMarketDataContractForInteraction?.getMarketParameters(rightMarketAddress),
                 ]);
 
                 const { times } = marketParametersLeftMarket;

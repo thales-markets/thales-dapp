@@ -15,11 +15,11 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { setIsBuy } from 'redux/modules/marketWidgets';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';
 import { history, navigateTo } from 'utils/routes';
+import { getIsDeprecatedCurrency } from '../../redux/modules/ui';
 import Maturity from './components/Maturity';
 import TabContainer from './components/TabContainer';
 import WalletBalance from './components/WalletBalance';
@@ -35,8 +35,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const location = useLocation();
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
@@ -54,11 +55,11 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
             : Positions.UP
     );
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && !isRangedMarket,
     });
 
-    const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
+    const rangedMarketQuery = useRangedMarketQuery(marketAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isRangedMarket,
     });
 

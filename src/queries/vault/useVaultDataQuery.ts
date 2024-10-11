@@ -1,9 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import QUERY_KEYS from '../../constants/queryKeys';
-import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
-import snxJSConnector from 'utils/snxJSConnector';
-import { VaultData } from 'types/vault';
 import { Network } from 'enums/network';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { bigNumberFormatter, getDefaultDecimalsForNetwork } from 'thales-utils';
+import { VaultData } from 'types/vault';
+import snxJSConnector from 'utils/snxJSConnector';
+import QUERY_KEYS from '../../constants/queryKeys';
 
 const useVaultDataQuery = (
     vaultAddress: string,
@@ -48,18 +48,18 @@ const useVaultDataQuery = (
                     vaultData.vaultStarted = contractVaultData.vaultStarted;
                     vaultData.maxAllowedDeposit = bigNumberFormatter(
                         contractVaultData.maxAllowedDeposit,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.round = Number(contractVaultData.round);
                     vaultData.roundEndTime = Number(contractVaultData.roundEndTime) * 1000;
                     vaultData.availableAllocationNextRound = bigNumberFormatter(
                         contractVaultData.availableAllocationNextRound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.isRoundEnded = new Date().getTime() > vaultData.roundEndTime;
                     vaultData.minDepositAmount = bigNumberFormatter(
                         contractVaultData.minDepositAmount,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.maxAllowedUsers = Number(contractVaultData.maxAllowedUsers);
                     vaultData.usersCurrentlyInVault = Number(contractVaultData.usersCurrentlyInVault);
@@ -75,11 +75,11 @@ const useVaultDataQuery = (
                     vaultData.roundLength = Number(contractVaultData.roundLength) / 60 / 60 / 24;
                     vaultData.allocationCurrentRound = bigNumberFormatter(
                         contractVaultData.allocationCurrentRound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.allocationNextRound = bigNumberFormatter(
                         contractVaultData.allocationNextRound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.allocationNextRoundPercentage =
                         (vaultData.allocationNextRound / vaultData.maxAllowedDeposit) * 100;
@@ -89,12 +89,12 @@ const useVaultDataQuery = (
                             : bigNumberFormatter(contractVaultData.lifetimePnl) - 1;
                     vaultData.allocationSpentInARound = bigNumberFormatter(
                         contractVaultData.allocationSpentInARound,
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     vaultData.availableAllocationInARound =
                         bigNumberFormatter(
                             contractVaultData.tradingAllocation,
-                            getDefaultDecimalsForNetwork(networkId)
+                            getDefaultDecimalsForNetwork(networkId, true)
                         ) - vaultData.allocationSpentInARound;
 
                     return vaultData;

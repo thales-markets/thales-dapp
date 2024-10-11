@@ -52,7 +52,7 @@ export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, inclu
     COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
 
 export const getIsOVM = (networkId: number): boolean =>
-    [Network.OptimismMainnet, Network.OptimismGoerli, Network.OptimismSepolia].includes(networkId);
+    [Network.OptimismMainnet, Network.OptimismSepolia].includes(networkId);
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {
@@ -159,26 +159,13 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.CreateMarket:
         case ROUTES.Options.Profile:
         case ROUTES.Options.Game:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base, Network.PolygonMainnet];
         case ROUTES.Options.Vaults:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+            return [Network.OptimismMainnet, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base];
         case ROUTES.Options.Wizard:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-                Network.Mainnet,
-            ];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base, Network.PolygonMainnet, Network.Mainnet];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }

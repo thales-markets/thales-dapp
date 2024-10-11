@@ -1,14 +1,15 @@
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
 import CollateralSelector from 'components/CollateralSelector/CollateralSelector';
-import SimpleLoader from 'components/SimpleLoader';
 import NumericInput from 'components/fields/NumericInput';
+import SimpleLoader from 'components/SimpleLoader';
 import {
     getDefaultToastContent,
-    getLoadingToastOptions,
     getErrorToastOptions,
+    getLoadingToastOptions,
     getSuccessToastOptions,
 } from 'components/ToastMessage/ToastMessage';
+import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 import { Network, OneInchLiquidityProtocol } from 'enums/network';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
@@ -17,11 +18,12 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
+import { truncToDecimals } from 'thales-utils';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getIsDeprecatedCurrency } from '../../redux/modules/ui';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
@@ -36,13 +38,12 @@ import {
     getTokenForSwap,
     mapTokenByNetwork,
 } from './tokens';
-import { truncToDecimals } from 'thales-utils';
-import { SWAP_SUPPORTED_NETWORKS } from 'constants/network';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const isL2 = getIsOVM(networkId);
     const isPolygon = networkId === Network.PolygonMainnet;
@@ -200,7 +201,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 };
                 const tx = await (snxJSConnector as any).signer.sendTransaction(transactionData);
                 await tx.wait();
-                refetchBalances(walletAddress as any, networkId);
+                refetchBalances(walletAddress as any, networkId, isDeprecatedCurrency);
                 setIsLoading(false);
                 toast.update(id, getSuccessToastOptions(t('common.swap.tx-success', { token: toToken.symbol }), id));
                 return {

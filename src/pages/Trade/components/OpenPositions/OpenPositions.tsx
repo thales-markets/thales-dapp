@@ -12,18 +12,19 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRowCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
-import { RootState } from 'types/ui';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 import OpenPosition from '../OpenPosition';
 
 const OpenPositions: React.FC = () => {
     const { t } = useTranslation();
 
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
-    const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
+    const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected,
     });
 

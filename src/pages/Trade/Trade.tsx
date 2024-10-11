@@ -16,13 +16,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsMobile, getShowTour, setShowTour } from 'redux/modules/ui';
+import {
+    getIsDeprecatedCurrency,
+    getIsMobile,
+    getShowTour,
+    setIsDeprecatedCurrency,
+    setShowTour,
+} from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { Step } from 'types/tour';
-import { RootState, ThemeInterface } from 'types/ui';
+import { ThemeInterface } from 'types/ui';
+import SwitchInput from '../../components/SwitchInput';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -38,10 +45,11 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const dispatch = useDispatch();
 
     // selectors
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const showTour = useSelector((state: RootState) => getShowTour(state));
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector(getNetworkId);
+    const isAppReady = useSelector(getIsAppReady);
+    const showTour = useSelector(getShowTour);
+    const isMobile = useSelector(getIsMobile);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
@@ -52,15 +60,22 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
     // queries
-    const assetsQuery = useAvailableAssetsQuery(networkId, {
+    const assetsQuery = useAvailableAssetsQuery(networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
-    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
+    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
-    const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
-        enabled: !!maturityDate,
-    });
+    const marketsQuery = useMarketsByAssetAndDateQuery(
+        currencyKey,
+        Number(maturityDate),
+        positionType,
+        networkId,
+        isDeprecatedCurrency,
+        {
+            enabled: !!maturityDate,
+        }
+    );
 
     // hooks
     const allAssets = useMemo(() => {
@@ -90,7 +105,10 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         }
     }, [allDates]);
 
-    useEffect(() => setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC), [networkId]);
+    useEffect(() => {
+        setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC);
+        dispatch(setIsDeprecatedCurrency(false));
+    }, [dispatch, networkId]);
 
     const getSelectedPrice = () => {
         if (market) {
@@ -151,6 +169,22 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 />
             )}
             <BannerCarousel />
+            <SwitchInput
+                active={isDeprecatedCurrency}
+                width="40px"
+                height="16px"
+                dotSize="10px"
+                circlePosition="2px"
+                label={{
+                    firstLabel: 'USDC',
+                    secondLabel: 'sUSD (DEPRECATED)',
+                    fontSize: '13px',
+                }}
+                handleClick={() => {
+                    dispatch(setIsDeprecatedCurrency(!isDeprecatedCurrency));
+                }}
+            />
+            <Info>{isDeprecatedCurrency.toString()}</Info>
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>
