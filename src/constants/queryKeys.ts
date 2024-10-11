@@ -186,12 +186,23 @@ const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        PnL: (networkId: Network) => ['liquidityPool', 'pnl', networkId],
-        UserTransactions: (networkId: Network, walletAddress?: string, round?: number) => [
+        PnL: (networkId: Network, liquidityPoolAddress: string) => [
+            'liquidityPool',
+            'pnl',
+            liquidityPoolAddress,
+            networkId,
+        ],
+        UserTransactions: (
+            networkId: Network,
+            liquidityPoolAddress: string,
+            walletAddress?: string,
+            round?: number
+        ) => [
             'liquidityPool',
             'userTransactions',
-            networkId,
+            liquidityPoolAddress,
             round ? round : walletAddress ? walletAddress : '',
+            networkId,
         ],
     },
 };

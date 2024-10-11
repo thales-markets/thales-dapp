@@ -168,7 +168,12 @@ export const refetchVaultData = async (
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
 };
 
-export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network, round: number) => {
+export const refetchLiquidityPoolData = async (
+    walletAddress: string,
+    networkId: Network,
+    round: number,
+    liquidityPoolAddress: string
+) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, round]),
@@ -178,12 +183,12 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
 
     // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
     // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId, liquidityPoolAddress));
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, undefined, round)
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, liquidityPoolAddress, undefined, round)
     );
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, undefined)
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, liquidityPoolAddress, walletAddress, undefined)
     );
 };
 

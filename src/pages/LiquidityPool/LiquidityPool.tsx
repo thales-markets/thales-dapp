@@ -329,7 +329,12 @@ const LiquidityPool: React.FC = () => {
                     );
                     setAmount('');
                     setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId, liquidityPoolData?.round || 0);
+                    refetchLiquidityPoolData(
+                        walletAddress,
+                        networkId,
+                        liquidityPoolData?.round || 0,
+                        liquidityPoolAddress
+                    );
                 }
             } catch (e) {
                 console.log(e);
@@ -367,7 +372,12 @@ const LiquidityPool: React.FC = () => {
                     );
                     setAmount('');
                     setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId, liquidityPoolData?.round || 0);
+                    refetchLiquidityPoolData(
+                        walletAddress,
+                        networkId,
+                        liquidityPoolData?.round || 0,
+                        liquidityPoolAddress
+                    );
                 }
             } catch (e) {
                 console.log(e);
@@ -1010,6 +1020,7 @@ const LiquidityPool: React.FC = () => {
                                 <PnL
                                     lifetimePnl={liquidityPoolData.lifetimePnl}
                                     type={LiquidityPoolPnlType.PNL_PER_ROUND}
+                                    liquidityPoolAddress={liquidityPoolAddress}
                                 />
                             )}
                         </ContentContainer>
@@ -1018,13 +1029,16 @@ const LiquidityPool: React.FC = () => {
                                 <PnL
                                     lifetimePnl={liquidityPoolData.lifetimePnl}
                                     type={LiquidityPoolPnlType.CUMULATIVE_PNL}
+                                    liquidityPoolAddress={liquidityPoolAddress}
                                 />
                             )}
                         </ContentContainer>
                     </>
                 )}
             </MainContainer>
-            {liquidityPoolData && <Transactions currentRound={liquidityPoolData.round} />}
+            {liquidityPoolData && (
+                <Transactions currentRound={liquidityPoolData.round} liquidityPoolAddress={liquidityPoolAddress} />
+            )}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
