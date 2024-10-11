@@ -30,6 +30,7 @@ import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { Step } from 'types/tour';
 import { ThemeInterface } from 'types/ui';
 import SwitchInput from '../../components/SwitchInput';
+import { Network } from '../../enums/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -107,7 +108,9 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     useEffect(() => {
         setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC);
-        dispatch(setIsDeprecatedCurrency(false));
+        if (networkId !== Network.OptimismMainnet) {
+            dispatch(setIsDeprecatedCurrency(false));
+        }
     }, [dispatch, networkId]);
 
     const getSelectedPrice = () => {
@@ -169,21 +172,23 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 />
             )}
             <BannerCarousel />
-            <SwitchInput
-                active={isDeprecatedCurrency}
-                width="40px"
-                height="16px"
-                dotSize="10px"
-                circlePosition="2px"
-                label={{
-                    firstLabel: 'USDC',
-                    secondLabel: 'sUSD (DEPRECATED)',
-                    fontSize: '13px',
-                }}
-                handleClick={() => {
-                    dispatch(setIsDeprecatedCurrency(!isDeprecatedCurrency));
-                }}
-            />
+            {networkId === Network.OptimismMainnet && (
+                <SwitchInput
+                    active={isDeprecatedCurrency}
+                    width="40px"
+                    height="16px"
+                    dotSize="10px"
+                    circlePosition="2px"
+                    label={{
+                        firstLabel: 'USDC',
+                        secondLabel: 'sUSD (DEPRECATED)',
+                        fontSize: '13px',
+                    }}
+                    handleClick={() => {
+                        dispatch(setIsDeprecatedCurrency(!isDeprecatedCurrency));
+                    }}
+                />
+            )}
             <Info>{isDeprecatedCurrency.toString()}</Info>
             <ContentWrapper>
                 <LeftSide>

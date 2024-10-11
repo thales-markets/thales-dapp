@@ -362,6 +362,7 @@ export const currencyKeyToNameMap = {
 export const COLLATERALS: Record<SupportedNetwork, Coins[]> = {
     [Network.Mainnet]: [SYNTHS_MAP.sUSD as Coins],
     [Network.OptimismMainnet]: [
+        CRYPTO_CURRENCY_MAP.USDC as Coins,
         SYNTHS_MAP.sUSD as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,
         CRYPTO_CURRENCY_MAP.USDCe as Coins,
