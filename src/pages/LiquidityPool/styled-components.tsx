@@ -411,3 +411,19 @@ export const NavigationItem = styled(FlexDivRow)`
         color: ${(props) => props.theme.textColor.primary};
     }
 `;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    width: 80%;
+    background-color: ${(props) => props.theme.background.secondary};
+    border-radius: 15px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    padding: 5px 10px;
+    text-align: center;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+`;

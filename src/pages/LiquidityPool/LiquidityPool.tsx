@@ -54,6 +54,7 @@ import {
     ContentInfo,
     ContentInfoContainer,
     CopyContainer,
+    DeprecatedContainer,
     Description,
     LiquidityPoolFilledGraphicContainer,
     LiquidityPoolFilledGraphicPercentage,
@@ -545,12 +546,17 @@ const LiquidityPool: React.FC = () => {
                                 href={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lpCollateral}`}
                             >
                                 <NavigationItem className={`${lpCollateral === paramCollateral ? 'selected' : ''}`}>
-                                    {item.name}
+                                    {`${item.name}${
+                                        lpCollateral === LiquidityPoolCollateral.sUSD ? ' (DEPRECATED)' : ''
+                                    }`}
                                 </NavigationItem>
                             </SPAAnchor>
                         );
                     })}
                 </NavigationContainer>
+            )}
+            {paramCollateral === LiquidityPoolCollateral.sUSD && (
+                <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
             )}
             {liquidityPoolData && (
                 <Container>
