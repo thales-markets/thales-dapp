@@ -138,7 +138,7 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound, liquidityPool
                 {selectedTab === LiquidityPoolTransaction.USER_TRANSACTIONS && (
                     <UserTransactionsTable
                         transactions={liquidityPoolUserTransactions}
-                        isLoading={liquidityPoolUserTransactionsQuery.isLoading}
+                        isLoading={liquidityPoolRoundTransactionsQuery.isLoading}
                         noResultsMessage={
                             noLiquidityPoolUserTransactions ? (
                                 <span>{t(`liquidity-pool.user-transactions.no-transactions`)}</span>

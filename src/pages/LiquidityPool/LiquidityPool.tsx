@@ -116,6 +116,7 @@ const LiquidityPool: React.FC = () => {
         networkId === Network.OptimismMainnet
             ? queryString.parse(location.search).collateral || getDefaultLpCollateral(networkId)
             : getDefaultLpCollateral(networkId);
+    const isSUSD = paramCollateral === LiquidityPoolCollateral.sUSD;
 
     const collateral = getLpCollateral(networkId, paramCollateral);
 
@@ -555,9 +556,7 @@ const LiquidityPool: React.FC = () => {
                     })}
                 </NavigationContainer>
             )}
-            {paramCollateral === LiquidityPoolCollateral.sUSD && (
-                <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
-            )}
+            {isSUSD && <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>}
             {liquidityPoolData && (
                 <Container>
                     <ContentContainer>
@@ -594,28 +593,30 @@ const LiquidityPool: React.FC = () => {
                         )}
                     </ContentContainer>
                     <ContentContainer>
-                        <ToggleContainer>
-                            <Switch
-                                active={selectedTab === LiquidityPoolTab.WITHDRAW}
-                                width={'66px'}
-                                height={'30px'}
-                                dotSize="18px"
-                                label={{
-                                    firstLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.DEPOSIT}`),
-                                    secondLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.WITHDRAW}`),
-                                    fontSize: '18px',
-                                }}
-                                dotBackground={theme.textColor.primary}
-                                handleClick={() => {
-                                    setSelectedTab(
-                                        selectedTab === LiquidityPoolTab.DEPOSIT
-                                            ? LiquidityPoolTab.WITHDRAW
-                                            : LiquidityPoolTab.DEPOSIT
-                                    );
-                                }}
-                            />
-                        </ToggleContainer>
-                        {selectedTab === LiquidityPoolTab.DEPOSIT && (
+                        {!isSUSD && (
+                            <ToggleContainer>
+                                <Switch
+                                    active={selectedTab === LiquidityPoolTab.WITHDRAW}
+                                    width={'66px'}
+                                    height={'30px'}
+                                    dotSize="18px"
+                                    label={{
+                                        firstLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.DEPOSIT}`),
+                                        secondLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.WITHDRAW}`),
+                                        fontSize: '18px',
+                                    }}
+                                    dotBackground={theme.textColor.primary}
+                                    handleClick={() => {
+                                        setSelectedTab(
+                                            selectedTab === LiquidityPoolTab.DEPOSIT
+                                                ? LiquidityPoolTab.WITHDRAW
+                                                : LiquidityPoolTab.DEPOSIT
+                                        );
+                                    }}
+                                />
+                            </ToggleContainer>
+                        )}
+                        {selectedTab === LiquidityPoolTab.DEPOSIT && !isSUSD && (
                             <>
                                 {isWithdrawalRequested && (
                                     <WarningContentInfo>
@@ -662,7 +663,7 @@ const LiquidityPool: React.FC = () => {
                                 <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
                             </>
                         )}
-                        {selectedTab === LiquidityPoolTab.WITHDRAW && (
+                        {(selectedTab === LiquidityPoolTab.WITHDRAW || isSUSD) && (
                             <>
                                 {((liquidityPoolData && userLiquidityPoolData && !isWithdrawalRequested) ||
                                     !isWalletConnected) && (
