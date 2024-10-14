@@ -12,7 +12,7 @@ import { coinFormatter, truncToDecimals } from 'thales-utils';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getContractForInteraction } from '../../utils/options';
+import { getContractForInteraction, getIsDeprecatedCurrency } from '../../utils/options';
 
 const BATCH_LIMIT = 30;
 
@@ -34,6 +34,8 @@ const useMarketsByAssetAndDateQuery = (
                 binaryOptionsMarketDataContract,
                 binaryOptionsMarketDataUSDCContract
             );
+
+            console.log(binaryOptionsMarketDataContractForInteraction?.address, isDeprecatedCurrency);
 
             if (position === Positions.UP || position === Positions.DOWN) {
                 const result = await binaryOptionsMarketDataContractForInteraction?.getMarketsForAssetAndStrikeDate(
@@ -92,7 +94,12 @@ const useMarketsByAssetAndDateQuery = (
                     )}&max-maturity=${Number(date / 1000)}&currency-key=${ethers.utils.formatBytes32String(asset)}`
                 );
 
-                const rangedMarkets: RangedMarket[] = rangedMarketsResponse?.data ? rangedMarketsResponse.data : [];
+                const rangedMarkets: RangedMarket[] = rangedMarketsResponse?.data
+                    ? rangedMarketsResponse.data.filter((market: any) => {
+                          const isDeprecated = getIsDeprecatedCurrency(networkId, market.managerAddress);
+                          return (isDeprecatedCurrency && isDeprecated) || (!isDeprecatedCurrency && !isDeprecated);
+                      })
+                    : [];
 
                 const allRangedMarkets = new Map();
 
