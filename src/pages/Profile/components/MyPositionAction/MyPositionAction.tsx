@@ -214,7 +214,8 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = coinFormatter(ammQuotes, networkId) / position.amount;
+                    const ammPrice =
+                        coinFormatter(ammQuotes, networkId, undefined, isDeprecatedCurrency) / position.amount;
                     // changes in cash out value less than 2% are not relevant
                     totalValueChanged =
                         ammPrice * position.amount < Number(position.value) * (1 - SLIPPAGE_PERCENTAGE[2] / 100) ||
