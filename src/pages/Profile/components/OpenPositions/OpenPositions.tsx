@@ -11,7 +11,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithSign } from 'thales-utils';
@@ -36,7 +36,6 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     const isWalletConnected = useSelector(getIsWalletConnected);
     const walletAddress = useSelector(getWalletAddress) || '';
     const isMobile = useSelector(getIsMobile);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
@@ -49,7 +48,7 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
             ? exchangeRatesMarketDataQuery.data
             : null;
 
-    const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, isDeprecatedCurrency, {
+    const openPositionsQuery = useOpenPositionsQuery(networkId, searchAddress || walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
 

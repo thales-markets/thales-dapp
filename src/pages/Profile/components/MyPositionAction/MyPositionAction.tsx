@@ -233,7 +233,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
         if (totalValueChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again'), id));
             setIsSubmitting(false);
-            refetchUserOpenPositions(walletAddress, networkId, isDeprecatedCurrency);
+            refetchUserOpenPositions(walletAddress, networkId);
             return;
         }
         try {
@@ -284,10 +284,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.sell.confirmation-message`), id));
 
-                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
+                    refetchBalances(walletAddress, networkId);
                     refetchUserNotifications(walletAddress, networkId);
-                    refetchUserOpenPositions(walletAddress, networkId, isDeprecatedCurrency);
-                    refetchUserProfileQueries(walletAddress, networkId, isDeprecatedCurrency);
+                    refetchUserOpenPositions(walletAddress, networkId);
+                    refetchUserProfileQueries(walletAddress, networkId);
 
                     setIsSubmitting(false);
 
@@ -330,10 +330,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                             id
                         )
                     );
-                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
+                    refetchBalances(walletAddress, networkId);
                     refetchUserNotifications(walletAddress, networkId);
-                    refetchUserOpenPositions(walletAddress, networkId, isDeprecatedCurrency);
-                    refetchUserProfileQueries(walletAddress, networkId, isDeprecatedCurrency);
+                    refetchUserOpenPositions(walletAddress, networkId);
+                    refetchUserProfileQueries(walletAddress, networkId);
                     setIsSubmitting(false);
                 }
             } catch (e) {

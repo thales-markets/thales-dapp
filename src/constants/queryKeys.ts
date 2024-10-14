@@ -99,12 +99,11 @@ const QUERY_KEYS = {
         MarketsCount: (networkId: Network) => ['markets-count', networkId],
     },
     User: {
-        OpenPositions: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
+        OpenPositions: (walletAddress: string, networkId: Network) => [
             'user',
             'userOpenPositions',
             walletAddress,
             networkId,
-            isDeprecatedCurrency,
         ],
         Notifications: (walletAddress: string, networkId: Network) => [
             'user',
@@ -122,12 +121,11 @@ const QUERY_KEYS = {
     },
     Profile: {
         Data: (walletAddress: string, networkId: Network) => ['profile', 'data', walletAddress, networkId],
-        OpenPositions: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
+        OpenPositions: (walletAddress: string, networkId: Network) => [
             'profile',
             'openPositions',
             walletAddress,
             networkId,
-            isDeprecatedCurrency,
         ],
         ClaimablePositions: (walletAddress: string, networkId: Network) => [
             'profile',

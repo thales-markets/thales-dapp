@@ -582,7 +582,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
                     );
 
-                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
+                    refetchBalances(walletAddress, networkId);
                     isRangedMarket
                         ? refetchRangedAmmData(walletAddress, market.address, networkId)
                         : refetchAmmData(walletAddress, market.address);

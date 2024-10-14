@@ -2,7 +2,7 @@ import { Positions } from 'enums/options';
 import { Contract } from 'ethers';
 import { formatCurrency } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
-import { MARKET_DURATION_IN_DAYS } from '../constants/options';
+import { DEPRECATED_CONTRACT_ADDRESSES, MARKET_DURATION_IN_DAYS } from '../constants/options';
 import { Network } from '../enums/network';
 import { Phase } from '../types/options';
 
@@ -66,3 +66,6 @@ export const getContractForInteraction = (
     deprecatedContract: Contract | undefined,
     newContract: Contract | undefined
 ) => (networkId === Network.OptimismMainnet && !isDeprecatedCurrency ? newContract : deprecatedContract);
+
+export const getIsDeprecatedCurrency = (networkId: number, address: string) =>
+    networkId === Network.OptimismMainnet && DEPRECATED_CONTRACT_ADDRESSES.includes(address.toLowerCase());

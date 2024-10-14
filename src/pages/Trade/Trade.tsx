@@ -189,7 +189,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     }}
                 />
             )}
-            <Info>{isDeprecatedCurrency.toString()}</Info>
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>

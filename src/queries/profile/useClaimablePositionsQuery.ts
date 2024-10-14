@@ -10,7 +10,7 @@ import { parseBytes32String } from 'ethers/lib/utils.js';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { UserPosition } from 'types/profile';
-import { getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
+import { getIsDeprecatedCurrency, getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
 
 const useClaimablePositionsQuery = (
     networkId: Network,
@@ -67,13 +67,17 @@ const useClaimablePositionsQuery = (
 
             const modifiedClaimablePositions: UserPosition[] = [
                 ...claimablePositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -85,16 +89,21 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: false,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: 0,
@@ -106,6 +115,7 @@ const useClaimablePositionsQuery = (
                         claimable: true,
                         claimed: false,
                         isRanged: true,
+                        isDeprecatedCurrency,
                     };
                 }),
             ];

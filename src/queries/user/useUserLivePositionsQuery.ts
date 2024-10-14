@@ -14,17 +14,21 @@ import { UserLivePositions } from 'types/options';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import { formatStrikePrice } from 'utils/formatters/number';
-import { getContractForInteraction, getMinMaturityDateForClaim, isOptionClaimable } from 'utils/options';
+import {
+    getContractForInteraction,
+    getIsDeprecatedCurrency,
+    getMinMaturityDateForClaim,
+    isOptionClaimable,
+} from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useUserLivePositionsQuery = (
     networkId: Network,
     walletAddress: string,
-    isDeprecatedCurrency: boolean,
     options?: UseQueryOptions<UserLivePositions[]>
 ) => {
     return useQuery<UserLivePositions[]>(
-        QUERY_KEYS.User.OpenPositions(walletAddress, networkId, isDeprecatedCurrency),
+        QUERY_KEYS.User.OpenPositions(walletAddress, networkId),
         async () => {
             const [positionBalancesResponse, rangedPositionBalancesResponse] = await Promise.all([
                 axios.get(
@@ -84,6 +88,10 @@ const useUserLivePositionsQuery = (
             const [result, resultsRanged] = await Promise.all([
                 Promise.all([
                     ...openPositions.map(async (positionBalance: any) => {
+                        const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                            networkId,
+                            positionBalance.position.market.managerAddress
+                        );
                         /*
                             On subgraph there is an issue with plus function, so when user buy the same position several times, 
                             it sums up to value which is higher than it has on contract. Read position balance from contract!
@@ -115,12 +123,17 @@ const useUserLivePositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: coinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId, undefined, isDeprecatedCurrency),
                         };
                     }),
                 ]),
                 Promise.all([
                     ...openRangedPositions.map(async (positionBalance: any) => {
+                        const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                            networkId,
+                            positionBalance.position.market.managerAddress
+                        );
+
                         const positionContract = new ethers.Contract(
                             positionBalance.position.id,
                             rangedPositionContract.abi,
@@ -144,7 +157,7 @@ const useUserLivePositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: coinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId, undefined, isDeprecatedCurrency),
                         };
                     }),
                 ]),
@@ -152,13 +165,18 @@ const useUserLivePositionsQuery = (
 
             const modifiedLivePositions: UserLivePositions[] = [
                 ...result.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -167,16 +185,22 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: positionBalance.value,
                         claimable: false,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...claimablePositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -185,16 +209,22 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...resultsRanged.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.leftPrice),
@@ -204,16 +234,22 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
                         claimable: false,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...rangedClaimablePositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
                             bigNumberFormatter(positionBalance.position.market.leftPrice),
@@ -223,6 +259,7 @@ const useUserLivePositionsQuery = (
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: bigNumberFormatter(positionBalance.amount),
                         claimable: true,
+                        isDeprecatedCurrency,
                     };
                 }),
             ];

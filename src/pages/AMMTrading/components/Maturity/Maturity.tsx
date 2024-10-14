@@ -147,7 +147,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                 isRangedMarket
                     ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
                     : refetchMarketQueries(walletAddress, BOMContract.address, market.address);
-                refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
+                refetchBalances(walletAddress, networkId);
                 refetchUserNotifications(walletAddress, networkId);
                 setIsExercising(false);
             }

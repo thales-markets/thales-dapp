@@ -1,6 +1,6 @@
 import { Positions } from 'enums/options';
-import { HistoricalOptionsMarketInfo, RangedMarket, Trade } from './options';
 import { BigNumber } from 'ethers';
+import { HistoricalOptionsMarketInfo, RangedMarket, Trade } from './options';
 
 export type UserPosition = {
     positionAddress: string;
@@ -20,6 +20,7 @@ export type UserPosition = {
     claimable: boolean;
     claimed: boolean;
     isRanged: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
 export type UserProfileData = {
