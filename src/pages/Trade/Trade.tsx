@@ -189,10 +189,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 />
             )}
             {networkId === Network.OptimismMainnet && isDeprecatedCurrency && (
-                <DeprecatedContainer>
-                    Trading with sUSD will be deprecated soon. You can trade on exisiting markets, but new markets wont
-                    be created.{' '}
-                </DeprecatedContainer>
+                <DeprecatedContainer>{t('markets.deprecated-message')}</DeprecatedContainer>
             )}
             <ContentWrapper>
                 <LeftSide>

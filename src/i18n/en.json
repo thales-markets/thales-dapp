@@ -304,6 +304,7 @@
     "markets": {
         "title": "Thales Markets",
         "markets": "markets",
+        "deprecated-message": "Trading with sUSD will soon be deprecated. You can trade on existing markets, but new markets will not be created.",
         "amm-trading": {
             "asset-price": "If {{asset}} price is",
             "choose-direction": "choose direction",
