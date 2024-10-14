@@ -30,6 +30,7 @@ import {
     getDefaultCollateral,
 } from 'utils/currency';
 import { getIsMultiCollateralSupported } from 'utils/network';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 
 type SwapCollateral = {
     type: Coins;
@@ -44,8 +45,10 @@ const UserSwap: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const userSelectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
+
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, isDeprecatedCurrency);
 
     const [showSwap, setShowSwap] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -88,7 +91,7 @@ const UserSwap: React.FC = () => {
         return collaterals;
     }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCBalance, USDTBalance, balance, networkId]);
 
-    const currentCollateral = getCollateral(networkId, userSelectedCollateralIndex);
+    const currentCollateral = getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency);
     const currentCollateralBalance = userCollaterals.find((col) => col.type === currentCollateral)?.balance || 0;
     const currentCollateralWithBalance = { type: currentCollateral, balance: currentCollateralBalance };
 
@@ -100,7 +103,8 @@ const UserSwap: React.FC = () => {
                           col.type ===
                           getCollateral(
                               networkId,
-                              getCollateralIndexByBalance(multipleCollateralBalances.data, networkId)
+                              getCollateralIndexByBalance(multipleCollateralBalances.data, networkId),
+                              isDeprecatedCurrency
                           )
                   ) || currentCollateralWithBalance
                 : currentCollateralWithBalance
@@ -117,12 +121,16 @@ const UserSwap: React.FC = () => {
                 networkId
             );
             const positiveCollateral = userCollaterals.find(
-                (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance)
+                (el) => el.type === getCollateral(networkId, collateralIndexWithPositiveBalance, isDeprecatedCurrency)
             );
 
             if (positiveCollateral && positiveCollateral.balance >= 1) {
                 setCollateral(positiveCollateral);
-                dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, positiveCollateral.type)));
+                dispatch(
+                    setSelectedCollateralIndex(
+                        getCollateralIndexForNetwork(networkId, positiveCollateral.type, isDeprecatedCurrency)
+                    )
+                );
             }
         }
     }, [
@@ -132,6 +140,7 @@ const UserSwap: React.FC = () => {
         isMultiCollateralSupported,
         networkId,
         userCollaterals,
+        isDeprecatedCurrency,
     ]);
 
     useEffect(() => {
@@ -142,10 +151,11 @@ const UserSwap: React.FC = () => {
 
     useEffect(() => {
         const selectedCollateral =
-            userCollaterals.find((el) => el.type === getCollateral(networkId, userSelectedCollateralIndex)) ||
-            userCollaterals[0];
+            userCollaterals.find(
+                (el) => el.type === getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency)
+            ) || userCollaterals[0];
         setCollateral(selectedCollateral);
-    }, [userSelectedCollateralIndex, networkId, userCollaterals]);
+    }, [userSelectedCollateralIndex, networkId, userCollaterals, isDeprecatedCurrency]);
 
     const onStableHoverHandler = (index: number, stableCoin: Coins) => {
         if (isWalletConnected && SWAP_SUPPORTED_NETWORKS.includes(networkId)) {
@@ -163,7 +173,7 @@ const UserSwap: React.FC = () => {
             setSwapToStableCoin(coinType);
             isWalletConnected && setShowSwap(true);
         }
-        dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, coinType)));
+        dispatch(setSelectedCollateralIndex(getCollateralIndexForNetwork(networkId, coinType, isDeprecatedCurrency)));
     };
 
     const closeSwap = (isShowSwap: boolean) => {

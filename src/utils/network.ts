@@ -5,7 +5,7 @@ import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
+import { COLLATERALS, DEPRECATED_COLLATERALS } from 'constants/currency';
 import {
     DEFAULT_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
@@ -48,8 +48,8 @@ export const isNetworkSupported = (networkId: SupportedNetwork): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, includeAdditional?: boolean): boolean =>
-    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
+export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, isDeprecatedCurrency: boolean): boolean =>
+    (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId].length > 1;
 
 export const getIsOVM = (networkId: number): boolean =>
     [Network.OptimismMainnet, Network.OptimismSepolia].includes(networkId);

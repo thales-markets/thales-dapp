@@ -126,7 +126,6 @@ const Label = styled.span<{ fontSize?: string; color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     margin-left: 5px;
     margin-right: 5px;
-    text-transform: uppercase;
 `;
 
 const SwitchContainer = styled.div<SwitchContainerProps>`

@@ -141,11 +141,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     // Still not supporting all collaterals
     const selectedCollateralIndex = useMemo(
         () =>
-            selectedCollateralIndexSelector < getCollaterals(networkId).length ? selectedCollateralIndexSelector : 0,
-        [networkId, selectedCollateralIndexSelector]
+            selectedCollateralIndexSelector < getCollaterals(networkId, isDeprecatedCurrency).length
+                ? selectedCollateralIndexSelector
+                : 0,
+        [isDeprecatedCurrency, networkId, selectedCollateralIndexSelector]
     );
 
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, isDeprecatedCurrency);
     const isBuyWithNonDefaultCollateral = selectedCollateralIndex !== 0 && isMultiCollateralSupported && isBuy;
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
@@ -221,7 +223,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     }, [stableBalanceQuery]);
 
     const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
-    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex), [
+    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
         networkId,
         selectedCollateralIndex,
     ]);
@@ -556,7 +559,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                 const parsedAmount = ethers.utils.parseEther(amount.toString());
 
                 const total = isBuy ? paidAmount : positionAmount;
-                const parsedTotal = coinParser(total.toString(), networkId);
+                const parsedTotal = coinParser(total.toString(), networkId, undefined, isDeprecatedCurrency);
 
                 const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
 
@@ -603,7 +606,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             {
                                 props: {
                                     value: Number(paidAmount),
-                                    collateral: getCollateral(networkId, selectedCollateralIndex),
+                                    collateral: getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency),
                                     networkId,
                                 },
                             }
@@ -618,7 +621,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             {
                                 props: {
                                     value: Number(paidAmount),
-                                    collateral: getCollateral(networkId, selectedCollateralIndex),
+                                    collateral: getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency),
                                     networkId,
                                 },
                             }
@@ -798,7 +801,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         currencyComponent={
                             isBuy && isMultiCollateralSupported ? (
                                 <CollateralSelector
-                                    collateralArray={getCollaterals(networkId)}
+                                    collateralArray={getCollaterals(networkId, isDeprecatedCurrency)}
                                     selectedItem={selectedCollateralIndex}
                                     onChangeCollateral={() => {}}
                                     disabled={isFormDisabled}

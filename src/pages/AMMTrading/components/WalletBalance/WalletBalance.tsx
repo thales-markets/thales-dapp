@@ -79,7 +79,10 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
 
     const sUSDBalance =
         userSelectedCollateralIndex && Number(userSelectedCollateralIndex) !== 0
-            ? getCoinBalance(multipleCollateralBalances?.data, getCollateral(networkId, userSelectedCollateralIndex))
+            ? getCoinBalance(
+                  multipleCollateralBalances?.data,
+                  getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency)
+              )
             : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId)) || 0;
 
     return (
@@ -87,7 +90,10 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
             <Label>{t(`common.wallet.balance`)}:</Label>
             <BalanceContainer>
                 <Balance>
-                    {formatCurrencyWithKey(getCollateral(networkId, userSelectedCollateralIndex), sUSDBalance)}
+                    {formatCurrencyWithKey(
+                        getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency),
+                        sUSDBalance
+                    )}
                 </Balance>
                 {!!tokenBalance && <Balance>{formatCurrencyWithKey(positionType, tokenBalance)}</Balance>}
             </BalanceContainer>

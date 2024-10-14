@@ -19,7 +19,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'styles/common';
@@ -61,10 +61,12 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
     const walletAddress = useSelector(getWalletAddress) || '';
     const isMobile = useSelector(getIsMobile);
     const selectedCollateralIndex = useSelector(getSelectedCollateralIndex);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
+
+    const isDeprecatedCurrency = position.isDeprecatedCurrency;
 
     const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
-    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, true), [
+    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
         networkId,
         selectedCollateralIndex,
     ]);
@@ -96,7 +98,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
         const erc20Instance = new ethers.Contract(position.positionAddress, erc20Contract.abi, snxJSConnector.provider);
         const addressToApprove =
-            (isRangedMarket ? ammContractForInteraction?.address : rangedMarketAMMContractForInteraction?.address) ||
+            (isRangedMarket ? rangedMarketAMMContractForInteraction?.address : ammContractForInteraction?.address) ||
             '';
 
         const getAllowance = async () => {
@@ -109,7 +111,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 console.log(e);
             }
         };
-        if (isWalletConnected && erc20Instance.provider) {
+        if (isWalletConnected) {
             getAllowance();
         }
     }, [
@@ -262,7 +264,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                     : ammContractForInteraction
                 ).connect(signer);
 
-                const parsedTotal = coinParser(position.value.toString(), networkId);
+                const parsedTotal = coinParser(position.value.toString(), networkId, undefined, isDeprecatedCurrency);
                 const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
 
                 const tx: ethers.ContractTransaction = await prepareTransactionForAMM(

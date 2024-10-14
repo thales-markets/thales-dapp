@@ -415,6 +415,7 @@ export const NavigationItem = styled(FlexDivRow)`
 export const DeprecatedContainer = styled(FlexDiv)`
     width: 80%;
     background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.warning.textColor.primary};
     border-radius: 15px;
     height: 50px;
     align-items: center;

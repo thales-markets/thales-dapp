@@ -361,8 +361,21 @@ export const currencyKeyToNameMap = {
 
 export const COLLATERALS: Record<SupportedNetwork, Coins[]> = {
     [Network.Mainnet]: [SYNTHS_MAP.sUSD as Coins],
-    [Network.OptimismMainnet]: [
+    [Network.OptimismMainnet]: [CRYPTO_CURRENCY_MAP.USDC as Coins],
+    [Network.OptimismSepolia]: [
+        SYNTHS_MAP.sUSD as Coins,
+        CRYPTO_CURRENCY_MAP.DAI as Coins,
         CRYPTO_CURRENCY_MAP.USDC as Coins,
+        CRYPTO_CURRENCY_MAP.USDT as Coins,
+    ],
+    [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
+    [Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins],
+    [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
+};
+
+export const DEPRECATED_COLLATERALS: Record<SupportedNetwork, Coins[]> = {
+    [Network.Mainnet]: [SYNTHS_MAP.sUSD as Coins],
+    [Network.OptimismMainnet]: [
         SYNTHS_MAP.sUSD as Coins,
         CRYPTO_CURRENCY_MAP.DAI as Coins,
         CRYPTO_CURRENCY_MAP.USDCe as Coins,
@@ -377,29 +390,4 @@ export const COLLATERALS: Record<SupportedNetwork, Coins[]> = {
     [Network.PolygonMainnet]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
     [Network.Base]: [CRYPTO_CURRENCY_MAP.USDbC as Coins],
     [Network.Arbitrum]: [CRYPTO_CURRENCY_MAP.USDCe as Coins],
-};
-
-// TODO: merge with COLLATERALS when all pages will support these
-export const ADDITIONAL_COLLATERALS: Record<SupportedNetwork, Coins[]> = {
-    [Network.Mainnet]: [],
-    [Network.OptimismMainnet]: [
-        CRYPTO_CURRENCY_MAP.OP as Coins,
-        CRYPTO_CURRENCY_MAP.WETH as Coins,
-        CRYPTO_CURRENCY_MAP.ETH as Coins,
-    ],
-    [Network.OptimismSepolia]: [],
-    [Network.PolygonMainnet]: [],
-    [Network.Base]: [
-        CRYPTO_CURRENCY_MAP.USDC as Coins,
-        CRYPTO_CURRENCY_MAP.WETH as Coins,
-        CRYPTO_CURRENCY_MAP.ETH as Coins,
-    ],
-    [Network.Arbitrum]: [
-        CRYPTO_CURRENCY_MAP.USDC as Coins,
-        CRYPTO_CURRENCY_MAP.DAI as Coins,
-        CRYPTO_CURRENCY_MAP.USDT as Coins,
-        CRYPTO_CURRENCY_MAP.ARB as Coins,
-        CRYPTO_CURRENCY_MAP.WETH as Coins,
-        CRYPTO_CURRENCY_MAP.ETH as Coins,
-    ],
 };

@@ -221,6 +221,7 @@ const AmmTradingContainer = styled(FlexDivColumn)`
     padding: 15px 10px 25px 10px;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
+    text-transform: uppercase;
 `;
 
 const DirectionContainer = styled(FlexDivColumn)`

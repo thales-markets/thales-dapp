@@ -1,8 +1,8 @@
 import {
-    ADDITIONAL_COLLATERALS,
     COLLATERALS,
     COMMODITY,
     CRYPTO_CURRENCY,
+    DEPRECATED_COLLATERALS,
     STABLE_COINS,
     SYNTHS_MAP,
     currencyKeyToAssetIconMap,
@@ -26,14 +26,17 @@ export const getSynthAsset = (currencyKey: string) =>
 
 export const getDefaultCollateral = (networkId: SupportedNetwork) => COLLATERALS[networkId][0];
 
-export const getCollateral = (networkId: SupportedNetwork, index: number, includeAdditional?: boolean) =>
-    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : [])[index];
+export const getCollateral = (networkId: SupportedNetwork, index: number, isDeprecatedCurrency: boolean) =>
+    (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId][index];
 
-export const getCollaterals = (networkId: SupportedNetwork, includeAdditional?: boolean) =>
-    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []);
+export const getCollaterals = (networkId: SupportedNetwork, isDeprecatedCurrency: boolean) =>
+    (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId];
 
-export const getCollateralIndexForNetwork = (networkId: SupportedNetwork, currencyKey: Coins) =>
-    COLLATERALS[networkId].concat(ADDITIONAL_COLLATERALS[networkId]).indexOf(currencyKey);
+export const getCollateralIndexForNetwork = (
+    networkId: SupportedNetwork,
+    currencyKey: Coins,
+    isDeprecatedCurrency: boolean
+) => (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId].indexOf(currencyKey);
 
 export const isStableCurrency = (currencyKey: Coins) => {
     return STABLE_COINS.includes(currencyKey);

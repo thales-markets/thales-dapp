@@ -25,7 +25,7 @@ import {
 } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
+import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { Step } from 'types/tour';
 import { ThemeInterface } from 'types/ui';
@@ -175,19 +175,24 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
             {networkId === Network.OptimismMainnet && (
                 <SwitchInput
                     active={isDeprecatedCurrency}
-                    width="40px"
-                    height="16px"
-                    dotSize="10px"
-                    circlePosition="2px"
+                    width={'56px'}
+                    height={'24px'}
+                    dotSize="18px"
                     label={{
                         firstLabel: 'USDC',
                         secondLabel: 'sUSD (DEPRECATED)',
-                        fontSize: '13px',
+                        fontSize: '16px',
                     }}
                     handleClick={() => {
                         dispatch(setIsDeprecatedCurrency(!isDeprecatedCurrency));
                     }}
                 />
+            )}
+            {networkId === Network.OptimismMainnet && isDeprecatedCurrency && (
+                <DeprecatedContainer>
+                    Trading with sUSD will be deprecated soon. You can trade on exisiting markets, but new markets wont
+                    be created.{' '}
+                </DeprecatedContainer>
             )}
             <ContentWrapper>
                 <LeftSide>
@@ -362,6 +367,23 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
 
 const BannerWrapper = styled.div`
     margin-top: 20px;
+`;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.warning.textColor.primary};
+    border-radius: 8px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    padding: 5px 5px;
+    margin: 5px 0px;
+    text-align: center;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        margin-top: 10px;
+    }
 `;
 
 const getSteps = (steps: Step[], theme: ThemeInterface, isMobile: boolean): ReactourStep[] => {
