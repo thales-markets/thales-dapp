@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { CellProps } from 'react-table';
-import { formatTxTimestamp, formatCurrency } from 'thales-utils';
 import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
-import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
-import { getIsAppReady } from 'redux/modules/app';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import useUserVaultsAndLpTransactionsQuery from 'queries/user/useUserVaultsAndLpTransactionsQuery';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { CellProps } from 'react-table';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
-import { ScreenSizeBreakpoint } from 'enums/ui';
+import { formatCurrency, formatTxTimestamp } from 'thales-utils';
+import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
+import { RootState } from 'types/ui';
 
 const UserVaultsAndLpTransactionsTable: React.FC = () => {
     const { t } = useTranslation();
@@ -61,8 +61,10 @@ const UserVaultsAndLpTransactionsTable: React.FC = () => {
                                 >
                             ) => (
                                 <p>
-                                    {cellProps.cell.value === 'lp'
-                                        ? t(`profile.vaults-lp.thales-lp-title`)
+                                    {cellProps.cell.value === 'lp' || cellProps.cell.value === 'susd-lp'
+                                        ? t(`profile.vaults-lp.thales-lp-title`, {
+                                              collateral: cellProps.cell.value === 'lp' ? 'USDC' : 'sUSD',
+                                          })
                                         : t(`vault.${cellProps.cell.value}.title`)}
                                 </p>
                             ),

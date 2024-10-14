@@ -7,12 +7,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsMobile } from 'redux/modules/ui';
-import { RootState } from 'types/ui';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRow, FlexDivStart } from 'styles/common';
-import { ThemeInterface } from 'types/ui';
+import styled, { useTheme } from 'styled-components';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivStart } from 'styles/common';
 import { formatCurrencyWithSign, formatPercentageWithSign } from 'thales-utils';
+import { RootState, ThemeInterface } from 'types/ui';
 
 type VaultLpDetailsProps = {
     icon: string;
@@ -24,6 +22,7 @@ type VaultLpDetailsProps = {
     isRoundEnded: boolean;
     link: string;
     isLoading: boolean;
+    isDeprecated?: boolean;
 };
 
 const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
@@ -36,6 +35,7 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
     isRoundEnded,
     link,
     isLoading,
+    isDeprecated,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -49,7 +49,12 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
         <Container>
             <TitleWrapper>
                 <Icon className={`sidebar-icon icon--${icon}`} />
-                <Title>{title}</Title>
+                <TitleContainer>
+                    <Title>{title}</Title>
+                    {isDeprecated && (
+                        <DeprecatedContainer>{t('profile.vaults-lp.deprecated-label')}</DeprecatedContainer>
+                    )}
+                </TitleContainer>
             </TitleWrapper>
             <Item hideBorder>
                 <Label>{t('profile.vaults-lp.my-position-label')}</Label>
@@ -181,6 +186,20 @@ const IconLink = styled.i<{ color?: string }>`
     font-size: 20px;
     color: ${(props) => props.color || props.theme.textColor.secondary};
     text-transform: none;
+`;
+
+export const TitleContainer = styled(FlexDivColumn)`
+    flex: initial;
+`;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    color: ${(props) => props.theme.warning.textColor.primary};
+    align-items: center;
+    justify-content: start;
+    font-size: 10px;
+    text-align: start;
+    text-transform: uppercase;
+    margin-bottom: -5px;
 `;
 
 export default VaultLpDetails;

@@ -863,7 +863,7 @@
         "vaults-lp": {
             "vaults-title": "Vaults",
             "lp-title": "Liquidity Pool",
-            "thales-lp-title": "Thales Liquidity Pool",
+            "thales-lp-title": "{{collateral}} Liquidity Pool",
             "history-title": "History",
             "my-position-label": "My position",
             "vault-pnl-label": "Vault PnL",
@@ -877,7 +877,8 @@
             "amount-col": "amount",
             "round-col": "round",
             "tx-status-col": "tx status",
-            "no-transactions": "No transactions associated with this wallet"
+            "no-transactions": "No transactions associated with this wallet",
+            "deprecated-label": "Deprecated"
         },
         "leaderboard": {
             "table": {

@@ -1,17 +1,19 @@
 import { VAULT_MAP } from 'constants/vault';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
+import { LiquidityPool } from '../../../../types/liquidityPool';
+import { getLiquidityPools } from '../../../../utils/liquidityPool';
+import ProfileSection from '../ProfileSection/ProfileSection';
 import UserLiquidityPool from './components/UserLiquidityPool';
 import UserVault from './components/UserVault';
-import ProfileSection from '../ProfileSection/ProfileSection';
-import { useTranslation } from 'react-i18next';
 import UserVaultsAndLpTransactionsTable from './components/UserVaultsAndLpTransactionsTable';
 
 const UserVaultsLp: React.FC = () => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const networkId = useSelector(getNetworkId);
+    const liquidityPools = getLiquidityPools(networkId);
 
     const vaults = useMemo(() => {
         const arr = [];
@@ -24,7 +26,9 @@ const UserVaultsLp: React.FC = () => {
     return (
         <>
             <ProfileSection title={t('profile.vaults-lp.lp-title')} maxHeight="100%">
-                <UserLiquidityPool />
+                {liquidityPools.map((item: LiquidityPool) => (
+                    <UserLiquidityPool key={item.address} lp={item} />
+                ))}
             </ProfileSection>
             <ProfileSection title={t('profile.vaults-lp.vaults-title')} maxHeight="100%">
                 {vaults.map((obj) => {

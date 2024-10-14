@@ -7,13 +7,18 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { Coins } from 'thales-utils';
-import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
+import { LiquidityPool, LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { RootState } from 'types/ui';
-import { buildLiquidityPoolLink } from 'utils/routes';
+import { buildHref } from 'utils/routes';
+import { SYNTHS_MAP } from '../../../../../../constants/currency';
+import ROUTES from '../../../../../../constants/routes';
 import VaultLpDetails from '../VaultLpDetails';
 
-const UserLiquidityPool: React.FC = () => {
+type UserLiquidityPoolProps = {
+    lp: LiquidityPool;
+};
+
+const UserLiquidityPool: React.FC<UserLiquidityPoolProps> = ({ lp }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -27,7 +32,7 @@ const UserLiquidityPool: React.FC = () => {
         UserLiquidityPoolData | undefined
     >(undefined);
 
-    const liquidityPoolDataQuery = useLiquidityPoolDataQuery('', '' as Coins, networkId, {
+    const liquidityPoolDataQuery = useLiquidityPoolDataQuery(lp.address, lp.collateral, networkId, {
         enabled: isAppReady,
     });
 
@@ -44,9 +49,15 @@ const UserLiquidityPool: React.FC = () => {
         return lastValidLiquidityPoolData;
     }, [liquidityPoolDataQuery.isSuccess, liquidityPoolDataQuery.data, lastValidLiquidityPoolData]);
 
-    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery('', '' as Coins, walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
+    const userLiquidityPoolDataQuery = useLiquidityPoolUserDataQuery(
+        lp.address,
+        lp.collateral,
+        walletAddress,
+        networkId,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
 
     useEffect(() => {
         if (userLiquidityPoolDataQuery.isSuccess && userLiquidityPoolDataQuery.data) {
@@ -62,30 +73,32 @@ const UserLiquidityPool: React.FC = () => {
     }, [userLiquidityPoolDataQuery.isSuccess, userLiquidityPoolDataQuery.data, lastValidUserLiquidityPoolData]);
 
     return isMobile ? (
-        <SPAAnchor href={buildLiquidityPoolLink()}>
+        <SPAAnchor href={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lp.collateral.toLowerCase()}`}>
             <VaultLpDetails
                 icon={'liquidity-pool'}
-                title={t(`profile.vaults-lp.thales-lp-title`)}
+                title={t(`profile.vaults-lp.thales-lp-title`, { collateral: lp.collateral })}
                 position={userLiquidityPoolData?.balanceTotal || 0}
                 pnl={liquidityPoolData?.lifetimePnl || 0}
                 round={liquidityPoolData?.round || 0}
                 roundEndTime={liquidityPoolData?.roundEndTime || 0}
                 isRoundEnded={!!liquidityPoolData?.isRoundEnded}
-                link={buildLiquidityPoolLink()}
+                link={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lp.collateral.toLowerCase()}`}
                 isLoading={liquidityPoolDataQuery.isLoading || userLiquidityPoolDataQuery.isLoading}
+                isDeprecated={lp.collateral === SYNTHS_MAP.sUSD}
             />
         </SPAAnchor>
     ) : (
         <VaultLpDetails
             icon={'liquidity-pool'}
-            title={t(`profile.vaults-lp.thales-lp-title`)}
+            title={t(`profile.vaults-lp.thales-lp-title`, { collateral: lp.collateral })}
             position={userLiquidityPoolData?.balanceTotal || 0}
             pnl={liquidityPoolData?.lifetimePnl || 0}
             round={liquidityPoolData?.round || 0}
             roundEndTime={liquidityPoolData?.roundEndTime || 0}
             isRoundEnded={!!liquidityPoolData?.isRoundEnded}
-            link={buildLiquidityPoolLink()}
+            link={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lp.collateral.toLowerCase()}`}
             isLoading={liquidityPoolDataQuery.isLoading || userLiquidityPoolDataQuery.isLoading}
+            isDeprecated={lp.collateral === SYNTHS_MAP.sUSD}
         />
     );
 };

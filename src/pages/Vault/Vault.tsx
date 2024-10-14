@@ -52,6 +52,7 @@ import {
     Container,
     ContentInfo,
     ContentInfoContainer,
+    DeprecatedContainer,
     Description,
     Header,
     HeaderVaultIcon,
@@ -84,6 +85,8 @@ import {
     WarningContentInfo,
     Wrapper,
 } from './styled-components';
+
+const IS_DEPRECATED = true;
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -388,7 +391,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                 &nbsp;/ {t(`vault.${vaultId}.title`)}
                 <HeaderVaultIcon className={`sidebar-icon icon--${vaultId}`} />
             </Header>
-            {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
             {vaultData && (
                 <>
                     <RoundInfoWrapper>
@@ -441,6 +443,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     </RoundInfoWrapper>
                 </>
             )}
+            <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
             <Container>
                 <LeftContainer>
                     <Title>
@@ -601,26 +604,28 @@ const Vault: React.FC<VaultProps> = (props) => {
                                     )}
                                 </ContentInfoContainer>
                             )}
-                            <ToggleContainer>
-                                <Switch
-                                    active={selectedTab === VaultTab.WITHDRAW}
-                                    width={'66px'}
-                                    height={'30px'}
-                                    dotSize={'20px'}
-                                    label={{
-                                        firstLabel: t(`vault.tabs.${VaultTab.DEPOSIT}`),
-                                        secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
-                                        fontSize: '20px',
-                                    }}
-                                    dotBackground={theme.textColor.primary}
-                                    handleClick={() => {
-                                        setSelectedTab(
-                                            selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
-                                        );
-                                    }}
-                                />
-                            </ToggleContainer>
-                            {selectedTab === VaultTab.DEPOSIT && (
+                            {!IS_DEPRECATED && (
+                                <ToggleContainer>
+                                    <Switch
+                                        active={selectedTab === VaultTab.WITHDRAW}
+                                        width={'66px'}
+                                        height={'30px'}
+                                        dotSize={'20px'}
+                                        label={{
+                                            firstLabel: t(`vault.tabs.${VaultTab.DEPOSIT}`),
+                                            secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
+                                            fontSize: '20px',
+                                        }}
+                                        dotBackground={theme.textColor.primary}
+                                        handleClick={() => {
+                                            setSelectedTab(
+                                                selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
+                                            );
+                                        }}
+                                    />
+                                </ToggleContainer>
+                            )}
+                            {selectedTab === VaultTab.DEPOSIT && !IS_DEPRECATED && (
                                 <>
                                     <ContentInfo>{t('vault.deposit-message')}</ContentInfo>
                                     {isWithdrawalRequested && (
@@ -715,7 +720,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                     <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
                                 </>
                             )}
-                            {selectedTab === VaultTab.WITHDRAW && (
+                            {(selectedTab === VaultTab.WITHDRAW || IS_DEPRECATED) && (
                                 <>
                                     {((vaultData && userVaultData && !isWithdrawalRequested) || !isWalletConnected) && (
                                         <>
