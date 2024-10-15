@@ -1,24 +1,24 @@
-import React, { useMemo } from 'react';
 import TileTable, { TileRow } from 'components/TileTable/TileTable';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'types/ui';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { USD_SIGN } from 'constants/currency';
+import { orderBy } from 'lodash';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useBinaryOptionsUserTradesQuery from 'queries/options/useBinaryOptionsUserTradesQuery';
 import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { orderBy } from 'lodash';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import {
     formatCurrency,
     formatCurrencyWithSign,
     formatHoursAndMinutesFromTimestamp,
     formatShortDate,
 } from 'thales-utils';
-import { USD_SIGN } from 'constants/currency';
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
-import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { RootState } from 'types/ui';
 import { Container, Date, DateTimeContainer, Time } from './styled-components';
 
 type Activity = {
@@ -35,9 +35,10 @@ type Activity = {
 
 type UserActivityProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
+const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -59,6 +60,7 @@ const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
         networkId,
         walletAddress,
         isRangedMarket,
+        isDeprecatedCurrency,
         { enabled: isAppReady }
     );
 

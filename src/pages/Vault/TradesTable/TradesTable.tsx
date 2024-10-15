@@ -1,17 +1,17 @@
+import SPAAnchor from 'components/SPAAnchor';
+import Table from 'components/TableV2';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { Positions } from 'enums/options';
+import { VaultTradeStatus } from 'enums/vault';
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { formatShortDate, formatTxTimestamp, formatCurrency } from 'thales-utils';
-import Table from 'components/TableV2';
-import { buildOptionsMarketLink } from 'utils/routes';
-import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import SPAAnchor from 'components/SPAAnchor';
-import { VaultTrade, VaultTrades } from 'types/vault';
 import styled, { useTheme } from 'styled-components';
-import { VaultTradeStatus } from 'enums/vault';
+import { formatCurrency, formatShortDate, formatTxTimestamp } from 'thales-utils';
 import { ThemeInterface } from 'types/ui';
+import { VaultTrade, VaultTrades } from 'types/vault';
 import { getColorPerPosition } from 'utils/options';
-import { Positions } from 'enums/options';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 type TradesTableProps = {
     transactions: VaultTrades;
@@ -40,7 +40,7 @@ const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage
                     Cell: (cellProps: CellProps<VaultTrade, VaultTrade['currencyKey']>) => (
                         <SPAAnchor
                             onClick={(e) => e.stopPropagation()}
-                            href={buildOptionsMarketLink(cellProps.row.original.market)}
+                            href={buildOptionsMarketLink(cellProps.row.original.market, true)}
                         >
                             <CurrencyName>{cellProps.cell.value}</CurrencyName>
                         </SPAAnchor>

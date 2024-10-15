@@ -67,7 +67,7 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
         ? optBalances.long
         : optBalances.short;
 
-    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -83,7 +83,8 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
                   multipleCollateralBalances?.data,
                   getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency)
               )
-            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId)) || 0;
+            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId, isDeprecatedCurrency)) ||
+              0;
 
     return (
         <Wrapper>

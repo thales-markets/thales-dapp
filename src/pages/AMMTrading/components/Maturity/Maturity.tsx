@@ -35,7 +35,6 @@ import {
     refetchUserNotifications,
 } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 import {
     additionalButtonStyle,
     Container,
@@ -53,9 +52,10 @@ import {
 
 type MaturityProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
+const Maturity: React.FC<MaturityProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -67,7 +67,6 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
     const isWalletConnected = useSelector(getIsWalletConnected);
     const walletAddress = useSelector(getWalletAddress) || '';
     const networkId = useSelector(getNetworkId);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
@@ -145,9 +144,15 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                     )
                 );
                 isRangedMarket
-                    ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
-                    : refetchMarketQueries(walletAddress, BOMContract.address, market.address);
-                refetchBalances(walletAddress, networkId);
+                    ? refetchRangeMarketQueries(
+                          walletAddress,
+                          BOMContract.address,
+                          market.address,
+                          networkId,
+                          isDeprecatedCurrency
+                      )
+                    : refetchMarketQueries(walletAddress, BOMContract.address, market.address, isDeprecatedCurrency);
+                refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
                 refetchUserNotifications(walletAddress, networkId);
                 setIsExercising(false);
             }
@@ -193,7 +198,7 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                             <InfoLabel>{t('markets.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
                             <Info>
                                 {formatCurrencyWithKey(
-                                    getDefaultCollateral(networkId),
+                                    getDefaultCollateral(networkId, isDeprecatedCurrency),
                                     isRangedMarket
                                         ? isInResult
                                             ? inAmount
@@ -215,9 +220,15 @@ const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
                                               walletAddress,
                                               BOMContract.address,
                                               market.address,
-                                              networkId
+                                              networkId,
+                                              isDeprecatedCurrency
                                           )
-                                        : refetchMarketQueries(walletAddress, BOMContract.address, market.address)
+                                        : refetchMarketQueries(
+                                              walletAddress,
+                                              BOMContract.address,
+                                              market.address,
+                                              isDeprecatedCurrency
+                                          )
                                 }
                             />
                         </InfoItem>

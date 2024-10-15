@@ -120,14 +120,14 @@ const Vault: React.FC<VaultProps> = (props) => {
         }
     }, [vaultAddress]);
 
-    const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, true, {
         enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
             setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId, true))
             );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
@@ -255,7 +255,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                         id,
                         getSuccessToastOptions(
                             t('markets.market.toast-messsage.approve-success', {
-                                token: getDefaultCollateral(networkId),
+                                token: getDefaultCollateral(networkId, true),
                             }),
                             id
                         )
@@ -353,10 +353,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', {
-                              currencyKey: getDefaultCollateral(networkId),
+                              currencyKey: getDefaultCollateral(networkId, true),
                           })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: getDefaultCollateral(networkId),
+                              currencyKey: getDefaultCollateral(networkId, true),
                           })}
                 </Button>
             );
@@ -647,7 +647,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                         value={amount}
                                         disabled={isDepositAmountInputDisabled}
                                         onChange={(_, value) => setAmount(value)}
-                                        currencyLabel={getDefaultCollateral(networkId)}
+                                        currencyLabel={getDefaultCollateral(networkId, true)}
                                         placeholder={t('common.enter-amount')}
                                         showValidation={insufficientBalance || !!exceededVaultCap || !!invalidAmount}
                                         validationMessage={
@@ -848,7 +848,7 @@ const Vault: React.FC<VaultProps> = (props) => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={getDefaultCollateral(networkId)}
+                    tokenSymbol={getDefaultCollateral(networkId, true)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

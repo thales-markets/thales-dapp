@@ -260,6 +260,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     }
                 }
                 showBuyLiquidity
+                isDeprecatedCurrency={isDeprecatedCurrency}
             />
             <BannerWrapper>
                 <PageLinkBanner />

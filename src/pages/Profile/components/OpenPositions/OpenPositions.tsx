@@ -128,8 +128,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                                 <SPAAnchor
                                     href={
                                         row.isRanged
-                                            ? buildRangeMarketLink(row.market, row.side)
-                                            : buildOptionsMarketLink(row.market, row.side)
+                                            ? buildRangeMarketLink(row.market, row.isDeprecatedCurrency, row.side)
+                                            : buildOptionsMarketLink(row.market, row.isDeprecatedCurrency, row.side)
                                     }
                                 >
                                     {isMobile ? (

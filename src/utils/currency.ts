@@ -24,7 +24,8 @@ export const getSynthName = (currencyKey: string) =>
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
-export const getDefaultCollateral = (networkId: SupportedNetwork) => COLLATERALS[networkId][0];
+export const getDefaultCollateral = (networkId: SupportedNetwork, isDeprecatedCurrency: boolean) =>
+    (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId][0];
 
 export const getCollateral = (networkId: SupportedNetwork, index: number, isDeprecatedCurrency: boolean) =>
     (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId][index];

@@ -38,7 +38,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
-import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
 import {
     bigNumberFormatter,
@@ -89,6 +89,7 @@ type AmmTradingProps = {
     isDetailsPage?: boolean;
     showBuyLiquidity?: boolean;
     showWalletBalance?: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
 const AmmTrading: React.FC<AmmTradingProps> = ({
@@ -98,6 +99,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     isDetailsPage,
     showBuyLiquidity,
     showWalletBalance,
+    isDeprecatedCurrency,
 }) => {
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
     const rangedMarket = useRangedMarketContext();
@@ -114,7 +116,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const selectedCollateralIndexSelector = useSelector(getSelectedCollateralIndex);
     const isBuy = useSelector(getIsBuy) || !isDetailsPage;
     const isMobile = useSelector(getIsMobile);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -211,7 +212,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         setIsAmmTradingDisabled(isTradingDisabled);
     }, [isRangedMarket, ammMaxLimitsQuery, isUpPosition, rangedAmmMaxLimitsQuery, isInPosition, isBuy]);
 
-    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
@@ -222,7 +223,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
     }, [stableBalanceQuery]);
 
-    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
+    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
+        networkId,
+    ]);
     const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency), [
         isDeprecatedCurrency,
         networkId,
@@ -585,10 +589,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
                     );
 
-                    refetchBalances(walletAddress, networkId);
+                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
                     isRangedMarket
-                        ? refetchRangedAmmData(walletAddress, market.address, networkId)
-                        : refetchAmmData(walletAddress, market.address);
+                        ? refetchRangedAmmData(walletAddress, market.address, networkId, isDeprecatedCurrency)
+                        : refetchAmmData(walletAddress, market.address, isDeprecatedCurrency);
 
                     setIsSubmitting(false);
 
@@ -751,6 +755,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         priceProfit={priceProfit}
                         paidAmount={paidAmount}
                         breakFirstLine={false}
+                        isDeprecatedCurrency={isDeprecatedCurrency}
                     />
                     <Tooltip
                         overlay={
@@ -826,6 +831,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 profit={Number(priceProfit) * Number(paidAmount)}
                                 isLoading={isFetchingQuote}
                                 isBuy={isBuy}
+                                isDeprecatedCurrency={isDeprecatedCurrency}
                             />
                             <SkewSlippageDetails
                                 skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
@@ -867,9 +873,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             priceProfit={priceProfit}
                             paidAmount={paidAmount}
                             breakFirstLine={true}
+                            isDeprecatedCurrency={isDeprecatedCurrency}
                         />
                     }
                     onClose={() => setOpenTradingDetailsModal(false)}
+                    isDeprecatedCurrency={isDeprecatedCurrency}
                 />
             )}
             {openTwitterShareModal && (

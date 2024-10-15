@@ -13,7 +13,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsBuy } from 'redux/modules/marketWidgets';
-import { getIsDeprecatedCurrency, getIsMobile } from 'redux/modules/ui';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTheme } from 'styled-components';
 import {
@@ -43,9 +43,10 @@ import {
 
 type RowCardProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
+const RowCard: React.FC<RowCardProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -58,7 +59,8 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket }) => {
     const walletAddress = useSelector(getWalletAddress) || '';
     const isAppReady = useSelector(getIsAppReady);
     const isMobile = useSelector(getIsMobile);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
+
+    console.log(isDeprecatedCurrency);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
         market.address,

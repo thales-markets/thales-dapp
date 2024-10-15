@@ -4,11 +4,12 @@ import { BigNumber } from 'ethers';
 
 const QUERY_KEYS = {
     WalletBalances: {
-        StableCoinBalance: (walletAddress: string, networkId: Network) => [
+        StableCoinBalance: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
             'walletBalances',
             'stableCoin',
             walletAddress,
             networkId,
+            isDeprecatedCurrency,
         ],
         Eth: (walletAddress: string) => ['walletBalances', 'eth', walletAddress],
         Thales: (walletAddress: string, networkId: Network) => ['walletBalances', 'thales', walletAddress, networkId],
@@ -47,8 +48,16 @@ const QUERY_KEYS = {
         Markets: (networkId: Network) => ['markets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
-        Market: (marketAddress: string) => ['market', marketAddress],
-        RangedMarket: (marketAddress: string) => ['rangedMarket', marketAddress],
+        Market: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'market',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
+        RangedMarket: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'rangedMarket',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
         UserMarketPositions: (marketAddress: string, accountAddress: string) => [
             'market',
             'positions',
@@ -69,15 +78,28 @@ const QUERY_KEYS = {
             marketAddress,
             walletAddress,
         ],
-        MarketTrades: (marketAddress: string) => ['market', 'trades', marketAddress],
+        MarketTrades: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'market',
+            'trades',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
         UserMarketTrades: (marketAddress: string, walletAddress: string) => [
             'market',
             'trades',
             marketAddress,
             walletAddress,
         ],
-        AmmMaxLimits: (marketAddress: string) => ['amm', marketAddress],
-        RangedAmmMaxLimits: (marketAddress: string) => ['rangedAmm', marketAddress],
+        AmmMaxLimits: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'amm',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
+        RangedAmmMaxLimits: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'rangedAmm',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
         AvailableAssets: (networkId: Network, isDeprecatedCurrency: boolean) => [
             'availableAssets',
             networkId,

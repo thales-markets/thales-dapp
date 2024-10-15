@@ -129,7 +129,7 @@ const CreateMarket: React.FC = () => {
 
     useEffect(() => {
         if (!walletAddress) return;
-        const collateral = snxJSConnector.collateral;
+        const collateral = snxJSConnector.collateralUSDC;
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
         const getAllowanceForCurrentWallet = async () => {
             try {
@@ -169,7 +169,7 @@ const CreateMarket: React.FC = () => {
                     setMarket(goodData.market);
                     setIsMarketCreated(true);
                     setIsCreatingMarket(false);
-                    navigateToOptionsMarket(goodData.market);
+                    navigateToOptionsMarket(goodData.market, false);
                 }
             }
         } catch (e) {
@@ -237,9 +237,11 @@ const CreateMarket: React.FC = () => {
                 <FlexDivColumn style={{ flex: 1 }}>
                     <div>
                         <Description>
-                            {t('create-market.subtitle', { token: getDefaultCollateral(networkId) })}
+                            {t('create-market.subtitle', { token: getDefaultCollateral(networkId, false) })}
                         </Description>
-                        <Description>{t('create-market.note', { token: getDefaultCollateral(networkId) })}</Description>
+                        <Description>
+                            {t('create-market.note', { token: getDefaultCollateral(networkId, false) })}
+                        </Description>
                     </div>
                     <InputsWrapper>
                         <Row>
@@ -433,7 +435,7 @@ const CreateMarket: React.FC = () => {
                                     }}
                                     disabled={isCreatingMarket || isMarketCreated}
                                     label={t('create-market.details.funding-amount.label')}
-                                    currencyLabel={getDefaultCollateral(networkId)}
+                                    currencyLabel={getDefaultCollateral(networkId, false)}
                                     showValidation={!isAmountValid}
                                     validationMessage={t('create-market.min-amount', {
                                         minimum: MIN_FUNDING_AMOUNT,
@@ -441,7 +443,7 @@ const CreateMarket: React.FC = () => {
                                 />
                                 <NoteText>
                                     {t('create-market.details.funding-amount.desc', {
-                                        token: getDefaultCollateral(networkId),
+                                        token: getDefaultCollateral(networkId, false),
                                     })}
                                 </NoteText>
                             </ShortInputContainer>
@@ -466,13 +468,15 @@ const CreateMarket: React.FC = () => {
             <ButtonContainer>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
                 {isMarketCreated && (
-                    <Button onClick={() => navigateToOptionsMarket(market)}>{t('create-market.go-to-market')}</Button>
+                    <Button onClick={() => navigateToOptionsMarket(market, false)}>
+                        {t('create-market.go-to-market')}
+                    </Button>
                 )}
             </ButtonContainer>
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={initialFundingAmount}
-                    tokenSymbol={getDefaultCollateral(networkId)}
+                    tokenSymbol={getDefaultCollateral(networkId, false)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

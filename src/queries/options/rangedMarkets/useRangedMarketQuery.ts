@@ -16,7 +16,7 @@ const useRangedMarketQuery = (
     options?: UseQueryOptions<RangedMarketData | null>
 ) => {
     return useQuery<RangedMarketData | null>(
-        QUERY_KEYS.BinaryOptions.RangedMarket(marketAddress),
+        QUERY_KEYS.BinaryOptions.RangedMarket(marketAddress, isDeprecatedCurrency),
         async () => {
             try {
                 const rangedMarket = new ethers.Contract(

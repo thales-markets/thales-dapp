@@ -14,7 +14,7 @@ const useBinaryOptionsMarketQuery = (
     options?: UseQueryOptions<OptionsMarketInfo | null>
 ) => {
     return useQuery<OptionsMarketInfo | null>(
-        QUERY_KEYS.BinaryOptions.Market(marketAddress),
+        QUERY_KEYS.BinaryOptions.Market(marketAddress, isDeprecatedCurrency),
         async () => {
             try {
                 const { binaryOptionsMarketDataContract, binaryOptionsMarketDataUSDCContract } = snxJSConnector;

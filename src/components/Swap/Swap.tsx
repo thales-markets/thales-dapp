@@ -23,6 +23,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getIsDeprecatedCurrency } from '../../redux/modules/ui';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
@@ -42,6 +43,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector(getWalletAddress) || '';
     const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const isL2 = getIsOVM(networkId);
     const isPolygon = networkId === Network.PolygonMainnet;
@@ -199,7 +201,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                 };
                 const tx = await (snxJSConnector as any).signer.sendTransaction(transactionData);
                 await tx.wait();
-                refetchBalances(walletAddress as any, networkId);
+                refetchBalances(walletAddress as any, networkId, isDeprecatedCurrency);
                 setIsLoading(false);
                 toast.update(id, getSuccessToastOptions(t('common.swap.tx-success', { token: toToken.symbol }), id));
                 return {

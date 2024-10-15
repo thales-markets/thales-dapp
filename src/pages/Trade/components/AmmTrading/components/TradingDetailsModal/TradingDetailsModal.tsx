@@ -28,6 +28,7 @@ type TradingDetailsModalProps = {
     setSlippage: (value: number) => void;
     tradingDetailsSentence: JSX.Element;
     onClose: () => void;
+    isDeprecatedCurrency: boolean;
 };
 
 const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
@@ -48,6 +49,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
     setSlippage,
     tradingDetailsSentence,
     onClose,
+    isDeprecatedCurrency,
 }) => {
     const { t } = useTranslation();
 
@@ -87,6 +89,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     selectedStable={selectedStable}
                     profit={profit}
                     isBuy={true}
+                    isDeprecatedCurrency={isDeprecatedCurrency}
                 />
                 <SkewSlippageDetails skew={skew} slippage={slippage} setSlippage={setSlippageTolerance} />
                 <TradingDetailsSentence>{tradingDetailsSentence}</TradingDetailsSentence>

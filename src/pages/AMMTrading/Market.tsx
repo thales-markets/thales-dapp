@@ -19,7 +19,6 @@ import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';
 import { history, navigateTo } from 'utils/routes';
-import { getIsDeprecatedCurrency } from '../../redux/modules/ui';
 import Maturity from './components/Maturity';
 import TabContainer from './components/TabContainer';
 import WalletBalance from './components/WalletBalance';
@@ -37,7 +36,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const location = useLocation();
     const isAppReady = useSelector(getIsAppReady);
     const networkId = useSelector(getNetworkId);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
@@ -53,6 +51,11 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
             : isRangedMarket
             ? Positions.IN
             : Positions.UP
+    );
+
+    const queryParamIsDeprecated = queryString.parse(location.search).isDeprecated;
+    const [isDeprecatedCurrency] = useState(
+        queryParamIsDeprecated !== undefined && queryParamIsDeprecated.toLowerCase() === 'true'
     );
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, networkId, isDeprecatedCurrency, {
@@ -123,7 +126,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         <>
             <Container>
                 {inMaturityPhase ? (
-                    <Maturity isRangedMarket={isRangedMarket} />
+                    <Maturity isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
                 ) : (
                     <>
                         {market && (
@@ -170,6 +173,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         market={getAmmTradingMarket(market)}
                                         isDetailsPage={true}
                                         showBuyLiquidity={orderSide === 'buy'}
+                                        isDeprecatedCurrency={isDeprecatedCurrency}
                                     />
                                 </AmmTradingContainer>
                             </>
@@ -177,7 +181,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                     </>
                 )}
             </Container>
-            <TabContainer isRangedMarket={isRangedMarket} />
+            <TabContainer isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
         </>
     );
 

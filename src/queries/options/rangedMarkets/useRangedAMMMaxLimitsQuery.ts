@@ -32,7 +32,7 @@ const useRangedAMMMaxLimitsQuery = (
     options?: UseQueryOptions<RangeAmmMaxLimits>
 ) => {
     return useQuery<RangeAmmMaxLimits>(
-        QUERY_KEYS.BinaryOptions.RangedAmmMaxLimits(marketAddress),
+        QUERY_KEYS.BinaryOptions.RangedAmmMaxLimits(marketAddress, isDeprecatedCurrency),
         async () => {
             const ammMaxLimits: RangeAmmMaxLimits = {
                 in: {
@@ -149,6 +149,7 @@ const useRangedAMMMaxLimitsQuery = (
                 ammMaxLimits.out.priceImpact = bigNumberFormatter(rangedAmmMarketData.outPriceImpact);
             }
 
+            console.log(ammMaxLimits, isDeprecatedCurrency);
             return ammMaxLimits;
         },
         {

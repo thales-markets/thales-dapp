@@ -10,6 +10,7 @@ import { SupportedNetwork } from 'types/network';
 import { RootState, ThemeInterface } from 'types/ui';
 import { getDefaultCollateral } from 'utils/currency';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getIsDeprecatedCurrency } from '../../redux/modules/ui';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
 
 const SUPPORTED_DESTINATION_NETWORKS: SupportedNetwork[] = [
@@ -23,6 +24,7 @@ const BungeePlugin: React.FC = () => {
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const apiKey = process.env.REACT_APP_BUNGEE_API_KEY || '';
     if (!apiKey) {
@@ -41,7 +43,7 @@ const BungeePlugin: React.FC = () => {
     const defaultDestinationToken = allTokens.filter(
         (token) =>
             token.chainId === defaultDestNetwork &&
-            token.symbol === getDefaultCollateral(defaultDestNetwork).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
+            token.symbol === getDefaultCollateral(defaultDestNetwork, isDeprecatedCurrency).toUpperCase() // SUSD is symbol on Bungee instead of sUSD
     )[0]?.address;
 
     // All colors should stricktly be in RGB format

@@ -32,7 +32,7 @@ const useAmmMaxLimitsQuery = (
     options?: UseQueryOptions<AmmMaxLimits>
 ) => {
     return useQuery<AmmMaxLimits>(
-        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
+        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress, isDeprecatedCurrency),
         async () => {
             const ammMaxLimits: AmmMaxLimits = {
                 maxBuyLong: 0,

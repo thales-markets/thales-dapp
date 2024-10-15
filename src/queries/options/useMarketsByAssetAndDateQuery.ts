@@ -67,7 +67,7 @@ const useMarketsByAssetAndDateQuery = (
                         roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
                         strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
                         discount: Math.floor(roi - newRoi),
-                        url: buildOptionsMarketLink(market.market),
+                        url: buildOptionsMarketLink(market.market, isDeprecatedCurrency),
                     };
                 });
 
@@ -156,7 +156,7 @@ const useMarketsByAssetAndDateQuery = (
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
                             discount: Math.floor(roi - newRoi),
-                            url: buildRangeMarketLink(market.market),
+                            url: buildRangeMarketLink(market.market, isDeprecatedCurrency),
                         };
                     })
                     .sort((a: RangedMarketPerPosition, b: RangedMarketPerPosition) => {

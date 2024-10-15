@@ -68,12 +68,13 @@ const UserSwap: React.FC = () => {
     const USDCBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDCe as Coins);
     const USDTBalance = getCoinBalance(multipleCollateralBalancesData, CRYPTO_CURRENCY_MAP.USDT as Coins);
 
-    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && walletAddress !== '' && !isMultiCollateralSupported,
     });
 
     const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;
-    const balance = getCurrencyKeyStableBalance(stableBalance, getDefaultCollateral(networkId)) || 0;
+    const balance =
+        getCurrencyKeyStableBalance(stableBalance, getDefaultCollateral(networkId, isDeprecatedCurrency)) || 0;
 
     const userCollaterals: SwapCollateral[] = useMemo(() => {
         const collaterals = [];
@@ -85,11 +86,20 @@ const UserSwap: React.FC = () => {
                 { type: CRYPTO_CURRENCY_MAP.USDT as Coins, balance: USDTBalance }
             );
         } else {
-            collaterals.push({ type: getDefaultCollateral(networkId), balance: balance });
+            collaterals.push({ type: getDefaultCollateral(networkId, isDeprecatedCurrency), balance: balance });
         }
 
         return collaterals;
-    }, [isMultiCollateralSupported, sUSDBalance, DAIBalance, USDCBalance, USDTBalance, balance, networkId]);
+    }, [
+        isMultiCollateralSupported,
+        sUSDBalance,
+        DAIBalance,
+        USDCBalance,
+        USDTBalance,
+        networkId,
+        isDeprecatedCurrency,
+        balance,
+    ]);
 
     const currentCollateral = getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency);
     const currentCollateralBalance = userCollaterals.find((col) => col.type === currentCollateral)?.balance || 0;

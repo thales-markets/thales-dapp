@@ -64,7 +64,10 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
 
     const isDeprecatedCurrency = position.isDeprecatedCurrency;
 
-    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
+    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
+        networkId,
+    ]);
     const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency), [
         isDeprecatedCurrency,
         networkId,
@@ -287,7 +290,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                 if (txResult && txResult.transactionHash) {
                     toast.update(id, getSuccessToastOptions(t(`common.sell.confirmation-message`), id));
 
-                    refetchBalances(walletAddress, networkId);
+                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
                     refetchUserNotifications(walletAddress, networkId);
                     refetchUserOpenPositions(walletAddress, networkId);
                     refetchUserProfileQueries(walletAddress, networkId);
@@ -333,7 +336,7 @@ const MyPositionAction: React.FC<MyPositionActionProps> = ({ position, isProfile
                             id
                         )
                     );
-                    refetchBalances(walletAddress, networkId);
+                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
                     refetchUserNotifications(walletAddress, networkId);
                     refetchUserOpenPositions(walletAddress, networkId);
                     refetchUserProfileQueries(walletAddress, networkId);

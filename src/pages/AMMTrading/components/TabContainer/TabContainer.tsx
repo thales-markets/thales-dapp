@@ -1,9 +1,13 @@
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import OptionPriceTab from '../Tabs/OptionPriceTab';
-import UserActivity from '../Tabs/UserActivity';
-import TradingView from '../Tabs/TradingView';
+import OutsideClickHandler from 'react-outside-click-handler';
+import RowCard from '../RowCard';
 import MarketActivity from '../Tabs/MarketActivity';
+import OptionPriceTab from '../Tabs/OptionPriceTab';
+import TradingView from '../Tabs/TradingView';
+import UserActivity from '../Tabs/UserActivity';
 import {
     Container,
     MenuContainer,
@@ -15,16 +19,13 @@ import {
     ViewsDropDown,
     ViewsDropDownWrapper,
 } from './styled-components';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import RowCard from '../RowCard';
-import OutsideClickHandler from 'react-outside-click-handler';
-import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 type TabContainerProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
+const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -74,7 +75,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
 
     return (
         <Container>
-            <RowCard isRangedMarket={isRangedMarket} />
+            <RowCard isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
             <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
                 {currentTab
                     ? t('markets.market.row-card.current-view', {
@@ -123,9 +124,15 @@ const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
             </MenuContainer>
             <Tab>
                 {currentTab == 1 && <TradingView />}
-                {currentTab == 2 && <OptionPriceTab isRangedMarket={isRangedMarket} />}
-                {currentTab == 3 && <UserActivity isRangedMarket={isRangedMarket} />}
-                {currentTab == 4 && <MarketActivity isRangedMarket={isRangedMarket} />}
+                {currentTab == 2 && (
+                    <OptionPriceTab isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
+                )}
+                {currentTab == 3 && (
+                    <UserActivity isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
+                )}
+                {currentTab == 4 && (
+                    <MarketActivity isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
+                )}
             </Tab>
         </Container>
     );

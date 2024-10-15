@@ -1,21 +1,22 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import OptionPriceChart from '../../OptionPriceChart';
-import { useMarketContext } from '../../../contexts/MarketContext';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'types/ui';
 import { maxBy, orderBy } from 'lodash';
-import { OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
+import { RootState } from 'types/ui';
+import { useMarketContext } from '../../../contexts/MarketContext';
+import OptionPriceChart from '../../OptionPriceChart';
 import { ChartContainer, Container } from './styled-components';
 
 type OptionPriceTabProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
+const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -29,6 +30,7 @@ const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
         isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
         isRangedMarket,
+        isDeprecatedCurrency,
         { enabled: isAppReady }
     );
 

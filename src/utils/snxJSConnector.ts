@@ -11,6 +11,7 @@ import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketData
 import binaryOptionsMarketDataUSDCContract from './contracts/binaryOptionsMarketDataUSDCContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import collateralContract from './contracts/collateralContract';
+import collateralUSDCContract from './contracts/collateralUSDCContract';
 import multipleCollateral from './contracts/multipleCollateralContract';
 import priceFeedContract from './contracts/priceFeedContract';
 import rangedMarketAMMContract from './contracts/rangedMarketsAMM';
@@ -23,6 +24,7 @@ type SnxJSConnector = {
     provider: Provider | undefined;
     signer: Signer | undefined;
     collateral?: ethers.Contract;
+    collateralUSDC?: ethers.Contract;
     multipleCollateral?: Partial<Record<Coins, ethers.Contract | undefined>>;
     binaryOptionsMarketDataContract?: ethers.Contract;
     binaryOptionsMarketDataUSDCContract?: ethers.Contract;
@@ -66,6 +68,7 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.collateral = conditionalInitializeContract(collateralContract, contractSettings);
+        this.collateralUSDC = conditionalInitializeContract(collateralUSDCContract, contractSettings);
 
         this.multipleCollateral = {
             sUSD: conditionalInitializeContract(multipleCollateral.sUSD, contractSettings),

@@ -22,6 +22,7 @@ type TradingDetailsSentenceProps = {
     priceProfit: number | string;
     paidAmount: number | string;
     breakFirstLine: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
 const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
@@ -33,6 +34,7 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
     priceProfit,
     paidAmount,
     breakFirstLine,
+    isDeprecatedCurrency,
 }) => {
     const { t } = useTranslation();
 
@@ -41,7 +43,10 @@ const TradingDetailsSentence: React.FC<TradingDetailsSentenceProps> = ({
 
     const potentialWinFormatted = isFetchingQuote
         ? '...'
-        : `${formatCurrencyWithKey(getDefaultCollateral(networkId), (1 + Number(priceProfit)) * Number(paidAmount))}`;
+        : `${formatCurrencyWithKey(
+              getDefaultCollateral(networkId, isDeprecatedCurrency),
+              (1 + Number(priceProfit)) * Number(paidAmount)
+          )}`;
 
     const positionTypeFormatted =
         market.positionType === Positions.UP
