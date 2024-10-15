@@ -180,7 +180,7 @@ const CreateMarket: React.FC = () => {
     };
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const collateral = snxJSConnector.collateral;
+        const collateral = snxJSConnector.collateralUSDC;
         const collateralContract = collateral?.connect((snxJSConnector as any).signer);
 
         const { binaryOptionsMarketManagerContract } = snxJSConnector;

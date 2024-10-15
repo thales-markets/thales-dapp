@@ -244,8 +244,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
             ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
-            : snxJSConnector.collateral?.address;
-    }, [selectedCollateral, isMultiCollateralSupported]);
+            : getContractForInteraction(
+                  networkId,
+                  isDeprecatedCurrency,
+                  snxJSConnector.collateral,
+                  snxJSConnector.collateralUSDC
+              )?.address;
+    }, [isMultiCollateralSupported, selectedCollateral, networkId, isDeprecatedCurrency]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
