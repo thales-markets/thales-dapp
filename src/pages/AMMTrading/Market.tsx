@@ -154,6 +154,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                                 history.push({
                                                     pathname: location.pathname,
                                                     search: queryString.stringify({
+                                                        isDeprecated: isDeprecatedCurrency,
                                                         position: position.toLowerCase(),
                                                     }),
                                                 });
