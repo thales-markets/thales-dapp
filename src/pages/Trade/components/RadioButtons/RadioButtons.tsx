@@ -5,8 +5,9 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import { RootState } from 'types/ui';
 import { areDatesEqual } from 'utils/ui';
+import { Network } from '../../../../enums/network';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 
 type RadioButtonsProps = {
     selected: Positions;
@@ -17,8 +18,9 @@ type RadioButtonsProps = {
 };
 
 const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options, currencyKey, date }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const marketsCountQuery = useMarketsCountQuery(networkId, {
         enabled: isAppReady,
@@ -53,7 +55,9 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options
                             )}
                             <Label selected={selected === position}>
                                 {' '}
-                                {position} {diplayPositionCount(position)}
+                                {position}{' '}
+                                {(networkId !== Network.OptimismMainnet || isDeprecatedCurrency) &&
+                                    diplayPositionCount(position)}
                             </Label>
                         </RadioWrapper>
                         {index === 1 && !options && <Separator />}
