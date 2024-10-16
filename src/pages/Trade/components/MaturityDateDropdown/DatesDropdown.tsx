@@ -4,12 +4,11 @@ import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsDeprecatedCurrency } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { formatShortDateWithTime } from 'thales-utils';
 import { areDatesEqual } from 'utils/ui';
-import { Network } from '../../../../enums/network';
-import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 
 type AssetDropdownProps = {
     date: number | undefined;
@@ -20,13 +19,13 @@ type AssetDropdownProps = {
 
 const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, currencyKey }) => {
     const { t } = useTranslation();
-    const isAppReady = useSelector(getIsAppReady);
     const networkId = useSelector(getNetworkId);
+    const isAppReady = useSelector(getIsAppReady);
     const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [open, setOpen] = useState(false);
 
-    const marketsCountQuery = useMarketsCountQuery(networkId, {
+    const marketsCountQuery = useMarketsCountQuery(networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
 
@@ -55,9 +54,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
                 <Container onClick={() => setOpen(!open)} isClickable={allDates.length > 1}>
                     <DatePrint onClick={() => date && setDate(date)}>
                         {date ? formatShortDateWithTime(date) : 'N/A'}
-                        {(networkId !== Network.OptimismMainnet || isDeprecatedCurrency) && (
-                            <MarketsCount>{countDisplay(date)}</MarketsCount>
-                        )}
+                        <MarketsCount>{countDisplay(date)}</MarketsCount>
                     </DatePrint>
                     {allDates.length > 1 && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
                 </Container>
@@ -67,10 +64,9 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates, 
                             <DateContainer key={index}>
                                 <DatePrint onClick={() => setDate(_date)}>
                                     {formatShortDateWithTime(_date)}
-                                    {countDisplay(_date, true) &&
-                                        (networkId !== Network.OptimismMainnet || isDeprecatedCurrency) && (
-                                            <MarketsCount>{countDisplay(_date, true)}</MarketsCount>
-                                        )}
+                                    {countDisplay(_date, true) && (
+                                        <MarketsCount>{countDisplay(_date, true)}</MarketsCount>
+                                    )}
                                 </DatePrint>
                             </DateContainer>
                         ))}

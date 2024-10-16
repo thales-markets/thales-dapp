@@ -118,7 +118,11 @@ const QUERY_KEYS = {
             networkId: Network,
             isDeprecatedCurrency: boolean
         ) => ['marketsByAssetAndDate', asset, date, position, networkId, isDeprecatedCurrency],
-        MarketsCount: (networkId: Network) => ['markets-count', networkId],
+        MarketsCount: (networkId: Network, isDeprecatedCurrency: boolean) => [
+            'markets-count',
+            networkId,
+            isDeprecatedCurrency,
+        ],
     },
     User: {
         OpenPositions: (walletAddress: string, networkId: Network) => [

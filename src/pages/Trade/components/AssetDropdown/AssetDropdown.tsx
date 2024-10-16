@@ -4,12 +4,11 @@ import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsDeprecatedCurrency } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
 import { getSynthAsset, getSynthName } from 'utils/currency';
-import { Network } from '../../../../enums/network';
-import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 
 type AssetDropdownType = 'center' | 'left';
 
@@ -24,10 +23,11 @@ type AssetDropdownProps = {
 const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAssets, showAssetIcon, type }) => {
     const networkId = useSelector(getNetworkId);
     const isAppReady = useSelector(getIsAppReady);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [open, setOpen] = useState(false);
 
-    const marketsCountQuery = useMarketsCountQuery(networkId, {
+    const marketsCountQuery = useMarketsCountQuery(networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
 
@@ -97,8 +97,6 @@ const Asset: React.FC<AssetProps> = ({
     removeMarketsLabel,
 }) => {
     const { t } = useTranslation();
-    const networkId = useSelector(getNetworkId);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const countDisplay = (count: number, removeMarketsLabel?: boolean) => {
         return `(${count}${!removeMarketsLabel ? ` ${t('markets.markets')}` : ''})`;
@@ -118,7 +116,7 @@ const Asset: React.FC<AssetProps> = ({
                     <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                     <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
                 </AssetInfoWrapper>
-                {marketsCount && (networkId !== Network.OptimismMainnet || isDeprecatedCurrency) && (
+                {marketsCount && (
                     <MarketsCount marginRight={!removeMarketsLabel ? '18px' : ''}>
                         {countDisplay(marketsCount, removeMarketsLabel)}
                     </MarketsCount>
