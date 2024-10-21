@@ -35,8 +35,6 @@ const useMarketsByAssetAndDateQuery = (
                 binaryOptionsMarketDataUSDCContract
             );
 
-            console.log(binaryOptionsMarketDataContractForInteraction?.address, isDeprecatedCurrency);
-
             if (position === Positions.UP || position === Positions.DOWN) {
                 const result = await binaryOptionsMarketDataContractForInteraction?.getMarketsForAssetAndStrikeDate(
                     ethers.utils.formatBytes32String(asset),

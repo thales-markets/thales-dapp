@@ -149,7 +149,6 @@ const useRangedAMMMaxLimitsQuery = (
                 ammMaxLimits.out.priceImpact = bigNumberFormatter(rangedAmmMarketData.outPriceImpact);
             }
 
-            console.log(ammMaxLimits, isDeprecatedCurrency);
             return ammMaxLimits;
         },
         {

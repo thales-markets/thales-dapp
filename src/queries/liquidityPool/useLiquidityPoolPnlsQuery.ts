@@ -16,9 +16,6 @@ const useLiquidityPoolPnlsQuery = (
         QUERY_KEYS.LiquidityPool.PnL(networkId, liquidityPoolAddress),
         async () => {
             try {
-                console.log(
-                    `${generalConfig.API_URL}/${API_ROUTES.LPPnls}/${networkId}?liquidityPool=${liquidityPoolAddress}`
-                );
                 const liquidityPoolPnlsResponse = await axios.get(
                     `${generalConfig.API_URL}/${API_ROUTES.LPPnls}/${networkId}?liquidityPool=${liquidityPoolAddress}`
                 );
