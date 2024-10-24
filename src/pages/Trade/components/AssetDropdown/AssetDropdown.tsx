@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsDeprecatedCurrency } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
-import { RootState } from 'types/ui';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
 type AssetDropdownType = 'center' | 'left';
@@ -21,12 +21,13 @@ type AssetDropdownProps = {
 };
 
 const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAssets, showAssetIcon, type }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector(getNetworkId);
+    const isAppReady = useSelector(getIsAppReady);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const [open, setOpen] = useState(false);
 
-    const marketsCountQuery = useMarketsCountQuery(networkId, {
+    const marketsCountQuery = useMarketsCountQuery(networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
 

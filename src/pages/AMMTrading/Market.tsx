@@ -15,7 +15,6 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { setIsBuy } from 'redux/modules/marketWidgets';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
 import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';
@@ -35,8 +34,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const location = useLocation();
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
@@ -54,11 +53,16 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
             : Positions.UP
     );
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
+    const queryParamIsDeprecated = queryString.parse(location.search).isDeprecated;
+    const [isDeprecatedCurrency] = useState(
+        queryParamIsDeprecated !== undefined && queryParamIsDeprecated.toLowerCase() === 'true'
+    );
+
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && !isRangedMarket,
     });
 
-    const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
+    const rangedMarketQuery = useRangedMarketQuery(marketAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isRangedMarket,
     });
 
@@ -122,7 +126,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         <>
             <Container>
                 {inMaturityPhase ? (
-                    <Maturity isRangedMarket={isRangedMarket} />
+                    <Maturity isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
                 ) : (
                     <>
                         {market && (
@@ -150,6 +154,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                                 history.push({
                                                     pathname: location.pathname,
                                                     search: queryString.stringify({
+                                                        isDeprecated: isDeprecatedCurrency,
                                                         position: position.toLowerCase(),
                                                     }),
                                                 });
@@ -169,6 +174,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         market={getAmmTradingMarket(market)}
                                         isDetailsPage={true}
                                         showBuyLiquidity={orderSide === 'buy'}
+                                        isDeprecatedCurrency={isDeprecatedCurrency}
                                     />
                                 </AmmTradingContainer>
                             </>
@@ -176,7 +182,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                     </>
                 )}
             </Container>
-            <TabContainer isRangedMarket={isRangedMarket} />
+            <TabContainer isRangedMarket={isRangedMarket} isDeprecatedCurrency={isDeprecatedCurrency} />
         </>
     );
 
@@ -220,6 +226,7 @@ const AmmTradingContainer = styled(FlexDivColumn)`
     padding: 15px 10px 25px 10px;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
+    text-transform: uppercase;
 `;
 
 const DirectionContainer = styled(FlexDivColumn)`

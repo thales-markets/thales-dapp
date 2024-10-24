@@ -16,9 +16,10 @@ import UserTransactionsTable from '../UserTransactionsTable';
 
 type TransactionsProps = {
     currentRound: number;
+    liquidityPoolAddress: string;
 };
 
-const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
+const Transactions: React.FC<TransactionsProps> = ({ currentRound, liquidityPoolAddress }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -57,12 +58,19 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
         });
     }
 
-    const liquidityPoolRoundTransactionsQuery = useLiquidityPoolUserTransactionsQuery(networkId, undefined, round, {
-        enabled: isAppReady,
-    });
+    const liquidityPoolRoundTransactionsQuery = useLiquidityPoolUserTransactionsQuery(
+        networkId,
+        liquidityPoolAddress,
+        undefined,
+        round,
+        {
+            enabled: isAppReady,
+        }
+    );
 
     const liquidityPoolUserTransactionsQuery = useLiquidityPoolUserTransactionsQuery(
         networkId,
+        liquidityPoolAddress,
         walletAddress,
         undefined,
         {
@@ -130,7 +138,7 @@ const Transactions: React.FC<TransactionsProps> = ({ currentRound }) => {
                 {selectedTab === LiquidityPoolTransaction.USER_TRANSACTIONS && (
                     <UserTransactionsTable
                         transactions={liquidityPoolUserTransactions}
-                        isLoading={liquidityPoolUserTransactionsQuery.isLoading}
+                        isLoading={liquidityPoolRoundTransactionsQuery.isLoading}
                         noResultsMessage={
                             noLiquidityPoolUserTransactions ? (
                                 <span>{t(`liquidity-pool.user-transactions.no-transactions`)}</span>

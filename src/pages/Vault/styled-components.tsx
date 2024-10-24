@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'styles/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivStart } from 'styles/common';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
@@ -313,4 +313,22 @@ export const HeaderVaultIcon = styled.i`
     font-size: 23px;
     margin-left: 8px;
     position: relative;
+`;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    width: 80%;
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.warning.textColor.primary};
+    border-radius: 15px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    padding: 5px 10px;
+    text-align: center;
+    @media (max-width: 767px) {
+        width: 100%;
+        font-size: 16px;
+        margin-top: 10px;
+    }
 `;

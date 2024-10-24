@@ -1,9 +1,10 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
 import QUERY_KEYS from 'constants/queryKeys';
+import { BigNumber } from 'ethers';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import snxJSConnector from 'utils/snxJSConnector';
-import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
-import { BigNumber } from 'ethers';
+import { getContractForInteraction } from '../../utils/options';
 
 export type AmmMaxLimits = {
     maxBuyLong: number;
@@ -24,9 +25,14 @@ export type AmmMaxLimits = {
     iv: number;
 };
 
-const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?: UseQueryOptions<AmmMaxLimits>) => {
+const useAmmMaxLimitsQuery = (
+    marketAddress: string,
+    networkId: number,
+    isDeprecatedCurrency: boolean,
+    options?: UseQueryOptions<AmmMaxLimits>
+) => {
     return useQuery<AmmMaxLimits>(
-        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
+        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress, isDeprecatedCurrency),
         async () => {
             const ammMaxLimits: AmmMaxLimits = {
                 maxBuyLong: 0,
@@ -46,20 +52,40 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                 sellShortPriceImpact: 0,
                 iv: 0,
             };
-            const { ammContract, binaryOptionsMarketDataContract } = snxJSConnector;
-            if (ammContract && binaryOptionsMarketDataContract) {
-                const ammMarketData = await binaryOptionsMarketDataContract.getAmmMarketData(marketAddress);
+            const {
+                ammContract,
+                ammUSDCContract,
+                binaryOptionsMarketDataContract,
+                binaryOptionsMarketDataUSDCContract,
+            } = snxJSConnector;
+            const ammContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                ammContract,
+                ammUSDCContract
+            );
+            const binaryOptionsMarketDataContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                binaryOptionsMarketDataContract,
+                binaryOptionsMarketDataUSDCContract
+            );
+
+            if (ammContractForInteraction && binaryOptionsMarketDataContractForInteraction) {
+                const ammMarketData = await binaryOptionsMarketDataContractForInteraction.getAmmMarketData(
+                    marketAddress
+                );
 
                 const [maxBuyLongPrice, maxBuyShortPrice] = await Promise.all([
                     ammMarketData.upBuyLiquidity > 0
-                        ? ammContract.buyFromAmmQuote(
+                        ? ammContractForInteraction.buyFromAmmQuote(
                               marketAddress,
                               SIDE['long'],
                               (ammMarketData.upBuyLiquidity as BigNumber).mul(AMM_MAX_BUFFER_PERCENTAGE * 100).div(100)
                           )
                         : 0,
                     ammMarketData.downBuyLiquidity > 0
-                        ? ammContract.buyFromAmmQuote(
+                        ? ammContractForInteraction.buyFromAmmQuote(
                               marketAddress,
                               SIDE['short'],
                               (ammMarketData.downBuyLiquidity as BigNumber)
@@ -76,12 +102,42 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                     bigNumberFormatter(ammMarketData.downBuyLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
                 ammMaxLimits.maxSellShort =
                     bigNumberFormatter(ammMarketData.downSellLiquidity) * AMM_MAX_BUFFER_PERCENTAGE;
-                ammMaxLimits.buyLongPrice = coinFormatter(ammMarketData.upBuyPrice, networkId);
-                ammMaxLimits.buyShortPrice = coinFormatter(ammMarketData.downBuyPrice, networkId);
-                ammMaxLimits.maxBuyLongPrice = coinFormatter(maxBuyLongPrice, networkId);
-                ammMaxLimits.maxBuyShortPrice = coinFormatter(maxBuyShortPrice, networkId);
-                ammMaxLimits.sellLongPrice = coinFormatter(ammMarketData.upSellPrice, networkId);
-                ammMaxLimits.sellShortPrice = coinFormatter(ammMarketData.downSellPrice, networkId);
+                ammMaxLimits.buyLongPrice = coinFormatter(
+                    ammMarketData.upBuyPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.buyShortPrice = coinFormatter(
+                    ammMarketData.downBuyPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.maxBuyLongPrice = coinFormatter(
+                    maxBuyLongPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.maxBuyShortPrice = coinFormatter(
+                    maxBuyShortPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.sellLongPrice = coinFormatter(
+                    ammMarketData.upSellPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
+                ammMaxLimits.sellShortPrice = coinFormatter(
+                    ammMarketData.downSellPrice,
+                    networkId,
+                    undefined,
+                    isDeprecatedCurrency
+                );
                 ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(ammMarketData.upBuyPriceImpact) - MIN_SCEW_IMPACT;
                 ammMaxLimits.buyShortPriceImpact =
                     bigNumberFormatter(ammMarketData.downBuyPriceImpact) - MIN_SCEW_IMPACT;

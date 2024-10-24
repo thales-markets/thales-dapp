@@ -1,13 +1,13 @@
 import { Network } from 'enums/network';
 
-const binaryOptionsMarketDataContract = {
+const binaryOptionsMarketDataUSDCContract = {
     addresses: {
-        [Network.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
-        [Network.OptimismMainnet]: '0x21382a033E581a2D685826449d6c9b3d6507e23C',
+        [Network.Mainnet]: 'TBD',
+        [Network.OptimismMainnet]: '0xE69AF31bBB306d45577746861C75912bc66C3700',
         [Network.OptimismSepolia]: 'TBD',
-        [Network.PolygonMainnet]: '0x3198ab211cdf3e4d13a698e1fb819507bca2e579',
-        [Network.Arbitrum]: '0x036adEA6bc1fD0247c2796f8D201B28C0dC2a67d',
-        [Network.Base]: '0x22Eb15Fb53B61B470cabbe9fC268a1b67E675ff9',
+        [Network.PolygonMainnet]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
+        [Network.Base]: 'TBD',
     },
     abi: [
         {
@@ -952,4 +952,4 @@ const binaryOptionsMarketDataContract = {
     ],
 };
 
-export default binaryOptionsMarketDataContract;
+export default binaryOptionsMarketDataUSDCContract;

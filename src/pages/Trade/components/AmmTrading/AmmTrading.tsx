@@ -57,13 +57,12 @@ import {
     RangedMarketData,
     RangedMarketPerPosition,
 } from 'types/options';
-import { RootState } from 'types/ui';
 import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getCoinBalance, getCollateral, getCollaterals, getDefaultCollateral } from 'utils/currency';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
-import { convertPriceImpactToBonus } from 'utils/options';
+import { convertPriceImpactToBonus, getContractForInteraction } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -90,6 +89,7 @@ type AmmTradingProps = {
     isDetailsPage?: boolean;
     showBuyLiquidity?: boolean;
     showWalletBalance?: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
 const AmmTrading: React.FC<AmmTradingProps> = ({
@@ -99,6 +99,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     isDetailsPage,
     showBuyLiquidity,
     showWalletBalance,
+    isDeprecatedCurrency,
 }) => {
     const isRangedMarket = [Positions.IN, Positions.OUT].includes(market.positionType);
     const rangedMarket = useRangedMarketContext();
@@ -108,13 +109,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
 
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const selectedCollateralIndexSelector = useSelector((state: RootState) => getSelectedCollateralIndex(state));
-    const isBuy = useSelector((state: RootState) => getIsBuy(state)) || !isDetailsPage;
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const selectedCollateralIndexSelector = useSelector(getSelectedCollateralIndex);
+    const isBuy = useSelector(getIsBuy) || !isDetailsPage;
+    const isMobile = useSelector(getIsMobile);
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -141,19 +142,21 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     // Still not supporting all collaterals
     const selectedCollateralIndex = useMemo(
         () =>
-            selectedCollateralIndexSelector < getCollaterals(networkId).length ? selectedCollateralIndexSelector : 0,
-        [networkId, selectedCollateralIndexSelector]
+            selectedCollateralIndexSelector < getCollaterals(networkId, isDeprecatedCurrency).length
+                ? selectedCollateralIndexSelector
+                : 0,
+        [isDeprecatedCurrency, networkId, selectedCollateralIndexSelector]
     );
 
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId, isDeprecatedCurrency);
     const isBuyWithNonDefaultCollateral = selectedCollateralIndex !== 0 && isMultiCollateralSupported && isBuy;
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && !isRangedMarket && !!market.address,
     });
-    const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, {
+    const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isRangedMarket && !!market.address,
     });
 
@@ -209,7 +212,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         setIsAmmTradingDisabled(isTradingDisabled);
     }, [isRangedMarket, ammMaxLimitsQuery, isUpPosition, rangedAmmMaxLimitsQuery, isInPosition, isBuy]);
 
-    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
@@ -220,8 +223,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
     }, [stableBalanceQuery]);
 
-    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId), [networkId]);
-    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex), [
+    const defaultCollateral = useMemo(() => getDefaultCollateral(networkId, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
+        networkId,
+    ]);
+    const selectedCollateral = useMemo(() => getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency), [
+        isDeprecatedCurrency,
         networkId,
         selectedCollateralIndex,
     ]);
@@ -237,17 +244,28 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
     const collateralAddress = useMemo(() => {
         return isMultiCollateralSupported
             ? snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedCollateral]?.address
-            : snxJSConnector.collateral?.address;
-    }, [selectedCollateral, isMultiCollateralSupported]);
+            : getContractForInteraction(
+                  networkId,
+                  isDeprecatedCurrency,
+                  snxJSConnector.collateral,
+                  snxJSConnector.collateralUSDC
+              )?.address;
+    }, [isMultiCollateralSupported, selectedCollateral, networkId, isDeprecatedCurrency]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
             ? getReferralWallet()
             : null;
 
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedMarket && !!market.address,
-    });
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
+        market.address,
+        walletAddress,
+        networkId,
+        isDeprecatedCurrency,
+        {
+            enabled: isAppReady && isWalletConnected && !isRangedMarket && !!market.address,
+        }
+    );
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isRangedMarket && !!market.address,
     });
@@ -314,8 +332,22 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             return;
         }
         const erc20Instance = new ethers.Contract(approvalCurrencyAddress, erc20Contract.abi, snxJSConnector.provider);
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+        const { ammContract, ammUSDCContract, rangedMarketAMMContract, rangedMarketsAMMUSDCContract } = snxJSConnector;
+        const ammContractForInteraction = getContractForInteraction(
+            networkId,
+            isDeprecatedCurrency,
+            ammContract,
+            ammUSDCContract
+        );
+        const rangedMarketAMMContractForInteraction = getContractForInteraction(
+            networkId,
+            isDeprecatedCurrency,
+            rangedMarketAMMContract,
+            rangedMarketsAMMUSDCContract
+        );
+        const addressToApprove =
+            (isRangedMarket ? rangedMarketAMMContractForInteraction?.address : ammContractForInteraction?.address) ||
+            '';
 
         const getAllowance = async () => {
             try {
@@ -344,6 +376,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
         isRangedMarket,
         isBuy,
         selectedCollateral,
+        isDeprecatedCurrency,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -351,8 +384,22 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             return;
         }
         const erc20Instance = new ethers.Contract(approvalCurrencyAddress, erc20Contract.abi, snxJSConnector.signer);
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedMarket ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+        const { ammContract, ammUSDCContract, rangedMarketAMMContract, rangedMarketsAMMUSDCContract } = snxJSConnector;
+        const ammContractForInteraction = getContractForInteraction(
+            networkId,
+            isDeprecatedCurrency,
+            ammContract,
+            ammUSDCContract
+        );
+        const rangedMarketAMMContractForInteraction = getContractForInteraction(
+            networkId,
+            isDeprecatedCurrency,
+            rangedMarketAMMContract,
+            rangedMarketsAMMUSDCContract
+        );
+        const addressToApprove =
+            (isRangedMarket ? rangedMarketAMMContractForInteraction?.address : ammContractForInteraction?.address) ||
+            '';
 
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
@@ -395,8 +442,25 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             }
 
             try {
-                const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
-                const contract = isRangedMarket ? rangedMarketAMMContract : ammContract;
+                const {
+                    ammContract,
+                    ammUSDCContract,
+                    rangedMarketAMMContract,
+                    rangedMarketsAMMUSDCContract,
+                } = snxJSConnector;
+                const ammContractForInteraction = getContractForInteraction(
+                    networkId,
+                    isDeprecatedCurrency,
+                    ammContract,
+                    ammUSDCContract
+                );
+                const rangedMarketAMMContractForInteraction = getContractForInteraction(
+                    networkId,
+                    isDeprecatedCurrency,
+                    rangedMarketAMMContract,
+                    rangedMarketsAMMUSDCContract
+                );
+                const contract = isRangedMarket ? rangedMarketAMMContractForInteraction : ammContractForInteraction;
 
                 const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
                 const promises = isRangedMarket
@@ -421,7 +485,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
 
                 const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isBuyWithNonDefaultCollateral ? (ammQuotes as any)[0] : ammQuotes;
-                const formattedAmmQuote = coinFormatter(ammQuote, networkId, isBuy ? selectedCollateral : undefined);
+                const formattedAmmQuote = coinFormatter(
+                    ammQuote,
+                    networkId,
+                    isBuy ? selectedCollateral : undefined,
+                    isDeprecatedCurrency
+                );
 
                 const ammPrice = formattedAmmQuote / suggestedAmount;
 
@@ -470,74 +539,103 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
             return;
         }
         try {
-            const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-            const ammContractWithSigner = (isRangedMarket ? rangedMarketAMMContract : ammContract).connect(signer);
-
-            const amount = isBuy ? positionAmount : paidAmount;
-            const parsedAmount = ethers.utils.parseEther(amount.toString());
-
-            const total = isBuy ? paidAmount : positionAmount;
-            const parsedTotal = coinParser(total.toString(), networkId);
-
-            const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
-
-            const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
-                isBuyWithNonDefaultCollateral,
-                isBuy,
-                ammContractWithSigner,
-                market.address,
-                POSITIONS_TO_SIDE_MAP[market.positionType],
-                parsedAmount,
-                parsedTotal,
-                parsedSlippage,
-                collateralAddress,
-                referral,
-                networkId
+            const {
+                ammContract,
+                ammUSDCContract,
+                rangedMarketAMMContract,
+                rangedMarketsAMMUSDCContract,
+                signer,
+            } = snxJSConnector;
+            const ammContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                ammContract,
+                ammUSDCContract
             );
+            const rangedMarketAMMContractForInteraction = getContractForInteraction(
+                networkId,
+                isDeprecatedCurrency,
+                rangedMarketAMMContract,
+                rangedMarketsAMMUSDCContract
+            );
+            if (signer && ammContractForInteraction && rangedMarketAMMContractForInteraction) {
+                const ammContractWithSigner = (isRangedMarket
+                    ? rangedMarketAMMContractForInteraction
+                    : ammContractForInteraction
+                ).connect(signer);
 
-            const txResult = await tx.wait();
+                const amount = isBuy ? positionAmount : paidAmount;
+                const parsedAmount = ethers.utils.parseEther(amount.toString());
 
-            if (txResult && txResult.transactionHash) {
-                toast.update(
-                    id,
-                    getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
+                const total = isBuy ? paidAmount : positionAmount;
+                const parsedTotal = coinParser(total.toString(), networkId, undefined, isDeprecatedCurrency);
+
+                const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
+
+                const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
+                    isBuyWithNonDefaultCollateral,
+                    isBuy,
+                    ammContractWithSigner,
+                    market.address,
+                    POSITIONS_TO_SIDE_MAP[market.positionType],
+                    parsedAmount,
+                    parsedTotal,
+                    parsedSlippage,
+                    collateralAddress,
+                    referral,
+                    networkId
                 );
 
-                refetchBalances(walletAddress, networkId);
-                isRangedMarket
-                    ? refetchRangedAmmData(walletAddress, market.address, networkId)
-                    : refetchAmmData(walletAddress, market.address);
+                const txResult = await tx.wait();
 
-                setIsSubmitting(false);
+                if (txResult && txResult.transactionHash) {
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(t(`common.${isBuy ? 'buy' : 'sell'}.confirmation-message`), id)
+                    );
 
-                resetData();
-                setPaidAmount('');
+                    refetchBalances(walletAddress, networkId, isDeprecatedCurrency);
+                    isRangedMarket
+                        ? refetchRangedAmmData(walletAddress, market.address, networkId, isDeprecatedCurrency)
+                        : refetchAmmData(walletAddress, market.address, isDeprecatedCurrency);
 
-                if (isBuy) {
-                    trackEvent({
-                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
-                        action: `buy-with-${selectedCollateral}`,
-                        value: Number(paidAmount),
-                    });
-                    PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM, {
-                        props: {
+                    setIsSubmitting(false);
+
+                    resetData();
+                    setPaidAmount('');
+
+                    if (isBuy) {
+                        trackEvent({
+                            category: isRangedMarket ? 'RangeAMM' : 'AMM',
+                            action: `buy-with-${selectedCollateral}`,
                             value: Number(paidAmount),
-                            collateral: getCollateral(networkId, selectedCollateralIndex),
-                            networkId,
-                        },
-                    });
-                } else {
-                    trackEvent({
-                        category: isRangedMarket ? 'RangeAMM' : 'AMM',
-                        action: 'sell-to-amm',
-                    });
-                    PLAUSIBLE.trackEvent(isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM, {
-                        props: {
-                            value: Number(paidAmount),
-                            collateral: getCollateral(networkId, selectedCollateralIndex),
-                            networkId,
-                        },
-                    });
+                        });
+                        PLAUSIBLE.trackEvent(
+                            isRangedMarket ? PLAUSIBLE_KEYS.buyFromRangeAMM : PLAUSIBLE_KEYS.buyFromAMM,
+                            {
+                                props: {
+                                    value: Number(paidAmount),
+                                    collateral: getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency),
+                                    networkId,
+                                },
+                            }
+                        );
+                    } else {
+                        trackEvent({
+                            category: isRangedMarket ? 'RangeAMM' : 'AMM',
+                            action: 'sell-to-amm',
+                        });
+                        PLAUSIBLE.trackEvent(
+                            isRangedMarket ? PLAUSIBLE_KEYS.sellToRangeAMM : PLAUSIBLE_KEYS.sellToAMM,
+                            {
+                                props: {
+                                    value: Number(paidAmount),
+                                    collateral: getCollateral(networkId, selectedCollateralIndex, isDeprecatedCurrency),
+                                    networkId,
+                                },
+                            }
+                        );
+                    }
                 }
             }
         } catch (e) {
@@ -662,6 +760,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         priceProfit={priceProfit}
                         paidAmount={paidAmount}
                         breakFirstLine={false}
+                        isDeprecatedCurrency={isDeprecatedCurrency}
                     />
                     <Tooltip
                         overlay={
@@ -712,7 +811,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                         currencyComponent={
                             isBuy && isMultiCollateralSupported ? (
                                 <CollateralSelector
-                                    collateralArray={getCollaterals(networkId)}
+                                    collateralArray={getCollaterals(networkId, isDeprecatedCurrency)}
                                     selectedItem={selectedCollateralIndex}
                                     onChangeCollateral={() => {}}
                                     disabled={isFormDisabled}
@@ -737,6 +836,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                                 profit={Number(priceProfit) * Number(paidAmount)}
                                 isLoading={isFetchingQuote}
                                 isBuy={isBuy}
+                                isDeprecatedCurrency={isDeprecatedCurrency}
                             />
                             <SkewSlippageDetails
                                 skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
@@ -778,9 +878,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({
                             priceProfit={priceProfit}
                             paidAmount={paidAmount}
                             breakFirstLine={true}
+                            isDeprecatedCurrency={isDeprecatedCurrency}
                         />
                     }
                     onClose={() => setOpenTradingDetailsModal(false)}
+                    isDeprecatedCurrency={isDeprecatedCurrency}
                 />
             )}
             {openTwitterShareModal && (

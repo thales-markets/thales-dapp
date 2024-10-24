@@ -4,7 +4,6 @@ const sportVaultDataContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.OptimismMainnet]: '0x70164a1ec9D21c4dBA2b4f9B23750F9C7D03286b',
-        [Network.OptimismGoerli]: 'TBD',
         [Network.OptimismSepolia]: 'TBD',
         [Network.PolygonMainnet]: 'TBD',
         [Network.Arbitrum]: '0x4A096E1d719A2087F5CAfB0839aa25B6dd6dB324',

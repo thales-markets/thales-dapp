@@ -1,35 +1,35 @@
+import SimpleLoader from 'components/SimpleLoader';
+import SPAAnchor from 'components/SPAAnchor';
+import TimeRemaining from 'components/TimeRemaining';
+import { VAULT_MAP } from 'constants/vault';
+import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { useTheme } from 'styled-components';
+import { FlexDivColumn } from 'styles/common';
+import { formatPercentage, formatPercentageWithSign } from 'thales-utils';
+import { RootState, ThemeInterface } from 'types/ui';
+import { VaultData } from 'types/vault';
 import { buildVaultLink } from 'utils/routes';
 import {
-    VaultContainer,
-    SpaContainer,
-    VaultTitle,
-    VaultSectionTitle,
-    VaultSectionDescription,
+    DeprecatedContainer,
     LoaderContainer,
+    SpaContainer,
+    TitleVaultIcon,
+    VaultBottomWrapper,
+    VaultContainer,
+    VaultInfo,
     VaultInfoContainer,
     VaultInfoLabel,
-    VaultInfo,
-    VaultBottomWrapper,
-    VaultTopWrapper,
-    TitleVaultIcon,
+    VaultSectionDescription,
     VaultSectionIcon,
+    VaultSectionTitle,
+    VaultTitle,
+    VaultTopWrapper,
 } from './styled-components';
-import SPAAnchor from 'components/SPAAnchor';
-import { VAULT_MAP } from 'constants/vault';
-import { RootState } from 'types/ui';
-import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
-import { VaultData } from 'types/vault';
-import { formatPercentage, formatPercentageWithSign } from 'thales-utils';
-import SimpleLoader from 'components/SimpleLoader';
-import TimeRemaining from 'components/TimeRemaining';
-import { FlexDivColumn } from 'styles/common';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 type VaultOverviewProps = {
     vaultId: string;
@@ -70,6 +70,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                             <TitleVaultIcon className={`sidebar-icon icon--${vaultId}`} />
                             {t(`vault.${vaultId}.title`)}
                         </VaultTitle>
+                        <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
                         {!vaultData ? (
                             <LoaderContainer>
                                 <SimpleLoader />

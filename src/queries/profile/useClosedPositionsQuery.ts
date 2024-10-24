@@ -11,7 +11,7 @@ import { UseQueryOptions, useQuery } from 'react-query';
 import { bigNumberFormatter, coinFormatter } from 'thales-utils';
 import { HistoricalOptionsMarketInfo, OptionsTransaction, RangedMarket } from 'types/options';
 import { UserPosition } from 'types/profile';
-import { isOptionClaimable } from 'utils/options';
+import { getIsDeprecatedCurrency, isOptionClaimable } from 'utils/options';
 
 const useClosedPositionsQuery = (
     networkId: Network,
@@ -76,13 +76,18 @@ const useClosedPositionsQuery = (
 
             const modifiedRipPositions: UserPosition[] = [
                 ...ripPositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -94,16 +99,22 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...rangedRipPositions.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
+
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: BigNumber.from(0),
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: 0,
@@ -115,6 +126,7 @@ const useClosedPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
+                        isDeprecatedCurrency,
                     };
                 }),
             ];

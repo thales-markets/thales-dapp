@@ -7,13 +7,17 @@ import { orderBy } from 'lodash';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { LiquidityPoolPnls } from 'types/liquidityPool';
 
-const useLiquidityPoolPnlsQuery = (networkId: Network, options?: UseQueryOptions<LiquidityPoolPnls>) => {
+const useLiquidityPoolPnlsQuery = (
+    networkId: Network,
+    liquidityPoolAddress: string,
+    options?: UseQueryOptions<LiquidityPoolPnls>
+) => {
     return useQuery<LiquidityPoolPnls>(
-        QUERY_KEYS.LiquidityPool.PnL(networkId),
+        QUERY_KEYS.LiquidityPool.PnL(networkId, liquidityPoolAddress),
         async () => {
             try {
                 const liquidityPoolPnlsResponse = await axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.LPPnls}/${networkId}`
+                    `${generalConfig.API_URL}/${API_ROUTES.LPPnls}/${networkId}?liquidityPool=${liquidityPoolAddress}`
                 );
 
                 if (!liquidityPoolPnlsResponse?.data) return [];

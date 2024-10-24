@@ -113,8 +113,8 @@ const ClaimablePositions: React.FC<ClaimablePositionsProps> = ({ searchAddress, 
                                 <SPAAnchor
                                     href={
                                         row.isRanged
-                                            ? buildRangeMarketLink(row.market, row.side)
-                                            : buildOptionsMarketLink(row.market, row.side)
+                                            ? buildRangeMarketLink(row.market, row.isDeprecatedCurrency, row.side)
+                                            : buildOptionsMarketLink(row.market, row.isDeprecatedCurrency, row.side)
                                     }
                                 >
                                     {isMobile ? (

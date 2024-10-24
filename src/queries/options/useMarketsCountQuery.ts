@@ -12,11 +12,19 @@ type MaturityInfo = {
 
 type MarketsCountType = { asset: string; count: number; byMaturity: MaturityInfo[] }[];
 
-const useMarketsCountQuery = (networkId: Network, options?: UseQueryOptions<MarketsCountType>) => {
+const useMarketsCountQuery = (
+    networkId: Network,
+    isDeprecatedCurrency: boolean,
+    options?: UseQueryOptions<MarketsCountType>
+) => {
     return useQuery<MarketsCountType>(
-        QUERY_KEYS.BinaryOptions.MarketsCount(networkId),
+        QUERY_KEYS.BinaryOptions.MarketsCount(networkId, isDeprecatedCurrency),
         async () => {
-            const response = await axios.get(`${generalConfig.API_URL}/thales/networks/${networkId}/market-count`);
+            const response = await axios.get(
+                `${generalConfig.API_URL}/thales/networks/${networkId}/market-count${
+                    isDeprecatedCurrency ? '' : '?lpCollateral=usdc'
+                }`
+            );
 
             if (response.data) {
                 return response.data?.data;

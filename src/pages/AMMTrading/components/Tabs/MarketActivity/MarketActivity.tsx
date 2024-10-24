@@ -1,31 +1,30 @@
-import React, { useMemo } from 'react';
-import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
-import { getIsAppReady } from 'redux/modules/app';
-import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
-import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
-import { useTranslation } from 'react-i18next';
-import { uniqBy, orderBy } from 'lodash';
-import { formatTxTimestamp, formatCurrency, formatCurrencyWithKey } from 'thales-utils';
 import { OPTIONS_POSITIONS_MAP } from 'constants/options';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { OptionsMarketInfo, RangedMarketData } from 'types/options';
+import { orderBy, uniqBy } from 'lodash';
+import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
+import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'styles/common';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
-import styled from 'styled-components';
+import { formatCurrency, formatCurrencyWithKey, formatTxTimestamp } from 'thales-utils';
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
+import { RootState, ThemeInterface } from 'types/ui';
 import { getDefaultCollateral } from 'utils/currency';
 
 type MarketActivityProps = {
     isRangedMarket: boolean;
+    isDeprecatedCurrency: boolean;
 };
 
-const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
+const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket, isDeprecatedCurrency }) => {
     const rangedMarket = useRangedMarketContext();
     const directMarket = useMarketContext();
     const market = isRangedMarket ? rangedMarket : directMarket;
@@ -47,6 +46,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
         isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
         isRangedMarket,
+        isDeprecatedCurrency,
         { enabled: isAppReady }
     );
 
@@ -140,7 +140,10 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
                                     ? formatCurrency(cellProps.cell.value)
-                                    : formatCurrencyWithKey(getDefaultCollateral(networkId), cellProps.cell.value)}
+                                    : formatCurrencyWithKey(
+                                          getDefaultCollateral(networkId, isDeprecatedCurrency),
+                                          cellProps.cell.value
+                                      )}
                             </p>
                         ),
                         sortable: true,
@@ -153,7 +156,10 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
                             <p>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
-                                    ? formatCurrencyWithKey(getDefaultCollateral(networkId), cellProps.cell.value ?? 0)
+                                    ? formatCurrencyWithKey(
+                                          getDefaultCollateral(networkId, isDeprecatedCurrency),
+                                          cellProps.cell.value ?? 0
+                                      )
                                     : EMPTY_VALUE}
                             </p>
                         ),

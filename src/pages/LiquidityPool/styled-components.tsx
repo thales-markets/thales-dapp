@@ -391,3 +391,40 @@ export const defaultButtonProps = {
     fontSize: '15px',
     height: '30px;',
 };
+
+export const NavigationContainer = styled(FlexDivRow)`
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 30px;
+    font-size: 20px;
+    font-weight: 600;
+`;
+
+export const NavigationItem = styled(FlexDivRow)`
+    color: ${(props) => props.theme.textColor.secondary};
+    &.selected {
+        transition: 0.2s;
+        color: ${(props) => props.theme.textColor.quaternary};
+    }
+    &:hover:not(.selected) {
+        cursor: pointer;
+        color: ${(props) => props.theme.textColor.primary};
+    }
+`;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    width: 80%;
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.warning.textColor.primary};
+    border-radius: 15px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    padding: 5px 10px;
+    text-align: center;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+`;

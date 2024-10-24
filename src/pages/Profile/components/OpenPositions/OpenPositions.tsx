@@ -17,7 +17,7 @@ import { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithSign } from 'thales-utils';
 import { SharePositionData } from 'types/flexCards';
 import { UserPosition } from 'types/profile';
-import { RootState, ThemeInterface } from 'types/ui';
+import { ThemeInterface } from 'types/ui';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import MyPositionAction from '../MyPositionAction/MyPositionAction';
 import { IconLink, TextLink, getAmount } from '../styled-components';
@@ -31,11 +31,11 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
-    const isMobile = useSelector((state: RootState) => getIsMobile(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const isMobile = useSelector(getIsMobile);
 
     const [openTwitterShareModal, setOpenTwitterShareModal] = useState<boolean>(false);
     const [positionsShareData, setPositionShareData] = useState<SharePositionData | null>(null);
@@ -128,8 +128,8 @@ const OpenPositions: React.FC<OpenPositionsProps> = ({ searchAddress, searchText
                                 <SPAAnchor
                                     href={
                                         row.isRanged
-                                            ? buildRangeMarketLink(row.market, row.side)
-                                            : buildOptionsMarketLink(row.market, row.side)
+                                            ? buildRangeMarketLink(row.market, row.isDeprecatedCurrency, row.side)
+                                            : buildOptionsMarketLink(row.market, row.isDeprecatedCurrency, row.side)
                                     }
                                 >
                                     {isMobile ? (

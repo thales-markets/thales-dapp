@@ -1,6 +1,6 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn } from 'styles/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'styles/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
     background: linear-gradient(0deg, rgba(3, 218, 198, 0.2) 0%, rgba(3, 218, 198, 0) 90.62%);
@@ -115,4 +115,20 @@ export const VaultSectionIcon = styled.i`
     margin-right: 8px;
     top: -2px;
     position: relative;
+`;
+
+export const DeprecatedContainer = styled(FlexDiv)`
+    width: 100%;
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.warning.textColor.primary};
+    border-radius: 8px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 5px 10px;
+    text-align: center;
+    @media (max-width: 767px) {
+        font-size: 13px;
+    }
 `;

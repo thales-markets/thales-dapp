@@ -8,7 +8,6 @@ export const SUPPORTED_NETWORKS: Record<SupportedNetwork, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISTIC',
     [Network.PolygonMainnet]: 'POLYGON-MAINNET',
-    [Network.OptimismGoerli]: 'GOERLI-OPTIMISM',
     [Network.OptimismSepolia]: 'SEPOLIA-OPTIMISM',
     [Network.Arbitrum]: 'ARBITRUM-ONE',
     [Network.Base]: 'BASE',
@@ -18,7 +17,6 @@ export const SUPPORTED_NETWORKS_NAMES: Record<SupportedNetwork, string> = {
     [Network.Mainnet]: 'MAINNET',
     [Network.OptimismMainnet]: 'OPTIMISM MAINNET',
     [Network.PolygonMainnet]: 'POLYGON',
-    [Network.OptimismGoerli]: 'OPTIMISM GOERLI',
     [Network.OptimismSepolia]: 'OPTIMISM SEPOLIA',
     [Network.Arbitrum]: 'ARBITRUM ONE',
     [Network.Base]: 'BASE',
@@ -26,7 +24,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<SupportedNetwork, string> = {
 
 export const SWAP_SUPPORTED_NETWORKS: Network[] = [];
 
-export const TEST_NETWORKS = [Network.OptimismGoerli, Network.OptimismSepolia];
+export const TEST_NETWORKS = [Network.OptimismSepolia];
 
 export const DEFAULT_NETWORK: { name: string; networkId: SupportedNetwork } = {
     name: SUPPORTED_NETWORKS_NAMES[Network.OptimismMainnet],

@@ -6,9 +6,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDiv } from 'styles/common';
+import { RootState } from 'types/ui';
 import { getDefaultCollateral } from 'utils/currency';
 
 type ProgressTrackerProps = {
@@ -29,7 +29,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label style={{ left: -36 }}>
                     {t('create-market.progress-tracker.approving', {
-                        currencyKey: getDefaultCollateral(networkId),
+                        currencyKey: getDefaultCollateral(networkId, false),
                     })}
                 </Label>
             </ProgressTrackerStep>

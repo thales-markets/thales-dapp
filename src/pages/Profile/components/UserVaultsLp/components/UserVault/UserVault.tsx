@@ -1,16 +1,16 @@
+import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
 import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsMobile } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'types/ui';
 import { UserVaultData, VaultData } from 'types/vault';
 import { buildVaultLink } from 'utils/routes';
 import VaultLpDetails from '../VaultLpDetails/VaultLpDetails';
-import { getIsMobile } from 'redux/modules/ui';
-import SPAAnchor from 'components/SPAAnchor/SPAAnchor';
 
 const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaultName, vaultAddress }) => {
     const { t } = useTranslation();
@@ -68,6 +68,7 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
                 isRoundEnded={!!vaultData?.isRoundEnded}
                 link={buildVaultLink(vaultName)}
                 isLoading={vaultDataQuery.isLoading || userVaultDataQuery.isLoading}
+                isDeprecated={true}
             />
         </SPAAnchor>
     ) : (
@@ -81,6 +82,7 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
             isRoundEnded={!!vaultData?.isRoundEnded}
             link={buildVaultLink(vaultName)}
             isLoading={vaultDataQuery.isLoading || userVaultDataQuery.isLoading}
+            isDeprecated={true}
         />
     );
 };

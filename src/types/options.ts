@@ -219,4 +219,5 @@ export type UserLivePositions = {
     paid: number;
     value: number;
     claimable?: boolean;
+    isDeprecatedCurrency: boolean;
 };

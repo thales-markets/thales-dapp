@@ -89,8 +89,8 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                                 <SPAAnchor
                                     href={
                                         row.isRanged
-                                            ? buildRangeMarketLink(row.market, row.side)
-                                            : buildOptionsMarketLink(row.market, row.side)
+                                            ? buildRangeMarketLink(row.market, row.isDeprecatedCurrency, row.side)
+                                            : buildOptionsMarketLink(row.market, row.isDeprecatedCurrency, row.side)
                                     }
                                 >
                                     <IconLink className="icon icon--right" />
@@ -107,8 +107,8 @@ const PositionHistory: React.FC<PositionHistoryProps> = ({ searchAddress, search
                         cells: cells,
                         link: isMobile
                             ? row.isRanged
-                                ? buildRangeMarketLink(row.market, row.side)
-                                : buildOptionsMarketLink(row.market, row.side)
+                                ? buildRangeMarketLink(row.market, row.isDeprecatedCurrency, row.side)
+                                : buildOptionsMarketLink(row.market, row.isDeprecatedCurrency, row.side)
                             : undefined,
                     };
                 });

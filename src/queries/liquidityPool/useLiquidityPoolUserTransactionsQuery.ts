@@ -8,18 +8,21 @@ import { LiquidityPoolUserTransactions } from 'types/liquidityPool';
 
 const useLiquidityPoolUserTransactionsQuery = (
     networkId: Network,
+    liquidityPoolAddress: string,
     walletAddress?: string,
     round?: number,
     options?: UseQueryOptions<LiquidityPoolUserTransactions>
 ) => {
     return useQuery<LiquidityPoolUserTransactions>(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, round),
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, liquidityPoolAddress, walletAddress, round),
         async () => {
             try {
                 const liquidityPoolUserTransactionsResponse = await axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.LPTransactions}/${networkId}?${
-                        round ? `round=${round}` : ''
-                    }&${walletAddress ? `account=${walletAddress}` : ''}`
+                    `${generalConfig.API_URL}/${
+                        API_ROUTES.LPTransactions
+                    }/${networkId}?liquidityPool=${liquidityPoolAddress}&${round ? `round=${round}` : ''}&${
+                        walletAddress ? `account=${walletAddress}` : ''
+                    }`
                 );
 
                 if (!liquidityPoolUserTransactionsResponse?.data) return [];

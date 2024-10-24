@@ -7,6 +7,8 @@ import { Network } from 'enums/network';
 import { orderBy } from 'lodash';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { VaultsAndLiquidityPoolUserTransaction, VaultsAndLiquidityPoolUserTransactions } from 'types/profile';
+import { LiquidityPoolMap } from '../../constants/liquidityPool';
+import { LiquidityPoolCollateral } from '../../enums/liquidityPool';
 
 const useUserVaultsAndLpTransactionsQuery = (
     networkId: Network,
@@ -45,15 +47,15 @@ const useUserVaultsAndLpTransactionsQuery = (
                     `${generalConfig.API_URL}/${API_ROUTES.LPTransactions}/${networkId}?account=${walletAddress}`
                 );
 
-                const liquidityPoolUserTransactions: VaultsAndLiquidityPoolUserTransactions = liquidityPoolUserTransactionsResponse?.data
+                const liquidityPoolUserTransactions = liquidityPoolUserTransactionsResponse?.data
                     ? liquidityPoolUserTransactionsResponse?.data
                     : [];
 
-                const liquidityPoolUserTransactionsWithName = liquidityPoolUserTransactions.map(
-                    (tx: VaultsAndLiquidityPoolUserTransaction) => {
-                        return { ...tx, name: 'lp' };
-                    }
-                );
+                const liquidityPoolUserTransactionsWithName = liquidityPoolUserTransactions.map((tx: any) => {
+                    const lpPerNetwork = LiquidityPoolMap[Network.OptimismMainnet];
+                    const sUsdLpAddress = lpPerNetwork ? lpPerNetwork[LiquidityPoolCollateral.sUSD]?.address || '' : '';
+                    return { ...tx, name: tx.liquidityPool === sUsdLpAddress.toLowerCase() ? 'susd-lp' : 'lp' };
+                });
 
                 return orderBy(
                     [...vaultsUserTransactionsWithName, ...liquidityPoolUserTransactionsWithName],

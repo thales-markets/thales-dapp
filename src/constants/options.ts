@@ -51,3 +51,12 @@ export const MIN_MATURITY = Math.round(
     ).getTime() / 1000
 ); // show history for 90 days in the past
 export const MAX_MATURITY = Math.round(Number(TODAY.getTime() / 1000)); // show history until today
+
+export const DEPRECATED_CONTRACT_ADDRESSES = [
+    // PositionalMarketManager
+    '0x9227334352a890e51e980beb7a56bbdd01499b54',
+    // ThalesAMM
+    '0x278b5a44397c9d8e52743fedec263c4760dc1a1a',
+    // RangedAMM
+    '0x2d356b114cbca8deff2d8783eac2a5a5324fe1df',
+];

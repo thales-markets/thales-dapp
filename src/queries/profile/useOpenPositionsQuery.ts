@@ -13,6 +13,7 @@ import { UserPosition } from 'types/profile';
 import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getContractForInteraction, getIsDeprecatedCurrency } from '../../utils/options';
 
 const useOpenPositionsQuery = (
     networkId: Network,
@@ -64,6 +65,11 @@ const useOpenPositionsQuery = (
             const [openPositionsWithValue, openRangedPositionsWithValue] = await Promise.all([
                 Promise.all([
                     ...openPositions.map(async (positionBalance: any) => {
+                        const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                            networkId,
+                            positionBalance.position.market.managerAddress
+                        );
+
                         const positionContract = new ethers.Contract(
                             positionBalance.position.id,
                             binaryOptionPositionContract.abi,
@@ -71,8 +77,14 @@ const useOpenPositionsQuery = (
                         );
                         const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
-                        const { ammContract } = snxJSConnector as any;
-                        const ammQuote = await ammContract.sellToAmmQuote(
+                        const { ammContract, ammUSDCContract } = snxJSConnector;
+                        const ammContractForInteraction = getContractForInteraction(
+                            networkId,
+                            isDeprecatedCurrency,
+                            ammContract,
+                            ammUSDCContract
+                        );
+                        const ammQuote = await ammContractForInteraction?.sellToAmmQuote(
                             positionBalance.position.market.id,
                             SIDE[positionBalance.position.side],
                             positionBalance.amount
@@ -81,12 +93,17 @@ const useOpenPositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: coinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId, undefined, isDeprecatedCurrency),
                         };
                     }),
                 ]),
                 Promise.all([
                     ...openRangedPositions.map(async (positionBalance: any) => {
+                        const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                            networkId,
+                            positionBalance.position.market.managerAddress
+                        );
+
                         const positionContract = new ethers.Contract(
                             positionBalance.position.id,
                             rangedPositionContract.abi,
@@ -94,8 +111,14 @@ const useOpenPositionsQuery = (
                         );
                         const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
-                        const { rangedMarketAMMContract } = snxJSConnector as any;
-                        const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
+                        const { rangedMarketAMMContract, rangedMarketsAMMUSDCContract } = snxJSConnector;
+                        const rangedMarketAMMContractForInteraction = getContractForInteraction(
+                            networkId,
+                            isDeprecatedCurrency,
+                            rangedMarketAMMContract,
+                            rangedMarketsAMMUSDCContract
+                        );
+                        const ammQuote = await rangedMarketAMMContractForInteraction?.sellToAmmQuote(
                             positionBalance.position.market.id,
                             RANGE_SIDE[positionBalance.position.side],
                             positionBalance.amount
@@ -104,7 +127,7 @@ const useOpenPositionsQuery = (
                         return {
                             ...positionBalance,
                             amount: contractPositionBalance,
-                            value: coinFormatter(ammQuote, networkId),
+                            value: coinFormatter(ammQuote, networkId, undefined, isDeprecatedCurrency),
                         };
                     }),
                 ]),
@@ -112,13 +135,17 @@ const useOpenPositionsQuery = (
 
             const modifiedOpenPositions: UserPosition[] = [
                 ...openPositionsWithValue.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: bigNumberFormatter(positionBalance.position.market.strikePrice),
@@ -130,16 +157,21 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: false,
+                        isDeprecatedCurrency,
                     };
                 }),
                 ...openRangedPositionsWithValue.map((positionBalance: any) => {
+                    const isDeprecatedCurrency = getIsDeprecatedCurrency(
+                        networkId,
+                        positionBalance.position.market.managerAddress
+                    );
                     return {
                         positionAddress: positionBalance.position.id,
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: bigNumberFormatter(positionBalance.amount),
                         amountBigNumber: positionBalance.amount,
-                        paid: coinFormatter(positionBalance.paid, networkId),
+                        paid: coinFormatter(positionBalance.paid, networkId, undefined, isDeprecatedCurrency),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         expiryDate: Number(positionBalance.position.market.expiryDate) * 1000,
                         strikePrice: 0,
@@ -151,6 +183,7 @@ const useOpenPositionsQuery = (
                         claimable: false,
                         claimed: false,
                         isRanged: true,
+                        isDeprecatedCurrency,
                     };
                 }),
             ];

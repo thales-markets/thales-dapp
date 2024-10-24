@@ -52,6 +52,7 @@ import {
     Container,
     ContentInfo,
     ContentInfoContainer,
+    DeprecatedContainer,
     Description,
     Header,
     HeaderVaultIcon,
@@ -85,6 +86,8 @@ import {
     Wrapper,
 } from './styled-components';
 
+const IS_DEPRECATED = true;
+
 type VaultProps = RouteComponentProps<{
     vaultId: string;
 }>;
@@ -117,14 +120,14 @@ const Vault: React.FC<VaultProps> = (props) => {
         }
     }, [vaultAddress]);
 
-    const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, true, {
         enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
             setPaymentTokenBalance(
-                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId))
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getDefaultCollateral(networkId, true))
             );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data, networkId]);
@@ -209,7 +212,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 try {
                     const parsedAmount = ethers.utils.parseUnits(
                         Number(amount).toString(),
-                        getDefaultDecimalsForNetwork(networkId)
+                        getDefaultDecimalsForNetwork(networkId, true)
                     );
                     const allowance = await checkAllowance(
                         parsedAmount,
@@ -252,7 +255,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                         id,
                         getSuccessToastOptions(
                             t('markets.market.toast-messsage.approve-success', {
-                                token: getDefaultCollateral(networkId),
+                                token: getDefaultCollateral(networkId, true),
                             }),
                             id
                         )
@@ -279,7 +282,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
                 const parsedAmount = ethers.utils.parseUnits(
                     Number(amount).toString(),
-                    getDefaultDecimalsForNetwork(networkId)
+                    getDefaultDecimalsForNetwork(networkId, true)
                 );
 
                 const tx = await ammVaultContractWithSigner.deposit(parsedAmount);
@@ -350,10 +353,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                 <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', {
-                              currencyKey: getDefaultCollateral(networkId),
+                              currencyKey: getDefaultCollateral(networkId, true),
                           })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: getDefaultCollateral(networkId),
+                              currencyKey: getDefaultCollateral(networkId, true),
                           })}
                 </Button>
             );
@@ -388,7 +391,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                 &nbsp;/ {t(`vault.${vaultId}.title`)}
                 <HeaderVaultIcon className={`sidebar-icon icon--${vaultId}`} />
             </Header>
-            {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
             {vaultData && (
                 <>
                     <RoundInfoWrapper>
@@ -441,6 +443,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     </RoundInfoWrapper>
                 </>
             )}
+            <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
             <Container>
                 <LeftContainer>
                     <Title>
@@ -601,26 +604,28 @@ const Vault: React.FC<VaultProps> = (props) => {
                                     )}
                                 </ContentInfoContainer>
                             )}
-                            <ToggleContainer>
-                                <Switch
-                                    active={selectedTab === VaultTab.WITHDRAW}
-                                    width={'66px'}
-                                    height={'30px'}
-                                    dotSize={'20px'}
-                                    label={{
-                                        firstLabel: t(`vault.tabs.${VaultTab.DEPOSIT}`),
-                                        secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
-                                        fontSize: '20px',
-                                    }}
-                                    dotBackground={theme.textColor.primary}
-                                    handleClick={() => {
-                                        setSelectedTab(
-                                            selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
-                                        );
-                                    }}
-                                />
-                            </ToggleContainer>
-                            {selectedTab === VaultTab.DEPOSIT && (
+                            {!IS_DEPRECATED && (
+                                <ToggleContainer>
+                                    <Switch
+                                        active={selectedTab === VaultTab.WITHDRAW}
+                                        width={'66px'}
+                                        height={'30px'}
+                                        dotSize={'20px'}
+                                        label={{
+                                            firstLabel: t(`vault.tabs.${VaultTab.DEPOSIT}`),
+                                            secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
+                                            fontSize: '20px',
+                                        }}
+                                        dotBackground={theme.textColor.primary}
+                                        handleClick={() => {
+                                            setSelectedTab(
+                                                selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
+                                            );
+                                        }}
+                                    />
+                                </ToggleContainer>
+                            )}
+                            {selectedTab === VaultTab.DEPOSIT && !IS_DEPRECATED && (
                                 <>
                                     <ContentInfo>{t('vault.deposit-message')}</ContentInfo>
                                     {isWithdrawalRequested && (
@@ -642,7 +647,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                         value={amount}
                                         disabled={isDepositAmountInputDisabled}
                                         onChange={(_, value) => setAmount(value)}
-                                        currencyLabel={getDefaultCollateral(networkId)}
+                                        currencyLabel={getDefaultCollateral(networkId, true)}
                                         placeholder={t('common.enter-amount')}
                                         showValidation={insufficientBalance || !!exceededVaultCap || !!invalidAmount}
                                         validationMessage={
@@ -715,7 +720,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                     <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
                                 </>
                             )}
-                            {selectedTab === VaultTab.WITHDRAW && (
+                            {(selectedTab === VaultTab.WITHDRAW || IS_DEPRECATED) && (
                                 <>
                                     {((vaultData && userVaultData && !isWithdrawalRequested) || !isWalletConnected) && (
                                         <>
@@ -843,7 +848,7 @@ const Vault: React.FC<VaultProps> = (props) => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={getDefaultCollateral(networkId)}
+                    tokenSymbol={getDefaultCollateral(networkId, true)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
