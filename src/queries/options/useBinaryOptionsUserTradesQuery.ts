@@ -13,6 +13,7 @@ import {
     Trades,
 } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
+import { getContractForInteraction } from '../../utils/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
@@ -56,9 +57,16 @@ const useBinaryOptionsUserTradesQuery = (
     networkId: number,
     walletAddress: string,
     isRangedMarket: boolean,
+    isDeprecatedCurrency: boolean,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
-    const collateral = snxJSConnector.collateral;
+    const { collateral, collateralUSDC } = snxJSConnector;
+    const collateralContractForInteraction = getContractForInteraction(
+        networkId,
+        isDeprecatedCurrency,
+        collateral,
+        collateralUSDC
+    );
 
     return useQuery<OptionsTransactions>(
         QUERY_KEYS.BinaryOptions.UserMarketTrades(marketAddress, walletAddress),
@@ -70,16 +78,16 @@ const useBinaryOptionsUserTradesQuery = (
                 secondPositionSellsResponse,
             ] = await Promise.all([
                 axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateral?.address}&taker-token=${firstPositionAddress}`
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateralContractForInteraction?.address}&taker-token=${firstPositionAddress}`
                 ),
                 axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${firstPositionAddress}&taker-token=${collateral?.address}`
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${firstPositionAddress}&taker-token=${collateralContractForInteraction?.address}`
                 ),
                 axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateral?.address}&taker-token=${secondPositionAddress}`
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${collateralContractForInteraction?.address}&taker-token=${secondPositionAddress}`
                 ),
                 axios.get(
-                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${secondPositionAddress}&taker-token=${collateral?.address}`
+                    `${generalConfig.API_URL}/${API_ROUTES.Trades}/${networkId}?maker-token=${secondPositionAddress}&taker-token=${collateralContractForInteraction?.address}`
                 ),
             ]);
 

@@ -27,4 +27,5 @@ export const LOCAL_STORAGE_KEYS = {
     RANGED_MARKET_GRID_PAGE_SIZE: 'rangedMarketGridPageSize',
 
     PROFILE_TABLE_VIEW: 'profileTableView',
+    IS_DEPRECATED_CURRENCY: 'isDeprecatedCurrency',
 };

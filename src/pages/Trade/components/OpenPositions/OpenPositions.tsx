@@ -12,16 +12,15 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRowCentered } from 'styles/common';
 import { UserLivePositions } from 'types/options';
-import { RootState } from 'types/ui';
 import OpenPosition from '../OpenPosition';
 
 const OpenPositions: React.FC = () => {
     const { t } = useTranslation();
 
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
 
     const positionsQuery = useUserLivePositionsQuery(networkId, walletAddress ?? '', {
         enabled: isAppReady && isWalletConnected,
@@ -74,6 +73,7 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 25,000.00',
         side: Positions.UP,
         value: 0,
+        isDeprecatedCurrency: false,
     },
     {
         positionAddress: ZERO_ADDRESS,
@@ -86,6 +86,7 @@ const dummyPositions: UserLivePositions[] = [
         strikePrice: '$ 35,000.00',
         side: Positions.DOWN,
         value: 0,
+        isDeprecatedCurrency: false,
     },
 ];
 

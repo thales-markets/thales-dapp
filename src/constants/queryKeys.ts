@@ -4,11 +4,12 @@ import { BigNumber } from 'ethers';
 
 const QUERY_KEYS = {
     WalletBalances: {
-        StableCoinBalance: (walletAddress: string, networkId: Network) => [
+        StableCoinBalance: (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => [
             'walletBalances',
             'stableCoin',
             walletAddress,
             networkId,
+            isDeprecatedCurrency,
         ],
         Eth: (walletAddress: string) => ['walletBalances', 'eth', walletAddress],
         Thales: (walletAddress: string, networkId: Network) => ['walletBalances', 'thales', walletAddress, networkId],
@@ -47,8 +48,16 @@ const QUERY_KEYS = {
         Markets: (networkId: Network) => ['markets', networkId],
         RangedMarkets: (networkId: Network, marketIds?: string[]) => ['rangedMarkets', networkId, marketIds],
         SynthsMap: (networkId: Network) => ['synthsMap', networkId],
-        Market: (marketAddress: string) => ['market', marketAddress],
-        RangedMarket: (marketAddress: string) => ['rangedMarket', marketAddress],
+        Market: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'market',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
+        RangedMarket: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'rangedMarket',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
         UserMarketPositions: (marketAddress: string, accountAddress: string) => [
             'market',
             'positions',
@@ -69,25 +78,51 @@ const QUERY_KEYS = {
             marketAddress,
             walletAddress,
         ],
-        MarketTrades: (marketAddress: string) => ['market', 'trades', marketAddress],
+        MarketTrades: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'market',
+            'trades',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
         UserMarketTrades: (marketAddress: string, walletAddress: string) => [
             'market',
             'trades',
             marketAddress,
             walletAddress,
         ],
-        AmmMaxLimits: (marketAddress: string) => ['amm', marketAddress],
-        RangedAmmMaxLimits: (marketAddress: string) => ['rangedAmm', marketAddress],
-        AvailableAssets: (networkId: Network) => ['availableAssets', networkId],
-        MaturityDatesByAsset: (asset: string, networkId: Network) => ['maturityDatesByAsset', asset, networkId],
-        MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: Network) => [
-            'marketsByAssetAndDate',
-            asset,
-            date,
-            position,
-            networkId,
+        AmmMaxLimits: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'amm',
+            marketAddress,
+            isDeprecatedCurrency,
         ],
-        MarketsCount: (networkId: Network) => ['markets-count', networkId],
+        RangedAmmMaxLimits: (marketAddress: string, isDeprecatedCurrency: boolean) => [
+            'rangedAmm',
+            marketAddress,
+            isDeprecatedCurrency,
+        ],
+        AvailableAssets: (networkId: Network, isDeprecatedCurrency: boolean) => [
+            'availableAssets',
+            networkId,
+            isDeprecatedCurrency,
+        ],
+        MaturityDatesByAsset: (asset: string, networkId: Network, isDeprecatedCurrency: boolean) => [
+            'maturityDatesByAsset',
+            asset,
+            networkId,
+            isDeprecatedCurrency,
+        ],
+        MarketsByAssetAndDate: (
+            asset: string,
+            date: number,
+            position: Positions,
+            networkId: Network,
+            isDeprecatedCurrency: boolean
+        ) => ['marketsByAssetAndDate', asset, date, position, networkId, isDeprecatedCurrency],
+        MarketsCount: (networkId: Network, isDeprecatedCurrency: boolean) => [
+            'markets-count',
+            networkId,
+            isDeprecatedCurrency,
+        ],
     },
     User: {
         OpenPositions: (walletAddress: string, networkId: Network) => [
@@ -178,14 +213,31 @@ const QUERY_KEYS = {
     },
     Banners: (networkId: Network) => ['banners', networkId],
     LiquidityPool: {
-        Data: (networkId: Network) => ['liquidityPool', 'data', networkId],
-        UserData: (walletAddress: string, networkId: Network) => ['liquidityPool', 'data', walletAddress, networkId],
-        PnL: (networkId: Network) => ['liquidityPool', 'pnl', networkId],
-        UserTransactions: (networkId: Network, walletAddress?: string, round?: number) => [
+        Data: (address: string, networkId: Network) => ['liquidityPool', 'data', address, networkId],
+        UserData: (address: string, walletAddress: string, networkId: Network) => [
+            'liquidityPool',
+            'data',
+            address,
+            walletAddress,
+            networkId,
+        ],
+        PnL: (networkId: Network, liquidityPoolAddress: string) => [
+            'liquidityPool',
+            'pnl',
+            liquidityPoolAddress,
+            networkId,
+        ],
+        UserTransactions: (
+            networkId: Network,
+            liquidityPoolAddress: string,
+            walletAddress?: string,
+            round?: number
+        ) => [
             'liquidityPool',
             'userTransactions',
-            networkId,
+            liquidityPoolAddress,
             round ? round : walletAddress ? walletAddress : '',
+            networkId,
         ],
     },
 };

@@ -10,13 +10,13 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateralIndex, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled from 'styled-components';
 import { FlexDivRowCentered, FlexDivSpaceBetween } from 'styles/common';
+import { formatCurrencyWithKey } from 'thales-utils';
 import { AccountMarketInfo, RangedMarketBalanceInfo } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { getCollateral, getDefaultCollateral, getCoinBalance } from 'utils/currency';
-import { formatCurrencyWithKey } from 'thales-utils';
+import { getCoinBalance, getCollateral, getDefaultCollateral } from 'utils/currency';
+import { getIsDeprecatedCurrency } from '../../../../redux/modules/ui';
 
 type WalletBalanceProps = {
     isRangedMarket: boolean;
@@ -29,16 +29,23 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
     const optionsMarket = isRangedMarket ? rangedMarket : directMarket;
     const { t } = useTranslation();
 
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const userSelectedCollateralIndex = useSelector((state: RootState) => getSelectedCollateralIndex(state));
+    const isAppReady = useSelector(getIsAppReady);
+    const networkId = useSelector(getNetworkId);
+    const isWalletConnected = useSelector(getIsWalletConnected);
+    const walletAddress = useSelector(getWalletAddress) || '';
+    const userSelectedCollateralIndex = useSelector(getSelectedCollateralIndex);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedMarket,
-    });
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
+        optionsMarket.address,
+        walletAddress,
+        networkId,
+        isDeprecatedCurrency,
+        {
+            enabled: isAppReady && isWalletConnected && !isRangedMarket,
+        }
+    );
 
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket?.address, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isRangedMarket,
@@ -60,7 +67,7 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
         ? optBalances.long
         : optBalances.short;
 
-    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, isDeprecatedCurrency, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -72,15 +79,22 @@ const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionT
 
     const sUSDBalance =
         userSelectedCollateralIndex && Number(userSelectedCollateralIndex) !== 0
-            ? getCoinBalance(multipleCollateralBalances?.data, getCollateral(networkId, userSelectedCollateralIndex))
-            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId)) || 0;
+            ? getCoinBalance(
+                  multipleCollateralBalances?.data,
+                  getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency)
+              )
+            : getCurrencyKeyStableBalance(walletBalancesMap, getDefaultCollateral(networkId, isDeprecatedCurrency)) ||
+              0;
 
     return (
         <Wrapper>
             <Label>{t(`common.wallet.balance`)}:</Label>
             <BalanceContainer>
                 <Balance>
-                    {formatCurrencyWithKey(getCollateral(networkId, userSelectedCollateralIndex), sUSDBalance)}
+                    {formatCurrencyWithKey(
+                        getCollateral(networkId, userSelectedCollateralIndex, isDeprecatedCurrency),
+                        sUSDBalance
+                    )}
                 </Balance>
                 {!!tokenBalance && <Balance>{formatCurrencyWithKey(positionType, tokenBalance)}</Balance>}
             </BalanceContainer>

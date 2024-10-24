@@ -52,9 +52,12 @@ const wait = (seconds: number) => {
 export const refetchMarketQueries = (
     walletAddress: string,
     BOMContractAddress: string,
-    optionsMarketAddress: string
+    optionsMarketAddress: string,
+    isDeprecatedCurrency: boolean
 ) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(BOMContractAddress));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.BinaryOptions.Market(BOMContractAddress, isDeprecatedCurrency)
+    );
 
     if (walletAddress) {
         queryConnector.queryClient.invalidateQueries(
@@ -67,9 +70,12 @@ export const refetchRangeMarketQueries = (
     walletAddress: string,
     BOMContractAddress: string,
     marketAddress: string,
-    networkId: Network
+    networkId: Network,
+    isDeprecatedCurrency: boolean
 ) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.RangedMarket(BOMContractAddress));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.BinaryOptions.RangedMarket(BOMContractAddress, isDeprecatedCurrency)
+    );
 
     if (walletAddress) {
         queryConnector.queryClient.invalidateQueries(
@@ -117,21 +123,30 @@ export const refetchUserProfileQueries = async (walletAddress: string, networkId
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Profile.Trades(walletAddress, networkId));
 };
 
-export const refetchAmmData = (walletAddress: string, marketAddress: string) => {
+export const refetchAmmData = (walletAddress: string, marketAddress: string, isDeprecatedCurrency: boolean) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.BinaryOptions.UserMarketPositions(marketAddress, walletAddress)
     );
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress, isDeprecatedCurrency)
+    );
 };
 
-export const refetchRangedAmmData = (walletAddress: string, marketAddress: string, networkId: Network) => {
+export const refetchRangedAmmData = (
+    walletAddress: string,
+    marketAddress: string,
+    networkId: Network,
+    isDeprecatedCurrency: boolean
+) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.BinaryOptions.UserRangedMarketPositions(marketAddress, walletAddress, networkId)
     );
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress, isDeprecatedCurrency)
+    );
 };
 
-export const refetchBalances = async (walletAddress: string, networkId: Network) => {
+export const refetchBalances = async (walletAddress: string, networkId: Network, isDeprecatedCurrency: boolean) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.PositionBalance, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.RangePositionBalance, [networkId, walletAddress]),
@@ -141,7 +156,9 @@ export const refetchBalances = async (walletAddress: string, networkId: Network)
 
     await wait(WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS);
 
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.WalletBalances.StableCoinBalance(walletAddress, networkId, isDeprecatedCurrency)
+    );
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
     );
@@ -168,7 +185,12 @@ export const refetchVaultData = async (
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
 };
 
-export const refetchLiquidityPoolData = async (walletAddress: string, networkId: Network, round: number) => {
+export const refetchLiquidityPoolData = async (
+    walletAddress: string,
+    networkId: Network,
+    round: number,
+    liquidityPoolAddress: string
+) => {
     await invalidateCache([
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, walletAddress]),
         getCacheKey(CACHE_PREFIX_KEYS.DigitalOptions.LiquidityPoolTransactions, [networkId, round]),
@@ -176,14 +198,14 @@ export const refetchLiquidityPoolData = async (walletAddress: string, networkId:
 
     await wait(WAIT_PERIOD_AFTER_CACHE_INVALIDATION_IN_SECONDS);
 
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId));
+    // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.Data(networkId));
+    // queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.UserData(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.LiquidityPool.PnL(networkId, liquidityPoolAddress));
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, undefined, round)
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, liquidityPoolAddress, undefined, round)
     );
     queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, walletAddress, undefined)
+        QUERY_KEYS.LiquidityPool.UserTransactions(networkId, liquidityPoolAddress, walletAddress, undefined)
     );
 };
 

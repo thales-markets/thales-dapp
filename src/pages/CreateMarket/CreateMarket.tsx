@@ -1,22 +1,42 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import ApprovalModal from 'components/ApprovalModal';
+import Button from 'components/Button/Button';
+import DatePicker from 'components/DatePicker';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
+import {
+    getDefaultToastContent,
+    getErrorToastOptions,
+    getLoadingToastOptions,
+} from 'components/ToastMessage/ToastMessage';
+import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import add from 'date-fns/add';
+import formatDuration from 'date-fns/formatDuration';
+import intervalToDuration from 'date-fns/intervalToDuration';
+import { Network } from 'enums/network';
+import { BigNumber, ethers } from 'ethers';
+import { get } from 'lodash';
+import orderBy from 'lodash/orderBy';
+import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { ValueType } from 'react-select';
-import intervalToDuration from 'date-fns/intervalToDuration';
-import formatDuration from 'date-fns/formatDuration';
-import add from 'date-fns/add';
-import orderBy from 'lodash/orderBy';
-import { CRYPTO_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
-import { EMPTY_VALUE } from 'constants/placeholder';
+import { toast } from 'react-toastify';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { FlexDivCentered, FlexDivColumn } from 'styles/common';
 import { bytesFormatter, convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'thales-utils';
-import { checkAllowance } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import DatePicker from 'components/DatePicker';
+import { CurrencyKeyOptionType } from 'types/options';
+import { SynthsMap } from 'types/synthetix';
 import { RootState } from 'types/ui';
-import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
-import { BigNumber, ethers } from 'ethers';
-import { FlexDivColumn, FlexDivCentered } from 'styles/common';
+import { getDefaultCollateral, getSynthName } from 'utils/currency';
+import { checkAllowance } from 'utils/network';
+import { navigateToOptionsMarket } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
 import MarketSummary from './MarketSummary';
+import ProgressTracker from './ProgressTracker';
 import {
     ButtonContainer,
     Container,
@@ -27,31 +47,11 @@ import {
     InputLabel,
     InputsWrapper,
     NoteText,
+    ReactSelect,
     Row,
     ShortInputContainer,
     Title,
-    ReactSelect,
 } from './styled-components';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
-import ProgressTracker from './ProgressTracker';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
-import { navigateToOptionsMarket } from 'utils/routes';
-import { getIsAppReady } from 'redux/modules/app';
-import { SynthsMap } from 'types/synthetix';
-import { getDefaultCollateral, getSynthName } from 'utils/currency';
-import ApprovalModal from 'components/ApprovalModal';
-import NumericInput from 'components/fields/NumericInput/NumericInput';
-import Button from 'components/Button/Button';
-import { toast } from 'react-toastify';
-import {
-    getDefaultToastContent,
-    getErrorToastOptions,
-    getLoadingToastOptions,
-} from 'components/ToastMessage/ToastMessage';
-import { CurrencyKeyOptionType } from 'types/options';
-import { Network } from 'enums/network';
 
 const MIN_FUNDING_AMOUNT = 0;
 
@@ -129,7 +129,7 @@ const CreateMarket: React.FC = () => {
 
     useEffect(() => {
         if (!walletAddress) return;
-        const collateral = snxJSConnector.collateral;
+        const collateral = snxJSConnector.collateralUSDC;
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
         const getAllowanceForCurrentWallet = async () => {
             try {
@@ -149,12 +149,12 @@ const CreateMarket: React.FC = () => {
     }, [walletAddress, initialFundingAmount, isAllowing]);
 
     const handleMarketCreation = async () => {
-        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+        const { binaryOptionsMarketManagerContract, signer } = snxJSConnector as any;
         const id = toast.loading(getDefaultToastContent(t('common.progress')), getLoadingToastOptions());
         try {
             setIsCreatingMarket(true);
             const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-            const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect((snxJSConnector as any).signer);
+            const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(signer);
             const tx = (await BOMMContractWithSigner.createMarket(
                 oracleKey,
                 price,
@@ -169,7 +169,7 @@ const CreateMarket: React.FC = () => {
                     setMarket(goodData.market);
                     setIsMarketCreated(true);
                     setIsCreatingMarket(false);
-                    navigateToOptionsMarket(goodData.market);
+                    navigateToOptionsMarket(goodData.market, false);
                 }
             }
         } catch (e) {
@@ -180,7 +180,7 @@ const CreateMarket: React.FC = () => {
     };
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const collateral = snxJSConnector.collateral;
+        const collateral = snxJSConnector.collateralUSDC;
         const collateralContract = collateral?.connect((snxJSConnector as any).signer);
 
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
@@ -237,9 +237,11 @@ const CreateMarket: React.FC = () => {
                 <FlexDivColumn style={{ flex: 1 }}>
                     <div>
                         <Description>
-                            {t('create-market.subtitle', { token: getDefaultCollateral(networkId) })}
+                            {t('create-market.subtitle', { token: getDefaultCollateral(networkId, false) })}
                         </Description>
-                        <Description>{t('create-market.note', { token: getDefaultCollateral(networkId) })}</Description>
+                        <Description>
+                            {t('create-market.note', { token: getDefaultCollateral(networkId, false) })}
+                        </Description>
                     </div>
                     <InputsWrapper>
                         <Row>
@@ -433,7 +435,7 @@ const CreateMarket: React.FC = () => {
                                     }}
                                     disabled={isCreatingMarket || isMarketCreated}
                                     label={t('create-market.details.funding-amount.label')}
-                                    currencyLabel={getDefaultCollateral(networkId)}
+                                    currencyLabel={getDefaultCollateral(networkId, false)}
                                     showValidation={!isAmountValid}
                                     validationMessage={t('create-market.min-amount', {
                                         minimum: MIN_FUNDING_AMOUNT,
@@ -441,7 +443,7 @@ const CreateMarket: React.FC = () => {
                                 />
                                 <NoteText>
                                     {t('create-market.details.funding-amount.desc', {
-                                        token: getDefaultCollateral(networkId),
+                                        token: getDefaultCollateral(networkId, false),
                                     })}
                                 </NoteText>
                             </ShortInputContainer>
@@ -466,13 +468,15 @@ const CreateMarket: React.FC = () => {
             <ButtonContainer>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
                 {isMarketCreated && (
-                    <Button onClick={() => navigateToOptionsMarket(market)}>{t('create-market.go-to-market')}</Button>
+                    <Button onClick={() => navigateToOptionsMarket(market, false)}>
+                        {t('create-market.go-to-market')}
+                    </Button>
                 )}
             </ButtonContainer>
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={initialFundingAmount}
-                    tokenSymbol={getDefaultCollateral(networkId)}
+                    tokenSymbol={getDefaultCollateral(networkId, false)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

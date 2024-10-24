@@ -3,9 +3,9 @@ import useMarketsCountQuery from 'queries/options/useMarketsCountQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
+import { getIsDeprecatedCurrency } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
-import { RootState } from 'types/ui';
 import { areDatesEqual } from 'utils/ui';
 
 type RadioButtonsProps = {
@@ -17,10 +17,11 @@ type RadioButtonsProps = {
 };
 
 const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options, currencyKey, date }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector(getNetworkId);
+    const isAppReady = useSelector(getIsAppReady);
+    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
-    const marketsCountQuery = useMarketsCountQuery(networkId, {
+    const marketsCountQuery = useMarketsCountQuery(networkId, isDeprecatedCurrency, {
         enabled: isAppReady,
     });
 

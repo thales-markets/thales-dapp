@@ -18,26 +18,26 @@ import {
 } from 'recharts';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'types/ui';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'styles/common';
-import { LiquidityPoolPnls } from 'types/liquidityPool';
-import { ThemeInterface } from 'types/ui';
 import { formatPercentageWithSign } from 'thales-utils';
+import { LiquidityPoolPnls } from 'types/liquidityPool';
+import { RootState, ThemeInterface } from 'types/ui';
 
 type PnlProps = {
     lifetimePnl: number;
     type: LiquidityPoolPnlType;
+    liquidityPoolAddress: string;
 };
 
-const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
+const PnL: React.FC<PnlProps> = ({ lifetimePnl, type, liquidityPoolAddress }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [liquidityPoolPnls, setLiquidityPoolPnls] = useState<LiquidityPoolPnls>([]);
 
-    const liquidityPoolPnlsQuery = useLiquidityPoolPnlsQuery(networkId, {
+    const liquidityPoolPnlsQuery = useLiquidityPoolPnlsQuery(networkId, liquidityPoolAddress, {
         enabled: isAppReady,
     });
 

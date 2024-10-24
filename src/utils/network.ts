@@ -5,7 +5,7 @@ import { ReactComponent as BaseLogo } from 'assets/images/base-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ADDITIONAL_COLLATERALS, COLLATERALS } from 'constants/currency';
+import { COLLATERALS, DEPRECATED_COLLATERALS } from 'constants/currency';
 import {
     DEFAULT_NETWORK,
     L1_TO_L2_NETWORK_MAPPER,
@@ -48,11 +48,11 @@ export const isNetworkSupported = (networkId: SupportedNetwork): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, includeAdditional?: boolean): boolean =>
-    COLLATERALS[networkId].concat(includeAdditional ? ADDITIONAL_COLLATERALS[networkId] : []).length > 1;
+export const getIsMultiCollateralSupported = (networkId: SupportedNetwork, isDeprecatedCurrency: boolean): boolean =>
+    (isDeprecatedCurrency ? DEPRECATED_COLLATERALS : COLLATERALS)[networkId].length > 1;
 
 export const getIsOVM = (networkId: number): boolean =>
-    [Network.OptimismMainnet, Network.OptimismGoerli, Network.OptimismSepolia].includes(networkId);
+    [Network.OptimismMainnet, Network.OptimismSepolia].includes(networkId);
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
     try {
@@ -159,26 +159,13 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
         case ROUTES.Options.CreateMarket:
         case ROUTES.Options.Profile:
         case ROUTES.Options.Game:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-            ];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base, Network.PolygonMainnet];
         case ROUTES.Options.Vaults:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum];
+            return [Network.OptimismMainnet, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
-            return [Network.OptimismMainnet, Network.OptimismGoerli, Network.Arbitrum, Network.Base];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base];
         case ROUTES.Options.Wizard:
-            return [
-                Network.OptimismMainnet,
-                Network.OptimismGoerli,
-                Network.Arbitrum,
-                Network.Base,
-                Network.PolygonMainnet,
-                Network.Mainnet,
-            ];
+            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base, Network.PolygonMainnet, Network.Mainnet];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }

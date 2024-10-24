@@ -16,7 +16,6 @@ export const SOURCE_NETWORK_IDS = [
     gnosis.id,
     Network.PolygonMainnet,
     fantom.id,
-    Network.ZkSync,
     Network.Base,
     avalanche.id,
     Network.Arbitrum,

@@ -12,3 +12,10 @@ export enum LiquidityPoolPnlType {
     PNL_PER_ROUND = 'pnl-per-round',
     CUMULATIVE_PNL = 'cumulative-pnl',
 }
+
+export enum LiquidityPoolCollateral {
+    USDC = 'usdc',
+    USDCe = 'usdce',
+    USDbC = 'usdbc',
+    sUSD = 'susd',
+}
