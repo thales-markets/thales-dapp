@@ -60,8 +60,6 @@ const RowCard: React.FC<RowCardProps> = ({ isRangedMarket, isDeprecatedCurrency 
     const isAppReady = useSelector(getIsAppReady);
     const isMobile = useSelector(getIsMobile);
 
-    console.log(isDeprecatedCurrency);
-
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(
         market.address,
         walletAddress,
