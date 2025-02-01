@@ -187,6 +187,7 @@
             "op-rewards-banner-message": "All traders on Optimism are eligible for <bold>5,000 OP</bold> weekly based on Notional Volume. <bold>More details here</bold>.",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
             "page-link": {
+                "speed-markets-title": "Speed Markets",
                 "speed-markets": "Looking for markets that resolve in hours and not days?",
                 "try": "Try <bold>{{value}}</bold>"
             }

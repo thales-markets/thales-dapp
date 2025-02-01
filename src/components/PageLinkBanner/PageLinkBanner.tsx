@@ -25,7 +25,7 @@ const PageLinkBanner: React.FC = () => {
                             i18nKey="common.banner.page-link.try"
                             components={{
                                 bold: <BoldText />,
-                                value: t(isMobile ? 'speed-markets.title' : ''),
+                                value: t(isMobile ? 'common.banner.page-link.speed-markets-title' : ''),
                             }}
                         />
                     </Text>
