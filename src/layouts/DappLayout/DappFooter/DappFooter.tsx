@@ -1,6 +1,5 @@
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
-import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 
@@ -11,18 +10,9 @@ const DappFooter: React.FC = () => {
         <Wrapper>
             <ThalesLogoContainer>
                 <ThalesLogo className="icon icon--logo" />
-                <ThalesLogoText>© {year} THALES DAO All Rights Reserved</ThalesLogoText>
+                <ThalesLogoText>© {year} OVERTIME DAO All Rights Reserved</ThalesLogoText>
             </ThalesLogoContainer>
             <FooterIconsWrapper>
-                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
-                    <Trans i18nKey="common.footer.discover" />
-                </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
-                    <Trans i18nKey="common.footer.about" />
-                </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    <Trans i18nKey="common.footer.resources" />
-                </TextLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
                     <FooterIcon className="icon-home icon-home--twitter-x" />
                 </IconLink>

@@ -55,21 +55,6 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    <DappHeaderItem
-                        href={LINKS.SpeedMarkets}
-                        iconName="speed-markets"
-                        label={t('common.sidebar.speed-markets')}
-                    />
-
-                    {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Options.Vaults)}
-                            iconName="vaults"
-                            label={t('common.sidebar.vaults-label')}
-                        />
-                    )}
-
                     {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
@@ -87,18 +72,6 @@ const DappSidebar: React.FC = () => {
                             label={t('common.sidebar.wizard')}
                         />
                     )}
-
-                    <Divider />
-                    <DappHeaderItem
-                        href={LINKS.ThalesProtocol.Token}
-                        iconName="token"
-                        label={t('common.sidebar.earn-label')}
-                    />
-                    <DappHeaderItem
-                        href={LINKS.ThalesProtocol.Governance}
-                        iconName="governance"
-                        label={t('common.sidebar.governance-label')}
-                    />
 
                     {showProfileDivider && <Divider />}
 
@@ -125,6 +98,11 @@ const DappSidebar: React.FC = () => {
                         href={LINKS.SportMarkets}
                         iconName="overtime-markets"
                         label={t('common.sidebar.sport-markets-label')}
+                    />
+                    <DappHeaderItem
+                        href={LINKS.SpeedMarkets}
+                        iconName="speed-markets"
+                        label={t('common.sidebar.speed-markets')}
                     />
                 </ItemsContainer>
             </SidebarHtml>
