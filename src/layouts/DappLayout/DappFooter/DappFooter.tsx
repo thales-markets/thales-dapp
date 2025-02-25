@@ -106,16 +106,6 @@ const FooterIconsWrapper = styled(FlexDiv)`
 
 const IconLink = styled.a``;
 
-const TextLink = styled.a`
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 17px;
-    color: ${(props) => props.theme.link.textColor.secondary};
-    &:hover {
-        text-decoration: underline;
-    }
-`;
-
 const FooterIcon = styled.i`
     transition: 0.2s;
     &:hover {
