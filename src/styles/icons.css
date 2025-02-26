@@ -202,6 +202,14 @@
     content: '\0038';
 }
 
+.icon--thales-markets:before {
+    content: '\003C';
+}
+
+.icon--overtime:before {
+    content: '\003E';
+}
+
 .icon--stats:before {
     content: '\0041';
 }

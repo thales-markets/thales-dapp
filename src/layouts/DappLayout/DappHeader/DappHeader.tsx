@@ -68,8 +68,6 @@ const getMaxWidth = () => {
     const splittedPathname = location.pathname.split('/');
     if (`/${splittedPathname[1]}` === ROUTES.Options.Home || [ROUTES.Options.Profile].includes(location.pathname))
         return '974px';
-
-    if (location.pathname === ROUTES.Options.Wizard) return '900px';
     return '1440px';
 };
 

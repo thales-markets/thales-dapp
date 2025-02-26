@@ -18,8 +18,4 @@ export const LINKS = {
     Discord: {
         Help: 'https://discord.com/channels/906484044915687464/906723153349316638',
     },
-    ThalesProtocol: {
-        Token: 'https://thales.io/token/staking',
-        Governance: 'https://thales.io/dao',
-    },
 };

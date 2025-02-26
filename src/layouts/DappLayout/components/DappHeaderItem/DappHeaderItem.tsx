@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import SPAAnchor from 'components/SPAAnchor';
-import styled from 'styled-components';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 type MenuItem = {
     className?: string;
@@ -49,12 +49,12 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     }
     return (
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
-            <MenuItem className={className} margin={iconName === 'wizard' ? '0 0 0 -5px' : ''}>
+            <MenuItem className={className}>
                 <i
                     className={`sidebar-icon icon--${iconName}`}
                     style={iconName == 'optimism' ? { color: 'white' } : {}}
                 />
-                <Text marginLeft={iconName === 'wizard' ? '25px' : ''}>{label}</Text>
+                <Text>{label}</Text>
             </MenuItem>
         </SPAAnchor>
     );

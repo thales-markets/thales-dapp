@@ -164,8 +164,6 @@ export const getSupportedNetworksByRoute = (route: string): Network[] => {
             return [Network.OptimismMainnet, Network.Arbitrum];
         case ROUTES.Options.LiquidityPool:
             return [Network.OptimismMainnet, Network.Arbitrum, Network.Base];
-        case ROUTES.Options.Wizard:
-            return [Network.OptimismMainnet, Network.Arbitrum, Network.Base, Network.PolygonMainnet, Network.Mainnet];
         default:
             return Object.keys(SUPPORTED_NETWORKS).map((network) => Number(network) as Network);
     }

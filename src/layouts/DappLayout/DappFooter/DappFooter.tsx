@@ -8,10 +8,10 @@ const DappFooter: React.FC = () => {
 
     return (
         <Wrapper>
-            <ThalesLogoContainer>
-                <ThalesLogo className="icon icon--logo" />
-                <ThalesLogoText>© {year} OVERTIME DAO All Rights Reserved</ThalesLogoText>
-            </ThalesLogoContainer>
+            <LogoContainer>
+                <Logo className="icon icon--thales-markets" />
+                <LogoText>© {year} OVERTIME DAO All Rights Reserved</LogoText>
+            </LogoContainer>
             <FooterIconsWrapper>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
                     <FooterIcon className="icon-home icon-home--twitter-x" />
@@ -39,7 +39,7 @@ const Wrapper = styled(FlexDivCentered)`
     }
 `;
 
-const ThalesLogoContainer = styled.div`
+const LogoContainer = styled.div`
     display: flex;
     align-items: center;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -47,25 +47,19 @@ const ThalesLogoContainer = styled.div`
     }
 `;
 
-const ThalesLogo = styled.i`
-    font-size: 88px;
-    height: 83px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 80px;
-    }
+const Logo = styled.i`
+    font-size: 52px;
+    height: 52px;
 `;
 
-const ThalesLogoText = styled.p`
-    width: 84px;
-    height: 16px;
-    font-size: 8px;
+const LogoText = styled.p`
+    width: 110px;
+    height: 20px;
+    font-size: 10px;
     font-weight: 400;
-    line-height: 8px;
+    line-height: 11px;
     text-align: center;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        height: 24px;
-    }
 `;
 
 const FlexDiv = styled.div`
