@@ -86,8 +86,9 @@ const DappSidebar: React.FC = () => {
                     <Divider />
                     <DappHeaderItem
                         href={LINKS.SportMarkets}
-                        iconName="overtime-markets"
+                        iconName="overtime-logo"
                         label={t('common.sidebar.sport-markets-label')}
+                        iconPrefix="icon"
                     />
                     <DappHeaderItem
                         href={LINKS.SpeedMarkets}

@@ -206,6 +206,10 @@
     content: '\003C';
 }
 
+.icon--overtime-logo:before {
+    content: '\003D';
+}
+
 .icon--overtime:before {
     content: '\003E';
 }

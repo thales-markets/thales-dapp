@@ -10,6 +10,7 @@ type MenuItem = {
     label: string;
     onClick?: any;
     simpleOnClick?: boolean;
+    iconPrefix?: string;
 };
 
 type DappHeaderItemProps = MenuItem & { submenuItems?: MenuItem[] };
@@ -22,6 +23,7 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     submenuItems,
     onClick,
     simpleOnClick,
+    iconPrefix,
 }) => {
     const [showSubmenu, setShowSubmenu] = useState(false);
 
@@ -31,7 +33,7 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
         return (
             <>
                 <MenuItem onClick={() => setShowSubmenu(!showSubmenu)} className={showSubmenu ? '' : parentClassName}>
-                    <i className={`sidebar-icon icon--${iconName}`} />
+                    <i className={`${iconPrefix || 'sidebar-icon'} icon--${iconName}`} />
                     <Text>{label}</Text>
                     <Arrow open={showSubmenu} className={'icon icon--left'} />
                 </MenuItem>
@@ -39,7 +41,7 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
                     submenuItems.map((submenu) => (
                         <SPAAnchor key={submenu.iconName} href={submenu.href || ''}>
                             <MenuItem className={!showSubmenu ? 'parent-hovered' : submenu.className}>
-                                <i className={`sidebar-icon icon--${submenu.iconName}`} />
+                                <i className={`${iconPrefix || 'sidebar-icon'} icon--${submenu.iconName}`} />
                                 <Text>{submenu.label}</Text>
                             </MenuItem>
                         </SPAAnchor>
@@ -51,10 +53,10 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
             <MenuItem className={className}>
                 <i
-                    className={`sidebar-icon icon--${iconName}`}
-                    style={iconName == 'optimism' ? { color: 'white' } : {}}
+                    className={`${iconPrefix || 'sidebar-icon'} icon--${iconName}`}
+                    style={iconPrefix ? { fontSize: '38px' } : {}}
                 />
-                <Text>{label}</Text>
+                <Text marginLeft={iconPrefix ? '13px' : undefined}>{label}</Text>
             </MenuItem>
         </SPAAnchor>
     );
