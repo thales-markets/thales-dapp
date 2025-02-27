@@ -66,7 +66,11 @@ const sidebarMenuClickHandler = () => {
 
 const getMaxWidth = () => {
     const splittedPathname = location.pathname.split('/');
-    if (`/${splittedPathname[1]}` === ROUTES.Options.Home || [ROUTES.Options.Profile].includes(location.pathname))
+    if (
+        `/${splittedPathname[1]}` === ROUTES.Options.Home ||
+        `/${splittedPathname[1]}` === ROUTES.Home ||
+        [ROUTES.Options.Profile].includes(location.pathname)
+    )
         return '974px';
     return '1440px';
 };
