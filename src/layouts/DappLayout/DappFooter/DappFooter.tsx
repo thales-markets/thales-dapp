@@ -10,7 +10,7 @@ const DappFooter: React.FC = () => {
         <Wrapper>
             <LogoContainer>
                 <Logo className="icon icon--thales-markets" />
-                <LogoText>© {year} OVERTIME DAO All Rights Reserved</LogoText>
+                <LogoText>© {year} OVERTIME All Rights Reserved</LogoText>
             </LogoContainer>
             <FooterIconsWrapper>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
