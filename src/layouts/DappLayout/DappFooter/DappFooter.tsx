@@ -50,10 +50,11 @@ const LogoContainer = styled.div`
 const Logo = styled.i`
     font-size: 52px;
     height: 52px;
+    margin-right: 10px;
 `;
 
 const LogoText = styled.p`
-    width: 110px;
+    width: 90px;
     height: 20px;
     font-size: 10px;
     font-weight: 400;
