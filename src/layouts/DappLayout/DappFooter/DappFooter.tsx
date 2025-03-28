@@ -1,3 +1,4 @@
+import { LINKS } from 'constants/links';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
 import styled from 'styled-components';
@@ -13,16 +14,16 @@ const DappFooter: React.FC = () => {
                 <LogoText>© {year} OVERTIME All Rights Reserved</LogoText>
             </LogoContainer>
             <FooterIconsWrapper>
-                <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Twitter}>
                     <FooterIcon className="icon-home icon-home--twitter-x" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Medium}>
                     <FooterIcon className="icon-home icon-home--medium" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://discord.gg/thales">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Discord}>
                     <FooterIcon className="icon-home icon-home--discord" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Docs}>
                     <FooterIcon className="icon-home icon-home--docs" />
                 </IconLink>
             </FooterIconsWrapper>
