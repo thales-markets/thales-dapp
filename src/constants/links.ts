@@ -23,8 +23,5 @@ export const LINKS = {
         Discord: 'https://discord.gg/z5xFxMccsu',
         Docs: 'https://docs.overtime.io/',
         Medium: 'https://medium.com/@OvertimeMarkets.xyz',
-        GitHub: 'https://github.com/thales-markets/thales-sport-markets',
-        Instagram: 'https://www.instagram.com/overtimemarkets',
-        Reddit: 'https://www.reddit.com/r/overtimemarkets',
     },
 };
