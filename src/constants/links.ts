@@ -19,7 +19,7 @@ export const LINKS = {
         Help: 'https://discord.com/channels/906484044915687464/906723153349316638',
     },
     Footer: {
-        Twitter: 'https://twitter.com/OvertimeMarkets',
+        Twitter: 'https://x.com/overtime_io',
         Discord: 'https://discord.gg/z5xFxMccsu',
         Docs: 'https://docs.overtime.io/',
         Medium: 'https://medium.com/@OvertimeMarkets.xyz',
