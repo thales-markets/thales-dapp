@@ -31,14 +31,11 @@ import { getDefaultTheme } from 'utils/style';
 import { useAccount, useDisconnect, useNetwork, useProvider, useSigner } from 'wagmi';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
-const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
 const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
-const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage'));
 
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
-const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
 const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
 const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
@@ -297,21 +294,17 @@ const App = () => {
                             )}
                         ></Route>
 
-                        {getSupportedNetworksByRoute(ROUTES.Options.Wizard).includes(networkId) && (
-                            <Route exact path={ROUTES.Options.Wizard}>
-                                <Suspense fallback={<Loader />}>
-                                    <DappLayout>
-                                        <Wizard />
-                                    </DappLayout>
-                                </Suspense>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Home}>
                             <Suspense fallback={<Loader />}>
-                                <MainLayout>
-                                    <Home />
-                                </MainLayout>
+                                <DappLayout>
+                                    {getSupportedNetworksByRoute(ROUTES.Options.Home).includes(networkId) ? (
+                                        <Markets />
+                                    ) : (
+                                        <UnsupportedNetwork
+                                            supportedNetworks={getSupportedNetworksByRoute(ROUTES.Options.Home)}
+                                        />
+                                    )}
+                                </DappLayout>
                             </Suspense>
                         </Route>
 

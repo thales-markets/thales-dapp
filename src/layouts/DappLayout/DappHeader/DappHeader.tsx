@@ -26,7 +26,7 @@ const DappHeader: React.FC = () => {
                 <FlexDivRow>
                     {isMobile && <Icon className="sidebar-icon icon--nav-menu" onClick={sidebarMenuClickHandler} />}
                     <Logo />
-                    {location.pathname == ROUTES.Options.Home && !isMobile && (
+                    {(location.pathname == ROUTES.Options.Home || location.pathname == ROUTES.Home) && !isMobile && (
                         <Button
                             height="25px"
                             padding="0 7px"
@@ -66,10 +66,13 @@ const sidebarMenuClickHandler = () => {
 
 const getMaxWidth = () => {
     const splittedPathname = location.pathname.split('/');
-    if (`/${splittedPathname[1]}` === ROUTES.Options.Home || [ROUTES.Options.Profile].includes(location.pathname))
+    console.log(location.pathname, location.pathname === ROUTES.Home);
+    if (
+        `/${splittedPathname[1]}` === ROUTES.Options.Home ||
+        location.pathname === ROUTES.Home ||
+        [ROUTES.Options.Profile].includes(location.pathname)
+    )
         return '974px';
-
-    if (location.pathname === ROUTES.Options.Wizard) return '900px';
     return '1440px';
 };
 

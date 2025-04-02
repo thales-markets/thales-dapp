@@ -46,13 +46,12 @@ const OpenPositions: React.FC = () => {
             ) : (
                 <>
                     <PositionsWrapper noPositions={noPositions}>
-                        {!noPositions &&
-                            positions.map((position, index) => (
-                                <OpenPosition
-                                    position={position}
-                                    key={`position${position.market}${position.positionAddress}${index}`}
-                                />
-                            ))}
+                        {positions.map((position, index) => (
+                            <OpenPosition
+                                position={position}
+                                key={`position${position.market}${position.positionAddress}${index}`}
+                            />
+                        ))}
                     </PositionsWrapper>
                     {noPositions && <NoPositionsText>{t('markets.user-positions.no-positions')}</NoPositionsText>}
                 </>

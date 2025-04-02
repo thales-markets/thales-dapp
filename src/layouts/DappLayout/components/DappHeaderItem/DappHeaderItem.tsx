@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import SPAAnchor from 'components/SPAAnchor';
-import styled from 'styled-components';
 import { ScreenSizeBreakpoint } from 'enums/ui';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 type MenuItem = {
     className?: string;
@@ -10,6 +10,9 @@ type MenuItem = {
     label: string;
     onClick?: any;
     simpleOnClick?: boolean;
+    iconPrefix?: string;
+    fontSize?: string;
+    padding?: string;
 };
 
 type DappHeaderItemProps = MenuItem & { submenuItems?: MenuItem[] };
@@ -22,6 +25,9 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     submenuItems,
     onClick,
     simpleOnClick,
+    iconPrefix,
+    fontSize,
+    padding,
 }) => {
     const [showSubmenu, setShowSubmenu] = useState(false);
 
@@ -30,16 +36,20 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
 
         return (
             <>
-                <MenuItem onClick={() => setShowSubmenu(!showSubmenu)} className={showSubmenu ? '' : parentClassName}>
-                    <i className={`sidebar-icon icon--${iconName}`} />
+                <MenuItem
+                    onClick={() => setShowSubmenu(!showSubmenu)}
+                    className={showSubmenu ? '' : parentClassName}
+                    padding={padding}
+                >
+                    <i className={`${iconPrefix || 'sidebar-icon'} icon--${iconName}`} />
                     <Text>{label}</Text>
                     <Arrow open={showSubmenu} className={'icon icon--left'} />
                 </MenuItem>
                 {showSubmenu &&
                     submenuItems.map((submenu) => (
                         <SPAAnchor key={submenu.iconName} href={submenu.href || ''}>
-                            <MenuItem className={!showSubmenu ? 'parent-hovered' : submenu.className}>
-                                <i className={`sidebar-icon icon--${submenu.iconName}`} />
+                            <MenuItem className={!showSubmenu ? 'parent-hovered' : submenu.className} padding={padding}>
+                                <i className={`${iconPrefix || 'sidebar-icon'} icon--${submenu.iconName}`} />
                                 <Text>{submenu.label}</Text>
                             </MenuItem>
                         </SPAAnchor>
@@ -49,23 +59,24 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     }
     return (
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
-            <MenuItem className={className} margin={iconName === 'wizard' ? '0 0 0 -5px' : ''}>
+            <MenuItem className={className} padding={padding}>
                 <i
-                    className={`sidebar-icon icon--${iconName}`}
-                    style={iconName == 'optimism' ? { color: 'white' } : {}}
+                    className={`${iconPrefix || 'sidebar-icon'} icon--${iconName}`}
+                    style={fontSize ? { fontSize } : {}}
                 />
-                <Text marginLeft={iconName === 'wizard' ? '25px' : ''}>{label}</Text>
+                <Text marginLeft={iconPrefix ? '13px' : undefined}>{label}</Text>
             </MenuItem>
         </SPAAnchor>
     );
 };
 
-const MenuItem = styled.li<{ margin?: string }>`
+const MenuItem = styled.li<{ margin?: string; padding?: string }>`
     display: flex;
     align-items: center;
     cursor: pointer;
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-    padding: 15px 20px;
+    padding: ${(props) => props.padding || '15px 20px'};
+    height: 64px;
     color: ${(props) => props.theme.textColor.primary};
     transition: background 300ms;
     &.selected {
@@ -87,7 +98,7 @@ const MenuItem = styled.li<{ margin?: string }>`
     }
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
-        padding: 0 10px;
+        height: 32px;
 
         &:hover {
             color: ${(props) => props.theme.background.tertiary};
