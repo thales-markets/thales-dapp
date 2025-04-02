@@ -61,9 +61,6 @@ const Container = styled(FlexDiv)`
     z-index: 102;
     cursor: pointer;
     text-align: center;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const Label = styled.span`
@@ -72,6 +69,10 @@ const Label = styled.span`
     padding: 9px 0px;
     font-style: normal;
     font-weight: 400;
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 12px;
+        padding: 5px 0px;
+    }
 `;
 
 const BoldedText = styled.strong`
