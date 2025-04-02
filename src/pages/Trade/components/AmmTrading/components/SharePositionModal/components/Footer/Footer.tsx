@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Trans } from 'react-i18next';
 import LogoIcon from 'assets/images/logo-light.svg';
+import React from 'react';
+import { Trans } from 'react-i18next';
+import styled from 'styled-components';
 
 const Footer: React.FC = () => {
     return (
         <Container>
-            <ThalesLogo src={LogoIcon} />
+            <Logo src={LogoIcon} />
             <Text>
                 <Trans
                     i18nKey="common.flex-card.footer-text"
@@ -29,7 +29,9 @@ const Container = styled.div`
     margin-bottom: -10px;
 `;
 
-const ThalesLogo = styled.img``;
+const Logo = styled.img`
+    height: 26px;
+`;
 
 const Text = styled.div`
     font-size: 10px;

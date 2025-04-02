@@ -1,6 +1,6 @@
+import { LINKS } from 'constants/links';
 import { ScreenSizeBreakpoint } from 'enums/ui';
 import React from 'react';
-import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'styles/common';
 
@@ -9,30 +9,21 @@ const DappFooter: React.FC = () => {
 
     return (
         <Wrapper>
-            <ThalesLogoContainer>
-                <ThalesLogo className="icon icon--logo" />
-                <ThalesLogoText>© {year} THALES DAO All Rights Reserved</ThalesLogoText>
-            </ThalesLogoContainer>
+            <LogoContainer>
+                <Logo className="icon icon--thales-markets" />
+                <LogoText>© {year} OVERTIME All Rights Reserved</LogoText>
+            </LogoContainer>
             <FooterIconsWrapper>
-                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
-                    <Trans i18nKey="common.footer.discover" />
-                </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
-                    <Trans i18nKey="common.footer.about" />
-                </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    <Trans i18nKey="common.footer.resources" />
-                </TextLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/thales_io">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Twitter}>
                     <FooterIcon className="icon-home icon-home--twitter-x" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Medium}>
                     <FooterIcon className="icon-home icon-home--medium" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://discord.gg/thales">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Discord}>
                     <FooterIcon className="icon-home icon-home--discord" />
                 </IconLink>
-                <IconLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
+                <IconLink target="_blank" rel="noreferrer" href={LINKS.Footer.Docs}>
                     <FooterIcon className="icon-home icon-home--docs" />
                 </IconLink>
             </FooterIconsWrapper>
@@ -49,7 +40,7 @@ const Wrapper = styled(FlexDivCentered)`
     }
 `;
 
-const ThalesLogoContainer = styled.div`
+const LogoContainer = styled.div`
     display: flex;
     align-items: center;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
@@ -57,25 +48,20 @@ const ThalesLogoContainer = styled.div`
     }
 `;
 
-const ThalesLogo = styled.i`
-    font-size: 88px;
-    height: 83px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        font-size: 80px;
-    }
+const Logo = styled.i`
+    font-size: 52px;
+    height: 52px;
+    margin-right: 10px;
 `;
 
-const ThalesLogoText = styled.p`
-    width: 84px;
-    height: 16px;
-    font-size: 8px;
+const LogoText = styled.p`
+    width: 90px;
+    height: 20px;
+    font-size: 10px;
     font-weight: 400;
-    line-height: 8px;
+    line-height: 11px;
     text-align: center;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        height: 24px;
-    }
 `;
 
 const FlexDiv = styled.div`
@@ -115,16 +101,6 @@ const FooterIconsWrapper = styled(FlexDiv)`
 `;
 
 const IconLink = styled.a``;
-
-const TextLink = styled.a`
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 17px;
-    color: ${(props) => props.theme.link.textColor.secondary};
-    &:hover {
-        text-decoration: underline;
-    }
-`;
 
 const FooterIcon = styled.i`
     transition: 0.2s;

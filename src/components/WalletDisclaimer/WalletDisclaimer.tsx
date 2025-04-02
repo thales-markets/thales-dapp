@@ -1,11 +1,11 @@
 // @ts-ignore
-import React from 'react';
-import disclaimer from 'assets/docs/thales-protocol-disclaimer.pdf';
-import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import { DisclaimerComponent } from '@rainbow-me/rainbowkit';
+import disclaimer from 'assets/docs/overtime-disclaimer.pdf';
+import privacyPolicy from 'assets/docs/overtime-privacy-policy.pdf';
+import termsOfUse from 'assets/docs/overtime-terms-of-use.pdf';
+import { ScreenSizeBreakpoint } from 'enums/ui';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { ScreenSizeBreakpoint } from 'enums/ui';
 
 const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
     return (
@@ -16,6 +16,11 @@ const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
                     components={{
                         disclaimer: (
                             <Link href={disclaimer}>
+                                <></>
+                            </Link>
+                        ),
+                        privacyPolicy: (
+                            <Link href={privacyPolicy}>
                                 <></>
                             </Link>
                         ),

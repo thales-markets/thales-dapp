@@ -1,5 +1,4 @@
 import logoIcon from 'assets/images/logo-light.svg';
-import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import SPAAnchor from 'components/SPAAnchor';
 import { LINKS } from 'constants/links';
 import ROUTES from 'constants/routes';
@@ -40,7 +39,7 @@ const DappSidebar: React.FC = () => {
             <SidebarHtml id="sidebar">
                 <ItemsContainer onClick={removeCollapse}>
                     <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
-                        <LogoIcon width="38" height="42" src={logoSmallIcon} />
+                        <LogoIcon width="54" height="42" src={logoIcon} marginLeft="10px" />
                     </SPAAnchor>
                     <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
                         <LogoIcon height="42" src={logoIcon} />
@@ -55,21 +54,6 @@ const DappSidebar: React.FC = () => {
                         />
                     )}
 
-                    <DappHeaderItem
-                        href={LINKS.SpeedMarkets}
-                        iconName="speed-markets"
-                        label={t('common.sidebar.speed-markets')}
-                    />
-
-                    {getSupportedNetworksByRoute(ROUTES.Options.Vaults).includes(networkId) && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Options.Vaults)}
-                            iconName="vaults"
-                            label={t('common.sidebar.vaults-label')}
-                        />
-                    )}
-
                     {getSupportedNetworksByRoute(ROUTES.Options.LiquidityPool).includes(networkId) && (
                         <DappHeaderItem
                             className={`${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
@@ -78,27 +62,6 @@ const DappSidebar: React.FC = () => {
                             label={t('common.sidebar.liquidity-pool-label')}
                         />
                     )}
-
-                    {!isMobile && getSupportedNetworksByRoute(ROUTES.Options.Wizard).includes(networkId) && (
-                        <DappHeaderItem
-                            className={`${location.pathname === ROUTES.Options.Wizard ? 'selected' : ''}`}
-                            href={buildHref(ROUTES.Options.Wizard)}
-                            iconName="wizard"
-                            label={t('common.sidebar.wizard')}
-                        />
-                    )}
-
-                    <Divider />
-                    <DappHeaderItem
-                        href={LINKS.ThalesProtocol.Token}
-                        iconName="token"
-                        label={t('common.sidebar.earn-label')}
-                    />
-                    <DappHeaderItem
-                        href={LINKS.ThalesProtocol.Governance}
-                        iconName="governance"
-                        label={t('common.sidebar.governance-label')}
-                    />
 
                     {showProfileDivider && <Divider />}
 
@@ -122,9 +85,27 @@ const DappSidebar: React.FC = () => {
 
                     <Divider />
                     <DappHeaderItem
+                        href={LINKS.Overtime}
+                        iconName="overtime-logo"
+                        label={t('common.sidebar.overtime-label')}
+                        iconPrefix="icon"
+                        fontSize="38px"
+                    />
+                    <DappHeaderItem
                         href={LINKS.SportMarkets}
-                        iconName="overtime-markets"
+                        iconName="overtime-sportsbook"
                         label={t('common.sidebar.sport-markets-label')}
+                        iconPrefix="icon"
+                        fontSize="56px"
+                        padding="4px 8px"
+                    />
+                    <DappHeaderItem
+                        href={LINKS.SpeedMarkets}
+                        iconName="speed-markets"
+                        label={t('common.sidebar.speed-markets')}
+                        iconPrefix="icon"
+                        fontSize="56px"
+                        padding="4px 8px"
                     />
                 </ItemsContainer>
             </SidebarHtml>
@@ -203,7 +184,7 @@ const SidebarHtml = styled.nav`
 
     &.collapse {
         display: block;
-        width: 275px;
+        width: 300px;
         transition: width 0.5s ease-in;
         height: 100vh;
         left: 0;
@@ -224,11 +205,12 @@ const SidebarHtml = styled.nav`
     user-select: none;
 `;
 
-const LogoIcon = styled.img`
+const LogoIcon = styled.img<{ marginLeft?: string }>`
     display: block;
     object-fit: contain;
     cursor: pointer;
     margin: auto;
+    margin-left: ${(props) => props.marginLeft || 'auto'};
     margin-top: 10px;
     margin-bottom: 25px;
 `;

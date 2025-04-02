@@ -8,7 +8,6 @@ const ROUTES = {
         RangeMarketMatch: '/ranged-markets/:marketAddress',
         Game: '/tale-of-thales',
         Profile: '/profile',
-        Wizard: '/wizard',
         Vaults: '/vaults',
         Vault: '/vaults/:vaultId',
         LiquidityPool: '/liquidity-pool',

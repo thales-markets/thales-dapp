@@ -6,10 +6,6 @@
     color: #ffffff;
 }
 
-.icon--speed-markets:before {
-    content: '\003D';
-}
-
 .icon--nav-menu:before {
     content: '\0040';
 }
