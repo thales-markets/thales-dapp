@@ -138,6 +138,7 @@
             "speed-markets": "Speed markets",
             "game-label": "Tale of Thales",
             "profile-label": "Profile",
+            "overtime-label": "Overtime",
             "sport-markets-label": "Overtime Sportsbook",
             "vaults-label": "Vaults",
             "liquidity-pool-label": "Provide Liquidity"
@@ -180,6 +181,7 @@
             "error": "Error"
         },
         "banner": {
+            "migration-message": "THALES HAS MIGRATED TO OVERTIME. CHECK THE NEW <bold>WEBSITE</bold>.",
             "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
             "page-link": {
                 "speed-markets": "Looking for markets that resolve in hours and not days?",

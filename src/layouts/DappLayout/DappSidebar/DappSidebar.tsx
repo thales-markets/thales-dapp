@@ -85,15 +85,27 @@ const DappSidebar: React.FC = () => {
 
                     <Divider />
                     <DappHeaderItem
-                        href={LINKS.SportMarkets}
+                        href={LINKS.Overtime}
                         iconName="overtime-logo"
+                        label={t('common.sidebar.overtime-label')}
+                        iconPrefix="icon"
+                        fontSize="38px"
+                    />
+                    <DappHeaderItem
+                        href={LINKS.SportMarkets}
+                        iconName="overtime-sportsbook"
                         label={t('common.sidebar.sport-markets-label')}
                         iconPrefix="icon"
+                        fontSize="56px"
+                        padding="4px 8px"
                     />
                     <DappHeaderItem
                         href={LINKS.SpeedMarkets}
                         iconName="speed-markets"
                         label={t('common.sidebar.speed-markets')}
+                        iconPrefix="icon"
+                        fontSize="56px"
+                        padding="4px 8px"
                     />
                 </ItemsContainer>
             </SidebarHtml>
@@ -172,7 +184,7 @@ const SidebarHtml = styled.nav`
 
     &.collapse {
         display: block;
-        width: 275px;
+        width: 300px;
         transition: width 0.5s ease-in;
         height: 100vh;
         left: 0;

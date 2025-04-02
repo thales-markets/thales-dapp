@@ -202,6 +202,14 @@
     content: '\0038';
 }
 
+.icon--overtime-sportsbook:before {
+    content: '\003A';
+}
+
+.icon--speed-markets:before {
+    content: '\003B';
+}
+
 .icon--thales-markets:before {
     content: '\003C';
 }

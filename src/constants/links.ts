@@ -6,6 +6,7 @@ export const LINKS = {
     },
     SpeedMarkets: 'https://speedmarkets.xyz/',
     SportMarkets: 'https://overtimemarkets.xyz/',
+    Overtime: 'https://overtime.io/',
     ThalesAPI: {
         medium: `${generalConfig.API_URL}/medium`,
     },

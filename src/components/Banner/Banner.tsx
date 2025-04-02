@@ -9,7 +9,7 @@ type BannerProps = {
     isLandingPage?: boolean;
 };
 
-const IS_VISIBLE = false;
+const IS_VISIBLE = true;
 
 const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
     if (!IS_VISIBLE) {
@@ -20,10 +20,10 @@ const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
         <>
             {isLandingPage ? (
                 <Info>
-                    <SPAAnchor href={'https://dune.com/leifu/op-incentive-program'}>
+                    <SPAAnchor href={'https://overtime.io'}>
                         <Label>
                             <Trans
-                                i18nKey="common.banner.op-rewards-banner-message"
+                                i18nKey="common.banner.migration-message"
                                 components={{
                                     bold: <BoldedText />,
                                 }}
@@ -33,10 +33,10 @@ const Banner: React.FC<BannerProps> = ({ isLandingPage }) => {
                 </Info>
             ) : (
                 <Container>
-                    <SPAAnchor href={'https://dune.com/leifu/op-incentive-program'}>
+                    <SPAAnchor href={'https://overtime.io'}>
                         <Label>
                             <Trans
-                                i18nKey="common.banner.op-rewards-banner-message"
+                                i18nKey="common.banner.migration-message"
                                 components={{
                                     bold: <BoldedText />,
                                 }}
