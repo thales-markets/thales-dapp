@@ -2,6 +2,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
 import Banner from 'components/Banner';
 import { generalConfig } from 'config/general';
+import useWidgetBotScript from 'hooks/useWidgetBotScript';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -32,7 +33,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     const { trackPageView } = useMatomo();
 
-    const [, setPreventDiscordWidgetLoad] = useState(true);
+    const [preventDiscordWidgetLoad, setPreventDiscordWidgetLoad] = useState(true);
 
     useEffect(() => {
         if (queryParams?.referralId) {
@@ -82,7 +83,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
         checkMetamaskBrowser();
     }, []);
 
-    // useWidgetBotScript(preventDiscordWidgetLoad, theme);
+    useWidgetBotScript(preventDiscordWidgetLoad, theme);
 
     // Fix page scrollbar background as landing page has different background than dApp
     document.body.style.background = theme.background.primary;
