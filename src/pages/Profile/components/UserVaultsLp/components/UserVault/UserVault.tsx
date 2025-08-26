@@ -68,7 +68,6 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
                 isRoundEnded={!!vaultData?.isRoundEnded}
                 link={buildVaultLink(vaultName)}
                 isLoading={vaultDataQuery.isLoading || userVaultDataQuery.isLoading}
-                isDeprecated={true}
             />
         </SPAAnchor>
     ) : (
@@ -82,7 +81,6 @@ const UserVault: React.FC<{ vaultName: string; vaultAddress: string }> = ({ vaul
             isRoundEnded={!!vaultData?.isRoundEnded}
             link={buildVaultLink(vaultName)}
             isLoading={vaultDataQuery.isLoading || userVaultDataQuery.isLoading}
-            isDeprecated={true}
         />
     );
 };
