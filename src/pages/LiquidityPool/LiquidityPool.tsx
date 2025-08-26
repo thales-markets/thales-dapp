@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button/Button';
 import SimpleLoader from 'components/SimpleLoader';
-import Switch from 'components/SwitchInput/SwitchInput';
 import TimeRemaining from 'components/TimeRemaining';
 import {
     getDefaultToastContent,
@@ -13,10 +12,9 @@ import {
 import Tooltip from 'components/Tooltip';
 import NumericInput from 'components/fields/NumericInput';
 import RadioButton from 'components/fields/RadioButton';
-import { PLAUSIBLE, PLAUSIBLE_KEYS } from 'constants/analytics';
 import { USD_SIGN } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { LiquidityPoolCollateral, LiquidityPoolPnlType, LiquidityPoolTab } from 'enums/liquidityPool';
+import { LiquidityPoolCollateral, LiquidityPoolPnlType } from 'enums/liquidityPool';
 import { BigNumber, Contract, ethers } from 'ethers';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
@@ -28,11 +26,10 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { useTheme } from 'styled-components';
 import { FlexDivRow } from 'styles/common';
 import { coinParser, formatCurrencyWithSign, formatPercentage } from 'thales-utils';
 import { LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
-import { RootState, ThemeInterface } from 'types/ui';
+import { RootState } from 'types/ui';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import { checkAllowance } from 'utils/network';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
@@ -41,7 +38,6 @@ import { delay } from 'utils/timer';
 import SPAAnchor from '../../components/SPAAnchor';
 import ROUTES from '../../constants/routes';
 import { Network } from '../../enums/network';
-import useMultipleCollateralBalanceQuery from '../../queries/walletBalances/useMultipleCollateralBalanceQuery';
 import { getDefaultLpCollateral, getLiquidityPools, getLpAddress, getLpCollateral } from '../../utils/liquidityPool';
 import { buildHref } from '../../utils/routes';
 import PnL from './PnL';
@@ -79,7 +75,6 @@ import {
     StyledSlider,
     TipLink,
     Title,
-    ToggleContainer,
     WarningContentInfo,
     Wrapper,
     defaultButtonProps,
@@ -87,7 +82,6 @@ import {
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
-    const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const { openConnectModal } = useConnectModal();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -99,8 +93,6 @@ const LiquidityPool: React.FC = () => {
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
-    const [selectedTab, setSelectedTab] = useState<LiquidityPoolTab>(LiquidityPoolTab.DEPOSIT);
-    const [paymentTokenBalance, setPaymentTokenBalance] = useState<number | string>('');
     const [lastValidLiquidityPoolData, setLastValidLiquidityPoolData] = useState<LiquidityPoolData | undefined>(
         undefined
     );
@@ -116,22 +108,11 @@ const LiquidityPool: React.FC = () => {
         networkId === Network.OptimismMainnet
             ? queryString.parse(location.search).collateral || getDefaultLpCollateral(networkId)
             : getDefaultLpCollateral(networkId);
-    const isSUSD = paramCollateral === LiquidityPoolCollateral.sUSD;
 
     const collateral = getLpCollateral(networkId, paramCollateral);
 
     const liquidityPoolAddress = getLpAddress(networkId, paramCollateral);
     const liquidityPools = getLiquidityPools(networkId);
-
-    const multipleCollateralBalanceQuery = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-
-    useEffect(() => {
-        if (multipleCollateralBalanceQuery.isSuccess && multipleCollateralBalanceQuery.data !== undefined) {
-            setPaymentTokenBalance(Number(multipleCollateralBalanceQuery.data[collateral]));
-        }
-    }, [multipleCollateralBalanceQuery.isSuccess, multipleCollateralBalanceQuery.data, collateral]);
 
     const liquidityPoolDataQuery = useLiquidityPoolDataQuery(liquidityPoolAddress, collateral, networkId, {
         enabled: isAppReady && liquidityPoolAddress !== undefined,
@@ -173,29 +154,7 @@ const LiquidityPool: React.FC = () => {
         return lastValidUserLiquidityPoolData;
     }, [userLiquidityPoolDataQuery.isSuccess, userLiquidityPoolDataQuery.data, lastValidUserLiquidityPoolData]);
 
-    const isAmountEntered = Number(amount) > 0;
-    const invalidAmount =
-        liquidityPoolData &&
-        Number(liquidityPoolData.minDepositAmount) > Number(amount) &&
-        userLiquidityPoolData &&
-        !userLiquidityPoolData.hasDepositForCurrentRound &&
-        !userLiquidityPoolData.hasDepositForNextRound &&
-        isAmountEntered;
-
-    const insufficientBalance =
-        (Number(paymentTokenBalance) < Number(amount) || Number(paymentTokenBalance) === 0) && isWalletConnected;
-
     const liquidityPoolPaused = liquidityPoolData && liquidityPoolData.paused;
-
-    const exceededLiquidityPoolCap =
-        liquidityPoolData && liquidityPoolData.availableAllocationNextRound < Number(amount);
-    const isMaximumAmountOfUsersReached =
-        liquidityPoolData &&
-        liquidityPoolData.usersCurrentlyInLiquidityPool === liquidityPoolData.maxAllowedUsers &&
-        userLiquidityPoolData &&
-        !userLiquidityPoolData.hasDepositForCurrentRound &&
-        !userLiquidityPoolData.hasDepositForNextRound;
-    const isLiquidityPoolCapReached = liquidityPoolData && liquidityPoolData.allocationNextRoundPercentage >= 100;
 
     const isWithdrawalRequested = userLiquidityPoolData && userLiquidityPoolData.isWithdrawalRequested;
     const nothingToWithdraw = userLiquidityPoolData && userLiquidityPoolData.balanceCurrentRound === 0;
@@ -208,25 +167,6 @@ const LiquidityPool: React.FC = () => {
         liquidityPoolPaused;
 
     const isPartialWithdrawalDisabled = isRequestWithdrawalButtonDisabled || withdrawAll;
-
-    const isDepositButtonDisabled =
-        !isWalletConnected ||
-        !isAmountEntered ||
-        insufficientBalance ||
-        isSubmitting ||
-        isWithdrawalRequested ||
-        exceededLiquidityPoolCap ||
-        isMaximumAmountOfUsersReached ||
-        invalidAmount ||
-        liquidityPoolPaused ||
-        isLiquidityPoolCapReached;
-
-    const isDepositAmountInputDisabled =
-        isSubmitting ||
-        isWithdrawalRequested ||
-        isMaximumAmountOfUsersReached ||
-        liquidityPoolPaused ||
-        isLiquidityPoolCapReached;
 
     useEffect(() => {
         const { signer, multipleCollateral } = snxJSConnector;
@@ -296,52 +236,6 @@ const LiquidityPool: React.FC = () => {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
                 setIsAllowing(false);
-            }
-        }
-    };
-
-    const handleDeposit = async () => {
-        const { signer } = snxJSConnector;
-        if (signer) {
-            const id = toast.loading(
-                getDefaultToastContent(t('markets.market.toast-messsage.transaction-pending')),
-                getLoadingToastOptions()
-            );
-            setIsSubmitting(true);
-            try {
-                const liquidityPoolContractWithSigner = new Contract(
-                    liquidityPoolAddress,
-                    liquidityPoolContract.abi,
-                    signer
-                );
-                const parsedAmount = coinParser(Number(amount).toString(), networkId, collateral);
-
-                const tx = await liquidityPoolContractWithSigner.deposit(parsedAmount);
-                const txResult = await tx.wait();
-
-                if (txResult && txResult.events) {
-                    PLAUSIBLE.trackEvent(PLAUSIBLE_KEYS.depositLp, {
-                        props: {
-                            networkId,
-                        },
-                    });
-                    toast.update(
-                        id,
-                        getSuccessToastOptions(t('liquidity-pool.button.deposit-confirmation-message'), id)
-                    );
-                    setAmount('');
-                    setIsSubmitting(false);
-                    refetchLiquidityPoolData(
-                        walletAddress,
-                        networkId,
-                        liquidityPoolData?.round || 0,
-                        liquidityPoolAddress
-                    );
-                }
-            } catch (e) {
-                console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again'), id));
-                setIsSubmitting(false);
             }
         }
     };
@@ -450,48 +344,6 @@ const LiquidityPool: React.FC = () => {
         }
     };
 
-    const getDepositSubmitButton = () => {
-        if (!isWalletConnected) {
-            return (
-                <Button onClick={openConnectModal} {...defaultButtonProps}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
-        }
-        if (insufficientBalance) {
-            return (
-                <Button disabled={true} {...defaultButtonProps}>
-                    {t(`common.errors.insufficient-balance`)}
-                </Button>
-            );
-        }
-        if (!isAmountEntered) {
-            return (
-                <Button disabled={true} {...defaultButtonProps}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
-        }
-        if (!hasAllowance) {
-            return (
-                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} {...defaultButtonProps}>
-                    {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: collateral })
-                        : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: collateral,
-                          })}
-                </Button>
-            );
-        }
-        return (
-            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit} {...defaultButtonProps}>
-                {!isSubmitting
-                    ? t('liquidity-pool.button.deposit-label')
-                    : t('liquidity-pool.button.deposit-progress-label')}
-            </Button>
-        );
-    };
-
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
             return (
@@ -547,16 +399,14 @@ const LiquidityPool: React.FC = () => {
                                 href={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lpCollateral}`}
                             >
                                 <NavigationItem className={`${lpCollateral === paramCollateral ? 'selected' : ''}`}>
-                                    {`${item.name}${
-                                        lpCollateral === LiquidityPoolCollateral.sUSD ? ' (DEPRECATED)' : ''
-                                    }`}
+                                    {`${item.name} (DEPRECATED)`}
                                 </NavigationItem>
                             </SPAAnchor>
                         );
                     })}
                 </NavigationContainer>
             )}
-            {isSUSD && <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>}
+            <DeprecatedContainer>{t(`liquidity-pool.deprecated-info`)}</DeprecatedContainer>
             {liquidityPoolData && (
                 <Container>
                     <ContentContainer>
@@ -593,263 +443,169 @@ const LiquidityPool: React.FC = () => {
                         )}
                     </ContentContainer>
                     <ContentContainer>
-                        {!isSUSD && (
-                            <ToggleContainer>
-                                <Switch
-                                    active={selectedTab === LiquidityPoolTab.WITHDRAW}
-                                    width={'66px'}
-                                    height={'30px'}
-                                    dotSize="18px"
-                                    label={{
-                                        firstLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.DEPOSIT}`),
-                                        secondLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.WITHDRAW}`),
-                                        fontSize: '18px',
-                                    }}
-                                    dotBackground={theme.textColor.primary}
-                                    handleClick={() => {
-                                        setSelectedTab(
-                                            selectedTab === LiquidityPoolTab.DEPOSIT
-                                                ? LiquidityPoolTab.WITHDRAW
-                                                : LiquidityPoolTab.DEPOSIT
-                                        );
-                                    }}
-                                />
-                            </ToggleContainer>
-                        )}
-                        {selectedTab === LiquidityPoolTab.DEPOSIT && !isSUSD && (
+                        {((liquidityPoolData && userLiquidityPoolData && !isWithdrawalRequested) ||
+                            !isWalletConnected) && (
                             <>
-                                {isWithdrawalRequested && (
-                                    <WarningContentInfo>
-                                        <Trans i18nKey="liquidity-pool.deposit-withdrawal-warning" />
-                                    </WarningContentInfo>
-                                )}
-                                {isLiquidityPoolCapReached && (
-                                    <WarningContentInfo>
-                                        <Trans i18nKey="liquidity-pool.deposit-liquidity-pool-cap-reached-warning" />
-                                    </WarningContentInfo>
-                                )}
-                                {isMaximumAmountOfUsersReached && (
-                                    <WarningContentInfo>
-                                        <Trans i18nKey="liquidity-pool.deposit-max-amount-of-users-warning" />
-                                    </WarningContentInfo>
-                                )}
-                                <NumericInput
-                                    value={amount}
-                                    disabled={isDepositAmountInputDisabled}
-                                    onChange={(_, value) => setAmount(value)}
-                                    currencyLabel={collateral}
-                                    placeholder={t('common.enter-amount')}
-                                    showValidation={
-                                        insufficientBalance || !!exceededLiquidityPoolCap || !!invalidAmount
-                                    }
-                                    validationMessage={
-                                        t(
-                                            `${
-                                                insufficientBalance
-                                                    ? 'common.errors.insufficient-balance'
-                                                    : exceededLiquidityPoolCap
-                                                    ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
-                                                    : 'liquidity-pool.deposit-min-amount-error'
-                                            }`,
-                                            {
-                                                amount: formatCurrencyWithSign(
-                                                    USD_SIGN,
-                                                    liquidityPoolData.minDepositAmount
-                                                ),
-                                            }
-                                        ) as string
-                                    }
-                                />
-                                <ButtonContainer>{getDepositSubmitButton()}</ButtonContainer>
-                            </>
-                        )}
-                        {(selectedTab === LiquidityPoolTab.WITHDRAW || isSUSD) && (
-                            <>
-                                {((liquidityPoolData && userLiquidityPoolData && !isWithdrawalRequested) ||
-                                    !isWalletConnected) && (
+                                {nothingToWithdraw || !isWalletConnected ? (
                                     <>
-                                        {nothingToWithdraw || !isWalletConnected ? (
-                                            <>
-                                                <ContentInfo>
-                                                    <Trans i18nKey="liquidity-pool.nothing-to-withdraw-label" />
-                                                </ContentInfo>
-                                                {userLiquidityPoolData && userLiquidityPoolData.hasDepositForNextRound && (
-                                                    <ContentInfo>
-                                                        <Trans i18nKey="liquidity-pool.first-deposit-withdrawal-message" />
-                                                    </ContentInfo>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <>
-                                                {userLiquidityPoolData && (
-                                                    <>
-                                                        {userLiquidityPoolData.hasDepositForNextRound ? (
-                                                            <WarningContentInfo>
-                                                                <Trans i18nKey="liquidity-pool.withdrawal-deposit-warning" />
-                                                            </WarningContentInfo>
-                                                        ) : (
-                                                            <>
-                                                                <ContentInfo>
-                                                                    <Trans
-                                                                        i18nKey="liquidity-pool.available-to-withdraw-label"
-                                                                        components={{
-                                                                            bold: <BoldContent />,
-                                                                        }}
-                                                                        values={{
-                                                                            amount: formatCurrencyWithSign(
-                                                                                USD_SIGN,
-                                                                                userLiquidityPoolData.balanceCurrentRound
-                                                                            ),
-                                                                        }}
-                                                                    />
-                                                                    <Tooltip
-                                                                        overlay={t(
-                                                                            `liquidity-pool.estimated-amount-tooltip`
-                                                                        )}
-                                                                        iconFontSize={14}
-                                                                        marginLeft={2}
-                                                                        top={-1}
-                                                                    />
-                                                                </ContentInfo>
-                                                                <ContentInfo>
-                                                                    <Trans i18nKey="liquidity-pool.withdrawal-message" />
-                                                                </ContentInfo>
-                                                                <RadioButtonContainer>
-                                                                    <RadioButton
-                                                                        checked={withdrawAll}
-                                                                        value={'true'}
-                                                                        onChange={() => setWithdrawAll(true)}
-                                                                        label={t(
-                                                                            `liquidity-pool.full-withdrawal-label`
-                                                                        )}
-                                                                    />
-                                                                    <RadioButton
-                                                                        checked={!withdrawAll}
-                                                                        value={'false'}
-                                                                        onChange={() => setWithdrawAll(false)}
-                                                                        label={t(
-                                                                            `liquidity-pool.partial-withdrawal-label`
-                                                                        )}
-                                                                    />
-                                                                </RadioButtonContainer>
-                                                                <NumericInput
-                                                                    value={withdrawalPercentage}
-                                                                    onChange={(_, value) =>
-                                                                        setWithdrawalPercentage(value)
-                                                                    }
-                                                                    disabled={isPartialWithdrawalDisabled}
-                                                                    step="1"
-                                                                    currencyLabel="%"
-                                                                    placeholder={t('common.enter-percentage')}
-                                                                    showValidation={!isWithdrawalPercentageValid}
-                                                                    validationMessage={t(
-                                                                        Number(withdrawalPercentage) == 0
-                                                                            ? 'common.errors.enter-percentage'
-                                                                            : 'common.errors.invalid-percentage-range',
-                                                                        { min: 10, max: 90 }
-                                                                    )}
-                                                                />
-                                                                <SliderContainer>
-                                                                    <StyledSlider
-                                                                        value={Number(withdrawalPercentage)}
-                                                                        step={1}
-                                                                        max={90}
-                                                                        min={10}
-                                                                        onChange={(_: any, value: any) =>
-                                                                            setWithdrawalPercentage(Number(value))
-                                                                        }
-                                                                        disabled={isPartialWithdrawalDisabled}
-                                                                    />
-                                                                    <FlexDivRow>
-                                                                        <SliderRange
-                                                                            className={
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }
-                                                                        >
-                                                                            10%
-                                                                        </SliderRange>
-                                                                        <SliderRange
-                                                                            className={
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }
-                                                                        >
-                                                                            90%
-                                                                        </SliderRange>
-                                                                    </FlexDivRow>
-                                                                </SliderContainer>
-                                                                <ContentInfo>
-                                                                    <Trans
-                                                                        i18nKey="liquidity-pool.withdrawal-amount-label"
-                                                                        components={{
-                                                                            bold: <BoldContent />,
-                                                                        }}
-                                                                        values={{
-                                                                            amount: formatCurrencyWithSign(
-                                                                                USD_SIGN,
-                                                                                withdrawalAmount
-                                                                            ),
-                                                                        }}
-                                                                    />
-                                                                    <Tooltip
-                                                                        overlay={t(
-                                                                            `liquidity-pool.estimated-amount-tooltip`
-                                                                        )}
-                                                                        iconFontSize={14}
-                                                                        marginLeft={2}
-                                                                        top={-1}
-                                                                    />
-                                                                </ContentInfo>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </>
-                                        )}
-                                        <ButtonContainer> {getWithdrawSubmitButton()}</ButtonContainer>
-                                    </>
-                                )}
-                                {liquidityPoolData &&
-                                    userLiquidityPoolData &&
-                                    userLiquidityPoolData.isWithdrawalRequested && (
-                                        <>
+                                        <ContentInfo>
+                                            <Trans i18nKey="liquidity-pool.nothing-to-withdraw-label" />
+                                        </ContentInfo>
+                                        {userLiquidityPoolData && userLiquidityPoolData.hasDepositForNextRound && (
                                             <ContentInfo>
-                                                <Trans
-                                                    i18nKey={`liquidity-pool.${
-                                                        userLiquidityPoolData.isPartialWithdrawalRequested
-                                                            ? 'partial'
-                                                            : 'full'
-                                                    }-withdrawal-requested-message`}
-                                                    components={{
-                                                        bold: <BoldContent />,
-                                                        tooltip: (
+                                                <Trans i18nKey="liquidity-pool.first-deposit-withdrawal-message" />
+                                            </ContentInfo>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        {userLiquidityPoolData && (
+                                            <>
+                                                {userLiquidityPoolData.hasDepositForNextRound ? (
+                                                    <WarningContentInfo>
+                                                        <Trans i18nKey="liquidity-pool.withdrawal-deposit-warning" />
+                                                    </WarningContentInfo>
+                                                ) : (
+                                                    <>
+                                                        <ContentInfo>
+                                                            <Trans
+                                                                i18nKey="liquidity-pool.available-to-withdraw-label"
+                                                                components={{
+                                                                    bold: <BoldContent />,
+                                                                }}
+                                                                values={{
+                                                                    amount: formatCurrencyWithSign(
+                                                                        USD_SIGN,
+                                                                        userLiquidityPoolData.balanceCurrentRound
+                                                                    ),
+                                                                }}
+                                                            />
                                                             <Tooltip
                                                                 overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                                 iconFontSize={14}
                                                                 marginLeft={2}
                                                                 top={-1}
                                                             />
-                                                        ),
-                                                    }}
-                                                    values={{
-                                                        amount: formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            userLiquidityPoolData.withdrawalAmount
-                                                        ),
-                                                        percentage: formatPercentage(
-                                                            userLiquidityPoolData.withdrawalShare
-                                                        ),
-                                                    }}
+                                                        </ContentInfo>
+                                                        <ContentInfo>
+                                                            <Trans i18nKey="liquidity-pool.withdrawal-message" />
+                                                        </ContentInfo>
+                                                        <RadioButtonContainer>
+                                                            <RadioButton
+                                                                checked={withdrawAll}
+                                                                value={'true'}
+                                                                onChange={() => setWithdrawAll(true)}
+                                                                label={t(`liquidity-pool.full-withdrawal-label`)}
+                                                            />
+                                                            <RadioButton
+                                                                checked={!withdrawAll}
+                                                                value={'false'}
+                                                                onChange={() => setWithdrawAll(false)}
+                                                                label={t(`liquidity-pool.partial-withdrawal-label`)}
+                                                            />
+                                                        </RadioButtonContainer>
+                                                        <NumericInput
+                                                            value={withdrawalPercentage}
+                                                            onChange={(_, value) => setWithdrawalPercentage(value)}
+                                                            disabled={isPartialWithdrawalDisabled}
+                                                            step="1"
+                                                            currencyLabel="%"
+                                                            placeholder={t('common.enter-percentage')}
+                                                            showValidation={!isWithdrawalPercentageValid}
+                                                            validationMessage={t(
+                                                                Number(withdrawalPercentage) == 0
+                                                                    ? 'common.errors.enter-percentage'
+                                                                    : 'common.errors.invalid-percentage-range',
+                                                                { min: 10, max: 90 }
+                                                            )}
+                                                        />
+                                                        <SliderContainer>
+                                                            <StyledSlider
+                                                                value={Number(withdrawalPercentage)}
+                                                                step={1}
+                                                                max={90}
+                                                                min={10}
+                                                                onChange={(_: any, value: any) =>
+                                                                    setWithdrawalPercentage(Number(value))
+                                                                }
+                                                                disabled={isPartialWithdrawalDisabled}
+                                                            />
+                                                            <FlexDivRow>
+                                                                <SliderRange
+                                                                    className={
+                                                                        isPartialWithdrawalDisabled ? 'disabled' : ''
+                                                                    }
+                                                                >
+                                                                    10%
+                                                                </SliderRange>
+                                                                <SliderRange
+                                                                    className={
+                                                                        isPartialWithdrawalDisabled ? 'disabled' : ''
+                                                                    }
+                                                                >
+                                                                    90%
+                                                                </SliderRange>
+                                                            </FlexDivRow>
+                                                        </SliderContainer>
+                                                        <ContentInfo>
+                                                            <Trans
+                                                                i18nKey="liquidity-pool.withdrawal-amount-label"
+                                                                components={{
+                                                                    bold: <BoldContent />,
+                                                                }}
+                                                                values={{
+                                                                    amount: formatCurrencyWithSign(
+                                                                        USD_SIGN,
+                                                                        withdrawalAmount
+                                                                    ),
+                                                                }}
+                                                            />
+                                                            <Tooltip
+                                                                overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
+                                                                iconFontSize={14}
+                                                                marginLeft={2}
+                                                                top={-1}
+                                                            />
+                                                        </ContentInfo>
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                                <ButtonContainer> {getWithdrawSubmitButton()}</ButtonContainer>
+                            </>
+                        )}
+                        {liquidityPoolData && userLiquidityPoolData && userLiquidityPoolData.isWithdrawalRequested && (
+                            <>
+                                <ContentInfo>
+                                    <Trans
+                                        i18nKey={`liquidity-pool.${
+                                            userLiquidityPoolData.isPartialWithdrawalRequested ? 'partial' : 'full'
+                                        }-withdrawal-requested-message`}
+                                        components={{
+                                            bold: <BoldContent />,
+                                            tooltip: (
+                                                <Tooltip
+                                                    overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
+                                                    iconFontSize={14}
+                                                    marginLeft={2}
+                                                    top={-1}
                                                 />
-                                            </ContentInfo>
-                                            <ContentInfo>
-                                                <Trans i18nKey="liquidity-pool.withdrawal-requested-message" />
-                                            </ContentInfo>
-                                        </>
-                                    )}
+                                            ),
+                                        }}
+                                        values={{
+                                            amount: formatCurrencyWithSign(
+                                                USD_SIGN,
+                                                userLiquidityPoolData.withdrawalAmount
+                                            ),
+                                            percentage: formatPercentage(userLiquidityPoolData.withdrawalShare),
+                                        }}
+                                    />
+                                </ContentInfo>
+                                <ContentInfo>
+                                    <Trans i18nKey="liquidity-pool.withdrawal-requested-message" />
+                                </ContentInfo>
                             </>
                         )}
                     </ContentContainer>

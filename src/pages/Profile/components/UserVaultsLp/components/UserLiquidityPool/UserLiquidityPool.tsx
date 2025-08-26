@@ -10,7 +10,6 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { LiquidityPool, LiquidityPoolData, UserLiquidityPoolData } from 'types/liquidityPool';
 import { RootState } from 'types/ui';
 import { buildHref } from 'utils/routes';
-import { SYNTHS_MAP } from '../../../../../../constants/currency';
 import ROUTES from '../../../../../../constants/routes';
 import VaultLpDetails from '../VaultLpDetails';
 
@@ -84,7 +83,6 @@ const UserLiquidityPool: React.FC<UserLiquidityPoolProps> = ({ lp }) => {
                 isRoundEnded={!!liquidityPoolData?.isRoundEnded}
                 link={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lp.collateral.toLowerCase()}`}
                 isLoading={liquidityPoolDataQuery.isLoading || userLiquidityPoolDataQuery.isLoading}
-                isDeprecated={lp.collateral === SYNTHS_MAP.sUSD}
             />
         </SPAAnchor>
     ) : (
@@ -98,7 +96,6 @@ const UserLiquidityPool: React.FC<UserLiquidityPoolProps> = ({ lp }) => {
             isRoundEnded={!!liquidityPoolData?.isRoundEnded}
             link={`${buildHref(ROUTES.Options.LiquidityPool)}?collateral=${lp.collateral.toLowerCase()}`}
             isLoading={liquidityPoolDataQuery.isLoading || userLiquidityPoolDataQuery.isLoading}
-            isDeprecated={lp.collateral === SYNTHS_MAP.sUSD}
         />
     );
 };
