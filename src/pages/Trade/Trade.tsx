@@ -16,21 +16,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Tour, { ReactourStep } from 'reactour';
 import { getIsAppReady } from 'redux/modules/app';
-import {
-    getIsDeprecatedCurrency,
-    getIsMobile,
-    getShowTour,
-    setIsDeprecatedCurrency,
-    setShowTour,
-} from 'redux/modules/ui';
+import { getIsMobile, getShowTour, setShowTour } from 'redux/modules/ui';
 import { getNetworkId } from 'redux/modules/wallet';
 import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered } from 'styles/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { Step } from 'types/tour';
 import { ThemeInterface } from 'types/ui';
-import SwitchInput from '../../components/SwitchInput';
-import { Network } from '../../enums/network';
 import AmmTrading from './components/AmmTrading';
 import AssetDropdown from './components/AssetDropdown';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -50,7 +42,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const isAppReady = useSelector(getIsAppReady);
     const showTour = useSelector(getShowTour);
     const isMobile = useSelector(getIsMobile);
-    const isDeprecatedCurrency = useSelector(getIsDeprecatedCurrency);
 
     const isRangedMarkets = props.location?.pathname.includes(ROUTES.Options.RangeMarkets);
 
@@ -61,10 +52,10 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
     // queries
-    const assetsQuery = useAvailableAssetsQuery(networkId, isDeprecatedCurrency, {
+    const assetsQuery = useAvailableAssetsQuery(networkId, false, {
         enabled: isAppReady,
     });
-    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, isDeprecatedCurrency, {
+    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, false, {
         enabled: isAppReady,
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(
@@ -72,7 +63,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
         Number(maturityDate),
         positionType,
         networkId,
-        isDeprecatedCurrency,
+        false,
         {
             enabled: !!maturityDate,
         }
@@ -108,9 +99,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
 
     useEffect(() => {
         setCurrencyKey(CRYPTO_CURRENCY_MAP.BTC);
-        if (networkId !== Network.OptimismMainnet) {
-            dispatch(setIsDeprecatedCurrency(false));
-        }
     }, [dispatch, networkId]);
 
     const getSelectedPrice = () => {
@@ -172,25 +160,6 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                 />
             )}
             <BannerCarousel />
-            {networkId === Network.OptimismMainnet && (
-                <SwitchInput
-                    active={isDeprecatedCurrency}
-                    width={'56px'}
-                    height={'24px'}
-                    dotSize="18px"
-                    label={{
-                        firstLabel: 'USDC',
-                        secondLabel: 'sUSD (DEPRECATED)',
-                        fontSize: '16px',
-                    }}
-                    handleClick={() => {
-                        dispatch(setIsDeprecatedCurrency(!isDeprecatedCurrency));
-                    }}
-                />
-            )}
-            {networkId === Network.OptimismMainnet && isDeprecatedCurrency && (
-                <DeprecatedContainer>{t('markets.deprecated-message')}</DeprecatedContainer>
-            )}
             <ContentWrapper>
                 <LeftSide>
                     <DropdownsWrapper>
@@ -260,7 +229,7 @@ const TradePage: React.FC<RouteComponentProps> = (props) => {
                     }
                 }
                 showBuyLiquidity
-                isDeprecatedCurrency={isDeprecatedCurrency}
+                isDeprecatedCurrency={false}
             />
             <BannerWrapper>
                 <PageLinkBanner />

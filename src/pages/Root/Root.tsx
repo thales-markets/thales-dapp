@@ -37,25 +37,39 @@ dotenv.config();
 
 const STALL_TIMEOUT = 2000;
 
+export const RPC_LIST = {
+    DRPC: {
+        [Network.OptimismMainnet]: {
+            http: `https://lb.drpc.org/optimism/${process.env.REACT_APP_DRPC_PROJECT_ID}`,
+        },
+        [Network.Arbitrum]: {
+            http: `https://lb.drpc.org/arbitrum/${process.env.REACT_APP_DRPC_PROJECT_ID}`,
+        },
+        [Network.Base]: {
+            http: `https://lb.drpc.org/base/${process.env.REACT_APP_DRPC_PROJECT_ID}`,
+        },
+        [Network.PolygonMainnet]: {
+            http: `https://lb.drpc.org/polygon/${process.env.REACT_APP_DRPC_PROJECT_ID}`,
+        },
+    },
+};
+
 const { chains, provider } = configureChains(
     [optimism, optimismSepolia, mainnet, polygon, arbitrum, base],
     [
         jsonRpcProvider({
             rpc: (chain) => {
                 return {
-                    http:
-                        chain.id === Network.Base
-                            ? `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
-                            : chain.rpcUrls.default.http[0],
+                    http: RPC_LIST.DRPC[chain.id as keyof typeof RPC_LIST.DRPC]?.http,
                 };
             },
             stallTimeout: STALL_TIMEOUT,
-            priority: 1,
+            priority: 0,
         }),
         infuraProvider({
             apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '',
             stallTimeout: STALL_TIMEOUT,
-            priority: 0,
+            priority: 1,
         }),
         publicProvider({ stallTimeout: STALL_TIMEOUT, priority: 5 }),
     ]

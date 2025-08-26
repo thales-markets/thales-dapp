@@ -22,7 +22,6 @@ type VaultLpDetailsProps = {
     isRoundEnded: boolean;
     link: string;
     isLoading: boolean;
-    isDeprecated?: boolean;
 };
 
 const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
@@ -35,7 +34,6 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
     isRoundEnded,
     link,
     isLoading,
-    isDeprecated,
 }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
@@ -51,9 +49,7 @@ const VaultLpDetails: React.FC<VaultLpDetailsProps> = ({
                 <Icon className={`sidebar-icon icon--${icon}`} />
                 <TitleContainer>
                     <Title>{title}</Title>
-                    {isDeprecated && (
-                        <DeprecatedContainer>{t('profile.vaults-lp.deprecated-label')}</DeprecatedContainer>
-                    )}
+                    <DeprecatedContainer>{t('profile.vaults-lp.deprecated-label')}</DeprecatedContainer>
                 </TitleContainer>
             </TitleWrapper>
             <Item hideBorder>
